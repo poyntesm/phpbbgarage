@@ -553,4 +553,23 @@ $lang['Need_To_Process'] = 'We need to process in total : ';
 $lang['Log_To'] = 'We will log to : ';
 $lang['Out_Of'] = 'Out Of';
 $lang['Kbytes'] = 'kbytes';
+
+//Added For New Category & Business Admin Pages
+$lang['Deny'] = 'Deny';
+$lang['Rename'] = 'Rename';
+$lang['Empty_Title'] = 'You Have Not Entered A Category Title';
+$lang['Category_Order_Updated'] = 'Category Order Updated';
+$lang['Status'] = 'Status';
+$lang['Show_Details'] = 'Show Details';
+$lang['Hide_Details'] = 'Hide Details';
+$lang['set_pending'] = 'Set To Pending';
+$lang['set_approved'] = 'Set To Approved';
+$lang['Delete_Business'] = 'Delete Category';
+$lang['Move_Delete_Business_Button'] = 'Move Related Items And Delete Category';
+$lang['Move_Delete_Business'] = '<b>Move all existing items related to this business to which existing business?</b>';
+$lang['Remove_Business'] = '<b>Business to remove:</b>';
+$lang['Missing_Required_Data'] = '<b>Missing Required Data</b>';
+$lang['Delete_Business_Explain'] = 'The form below will allow you to delete a business. You need to decide which business related items will be moved to.';
+$lang['Models'] = 'Models';
+
 ?>

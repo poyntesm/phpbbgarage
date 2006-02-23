@@ -2,24 +2,80 @@
 
 <p>{L_GARAGE_CAT_EXPLAIN}</p>
 
-<form action="{S_GARAGE_ACTION}" method="post">
+
+<script language="JavaScript" type="text/javascript">
+<!--
+function rename ( selected )
+{
+	var a = 'title_' + selected;
+	alert(a);
+	if (document.manage_categories.a.value.length < 2)
+	{
+		formErrors = "{L_EMPTY_TITLE}";
+	}
+
+	if (formErrors) 
+	{
+		alert(formErrors);
+		return false;
+	} 
+	else 
+	{
+		return true;
+	}
+
+	document.manage_categories.category_id.value = selected;
+	document.manage_categories.submit() ;
+}
+
+function checkForm() 
+{
+
+	formErrors = false;    
+
+	if (document.new_category.title.value.length < 2) 
+	{
+		formErrors = "{L_EMPTY_TITLE}";
+	}
+
+	if (formErrors) 
+	{
+		alert(formErrors);
+		return false;
+	} 
+	else 
+	{
+		return true;
+	}
+}
+
+-->
+</script>
+
+<form name="manage_categories" action="{S_GARAGE_MODE_RENAME}" method="post">
 <table width="100%" cellpadding="2" cellspacing="1" border="0" class="forumline">
 	<tr>
 		<th class="thHead" height="25" colspan="4">{L_GARAGE_CAT_TITLE}</th>
 	</tr>
+	<tr>
+		<td class="catBottom" align="center" height="28" ><span class="gen"><b>{L_NAME}</b></span></td>
+		<td class="catBottom" align="center" height="28" ><span class="gen"><b>{L_RENAME}</b></span></td>
+		<td class="catBottom" align="center" height="28" ><span class="gen"><b>{L_DELETE}</b></span></td>
+		<td class="catBottom" align="center" height="28" ><span class="gen"><b>{L_REORDER}</b></span></td>
+	</tr>
 	<!-- BEGIN catrow -->
 	<tr>
-		<td class="{catrow.COLOR}" width="60%" height="25"><span class="gen">{catrow.TITLE}<br /></span><span class="gensmall">{catrow.DESC}</span></td>
-		<td class="{catrow.COLOR}" align="center"><span
-		class="genmed"><a href="{catrow.S_EDIT_ACTION}">{L_EDIT}</a></span></td>
-		<td class="{catrow.COLOR}" align="center"><span
-		class="genmed"><a href="{catrow.S_DELETE_ACTION}">{L_DELETE}</a></span></td>
+		<td class="{catrow.COLOR}" width="50%" nowrap=nowrap><span class="gen">{catrow.TITLE}</span></td>
+		<td class="{catrow.COLOR}" align="center" nowrap=nowrap><input name="title_{catrow.ID}" type="text" class="post" size="25" value="{S_CAT_TITLE}" /><span class="genmed">&nbsp;&nbsp;{catrow.U_RENAME}</span></td>
+		<td class="{catrow.COLOR}" align="center" nowrap=nowrap><span	class="genmed">{catrow.U_DELETE}</span></td>
+		<td class="{catrow.COLOR}" align="center" nowrap=nowrap><span	class="genmed">{catrow.U_MOVE_UP}&nbsp;{catrow.U_MOVE_DOWN}</span></td>
 	</tr>
 	<!-- END catrow -->
+	<input type="hidden" name="category_id" value="" />
 </table>
 </form>
 
-<form action="{S_GARAGE_ACTION}" method="post">
+<form name="new_category" action="{S_GARAGE_MODE_NEW}" method="post" onsubmit="return checkForm(this)">
 <table width="100%" cellpadding="3" cellspacing="1" border="0" class="forumline">
 	<tr>
 		<th class="thHead" height="25" nowrap="nowrap" colspan="2">{L_PANEL_TITLE}</th>
@@ -29,7 +85,8 @@
 		<td class="row2"><input name="title" type="text" class="post" size="35" value="{S_CAT_TITLE}" /></td>
 	</tr>
 	<tr>
-		<td class="catBottom" align="center" height="28" colspan="2"><input type="hidden" value="{S_MODE}" name="mode" /><input name="submit" type="submit" value="{L_PANEL_TITLE}" class="liteoption" /></td>
+		<td class="catBottom" align="center" height="28" colspan="2"><input name="submit" type="submit" value="{L_PANEL_TITLE}" class="liteoption" /></td>
 	</tr>
 </table>
 </form>
+
