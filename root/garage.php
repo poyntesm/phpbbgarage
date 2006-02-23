@@ -211,7 +211,7 @@ switch( $mode )
 		$cid = $garage_lib->insert_vehicle($data);
 
 		//If Any Image Variables Set Enter The Image Handling
-		if( ((isset($HTTP_POST_FILES['FILE_UPLOAD'])) AND ($HTTP_POST_FILES['FILE_UPLOAD']['name'])) OR (!preg_match("/^http:\/\/$/i", $HTTP_POST_VARS['url_image'])) )
+		if( $garage_lib->image_attached() )
 		{
 			$image_id = $garage_lib->process_image_attach('vehicle',$cid);
 			if (!empty($image_id))
@@ -429,7 +429,7 @@ switch( $mode )
 		// Update The Time Now...In Case We Get Redirected During Image Processing
 		$garage_lib->update_vehicle_time($cid);
 
-		if( ((isset($HTTP_POST_FILES['FILE_UPLOAD'])) AND ($HTTP_POST_FILES['FILE_UPLOAD']['name'])) OR (!preg_match("/^http:\/\/$/i", $HTTP_POST_VARS['url_image'])) )
+		if( $garage_lib->image_attached() )
 		{
 			$image_id = $garage_lib->process_image_attach('modification',$mid);
 			if (!empty($image_id))
@@ -538,7 +538,7 @@ switch( $mode )
 		}
 
 		//Handle New Image Upload
-		if( ((isset($HTTP_POST_FILES['FILE_UPLOAD'])) AND ($HTTP_POST_FILES['FILE_UPLOAD']['name'])) OR (!preg_match("/^http:\/\/$/i", $HTTP_POST_VARS['url_image'])) )
+		if( $garage_lib->image_attached() )
 		{
 			$image_id = $garage_lib->process_image_attach('modification',$mid);
 			if (!empty($image_id))
@@ -653,7 +653,7 @@ switch( $mode )
 		// Update The Time Now...In Case We Get Redirected During Image Processing
 		$garage_lib->update_vehicle_time($cid);
 
-		if( (isset($HTTP_POST_FILES['FILE_UPLOAD'])) AND ($HTTP_POST_FILES['FILE_UPLOAD']['name']) OR (!preg_match("/^http:\/\/$/i", $HTTP_POST_VARS['url_image'])) )
+		if( $garage_lib->image_attached() )
 		{
 			$image_id = $garage_lib->process_image_attach('quartermile',$qmid);
 			if (!empty($image_id))
@@ -774,7 +774,7 @@ switch( $mode )
 		}
 
 		//Since We Have Removed The Old Image Lets Handle The New One Now
-		if( (isset($HTTP_POST_FILES['FILE_UPLOAD'])  AND ($HTTP_POST_FILES['FILE_UPLOAD']['name'])) OR (!preg_match("/^http:\/\/$/i", $HTTP_POST_VARS['url_image'])) )
+		if( $garage_lib->image_attached() )
 		{
 			$image_id = $garage_lib->process_image_attach('quartermile',$qmid);
 			if (!empty($image_id))
@@ -888,7 +888,7 @@ switch( $mode )
 		// Update The Time Now...In Case We Get Redirected During Image Processing
 		$garage_lib->update_vehicle_time($cid);
 
-		if( (isset($HTTP_POST_FILES['FILE_UPLOAD'])) AND ($HTTP_POST_FILES['FILE_UPLOAD']['name']) OR (!preg_match("/^http:\/\/$/i", $HTTP_POST_VARS['url_image'])) )
+		if( $garage_lib->image_attached() )
 		{
 			$image_id = $garage_lib->process_image_attach('rollingroad',$rrid);
 			if (!empty($image_id))
@@ -994,7 +994,7 @@ switch( $mode )
 		}
 
 		//Since We Have Removed The Old Image Lets Handle The New One Now
-		if( ((isset($HTTP_POST_FILES['FILE_UPLOAD']) AND ($HTTP_POST_FILES['FILE_UPLOAD']['name']))) OR (!preg_match("/^http:\/\/$/i", $HTTP_POST_VARS['url_image'])) )
+		if( $garage_lib->image_attached() )
 		{
 			$image_id = $garage_lib->process_image_attach('rollingroad',$rrid);
 			if (!empty($image_id))
@@ -1436,9 +1436,9 @@ switch( $mode )
 			$template->assign_block_vars('vehiclerow', array(
 				'ROW_COLOR' => '#' . $row_color,
 				'ROW_CLASS' => $row_class,
-				'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" .$data['id']),
-				'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=" .$data['user_id']),
-				'U_VIEW_BUSINESS' => append_sid("garage.$phpEx?mode=view_insurance_business&amp;business_id=" .$data['business_id']),
+				'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$data['id']),
+				'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$data['user_id']),
+				'U_VIEW_BUSINESS' => append_sid("garage.$phpEx?mode=view_insurance_business&amp;business_id=".$data['business_id']),
 				'VEHICLE' => $data['vehicle'],
 				'USERNAME' => $data['username'],
 				'BUSINESS' => $data['title'],
@@ -1735,7 +1735,7 @@ switch( $mode )
 		//Pull Gallery Data From DB
 		$gallery_data = $garage_lib->select_gallery_data($cid);
 
-		if( (isset($HTTP_POST_FILES['FILE_UPLOAD'])) AND ($HTTP_POST_FILES['FILE_UPLOAD']['name']) OR (!preg_match("/^http:\/\/$/i", $HTTP_POST_VARS['url_image'])) )
+		if( $garage_lib->image_attached() )
 		{
 			if ( count($gallery_data) < $garage_config['max_car_images'])
 			{

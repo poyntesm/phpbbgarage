@@ -1398,6 +1398,22 @@ class garage_lib
 		$gd_ver = $match[0];
 		return $match[0];
 	}
+
+	/*========================================================================*/
+	// Return True/False Depending On If Any Images Need Handling
+	// Usage:  image_attached();
+	/*========================================================================*/
+	function image_attached()
+	{
+		global $HTTP_POST_FILES, $HTTP_POST_VARS;
+
+		if ( ((isset($HTTP_POST_FILES['FILE_UPLOAD'])) AND ($HTTP_POST_FILES['FILE_UPLOAD']['name'])) OR (!preg_match("/^http:\/\/$/i", $HTTP_POST_VARS['url_image'])) )
+		{
+			return true;
+		}
+
+		return false;
+	}
 	
 	/*========================================================================*/
 	// Handle Image Upload And Thumbnail Creation For Remote/Local Images
@@ -1557,7 +1573,7 @@ class garage_lib
 			return $image_id;
 		}
 		// Uploaded Image Not Remote Image
-		else if( (isset($HTTP_POST_FILES['FILE_UPLOAD'])) AND (!empty($HTTP_POST_FILES['FILE_UPLOAD']['name'])) )
+		else if ( (isset($HTTP_POST_FILES['FILE_UPLOAD'])) AND (!empty($HTTP_POST_FILES['FILE_UPLOAD']['name'])) )
 		{
 			$attach_filetype = $HTTP_POST_FILES['FILE_UPLOAD']['type'];
 			$attach_filesize = $HTTP_POST_FILES['FILE_UPLOAD']['size'];
