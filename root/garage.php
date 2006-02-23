@@ -3599,18 +3599,11 @@ switch( $mode )
 		
 		if ( $count['total'] < 1 )
 		{
-			$sql = "INSERT INTO ". GARAGE_RATING_TABLE ." (garage_id,rating,user_id,rate_date)
-				VALUES ('$cid', '".$data['vehicle_rating']."', '".$data['user_id']."', '".$data['rate_date']."')";
+			$garage_lib->insert_vehicle_rating($data);
 		}
 		else
 		{
-			$sql = "UPDATE ". GARAGE_RATING_TABLE ." SET rating = '".$data['vehicle_rating']."', rate_date = '".$data['rate_date']."'
-		       		WHERE user_id = '".$data['user_id']."' AND garage_id = '$cid'";
-		}
-
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Could Insert Vehicle Rating', '', __LINE__, __FILE__, $sql);
+			$garage_lib->update_vehicle_rating($data);
 		}
 
 		redirect(append_sid("garage.$phpEx?mode=view_vehicle&CID=$cid", true));
@@ -3653,7 +3646,6 @@ switch( $mode )
 			'TOTAL_MODIFICATIONS' 	=> $garage_lib->count_total_modifications,
 			'TOTAL_COMMENTS'  	=> $garage_lib->count_total_comments)
 		);
-
 
 		//Display Page...In Order Header->Menu->Body->Footer
 		$template->pparse('header');

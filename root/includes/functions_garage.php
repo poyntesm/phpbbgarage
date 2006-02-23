@@ -200,6 +200,26 @@ class garage_lib
 		return;
 	}
 
+		/*========================================================================*/
+	// Insurance Vehicle Rating Into DB
+	// Usage: insert_vehicel_rating(array());
+	/*========================================================================*/
+	function insert_vehicle_rating($data)
+	{
+		global $cid, $db;
+
+		$sql = "INSERT INTO ". GARAGE_RATING_TABLE ." (garage_id,rating,user_id,rate_date)
+			VALUES ('$cid', '".$data['vehicle_rating']."', '".$data['user_id']."', '".$data['rate_date']."')";
+
+		if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'Could Not Insert Vehicle Rating', '', __LINE__, __FILE__, $sql);
+		}
+
+		return;
+	}
+
+
 	/*========================================================================*/
 	// Insurance Insurance Into DB
 	// Usage: insert_vehicle_comment(array());
@@ -390,6 +410,25 @@ class garage_lib
 		if(!$result = $db->sql_query($sql))
 		{
 			message_die(GENERAL_ERROR, 'Could Not Update Insurance Premium', '', __LINE__, __FILE__, $sql);
+		}
+
+		return;
+	}
+
+		/*========================================================================*/
+	// Updates Vehicle Rating In DB
+	// Usage: update_vehicle_rating(array());
+	/*========================================================================*/
+	function update_vehicle_rating($data)
+	{
+		global $db, $cid;
+
+		$sql = "UPDATE ". GARAGE_RATING_TABLE ." SET rating = '".$data['vehicle_rating']."', rate_date = '".$data['rate_date']."'
+	       		WHERE user_id = '".$data['user_id']."' AND garage_id = '$cid';";
+
+		if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'Could Not Update Vehicle Rating', '', __LINE__, __FILE__, $sql);
 		}
 
 		return;
