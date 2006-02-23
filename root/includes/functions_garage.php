@@ -415,7 +415,85 @@ class garage_lib
 		return;
 	}
 
+	/*========================================================================*/
+	// Count The Total Modifications Within The Garage
+	// Usage: count_total_modifications();
+	/*========================================================================*/
+	function count_total_modifications()
+	{
+		global $db;
 
+	        // Get the total count of mods in the garage
+	        $sql = "SELECT count(*) AS total_mods FROM " . GARAGE_MODS_TABLE . " ";
+		if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'Error Counting Total Mods', '', __LINE__, __FILE__, $sql);
+		}
+        	$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $row['total_mods'];
+	}
+
+	/*========================================================================*/
+	// Count The Total Commnets Vehciles Have Recieved
+	// Usage: count_total_comments();
+	/*========================================================================*/
+	function count_total_comments()
+	{
+		global $db;
+
+        	// Get the total count of comments in the garage
+	        $sql = "SELECT count(*) AS total_comments FROM " . GARAGE_GUESTBOOKS_TABLE . " ";
+		if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'Error Counting Comments', '', __LINE__, __FILE__, $sql);
+		}
+        	$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $row['total_comments'];
+	}
+
+	/*========================================================================*/
+	// Count The Total Vehicles Within The Garage
+	// Usage: count_total_vehciles();
+	/*========================================================================*/
+	function count_total_vehicles()
+	{
+		global $db;
+
+		// Get the total count of vehicles and views in the garage
+        	$sql ="SELECT count(*) AS total_vehicles FROM " . GARAGE_TABLE . " ";
+		if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'Error Counting Vehicles', '', __LINE__, __FILE__, $sql);
+		}
+	        $row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $row['total_vehciles'];
+	}
+
+	/*========================================================================*/
+	// Count The Total Views The Garage Has Recieved
+	// Usage: count_total_views();
+	/*========================================================================*/
+	function count_total_views()
+	{
+		global $db;
+
+		// Get the total count of vehicles and views in the garage
+        	$sql ="SELECT SUM(views) AS total_views FROM " . GARAGE_TABLE . " ";
+		if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'Error Counting Views', '', __LINE__, __FILE__, $sql);
+		}
+	        $row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $row['total_views'];
+	}
 
 	/*========================================================================*/
 	// Builds HTML Variables For Copywrite Notice

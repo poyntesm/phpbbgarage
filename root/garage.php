@@ -3645,48 +3645,15 @@ switch( $mode )
 		$garage_lib->show_topquartermile();
 		$garage_lib->show_toprated();
 
-		// Get the total count of vehicles and views in the garage
-        	$sql ="SELECT count(*) AS total_cars, SUM(views) AS total_views FROM " . GARAGE_TABLE;
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Error Counting Views & Vehicles', '', __LINE__, __FILE__, $sql);
-		}
-	        $row = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
-		
-        	$data['total_cars'] = $row['total_cars'];
-	        $data['total_views'] = $row['total_views'];
-
-        	// Get the total count of mods in the garage
-	        $sql = "SELECT count(*) AS total_mods FROM " . GARAGE_MODS_TABLE;
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Error Counting Total Mods', '', __LINE__, __FILE__, $sql);
-		}
-        	$row = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
-		
-	        $data['total_mods'] = $row['total_mods'];
-
-        	// Get the total count of comments in the garage
-	        $sql = "SELECT count(*) AS total_comments FROM " . GARAGE_GUESTBOOKS_TABLE;
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Error Counting Comments', '', __LINE__, __FILE__, $sql);
-		}
-        	$row = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
-		
-	        $data['total_comments'] = $row['total_comments'];
-
 		$template->assign_vars(array(
 			'L_OWNER' 		=> $lang['Owner'],
 			'L_FEATURED_VEHICLE' 	=> $lang['Featured_Vehicle'],
-			'TOTAL_VEHICLES' 	=> $data['total_cars'],
-			'TOTAL_VIEWS' 		=> $data['total_views'],
-			'TOTAL_MODIFICATIONS' 	=> $data['total_mods'],
-			'TOTAL_COMMENTS'  	=> $data['total_comments'])
+			'TOTAL_VEHICLES' 	=> $garage_lib->count_total_vehicles,
+			'TOTAL_VIEWS' 		=> $garage_lib->count_total_views,
+			'TOTAL_MODIFICATIONS' 	=> $garage_lib->count_total_modifications,
+			'TOTAL_COMMENTS'  	=> $garage_lib->count_total_comments)
 		);
+
 
 		//Display Page...In Order Header->Menu->Body->Footer
 		$template->pparse('header');
