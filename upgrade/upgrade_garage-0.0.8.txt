@@ -1,0 +1,860 @@
+#############################################################################################################
+## MOD Title:		Update phpBB Garage 0.0.8 -> phpBB Garage 1.0.0
+## MOD Author: poyntesm < esmond.poynton[at]gmail[dot]com > (Esmond Poynton) http://forums.phpbbgarage.com
+## MOD Description:
+##			Updates phpBB Garage To Version 1.0.1
+##
+## MOD Version:		1.0.0 
+## 
+## Installation Level:	Easy
+## Installation Time:	10 Minutes
+## Files To Edit: (9)
+## 			viewtopic.php
+## 			includes/constants.php
+## 			includes/page_tail.php
+## 			includes/usercp_viewprofile.php
+##			language/lang_english/lang_admin.php
+##			language/lang_english/lang_main.php
+## 			templates/subSilver/subSilver.cfg
+## 			templates/subSilver/overall_footer.tpl
+##			templates/subSilver/profile_view_body.tpl
+##
+## Included Files: (104)
+##			Install Garage 1.0.0.txt
+##			Upgrade.txt
+##			contrib/Install Garage 1.0.0 PCP.txt
+##			contrib/profilcp/
+##			contrib/templates/
+## 			root/garage.php
+## 			root/install_garage.php
+##			root/admin/admin_garage_business.php
+##			root/admin/admin_garage_categories.php
+##			root/admin/admin_garage_config.php
+##			root/admin/admin_garage_models.php
+##			root/admin/admin_garage_permissions.php
+##			root/admin/admin_garage_tools.php
+##			root/includes/functions_garage.php
+##			root/language/lang_english/lang_garage.php
+##			root/language/lang_english/lang_garage_error.php
+##			root/templates/subSilver/garage.tpl
+##			root/templates/subSilver/garage_browse.tpl
+##			root/templates/subSilver/garage_browse_insurance.tpl
+##			root/templates/subSilver/garage_edit_comment.tpl
+##			root/templates/subSilver/garage_error.tpl
+##			root/templates/subSilver/garage_footer.tpl
+##			root/templates/subSilver/garage_header.tpl
+##			root/templates/subSilver/garage_insurance.tpl
+##			root/templates/subSilver/garage_manage_vehicle_gallery.tpl
+##			root/templates/subSilver/garage_menu.tpl
+##			root/templates/subSilver/garage_modification.tpl
+##			root/templates/subSilver/garage_pending.tpl
+##			root/templates/subSilver/garage_quartermile.tpl
+##			root/templates/subSilver/garage_quartermile_table.tpl
+##			root/templates/subSilver/garage_reassign_business.tpl
+##			root/templates/subSilver/garage_rollingroad.tpl
+##			root/templates/subSilver/garage_rollingroad_table.tpl
+##			root/templates/subSilver/garage_search.tpl
+##			root/templates/subSilver/garage_user_submit.tpl
+##			root/templates/subSilver/garage_user_submit_make.tpl
+##			root/templates/subSilver/garage_user_submit_model.tpl
+##			root/templates/subSilver/garage_vehicle.tpl
+##			root/templates/subSilver/garage_vehicle_select_javascript.tpl
+##			root/templates/subSilver/garage_view_garage_business.tpl
+##			root/templates/subSilver/garage_view_guestbook.tpl
+##			root/templates/subSilver/garage_view_insurance_business.tpl
+##			root/templates/subSilver/garage_view_modification.tpl
+##			root/templates/subSilver/garage_view_shop_business.tpl
+##			root/templates/subSilver/garage_view_vehicle.tpl
+##			root/templates/subSilver/admin/garage_business.tpl
+##			root/templates/subSilver/admin/garage_business_edit.tpl
+##			root/templates/subSilver/admin/garage_category.tpl
+##			root/templates/subSilver/admin/garage_category_delete_body.tpl
+##			root/templates/subSilver/admin/garage_category_edit_body.tpl
+##			root/templates/subSilver/admin/garage_config.tpl
+##			root/templates/subSilver/admin/garage_message.tpl
+##			root/templates/subSilver/admin/garage_model.tpl
+##			root/templates/subSilver/admin/garage_model_delete.tpl
+##			root/templates/subSilver/admin/garage_model_edit.tpl
+##			root/templates/subSilver/admin/garage_orphans.tpl
+##			root/templates/subSilver/admin/garage_permissions.tpl
+##			root/templates/subSilver/admin/garage_tools.tpl
+##			root/templates/subSilver/images/garage_camera.gif
+##			root/templates/subSilver/images/garage_slip.gif
+##			root/templates/subSilver/images/lang_english/garage_add_insurance.gif
+##			root/templates/subSilver/images/lang_english/garage_add_modification.gif
+##			root/templates/subSilver/images/lang_english/garage_add_quartermile.gif
+##			root/templates/subSilver/images/lang_english/garage_add_rollingroad.gif
+##			root/templates/subSilver/images/lang_english/garage_browse.gif
+##			root/templates/subSilver/images/lang_english/garage_create_vehicle.gif
+##			root/templates/subSilver/images/lang_english/garage_delete.gif
+##			root/templates/subSilver/images/lang_english/garage_delete_vehicle.gif
+##			root/templates/subSilver/images/lang_english/garage_edit.gif
+##			root/templates/subSilver/images/lang_english/garage_edit_vehicle.gif
+##			root/templates/subSilver/images/lang_english/garage_garage_review.gif
+##			root/templates/subSilver/images/lang_english/garage_insurance_review.gif
+##			root/templates/subSilver/images/lang_english/garage_main_menu.gif
+##			root/templates/subSilver/images/lang_english/garage_main_vehicle.gif
+##			root/templates/subSilver/images/lang_english/garage_manage_gallery.gif
+##			root/templates/subSilver/images/lang_english/garage_no_thumb.gif
+##			root/templates/subSilver/images/lang_english/garage_quartermile_table.gif
+##			root/templates/subSilver/images/lang_english/garage_rollingroad_table.gif
+##			root/templates/subSilver/images/lang_english/garage_search.gif
+##			root/templates/subSilver/images/lang_english/garage_shop_review.gif
+##			root/templates/subSilver/images/lang_english/garage_view_vehicle.gif
+##			root/templates/subSilver/images/lang_english/icon_garage.gif
+##			upgrade/upgrade_garage-0.0.7.php
+##			upgrade/upgrade_garage-0.0.7.txt
+##			upgrade/upgrade_garage-0.0.8.php
+##			upgrade/upgrade_garage-0.0.8.txt
+##			upgrade/upgrade_garage-0.0.9.php
+##			upgrade/upgrade_garage-0.0.9.txt
+##			upgrade/upgrade_garage-0.1.0.php
+##			upgrade/upgrade_garage-0.1.0.txt
+##			upgrade/upgrade_garage-0.1.1.php
+##			upgrade/upgrade_garage-0.1.1.txt
+##			upgrade/upgrade_garage-0.1.2.php
+##			upgrade/upgrade_garage-0.1.2.txt
+##			upgrade/upgrade_garage-0.9.0.php
+##			upgrade/upgrade_garage-0.9.0.txt
+##			upgrade/upgrade_garage-0.9.1.php
+##			upgrade/upgrade_garage-0.9.1.txt
+##			upgrade/upgrade_garage-0.9.2.php
+##			upgrade/upgrade_garage-0.9.2.txt
+##			upgrade/upgrade_garage-0.9.3.php
+##			upgrade/upgrade_garage-0.9.3.txt
+##			upgrade/upgrade_garage-0.9.4.php
+##			upgrade/upgrade_garage-0.9.4.txt
+## License: http://opensource.org/licenses/gpl-license.php GNU General Public License v2 or any later version
+######################################################################################
+## For security purposes, please check: http://www.phpbb.com/mods/
+## for the latest version of this MOD. Although MODs are checked
+## before being allowed in the MODs Database there is no guarantee
+## that there are no security problems within the MOD. No support
+## will be given for MODs not found within the MODs Database which
+## can be found at http://www.phpbb.com/mods/
+###################################################################################### 
+## Author Notes: 
+##
+##	- This Mod Was Inspired By IPB Based Garage By Matthew C. Veno
+##
+######################################################################################
+## MOD History:
+##   07-01-2006 - Version 1.0.0
+##	- Version Submitted To phpBB.com's MOD DB.
+##
+##   06-01-2006 - Version 0.9.4
+##	- 0000120: [Vehicle] Update should be required for new rating if set in ACP (poyntesm)
+##	- 0000117: [ACP] submission fix : Missing language in admin_garage_tools.php (poyntesm)
+##	- 0000110: [General] submission fix : Use socket_set_timeout as it works on all versions of PHP 4 and PHP 5 (poyntesm)
+##	- 0000107: [Installation] submission fix : Identifier "year" is a reserved keyword in MySQL (poyntesm)
+##	- 0000108: [Installation] submission fix : Identifier "name" is a reserved keyword in MySQL (poyntesm)
+##	- 0000109: [General] submission fix : SQL queries passed to mysql_query should not end in semicolons. (poyntesm)
+##	- 0000104: [General] submission fix : Use POST_USERS_URL constant where needed (poyntesm)
+##	- 0000111: [General] submission fix : Move some javascript from functions into .tpl files (poyntesm)
+##	- 0000119: [ACP] submission fix : Missing language in admin_garage_models.php (poyntesm)
+##	- 0000114: [ACP] submission fix : Remove possible SQL injection from admin_garage_config.php (poyntesm)
+##	- 0000113: [ACP] submission fix : Remove possible SQL injection from admin_garage_models.php (poyntesm)
+##	- 0000115: [ACP] submission fix : Missing language for block types in featured block dropdown (poyntesm)
+##	- 0000106: [General] submission fix : {USERNAME}'s {L_VEHICLE}</span> replaced with {USERNAME} : {L_VEHICLE} (poyntesm)
+##	- 0000103: [General] submission fix : Make sure all <a href=...></a> are done using <a href=""></a> (poyntesm)
+##	- 0000112: [General] submission fix : Missing language for business type in pending list (poyntesm)
+##	- 0000116: [General] submission fix : Make sure all './../' are replaced with $phpbb_root_path instead. (poyntesm)
+##	- 0000102: [ACP] submission fix : replace .php with $phpEx (poyntesm)
+##	- 0000118: [ACP] submission fix : Missing language in admin_garage_permissions.php (poyntesm)
+##	- 0000105: [General] submission fix : srand needs to be called before rand (poyntesm)
+##	- 0000101: [General] submission fix : make check_permissions clearer (poyntesm)
+##
+##   12-12-2005 - Version 0.9.3
+##	- 0000100: [Modification] Invalid link when editting modification for adding business. (poyntesm)
+##
+##   09-12-2005 - Version 0.9.2
+##	- 0000099: [Vehicle] Unknown userlevels can cause permission problems. (poyntesm)
+##	- 0000098: [Vehicle] Call to undefined function: build_selection_box() in includes/functions_garage.php (poyntesm)
+##	- 0000096: [Quartermile Table] No sort option avialable (poyntesm)
+##	- 0000097: [Rollingroad Table] No sort option avialable (poyntesm)
+##
+##   23-11-2005 - Version 0.9.1
+##	- 0000094: [Vehicle] Link for Add Tank has no image (poyntesm)
+##	- 0000093: [General] Profile Links Broken In Top Rated & Top Quartermile Blocks (poyntesm)
+##	- 0000092: [General] Enable duplicate business in pending to be deleted - but to assign existing entry to all items (poyntesm)
+##	- 0000084: [Installation] Install scripts needs to work out what needs to be done (poyntesm)
+##	- 0000091: [Quartermile] Deleing rollingroad, quartermile from pending list leaves images behind.. (poyntesm)
+##	- 0000090: [General] Opening hours not entered in DB for user submitted business's (poyntesm)
+##	- 0000087: [General] Include a edit link for within pending view.. (poyntesm)
+##	- 0000089: [Insurance] User submitting business is not redirected back correctly. (poyntesm)
+##	- 0000088: [Rollingroad] Editting rollingroads does not set it to pending if required via ACP (poyntesm)
+##	- 0000086: [Insurance] Unable to delete premium (poyntesm)
+##	- 0000085: [Modification] Dropdown category box not correct on edit (poyntesm)
+##	- 0000083: [General] Featured vehicle can be a pending make/model (poyntesm)
+##	- 0000082: [Insurance] Adding business not appending SID (poyntesm)
+##	- 0000081: [Modification] Adding business not appending SID (poyntesm)
+##
+##   03-11-2005 - Version 0.9.0
+##	- Support For GDv1
+##	- Icon Set Introduced
+##	- Users Can Submit Vehicle Makes - configurable in ACP
+##	- Users Can Submit Vehicle Models - configurable in ACP
+##	- Single View Of All Pending Items
+##	- Insurance Business Review Page Overhauled
+##	- Garage Business Review Page Overhauled
+##	- Shop Business Review Page Introduced
+##	- Some Of The Bug Fixes Below - Many many more...
+##        - 0000076: [Quartermile] Pagination broken (poyntesm)
+##        - 0000077: [Rollingroad] Pagination broken (poyntesm)
+##        - 0000069: [Vehicle] Uploaded images not working on vehicle creation (poyntesm)
+##        - 0000067: [Search] Hardcoded English Text in garage.php (poyntesm)
+##        - 0000055: [Template] view_vehicle on IE is displaying incorrectly. (poyntesm)
+##        - 0000061: [Vehicle] Mouse over thumbnail of featured vehicle produces "target=_blank" (poyntesm)
+##        - 0000054: [General] $lang not used in overall_header.tpl (poyntesm)
+##        - 0000060: [ACP] Rebuild thumbnails can produce errors if original file is missing (poyntesm)
+##
+##   17-09-2005 - Version 0.1.2
+##	- Rollingroad can be enabled/disabled via ACP
+##	- Rollingroad can be enabled/disabled via ACP
+##	- Integration with phpBB profile view
+##
+##   20-07-2005 - Version 0.1.1
+##	- New Rating System - Including New Frontpage Block
+##	- 1/4 Mile Table Now Only Returns Top Run Per Vehicle - Including New Frontpage Block
+##	- Quartermile/Business Approval Now ACP Customizable
+##	- Front Page Blocks Now Position Dynamically, Not Fixed To Left Or Right Column
+##	- Bug Fixes
+##
+##   17-06-2005 - Version 0.1.0
+##	- Full Permissions System
+##	- Main Menu ACP Customizable
+##	- Featured Vehicle Can Now Be Selected From Blocks
+##	- Bug Fixes
+## 
+##   02-06-2005 - Version 0.0.9
+##	- Support For Remote Images
+##	- Rebuildng Of Thumbnails
+##	- Bug Fixes
+##
+##   20-05-2005 - Version 0.0.8
+##	- Moderation Of All Vehicle Details (quartermile,rollingroad,insurance)
+##	- Bug Fixes
+## 			
+##   27-04-2005 - Version 0.0.7
+##	First public release of the phpBB garage mod :
+##	- Major garage functionality all working
+##	- ACP panels for all major admin functions
+## 			
+###################################################################################### 
+## Before Adding This MOD To Your Forum, You Should Back Up All Files Related To This MOD 
+###################################################################################### 
+
+#
+#-----[ COPY ]------------------------------------------
+#
+copy root/*.* TO *.*
+copy upgrade/upgrade_garage-0.0.8.php TO ./upgrade_garage.php
+
+#
+#-----[ DIY INSTRUCTIONS ]------------------------------------------
+#
+Open in your web browser and run upgrade_garage.php
+Delete upgrade.php if it ran succesfull
+# 
+#-----[ OPEN ]------------------------------------------
+# 
+language/lang_english/lang_admin.php
+
+#
+#-----[ FIND ]------------------------------------------
+#
+<?php
+
+#
+#-----[ AFTER, ADD ]------------------------------------
+#
+//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+#
+#-----[ FIND ]------------------------------------------
+#
+?>
+
+#
+#-----[ BEFORE, ADD ]------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+$lang['Business'] = 'Business';
+$lang['Categories'] = 'Categories';
+$lang['Configuration'] = 'Configuration';
+$lang['Makes & Models'] = 'Makes & Models';
+$lang['Permissions'] = 'Permissions';
+$lang['Tools'] = 'Tools';
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+# 
+#-----[ OPEN ]----- 
+# 
+includes/constants.php
+
+#
+#-----[ FIND ]------------------------------------------
+#
+define('GARAGE_UPLOAD_PATH', 'garage/upload/');
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+define('GARAGE_RATING_TABLE', $table_prefix.'garage_rating');
+define('PAGE_GARAGE', -2120);
+
+# 
+#-----[ OPEN ]----- 
+# 
+includes/page_tail.php
+
+#
+#-----[ FIND ]------------------------------------------
+#
+
+//-- mod start : Garage 0.0.7
+//-- add
+if ( $userdata['user_level'] == ADMIN )
+{
+	$sql = "SELECT count(qm.id) AS total
+		FROM ". GARAGE_QUARTERMILE_TABLE ." qm
+		WHERE (qm.quart > 0) 
+		AND (qm.sixty IS NOT NULL
+		OR qm.three IS NOT NULL
+		OR qm.eight IS NOT NULL
+		OR qm.eightmph IS NOT NULL
+		OR qm.thou IS NOT NULL
+		OR qm.rt IS NOT NULL
+		OR qm.quartmph IS NOT NULL) AND ( qm.pending = 1 )";
+	if( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'Could not query pending 1/4 mile information', '', __LINE__, __FILE__, $sql);
+	}
+
+	if ( $total = $db->sql_fetchrow($result) )
+	{
+			$total_pending = $total['total'];
+			if ( $total_pending > 0 )
+			{
+				$pending_quart_link = ( $userdata['user_level'] == ADMIN ) ? '<a href="garage.php?mode=quartermile_pending">' . $lang['Pending_QuarterMile'] . '</a>&nbsp;&nbsp;' : '';
+			}
+			else
+			{
+				$pending_quart_link = '';
+			}
+
+	}
+	$db->sql_freeresult($result);
+
+	$sql = "SELECT count(*) AS total
+		FROM ". GARAGE_BUSINESS_TABLE ." bus
+		WHERE bus.pending = 1";
+	if( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'Could not query pending business', '', __LINE__, __FILE__, $sql);
+	}
+
+	if ( $total = $db->sql_fetchrow($result) )
+	{
+			$total_pending = $total['total'];
+			if ( $total_pending > 0 )
+			{
+				$pending_business_link = ( $userdata['user_level'] == ADMIN ) ? '<a href="garage.php?mode=business_pending">' . $lang['Pending_Business'] . '</a>&nbsp;&nbsp;' : '';
+			}
+			else
+			{
+				$pending_business_link = '';
+			}
+
+	}
+	$db->sql_freeresult($result);
+
+}
+//-- mod finish : Garage 0.0.7
+
+# 
+#-----[ REPLACE WITH ]----- 
+# 
+
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+if ( $userdata['user_level'] == ADMIN )
+{
+	$sql = "SELECT count(*) AS total
+		FROM ". GARAGE_QUARTERMILE_TABLE ." qm
+		WHERE qm.pending = 1";
+	if( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'Could not query information', '', __LINE__, __FILE__, $sql);
+	}
+
+	$count = $db->sql_fetchrow($result);
+	$db->sql_freeresult($result);
+
+	$temp_url = append_sid("garage.$phpEx?mode=garage_pending");
+	//We Have At Least One Pending Image So Display Link
+	if ( $count['total'] > 0 )
+	{
+		$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
+	}
+	//Not Found A Pending Item So Lets Keep Checking Other Types
+	else
+	{
+		$sql = "SELECT count(*) AS total
+			FROM ". GARAGE_ROLLINGROAD_TABLE ." rr
+			WHERE rr.pending = 1";
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could not query pics information', '', __LINE__, __FILE__, $sql);
+		}
+
+		$count = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+		//We Have At Least One Pending Image So Display Link
+		if ( $count['total'] > 0 )
+		{
+			$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
+		}
+		//Still Not Found A Pending Item So Lets Keep Checking Other Types
+		else
+		{
+			$sql = "SELECT count(*) AS total
+				FROM ". GARAGE_BUSINESS_TABLE ." bus
+				WHERE bus.pending = 1";
+			if( !($result = $db->sql_query($sql)) )
+			{
+				message_die(GENERAL_ERROR, 'Could not query pics information', '', __LINE__, __FILE__, $sql);
+			}
+
+			$count = $db->sql_fetchrow($result);
+			$db->sql_freeresult($result);
+			if ( $count['total'] > 0 )
+			{
+				$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
+			}
+			//Still Not Found A Pending Item So Lets Keep Checking Other Types
+			else
+			{
+				$sql = "SELECT count(*) AS total
+					FROM ". GARAGE_MODELS_TABLE ." models
+					WHERE models.pending = 1";
+				if( !($result = $db->sql_query($sql)) )
+				{
+					message_die(GENERAL_ERROR, 'Could not query pics information', '', __LINE__, __FILE__, $sql);
+				}
+
+				$count = $db->sql_fetchrow($result);
+				$db->sql_freeresult($result);
+				if ( $count['total'] > 0 )
+				{
+					$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
+				}
+				else
+				{
+					$sql = "SELECT count(*) AS total
+						FROM ". GARAGE_MAKES_TABLE ." makes
+						WHERE makes.pending = 1";
+					if( !($result = $db->sql_query($sql)) )
+					{
+						message_die(GENERAL_ERROR, 'Could not query pics information', '', __LINE__, __FILE__, $sql);
+					}
+
+					$count = $db->sql_fetchrow($result);
+					$db->sql_freeresult($result);
+					if ( $count['total'] > 0 )
+					{
+						$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
+					}
+					//Out Of Luck No More Tables To Check
+					else
+					{
+						$pending_link = '';
+					}
+				}
+			}
+		}
+	}
+}
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+# 
+#-----[ FIND ]----- 
+# 
+//-- mod start : Garage 0.0.7
+//-- add
+	'PENDING_QUART_LINK' => $pending_quart_link,
+	'PENDING_BUSINESS_LINK' => $pending_business_link,
+//-- mod finish : Garage 0.0.7
+
+# 
+#-----[ REPLACE WITH ]----- 
+# 
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+	'PENDING_LINK' => $pending_link,
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+# 
+#-----[ OPEN ]------------------------------------------
+# 
+language/lang_english/lang_admin.php
+
+#
+#-----[ FIND ]------------------------------------------
+#
+<?php
+
+#
+#-----[ AFTER, ADD ]------------------------------------
+#
+//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+#
+#-----[ FIND ]------------------------------------------
+#
+?>
+
+#
+#-----[ BEFORE, ADD ]------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+$lang['Business'] = 'Business';
+$lang['Categories'] = 'Categories';
+$lang['Configuration'] = 'Configuration';
+$lang['Makes & Models'] = 'Makes & Models';
+$lang['Permissions'] = 'Permissions';
+$lang['Tools'] = 'Tools';
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+# 
+#-----[ OPEN ]----- 
+# 
+language/lang_english/lang_main.php
+
+# 
+#-----[ FIND ]----- 
+# 
+//-- mod start : Garage 0.0.7
+//-- add
+$lang['Viewing_Garage'] = 'Viewing Garage';
+$lang['Pending_QuarterMile'] = 'View Pending 1/4 Mile Times';
+$lang['Pending_Business'] = 'View Pending Business';
+//-- mod finish : Garage 0.0.7
+
+# 
+#-----[ REPLACE WITH ]----- 
+# 
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+$lang['Garage'] = 'Garage';
+$lang['Viewing_Garage'] = 'Viewing Garage';
+$lang['Quartermile_Table'] = '1/4 Mile Table';
+$lang['Pending_Items'] = 'View Pending Garage Items';
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+# 
+#-----[ OPEN ]----- 
+# 
+templates/subSilver/overall_footer.tpl
+
+#
+#-----[ FIND ]------------------------------------------
+#
+<div align="center"><span class="copyright"><br />
+
+#
+#-----[ IN-LINE FIND ]------------------------------------------
+#
+<span class="copyright"><br />
+
+#
+#-----[ IN-LINE AFTER, ADD ]------------------------------------------
+#
+{PENDING_LINK}
+
+# 
+#-----[ OPEN ]----- 
+# 
+templates/subSilver/subSilver.cfg
+
+#
+#-----[ FIND ]------------------------------------------
+#
+<?php
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+#
+#-----[ FIND ]------------------------------------------
+#
+?>
+#
+#-----[ BEFORE, ADD ]------------------------------------------
+#
+
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+$images['vehicle_image_attached']	= "$current_template_images/garage_camera.gif";
+$images['slip_image_attached']		= "$current_template_images/garage_slip.gif";
+$images['icon_garage']			= "$current_template_images/{LANG}/icon_garage.gif";
+$images['garage_main_menu']		= "$current_template_images/{LANG}/garage_main_menu.gif";
+$images['garage_browse']		= "$current_template_images/{LANG}/garage_browse.gif";
+$images['garage_search']		= "$current_template_images/{LANG}/garage_search.gif";
+$images['garage_quartermile_table']	= "$current_template_images/{LANG}/garage_quartermile_table.gif";
+$images['garage_rollingroad_table']	= "$current_template_images/{LANG}/garage_rollingroad_table.gif";
+$images['garage_garage_review']		= "$current_template_images/{LANG}/garage_garage_review.gif";
+$images['garage_shop_review']		= "$current_template_images/{LANG}/garage_shop_review.gif";
+$images['garage_insurance_review']	= "$current_template_images/{LANG}/garage_insurance_review.gif";
+$images['garage_create_vehicle']	= "$current_template_images/{LANG}/garage_create_vehicle.gif";
+$images['garage_edit_vehicle']		= "$current_template_images/{LANG}/garage_edit_vehicle.gif";
+$images['garage_delete_vehicle']	= "$current_template_images/{LANG}/garage_delete_vehicle.gif";
+$images['garage_view_vehicle']		= "$current_template_images/{LANG}/garage_view_vehicle.gif";
+$images['garage_add_modification']	= "$current_template_images/{LANG}/garage_add_modification.gif";
+$images['garage_add_insurance']		= "$current_template_images/{LANG}/garage_add_insurance.gif";
+$images['garage_add_rollingroad']	= "$current_template_images/{LANG}/garage_add_rollingroad.gif";
+$images['garage_add_quartermile']	= "$current_template_images/{LANG}/garage_add_quartermile.gif";
+$images['garage_manage_gallery']	= "$current_template_images/{LANG}/garage_manage_gallery.gif";
+$images['garage_edit']			= "$current_template_images/{LANG}/garage_edit.gif";
+$images['garage_delete']		= "$current_template_images/{LANG}/garage_delete.gif";
+$images['garage_main_vehicle']		= "$current_template_images/{LANG}/garage_main_vehicle.gif";
+$images['garage_no_thumb']		= "$current_template_images/{LANG}/garage_no_thumb.gif";
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+# 
+#-----[ OPEN ]----- 
+# 
+includes/usercp_viewprofile.php
+
+#
+#-----[ FIND ]------------------------------------------
+#
+<?php
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+#
+#-----[ FIND ]------------------------------------------
+#
+make_jumpbox('viewforum.'.$phpEx);
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage.' . $phpEx);
+require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage_error.' . $phpEx);
+require($phpbb_root_path . 'includes/functions_garage.' . $phpEx);
+
+$sql = "SELECT g.*, images.*, makes.make, models.model, user.username, user.user_avatar_type,
+	user.user_allowavatar, user.user_avatar,
+        count(mods.id) AS total_mods,  
+        ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent 
+        FROM " . GARAGE_TABLE . " AS g  
+		LEFT JOIN " . USERS_TABLE ." AS user ON g.member_id = user.user_id
+                LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON g.id = mods.garage_id
+                LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
+                LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
+		LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = g.image_id
+        WHERE g.member_id = " . $profiledata['user_id'] . " AND g.main_vehicle = 1
+                GROUP BY g.id";
+
+if ( !($result = $db->sql_query($sql)) )
+{
+       	message_die(GENERAL_ERROR, 'Could Not Select Vehicle Data', '', __LINE__, __FILE__, $sql);
+}
+
+$vehicle_row = $db->sql_fetchrow($result);
+
+if ( $db->sql_numrows($result) > 0 )
+{
+	$template->assign_block_vars('garage_vehicle', array());
+	$total_spent = $vehicle_row['total_spent'] ? $vehicle_row['total_spent'] : 0;
+
+	//Display Just Thumbnails Of All Images Or Just One Main Image
+	if ( $garage_config['profile_thumbs'] == 1 )
+	{
+	       	$gallery_query = "SELECT gallery.id, images.attach_id, images.attach_hits, images.attach_ext, 
+                        	        images.attach_file, images.attach_thumb_location, images.attach_is_image,
+                	                images.attach_location
+                                     FROM " . GARAGE_IMAGES_TABLE . " AS images 
+					LEFT JOIN " . GARAGE_GALLERY_TABLE . " AS gallery ON images.attach_id = gallery.image_id 
+                                     	LEFT JOIN " . GARAGE_TABLE . " AS garage ON gallery.garage_id = garage.id 
+                                     WHERE garage.id = " . $vehicle_row['id'] .";";
+		if ( !($result = $db->sql_query($gallery_query)) )
+      		{
+         		message_die(GENERAL_ERROR, 'Could Not Select Image Data For Vehicle', '', __LINE__, __FILE__, $sql);
+	      	}
+	
+        	while ( $gallery_data = $db->sql_fetchrow($result) )
+	       	{
+            		if ( $gallery_data['attach_is_image'] )
+           		{
+                		// Do we have a thumbnail?  If so, our job is simple here :)
+				if ( (empty($gallery_data['attach_thumb_location']) == FALSE) AND ($gallery_data['attach_thumb_location'] != $gallery_data['attach_location']) AND ( $vehicle_images_found <= 12) )
+                		{
+                    			// Form the image link
+					$thumb_image = GARAGE_UPLOAD_PATH . $gallery_data['attach_thumb_location'];
+					$id = $gallery_data['attach_id'];
+					$title = $gallery_data['attach_file'];
+					$hilite_image .= '<a href=garage.php?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
+               			} 
+			}
+	        }
+
+		$mod_query = "SELECT m.*,images.attach_id, images.attach_hits, images.attach_ext, 
+                        images.attach_file, images.attach_thumb_location, images.attach_is_image,
+                        images.attach_location
+         		FROM " . GARAGE_MODS_TABLE . " as m
+                        LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = m.image_id
+	       		WHERE garage_id = " . $vehicle_row['id'] .";";
+		if ( !($result = $db->sql_query($mod_query)) )
+      		{
+         		message_die(GENERAL_ERROR, 'Could Not Select Image Data For Vehicle', '', __LINE__, __FILE__, $sql);
+	      	}
+
+        	while ( $mod_gallery = $db->sql_fetchrow($result) )
+	       	{
+            		if ( $mod_gallery['attach_is_image'] )
+           		{
+                		// Do we have a thumbnail?  If so, our job is simple here :)
+				if ( (empty($mod_gallery['attach_thumb_location']) == FALSE) AND ($mod_gallery['attach_thumb_location'] != $gallery_data['attach_location']) AND ( $vehicle_images_found <= 12) )
+                		{
+                    			// Form the image link
+					$thumb_image = GARAGE_UPLOAD_PATH . $mod_gallery['attach_thumb_location'];
+					$id = $mod_gallery['attach_id'];
+					$title = $mod_gallerya['attach_file'];
+					$hilite_image .= '<a href=garage.php?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
+               			} 
+			}
+	        }
+	}
+	//Looks Like We Only Need To Draw One Main Image
+	else
+	{
+		if ( ($vehicle_row['image_id']) AND ($vehicle_row['attach_is_image']) AND (!empty($vehicle_row['attach_thumb_location'])) AND (!empty($vehicle_row['attach_location'])) )
+		{
+			// Check to see if this is a remote image
+			if ( preg_match( "/^http:\/\//i", $vehicle_row['attach_location']) )
+			{
+				$image = $vehicle_row['attach_location'];
+				$id = $vehicle_row['attach_id'];
+				$title = $vehicle_row['attach_file'];
+				$total_image_views = $vehicle_row['attach_hits'];
+				$hilite_image = '<a href=garage.php?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
+			}
+			else
+			{
+				$image = GARAGE_UPLOAD_PATH . $vehicle_row['attach_location'];
+				$id = $vehicle_row['attach_id'];
+				$title = $vehicle_row['attach_file'];
+				$total_image_views = $vehicle_row['attach_hits'];
+				$hilite_image = '<a href=garage.php?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
+			}
+		}
+	}
+
+	$garage_img ='<a href="' . append_sid("garage.$phpEx?mode=browse&search=yes&user=".$profiledata['username']."") . '"><img src="' . $images['icon_garage'] . '" alt="'.$lang['Garage'].'" title="'.$lang['Garage'].'" border="0" /></a>';
+
+	$template->assign_vars(array(
+		'L_VEHICLE' => $lang['Vehicle'],
+		'L_GARAGE' => $lang['Garage'],
+		'L_COLOUR' => $lang['Colour'],
+		'L_MILEAGE' => $lang['Mileage'],
+		'L_PRICE' => $lang['Purchased_Price'],
+		'L_TOTAL_MODS' => $lang['Total_Mods'],
+		'L_TOTAL_SPENT' => $lang['Total_Spent'],
+		'L_DESCRIPTION' => $lang['Description'],
+		'L_SEARCH_USER_GARAGE' => $lang['Search_User_Garage'],
+		'YEAR' => $vehicle_row['year'],
+		'MAKE' => $vehicle_row['make'],
+		'MODEL' => $vehicle_row['model'],
+       		'COLOUR' => $vehicle_row['color'],
+	       	'HILITE_IMAGE' => $hilite_image,
+        	'MILEAGE' => $vehicle_row['mileage'],
+	        'MILEAGE_UNITS' => $vehicle_row['mileage_unit'],
+        	'PRICE' => $vehicle_row['price'],
+	        'CURRENCY' => $vehicle_row['currency'],
+        	'TOTAL_MODS' => $vehicle_row['total_mods'],
+	        'TOTAL_SPENT' => $total_spent,
+        	'TOTAL_VIEWS' => $vehicle_row['views'],
+	        'DESCRIPTION' => $vehicle_row['comments'],
+	        'GARAGE_IMG' => $garage_img,
+		'U_SEARCH_USER_GARAGE' => append_sid("garage.$phpEx?mode=browse"))
+	);
+}
+//-- mod finish: Garage ----------------------------------------------------------------------------------------------------
+
+# 
+#-----[ OPEN ]----- 
+# 
+templates/subSilver/profile_view_body.tpl
+
+#
+#-----[ FIND ]------------------------------------------
+#
+		  //--></script><noscript>{ICQ_IMG}</noscript></td>
+		</tr>
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+	<!-- BEGIN garage_vehicle -->
+		<tr> 
+			<td valign="middle" nowrap="nowrap" align="right"><span class="gen">{L_GARAGE}:</span></td>
+			<td class="row1" valign="middle"><span class="gen">{GARAGE_IMG}</span></td>
+		</tr>
+  	<!-- END garage_vehicle -->
+#
+#-----[ FIND ]------------------------------------------
+#
+	  </table>
+	</td>
+  </tr>
+</table>
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+	  </table>
+	</td>
+  </tr>
+
+  <!-- BEGIN garage_vehicle -->
+  <tr> 
+	<td class="catLeft" align="center" height="28" colspan="2"><b><span class="gen">{USERNAME}'s {L_VEHICLE}</span></b></td>
+  </tr>
+  <tr>
+	<td class='row1' colspan="2"><span class="gen"><b>{L_VEHICLE}</b> : {YEAR} {MAKE} {MODEL}</span></td>
+  </tr>
+  <tr>
+	<td class='row1' colspan="2"><span class="gen"><b>{L_COLOUR} </b> : {COLOUR} </span></td>
+  </tr>
+  <tr>
+	<td class='row1' colspan="2"><span class="gen"><b>{L_MILEAGE}</b> : {MILEAGE} {MILEAGE_UNITS}</span></td>
+  </tr>
+  <tr>
+        <td class='row1' colspan="2"><span class="gen"><b>{L_PRICE}</b> : {PRICE} {CURRENCY}</span></td>
+  </tr>
+  <tr>
+        <td class='row1' colspan="2"><span class="gen"><b>{L_TOTAL_MODS}</b> : {TOTAL_MODS}</span></td>
+  </tr>
+  <tr>
+        <td class='row1' colspan="2"><span class="gen"><b>{L_TOTAL_SPENT}</b> : {TOTAL_SPENT} {CURRENCY}</span></td>
+  </tr>
+  <tr>
+        <td class='row1' colspan="2"><span class="gen"><b>{L_DESCRIPTION}</b> : {DESCRIPTION}</span></td>
+  </tr>
+  <tr> 
+	<td class="row1" valign="middle" align="left" colspan="2"><span class="gen">{HILITE_IMAGE}</span></td>
+  </tr>
+  <!-- END garage_vehicle -->
+
+</table>
+
+#
+#-----[ SAVE/CLOSE ALL FILES ]------------------------------------------
+#
+# EoM

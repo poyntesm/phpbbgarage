@@ -1,0 +1,253 @@
+#############################################################################################################
+## MOD Title:		Update phpBB Garage 0.9.4 -> phpBB Garage 1.0.0
+## MOD Author: poyntesm < esmond.poynton[at]gmail[dot]com > (Esmond Poynton) http://forums.phpbbgarage.com
+## MOD Description:
+##			Updates phpBB Garage To Version 1.0.0
+##
+## MOD Version:		1.0.0 
+## 
+## Installation Level:	Easy
+## Installation Time:	10 Minutes
+## Files To Edit: (0)
+##
+## Included Files: (104)
+##			Install Garage 1.0.0.txt
+##			Upgrade.txt
+##			contrib/Install Garage 1.0.0 PCP.txt
+##			contrib/profilcp/
+##			contrib/templates/
+## 			root/garage.php
+## 			root/install_garage.php
+##			root/admin/admin_garage_business.php
+##			root/admin/admin_garage_categories.php
+##			root/admin/admin_garage_config.php
+##			root/admin/admin_garage_models.php
+##			root/admin/admin_garage_permissions.php
+##			root/admin/admin_garage_tools.php
+##			root/includes/functions_garage.php
+##			root/language/lang_english/lang_garage.php
+##			root/language/lang_english/lang_garage_error.php
+##			root/templates/subSilver/garage.tpl
+##			root/templates/subSilver/garage_browse.tpl
+##			root/templates/subSilver/garage_browse_insurance.tpl
+##			root/templates/subSilver/garage_edit_comment.tpl
+##			root/templates/subSilver/garage_error.tpl
+##			root/templates/subSilver/garage_footer.tpl
+##			root/templates/subSilver/garage_header.tpl
+##			root/templates/subSilver/garage_insurance.tpl
+##			root/templates/subSilver/garage_manage_vehicle_gallery.tpl
+##			root/templates/subSilver/garage_menu.tpl
+##			root/templates/subSilver/garage_modification.tpl
+##			root/templates/subSilver/garage_pending.tpl
+##			root/templates/subSilver/garage_quartermile.tpl
+##			root/templates/subSilver/garage_quartermile_table.tpl
+##			root/templates/subSilver/garage_reassign_business.tpl
+##			root/templates/subSilver/garage_rollingroad.tpl
+##			root/templates/subSilver/garage_rollingroad_table.tpl
+##			root/templates/subSilver/garage_search.tpl
+##			root/templates/subSilver/garage_user_submit.tpl
+##			root/templates/subSilver/garage_user_submit_make.tpl
+##			root/templates/subSilver/garage_user_submit_model.tpl
+##			root/templates/subSilver/garage_vehicle.tpl
+##			root/templates/subSilver/garage_vehicle_select_javascript.tpl
+##			root/templates/subSilver/garage_view_garage_business.tpl
+##			root/templates/subSilver/garage_view_guestbook.tpl
+##			root/templates/subSilver/garage_view_insurance_business.tpl
+##			root/templates/subSilver/garage_view_modification.tpl
+##			root/templates/subSilver/garage_view_shop_business.tpl
+##			root/templates/subSilver/garage_view_vehicle.tpl
+##			root/templates/subSilver/admin/garage_business.tpl
+##			root/templates/subSilver/admin/garage_business_edit.tpl
+##			root/templates/subSilver/admin/garage_category.tpl
+##			root/templates/subSilver/admin/garage_category_delete_body.tpl
+##			root/templates/subSilver/admin/garage_category_edit_body.tpl
+##			root/templates/subSilver/admin/garage_config.tpl
+##			root/templates/subSilver/admin/garage_message.tpl
+##			root/templates/subSilver/admin/garage_model.tpl
+##			root/templates/subSilver/admin/garage_model_delete.tpl
+##			root/templates/subSilver/admin/garage_model_edit.tpl
+##			root/templates/subSilver/admin/garage_orphans.tpl
+##			root/templates/subSilver/admin/garage_permissions.tpl
+##			root/templates/subSilver/admin/garage_tools.tpl
+##			root/templates/subSilver/images/garage_camera.gif
+##			root/templates/subSilver/images/garage_slip.gif
+##			root/templates/subSilver/images/lang_english/garage_add_insurance.gif
+##			root/templates/subSilver/images/lang_english/garage_add_modification.gif
+##			root/templates/subSilver/images/lang_english/garage_add_quartermile.gif
+##			root/templates/subSilver/images/lang_english/garage_add_rollingroad.gif
+##			root/templates/subSilver/images/lang_english/garage_browse.gif
+##			root/templates/subSilver/images/lang_english/garage_create_vehicle.gif
+##			root/templates/subSilver/images/lang_english/garage_delete.gif
+##			root/templates/subSilver/images/lang_english/garage_delete_vehicle.gif
+##			root/templates/subSilver/images/lang_english/garage_edit.gif
+##			root/templates/subSilver/images/lang_english/garage_edit_vehicle.gif
+##			root/templates/subSilver/images/lang_english/garage_garage_review.gif
+##			root/templates/subSilver/images/lang_english/garage_insurance_review.gif
+##			root/templates/subSilver/images/lang_english/garage_main_menu.gif
+##			root/templates/subSilver/images/lang_english/garage_main_vehicle.gif
+##			root/templates/subSilver/images/lang_english/garage_manage_gallery.gif
+##			root/templates/subSilver/images/lang_english/garage_no_thumb.gif
+##			root/templates/subSilver/images/lang_english/garage_quartermile_table.gif
+##			root/templates/subSilver/images/lang_english/garage_rollingroad_table.gif
+##			root/templates/subSilver/images/lang_english/garage_search.gif
+##			root/templates/subSilver/images/lang_english/garage_shop_review.gif
+##			root/templates/subSilver/images/lang_english/garage_view_vehicle.gif
+##			root/templates/subSilver/images/lang_english/icon_garage.gif
+##			upgrade/upgrade_garage-0.0.7.php
+##			upgrade/upgrade_garage-0.0.7.txt
+##			upgrade/upgrade_garage-0.0.8.php
+##			upgrade/upgrade_garage-0.0.8.txt
+##			upgrade/upgrade_garage-0.0.9.php
+##			upgrade/upgrade_garage-0.0.9.txt
+##			upgrade/upgrade_garage-0.1.0.php
+##			upgrade/upgrade_garage-0.1.0.txt
+##			upgrade/upgrade_garage-0.1.1.php
+##			upgrade/upgrade_garage-0.1.1.txt
+##			upgrade/upgrade_garage-0.1.2.php
+##			upgrade/upgrade_garage-0.1.2.txt
+##			upgrade/upgrade_garage-0.9.0.php
+##			upgrade/upgrade_garage-0.9.0.txt
+##			upgrade/upgrade_garage-0.9.1.php
+##			upgrade/upgrade_garage-0.9.1.txt
+##			upgrade/upgrade_garage-0.9.2.php
+##			upgrade/upgrade_garage-0.9.2.txt
+##			upgrade/upgrade_garage-0.9.3.php
+##			upgrade/upgrade_garage-0.9.3.txt
+##			upgrade/upgrade_garage-0.9.4.php
+##			upgrade/upgrade_garage-0.9.4.txt
+## License: http://opensource.org/licenses/gpl-license.php GNU General Public License v2 or any later version
+######################################################################################
+## For security purposes, please check: http://www.phpbb.com/mods/
+## for the latest version of this MOD. Although MODs are checked
+## before being allowed in the MODs Database there is no guarantee
+## that there are no security problems within the MOD. No support
+## will be given for MODs not found within the MODs Database which
+## can be found at http://www.phpbb.com/mods/
+###################################################################################### 
+## Author Notes: 
+##
+##	- This Mod Was Inspired By IPB Based Garage By Matthew C. Veno
+##
+######################################################################################
+## MOD History: 
+##   07-01-2006 - Version 1.0.0
+##	- Version Submitted To phpBB.com's MOD DB.
+##
+##   06-01-2006 - Version 0.9.4
+##	- 0000120: [Vehicle] Update should be required for new rating if set in ACP (poyntesm)
+##	- 0000117: [ACP] submission fix : Missing language in admin_garage_tools.php (poyntesm)
+##	- 0000110: [General] submission fix : Use socket_set_timeout as it works on all versions of PHP 4 and PHP 5 (poyntesm)
+##	- 0000107: [Installation] submission fix : Identifier "year" is a reserved keyword in MySQL (poyntesm)
+##	- 0000108: [Installation] submission fix : Identifier "name" is a reserved keyword in MySQL (poyntesm)
+##	- 0000109: [General] submission fix : SQL queries passed to mysql_query should not end in semicolons. (poyntesm)
+##	- 0000104: [General] submission fix : Use POST_USERS_URL constant where needed (poyntesm)
+##	- 0000111: [General] submission fix : Move some javascript from functions into .tpl files (poyntesm)
+##	- 0000119: [ACP] submission fix : Missing language in admin_garage_models.php (poyntesm)
+##	- 0000114: [ACP] submission fix : Remove possible SQL injection from admin_garage_config.php (poyntesm)
+##	- 0000113: [ACP] submission fix : Remove possible SQL injection from admin_garage_models.php (poyntesm)
+##	- 0000115: [ACP] submission fix : Missing language for block types in featured block dropdown (poyntesm)
+##	- 0000106: [General] submission fix : {USERNAME}'s {L_VEHICLE}</span> replaced with {USERNAME} : {L_VEHICLE} (poyntesm)
+##	- 0000103: [General] submission fix : Make sure all <a href=...></a> are done using <a href=""></a> (poyntesm)
+##	- 0000112: [General] submission fix : Missing language for business type in pending list (poyntesm)
+##	- 0000116: [General] submission fix : Make sure all './../' are replaced with $phpbb_root_path instead. (poyntesm)
+##	- 0000102: [ACP] submission fix : replace .php with $phpEx (poyntesm)
+##	- 0000118: [ACP] submission fix : Missing language in admin_garage_permissions.php (poyntesm)
+##	- 0000105: [General] submission fix : srand needs to be called before rand (poyntesm)
+##	- 0000101: [General] submission fix : make check_permissions clearer (poyntesm)
+##
+##   12-12-2005 - Version 0.9.3
+##	- 0000100: [Modification] Invalid link when editting modification for adding business. (poyntesm)
+##
+##   09-12-2005 - Version 0.9.2
+##	- 0000099: [Vehicle] Unknown userlevels can cause permission problems. (poyntesm)
+##	- 0000098: [Vehicle] Call to undefined function: build_selection_box() in includes/functions_garage.php (poyntesm)
+##	- 0000096: [Quartermile Table] No sort option avialable (poyntesm)
+##	- 0000097: [Rollingroad Table] No sort option avialable (poyntesm)
+##
+##   23-11-2005 - Version 0.9.1
+##	- 0000094: [Vehicle] Link for Add Tank has no image (poyntesm)
+##	- 0000093: [General] Profile Links Broken In Top Rated & Top Quartermile Blocks (poyntesm)
+##	- 0000092: [General] Enable duplicate business in pending to be deleted - but to assign existing entry to all items (poyntesm)
+##	- 0000084: [Installation] Install scripts needs to work out what needs to be done (poyntesm)
+##	- 0000091: [Quartermile] Deleing rollingroad, quartermile from pending list leaves images behind.. (poyntesm)
+##	- 0000090: [General] Opening hours not entered in DB for user submitted business's (poyntesm)
+##	- 0000087: [General] Include a edit link for within pending view.. (poyntesm)
+##	- 0000089: [Insurance] User submitting business is not redirected back correctly. (poyntesm)
+##	- 0000088: [Rollingroad] Editting rollingroads does not set it to pending if required via ACP (poyntesm)
+##	- 0000086: [Insurance] Unable to delete premium (poyntesm)
+##	- 0000085: [Modification] Dropdown category box not correct on edit (poyntesm)
+##	- 0000083: [General] Featured vehicle can be a pending make/model (poyntesm)
+##	- 0000082: [Insurance] Adding business not appending SID (poyntesm)
+##	- 0000081: [Modification] Adding business not appending SID (poyntesm)
+##
+##   03-11-2005 - Version 0.9.0
+##	- Support For GDv1
+##	- Icon Set Introduced
+##	- Users Can Submit Vehicle Makes - configurable in ACP
+##	- Users Can Submit Vehicle Models - configurable in ACP
+##	- Single View Of All Pending Items
+##	- Insurance Business Review Page Overhauled
+##	- Garage Business Review Page Overhauled
+##	- Shop Business Review Page Introduced
+##	- Some Of The Bug Fixes Below - Many many more...
+##        - 0000076: [Quartermile] Pagination broken (poyntesm)
+##        - 0000077: [Rollingroad] Pagination broken (poyntesm)
+##        - 0000069: [Vehicle] Uploaded images not working on vehicle creation (poyntesm)
+##        - 0000067: [Search] Hardcoded English Text in garage.php (poyntesm)
+##        - 0000055: [Template] view_vehicle on IE is displaying incorrectly. (poyntesm)
+##        - 0000061: [Vehicle] Mouse over thumbnail of featured vehicle produces "target=_blank" (poyntesm)
+##        - 0000054: [General] $lang not used in overall_header.tpl (poyntesm)
+##        - 0000060: [ACP] Rebuild thumbnails can produce errors if original file is missing (poyntesm)
+##
+##   17-09-2005 - Version 0.1.2
+##	- Rollingroad can be enabled/disabled via ACP
+##	- Rollingroad can be enabled/disabled via ACP
+##	- Integration with phpBB profile view
+##
+##   20-07-2005 - Version 0.1.1
+##	- New Rating System - Including New Frontpage Block
+##	- 1/4 Mile Table Now Only Returns Top Run Per Vehicle - Including New Frontpage Block
+##	- Quartermile/Business Approval Now ACP Customizable
+##	- Front Page Blocks Now Position Dynamically, Not Fixed To Left Or Right Column
+##	- Bug Fixes
+##
+##   17-06-2005 - Version 0.1.0
+##	- Full Permissions System
+##	- Main Menu ACP Customizable
+##	- Featured Vehicle Can Now Be Selected From Blocks
+##	- Bug Fixes
+## 
+##   02-06-2005 - Version 0.0.9
+##	- Support For Remote Images
+##	- Rebuildng Of Thumbnails
+##	- Bug Fixes
+##
+##   20-05-2005 - Version 0.0.8
+##	- Moderation Of All Vehicle Details (quartermile,rollingroad,insurance)
+##	- Bug Fixes
+## 			
+##   27-04-2005 - Version 0.0.7
+##	First public release of the phpBB garage mod :
+##	- Major garage functionality all working
+##	- ACP panels for all major admin functions
+## 			
+###################################################################################### 
+## Before Adding This MOD To Your Forum, You Should Back Up All Files Related To This MOD 
+###################################################################################### 
+
+#
+#-----[ COPY ]------------------------------------------
+#
+copy root/*.* TO *.*
+copy upgrade/upgrade_garage-0.9.4.php TO upgrade_garage.php
+
+#
+#-----[ DIY INSTRUCTIONS ]------------------------------------------
+#
+Open in your web browser and run upgrade_garage.php
+Delete upgrade_garage.php if it ran succesfull
+
+#
+#-----[ SAVE/CLOSE ALL FILES ]------------------------------------------
+#
+# EoM
