@@ -94,7 +94,7 @@
 <!-- BEGIN detail --> 
 				<tr>
 					<td class="{business.COLOR}" width="20%"><span class="gen"><b>{L_BUSINESS_NAME}</b></span></td>
-					<td class="{business.COLOR}"><input name="name" type="text" class="post" size="35" value="{business.NAME}" /></td>
+					<td class="{business.COLOR}"><input name="title" type="text" class="post" size="35" value="{business.TITLE}" /></td>
 				</tr>
 				<tr>
 					<td class="{business.COLOR}" width="20%"><span class="gen"><b>{L_BUSINESS_ADDRESS}</b></span></td>
@@ -145,31 +145,31 @@
 	</tr>
 	<tr>
 		<td class="row1" width="20%"><span class="gen"><b>{L_BUSINESS_NAME}</b></span></td>
-		<td class="row2"><input name="name" type="text" class="post" size="35" value="{S_MAKE}" /></td>
+		<td class="row2"><input name="title" type="text" class="post" size="35" value="" /></td>
 	</tr>
 	<tr>
 		<td class="row1" width="35%"><span class="gen"><b>{L_BUSINESS_ADDRESS}</b></span></td>
-		<td class="row2"><textarea name='address' cols='60' rows='5' wrap='soft'   class='multitext'>{COMMENTS}</textarea></td>
+		<td class="row2"><textarea name='address' cols='60' rows='5' wrap='soft' class='multitext'></textarea></td>
 	</tr>
 	<tr>
 		<td class="row1" width="20%"><span class="gen"><b>{L_BUSINESS_TELEPHONE_NO}</b></span></td>
-		<td class="row2"><input name="telephone" type="text" class="post" size="35" value="{S_MAKE}" /></td>
+		<td class="row2"><input name="telephone" type="text" class="post" size="35" value="" /></td>
 	</tr>
 	<tr>
 		<td class="row1" width="20%"><span class="gen"><b>{L_BUSINESS_FAX_NO}</b></span></td>
-		<td class="row2"><input name="fax" type="text" class="post" size="35" value="{S_MAKE}" /></td>
+		<td class="row2"><input name="fax" type="text" class="post" size="35" value="" /></td>
 	</tr>
 	<tr>
 		<td class="row1" width="20%"><span class="gen"><b>{L_BUSINESS_WEBSITE}</b></span></td>
-		<td class="row2"><input name="website" type="text" class="post" size="35" value="{S_MAKE}" /></td>
+		<td class="row2"><input name="website" type="text" class="post" size="35" value="" /></td>
 	</tr>
 	<tr>
 		<td class="row1" width="20%"><span class="gen"><b>{L_BUSINESS_EMAIL}</b></span></td>
-		<td class="row2"><input name="email" type="text" class="post" size="35" value="{S_MAKE}" /></td>
+		<td class="row2"><input name="email" type="text" class="post" size="35" value="" /></td>
 	</tr>
 	<tr>
 		<td class="row1" width="35%"><span class="gen"><b>{L_BUSINESS_OPENING_HOURS}</b></span></td>
-		<td class="row2"><textarea name='opening_hours' cols='60' rows='3' wrap='soft'   class='multitext'>{COMMENTS}</textarea></td>
+		<td class="row2"><textarea name='opening_hours' cols='60' rows='3' wrap='soft'   class='multitext'></textarea></td>
 	</tr>
 	<tr>
 		<td class="row1" width="20%"><span class="gen"><b>{L_BUSINESS_TYPE}</b></span></td>
