@@ -50,7 +50,7 @@ switch($mode)
 	case 'insert_business':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('name', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hous', 'insurance', 'garage', 'retail_shop', 'web_shop');
+		$params = array('title', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hous', 'insurance', 'garage', 'retail_shop', 'web_shop');
 		$data = $garage_lib->process_post_vars($params);
 		$data['pending'] = ($garage_config['enable_business_approval'] == '1') ? 1 : 0 ;
 		$data['insurance'] = ($data['insurance'] == 'on') ? 1 : 0 ;
@@ -78,22 +78,19 @@ switch($mode)
 
 	case 'update_business':
 
-		$id = ( isset($HTTP_GET_VARS['id']) ) ? intval($HTTP_GET_VARS['id']) : $HTTP_POST_VARS['id'];
-		$name = str_replace("\'", "''", trim($HTTP_POST_VARS['name']));
-		$address = str_replace("\'", "''", trim($HTTP_POST_VARS['address']));
-		$telephone = str_replace("\'", "''", trim($HTTP_POST_VARS['telephone']));
-		$fax = str_replace("\'", "''", trim($HTTP_POST_VARS['fax']));
-		$website = str_replace("\'", "''", trim($HTTP_POST_VARS['website']));
-		$email = str_replace("\'", "''", trim($HTTP_POST_VARS['email']));
-		$opening_hours = str_replace("\'", "''", trim($HTTP_POST_VARS['opening_hours']));
-		$insurance = str_replace("\'", "''", trim($HTTP_POST_VARS['insurance']));
-		$insurance = ($insurance == 'on') ? 1 : 0 ;
-		$garage = str_replace("\'", "''", trim($HTTP_POST_VARS['garage']));
-		$garage = ($garage == 'on') ? 1 : 0 ;
-		$retail_shop = str_replace("\'", "''", trim($HTTP_POST_VARS['retail_shop']));
-		$retail_shop = ($retail_shop == 'on') ? 1 : 0 ;
-		$web_shop = str_replace("\'", "''", trim($HTTP_POST_VARS['web_shop']));
-		$web_shop = ($web_shop == 'on') ? 1 : 0 ;
+		//Get All Data Posted And Make It Safe To Use
+		$params = array('id', 'title', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hous', 'insurance', 'garage', 'retail_shop', 'web_shop');
+		$data = $garage_lib->process_post_vars($params);
+		$data['pending'] = ($garage_config['enable_business_approval'] == '1') ? 1 : 0 ;
+		$data['insurance'] = ($data['insurance'] == 'on') ? 1 : 0 ;
+		$data['garage'] = ($data['garage'] == 'on') ? 1 : 0 ;
+		$data['retail_shop'] = ($data['retail_shop'] == 'on') ? 1 : 0 ;
+		$data['web_shop'] = ($data['web_shop'] == 'on') ? 1 : 0 ;
+		//Check They Entered http:// In The Front Of The Link
+		if ( (!preg_match( "/^http:\/\//i", $data['website'])) AND (!empty($data['website'])) )
+		{
+			$data['website'] = "http://".$data['website'];
+		}
 		
 		$sql = "UPDATE ". GARAGE_BUSINESS_TABLE ." 
 			SET name = '$name', address = '$address', telephone = '$telephone', fax = '$fax', website = '$website', email = '$email', opening_hours = '$opening_hours', insurance = '$insurance', garage = '$garage', retail_shop = '$retail_shop', web_shop = '$web_shop'
@@ -309,7 +306,7 @@ switch($mode)
 			$template->assign_block_vars('business', array(
 				'COLOR' => ($i % 2) ? 'row1' : 'row2',
 				'ID' => $data[$i]['id'],
-				'NAME' => $data[$i]['name'],
+				'TITLE' => $data[$i]['title'],
 				'ADDRESS' => $data[$i]['address'],
 				'TELEPHONE' => $data[$i]['telephone'],
 				'FAX' => $data[$i]['fax'],
