@@ -3983,6 +3983,31 @@ class garage_lib
 		return $rows;
 	}
 
+	/*========================================================================*/
+	// Select All Category Data
+	// Usage: select_category_data('vehicle id');
+	/*========================================================================*/
+	function select_category_data()
+	{
+		global $db;
+
+		$sql = "SELECT *
+			FROM " . GARAGE_CATEGORIES_TABLE . "
+			ORDER BY field_order";
+
+      		if ( !($result = $db->sql_query($sql)) )
+      		{
+         		message_die(GENERAL_ERROR, 'Could Not Select Category Data', '', __LINE__, __FILE__, $sql);
+      		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$data[] = $row;
+		}
+		$db->sql_freeresult($result);
+	
+		return $data;
+	}
 
 	/*========================================================================*/
 	// Select All Guestbook Comment Data From DB
