@@ -254,7 +254,7 @@ switch ( $mode )
 			'L_NAME' => $lang['Name'],
 			'L_RENAME' => $lang['Rename'],
 			'L_DELETE' => $lang['Delete'],
-			'L_REORDER' => $lang['REORDER'],
+			'L_REORDER' => $lang['Reorder'],
 			'L_CREATE_CATEGORY' => $lang['Create_category'],
 			'L_CAT_TITLE' => $lang['New_Category_Title'],
 			'L_PANEL_TITLE' => $lang['Create_category'],

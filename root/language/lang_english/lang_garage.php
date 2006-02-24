@@ -571,5 +571,9 @@ $lang['Remove_Business'] = '<b>Business to remove:</b>';
 $lang['Missing_Required_Data'] = '<b>Missing Required Data</b>';
 $lang['Delete_Business_Explain'] = 'The form below will allow you to delete a business. You need to decide which business related items will be moved to.';
 $lang['Models'] = 'Models';
+$lang['Reorder'] = 'Reorder';
+$lang['Move_Up'] = 'Move Up';
+$lang['Move_Down'] = 'Move Down';
+
 
 ?>
