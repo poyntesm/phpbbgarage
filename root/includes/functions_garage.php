@@ -79,6 +79,52 @@ class garage_lib
 	}
 
 	/*========================================================================*/
+	// Makes Safe Any Posted Int Variables
+	// Usage: process_int_vars(array());
+	/*========================================================================*/
+	function process_int_vars($params = array())
+	{
+		global $HTTP_POST_VARS, $HTTP_GET_VARS;
+
+		while( list($var, $param) = @each($params) )
+		{
+			if (!empty($HTTP_POST_VARS[$param]))
+			{
+				$data[$param] = intval($HTTP_POST_VARS[$param])));
+			}
+			else if (!empty($HTTP_GET_VARS[$param]))
+			{
+				$data[$param] = intval($HTTP_GET_VARS[$param])));
+			}
+		}
+
+		return $data;
+	}
+
+	/*========================================================================*/
+	// Makes Safe Any Posted String Variables
+	// Usage: process_str_vars(array());
+	/*========================================================================*/
+	function process_str_vars($params = array())
+	{
+		global $HTTP_POST_VARS, $HTTP_GET_VARS;
+
+		while( list($var, $param) = @each($params) )
+		{
+			if (!empty($HTTP_POST_VARS[$param]))
+			{
+				$data[$param] = str_replace("\'", "''", trim(htmlspecialchars($HTTP_POST_VARS[$param])));
+			}
+			else if (!empty($HTTP_GET_VARS[$param]))
+			{
+				$data[$param] = str_replace("\'", "''", trim(htmlspecialchars($HTTP_GET_VARS[$param])));
+			}
+		}
+
+		return $data;
+	}
+
+	/*========================================================================*/
 	// Check All Required Variables Have Data
 	// Usage: check_required_vars(array());
 	/*========================================================================*/
@@ -4088,17 +4134,26 @@ class garage_lib
 	{
 		global $db;
 
-		$sql = "SELECT * FROM " . GARAGE_BUSINESS_TABLE . " WHERE id = '$bus_id' ";
+		$sql = "SELECT * FROM " . GARAGE_BUSINESS_TABLE ;
+
+		if (!empty($bus_id))
+		{
+			$sql .= " WHERE id = '$bus_id'";
+		}
 
 		if( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'Could Not Select Model', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'Could Not Select Business Data', '', __LINE__, __FILE__, $sql);
 		}
 
-		$row = $db->sql_fetchrow($result);
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$data[] = $row;
+		}
+
 		$db->sql_freeresult($result);
 
-		return $row;
+		return $data;
 	}
 
 	/*========================================================================*/
