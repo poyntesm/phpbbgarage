@@ -144,7 +144,7 @@ switch ( $mode )
 		// Now we update this row
 		$sql = "UPDATE ". GARAGE_CATEGORIES_TABLE ."
 				SET title = '$title'
-				WHERE id = '$id'";
+				WHERE id = $id";
 		if(!$result = $db->sql_query($sql))
 		{
 			message_die(GENERAL_ERROR, 'Could not update this Garage Category', '', __LINE__, __FILE__, $sql);
@@ -171,8 +171,8 @@ switch ( $mode )
 		$garage_lib->check_acp_required_vars($params, $message);
 		
 		$sql = "UPDATE ". GARAGE_MODS_TABLE ."
-			SET category_id = '".$data['target']."'
-			WHERE category_id = '".$data['id']."';";
+			SET category_id = ".$data['target']."
+			WHERE category_id = ".$data['id'];
 		if(!$result = $db->sql_query($sql))
 		{
 			message_die(GENERAL_ERROR, 'Could not update this Category content', '', __LINE__, __FILE__, $sql);
@@ -180,7 +180,7 @@ switch ( $mode )
 
 		// This category is now emptied, we can remove it!
 		$sql = "DELETE FROM ". GARAGE_CATEGORIES_TABLE ."
-			WHERE id = '".$data['id']."';";
+			WHERE id = ".$data['id'];
 		if(!$result = $db->sql_query($sql))
 		{
 			message_die(GENERAL_ERROR, 'Could not delete this Category', '', __LINE__, __FILE__, $sql);
@@ -203,8 +203,8 @@ switch ( $mode )
 		$order_total = $field_order * 2 + (($mode == 'move_up') ? -1 : 1);
 
 		$sql = 'UPDATE ' . GARAGE_CATEGORIES_TABLE . "
-		SET field_order = $order_total - field_order
-		WHERE field_order IN ($field_order, " . (($mode == 'move_up') ? $field_order - 1 : $field_order + 1) . ')';
+			SET field_order = $order_total - field_order
+			WHERE field_order IN ($field_order, " . (($mode == 'move_up') ? $field_order - 1 : $field_order + 1) . ')';
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -227,8 +227,8 @@ switch ( $mode )
 		$order_total = $field_order * 2 + (($mode == 'move_up') ? -1 : 1);
 
 		$sql = 'UPDATE ' . GARAGE_CATEGORIES_TABLE . "
-		SET field_order = $order_total - field_order
-		WHERE field_order IN ($field_order, " . (($mode == 'move_up') ? $field_order - 1 : $field_order + 1) . ')';
+			SET field_order = $order_total - field_order
+			WHERE field_order IN ($field_order, " . (($mode == 'move_up') ? $field_order - 1 : $field_order + 1) . ')';
 
 		if(!$result = $db->sql_query($sql))
 		{
