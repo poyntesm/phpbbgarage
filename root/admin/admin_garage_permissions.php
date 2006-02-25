@@ -125,7 +125,7 @@ switch($mode)
 		//Right Now Lets Handle Private Usergroup Permissions If Any Permission Set To Private
 		if ($HTTP_POST_VARS['BROWSE_PRIVATE'] == 1) 
 		{
-			$browse_groups = @implode(',', str_replace("\'", "''", htmlspecialchars(trim($HTTP_POST_VARS['browse']))));
+			$browse_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['browse']));
 			$sql = "UPDATE ". GARAGE_CONFIG_TABLE ."
 				SET config_value = '$browse_groups'
 				WHERE config_name = 'private_browse_perms'";
@@ -137,7 +137,7 @@ switch($mode)
 
 		if ($HTTP_POST_VARS['INTERACT_PRIVATE'] == 1) 
 		{
-			$interact_groups = @implode(',', str_replace("\'", "''", htmlspecialchars(trim($HTTP_POST_VARS['interact']))));
+			$interact_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['interact']));
 			$sql = "UPDATE ". GARAGE_CONFIG_TABLE ."
 				SET config_value = '$interact_groups'
 				WHERE config_name = 'private_interact_perms'";
@@ -149,7 +149,8 @@ switch($mode)
 
 		if ($HTTP_POST_VARS['ADD_PRIVATE'] == 1) 
 		{
-			$add_groups = @implode(',', str_replace("\'", "''", htmlspecialchars(trim($HTTP_POST_VARS['add']))));
+			$add_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['add']));
+
 			$sql = "UPDATE ". GARAGE_CONFIG_TABLE ."
 				SET config_value = '$add_groups'
 				WHERE config_name = 'private_add_perms'";
@@ -161,7 +162,7 @@ switch($mode)
 
 		if ($HTTP_POST_VARS['UPLOAD_PRIVATE'] == 1) 
 		{
-			$upload_groups = @implode(',', str_replace("\'", "''", htmlspecialchars(trim($HTTP_POST_VARS['upload']))));
+			$upload_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['upload']));
 			$sql = "UPDATE ". GARAGE_CONFIG_TABLE ."
 				SET config_value = '$upload_groups'
 				WHERE config_name = 'private_upload_perms'";
