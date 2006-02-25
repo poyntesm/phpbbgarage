@@ -90,11 +90,11 @@ class garage_lib
 		{
 			if (!empty($HTTP_POST_VARS[$param]))
 			{
-				$data[$param] = intval($HTTP_POST_VARS[$param])));
+				$data[$param] = intval($HTTP_POST_VARS[$param]);
 			}
 			else if (!empty($HTTP_GET_VARS[$param]))
 			{
-				$data[$param] = intval($HTTP_GET_VARS[$param])));
+				$data[$param] = intval($HTTP_GET_VARS[$param]);
 			}
 		}
 
@@ -137,6 +137,25 @@ class garage_lib
 			if (empty($data[$param]))
 			{
 				redirect(append_sid("garage.$phpEx?mode=error&EID=3", true));
+			}
+		}
+
+		return ;
+	}
+
+	/*========================================================================*/
+	// Check All Required Variables Have Data Within The ACP
+	// Usage: check_acp_required_vars(array(), message);
+	/*========================================================================*/
+	function check_acp_required_vars($params = array(), $message)
+	{
+		global $data;
+
+		while( list($var, $param) = @each($params) )
+		{
+			if (empty($data[$param]))
+			{
+				message_die(GENERAL_MESSAGE, $message);
 			}
 		}
 
@@ -294,7 +313,7 @@ class garage_lib
 		global $db;
 
 		$sql = "INSERT INTO ". GARAGE_BUSINESS_TABLE ." 
-			SET title = '".$data['name']."', address = '".$data['address']."', telephone = '".$data['telephone']."', fax = '".$data['fax']."', website = '".$data['website']."', email = '".$data['email']."', opening_hours = '".$data['opening_hours']."', insurance = '".$data['insurance']."', garage = '".$data['garage']."', retail_shop = '".$data['retail_shop']."', web_shop = '".$data['web_shop']."', pending = '".$data['pending']."'";
+			SET title = '".$data['title']."', address = '".$data['address']."', telephone = '".$data['telephone']."', fax = '".$data['fax']."', website = '".$data['website']."', email = '".$data['email']."', opening_hours = '".$data['opening_hours']."', insurance = '".$data['insurance']."', garage = '".$data['garage']."', retail_shop = '".$data['retail_shop']."', web_shop = '".$data['web_shop']."', pending = '".$data['pending']."'";
 	
 		if(!$result = $db->sql_query($sql))
 		{
@@ -489,8 +508,8 @@ class garage_lib
 		global $db;
 
 		$sql = "UPDATE ". GARAGE_BUSINESS_TABLE ." 
-			SET title = '".$data['name']."', address = '".$data['address']."', telephone = '".$data['telephone']."', fax = '".$data['fax']."', website = '".$data['website']."', email = '".$data['email']."', opening_hours = '".$data['opening_hours']."', insurance = '".$data['insurance']."', garage = '".$data['garage']."', retail_shop = '".$data['retail_shop']."', web_shop = '".$data['web_shop']."', pending = '".$data['pending']."'
-			WHERE id = '".$data['BUS_ID']."'";
+			SET title = '".$data['title']."', address = '".$data['address']."', telephone = '".$data['telephone']."', fax = '".$data['fax']."', website = '".$data['website']."', email = '".$data['email']."', opening_hours = '".$data['opening_hours']."', insurance = '".$data['insurance']."', garage = '".$data['garage']."', retail_shop = '".$data['retail_shop']."', web_shop = '".$data['web_shop']."', pending = '".$data['pending']."'
+			WHERE id = '".$data['id']."'";
 	
 		if(!$result = $db->sql_query($sql))
 		{

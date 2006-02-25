@@ -67,7 +67,7 @@
 </script>
 </head>
 
-<form method="post" name="manage_business" action="{S_MODE_ACTION}">
+<form method="post" name="manage_business" action="{S_GARAGE_MODE_UPDATE}">
 <table width="100%" cellpadding="3" cellspacing="1" border="0" class="forumline"> 
 	<tr> 
 		<th class="thCornerL" width ="60%" height="20" valign="middle" nowrap="nowrap">{L_NAME}</th> 
@@ -77,7 +77,7 @@
 	</tr> 
 <!-- BEGIN business --> 
 	<tr>
-		<td class="{business.COLOR}" align="left"><span class="gen">{business.NAME}</span></td> 
+		<td class="{business.COLOR}" align="left"><span class="gen">{business.TITLE}</span></td> 
 		<td class="{business.COLOR}" align="center"><span class="genmed">
 			<script language="JavaScript" type="text/javascript"> 
 			<!-- 
@@ -94,38 +94,38 @@
 <!-- BEGIN detail --> 
 				<tr>
 					<td class="{business.COLOR}" width="20%"><span class="gen"><b>{L_BUSINESS_NAME}</b></span></td>
-					<td class="{business.COLOR}"><input name="title" type="text" class="post" size="35" value="{business.TITLE}" /></td>
+					<td class="{business.COLOR}"><input name="title_" type="text" class="post" size="35" value="{business.TITLE}" /></td>
 				</tr>
 				<tr>
 					<td class="{business.COLOR}" width="20%"><span class="gen"><b>{L_BUSINESS_ADDRESS}</b></span></td>
-					<td class="{business.COLOR}"><textarea name='address' cols='60' rows='5' wrap='soft' class='multitext'>{business.ADDRESS}</textarea></td>
+					<td class="{business.COLOR}"><textarea name='address_' cols='60' rows='5' wrap='soft' class='multitext'>{business.ADDRESS}</textarea></td>
 				</tr>
 				<tr>
 					<td class="{business.COLOR}" width="20%"><span class="gen"><b>{L_BUSINESS_TELEPHONE_NO}</b></span></td>
-					<td class="{business.COLOR}"><input name="telephone" type="text" class="post" size="35" value="{business.TELEPHONE}" /></td>
+					<td class="{business.COLOR}"><input name="telephone_" type="text" class="post" size="35" value="{business.TELEPHONE}" /></td>
 				</tr>
 				<tr>
 					<td class="{business.COLOR}" width="20%"><span class="gen"><b>{L_BUSINESS_FAX_NO}</b></span></td>
-					<td class="{business.COLOR}"><input name="fax" type="text" class="post" size="35" value="{business.FAX}" /></td>
+					<td class="{business.COLOR}"><input name="fax_" type="text" class="post" size="35" value="{business.FAX}" /></td>
 				</tr>
 				<tr>
 					<td class="{business.COLOR}" width="20%"><span class="gen"><b>{L_BUSINESS_WEBSITE}</b></span></td>
-					<td class="{business.COLOR}"><input name="website" type="text" class="post" size="35" value="{business.WEBSITE}" /></td>
+					<td class="{business.COLOR}"><input name="website_" type="text" class="post" size="35" value="{business.WEBSITE}" /></td>
 				</tr>
 				<tr>
 					<td class="{business.COLOR}" width="20%"><span class="gen"><b>{L_BUSINESS_EMAIL}</b></span></td>
-					<td class="{business.COLOR}"><input name="email" type="text" class="post" size="35" value="{business.EMAIL}" /></td>
+					<td class="{business.COLOR}"><input name="email_" type="text" class="post" size="35" value="{business.EMAIL}" /></td>
 				</tr>
 				<tr>
 					<td class="{business.COLOR}" width="20%"><span class="gen"><b>{L_BUSINESS_OPENING_HOURS}</b></span></td>
-					<td class="{business.COLOR}"><textarea name='opening_hours' cols='60' rows='3' wrap='soft'   class='multitext'>{business.OPENING_HOURS}</textarea></td>
+					<td class="{business.COLOR}"><textarea name='opening_hours_' cols='60' rows='3' wrap='soft'   class='multitext'>{business.OPENING_HOURS}</textarea></td>
 				</tr>
 				<tr>
 					<td class="{business.COLOR}" width="20%"><span class="gen"><b>{L_BUSINESS_TYPE}</b></span></td>
-					<td class="{business.COLOR}">{L_INSURANCE} : <input type='checkbox' name='insurance' {business.INSURANCE_CHECKED} >&nbsp;{L_GARAGE} : <input type='checkbox' name='garage' {business.GARAGE_CHECKED} >&nbsp;{L_RETAIL_SHOP} : <input type='checkbox' name='retail_shop' {business.RETAIL_CHECKED} >&nbsp;{L_WEB_SHOP} : <input type='checkbox' name='web_shop' {business.WEB_CHECKED} ></td>
+					<td class="{business.COLOR}">{L_INSURANCE} : <input type='checkbox' name='insurance_' {business.INSURANCE_CHECKED} >&nbsp;{L_GARAGE} : <input type='checkbox' name='garage_' {business.GARAGE_CHECKED} >&nbsp;{L_RETAIL_SHOP} : <input type='checkbox' name='retail_shop_' {business.RETAIL_CHECKED} >&nbsp;{L_WEB_SHOP} : <input type='checkbox' name='web_shop_' {business.WEB_CHECKED} ></td>
 				</tr>
 				<tr>
-					<td class="{business.COLOR}" align="center" height="28" colspan="2"><input type="hidden" value="update_business" name="mode" /><input name="submit" type="submit" value="{L_EDIT_BUSINESS}" class="liteoption" /></td>
+					<td class="{business.COLOR}" align="center" height="28" colspan="2">{business.U_UPDATE}</td>
 				</tr> 
 <!-- END detail --> 
 			</table> 
@@ -136,9 +136,10 @@
 		<td class="catBottom" height="18" align="center" valign="middle" colspan="4"><input type="hidden" value="" name="id" /></td>
 	</tr>
 </table>
+</form>
 <br/>
 
-<form action="{S_GARAGE_ACTION}" method="post">
+<form action="{S_GARAGE_MODE_NEW}" method="post">
 <table width="100%" cellpadding="3" cellspacing="1" border="0" class="forumline">
 	<tr>
 		<th class="thHead" height="25" nowrap="nowrap" colspan="2">{L_ADD_NEW_BUSINESS}</th>

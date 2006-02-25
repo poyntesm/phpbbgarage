@@ -13,7 +13,7 @@
 	</tr>
 	<tr>
 		<td class="row1" width="50%"><span class="genmed">{L_MOVE_DELETE}</span></td>
-		<td class="row1">{MOVE_TO_LIST}  <span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font></span></td>
+		<td class="row1"><select name="target"><option value="">---------</option>{MOVE_TO_LIST}</select><span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font></span></td>
 	</tr>
 	<tr>
 		<td class="catBottom" colspan="2" align="center"><input type="hidden" name="mode" value="delete" /><input type="submit" name="submit" value="{L_MOVE_DELETE_BUTTON}" class="mainoption" /></td>

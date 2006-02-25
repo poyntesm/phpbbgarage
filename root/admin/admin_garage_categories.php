@@ -51,52 +51,30 @@ switch ( $mode )
 {
 	case 'confirm_delete':
 
-		$id = intval($HTTP_GET_VARS['id']);
+		//Get All The Categories Data
+		$data = $garage_lib->select_category_data();
 
-		$sql = "SELECT id, title
-			FROM ". GARAGE_CATEGORIES_TABLE ."
-			ORDER BY id ASC";
-		if(!$result = $db->sql_query($sql))
+		//Build Drop Down Options Where To Move Linked Items
+		for ($i = 0; $i < count($data); $i++)
 		{
-			message_die(GENERAL_ERROR, 'Could not query Garage Categories information', '', __LINE__, __FILE__, $sql);
-		}
-
-		$cat_found = FALSE;
-		while( $row = $db->sql_fetchrow($result) )
-		{
-			if( $row['id'] == $id )
-			{
-				$thiscat = $row;
-				$cat_found = TRUE;
-			}
-			else
-			{
-				$catrow[] = $row;
-			}
-		}
-		if( $cat_found == FALSE )
-		{
-			message_die(GENERAL_ERROR, 'The requested category is not existed');
+			$select_to .= '<option value="'. $data[$i]['id'] .'">'. $data[$i]['title'] .'</option>';
 		}
 
-		$select_to = '<select name="target">';
-		$select_to .= '<option value="">---------</option>';
-		for ($i = 0; $i < count($catrow); $i++)
-		{
-			$select_to .= '<option value="'. $catrow[$i]['id'] .'">'. $catrow[$i]['title'] .'</option>';
-		}
-		$select_to .= '</select>';
+		//Store ID Of Category We Are Deleting For Use In Action Variable
+		$params = array('id');
+		$data = $garage_lib->process_post_vars($params);
+		$data = $garage_lib->select_category_data($data['id']);
 
 		$template->set_filenames(array(
 			'body' => 'admin/garage_confirm_delete.tpl')
 		);
 
 		$template->assign_vars(array(
-			'S_GARAGE_ACTION' => append_sid("admin_garage_categories.$phpEx?id=$id"),
+			'S_GARAGE_ACTION' => append_sid("admin_garage_categories.$phpEx?id=".$data['id']),
 			'L_DELETE' => $lang['Delete_Category'],
 			'L_DELETE_EXPLAIN' => $lang['Delete_Category_Explain'],
 			'L_TITLE' => $lang['category'],
-			'S_TITLE' => $thiscat['title'],
+			'S_TITLE' => $data['title'],
 			'L_MOVE_CONTENTS' => $lang['Move_contents'],
 			'L_MOVE_DELETE' => $lang['Move_and_Delete'],
 			'L_REQUIRED' => $lang['Required'],
