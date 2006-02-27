@@ -708,11 +708,10 @@ class garage_lib
 		// Grab the current year
 	        //$current_date = getdate();
 		$my_array = localtime(time(), 1) ;
-		$current_date = $my_array["tm_year"] +1901 ;
+		$current_date = $my_array["tm_year"] +1900 ;
 	
 	        // Calculate end year based on offset configured
-	        //$end_year = $current_date['year'] + $garage_config['year_end'];
-	        $end_year = $current_date;
+	        $end_year = $current_date + $garage_config['year_end'];
 	
 		// A simple check to prevent infinite loop
 		if ( $garage_config['year_start'] > $end_year ) {

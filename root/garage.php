@@ -2016,7 +2016,7 @@ switch( $mode )
 			}//end FOR Loop - Insurance Types
 
 			//Pull All Insurance Data Into A Large Array
-			$sql = "SELECT i.*, g.made_year, b.title, b.id as business_id, makes.make, models.model, user.username  
+			$sql = "SELECT i.*, g.made_year, b.title, b.id as business_id, makes.make, models.model, user.username, user.user_id
         			FROM " . GARAGE_INSURANCE_TABLE . " AS i 
                 	    		LEFT JOIN " . GARAGE_TABLE . " AS g ON i.garage_id = g.id
         	        	    	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " AS b ON i.business_id = b.id
