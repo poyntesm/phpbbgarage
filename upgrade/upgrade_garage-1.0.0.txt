@@ -1,19 +1,23 @@
 #############################################################################################################
-## MOD Title:		Update phpBB Garage 0.9.4 -> phpBB Garage 1.0.0
+## MOD Title:		Update phpBB Garage 1.0.0 -> phpBB Garage 1.0.2
 ## MOD Author: poyntesm < esmond.poynton[at]gmail[dot]com > (Esmond Poynton) http://forums.phpbbgarage.com
 ## MOD Description:
-##			Updates phpBB Garage To Version 1.0.0
+##			Updates phpBB Garage From 1.0.0 To 1.0.2
 ##
-## MOD Version:		1.0.0 
+## MOD Version:		1.0.2
 ## 
 ## Installation Level:	Easy
 ## Installation Time:	10 Minutes
-## Files To Edit: (0)
+## Files To Edit: (4)
+## 			root/garage.php
+##			root/admin/admin_garage_permissions.php
+##			root/includes/functions_garage.php
+##			root/templates/subSilver/garage_vehicle.tpl
 ##
-## Included Files: (104)
-##			Install Garage 1.0.0.txt
+## Included Files: (84)
+##			Install Garage.txt
 ##			Upgrade.txt
-##			contrib/Install Garage 1.0.0 PCP.txt
+##			contrib/Install Garage PCP.txt
 ##			contrib/profilcp/
 ##			contrib/templates/
 ## 			root/garage.php
@@ -93,28 +97,8 @@
 ##			root/templates/subSilver/images/lang_english/garage_shop_review.gif
 ##			root/templates/subSilver/images/lang_english/garage_view_vehicle.gif
 ##			root/templates/subSilver/images/lang_english/icon_garage.gif
-##			upgrade/upgrade_garage-0.0.7.php
-##			upgrade/upgrade_garage-0.0.7.txt
-##			upgrade/upgrade_garage-0.0.8.php
-##			upgrade/upgrade_garage-0.0.8.txt
-##			upgrade/upgrade_garage-0.0.9.php
-##			upgrade/upgrade_garage-0.0.9.txt
-##			upgrade/upgrade_garage-0.1.0.php
-##			upgrade/upgrade_garage-0.1.0.txt
-##			upgrade/upgrade_garage-0.1.1.php
-##			upgrade/upgrade_garage-0.1.1.txt
-##			upgrade/upgrade_garage-0.1.2.php
-##			upgrade/upgrade_garage-0.1.2.txt
-##			upgrade/upgrade_garage-0.9.0.php
-##			upgrade/upgrade_garage-0.9.0.txt
-##			upgrade/upgrade_garage-0.9.1.php
-##			upgrade/upgrade_garage-0.9.1.txt
-##			upgrade/upgrade_garage-0.9.2.php
-##			upgrade/upgrade_garage-0.9.2.txt
-##			upgrade/upgrade_garage-0.9.3.php
-##			upgrade/upgrade_garage-0.9.3.txt
-##			upgrade/upgrade_garage-0.9.4.php
-##			upgrade/upgrade_garage-0.9.4.txt
+##			upgrade/upgrade_garage-1.0.0.php
+##			upgrade/upgrade_garage-1.0.0.txt
 ## License: http://opensource.org/licenses/gpl-license.php GNU General Public License v2 or any later version
 ######################################################################################
 ## For security purposes, please check: http://www.phpbb.com/mods/
@@ -130,8 +114,15 @@
 ##
 ######################################################################################
 ## MOD History: 
-##   07-01-2006 - Version 1.0.0
-##	- Version Submitted To phpBB.com's MOD DB.
+##   27-02-2006 - Version 1.0.2
+##	- Fix javascript error on adding a new model
+##	- Fix setting private permissions
+##	- Fix offset year
+##	- Fix userlink in viewing insurance business
+##
+##   01-02-2006 - Version 1.0.0
+##	- Version Submitted To phpBB.com's MOD DB. (Resubmitted with changes 01-02-2006)
+##	- Version Submitted To phpBB.com's MOD DB. (Resubmitted with one change 08-01-2006)
 ##
 ##   06-01-2006 - Version 0.9.4
 ##	- 0000120: [Vehicle] Update should be required for new rating if set in ACP (poyntesm)
@@ -238,14 +229,127 @@
 #
 #-----[ COPY ]------------------------------------------
 #
-copy root/*.* TO *.*
-copy upgrade/upgrade_garage-0.9.4.php TO upgrade_garage.php
+copy upgrade/upgrade_garage-1.0.0.php TO upgrade_garage-1.0.0.php
 
 #
 #-----[ DIY INSTRUCTIONS ]------------------------------------------
 #
-Open in your web browser and run upgrade_garage.php
-Delete upgrade_garage.php if it ran succesfull
+Open in your web browser and run upgrade_garage-1.0.0.php
+Delete upgrade_garage-1.0.0.php if it ran succesfull
+
+# 
+#-----[ OPEN ]----- 
+# 
+garage.php
+#
+#-----[ FIND ]------------------------------------------
+#
+			$sql = "SELECT i.*, g.made_year, b.title, b.id as business_id, makes.make, models.model, user.username  
+#
+#-----[ IN-LINE FIND ]------------------------------------------
+#
+user.usernamme
+
+#
+#-----[ IN-LINE AFTER, ADD ]------------------------------------------
+#
+, user.user_id
+
+
+# 
+#-----[ OPEN ]----- 
+# 
+admin/admin_garage_permissions.php
+
+#
+#-----[ FIND ]------------------------------------------
+#
+			$browse_groups = @implode(',', str_replace("\'", "''", htmlspecialchars(trim($HTTP_POST_VARS['browse']))));
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+			$browse_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['browse']));
+
+#
+#-----[ FIND ]------------------------------------------
+# 
+			$interact_groups = @implode(',', str_replace("\'", "''", htmlspecialchars(trim($HTTP_POST_VARS['interact']))));
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+			$interact_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['interact']));
+ 
+#
+#-----[ FIND ]------------------------------------------
+#
+			$add_groups = @implode(',', str_replace("\'", "''", htmlspecialchars(trim($HTTP_POST_VARS['add']))));
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+			$add_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['add']));
+ 
+#
+#-----[ FIND ]------------------------------------------
+#
+			$upload_groups = @implode(',', str_replace("\'", "''", htmlspecialchars(trim($HTTP_POST_VARS['upload']))));
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+			$upload_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['upload']));
+
+# 
+#-----[ OPEN ]----- 
+# 
+includes/functions_garage.php
+
+#
+#-----[ FIND ]------------------------------------------
+#
+		$current_date = $my_array["tm_year"] +1901 ;
+
+#
+#-----[ IN-LINE FIND ]------------------------------------------
+#
+1900
+
+#
+#-----[ IN-LINE REPLACE WITH ]------------------------------------------
+#
+1900 ;
+ 	
+#
+#-----[ FIND ]------------------------------------------
+#
+	        //$end_year = $current_date['year'] + $garage_config['year_end'];
+	        $end_year = $current_date;
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+	        $end_year = $current_date + $garage_config['year_end'];
+ 
+# 
+#-----[ OPEN ]----- 
+# 
+templates/subSilver/garage_vehicle.tpl
+
+#
+#-----[ FIND ]------------------------------------------
+#
+<a href="javascript:add_model("YES")
+
+#
+#-----[ IN-LINE FIND ]------------------------------------------
+#
+("YES")
+
+#
+#-----[ IN-LINE REPLACE WITH ]------------------------------------------
+#
+('YES')
 
 #
 #-----[ SAVE/CLOSE ALL FILES ]------------------------------------------
