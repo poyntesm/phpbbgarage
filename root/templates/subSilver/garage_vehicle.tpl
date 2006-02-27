@@ -23,7 +23,7 @@
 					<td class="row1" width="30%"><span class="gen"><b>{L_MODEL}</b></span></td>
 					<td class="row2"><select name="model_id" class="forminput"><option value="">{L_ANY_MODEL}</option></select> <span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font></span>
 					<!-- BEGIN enable_user_submit_model -->
-						&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<input type="hidden" name="adding_model" value="{ADDING_MODEL}" /><a href="javascript:add_model("YES")">{L_HERE}</a></span>
+						&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<input type="hidden" name="adding_model" value="{ADDING_MODEL}" /><a href="javascript:add_model('YES')">{L_HERE}</a></span>
 					<!-- END enable_user_submit_model -->
 					</td>
 				</tr>
