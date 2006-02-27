@@ -907,7 +907,7 @@ templates/subSilver/overall_header.tpl
 #
 #-----[ IN-LINE AFTER, ADD ]------------------------------------------
 #
-<img src="templates/subSilver/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_GARAGE}" hspace="3" /><a href="{U_GARAGE}" class="mainmenu">{L_GARAGE}</a>&nbsp;<img src="templates/subSilver/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_QUARTERMILE_TABLE}" hspace="3" /><a href="{U_QUARTERMILE}" class="mainmenu">{L_QUARTERMILE_TABLE}</a>&nbsp;
+<a href="{U_GARAGE}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_GARAGE}" hspace="3" />{L_GARAGE}</a>&nbsp; &nbsp;<a href="{U_QUARTERMILE}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_QUARTERMILE_TABLE}" hspace="3" />{L_QUARTERMILE_TABLE}</a>&nbsp; &nbsp;
 # 
 #-----[ OPEN ]----- 
 # 
