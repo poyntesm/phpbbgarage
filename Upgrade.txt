@@ -1,8 +1,0 @@
-#####################################################################################
-##                                                                                 ##
-## Please Read This File Carefully To Fully Understand How Upgrades Can Be Handled ## 
-##                                                                                 ##
-#####################################################################################
-
-1) Upload all files from new zip and run the correct DB script from the upgrade folder.
-
