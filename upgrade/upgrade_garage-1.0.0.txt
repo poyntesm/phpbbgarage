@@ -241,10 +241,12 @@ Delete upgrade_garage-1.0.0.php if it ran succesfull
 #-----[ OPEN ]----- 
 # 
 garage.php
+
 #
 #-----[ FIND ]------------------------------------------
 #
 			$sql = "SELECT i.*, g.made_year, b.title, b.id as business_id, makes.make, models.model, user.username  
+
 #
 #-----[ IN-LINE FIND ]------------------------------------------
 #
@@ -254,7 +256,6 @@ user.usernamme
 #-----[ IN-LINE AFTER, ADD ]------------------------------------------
 #
 , user.user_id
-
 
 # 
 #-----[ OPEN ]----- 
