@@ -1,5 +1,5 @@
 #############################################################################################################
-## MOD Title:		phpBB Garage 1.0.0
+## MOD Title:		phpBB Garage 1.0.2
 ## MOD Author: poyntesm < esmond.poynton[at]gmail[dot]com > (Esmond Poynton) http://forums.phpbbgarage.com/
 ## MOD Description:
 ##			This mod allows users of your forum to add details about their vehicles.
@@ -33,7 +33,7 @@
 ##			This mod also provides an insurance,garage,shop review page. Users Can Add Business's Themselves.
 ##			Although for the business to appear in a review page the moderator must approve it.
 ##
-## MOD Version:		1.0.0 
+## MOD Version:		1.0.2 
 ## 
 ## Installation Level:	Easy
 ## Installation Time:	10 Minutes
@@ -52,10 +52,10 @@
 ##			templates/subSilver/overall_header.tpl
 ##			templates/subSilver/profile_view_body.tpl
 ##
-## Included Files: (104)
-##			Install Garage 1.0.0.txt
+## Included Files: (84)
+##			Install Garage.txt
 ##			Upgrade.txt
-##			contrib/Install Garage 1.0.0 PCP.txt
+##			contrib/Install Garage.txt
 ##			contrib/profilcp/
 ##			contrib/templates/
 ## 			root/garage.php
@@ -135,28 +135,8 @@
 ##			root/templates/subSilver/images/lang_english/garage_shop_review.gif
 ##			root/templates/subSilver/images/lang_english/garage_view_vehicle.gif
 ##			root/templates/subSilver/images/lang_english/icon_garage.gif
-##			upgrade/upgrade_garage-0.0.7.php
-##			upgrade/upgrade_garage-0.0.7.txt
-##			upgrade/upgrade_garage-0.0.8.php
-##			upgrade/upgrade_garage-0.0.8.txt
-##			upgrade/upgrade_garage-0.0.9.php
-##			upgrade/upgrade_garage-0.0.9.txt
-##			upgrade/upgrade_garage-0.1.0.php
-##			upgrade/upgrade_garage-0.1.0.txt
-##			upgrade/upgrade_garage-0.1.1.php
-##			upgrade/upgrade_garage-0.1.1.txt
-##			upgrade/upgrade_garage-0.1.2.php
-##			upgrade/upgrade_garage-0.1.2.txt
-##			upgrade/upgrade_garage-0.9.0.php
-##			upgrade/upgrade_garage-0.9.0.txt
-##			upgrade/upgrade_garage-0.9.1.php
-##			upgrade/upgrade_garage-0.9.1.txt
-##			upgrade/upgrade_garage-0.9.2.php
-##			upgrade/upgrade_garage-0.9.2.txt
-##			upgrade/upgrade_garage-0.9.3.php
-##			upgrade/upgrade_garage-0.9.3.txt
-##			upgrade/upgrade_garage-0.9.4.php
-##			upgrade/upgrade_garage-0.9.4.txt
+##			upgrade/upgrade_garage-1.0.0.php
+##			upgrade/upgrade_garage-1.0.0.txt
 ## License: http://opensource.org/licenses/gpl-license.php GNU General Public License v2 or any later version
 ######################################################################################
 ## For security purposes, please check: http://www.phpbb.com/mods/
@@ -172,6 +152,12 @@
 ##
 ######################################################################################
 ## MOD History: 
+##   27-02-2006 - Version 1.0.2
+##	- Fix javascript error on adding a new model
+##	- Fix setting private permissions
+##	- Fix offset year
+##	- Fix userlink in viewing insurance business
+##
 ##   01-02-2006 - Version 1.0.0
 ##	- Version Submitted To phpBB.com's MOD DB. (Resubmitted with changes 01-02-2006)
 ##	- Version Submitted To phpBB.com's MOD DB. (Resubmitted with one change 08-01-2006)
