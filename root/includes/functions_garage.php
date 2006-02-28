@@ -3855,6 +3855,44 @@ class garage_lib
 			return (FALSE);
 		}
 	}
+
+	/*========================================================================*/
+	// Select All Vehicles Data From Db
+	// Usage: select_all_vehicle_data();
+	/*========================================================================*/
+	function select_all_vehicle_data($additional_where, $order_by, $sort_order, $start, $end)
+	{
+		global $db;
+		//Select All Vehicles Information
+		$sql = "SELECT g.*, makes.make, models.model, user.username, count(mods.id) AS total_mods, count(*) as total
+        		FROM " . GARAGE_TABLE . " AS g 
+                    		LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON mods.garage_id = g.id
+			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
+			        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id 
+			        LEFT JOIN " . USERS_TABLE . " AS user ON g.member_id = user.user_id 
+			WHERE makes.pending = 0 AND models.pending = 0
+				".$search_data['where']."
+		        GROUP BY g.id
+			ORDER BY $order_by $sort_order"
+		if ( (!empty($start)) AND (!empty($end)) )
+		{
+			$sql .= "LIMIT $start, $end";
+		}
+
+      		if ( !($result = $db->sql_query($sql)) )
+      		{
+         		message_die(GENERAL_ERROR, 'Could Not Get Vehicle Data', '', __LINE__, __FILE__, $sql);
+      		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		return $rows;
+	}
+
 	
 	/*========================================================================*/
 	// Select All Vehicle Data From Db

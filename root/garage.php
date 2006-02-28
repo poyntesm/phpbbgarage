@@ -1237,34 +1237,14 @@ switch( $mode )
 		//Build All Required HTML
 		$garage_lib->build_sort_order_html($sort_order);
 
-		$sql = "SELECT g.*, makes.make, models.model, user.username, count(mods.id) AS total_mods 
-        		FROM " . GARAGE_TABLE . " AS g 
-                    		LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON mods.garage_id = g.id
-			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-			        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id 
-			        LEFT JOIN " . USERS_TABLE . " AS user ON g.member_id = user.user_id 
-			WHERE makes.pending = 0 AND models.pending = 0
-				".$search_data['where']."
-		        GROUP BY g.id
-			ORDER BY $order_by $sort_order
-			LIMIT $start, " . $garage_config['cars_per_page'];
-
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Select All Vehicles Data', '', __LINE__, __FILE__, $sql);
-		}
-		
-		$i = 0;
-		while ($data = $db->sql_fetchrow($result) )
-		{
-			$cid = $data['id'];
-            		if ($data['image_id'])
+		//Get All Vehicle Data....
+		$data = $garage_lib->select_all_vehicle_data($search_data['where'], $order_by, $sort_order, $start, $garage_config['cars_per_page']);
+		for ($i = 0; $i < count($data); $i++)
+      		{
+			$image_attached ='';
+            		if ($data[$i]['image_id'])
 			{
 				$image_attached = '<img hspace="1" vspace="1" src="' . $images['vehicle_image_attached'] . '" alt="' . $lang['Vehicle_Image_Attahced'] . '" title="' . $lang['Vehicle_Image_Attached'] . '" border="0" />';
-			}
-			else
-			{
-				$image_attached ='';
 			}
 
 			$row_color = ( !($i % 2) ) ? $theme['td_color1'] : $theme['td_color2'];
@@ -1275,39 +1255,24 @@ switch( $mode )
 				'ROW_COLOR' => '#' . $row_color,
 				'ROW_CLASS' => $row_class,
 				'IMAGE_ATTACHED' => $image_attached,
-				'YEAR' => $data['made_year'],
-				'MAKE' => $data['make'],
-				'COLOUR' => $data['color'],
-				'UPDATED' => create_date($board_config['default_dateformat'], $data['date_updated'], $board_config['board_timezone']),
-				'VIEWS' => $data['views'],
-				'MODS' => $data['total_mods'],
-				'MODEL' => $data['model'],
-				'OWNER' => $data['username'],
-				'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=$cid"),
+				'YEAR' => $data[$i]['made_year'],
+				'MAKE' => $data[$i]['make'],
+				'COLOUR' => $data[$i]['color'],
+				'UPDATED' => create_date($board_config['default_dateformat'], $data[$i]['date_updated'], $board_config['board_timezone']),
+				'VIEWS' => $data[$i]['views'],
+				'MODS' => $data[$i]['total_mods'],
+				'MODEL' => $data[$i]['model'],
+				'OWNER' => $data[$i]['username'],
+				'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$data['id']),
 				'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$data['member_id']))
 			);
-			$i++;
 		}
 		$db->sql_freeresult($result);
 
-		//Count Total Returned For Pagination...Need Other Tables Incase It Was A Search!!!
-		$sql = "SELECT count(*) AS total
-			FROM " . GARAGE_TABLE . " g
-				LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-			        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id 
-			        LEFT JOIN " . USERS_TABLE . " AS user ON g.member_id = user.user_id 
-			WHERE makes.pending = 0 AND models.pending = 0 
-		       		".$search_data['where'];
+		//Count Total Returned For Pagination...Notice No $start or $end to get complete count
+		$count = $garage_lib->select_all_vehicle_data($search_data['where'], $order_by, $sort_order, '', '');
 
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Error Counting Total Vehicles', '', __LINE__, __FILE__, $sql);
-		}
-
-		$count = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
-
-		$pagination = generate_pagination("garage.$phpEx?mode=browse&amp".$search_data['make_pagination'].$search_data['model_pagination'].$search_data['pagination'].";sort=$sort&amp;order=$sort_order", $count['total'], $garage_config['cars_per_page'], $start). '&nbsp;';
+		$pagination = generate_pagination("garage.$phpEx?mode=browse&amp".$search_data['make_pagination'].$search_data['model_pagination'].$search_data['pagination'].";sort=$sort&amp;order=$sort_order", $count[0]['total'], $garage_config['cars_per_page'], $start). '&nbsp;';
 
 		$template->assign_block_vars('level2', array());
 		$template->assign_vars(array(
@@ -1329,7 +1294,7 @@ switch( $mode )
 			'MODEL_ID' => $search_data['model_id'],
 			'SEARCH' => $search,
 			'PAGINATION' => $pagination,
-			'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count['total'] / $garage_config['cars_per_page'] )), 
+			'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count[0]['total'] / $garage_config['cars_per_page'] )), 
 			'S_SORT_SELECT' => $garage_lib->build_selection_box('sort',$sort_types_text,$sort_types,$sort),
 			'S_MODE_ACTION' => append_sid("garage.$phpEx?mode=browse"))
 		);
