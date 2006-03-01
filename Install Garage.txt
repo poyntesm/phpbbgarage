@@ -330,9 +330,9 @@ pt.post_text, pt.post_subject, pt.bbcode_uid
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
-		LEFT JOIN " . GARAGE_TABLE ." AS g on g.member_id = p.poster_id and g.main_vehicle = 1
-                LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-                LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
+		LEFT JOIN " . GARAGE_TABLE ." g ON ( g.member_id = p.poster_id and g.main_vehicle = 1)
+                LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON (g.make_id = makes.id)
+                LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON (g.model_id = models.id)
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -638,12 +638,12 @@ $sql = "SELECT g.*, images.*, makes.make, models.model, user.username, user.user
 	user.user_allowavatar, user.user_avatar,
         count(mods.id) AS total_mods,  
         ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent 
-        FROM " . GARAGE_TABLE . " AS g  
-		LEFT JOIN " . USERS_TABLE ." AS user ON g.member_id = user.user_id
-                LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON g.id = mods.garage_id
-                LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-                LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-		LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = g.image_id
+        FROM " . GARAGE_TABLE . " g  
+		LEFT JOIN " . USERS_TABLE ." user ON (g.member_id = user.user_id)
+                LEFT JOIN " . GARAGE_MODS_TABLE . " mods ON (g.id = mods.garage_id)
+                LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON (g.make_id = makes.id)
+                LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON (g.model_id = models.id)
+		LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON (images.attach_id = g.image_id)
         WHERE g.member_id = " . $profiledata['user_id'] . " AND g.main_vehicle = 1
                 GROUP BY g.id";
 
@@ -665,9 +665,9 @@ if ( $db->sql_numrows($result) > 0 )
 	       	$gallery_query = "SELECT gallery.id, images.attach_id, images.attach_hits, images.attach_ext, 
                         	        images.attach_file, images.attach_thumb_location, images.attach_is_image,
                 	                images.attach_location
-                                     FROM " . GARAGE_IMAGES_TABLE . " AS images 
-					LEFT JOIN " . GARAGE_GALLERY_TABLE . " AS gallery ON images.attach_id = gallery.image_id 
-                                     	LEFT JOIN " . GARAGE_TABLE . " AS garage ON gallery.garage_id = garage.id 
+                                     FROM " . GARAGE_IMAGES_TABLE . " images 
+					LEFT JOIN " . GARAGE_GALLERY_TABLE . " gallery ON (images.attach_id = gallery.image_id)
+                                     	LEFT JOIN " . GARAGE_TABLE . " garage ON (gallery.garage_id = garage.id)
                                      WHERE garage.id = " . $vehicle_row['id'] .";";
 		if ( !($result = $db->sql_query($gallery_query)) )
       		{
@@ -693,8 +693,8 @@ if ( $db->sql_numrows($result) > 0 )
 		$mod_query = "SELECT m.*,images.attach_id, images.attach_hits, images.attach_ext, 
                         images.attach_file, images.attach_thumb_location, images.attach_is_image,
                         images.attach_location
-         		FROM " . GARAGE_MODS_TABLE . " as m
-                        LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = m.image_id
+         		FROM " . GARAGE_MODS_TABLE . " m
+                        LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON (images.attach_id = m.image_id)
 	       		WHERE garage_id = " . $vehicle_row['id'] .";";
 		if ( !($result = $db->sql_query($mod_query)) )
       		{

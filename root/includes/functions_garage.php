@@ -814,9 +814,9 @@ class garage_lib
 			$template->assign_block_vars('show_vehicles', array());
 
 			$sql = "SELECT g.id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
-       				FROM " . GARAGE_TABLE . " AS g 
-	        			LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-		        		LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id 
+       				FROM " . GARAGE_TABLE . " g 
+	        			LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+		        		LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id ) 
 	        		WHERE g.member_id = $user_id
         			ORDER BY g.id ASC";
 
@@ -849,10 +849,10 @@ class garage_lib
 			$limit = $garage_config['lastupdatedvehiclesmain_limit'];
 
 			$sql = "SELECT g.id, g.made_year, g.member_id, g.date_updated, user.username, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
-       				FROM " . GARAGE_TABLE . " AS g 
-	        			LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-	        			LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id 
-					LEFT JOIN " . USERS_TABLE . " AS user ON g.member_id = user.user_id 
+       				FROM " . GARAGE_TABLE . " g 
+	        			LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON  ( g.make_id = makes.id )
+	        			LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
+					LEFT JOIN " . USERS_TABLE . " user ON ( g.member_id = user.user_id )
 				WHERE makes.pending = 0 AND models.pending = 0 
 		        	ORDER BY g.date_updated DESC
 				LIMIT 0, $limit";
@@ -2039,8 +2039,8 @@ class garage_lib
        			{
 				$sql = "SELECT g.id 
 					FROM " . GARAGE_TABLE . " g
-	                        		LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-			                        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id 
+	                        		LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+			                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id ) 
 					WHERE makes.pending = 0 and models.pending = 0 and image_id IS NOT NULL 
 					ORDER BY rand() LIMIT 1";
 
@@ -2090,7 +2090,7 @@ class garage_lib
 			}
 			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Latest_Vehicle_Comments'] )
 			{
-				$where = "LEFT JOIN " . GARAGE_GUESTBOOKS_TABLE . " AS gb on g.id = gb.garage_id
+				$where = "LEFT JOIN " . GARAGE_GUESTBOOKS_TABLE . " gb ON ( g.id = gb.garage_id )
 	  				  WHERE makes.pending = 0 and models.pending = 0
 					  GROUP BY g.id ORDER BY gb.post_date DESC LIMIT 1";
 			}
@@ -2116,17 +2116,17 @@ class garage_lib
 	        	{
 		            	// Grab the vehicle info and prep the HTML
 				$sql = "SELECT g.id, g.made_year, g.image_id, g.member_id, makes.make, models.model, 
-	                           	images.attach_id, images.attach_hits, images.attach_thumb_location, m.username, 
+	                           	images.attach_id, images.attach_hits, images.attach_thumb_location, u.username, 
 			                images.attach_is_image, images.attach_location, COUNT(mods.id) AS mod_count,
 					CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle,
 					(SUM(mods.install_price) + SUM(mods.price)) AS money_spent, sum( r.rating ) AS rating
-	                 	        FROM " . GARAGE_TABLE . " AS g 
-	                        		LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-		                            	LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = g.image_id
-			                        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id 
-			                        LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON g.id = mods.garage_id 
-			                        LEFT JOIN " . GARAGE_RATING_TABLE . " AS r ON g.id = r.garage_id 
-	        		                LEFT JOIN " . USERS_TABLE . " AS m ON g.member_id = m.user_id
+	                 	        FROM " . GARAGE_TABLE . " g 
+	                        		LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+		                            	LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON ( images.attach_id = g.image_id )
+			                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
+			                        LEFT JOIN " . GARAGE_MODS_TABLE . " mods ON ( g.id = mods.garage_id )
+			                        LEFT JOIN " . GARAGE_RATING_TABLE . " r ON ( g.id = r.garage_id )
+	        		                LEFT JOIN " . USERS_TABLE . " u ON ( g.member_id = u.user_id )
 				    	$where";
 	
 				if(!$result = $db->sql_query($sql))
@@ -2191,12 +2191,12 @@ class garage_lib
 	        $limit = $garage_config['lastcommented_limit'] ? $garage_config['lastcommented_limit'] : 10;
 	 		 		
 	 	$sql = "SELECT gb.garage_id AS id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, 
-	                        gb.author_id AS member_id, gb.post_date AS POI, m.username 
-	                FROM " . GARAGE_GUESTBOOKS_TABLE . " AS gb 
-	                	LEFT JOIN " . GARAGE_TABLE . " AS g ON gb.garage_id = g.id
-	                        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-	                        LEFT JOIN " . USERS_TABLE . " AS m ON gb.author_id = m.user_id
+	                        gb.author_id AS member_id, gb.post_date AS POI, u.username 
+	                FROM " . GARAGE_GUESTBOOKS_TABLE . "  gb 
+	                	LEFT JOIN " . GARAGE_TABLE . " g ON ( gb.garage_id = g.id )
+	                        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
+	                        LEFT JOIN " . USERS_TABLE . " u ON ( gb.author_id = u.user_id )
 			WHERE makes.pending = 0 AND models.pending = 0
 	                ORDER BY POI DESC LIMIT $limit";
 	
@@ -2247,11 +2247,11 @@ class garage_lib
 	
 		//First Query To Return Top Time For All Or For Selected Filter...
 		$sql = "SELECT  qm.garage_id, MIN(qm.quart) as quart
-			FROM " . GARAGE_QUARTERMILE_TABLE ." AS qm
-				LEFT JOIN " . GARAGE_TABLE ." AS g ON qm.garage_id = g.id
-				LEFT JOIN " . USERS_TABLE ." AS user ON g.member_id = user.user_id
-			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-	       			LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
+			FROM " . GARAGE_QUARTERMILE_TABLE ." qm
+				LEFT JOIN " . GARAGE_TABLE ." g ON ( qm.garage_id = g.id )
+				LEFT JOIN " . USERS_TABLE ." user ON ( g.member_id = user.user_id )
+			        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+	       			LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
 			WHERE	(qm.sixty IS NOT NULL
 				OR qm.three IS NOT NULL
 				OR qm.eight IS NOT NULL
@@ -2275,12 +2275,12 @@ class garage_lib
 			$sql = "SELECT g.id, g.member_id, user.username, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle,
 					qm.rt, qm.sixty, qm.three, qm.eight, qm.eightmph, qm.thou, qm.quart, qm.quartmph, qm.rr_id,
 					rr.bhp, rr.bhp_unit, rr.torque, rr.torque_unit, rr.boost, rr.boost_unit, rr.nitrous
-				FROM " . GARAGE_QUARTERMILE_TABLE ." AS qm
-					LEFT JOIN " . GARAGE_TABLE ." AS g ON qm.garage_id = g.id
-					LEFT JOIN " . USERS_TABLE ." AS user ON g.member_id = user.user_id
-					LEFT JOIN " . GARAGE_ROLLINGROAD_TABLE . " AS rr ON qm.rr_id = rr.id
-				        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-	       				LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
+				FROM " . GARAGE_QUARTERMILE_TABLE ." qm
+					LEFT JOIN " . GARAGE_TABLE ." g ON ( qm.garage_id = g.id )
+					LEFT JOIN " . USERS_TABLE ." user ON ( g.member_id = user.user_id )
+					LEFT JOIN " . GARAGE_ROLLINGROAD_TABLE . " rr ON ( qm.rr_id = rr.id )
+				        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+	       				LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
 				WHERE qm.garage_id = " . $row['garage_id'] . " AND qm.quart = " . $row['quart'];
 	
 	 		if(!$result = $db->sql_query($sql))
@@ -2331,9 +2331,9 @@ class garage_lib
 	        // What's the count? Default to 10
 	        $limit = $garage_config['lastupdatedmods_limit'] ? $garage_config['lastupdatedmods_limit'] : 10;
 	
-	 	$sql = "SELECT mods.id, mods.garage_id, mods.member_id, mods.title AS mod_title, mods.date_updated AS POI, m.username, mods.garage_id 
+	 	$sql = "SELECT mods.id, mods.garage_id, mods.member_id, mods.title AS mod_title, mods.date_updated AS POI, u.username, mods.garage_id 
 	                FROM " . GARAGE_MODS_TABLE . " AS mods 
-	                	LEFT JOIN " . USERS_TABLE . " AS m ON mods.member_id = m.user_id
+	                	LEFT JOIN " . USERS_TABLE . " u ON ( mods.member_id = u.user_id )
 	                ORDER BY POI DESC LIMIT $limit";
 	 		            
 	 	if(!$result = $db->sql_query($sql))
@@ -2383,10 +2383,10 @@ class garage_lib
 	
 	 	$sql = "SELECT g.id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, 
 	                       g.member_id, g.date_updated AS POI, m.username 
-	               	FROM " . GARAGE_TABLE . " AS g 
-	                       	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-	       	                LEFT JOIN " . USERS_TABLE . " AS m ON g.member_id = m.user_id
+	               	FROM " . GARAGE_TABLE . " g 
+	                       	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
+	       	                LEFT JOIN " . USERS_TABLE . " u ON ( g.member_id = m.user_id )
 			WHERE makes.pending = 0 AND models.pending = 0
 	                ORDER BY POI DESC LIMIT $limit";
 	 		            
@@ -2436,12 +2436,12 @@ class garage_lib
 	        $limit = $garage_config['mostmodded_limit'] ? $garage_config['mostmodded_limit'] : 10;
 	
 	 	$sql = "SELECT g.id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, 
-	                        g.member_id, COUNT(mods.id) AS POI, m.username 
-	                FROM " . GARAGE_TABLE . " AS g 
-	                	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-	                        LEFT JOIN " . USERS_TABLE . " AS m ON g.member_id = m.user_id 
-	                        LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON mods.garage_id = g.id
+	                        g.member_id, COUNT(mods.id) AS POI, u.username 
+	                FROM " . GARAGE_TABLE . " g 
+	                	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
+	                        LEFT JOIN " . USERS_TABLE . " u ON ( g.member_id = u.user_id )
+	                        LEFT JOIN " . GARAGE_MODS_TABLE . " mods ON ( mods.garage_id = g.id )
 			WHERE makes.pending = 0 AND models.pending = 0
 	                GROUP BY g.id 
 	                ORDER BY POI DESC LIMIT $limit";
@@ -2492,12 +2492,12 @@ class garage_lib
 	        $limit = $garage_config['mostmoneyspent_limit'] ? $garage_config['mostmoneyspent_limit'] : 10;
 	 		
 	 	$sql = "SELECT g.id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, 
-	                        g.member_id, (SUM(mods.install_price) + SUM(mods.price)) AS POI, m.username, g.currency 
-	                FROM " . GARAGE_TABLE . " AS g 
-	                	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-	                        LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON mods.garage_id = g.id 
-	                        LEFT JOIN " . USERS_TABLE . " AS m ON g.member_id = m.user_id
+	                        g.member_id, (SUM(mods.install_price) + SUM(mods.price)) AS POI, u.username, g.currency 
+	                FROM " . GARAGE_TABLE . " g 
+	                	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
+	                        LEFT JOIN " . GARAGE_MODS_TABLE . " mods ON ( mods.garage_id = g.id )
+	                        LEFT JOIN " . USERS_TABLE . " u ON ( g.member_id = u.user_id )
 			WHERE makes.pending = 0 AND models.pending = 0
 	                GROUP BY g.id 
 	                ORDER BY POI DESC LIMIT $limit";
@@ -2548,11 +2548,11 @@ class garage_lib
 	        $limit = $garage_config['mostviewed_limit'] ? $garage_config['mostviewed_limit'] : 10;
 	 		 		
 	 	$sql = "SELECT g.id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, 
-	                        g.member_id, g.views AS POI, m.username 
+	                        g.member_id, g.views AS POI, u.username 
 	                FROM " . GARAGE_TABLE . " AS g 
-	                        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-	                        LEFT JOIN " . USERS_TABLE . " AS m ON g.member_id = m.user_id
+	                        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
+	                        LEFT JOIN " . USERS_TABLE . " u ON ( g.member_id = u.user_id )
 			WHERE makes.pending = 0 AND models.pending = 0
 	                ORDER BY POI DESC LIMIT $limit";
 	 		            
@@ -2601,12 +2601,12 @@ class garage_lib
 	        // What's the count? Default to 10
 	        $limit = $garage_config['toprated_limit'] ? $garage_config['toprated_limit'] : 10;
 	
-		$sql =  "SELECT g.id, g.member_id, m.username, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, sum( r.rating ) AS rating, count( * ) *10 AS total_rating
-			 FROM " . GARAGE_RATING_TABLE . " AS r
-				LEFT JOIN " . GARAGE_TABLE . " AS g ON r.garage_id = g.id
-	                        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-	                        LEFT JOIN " . USERS_TABLE . " AS m ON g.member_id = m.user_id
+		$sql =  "SELECT g.id, g.member_id, u.username, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, sum( r.rating ) AS rating, count( * ) *10 AS total_rating
+			 FROM " . GARAGE_RATING_TABLE . " r
+				LEFT JOIN " . GARAGE_TABLE . " g ON ( r.garage_id = g.id )
+	                        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
+	                        LEFT JOIN " . USERS_TABLE . " u ON ( g.member_id = u.user_id )
 			 WHERE makes.pending = 0 AND models.pending = 0
 			 GROUP BY garage_id
 			 ORDER BY rating DESC LIMIT $limit";
@@ -2657,9 +2657,9 @@ class garage_lib
 	        $limit = $garage_config['newestmods_limit'] ? $garage_config['newestmods_limit'] : 10;
 	 		 		
 	 	$sql = "SELECT mods.id, mods.garage_id, mods.member_id, mods.title AS mod_title, mods.date_created AS POI,
-	       			m.username, mods.garage_id 
-	                FROM " . GARAGE_MODS_TABLE . " AS mods 
-	                	LEFT JOIN " . USERS_TABLE . " AS m ON mods.member_id = m.user_id
+	       			u.username, mods.garage_id 
+	                FROM " . GARAGE_MODS_TABLE . " mods 
+	                	LEFT JOIN " . USERS_TABLE . " u ON ( mods.member_id = u.user_id )
 	                ORDER BY POI DESC LIMIT $limit";
 	 		            
 	 	if(!$result = $db->sql_query($sql))
@@ -2708,11 +2708,11 @@ class garage_lib
 	        $limit = $garage_config['newestvehicles_limit'] ? $garage_config['newestvehicles_limit'] : 10;
 	 		 		
 	 	$sql = "SELECT g.id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, 
-	                        g.member_id, g.date_created AS POI, m.username 
-	                FROM " . GARAGE_TABLE . " AS g 
-	                	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-	                        LEFT JOIN " . USERS_TABLE . " AS m ON g.member_id = m.user_id
+	                        g.member_id, g.date_created AS POI, u.username 
+	                FROM " . GARAGE_TABLE . " g 
+	                	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
+	                        LEFT JOIN " . USERS_TABLE . " u ON ( g.member_id = u.user_id )
 			WHERE makes.pending = 0 AND models.pending = 0
 	                ORDER BY POI DESC LIMIT $limit";
 	 		            
@@ -3254,9 +3254,9 @@ class garage_lib
 				$guestbook_count = $guestbook_result['total'];
 	 			$comment_count ='( ' . $guestbook_count . ' ' . $lang['Total_Comments'] . ' )';
 	
-				$sql =  "SELECT SUBSTRING(REPLACE(gb.post,'<br />',' '),1,75) AS post, gb.author_id, m.username 
-	                                 FROM " . GARAGE_GUESTBOOKS_TABLE . " AS gb 
-	                                 	LEFT JOIN " . USERS_TABLE . " AS m ON gb.author_id = m.user_id
+				$sql =  "SELECT SUBSTRING(REPLACE(gb.post,'<br />',' '),1,75) AS post, gb.author_id, u.username 
+	                                 FROM " . GARAGE_GUESTBOOKS_TABLE . " gb 
+	                                 	LEFT JOIN " . USERS_TABLE . " u ON ( gb.author_id = u.user_id )
 	                                 WHERE gb.garage_id = $cid 
 	                                 ORDER BY gb.post_date DESC LIMIT 5";
 	
@@ -3335,8 +3335,8 @@ class garage_lib
 	       		// Select All Mods From This Car For Category We Are Currently Processing
 			$sql = "SELECT m.*,images.attach_id, images.attach_hits, images.attach_ext, images.attach_location,
 	                        images.attach_file, images.attach_thumb_location, images.attach_is_image 
-	         		FROM " . GARAGE_MODS_TABLE . " as m
-	                        	LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = m.image_id
+	         		FROM " . GARAGE_MODS_TABLE . " m
+	                        	LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON ( images.attach_id = m.image_id )
 		       		WHERE garage_id = $cid 
 					AND category_id = $category_id[$i]
 	                        ORDER BY title ASC";
@@ -3427,8 +3427,8 @@ class garage_lib
 	
 		// Next Lets See If We Have Any Insurance Premiums //
 		$sql = "SELECT ins.*, bus.title
-	        	FROM " . GARAGE_INSURANCE_TABLE . " as ins
-	                	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " AS bus ON ins.business_id = bus.id
+	        	FROM " . GARAGE_INSURANCE_TABLE . " ins
+	                	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " bus ON ( ins.business_id = bus.id )
 		       	WHERE garage_id = $cid";
 	
 	       	if( !($result = $db->sql_query($sql)) )
@@ -3466,8 +3466,8 @@ class garage_lib
 		// Next Lets See If We Have Any QuarterMile Runs //
 	       	$sql = "SELECT qm.*,images.attach_id, images.attach_hits, images.attach_ext, 
 	                        images.attach_file, images.attach_thumb_location, images.attach_is_image, images.attach_location
-	          	FROM " . GARAGE_QUARTERMILE_TABLE . " as qm
-	                	LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = qm.image_id
+	          	FROM " . GARAGE_QUARTERMILE_TABLE . " qm
+	                	LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON ( images.attach_id = qm.image_id )
 		       	WHERE garage_id = $cid";
 	
 	       	if( !($result = $db->sql_query($sql)) )
@@ -3525,8 +3525,8 @@ class garage_lib
 		// Next Lets See If We Have Any QuarterMile Runs //
 	       	$sql = "SELECT rr.*,images.attach_id, images.attach_hits, images.attach_ext, 
                         images.attach_file, images.attach_thumb_location, images.attach_is_image, images.attach_location
-         		FROM " . GARAGE_ROLLINGROAD_TABLE . " as rr
-                        	LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = rr.image_id
+         		FROM " . GARAGE_ROLLINGROAD_TABLE . " rr
+                        	LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON ( images.attach_id = rr.image_id )
 	       		WHERE garage_id = $cid";
 	
        		if( !($result = $db->sql_query($sql)) )
@@ -3589,9 +3589,9 @@ class garage_lib
 		       	$gallery_query_id = "SELECT gallery.id, images.attach_id, images.attach_hits, images.attach_ext, 
 	                        	        images.attach_file, images.attach_thumb_location, images.attach_is_image,
 	                	                images.attach_location
-	                                     FROM " . GARAGE_IMAGES_TABLE . " AS images 
-						LEFT JOIN " . GARAGE_GALLERY_TABLE . " AS gallery ON images.attach_id = gallery.image_id 
-	                                     	LEFT JOIN " . GARAGE_TABLE . " AS garage ON gallery.garage_id = garage.id 
+	                                     FROM " . GARAGE_IMAGES_TABLE . " images 
+						LEFT JOIN " . GARAGE_GALLERY_TABLE . " gallery ON ( images.attach_id = gallery.image_id )
+	                                     	LEFT JOIN " . GARAGE_TABLE . " garage ON ( gallery.garage_id = garage.id )
 	                                     WHERE garage.id = $cid";
 			if ( !($result = $db->sql_query($gallery_query_id)) )
       			{
@@ -3865,11 +3865,11 @@ class garage_lib
 		global $db;
 		//Select All Vehicles Information
 		$sql = "SELECT g.*, makes.make, models.model, user.username, count(mods.id) AS total_mods, count(*) as total
-        		FROM " . GARAGE_TABLE . " AS g 
-                    		LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON mods.garage_id = g.id
-			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-			        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id 
-			        LEFT JOIN " . USERS_TABLE . " AS user ON g.member_id = user.user_id 
+        		FROM " . GARAGE_TABLE . " g 
+                    		LEFT JOIN " . GARAGE_MODS_TABLE . " mods ON ( mods.garage_id = g.id )
+			        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+			        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
+			        LEFT JOIN " . USERS_TABLE . " user ON ( g.member_id = user.user_id )
 			WHERE makes.pending = 0 AND models.pending = 0
 				".$search_data['where']."
 		        GROUP BY g.id
@@ -3904,13 +3904,13 @@ class garage_lib
 		$sql = "SELECT i.*, g.*, b.title, b.id as business_id, makes.make, models.model, user.username, user.user_id,
                         ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent,
 			CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
-        		FROM " . GARAGE_INSURANCE_TABLE . " AS i 
-                    		LEFT JOIN " . GARAGE_TABLE . " AS g ON i.garage_id = g.id
-	                    	LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON i.garage_id = mods.garage_id
-        	            	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " AS b ON i.business_id = b.id
-			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-		        	LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id 
-			        LEFT JOIN " . USERS_TABLE . " AS user ON g.member_id = user.user_id 
+        		FROM " . GARAGE_INSURANCE_TABLE . " i 
+                    		LEFT JOIN " . GARAGE_TABLE . " g ON ( i.garage_id = g.id )
+	                    	LEFT JOIN " . GARAGE_MODS_TABLE . " mods ON ( i.garage_id = mods.garage_id )
+        	            	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " b ON ( i.business_id = b.id )
+			        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+		        	LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
+			        LEFT JOIN " . USERS_TABLE . " user ON ( g.member_id = user.user_id )
 			WHERE makes.pending = 0 AND models.pending = 0
 				".$search_data['where']."
 		        GROUP BY i.id
@@ -3945,12 +3945,12 @@ class garage_lib
 		global $db;
 		//Select All Vehicle Information
 	   	$sql = "SELECT g.*, images.*, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_allowavatar, user.user_avatar, user.user_id
-                      	FROM " . GARAGE_TABLE . " AS g  
-				LEFT JOIN " . USERS_TABLE ." AS user ON g.member_id = user.user_id
-	                       	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-        	                LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-				LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON g.id = mods.garage_id
-				LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = g.image_id
+                      	FROM " . GARAGE_TABLE . " g  
+				LEFT JOIN " . USERS_TABLE ." user ON ( g.member_id = user.user_id )
+	                       	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+        	                LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
+				LEFT JOIN " . GARAGE_MODS_TABLE . " mods ON ( g.id = mods.garage_id )
+				LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON ( images.attach_id = g.image_id )
                     	WHERE g.id = $cid
 	                GROUP BY g.id";
 
@@ -3974,14 +3974,14 @@ class garage_lib
 		global $db;
 	
 		$sql = "SELECT mods.*, g.made_year, g.id, images.*, user.username, user.user_avatar_type, user.user_allowavatar, user.user_avatar, images.attach_ext, images.attach_id, images.attach_file, cats.title as category_title, makes.make, models.model, bus.title as business_name, ins.title as install_business_name, ins.id as install_business_id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
-     			FROM " . GARAGE_MODS_TABLE . " AS mods, " . GARAGE_TABLE . " AS g 
-				LEFT JOIN " . USERS_TABLE ." AS user ON g.member_id = user.user_id
-				LEFT JOIN " . GARAGE_CATEGORIES_TABLE . " AS cats ON cats.id = mods.category_id
-        			LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = mods.image_id 
-                        	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-                        	LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-                        	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " AS bus ON mods.business_id = bus.id
-                        	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " AS ins ON mods.install_business_id = ins.id
+     			FROM " . GARAGE_MODS_TABLE . " mods, " . GARAGE_TABLE . " g 
+				LEFT JOIN " . USERS_TABLE ." user ON ( g.member_id = user.user_id )
+				LEFT JOIN " . GARAGE_CATEGORIES_TABLE . " cats ON ( cats.id = mods.category_id )
+        			LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON ( images.attach_id = mods.image_id )
+                        	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+                        	LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
+                        	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " bus ON ( mods.business_id = bus.id )
+                        	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " ins ON ( mods.install_business_id = ins.id )
         		WHERE mods.id = $mid AND g.id = mods.garage_id";
 
       		if ( !($result = $db->sql_query($sql)) )
@@ -4004,12 +4004,12 @@ class garage_lib
 		global $db;
 	
 	   	$sql = "SELECT qm.*, rr.id, rr.bhp, rr.bhp_unit, images.*, g.made_year, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
-                    	FROM " . GARAGE_QUARTERMILE_TABLE . " AS qm
-		          	LEFT JOIN " . GARAGE_TABLE . " AS g ON qm.garage_id = g.id
-		          	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-                        	LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-        			LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = qm.image_id 
-	        		LEFT JOIN " . GARAGE_ROLLINGROAD_TABLE . " AS rr ON rr.id = qm.rr_id 
+                    	FROM " . GARAGE_QUARTERMILE_TABLE . " qm
+		          	LEFT JOIN " . GARAGE_TABLE . " g ON ( qm.garage_id = g.id )
+		          	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+                        	LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
+        			LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON ( images.attach_id = qm.image_id )
+	        		LEFT JOIN " . GARAGE_ROLLINGROAD_TABLE . " rr ON ( rr.id = qm.rr_id )
                     	WHERE qm.id = $qmid";
 
       		if ( !($result = $db->sql_query($sql)) )
@@ -4032,11 +4032,11 @@ class garage_lib
 		global $db;
 
 	   	$sql = "SELECT rr.*, images.* , g.made_year, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
-                    	FROM " . GARAGE_ROLLINGROAD_TABLE . " AS rr
-		          	LEFT JOIN " . GARAGE_TABLE . " AS g ON rr.garage_id = g.id
-		          	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-                        	LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-        			LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = rr.image_id 
+                    	FROM " . GARAGE_ROLLINGROAD_TABLE . " rr
+		          	LEFT JOIN " . GARAGE_TABLE . " g ON ( rr.garage_id = g.id )
+		          	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+                        	LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
+        			LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON ( images.attach_id = rr.image_id )
                     	WHERE rr.id = $rrid";
 
 		if ( !($result = $db->sql_query($sql)) )
@@ -4059,11 +4059,11 @@ class garage_lib
 		global $db;
 
 		$sql = "SELECT ins.*, bus.title, g.made_year, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
-     			FROM " . GARAGE_INSURANCE_TABLE . " AS ins 
-                        	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " AS bus ON ins.business_id = bus.id
-		          	LEFT JOIN " . GARAGE_TABLE . " AS g ON ins.garage_id = g.id
-		          	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-                        	LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
+     			FROM " . GARAGE_INSURANCE_TABLE . " ins 
+                        	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " bus ON ( ins.business_id = bus.id )
+		          	LEFT JOIN " . GARAGE_TABLE . " g ON ( ins.garage_id = g.id )
+		          	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+                        	LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
         		WHERE ins.id = $ins_id ";
 
       		if ( !($result = $db->sql_query($sql)) )
@@ -4108,8 +4108,8 @@ class garage_lib
 
 		//Process Each Gallery Image For This Vehicle
 		$sql = "SELECT gallery.*, images.*
-     			FROM " . GARAGE_GALLERY_TABLE . " AS gallery
-        			LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = gallery.image_id 
+     			FROM " . GARAGE_GALLERY_TABLE . " gallery
+        			LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON ( images.attach_id = gallery.image_id )
         		WHERE gallery.garage_id = $cid
 			GROUP BY gallery.id";
 
@@ -4163,11 +4163,11 @@ class garage_lib
 
 		$sql = "SELECT gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, gb.garage_id,
 				g.made_year, makes.make, models.model, u.username, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
-               	        FROM " . GARAGE_GUESTBOOKS_TABLE . " AS gb 
-				LEFT JOIN " . GARAGE_TABLE ." AS g on g.id = gb.garage_id
-                        	LEFT JOIN " . USERS_TABLE . " AS u ON g.member_id = u.user_id 
-       				LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-                		LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
+               	        FROM " . GARAGE_GUESTBOOKS_TABLE . " gb 
+				LEFT JOIN " . GARAGE_TABLE ." g ON ( g.id = gb.garage_id )
+                        	LEFT JOIN " . USERS_TABLE . " u ON ( g.member_id = u.user_id ) 
+       				LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+                		LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
                         WHERE gb.id = $comment_id
                         ORDER BY gb.post_date ASC";
 
@@ -4383,11 +4383,11 @@ class garage_lib
 
 		//First Query To Return Top Time For All Or For Selected Filter...
 		$sql = "SELECT  qm.garage_id, MIN(qm.quart) as quart
-			FROM " . GARAGE_QUARTERMILE_TABLE ." AS qm
-				LEFT JOIN " . GARAGE_TABLE ." AS g ON qm.garage_id = g.id
-				LEFT JOIN " . USERS_TABLE ." AS user ON g.member_id = user.user_id
-			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-        			LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
+			FROM " . GARAGE_QUARTERMILE_TABLE ." qm
+				LEFT JOIN " . GARAGE_TABLE ." g ON ( qm.garage_id = g.id )
+				LEFT JOIN " . USERS_TABLE ." user ON ( g.member_id = user.user_id )
+			        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+        			LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
 			WHERE	(qm.sixty IS NOT NULL
 				OR qm.three IS NOT NULL
 				OR qm.eight IS NOT NULL
@@ -4415,13 +4415,13 @@ class garage_lib
 				qm.rt, qm.sixty, qm.three, qm.eight, qm.eightmph, qm.thou, qm.quart, qm.quartmph, qm.rr_id,
 				rr.bhp, rr.bhp_unit, rr.torque, rr.torque_unit, rr.boost, rr.boost_unit, rr.nitrous,
 				CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, images.attach_id as image_id
-				FROM " . GARAGE_QUARTERMILE_TABLE ." AS qm
-					LEFT JOIN " . GARAGE_TABLE ." AS g ON qm.garage_id = g.id
-					LEFT JOIN " . USERS_TABLE ." AS user ON g.member_id = user.user_id
-					LEFT JOIN " . GARAGE_ROLLINGROAD_TABLE . " AS rr ON qm.rr_id = rr.id
-				        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-        				LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-		                	LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = qm.image_id
+				FROM " . GARAGE_QUARTERMILE_TABLE ." qm
+					LEFT JOIN " . GARAGE_TABLE ." g ON ( qm.garage_id = g.id )
+					LEFT JOIN " . USERS_TABLE ." user ON ( g.member_id = user.user_id )
+					LEFT JOIN " . GARAGE_ROLLINGROAD_TABLE . " rr ON ( qm.rr_id = rr.id )
+				        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+        				LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
+		                	LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON ( images.attach_id = qm.image_id )
 				WHERE qm.garage_id = " . $row['garage_id'] . " AND qm.quart = " . $row['quart'];
 
 			if( !($result = $db->sql_query($sql)) )
@@ -4489,10 +4489,10 @@ class garage_lib
 		$db->sql_freeresult($result);
 
 		$sql = "SELECT COUNT(DISTINCT qm.garage_id)as total
-			FROM " . GARAGE_QUARTERMILE_TABLE ." AS qm
-				LEFT JOIN " . GARAGE_TABLE ." AS g ON qm.garage_id = g.id
-			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-        			LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
+			FROM " . GARAGE_QUARTERMILE_TABLE ." qm
+				LEFT JOIN " . GARAGE_TABLE ." g ON ( qm.garage_id = g.id )
+			        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+        			LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
 			WHERE	(qm.sixty IS NOT NULL
 				OR qm.three IS NOT NULL
 				OR qm.eight IS NOT NULL
@@ -4588,11 +4588,11 @@ class garage_lib
 
 		//First Query To Return Top Time For All Or For Selected Filter...
 		$sql = "SELECT  rr.garage_id, MAX(rr.bhp) as bhp
-			FROM " . GARAGE_ROLLINGROAD_TABLE ." AS rr
-				LEFT JOIN " . GARAGE_TABLE ." AS g ON rr.garage_id = g.id
-				LEFT JOIN " . USERS_TABLE ." AS user ON g.member_id = user.user_id
-			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-        			LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
+			FROM " . GARAGE_ROLLINGROAD_TABLE ." rr
+				LEFT JOIN " . GARAGE_TABLE ." g ON ( rr.garage_id = g.id )
+				LEFT JOIN " . USERS_TABLE ." user ON ( g.member_id = user.user_id )
+			        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+        			LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
 			WHERE rr.pending = $pending 
 				AND makes.pending = 0 AND models.pending = 0 
 				$addtional_where 
@@ -4612,12 +4612,12 @@ class garage_lib
 			//Second Query To Return All Other Data For Top Quartermile Run
 			$sql = "SELECT g.id, g.made_year, g.member_id, makes.make, models.model, user.username,
 				rr.dynocenter, rr.bhp, rr.bhp_unit, rr.torque, rr.torque_unit, rr.boost, rr.boost_unit, rr.nitrous, round(rr.peakpoint,0) as peakpoint, images.attach_id as image_id, rr.id as rr_id
-				FROM " . GARAGE_ROLLINGROAD_TABLE ." AS rr
-					LEFT JOIN " . GARAGE_TABLE ." AS g ON rr.garage_id = g.id
-					LEFT JOIN " . USERS_TABLE ." AS user ON g.member_id = user.user_id
-				        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-        				LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-		                	LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = rr.image_id
+				FROM " . GARAGE_ROLLINGROAD_TABLE ." rr
+					LEFT JOIN " . GARAGE_TABLE ." g ON rr.garage_id = g.id
+					LEFT JOIN " . USERS_TABLE ." user ON ( g.member_id = user.user_id )
+				        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+        				LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
+		                	LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON ( images.attach_id = rr.image_id )
 				WHERE rr.garage_id = " . $row['garage_id'] . " AND rr.bhp = " . $row['bhp'];
 
 			if( !($result = $db->sql_query($sql)) )
@@ -4680,10 +4680,10 @@ class garage_lib
 
 		$sql = "SELECT count(DISTINCT rr.garage_id) AS total
 				FROM " . GARAGE_ROLLINGROAD_TABLE . " rr
-				LEFT JOIN " . GARAGE_TABLE ." AS g ON rr.garage_id = g.id
-				LEFT JOIN " . USERS_TABLE ." AS user ON g.member_id = user.user_id
-			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-        			LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
+				LEFT JOIN " . GARAGE_TABLE ." g ON ( rr.garage_id = g.id )
+				LEFT JOIN " . USERS_TABLE ." user ON ( g.member_id = user.user_id )
+			        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+        			LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
 			WHERE rr.pending = $pending 
 				AND ( makes.pending = 0 AND models.pending = 0 )
 				$addtional_where";
@@ -4821,8 +4821,8 @@ class garage_lib
 		}
 
 		$sql = "SELECT model.* , make.make
-			FROM " . GARAGE_MODELS_TABLE ." AS model
-	        		LEFT JOIN " . GARAGE_MAKES_TABLE . " AS make ON model.make_id = make.id
+			FROM " . GARAGE_MODELS_TABLE ." model
+	        		LEFT JOIN " . GARAGE_MAKES_TABLE . " make ON ( model.make_id = make.id )
 			WHERE model.pending = 1";
 
 		if( !($result = $db->sql_query($sql)) )
