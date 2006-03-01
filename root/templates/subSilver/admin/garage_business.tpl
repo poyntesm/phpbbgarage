@@ -98,7 +98,7 @@
 				</tr>
 				<tr>
 					<td class="{business.COLOR}" width="20%"><span class="gen"><b>{L_BUSINESS_ADDRESS}</b></span></td>
-					<td class="{business.COLOR}"><textarea name='address_' cols='60' rows='5' wrap='soft' class='multitext'>{business.ADDRESS}</textarea></td>
+					<td class="{business.COLOR}"><textarea name='address_' cols='60' rows='5' wrap='soft' class='post'>{business.ADDRESS}</textarea></td>
 				</tr>
 				<tr>
 					<td class="{business.COLOR}" width="20%"><span class="gen"><b>{L_BUSINESS_TELEPHONE_NO}</b></span></td>
@@ -118,7 +118,7 @@
 				</tr>
 				<tr>
 					<td class="{business.COLOR}" width="20%"><span class="gen"><b>{L_BUSINESS_OPENING_HOURS}</b></span></td>
-					<td class="{business.COLOR}"><textarea name='opening_hours_' cols='60' rows='3' wrap='soft'   class='multitext'>{business.OPENING_HOURS}</textarea></td>
+					<td class="{business.COLOR}"><textarea name='opening_hours_' cols='60' rows='3' wrap='soft' class='post'>{business.OPENING_HOURS}</textarea></td>
 				</tr>
 				<tr>
 					<td class="{business.COLOR}" width="20%"><span class="gen"><b>{L_BUSINESS_TYPE}</b></span></td>
@@ -150,7 +150,7 @@
 	</tr>
 	<tr>
 		<td class="row1" width="35%"><span class="gen"><b>{L_BUSINESS_ADDRESS}</b></span></td>
-		<td class="row2"><textarea name='address' cols='60' rows='5' wrap='soft' class='multitext'></textarea></td>
+		<td class="row2"><textarea name='address' cols='60' rows='5' wrap='soft' class='post'></textarea></td>
 	</tr>
 	<tr>
 		<td class="row1" width="20%"><span class="gen"><b>{L_BUSINESS_TELEPHONE_NO}</b></span></td>
@@ -170,7 +170,7 @@
 	</tr>
 	<tr>
 		<td class="row1" width="35%"><span class="gen"><b>{L_BUSINESS_OPENING_HOURS}</b></span></td>
-		<td class="row2"><textarea name='opening_hours' cols='60' rows='3' wrap='soft'   class='multitext'></textarea></td>
+		<td class="row2"><textarea name='opening_hours' cols='60' rows='3' wrap='soft' class='post'></textarea></td>
 	</tr>
 	<tr>
 		<td class="row1" width="20%"><span class="gen"><b>{L_BUSINESS_TYPE}</b></span></td>
