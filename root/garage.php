@@ -1930,12 +1930,12 @@ switch( $mode )
 
 			//Pull All Insurance Data Into A Large Array
 			$sql = "SELECT i.*, g.made_year, b.title, b.id as business_id, makes.make, models.model, user.username, user.user_id
-        			FROM " . GARAGE_INSURANCE_TABLE . " AS i 
-                	    		LEFT JOIN " . GARAGE_TABLE . " AS g ON i.garage_id = g.id
-        	        	    	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " AS b ON i.business_id = b.id
-			        	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-			        	LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id 
-				        LEFT JOIN " . USERS_TABLE . " AS user ON g.member_id = user.user_id 
+        			FROM " . GARAGE_INSURANCE_TABLE . " i 
+                	    		LEFT JOIN " . GARAGE_TABLE . " g ON ( i.garage_id = g.id )
+        	        	    	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " b ON ( i.business_id = b.id )
+			        	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+			        	LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
+				        LEFT JOIN " . USERS_TABLE . " user ON ( g.member_id = user.user_id )
 				WHERE i.business_id = b.id
 					AND b.insurance =1
 					AND b.pending = 0
@@ -2097,11 +2097,11 @@ switch( $mode )
 
 			//Now Lets Go Get All Mods All Business's Have Installed
  			$sql = "SELECT mods.id, mods.garage_id, mods.title AS mod_title, mods.install_price, mods.install_rating, mods.install_comments, u.username, u.user_id, makes.make, models.model, g.made_year, b.id as business_id
-	               		FROM " . GARAGE_MODS_TABLE . " AS mods, " . GARAGE_BUSINESS_TABLE . " AS b
-	    				LEFT JOIN " . GARAGE_TABLE . " AS g ON mods.garage_id = g.id
-			    		LEFT JOIN " . USERS_TABLE . " AS u ON mods.member_id = u.user_id
-		        		LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-        				LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
+	               		FROM " . GARAGE_MODS_TABLE . " mods, " . GARAGE_BUSINESS_TABLE . " b
+	    				LEFT JOIN " . GARAGE_TABLE . " g ON ( mods.garage_id = g.id )
+			    		LEFT JOIN " . USERS_TABLE . " u ON ( mods.member_id = u.user_id )
+		        		LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+        				LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
 				WHERE mods.install_business_id = b.id
 					AND b.garage =1
 					AND b.pending = 0
@@ -2295,11 +2295,11 @@ switch( $mode )
 
 			//Now Lets Go Get All Mods All Business's Have Installed
  			$sql = "SELECT mods.id, mods.garage_id, mods.title AS mod_title, mods.price, mods.product_rating, mods.comments, u.username, u.user_id, makes.make, models.model, g.made_year, b.id as business_id
-	               		FROM " . GARAGE_MODS_TABLE . " AS mods, " . GARAGE_BUSINESS_TABLE . " AS b
-	    				LEFT JOIN " . GARAGE_TABLE . " AS g ON mods.garage_id = g.id
-			    		LEFT JOIN " . USERS_TABLE . " AS u ON mods.member_id = u.user_id
-		        		LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-        				LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
+	               		FROM " . GARAGE_MODS_TABLE . " mods, " . GARAGE_BUSINESS_TABLE . " b
+	    				LEFT JOIN " . GARAGE_TABLE . " g ON ( mods.garage_id = g.id )
+			    		LEFT JOIN " . USERS_TABLE . " u ON ( mods.member_id = u.user_id )
+		        		LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+        				LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
 				WHERE mods.business_id = b.id
 					AND ( b.web_shop =1 OR b.retail_shop =1 )
 					AND b.pending = 0
@@ -3106,11 +3106,11 @@ switch( $mode )
 			       	u.user_sig, u.user_sig_bbcode_uid, u.user_avatar, u.user_avatar_type, u.user_allowavatar,
 			       	u.user_allowsmile, u.user_allow_viewonline, u.user_session_time,
 				g.made_year, g.id as garage_id, makes.make, models.model
-                        FROM " . GARAGE_GUESTBOOKS_TABLE . " AS gb 
-                        	LEFT JOIN " . USERS_TABLE . " AS u ON gb.author_id = u.user_id 
-				LEFT JOIN " . GARAGE_TABLE ." AS g on g.member_id = gb.author_id and g.main_vehicle = 1
-       				LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-                		LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
+                        FROM " . GARAGE_GUESTBOOKS_TABLE . " gb 
+                        	LEFT JOIN " . USERS_TABLE . " u ON ( gb.author_id = u.user_id )
+				LEFT JOIN " . GARAGE_TABLE ." g ON g.member_id = gb.author_id and g.main_vehicle = 1 )
+       				LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id )
+                		LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id )
                         WHERE gb.garage_id = $cid
                         ORDER BY gb.post_date ASC";
 
