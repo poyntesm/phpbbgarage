@@ -3893,6 +3893,48 @@ class garage_lib
 		return $rows;
 	}
 
+	/*========================================================================*/
+	// Select All Insurance Data From Db
+	// Usage: select_all_vehicle_data();
+	/*========================================================================*/
+	function select_all_insurance_data($additional_where, $order_by, $sort_order, $start, $end)
+	{
+		global $db;
+		//Select All Vehicles Information
+		$sql = "SELECT i.*, g.*, b.title, b.id as business_id, makes.make, models.model, user.username, user.user_id,
+                        ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent,
+			CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
+        		FROM " . GARAGE_INSURANCE_TABLE . " AS i 
+                    		LEFT JOIN " . GARAGE_TABLE . " AS g ON i.garage_id = g.id
+	                    	LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON i.garage_id = mods.garage_id
+        	            	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " AS b ON i.business_id = b.id
+			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
+		        	LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id 
+			        LEFT JOIN " . USERS_TABLE . " AS user ON g.member_id = user.user_id 
+			WHERE makes.pending = 0 AND models.pending = 0
+				".$search_data['where']."
+		        GROUP BY i.id
+			ORDER BY $order_by $sort_order"
+		if ( (!empty($start)) AND (!empty($end)) )
+		{
+			$sql .= "LIMIT $start, $end";
+		}
+
+      		if ( !($result = $db->sql_query($sql)) )
+      		{
+         		message_die(GENERAL_ERROR, 'Could Not Get Insurance Data', '', __LINE__, __FILE__, $sql);
+      		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		return $rows;
+	}
+
+
 	
 	/*========================================================================*/
 	// Select All Vehicle Data From Db
@@ -4180,6 +4222,40 @@ class garage_lib
 		$db->sql_freeresult($result);
 
 		return $row;
+	}
+
+	/*========================================================================*/
+	// Select Model Data From DB
+	// Usage: select_model_data('model id');
+	/*========================================================================*/
+	function select_insurance_business_data($start, $where)
+	{
+		global $db, $where;
+
+		// Select Each Business
+      		$sql = "SELECT b.*, COUNT(DISTINCT b.id) as total
+       	 		FROM  " . GARAGE_BUSINESS_TABLE . " b 
+       			WHERE b.insurance = 1 
+				AND b.pending = 0
+				$where"
+		if (!empty($start))
+		{
+			$sql .=	"LIMIT $start, 25";
+		}
+
+      		if ( !($result = $db->sql_query($sql)) )
+      		{
+         		message_die(GENERAL_ERROR, 'Could Select Business Data', '', __LINE__, __FILE__, $sql);
+      		}
+
+		while( $row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
+      		$db->sql_freeresult($result);
+
+		return $rows;
+
 	}
 
 	/*========================================================================*/

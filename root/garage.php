@@ -1267,7 +1267,6 @@ switch( $mode )
 				'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$data['member_id']))
 			);
 		}
-		$db->sql_freeresult($result);
 
 		//Count Total Returned For Pagination...Notice No $start or $end to get complete count
 		$count = $garage_lib->select_all_vehicle_data($search_data['where'], $order_by, $sort_order, '', '');
@@ -1372,71 +1371,36 @@ switch( $mode )
 		//Pre Build All Side Menus
 		$garage_lib->build_sort_order_html($sort_order);
 
-		$sql = "SELECT i.*, g.*, b.title, b.id as business_id, makes.make, models.model, user.username, user.user_id,
-                        ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent,
-			CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
-        		FROM " . GARAGE_INSURANCE_TABLE . " AS i 
-                    		LEFT JOIN " . GARAGE_TABLE . " AS g ON i.garage_id = g.id
-	                    	LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON i.garage_id = mods.garage_id
-        	            	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " AS b ON i.business_id = b.id
-			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-		        	LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id 
-			        LEFT JOIN " . USERS_TABLE . " AS user ON g.member_id = user.user_id 
-			WHERE makes.pending = 0 AND models.pending = 0
-				".$search_data['where']."
-			GROUP BY i.id
-			ORDER BY $order_by $sort_order
-			LIMIT $start, " . $garage_config['cars_per_page'];
-
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Select All Vehicles Data', '', __LINE__, __FILE__, $sql);
-		}
-
-		while ($data = $db->sql_fetchrow($result) )
-		{
+		//Get All Insurance Data....
+		$data = $garage_lib->select_all_vehicle_data($search_data['where'], $order_by, $sort_order, $start, $garage_config['cars_per_page']);
+		for ($i = 0; $i < count($data); $i++)
+      		{
 			$row_color = ( !($i % 2) ) ? $theme['td_color1'] : $theme['td_color2'];
 			$row_class = ( !($i % 2) ) ? $theme['td_class1'] : $theme['td_class2'];
 
 			$template->assign_block_vars('vehiclerow', array(
 				'ROW_COLOR' => '#' . $row_color,
 				'ROW_CLASS' => $row_class,
-				'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$data['id']),
-				'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$data['user_id']),
-				'U_VIEW_BUSINESS' => append_sid("garage.$phpEx?mode=view_insurance_business&amp;business_id=".$data['business_id']),
-				'VEHICLE' => $data['vehicle'],
-				'USERNAME' => $data['username'],
-				'BUSINESS' => $data['title'],
-				'PRICE' => $data['price'],
-				'MOD_PRICE' => $data['total_spent'],
-				'PREMIUM' => $data['premium'],
-				'COVER_TYPE' => $data['cover_type'])
+				'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$data[$i]['id']),
+				'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$data[$i]['user_id']),
+				'U_VIEW_BUSINESS' => append_sid("garage.$phpEx?mode=view_insurance_business&amp;business_id=".$data[$i]['business_id']),
+				'VEHICLE' => $data[$i]['vehicle'],
+				'USERNAME' => $data[$i]['username'],
+				'BUSINESS' => $data[$i]['title'],
+				'PRICE' => $data[$i]['price'],
+				'MOD_PRICE' => $data[$i]['total_spent'],
+				'PREMIUM' => $data[$i]['premium'],
+				'COVER_TYPE' => $data[$i]['cover_type'])
 			);
 		}
-		$db->sql_freeresult($result);
 
-		$sql = "SELECT count(i.id) as total  
-        		FROM " . GARAGE_INSURANCE_TABLE . " AS i
-                    		LEFT JOIN " . GARAGE_TABLE . " AS g ON i.garage_id = g.id
-	                    	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " AS b ON i.business_id = b.id
-			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-			        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id 
-			WHERE makes.pending = 0 AND models.pending = 0
-				".$search_data['where'];
-
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Error Counting Total Vehicles', '', __LINE__, __FILE__, $sql);
-		}
-
-		$count = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
-
-		$pagination = generate_pagination("garage.$phpEx?mode=search_insurance&amp;make_id=".$search_data['make_id']."&amp;model_id=".$search_data['model_id']."&amp;sort=$sort&amp;order=$sort_order", $count['total'], $garage_config['cars_per_page'], $start). '&nbsp;';
+		//Count Total Returned For Pagination...Notice No $start or $end to get complete count
+		$count = $garage_lib->select_all_insurance_data($search_data['where'], $order_by, $sort_order, '', '');
+		$pagination = generate_pagination("garage.$phpEx?mode=search_insurance&amp;make_id=".$search_data['make_id']."&amp;model_id=".$search_data['model_id']."&amp;sort=$sort&amp;order=$sort_order", $count[0]['total'], $garage_config['cars_per_page'], $start). '&nbsp;';
 
 		$template->assign_vars(array(
 			'PAGINATION' 	=> $pagination,
-			'PAGE_NUMBER' 	=> sprintf($lang['Page_of'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count['total'] / $garage_config['cars_per_page'] )), 
+			'PAGE_NUMBER' 	=> sprintf($lang['Page_of'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count[0]['total'] / $garage_config['cars_per_page'] )), 
 			'L_GOTO_PAGE' 	=> $lang['Goto_page'],
 			'L_SORTED_BY' 	=> $lang['Insurance_Sorted_By'],
 			'L_IN' 		=> $lang['In'],
@@ -1889,29 +1853,13 @@ switch( $mode )
 			$limit = 20;
 		}
 
-		// Select Each Business
-      		$sql = "SELECT * 
-       	 		FROM  " . GARAGE_BUSINESS_TABLE . " b 
-       			WHERE b.insurance = 1
-				AND b.pending = 0
-				$where
-			LIMIT $start, 25";
+		// Get Insurance Business Data
+		$business = $garage_lib->select_insurance_business_data($start,$where);
 
-      		if ( !($result = $db->sql_query($sql)) )
-      		{
-         		message_die(GENERAL_ERROR, 'Could Select Business Data', '', __LINE__, __FILE__, $sql);
-      		}
-
-		if ( $db->sql_numrows($result) < 1 )
+		if ( count($business) < 1 )
 		{
 			redirect(append_sid("garage.$phpEx?mode=error&EID=1", true));
 		}
-
-		while( $row = $db->sql_fetchrow($result) )
-		{
-			$business[] = $row;
-		}
-      		$db->sql_freeresult($result);
 
 		if (!empty($single_business))
 		{
@@ -2018,26 +1966,14 @@ switch( $mode )
 			}
       		}// end FOR of outer loop - Business's
 
-		$sql = "SELECT count(DISTINCT b.id) as total
-			FROM " . GARAGE_BUSINESS_TABLE . " b
-			WHERE b.insurance =1
-				AND b.pending =0
-				$where";
-
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Error Getting Pagination Total', '', __LINE__, __FILE__, $sql);
-		}
-
-		$count = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
-
-		$pagination = generate_pagination("garage.$phpEx?mode=view_insurance_business", $count['total'], 25, $start). '&nbsp;';
+		// Get Insurance Business Data For Pagination
+		$count = $garage_lib->select_insurance_business_data('',$where);
+		$pagination = generate_pagination("garage.$phpEx?mode=view_insurance_business", $count[0]['total'], 25, $start). '&nbsp;';
 
 		$template->assign_block_vars('level1', array());
 		$template->assign_vars(array(
 			'PAGINATION' => $pagination,
-			'PAGE_NUMBER' => sprintf($lang['Page_of'], (floor( $start / 25) + 1), ceil($count['total'] / 25 )), 
+			'PAGE_NUMBER' => sprintf($lang['Page_of'], (floor( $start / 25) + 1), ceil($count[0]['total'] / 25 )), 
 			'L_GOTO_PAGE' => $lang['Goto_page'],
                		'L_LEVEL1' => $lang['Insurance_Summary'],
                		'U_LEVEL1' => append_sid("garage.$phpEx?mode=view_insurance_business"),
