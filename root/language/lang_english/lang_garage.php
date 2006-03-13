@@ -574,6 +574,8 @@ $lang['Models'] = 'Models';
 $lang['Reorder'] = 'Reorder';
 $lang['Move_Up'] = 'Move Up';
 $lang['Move_Down'] = 'Move Down';
+$lang['Add_Quota'] = 'Vehicle Quota';
+$lang['Upload_Quota'] = 'Upload Quota';
 
 
 ?>
