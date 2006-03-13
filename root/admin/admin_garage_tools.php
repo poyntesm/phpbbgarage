@@ -195,29 +195,6 @@ function orphan_search()
 	// Calculate which ones don't belong
 	$orphan_attach = array_diff($present_attach, $active_attach);
 		
-	// Inject our javascript toggle
-	$script = <<<EOF
-<SCRIPT LANGUAGE="JavaScript">
-<!--
-function select_all() {
-    for (var i=0;i<document.theAdminForm.elements.length;i++)
-    {
-       var e = document.theAdminForm.elements[i];
-       if (e.type=='checkbox')
-       {
-          if (e.checked == false) {
-               e.checked = true;
-          }
-          else
-               e.checked = false;
-          }
-     }
-     return 1;
-}
--->
-</script>
-EOF;
-
 	// If they don't have any, let them know
 	if ( count($orphan_attach) <= 0 )
 	{
@@ -250,8 +227,7 @@ EOF;
 			'L_GARAGE_ORPHANS_EXPLAIN' => $lang['Garage_Orphans_Explain'],
 			'L_GARAGE_ORPHANS_TABLE_TITLE' => $lang['Garage_Orphans_Table_Title'],
 			'L_REMOVE_SELECTED_ORPHANS' => $lang['Remove_Selected_Orphans'],
-			'S_ACTION' => append_sid('admin_garage_tools.'.$phpEx),
-			'SCRIPT' => $script)
+			'S_ACTION' => append_sid('admin_garage_tools.'.$phpEx))
 		);
 
 		// Otherwise print them all out baby!
