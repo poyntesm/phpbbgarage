@@ -2,7 +2,25 @@
 
 <p>{L_GARAGE_ORPHANS_EXPLAIN}</p>
 
-{SCRIPT}
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+function select_all() {
+    for (var i=0;i<document.theAdminForm.elements.length;i++)
+    {
+       var e = document.theAdminForm.elements[i];
+       if (e.type=='checkbox')
+       {
+          if (e.checked == false) {
+               e.checked = true;
+          }
+          else
+               e.checked = false;
+          }
+     }
+     return 1;
+}
+-->
+</script>
 
 <form action="{S_ACTION}" method="post" name="theAdminForm">
 <table width="100%" cellpadding="3" cellspacing="1" border="0" class="forumline">
