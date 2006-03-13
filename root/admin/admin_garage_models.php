@@ -36,7 +36,6 @@ $phpbb_root_path = '../';
 require($phpbb_root_path . 'extension.inc');
 require('./pagestart.' . $phpEx);
 require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage.' . $phpEx);
-
 //Build All Garage Functions For $garage_lib->
 include($phpbb_root_path . 'includes/functions_garage.' . $phpEx);
 
@@ -193,7 +192,7 @@ switch($mode)
 		break;
 
 	case 'delete_model_choice':
-		$make_id = ( isset($HTTP_POST_VARS['id'] ) ) ? intval($HTTP_POST_VARS['id']) : intval($HTTP_GET_VARS['id']);
+		$make_id = ( isset($HTTP_POST_VARS['id'] ) ) ? $HTTP_POST_VARS['id'] : rawurldecode($HTTP_GET_VARS['id']);
 		if(!$make_id)
 		{
 			message_die(GENERAL_MESSAGE, $lang['No_Make_Specified']);
@@ -298,35 +297,17 @@ switch($mode)
 
 	default:
 
-		$sql = "SELECT id,make 
-		FROM ".GARAGE_MAKES_TABLE."
-		ORDER BY make ASC";
-	
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Could not select makes data', '', __LINE__, __FILE__, $sql);
-		}
-	
-		$make_list = '';
-	
-		if($db->sql_numrows($result) != 0)
-		{
-			$template->assign_block_vars('makes_exist', array());
-	
-			while($row = $db->sql_fetchrow($result))
-			{
-				$make_list .= '<option value="'.$row['id'].'">'.strip_tags(htmlspecialchars($row['make'])).'</option>';
-			}
-		}
-
 		$template->set_filenames(array(
-			"body" => "admin/garage_model.tpl")
+			"body" => "admin/garage_makes_models.tpl")
 		);
 
 		$template->assign_vars(array(
 
 			'L_GARAGE_MODELS_TITLE' => $lang['Garage_Models_Title'],
 			'L_GARAGE_MODELS_EXPLAIN' => $lang['Garage_Models_Explain'],
+			'L_MAKE' => $lang['Make'],
+			'L_MODEL' => $lang['Model'],
+			'L_MODELS' => $lang['Models'],
 			'L_ADD_MAKE' => $lang['Add_Make'],
 			'L_ADD_MAKE_BUTTON' => $lang['Add_Make_Button'],
 			'L_MODIFY_MAKE' => $lang['Modify_Make'],
@@ -342,16 +323,48 @@ switch($mode)
 			'L_VEHICLE_MAKE' => $lang['Vehicle_Make'],
 			'L_VEHICLE_MODEL' => $lang['Vehicle_Model'],
 			'L_CHANGE_TO' => $lang['Change_To'],
+			'L_EDIT' => $lang['Edit'],
+			'L_STATUS' => $lang['Status'],
+			'L_DELETE' => $lang['Delete'],
+			'L_RENAME' => $lang['Rename'],
 			'S_GARAGE_MODELS_ACTION' => append_sid('admin_garage_models.'.$phpEx),
-			'MAKE_LIST' => $make_list,)
+			'SHOW' => '<img src="../' . $images['garage_show_details'] . '" alt="'.$lang['Show_Details'].'" title="'.$lang['Show_Details'].'" border="0" />',
+			'HIDE' => '<img src="../' . $images['garage_hide_details'] . '" alt="'.$lang['Hide_Details'].'" title="'.$lang['Hide_Details'].'" border="0" />')
 
-);
+		);
 
-$template->pparse("body");
+		$data = $garage_lib->select_make_data('');
+
+		for( $i = 0; $i < count($data); $i++ )
+		{
+			$status_mode =  ( $data[$i]['pending'] == TRUE ) ? 'set_approved' : 'set_pending' ;
+
+			$delete_url = append_sid("admin_garage_models.$phpEx?mode=confirm_delete&amp;id=" . $data[$i]['id']);
+			$status_url = append_sid("admin_garage_models.$phpEx?mode=$status_mode&amp;id=" . $data[$i]['id']);
+			$rename_url = 'javascript:rename('.$data[$i]['id'].')';
+
+
+			$delete = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" />' : $lang['Delete'] ;
+			$status = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_'.$status_mode] . '" alt="'.$lang[$status_mode].'" title="'.$lang[$status_mode].'" border="0" />' : $lang[$status_mode];
+			$rename = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_edit'] . '" alt="'.$lang['Rename'].'" title="'.$lang['Rename'].'" border="0" />' : $lang['Rename'];
+
+			$template->assign_block_vars('make', array(
+				'COLOR' => ($i % 2) ? 'row1' : 'row2',
+				'ID' => $data[$i]['id'],
+				'MAKE' => $data[$i]['make'],
+				'DELETE' => $delete,
+				'STATUS' => $status,
+				'RENAME' => $rename,
+				'U_RENAME' => $rename_url,
+				'U_DELETE' => $delete_url,
+				'U_STATUS' => $status_url)
+			);
+		}
+
+
+		$template->pparse("body");
 
 }
-// FINISH CHECKING FOR WHATEVER MODE WE AER IN THAT VARS ARE THERE
-
 
 include('./page_footer_admin.'.$phpEx);
 
