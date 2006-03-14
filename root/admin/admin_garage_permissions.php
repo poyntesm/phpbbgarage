@@ -126,50 +126,47 @@ switch($mode)
 		if ($HTTP_POST_VARS['BROWSE_PRIVATE'] == 1) 
 		{
 			$browse_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['browse']));
-			$sql = "UPDATE ". GARAGE_CONFIG_TABLE ."
-				SET config_value = '$browse_groups'
-				WHERE config_name = 'private_browse_perms'";
-			if ( !$result = $db->sql_query($sql) )
-			{
-				message_die(GENERAL_ERROR, 'Could not update permissions', '', __LINE__, __FILE__, $sql);
-			}
+			$garage_lib->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $browse_groups, 'config_name', 'private_browse_perms');
+		}
+		else
+		{
+			$garage_lib->update_single_field(GARAGE_CONFIG_TABLE,'config_value', '', 'config_name', 'private_browse_perms');
 		}
 
 		if ($HTTP_POST_VARS['INTERACT_PRIVATE'] == 1) 
 		{
 			$interact_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['interact']));
-			$sql = "UPDATE ". GARAGE_CONFIG_TABLE ."
-				SET config_value = '$interact_groups'
-				WHERE config_name = 'private_interact_perms'";
-			if ( !$result = $db->sql_query($sql) )
-			{
-				message_die(GENERAL_ERROR, 'Could not update permissions', '', __LINE__, __FILE__, $sql);
-			}
+			$garage_lib->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $interact_groups, 'config_name', 'private_interact_perms');
+		}
+		else
+		{
+			$garage_lib->update_single_field(GARAGE_CONFIG_TABLE,'config_value', '', 'config_name', 'private_interact_perms');
 		}
 
 		if ($HTTP_POST_VARS['ADD_PRIVATE'] == 1) 
 		{
 			$add_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['add']));
-
-			$sql = "UPDATE ". GARAGE_CONFIG_TABLE ."
-				SET config_value = '$add_groups'
-				WHERE config_name = 'private_add_perms'";
-			if ( !$result = $db->sql_query($sql) )
-			{
-				message_die(GENERAL_ERROR, 'Could not update permissions', '', __LINE__, __FILE__, $sql);
-			}
+			$garage_lib->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $add_groups, 'config_name', 'private_add_perms');
+			$add_quota = str_replace(",,", "", (str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['add_quota']))));
+			$garage_lib->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $add_quota, 'config_name', 'private_add_quota');
+		}
+		else
+		{
+			$garage_lib->update_single_field(GARAGE_CONFIG_TABLE,'config_value', '', 'config_name', 'private_add_perms');
+			$garage_lib->update_single_field(GARAGE_CONFIG_TABLE,'config_value', '', 'config_name', 'private_add_quota');
 		}
 
 		if ($HTTP_POST_VARS['UPLOAD_PRIVATE'] == 1) 
 		{
 			$upload_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['upload']));
-			$sql = "UPDATE ". GARAGE_CONFIG_TABLE ."
-				SET config_value = '$upload_groups'
-				WHERE config_name = 'private_upload_perms'";
-			if ( !$result = $db->sql_query($sql) )
-			{
-				message_die(GENERAL_ERROR, 'Could not update permissions', '', __LINE__, __FILE__, $sql);
-			}
+			$garage_lib->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $upload_groups, 'config_name', 'private_upload_perms');
+			$upload_quota = str_replace(",,", "", (str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['upload_quota']))));
+			$garage_lib->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $upload_quota, 'config_name', 'private_upload_quota');
+		}
+		else
+		{
+			$garage_lib->update_single_field(GARAGE_CONFIG_TABLE,'config_value', '', 'config_name', 'private_upload_perms');
+			$garage_lib->update_single_field(GARAGE_CONFIG_TABLE,'config_value', '', 'config_name', 'private_upload_quota');
 		}
 
 		$template->set_filenames(array(
@@ -349,6 +346,8 @@ switch($mode)
 				$template->assign_block_vars('usergroup', array(
 					'GROUP_ID' => $groupdata[$i]['group_id'],
 					'GROUP_NAME' => $groupdata[$i]['group_name'],
+					'ADD_QUOTA' => $garage_lib->get_group_add_quota($groupdata[$i]['group_id']),
+					'UPLOAD_QUOTA' => $garage_lib->get_group_upload_quota($groupdata[$i]['group_id']),
 					'BROWSE_CHECKED' => (in_array($groupdata[$i]['group_id'], $browse_groups)) ? 'checked="checked"' : '',
 					'INTERACT_CHECKED' => (in_array($groupdata[$i]['group_id'], $interact_groups)) ? 'checked="checked"' : '',
 					'ADD_CHECKED' => (in_array($groupdata[$i]['group_id'], $add_groups)) ? 'checked="checked"' : '',
@@ -381,6 +380,8 @@ switch($mode)
 			'L_GUEST_USERS' => $lang['Guest_Users'],
 			'L_PRIVATE' => $lang['Private'],
 			'L_SAVE' => $lang['Save'],
+			'L_ADD_QUOTA' => $lang['Add_Quota'],
+			'L_UPLOAD_QUOTA' => $lang['Upload_Quota'],
 			'S_GARAGE_ACTION' => append_sid("admin_garage_permissions.$phpEx?mode=update_permissions"))
 		);
 
