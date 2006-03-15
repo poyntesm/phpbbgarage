@@ -41,11 +41,11 @@
 				</tr>
 				<tr>
 					<td class="row1" width="35%"><span class="gen"><b>{L_DESCRIPTION}</b></span></td>
-					<td class="row2"><textarea name="comments" cols="60" rows="4" wrap="soft"   class="multitext">{COMMENTS}</textarea></td>
+					<td class="row2"><textarea name="comments" cols="60" rows="4" wrap="soft"   class="post">{COMMENTS}</textarea></td>
 				</tr>
 				<tr>
 					<td class="row1" width="35%"><span class="gen"><b>{L_INSTALL_COMMENTS}</b></span><br/><span class="gensmall">{L_ONLY_SHOW_IN_REVIEW}</span></td>
-					<td class="row2"><textarea name="install_comments" cols="60" rows="4" wrap="soft"   class="multitext">{INSTALL_COMMENTS}</textarea></td>
+					<td class="row2"><textarea name="install_comments" cols="60" rows="4" wrap="soft"   class="post">{INSTALL_COMMENTS}</textarea></td>
 				</tr>
 				<!-- BEGIN allow_images -->
 				<tr>

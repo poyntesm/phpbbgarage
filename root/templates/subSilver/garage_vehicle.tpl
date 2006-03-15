@@ -45,7 +45,7 @@
 				</tr>
 				<tr>
 					<td class="row1" width="30%"><span class="gen"><b>{L_DESCRIPTION}</b></span></td>
-					<td class="row2"><textarea name="comments" cols="60" rows="5" wrap="soft" class="multitext" value="{COMMENTS}">{COMMENTS}</textarea></td>
+					<td class="row2"><textarea name="comments" cols="60" rows="5" wrap="soft" class="post" value="{COMMENTS}">{COMMENTS}</textarea></td>
 				</tr>
 				<!-- BEGIN allow_images -->
 				<tr>

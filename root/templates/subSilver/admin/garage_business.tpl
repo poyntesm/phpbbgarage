@@ -13,7 +13,7 @@
 	</tr>
 	<tr>
 		<td class="row1" width="35%"><span class="gen"><b>{L_BUSINESS_ADDRESS}</b></span></td>
-		<td class="row2"><textarea name="address" cols="60" rows="5" wrap="soft"   class="multitext">{COMMENTS}</textarea></td>
+		<td class="row2"><textarea name="address" cols="60" rows="5" wrap="soft"   class="post">{COMMENTS}</textarea></td>
 	</tr>
 	<tr>
 		<td class="row1" width="20%"><span class="gen"><b>{L_BUSINESS_TELEPHONE_NO}</b></span></td>
@@ -33,7 +33,7 @@
 	</tr>
 	<tr>
 		<td class="row1" width="35%"><span class="gen"><b>{L_BUSINESS_OPENING_HOURS}</b></span></td>
-		<td class="row2"><textarea name="opening_hours" cols="60" rows="5" wrap="soft"   class="multitext">{COMMENTS}</textarea></td>
+		<td class="row2"><textarea name="opening_hours" cols="60" rows="5" wrap="soft"  class="post">{COMMENTS}</textarea></td>
 	</tr>
 	<tr>
 		<td class="row1" width="20%"><span class="gen"><b>{L_BUSINESS_TYPE}</b></span></td>
