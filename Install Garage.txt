@@ -742,7 +742,7 @@ if ( $db->sql_numrows($result) > 0 )
 		}
 	}
 
-	$garage_img ='<a href="' . append_sid("garage.$phpEx?mode=browse&search=yes&user=".$profiledata['username']."") . '"><img src="' . $images['icon_garage'] . '" alt="'.$lang['Garage'].'" title="'.$lang['Garage'].'" border="0" /></a>';
+	$garage_img ='<a href="' . append_sid("garage.$phpEx?mode=browse&search=yes&user=".urlencode($profiledata['username'])."") . '"><img src="' . $images['icon_garage'] . '" alt="'.$lang['Garage'].'" title="'.$lang['Garage'].'" border="0" /></a>';
 
 	$template->assign_vars(array(
 		'L_VEHICLE' => $lang['Vehicle'],
