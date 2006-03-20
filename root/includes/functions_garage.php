@@ -2333,7 +2333,11 @@ class garage_lib
 	
 	 	$sql = "SELECT mods.id, mods.garage_id, mods.member_id, mods.title AS mod_title, mods.date_updated AS POI, m.username, mods.garage_id 
 	                FROM " . GARAGE_MODS_TABLE . " AS mods 
+				LEFT JOIN " . GARAGE_TABLE . " AS g ON mods.garage_id = g.id
+			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
+	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
 	                	LEFT JOIN " . USERS_TABLE . " AS m ON mods.member_id = m.user_id
+			WHERE makes.pending = 0 AND models.pending = 0
 	                ORDER BY POI DESC LIMIT $limit";
 	 		            
 	 	if(!$result = $db->sql_query($sql))
@@ -2659,7 +2663,11 @@ class garage_lib
 	 	$sql = "SELECT mods.id, mods.garage_id, mods.member_id, mods.title AS mod_title, mods.date_created AS POI,
 	       			m.username, mods.garage_id 
 	                FROM " . GARAGE_MODS_TABLE . " AS mods 
+				LEFT JOIN " . GARAGE_TABLE . " AS g ON mods.garage_id = g.id
+			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
+	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
 	                	LEFT JOIN " . USERS_TABLE . " AS m ON mods.member_id = m.user_id
+			WHERE makes.pending = 0 AND models.pending = 0
 	                ORDER BY POI DESC LIMIT $limit";
 	 		            
 	 	if(!$result = $db->sql_query($sql))
