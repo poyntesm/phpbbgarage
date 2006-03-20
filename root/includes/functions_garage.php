@@ -3881,7 +3881,7 @@ class garage_lib
 			WHERE makes.pending = 0 AND models.pending = 0
 				".$search_data['where']."
 		        GROUP BY g.id
-			ORDER BY $order_by $sort_order"
+			ORDER BY $order_by $sort_order";
 		if ( (!empty($start)) AND (!empty($end)) )
 		{
 			$sql .= "LIMIT $start, $end";
@@ -3922,7 +3922,7 @@ class garage_lib
 			WHERE makes.pending = 0 AND models.pending = 0
 				".$search_data['where']."
 		        GROUP BY i.id
-			ORDER BY $order_by $sort_order"
+			ORDER BY $order_by $sort_order";
 		if ( (!empty($start)) AND (!empty($end)) )
 		{
 			$sql .= "LIMIT $start, $end";
@@ -3982,7 +3982,7 @@ class garage_lib
 		global $db;
 	
 		$sql = "SELECT mods.*, g.made_year, g.id, images.*, user.username, user.user_avatar_type, user.user_allowavatar, user.user_avatar, images.attach_ext, images.attach_id, images.attach_file, cats.title as category_title, makes.make, models.model, bus.title as business_name, ins.title as install_business_name, ins.id as install_business_id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
-     			FROM " . GARAGE_MODS_TABLE . " AS mods, " . GARAGE_TABLE . " AS g 
+     			FROM (" . GARAGE_MODS_TABLE . " AS mods, " . GARAGE_TABLE . " AS g)
 				LEFT JOIN " . USERS_TABLE ." AS user ON g.member_id = user.user_id
 				LEFT JOIN " . GARAGE_CATEGORIES_TABLE . " AS cats ON cats.id = mods.category_id
         			LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = mods.image_id 
@@ -4245,7 +4245,8 @@ class garage_lib
        	 		FROM  " . GARAGE_BUSINESS_TABLE . " b 
        			WHERE b.insurance = 1 
 				AND b.pending = 0
-				$where"
+				$where
+			GROUP BY b.id";
 		if (!empty($start))
 		{
 			$sql .=	"LIMIT $start, 25";

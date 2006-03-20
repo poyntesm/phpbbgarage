@@ -2101,7 +2101,7 @@ switch( $mode )
 
 			//Now Lets Go Get All Mods All Business's Have Installed
  			$sql = "SELECT mods.id, mods.garage_id, mods.title AS mod_title, mods.install_price, mods.install_rating, mods.install_comments, u.username, u.user_id, makes.make, models.model, g.made_year, b.id as business_id
-	               		FROM " . GARAGE_MODS_TABLE . " mods, " . GARAGE_BUSINESS_TABLE . " b
+	               		FROM (" . GARAGE_MODS_TABLE . " mods, " . GARAGE_BUSINESS_TABLE . " b)
 	    				LEFT JOIN " . GARAGE_TABLE . " g ON ( mods.garage_id = g.id )
 			    		LEFT JOIN " . USERS_TABLE . " u ON ( mods.member_id = u.user_id )
 		        		LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
@@ -2299,7 +2299,7 @@ switch( $mode )
 
 			//Now Lets Go Get All Mods All Business's Have Installed
  			$sql = "SELECT mods.id, mods.garage_id, mods.title AS mod_title, mods.price, mods.product_rating, mods.comments, u.username, u.user_id, makes.make, models.model, g.made_year, b.id as business_id
-	               		FROM " . GARAGE_MODS_TABLE . " mods, " . GARAGE_BUSINESS_TABLE . " b
+	               		FROM (" . GARAGE_MODS_TABLE . " mods, " . GARAGE_BUSINESS_TABLE . " b)
 	    				LEFT JOIN " . GARAGE_TABLE . " g ON ( mods.garage_id = g.id )
 			    		LEFT JOIN " . USERS_TABLE . " u ON ( mods.member_id = u.user_id )
 		        		LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
@@ -3111,10 +3111,10 @@ switch( $mode )
 			       	u.user_allowsmile, u.user_allow_viewonline, u.user_session_time,
 				g.made_year, g.id as garage_id, makes.make, models.model
                         FROM " . GARAGE_GUESTBOOKS_TABLE . " gb 
-                        	LEFT JOIN " . USERS_TABLE . " u ON ( gb.author_id = u.user_id )
-				LEFT JOIN " . GARAGE_TABLE ." g ON g.member_id = gb.author_id and g.main_vehicle = 1 )
-       				LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id )
-                		LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id )
+                        	LEFT JOIN " . USERS_TABLE . " u ON gb.author_id = u.user_id 
+				LEFT JOIN " . GARAGE_TABLE ." g ON g.member_id = gb.author_id and g.main_vehicle = 1 
+       				LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
+                		LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id 
                         WHERE gb.garage_id = $cid
                         ORDER BY gb.post_date ASC";
 
