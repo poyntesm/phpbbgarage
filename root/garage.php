@@ -490,7 +490,7 @@ switch( $mode )
 			'L_ONLY_SHOW_IN_REVIEW' => $lang['Only_Show_In_Review'],
        			'L_TITLE' => $lang['Modify_Mod'],
        			'L_BUTTON' => $lang['Modify_Mod'],
-			'U_LEVEL2' => append_sid("garage.$phpEx?mode=view_own_vehicle&amp;CID=".$cid.""),
+			'U_LEVEL2' => append_sid("garage.$phpEx?mode=view_own_vehicle&amp;CID=".$cid),
 			'S_MODE_ACTION' => append_sid("garage.$phpEx?mode=update_modification"),
 			'MID' => $mid,
 			'CID' => $cid,
@@ -715,7 +715,7 @@ switch( $mode )
 		$template->assign_block_vars('level2', array());
 		$template->assign_vars(array(
 			'L_GARAGE_QUARTERMILE_TIMES' => $lang['Garage_Quartermile_Times'],
-			'U_LEVEL2' => append_sid("garage.$phpEx?mode=view_own_vehicle&amp;CID=".$cid.""),
+			'U_LEVEL2' => append_sid("garage.$phpEx?mode=view_own_vehicle&amp;CID=".$cid),
 			'L_LEVEL2' => $data['vehicle'],
 			'L_TITLE'  => $lang['Edit_Time'],
 			'L_BUTTON'  => $lang['Edit_Time'],
@@ -934,7 +934,7 @@ switch( $mode )
 
 		$template->assign_block_vars('level2', array());
 		$template->assign_vars(array(
-			'U_LEVEL2' => append_sid("garage.$phpEx?mode=view_own_vehicle&amp;CID=".$cid.""),
+			'U_LEVEL2' => append_sid("garage.$phpEx?mode=view_own_vehicle&amp;CID=".$cid),
 			'L_LEVEL2' => $data['vehicle'],
 			'L_GARAGE_ROLLINGROAD_RUNS' => $lang['Garage_Rollingroad_Runs'],
 			'L_TITLE'  => $lang['Edit_Run'],
@@ -1134,7 +1134,7 @@ switch( $mode )
 
 		$template->assign_block_vars('level2', array());
 		$template->assign_vars(array(
-			'U_LEVEL2' 		=> append_sid("garage.$phpEx?mode=view_own_vehicle&amp;CID=".$cid.""),
+			'U_LEVEL2' 		=> append_sid("garage.$phpEx?mode=view_own_vehicle&amp;CID=".$cid),
 			'L_LEVEL2' 		=> $data['vehicle'],
 			'L_TITLE' 		=> $lang['Edit_Premium'],
 			'L_BUTTON' 		=> $lang['Edit_Premium'],
@@ -1288,7 +1288,7 @@ switch( $mode )
 				'MODEL' => $data['model'],
 				'OWNER' => $data['username'],
 				'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=$cid"),
-				'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$data['member_id'].""))
+				'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$data['member_id']))
 			);
 			$i++;
 		}
@@ -1311,7 +1311,7 @@ switch( $mode )
 		$count = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		$pagination = generate_pagination("garage.$phpEx?mode=browse&amp".$search_data['make_pagination']."".$search_data['model_pagination']."".$search_data['pagination'].";sort=$sort&amp;order=$sort_order", $count['total'], $garage_config['cars_per_page'], $start). '&nbsp;';
+		$pagination = generate_pagination("garage.$phpEx?mode=browse&amp".$search_data['make_pagination'].$search_data['model_pagination'].$search_data['pagination'].";sort=$sort&amp;order=$sort_order", $count['total'], $garage_config['cars_per_page'], $start). '&nbsp;';
 
 		$template->assign_block_vars('level2', array());
 		$template->assign_vars(array(
@@ -1440,9 +1440,9 @@ switch( $mode )
 			$template->assign_block_vars('vehiclerow', array(
 				'ROW_COLOR' => '#' . $row_color,
 				'ROW_CLASS' => $row_class,
-				'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" .$data['id'].""),
-				'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=" .$data['user_id']. ""),
-				'U_VIEW_BUSINESS' => append_sid("garage.$phpEx?mode=view_insurance_business&amp;business_id=" .$data['business_id']. ""),
+				'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" .$data['id']),
+				'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=" .$data['user_id']),
+				'U_VIEW_BUSINESS' => append_sid("garage.$phpEx?mode=view_insurance_business&amp;business_id=" .$data['business_id']),
 				'VEHICLE' => $data['vehicle'],
 				'USERNAME' => $data['username'],
 				'BUSINESS' => $data['title'],
@@ -1626,10 +1626,10 @@ switch( $mode )
             		'PRODUCT_RATING' => $data['product_rating'],
             		'INSTALL_RATING' => $data['install_rating'],
             		'BUSINESS_NAME' => $data['business_name'],
-			'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$data['member_id'].""),
+			'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$data['member_id']),
 			'U_LEVEL1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=$cid"),
-			'U_VIEW_GARAGE_BUSINESS' => append_sid("garage.$phpEx?mode=view_garage_business&amp;business_id=".$data['install_business_id'].""),
-			'U_VIEW_SHOP_BUSINESS' => append_sid("garage.$phpEx?mode=view_shop_business&amp;business_id=".$data['business_id'].""),
+			'U_VIEW_GARAGE_BUSINESS' => append_sid("garage.$phpEx?mode=view_garage_business&amp;business_id=".$data['install_business_id']),
+			'U_VIEW_SHOP_BUSINESS' => append_sid("garage.$phpEx?mode=view_shop_business&amp;business_id=".$data['business_id']),
 			'BUSINESS' => $data['install_business_name'],
 			'USERNAME' => $data['username'],
             		'AVATAR_IMG' => $data['avatar_img'],
@@ -1837,7 +1837,7 @@ switch( $mode )
 			}
 			else
 			{
-				$temp_url = append_sid("garage.$phpEx?mode=set_hilite&amp;image_id=". $data[$i]['image_id'] ."&amp;CID=". $cid ."", true);
+				$temp_url = append_sid("garage.$phpEx?mode=set_hilite&amp;image_id=". $data[$i]['image_id'] ."&amp;CID=".$cid, true);
 				$hilite= '<a href="'.$temp_url.'">' .$lang['Set_Hilite_Image']. "</a>";
 			}
 
@@ -1850,7 +1850,7 @@ switch( $mode )
 
 			$template->assign_block_vars('pic_row', array(
 				'THUMB_IMAGE' => $image,
-				'U_REMOVE_IMAGE' => append_sid("garage.$phpEx?mode=remove_gallery_item&amp;&amp;CID=$cid&amp;image_id=". $data[$i]['image_id'].""),
+				'U_REMOVE_IMAGE' => append_sid("garage.$phpEx?mode=remove_gallery_item&amp;&amp;CID=$cid&amp;image_id=". $data[$i]['image_id']),
 				'HILITE' => $hilite)
 			);
 		}
@@ -1956,7 +1956,7 @@ switch( $mode )
 		{
 			$template->assign_block_vars('level2', array());
 			$template->assign_vars(array(
-				'U_LEVEL2' => append_sid("garage.$phpEx?mode=view_insurance_business&amp;business_id=".$business[0]['id'].""),
+				'U_LEVEL2' => append_sid("garage.$phpEx?mode=view_insurance_business&amp;business_id=".$business[0]['id']),
 				'L_LEVEL2' => $business[0]['title'])
 			);
 		}
@@ -1966,7 +1966,7 @@ switch( $mode )
       		{
          		//Setup cat_row Template Varibles
          		$template->assign_block_vars('business_row', array(
-            			'U_VIEW_BUSINESS' => append_sid("garage.$phpEx?mode=view_insurance_business&amp;business_id=".$business[$i]['id'].""),
+            			'U_VIEW_BUSINESS' => append_sid("garage.$phpEx?mode=view_insurance_business&amp;business_id=".$business[$i]['id']),
             			'NAME' => $business[$i]['title'],
 	            		'ADDRESS' => $business[$i]['address'],
         	    		'TELEPHONE' => $business[$i]['telephone'],
@@ -2047,8 +2047,8 @@ switch( $mode )
 					$template->assign_block_vars('business_row.insurance_detail.premiums', array(
 						'USERNAME' => $insurance_data['username'],
 						'VEHICLE' => $insurance_data['made_year'] . ' ' . $insurance_data['make'] . ' ' . $insurance_data['model'],
-						'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=" . $insurance_data['user_id'] . ""),
-						'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" . $insurance_data['garage_id'] .""),
+						'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=" . $insurance_data['user_id']),
+						'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" . $insurance_data['garage_id']),
 						'PREMIUM' => $insurance_data['premium'],
 						'COVER_TYPE' => $insurance_data['cover_type'])
 					);
@@ -2165,7 +2165,7 @@ switch( $mode )
 		{
 			$template->assign_block_vars('level2', array());
 			$template->assign_vars(array(
-				'U_LEVEL2' => append_sid("garage.$phpEx?mode=view_garage_business&amp;business_id=".$business[0]['id'].""),
+				'U_LEVEL2' => append_sid("garage.$phpEx?mode=view_garage_business&amp;business_id=".$business[0]['id']),
 				'L_LEVEL2' => $business[0]['title'])
 			);
 		}
@@ -2180,7 +2180,7 @@ switch( $mode )
 
 			//Setup cat_row Template Varibles
          		$template->assign_block_vars('business_row', array(
-				'U_VIEW_BUSINESS' => append_sid("garage.$phpEx?mode=view_garage_business&amp;business_id=".$business[$i]['id'].""),
+				'U_VIEW_BUSINESS' => append_sid("garage.$phpEx?mode=view_garage_business&amp;business_id=".$business[$i]['id']),
             			'NAME' => $business[$i]['title'],
             			'ADDRESS' => $business[$i]['address'],
             			'TELEPHONE' => $business[$i]['telephone'],
@@ -2227,9 +2227,9 @@ switch( $mode )
 				$template->assign_block_vars('business_row.mod_row', array(
 					'USERNAME' => $bus_mod_data['username'],
 					'VEHICLE' => $bus_mod_data['made_year'] . ' ' . $bus_mod_data['make'] . ' ' . $bus_mod_data['model'],
-					'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=" . $bus_mod_data['user_id'] . ""),
-					'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" . $bus_mod_data['garage_id'] .""),
-					'U_VIEW_MODIFICATION' => append_sid("garage.$phpEx?mode=view_modification&amp;CID=" . $bus_mod_data['garage_id'] ."&amp;MID=" . $bus_mod_data['id'] .""),
+					'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=" . $bus_mod_data['user_id']),
+					'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" . $bus_mod_data['garage_id']),
+					'U_VIEW_MODIFICATION' => append_sid("garage.$phpEx?mode=view_modification&amp;CID=" . $bus_mod_data['garage_id'] ."&amp;MID=" . $bus_mod_data['id']),
 					'MODIFICATION' => $bus_mod_data['mod_title'],
 					'INSTALL_RATING' => $bus_mod_data['install_rating'])
 				);
@@ -2363,7 +2363,7 @@ switch( $mode )
 		{
 			$template->assign_block_vars('level2', array());
 			$template->assign_vars(array(
-				'U_LEVEL2' => append_sid("garage.$phpEx?mode=view_shop_business&amp;business_id=".$business[0]['id'].""),
+				'U_LEVEL2' => append_sid("garage.$phpEx?mode=view_shop_business&amp;business_id=".$business[0]['id']),
 				'L_LEVEL2' => $business[0]['title'])
 			);
 		}
@@ -2378,7 +2378,7 @@ switch( $mode )
 
 			//Setup cat_row Template Varibles
          		$template->assign_block_vars('business_row', array(
-				'U_VIEW_BUSINESS' => append_sid("garage.$phpEx?mode=view_shop_business&amp;business_id=".$business[$i]['id'].""),
+				'U_VIEW_BUSINESS' => append_sid("garage.$phpEx?mode=view_shop_business&amp;business_id=".$business[$i]['id']),
             			'NAME' => $business[$i]['title'],
             			'ADDRESS' => $business[$i]['address'],
             			'TELEPHONE' => $business[$i]['telephone'],
@@ -2425,9 +2425,9 @@ switch( $mode )
 				$template->assign_block_vars('business_row.mod_row', array(
 					'USERNAME' => $bus_mod_data['username'],
 					'VEHICLE' => $bus_mod_data['made_year'] . ' ' . $bus_mod_data['make'] . ' ' . $bus_mod_data['model'],
-					'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=" . $bus_mod_data['user_id'] . ""),
-					'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" . $bus_mod_data['garage_id'] .""),
-					'U_VIEW_MODIFICATION' => append_sid("garage.$phpEx?mode=view_modification&amp;CID=" . $bus_mod_data['garage_id'] ."&amp;MID=" . $bus_mod_data['id'] .""),
+					'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=" . $bus_mod_data['user_id']),
+					'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" . $bus_mod_data['garage_id']),
+					'U_VIEW_MODIFICATION' => append_sid("garage.$phpEx?mode=view_modification&amp;CID=" . $bus_mod_data['garage_id'] ."&amp;MID=" . $bus_mod_data['id']),
 					'MODIFICATION' => $bus_mod_data['mod_title'],
 					'RATING' => $bus_mod_data['product_rating'],
 					'PRICE' => $bus_mod_data['price'])
@@ -2740,7 +2740,7 @@ switch( $mode )
 		//Update The DB With Data Acquired
 		$garage_lib->insert_make($data);
 
-		redirect(append_sid("garage.$phpEx?mode=create_vehicle&MAKE=".$data['make']."", true));
+		redirect(append_sid("garage.$phpEx?mode=create_vehicle&MAKE=".$data['make'], true));
 
 		break;
 
@@ -2816,7 +2816,7 @@ switch( $mode )
 		//Update The DB With Data Acquired
 		$garage_lib->insert_model($data);
 
-		redirect(append_sid("garage.$phpEx?mode=create_vehicle&MAKE=".$data['make']."&MODEL=".$data['model']."", true));
+		redirect(append_sid("garage.$phpEx?mode=create_vehicle&MAKE=".$data['make']."&MODEL=".$data['model'], true));
 
 		break;
 
