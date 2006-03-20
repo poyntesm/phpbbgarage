@@ -197,7 +197,11 @@ switch( $mode )
 		//We Need To Check If We Have Been Sent Here To Add A Model...
 		if ( $data['adding_model'] == 'YES' )
 		{
-			redirect(append_sid("garage.$phpEx?mode=user_submit_model&MAKE_ID=".$data['make_id']."", true));
+			if ( empty($data['make_id']) )
+			{
+				redirect(append_sid("garage.$phpEx?mode=error&EID=23", true));
+			}
+			redirect(append_sid("garage.$phpEx?mode=user_submit_model&MAKE_ID=".$data['make_id'], true));
 		}
 
 		//Set As Main User Vehicle If No Other Vehicle Exists For User

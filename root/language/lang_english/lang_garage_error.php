@@ -44,4 +44,5 @@ $lang['Garage_Error_19'] = '<b>No GD Configured In PHP Build</b><br /><br />Your
 $lang['Garage_Error_20'] = '<b>GDv1 Configured In PHP Build</b><br /><br />Your build of PHP is missing the required GDv2 library that is used for all image processing.<br />Any item you were creating will have been created but no image attached. Please configure your PHP build with GDv2 and try again';
 $lang['Garage_Error_21'] = '<b>Unable To Rate Vehicle You Own</b><br /><br />Sorry but you are not allowed to rate your own vehicle.';
 $lang['Garage_Error_22'] = '<b>You Selected More Than One Business</b><br /><br />Sorry but you are not allowed to select more than one business from the pending list when you are performing this action.';
+$lang['Garage_Error_23'] = '<b>No Make Selected</b><br /><br />Sorry but you selected to add a model but no make was selected. Please go back and select a make.';
 ?>
