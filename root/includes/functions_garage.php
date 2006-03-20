@@ -5055,6 +5055,12 @@ class garage_lib
 					'ERROR_MESSAGE' => $lang['Garage_Error_22'])
 				);
 				break;
+			//No Make Selected When User Adding Model
+			case '23':
+				$template->assign_vars(array(
+					'ERROR_MESSAGE' => $lang['Garage_Error_23'])
+				);
+				break;
 
 			//Catch All Error Message
 			default:
