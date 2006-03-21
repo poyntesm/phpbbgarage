@@ -53,6 +53,7 @@ echo '<tr><th>Upgrading To phpBB Garage Version 1.0.4</th></tr><tr><td class="ro
 $sql = array();
 
 $sql[] = "UPDATE " . $table_prefix . "garage_config SET config_value = '1.0.4' WHERE config_name = 'version'";
+$sql[] = "ALTER TABLE " . $table_prefix . "garage_categories ADD `field_order` TINYINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'";
 
 for( $i = 0; $i < count($sql); $i++ )
 {
