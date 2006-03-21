@@ -81,18 +81,15 @@ switch($mode)
 
 	case 'update_business':
 
-		//First Things First...Get The ID Of Business We Are Updating
-		$params = array('business_id');
-		$id = $garage_lib->process_post_vars($params, $id['business_id']);
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('title', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
+		$params = array('id', 'title', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
 		$data = $garage_lib->process_post_vars($params);
-		$data['id'] = $id['business_id'] ;
 		$data['pending'] = ($garage_config['enable_business_approval'] == '1') ? 1 : 0 ;
-		$data['insurance'] = ($data['insurance'] == 'on') ? 1 : 0 ;
-		$data['garage'] = ($data['garage'] == 'on') ? 1 : 0 ;
-		$data['retail_shop'] = ($data['retail_shop'] == 'on') ? 1 : 0 ;
-		$data['web_shop'] = ($data['web_shop'] == 'on') ? 1 : 0 ;
+		$data['insurance'] = ($data['insurance'] == 'true') ? 1 : 0 ;
+		$data['garage'] = ($data['garage'] == 'true') ? 1 : 0 ;
+		$data['retail_shop'] = ($data['retail_shop'] == 'true') ? 1 : 0 ;
+		$data['web_shop'] = ($data['web_shop'] == 'true') ? 1 : 0 ;
+
 		//Check They Entered http:// In The Front Of The Link
 		if ( (!preg_match( "/^http:\/\//i", $data['website'])) AND (!empty($data['website'])) )
 		{
@@ -109,30 +106,33 @@ switch($mode)
 
 	case 'confirm_delete':
 
-		//Get All Business Data To Build Dropdown Of Where To Move Linked Items To
-		$data = $garage_lib->select_business_data();
-
-		//Build Dropdown Options For Where To Love Linked Items To
-		for ($i = 0; $i < count($data); $i++)
-		{
-			$select_to .= '<option value="'. $data[$i]['id'] .'">'. $data[$i]['title'] .'</option>';
-		}
-
-		//Store ID Of Business We Are Deleting For Use In Action Variable
-		$params = array('id');
-		$data = $garage_lib->process_post_vars($params);
-		$data = $garage_lib->select_business_data($data['id']);
-
 		$template->set_filenames(array(
 			'body' => 'admin/garage_confirm_delete.tpl')
 		);
 
+		//Store Data Of Business We Are Deleting For Use In Action Variable
+		$params = array('id');
+		$data = $garage_lib->process_post_vars($params);
+		$data = $garage_lib->select_business_data($data['id']);
+
+		//Get All Business Data To Build Dropdown Of Where To Move Linked Items To
+		$all_data = $garage_lib->select_business_data('');
+
+		//Build Dropdown Options For Where To Love Linked Items To
+		for ($i = 0; $i < count($all_data); $i++)
+		{
+			//Do Not List Business We Are Deleting..
+			if ( $data[0]['id'] == $all_data[$i]['id'] )
+			{
+				continue;
+			}
+			$select_to .= '<option value="'. $all_data[$i]['id'] .'">'. $all_data[$i]['title'] .'</option>';
+		}
+
+		//Send Needed Info To Template
 		$template->assign_vars(array(
-			'S_GARAGE_ACTION' => append_sid("admin_garage_business.$phpEx?id=".$data['id']),
-			'L_DELETE' => $lang['Delete_Business'],
-			'L_DELETE_EXPLAIN' => $lang['Delete_Business_Explain'],
-			'L_TITLE' => $lang['Business'],
-			'S_TITLE' => $data['title'],
+			'S_GARAGE_ACTION' => append_sid("admin_garage_business.$phpEx?id=".$data[0]['id']),
+			'S_TITLE' => $data[0]['title'],
 			'L_MOVE_CONTENTS' => $lang['Move_contents'],
 			'L_MOVE_DELETE' => $lang['Move_and_Delete'],
 			'L_REQUIRED' => $lang['Required'],
@@ -219,6 +219,7 @@ switch($mode)
 			'L_GARAGE_BUSINESS_TITLE' => $lang['Garage_Business_Title'],
 			'L_GARAGE_BUSINESS_EXPLAIN' => $lang['Garage_Business_Explain'],
 			'L_ADD_NEW_BUSINESS' => $lang['Add_New_Business'],
+			'L_TYPE' => $lang['Type'],
 			'L_EDIT_BUSINESS' => $lang['Edit_Business'],
 			'L_BUSINESS_NAME' => $lang['Business_Name'],
 			'L_INSURANCE' => $lang['Insurance'],
@@ -240,6 +241,8 @@ switch($mode)
 			'L_CAT_TITLE' => $lang['New_Category_Title'],
 			'L_PANEL_TITLE' => $lang['Create_category'],
 			'L_EMPTY_TITLE' => $lang['Empty_Title'],
+			'L_CLICK_TO_SHOW' => $lang['Show_Details'],
+			'L_CLICK_TO_HIDE' => $lang['Hide_Details'],
 			'SHOW' => '<img src="../' . $images['garage_show_details'] . '" alt="'.$lang['Show_Details'].'" title="'.$lang['Show_Details'].'" border="0" />',
 			'HIDE' => '<img src="../' . $images['garage_hide_details'] . '" alt="'.$lang['Hide_Details'].'" title="'.$lang['Hide_Details'].'" border="0" />',
 			'S_GARAGE_MODE_UPDATE' => append_sid("admin_garage_business.$phpEx?mode=update_business"),
@@ -261,6 +264,35 @@ switch($mode)
 			$delete = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" />' : $lang['Delete'] ;
 			$status = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_'.$status_mode] . '" alt="'.$lang[$status_mode].'" title="'.$lang[$status_mode].'" border="0" />' : $lang[$status_mode];
 
+			//Work Out Type Of Business
+			$type ='';
+			if ( $data[$i]['insurance'] == '1' )
+			{
+		       	 	$type = $lang['Insurance'] ;
+			}
+			if ( ($data[$i]['web_shop'] == '1') OR ($data[$i]['retail_shop'] == '1') )
+			{
+				if (empty($type))
+				{
+					$type = $lang['Shop'] ;
+				}
+				else
+				{
+					$type .= ", " . $lang['Shop'] ;
+				}
+			}
+			if ( $data[$i]['garage'] == '1' )
+			{
+				if (empty($type))
+				{
+					$type = $lang['Garage'] ;
+				}
+				else
+				{
+					$type .= ", " . $lang['Garage'] ;
+				}
+			}
+
 			$template->assign_block_vars('business', array(
 				'COLOR' => ($i % 2) ? 'row1' : 'row2',
 				'ID' => $data[$i]['id'],
@@ -277,6 +309,7 @@ switch($mode)
 				'WEB_CHECKED' => ( $data[$i]['web_shop'] == TRUE ) ? 'CHECKED' : '' ,
 				'DELETE' => $delete,
 				'STATUS' => $status,
+				'TYPE' => $type,
 				'U_UPDATE' => $update_url,
 				'U_DELETE' => $delete_url,
 				'U_STATUS' => $status_url)
