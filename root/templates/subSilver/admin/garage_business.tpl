@@ -7,7 +7,17 @@
 	function update(selected)
 	{
 		document.manage_business.business_id.value = selected;
-		document.manage_business.title.value = document.manage_business.title_'+selected+';
+		document.manage_business.title.value = document.manage_business.elements['title_'+selected].value;
+		document.manage_business.address.value = document.manage_business.elements['address_'+selected].value;
+		document.manage_business.telephone.value = document.manage_business.elements['telephone_'+selected].value;
+		document.manage_business.fax.value = document.manage_business.elements['fax_'+selected].value;
+		document.manage_business.website.value = document.manage_business.elements['website_'+selected].value;
+		document.manage_business.email.value = document.manage_business.elements['email_'+selected].value;
+		document.manage_business.opening_hours.value = document.manage_business.elements['opening_hours_'+selected].value;
+		document.manage_business.garage.value = document.manage_business.elements['garage_'+selected].checked;
+		document.manage_business.insurance.value = document.manage_business.elements['insurance_'+selected].checked;
+		document.manage_business.retail_shop.value = document.manage_business.elements['web_shop_'+selected].checked;
+		document.manage_business.web_shop.value = document.manage_business.elements['retail_shop_'+selected].checked;
 		document.manage_business.submit() ;
 	}
 

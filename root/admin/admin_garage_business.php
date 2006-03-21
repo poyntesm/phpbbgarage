@@ -50,7 +50,7 @@ switch($mode)
 	case 'insert_business':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('title', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hous', 'insurance', 'garage', 'retail_shop', 'web_shop');
+		$params = array('title', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
 		$data = $garage_lib->process_post_vars($params);
 		$data['pending'] = ($garage_config['enable_business_approval'] == '1') ? 1 : 0 ;
 		$data['insurance'] = ($data['insurance'] == 'on') ? 1 : 0 ;
@@ -85,7 +85,7 @@ switch($mode)
 		$params = array('business_id');
 		$id = $garage_lib->process_post_vars($params, $id['business_id']);
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('title', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hous', 'insurance', 'garage', 'retail_shop', 'web_shop');
+		$params = array('title', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
 		$data = $garage_lib->process_post_vars($params);
 		$data['id'] = $id['business_id'] ;
 		$data['pending'] = ($garage_config['enable_business_approval'] == '1') ? 1 : 0 ;
