@@ -1499,11 +1499,11 @@ class garage_lib
 	
 		if ($gd_version = $this->gd_version_check())
 	       	{
-	   		if ($gd_version = 2) 
+	   		if ($gd_version == 2) 
 			{
 				$garage_config['gd_version'] = 2;
 	   		}
-			else if ( $gd_version = 1 )
+			else if ( $gd_version == 1 )
 			{
 				$garage_config['gd_version'] = 1;
 			}
