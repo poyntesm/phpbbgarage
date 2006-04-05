@@ -7,7 +7,7 @@
  *   email                : esmond.poynton@gmail.com
  *   description          : Provides Vehicle Garage System For phpBB
  *
- *   $Id: admin_garage_business.php,v 0.1.1 20/07/2005 20:47:20 poynesmo Exp $
+ *   $Id$
  *
  ***************************************************************************/
 
@@ -179,10 +179,6 @@ switch($mode)
 		$params = array('id');
 		$data = $garage_lib->process_int_vars($params);
 
-		//Checks All Required Data Is Present
-		$params = array('id');
-		$garage_lib->check_required_vars($params);
-
 		$garage_lib->update_single_field(GARAGE_BUSINESS_TABLE,'pending',1,'id',$data['id']);
 
 		$message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_business.$phpEx") . '">'. $lang['Business_Updated'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Business'], "<a href=\"" . append_sid("admin_garage_business.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
@@ -196,10 +192,6 @@ switch($mode)
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('id');
 		$data = $garage_lib->process_int_vars($params);
-
-		//Checks All Required Data Is Present
-		$params = array('id');
-		$garage_lib->check_required_vars($params);
 
 		$garage_lib->update_single_field(GARAGE_BUSINESS_TABLE,'pending',0,'id',$data['id']);
 
@@ -261,8 +253,8 @@ switch($mode)
 
 			$update_url = '<a href="javascript:update('.$data[$i]['id'].')"><img src="../' . $images['garage_edit'] . '" alt="'.$lang['Rename'].'" title="'.$lang['Rename'].'" border="0" /></a>';
 
-			$delete = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" />' : $lang['Delete'] ;
-			$status = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_'.$status_mode] . '" alt="'.$lang[$status_mode].'" title="'.$lang[$status_mode].'" border="0" />' : $lang[$status_mode];
+			$delete = ( $garage_config['garage_images'] ) ? '<img src="../' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" />' : $lang['Delete'] ;
+			$status = ( $garage_config['garage_images'] ) ? '<img src="../' . $images['garage_'.$status_mode] . '" alt="'.$lang[$status_mode].'" title="'.$lang[$status_mode].'" border="0" />' : $lang[$status_mode];
 
 			//Work Out Type Of Business
 			$type ='';

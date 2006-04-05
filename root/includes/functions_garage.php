@@ -7,7 +7,7 @@
  *   email                : esmond.poynton@gmail.com
  *   description          : Provides Vehicle Garage System For phpBB
  *
- *   $Id: functions_garage.php,v 0.9.0 20/07/2005 20:47:20 poynesmo Exp $
+ *   $Id$
  *
  ***************************************************************************/
 
@@ -1523,6 +1523,19 @@ class garage_lib
 		if ( preg_match( "/^http:\/\/$/i", $url_image ) )
 		{
 			$url_image = "";
+		}
+
+		//Lets Check Directory Exists
+		if (!file_exists($phpbb_root_path. GARAGE_UPLOAD_PATH))
+		{
+			redirect(append_sid("garage.$phpEx?mode=error&EID=24", true));
+		}
+		//Lets Check Its Writeable...
+		//16895 is Octal for drwxrwxrwx - and thats what we need..
+		if ( !fileperms($phpbb_root_path. GARAGE_UPLOAD_PATH) == '16895')
+		{
+
+			redirect(append_sid("garage.$phpEx?mode=error&EID=25", true));
 		}
 
 		//Check For Both A Remote Image & Image Upload
@@ -5068,6 +5081,18 @@ class garage_lib
 			case '23':
 				$template->assign_vars(array(
 					'ERROR_MESSAGE' => $lang['Garage_Error_23'])
+				);
+				break;
+			//No Upload Directory Created
+			case '24':
+				$template->assign_vars(array(
+					'ERROR_MESSAGE' => $lang['Garage_Error_24'])
+				);
+				break;
+			//Incorrect Directory Permissions For Upload
+			case '25':
+				$template->assign_vars(array(
+					'ERROR_MESSAGE' => $lang['Garage_Error_25'])
 				);
 				break;
 

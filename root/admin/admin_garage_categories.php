@@ -7,7 +7,7 @@
  *   email                : esmond.poynton@gmail.com
  *   description          : Provides Vehicle Garage System For phpBB
  *
- *   $Id: admin_garage_categories.php,v 0.1.1 20/07/2005 20:47:20 poynesmo Exp $
+ *   $Id$
  *
  ***************************************************************************/
 
@@ -92,14 +92,16 @@ switch ( $mode )
 
 	case 'new':
 
+		$count = $garage_lib->count_mod_catgories();
+		
 		if( isset($HTTP_POST_VARS['title']) )
 		{
 			// Get posting variables
 			$title = str_replace("\'", "''", htmlspecialchars(trim($HTTP_POST_VARS['title'])));
 
 		// Here we insert a new row into the db
-		$sql = "INSERT INTO ". GARAGE_CATEGORIES_TABLE ." (title)
-			VALUES ('$title')";
+		$sql = "INSERT INTO ". GARAGE_CATEGORIES_TABLE ." (title,field_order)
+			VALUES ('$title', $field_order)";
 		if(!$result = $db->sql_query($sql))
 		{
 			message_die(GENERAL_ERROR, 'Could not create new Garage Category', '', __LINE__, __FILE__, $sql);
@@ -246,23 +248,30 @@ switch ( $mode )
 		for( $i = 0; $i < count($data); $i++ )
 		{
 			$order = $i + 1;
-			$rename_url = append_sid("admin_garage_categories.$phpEx?action=rename&amp;id=" . $data[$i]['id']);
+			//Build The Actual URL's
+			$rename_url = $data[$i]['id'];
 			$delete_url = append_sid("admin_garage_categories.$phpEx?mode=confirm_delete&amp;id=" . $data[$i]['id']);
 			$move_up_url = append_sid("admin_garage_categories.$phpEx?mode=move_up&amp;id=" . $data[$i]['id']. "&amp;order=$order");
 			$move_down_url = append_sid("admin_garage_categories.$phpEx?mode=move_down&amp;id=" . $data[$i]['id']. "&amp;order=$order");
-			$rename_link = '<a href="javascript:rename('.$data[$i]['id'].')"><img src="../' . $images['garage_edit'] . '" alt="'.$lang['Rename'].'" title="'.$lang['Rename'].'" border="0" /></a>';
-			$delete_link = '<a href="' . $delete_url . '"><img src="../' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" /></a>';
-			$move_up_link = '<a href="' . $move_up_url . '"><img src="../' . $images['garage_up'] . '" alt="'.$lang['Delete'].'" title="'.$lang['it'].'" border="0" /></a>';
-			$move_down_link = '<a href="' . $move_down_url . '"><img src="../' . $images['garage_down'] . '" alt="'.$lang['Delete'].'" title="'.$lang['it'].'" border="0" /></a>';
+
+			//Build How The URL's Will Look..Users Might Have Images Turned Off
+			$rename_url_dsp = '<img src="../'.$images['garage_edit'].'" alt="'.$lang['Rename'].'" title="'.$lang['Rename'].'" border="0" />';
+			$delete_url_dsp = '<img src="../'.$images['garage_delete'].'" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" />';
+			$move_up_url_dsp = '<img src="../'.$images['garage_move_up'].'" alt="'.$lang['Move_Up'].'" title="'.$lang['Move_Up'].'" border="0" />';
+			$move_down_url_dsp = '<img src="../'.$images['garage_move_down'].'" alt="'.$lang['Move_Down'].'" title="'.$lang['Move_Down'].'" border="0" />';
 
 			$template->assign_block_vars('catrow', array(
 				'COLOR' => ($i % 2) ? 'row1' : 'row2',
 				'ID' => $data[$i]['id'],
 				'TITLE' => $data[$i]['title'],
-				'U_RENAME' => $rename_link,
-				'U_DELETE' => $delete_link,
-				'U_MOVE_UP' => $move_up_link,
-				'U_MOVE_DOWN' => $move_down_link)
+				'RENAME' => $rename_url_dsp,
+				'DELETE' => $delete_url_dsp,
+				'MOVE_UP' => $move_up_url_dsp,
+				'MOVE_DOWN' => $move_down_url_dsp,
+				'U_RENAME' => $rename_url,
+				'U_DELETE' => $delete_url,
+				'U_MOVE_UP' => $move_up_url,
+				'U_MOVE_DOWN' => $move_down_url)
 			);
 		}
 

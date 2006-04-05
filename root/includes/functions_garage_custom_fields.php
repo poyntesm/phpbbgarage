@@ -2,7 +2,7 @@
 /** 
 *
 * @package phpBB3
-* @version $Id: functions_user.php,v 1.46 2005/05/01 13:15:47 acydburn Exp $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group 
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
 *

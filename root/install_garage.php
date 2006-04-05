@@ -315,6 +315,7 @@ $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('profile_thumbs
 $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('enable_user_submit_make', '1')";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('enable_user_submit_model', '1')";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('version', '1.0.0')";
+$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('garage_images', '1')";
 
 $sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (1, 'Engine', NULL)";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (2, 'Transmission', NULL)";

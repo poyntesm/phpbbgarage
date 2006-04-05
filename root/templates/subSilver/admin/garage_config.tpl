@@ -110,6 +110,10 @@
 		<th class="thHead" colspan="2">{L_GARAGE_IMAGE_FEATURES}</th>
 	</tr>
 	<tr>
+		<td class="row1"><span class="genmed">{L_GARAGE_ENABLE_IMAGES}</span></td>
+		<td class="row2"><span class="genmed"><input type="radio" {GARAGE_IMAGES_ENABLED} name="garage_images" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" {GARAGE_IMAGES_DISABLED} name="garage_images" value="0" />{L_NO}</span></td>
+	</tr>
+	<tr>
 		<td class="row1"><span class="genmed">{L_ALLOW_IMAGE_UPLOAD}</span></td>
 		<td class="row2"><span class="genmed"><input type="radio" {ALLOW_IMAGE_UPLOAD_ENABLED} name="allow_image_upload" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" {ALLOW_IMAGE_UPLOAD_DISABLED} name="allow_image_upload" value="0" />{L_NO}</span></td>
 	</tr>

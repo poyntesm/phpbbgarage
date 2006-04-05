@@ -7,9 +7,7 @@
 <!--
 function rename ( selected )
 {
-	var a = 'title_' + selected;
-	alert(a);
-	if (document.manage_categories.a.value.length < 2)
+	if (document.manage_categories.elements['title_'+selected].value.length < 2)
 	{
 		formErrors = "{L_EMPTY_TITLE}";
 	}
@@ -33,7 +31,7 @@ function checkForm()
 
 	formErrors = false;    
 
-	if (document.new_category.title.value.length < 2) 
+	if (document.manage_categories.title.value.length < 2) 
 	{
 		formErrors = "{L_EMPTY_TITLE}";
 	}
@@ -66,9 +64,9 @@ function checkForm()
 	<!-- BEGIN catrow -->
 	<tr>
 		<td class="{catrow.COLOR}" width="50%" nowrap=nowrap><span class="gen">{catrow.TITLE}</span></td>
-		<td class="{catrow.COLOR}" align="center" nowrap=nowrap><input name="title_{catrow.ID}" type="text" class="post" size="25" value="{S_CAT_TITLE}" /><span class="genmed">&nbsp;&nbsp;{catrow.U_RENAME}</span></td>
-		<td class="{catrow.COLOR}" align="center" nowrap=nowrap><span	class="genmed">{catrow.U_DELETE}</span></td>
-		<td class="{catrow.COLOR}" align="center" nowrap=nowrap><span	class="genmed">{catrow.U_MOVE_UP}&nbsp;{catrow.U_MOVE_DOWN}</span></td>
+		<td class="{catrow.COLOR}" align="center" nowrap=nowrap><input name="title_{catrow.ID}" type="text" class="post" size="25" value="{}" /><span class="genmed">&nbsp;&nbsp;<a href="javascript:rename('{catrow.U_RENAME}')">{catrow.RENAME}</a></span></td>
+		<td class="{catrow.COLOR}" align="center" nowrap=nowrap><span class="genmed"><a href="{catrow.U_DELETE}">{catrow.DELETE}</a></span></td>
+		<td class="{catrow.COLOR}" align="center" nowrap=nowrap><span class="genmed"><a href="{catrow.U_MOVE_UP}">{catrow.MOVE_UP}</a>&nbsp;<a href="{catrow.U_MOVE_DOWN}">{catrow.MOVE_DOWN}</a></span></td>
 	</tr>
 	<!-- END catrow -->
 	<input type="hidden" name="category_id" value="" />
