@@ -103,6 +103,10 @@
 		<td class="row2"><span class="genmed"><input type="radio" {TOP_QUARTERMILE_ON} name="topquartermile_on" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" {TOP_QUARTERMILE_OFF} name="topquartermile_on" value="0" />{L_NO}</span><br />{L_MAX_TOP_QUARTERMILE}&nbsp;<input class="post" type="text" maxlength="12" size="12" name="topquartermile_limit" value="{TOPQUARTERMILE_LIMIT}" /></td>
 	</tr>
 	<tr>
+		<td class="row1"><span class="genmed">{L_ENABLE_TOP_DYNORUN}</span></td>
+		<td class="row2"><span class="genmed"><input type="radio" {TOP_DYNORUN_ON} name="topdynorun_on" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" {TOP_DYNORUN_OFF} name="topdynorun_on" value="0" />{L_NO}</span><br />{L_MAX_TOP_DYNORUN}&nbsp;<input class="post" type="text" maxlength="12" size="12" name="topdynorun_limit" value="{TOPDYNORUN_LIMIT}" /></td>
+	</tr>
+	<tr>
 		<td class="row1"><span class="genmed">{L_ENABLE_TOP_RATED}</span></td>
 		<td class="row2"><span class="genmed"><input type="radio" {TOP_RATED_ON} name="toprated_on" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" {TOP_RATED_OFF} name="toprated_on" value="0" />{L_NO}</span><br />{L_MAX_MOST_VIEWED}&nbsp;<input class="post" type="text" maxlength="12" size="12" name="toprated_limit" value="{TOPRATED_LIMIT}" /></td>
 	</tr>

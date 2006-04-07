@@ -2112,6 +2112,18 @@ class garage_lib
 	  				  WHERE makes.pending = 0 and models.pending = 0
 					  GROUP BY g.id ORDER BY gb.post_date DESC LIMIT 1";
 			}
+			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Top_Quartermile_Runs'] )
+			{
+				$where = "LEFT JOIN " . GARAGE_QUARTERMILE_TABLE . " AS qm on g.id = qm.garage_id
+	  				  WHERE makes.pending = 0 and models.pending = 0
+					  GROUP BY g.id ORDER BY qm.quart ASC LIMIT 1";
+			}
+			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Top_Dyno_Runs'] )
+			{
+				$where = "LEFT JOIN " . GARAGE_ROLLINGROAD_TABLE . " AS rr on g.id = rr.garage_id
+	  				  WHERE makes.pending = 0 and models.pending = 0
+					  GROUP BY g.id ORDER BY rr.bhp DESC LIMIT 1";
+			}
 			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Top_Rated_Vehicles'] )
 			{
 				 $where = "WHERE makes.pending = 0 and models.pending = 0
@@ -2323,7 +2335,83 @@ class garage_lib
 		$required_position++;
 		return ;
 	}
+
+	/*========================================================================*/
+	// Build Top Dyno Runs HTML If Required 
+	// Usage: show_topquartermile();
+	/*========================================================================*/
+	function show_topdynorun()
+	{
+		global $required_position, $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
+		if ( $garage_config['topdynorun_on'] != TRUE )
+		{
+			return;
+		}
+
+		$template_block = 'block_'.$required_position;
+		$template_block_row = 'block_'.$required_position.'.row';
+		$template->assign_block_vars($template_block, array(
+			'BLOCK_TITLE' => $lang['Top_Dyno_Runs'],
+			'COLUMN_1_TITLE' => $lang['Vehicle'],
+			'COLUMN_2_TITLE' => $lang['Owner'],
+			'COLUMN_3_TITLE' => $lang['Bhp-Torque-Nitrous'])
+		);
+	
+	        // What's the count? Default to 10
+	        $limit = $garage_config['topdyno_limit'] ? $garage_config['topdyno_limit'] : 10;
+	
+		$sql = "SELECT  rr.garage_id, MAX(rr.bhp) as bhp
+			FROM " . GARAGE_ROLLINGROAD_TABLE ." AS rr
+				LEFT JOIN " . GARAGE_TABLE ." AS g ON rr.garage_id = g.id
+				LEFT JOIN " . USERS_TABLE ." AS user ON g.member_id = user.user_id
+			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
+        			LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
+			WHERE rr.pending = 0
+				AND makes.pending = 0 AND models.pending = 0 
+			GROUP BY rr.garage_id
+			ORDER BY bhp DESC LIMIT $limit";
+
+		if( !($first_result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Error Selecting Top Dyno Runs', '', __LINE__, __FILE__, $sql);
+		}
+		
+		//Now Process All Rows Returned And Get Rest Of Required Data	
+		$i = 0;
+		while ($row = $db->sql_fetchrow($first_result) )
+		{
+				$sql = "SELECT g.id, g.made_year, g.member_id, makes.make, models.model, user.username, rr.dynocenter, round(rr.bhp,0) as bhp, 
+					rr.bhp_unit, round(rr.torque,0) as torque, rr.torque_unit, rr.boost, rr.boost_unit, rr.nitrous, round(rr.peakpoint,0) as peakpoint, 
+					rr.id as rr_id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, rr.nitrous
+				FROM " . GARAGE_ROLLINGROAD_TABLE ." AS rr
+					LEFT JOIN " . GARAGE_TABLE ." AS g ON rr.garage_id = g.id
+					LEFT JOIN " . USERS_TABLE ." AS user ON g.member_id = user.user_id
+				        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
+        				LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
+				WHERE rr.garage_id = " . $row['garage_id'] . " AND rr.bhp = " . $row['bhp'];	
+	 		if(!$result = $db->sql_query($sql))
+			{
+				message_die(GENERAL_ERROR, "Could not query vehicle information", "", __LINE__, __FILE__, $sql);
+			}
+	 		            
+		 	$vehicle_data = $db->sql_fetchrow($result);
+	
+	            	$dynorun = $vehicle_data['bhp'] .' ' . $vehicle_data['bhp_unit'] . ' / ' . $vehicle_data['torque'] .' ' . $vehicle_data['torque_unit'] . ' / '. $vehicle_data['nitrous'];
+	
+			$template->assign_block_vars($template_block_row, array(
+				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
+				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id']),
+				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
+				'COLUMN_2_TITLE' => $vehicle_data['username'],
+				'COLUMN_3' => $dynorun)
+			);
+	 	}
+	
+		$required_position++;
+		return ;
+	}	
+
 	/*========================================================================*/
 	// Build Updated Modifications HTML If Required 
 	// Usage: show_updated_modifications();

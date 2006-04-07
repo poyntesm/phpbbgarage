@@ -146,6 +146,7 @@ $select_featured_by_block .= "<option value='".$lang['Most_Money_Spent']."'>".$l
 $select_featured_by_block .= "<option value='".$lang['Most_Viewed_Vehicle']."'>".$lang['Most_Viewed_Vehicle']."</option>";
 $select_featured_by_block .= "<option value='".$lang['Latest_Vehicle_Comments']."'>".$lang['Latest_Vehicle_Comments']."</option>";
 $select_featured_by_block .= "<option value='".$lang['Top_Quartermile_Runs']."'>".$lang['Top_Quartermile_Runs']."</option>";
+$select_featured_by_block .= "<option value='".$lang['Top_Dyno_Runs']."'>".$lang['Top_Dyno_Runs']."</option>";
 $select_featured_by_block .= "<option value='".$lang['Top_Rated_Vehicles']."'>".$lang['Top_Rated_Vehicles']."</option>";
 $select_featured_by_block .= "</select>";
 
@@ -219,6 +220,9 @@ $template->assign_vars(array(
 	'TOPQUARTERMILE_LIMIT' => $new['topquartermile_limit'],
 	'TOP_QUARTERMILE_ON' => ($new['topquartermile_on'] == 1) ? 'checked="checked"' : '',
 	'TOP_QUARTERMILE_OFF' => ($new['topquartermile_on'] == 0) ? 'checked="checked"' : '',
+	'TOPDYNORUN_LIMIT' => $new['topdynorun_limit'],
+	'TOP_DYNORUN_ON' => ($new['topdynorun_on'] == 1) ? 'checked="checked"' : '',
+	'TOP_DYNORUN_OFF' => ($new['topdynorun_on'] == 0) ? 'checked="checked"' : '',
 	'TOPRATED_LIMIT' => $new['toprated_limit'],
 	'TOP_RATED_ON' => ($new['toprated_on'] == 1) ? 'checked="checked"' : '',
 	'TOP_RATED_OFF' => ($new['toprated_on'] == 0) ? 'checked="checked"' : '',
@@ -306,11 +310,13 @@ $template->assign_vars(array(
 	'L_ENABLE_MOST_VIEWED' => $lang['Enable_Most_Viewed'],
 	'L_ENABLE_MOST_COMMENTED' => $lang['Enable_Latest_Commented'],
 	'L_ENABLE_TOP_QUARTERMILE' => $lang['Enable_Top_Quartermile'],
+	'L_ENABLE_TOP_DYNORUN' => $lang['Enable_Top_Dynorun'],
 	'L_ENABLE_TOP_RATED' => $lang['Enable_Top_Rated'],
 	'L_MAX_MOST_VIEWED' => $lang['Max_Most_Viewed'],
 	'L_MAX_MOD_VIEWED' => $lang['Max_Mod_Viewed'],
 	'L_MAX_COMMENT_VIEWED' => $lang['Max_Comment_Viewed'],
 	'L_MAX_TOP_QUARTERMILE' => $lang['Max_Top_Quartermile'],
+	'L_MAX_TOP_DYNORUN' => $lang['Max_Top_Dynorun'],
 	'L_GARAGE_FEATURES' => $lang['Garage_Features'],
 	'L_GARAGE_CONFIG' => $lang['Garage_Config'],
 	'L_DISABLED' => $lang['Disabled'],

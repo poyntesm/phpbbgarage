@@ -3547,6 +3547,7 @@ switch( $mode )
 		$garage_lib->show_most_viewed();
 		$garage_lib->show_lastcommented();
 		$garage_lib->show_topquartermile();
+		$garage_lib->show_topdynorun();
 		$garage_lib->show_toprated();
 
 		$template->assign_vars(array(

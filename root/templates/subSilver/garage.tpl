@@ -132,6 +132,28 @@
 						</table>
 						<br />
 						<!-- END block_9 -->
+
+						<!-- BEGIN block_11 -->
+						<table width="100%" cellpadding="3" cellspacing="1" border="0" class="forumline">
+							<tr>
+								<th class="thHead" height="25" align="center" colspan="3">{block_11.BLOCK_TITLE}</th>
+							</tr>
+							<tr>
+								<td class="catBottom" ><span class="gen">{block_11.COLUMN_1_TITLE}</span></td>
+								<td class="catBottom" ><span class="gen">{block_11.COLUMN_2_TITLE}</span></td>
+								<td class="catBottom" ><span class="gen">{block_11.COLUMN_3_TITLE}</span></td>
+							</tr>
+							<!-- BEGIN row -->
+							<tr>
+								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_11.row.U_COLUMN_1}">{block_11.row.COLUMN_1_TITLE}</a></span></td>
+								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_11.row.U_COLUMN_2}">{block_11.row.COLUMN_2_TITLE}</a></span></td>
+								<td class="row1" align="center" valign="middle"><span class="gensmall">{block_11.row.COLUMN_3}</span></td>
+							</tr>
+							<!-- END row -->
+						</table>
+						<br />
+						<!-- END block_11 -->
+
 					</td>
 
 					<td width="50%" valign="top" >

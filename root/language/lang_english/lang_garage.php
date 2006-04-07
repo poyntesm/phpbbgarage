@@ -576,8 +576,11 @@ $lang['Move_Up'] = 'Move Up';
 $lang['Move_Down'] = 'Move Down';
 $lang['Add_Quota'] = 'Vehicle Quota';
 $lang['Upload_Quota'] = 'Upload Quota';
-$lang['Garage_Enable_Images'] = '<b>Enable Garage Images</b><br />This affects what if buttons within the Garage are displayed with a image or as text.';
+$lang['Garage_Enable_Images'] = '<b>Enable Garage Images</b><br />This affects if buttons within the Garage are displayed with a image or as text.';
 $lang['Garage_Error_Occured'] = 'Garage Error Occured';
 
-
+$lang['Top_Dyno_Runs'] = 'Top Dyno Runs';
+$lang['Enable_Top_Dynorun'] = '<b>Enable Top Dynoruns?</b><br />Allows the top dyno runs to be shown on the main menu.';
+$lang['Max_Top_Dynorun'] = 'Max. no runs to show:';
+$lang['Bhp-Torque-Nitrous'] = 'Bhp / Torque / Nitrous';
 ?>
