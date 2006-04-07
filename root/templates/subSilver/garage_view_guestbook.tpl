@@ -12,7 +12,12 @@
 				<!-- BEGIN comments -->
 				<tr>
 					<td class="row2" align="center" height="28" ><span class="name"><a name="{comments.U_POST_ID}"></a><b>{comments.POSTER_NAME}</b></span><br /><span class="postdetails">{comments.POSTER_RANK}<br />{comments.RANK_IMAGE}<br />{comments.POSTER_AVATAR}<br /> {comments.POSTER_JOINED}<br />{comments.POSTER_FROM}<br /><br /><a href="{comments.VIEW_POSTER_CARPROFILE}" >{comments.POSTER_CAR_YEAR} {comments.POSTER_CAR_MARK} {comments.POSTER_CAR_MODEL}</a><br /></span></td>
-					<td class="row2" align="left" valign="top" height="28" colspan="4" ><span class="gensmall"><b>{L_POSTED}:</b> <span class="gensmall">{comments.POSTED} </span><span align="right">{comments.EDIT_IMG} {comments.DELETE_IMG}</span><br /><br /><span class="postbody" align="left">{comments.POST}</span></td>
+					<td class="row2" align="left" valign="top" height="28" colspan="4" >
+						<table width="100%">
+							<tr><td align="left"><span class="gensmall"><b>{L_POSTED}:</b> <span class="gensmall">{comments.POSTED}</span></td><td align="right">{comments.EDIT_IMG} {comments.DELETE_IMG}</span></tr></td>
+							<tr><td colspan="2"><span class="postbody" align="left">{comments.POST}</span></tr></td>
+						</table>
+					</td>
 				</tr>
 				<tr>
 					<td class="row2" align="center" height="10"> </td>
