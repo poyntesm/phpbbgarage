@@ -3324,7 +3324,8 @@ class garage_lib
 	      	$sql = "SELECT DISTINCT m.garage_id, m.category_id , c.title, c.id
 	       		FROM  " . GARAGE_MODS_TABLE . " m, " . GARAGE_CATEGORIES_TABLE . " c
 	       		WHERE m.garage_id = $cid
-	       			AND m.category_id = c.id";
+	       			AND m.category_id = c.id
+			ORDER by c.field_order";
 	
 	      	if ( !($result = $db->sql_query($sql)) )
 	      	{
