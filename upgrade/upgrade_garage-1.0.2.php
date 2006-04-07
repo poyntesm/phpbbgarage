@@ -65,7 +65,7 @@ if ( !($result2 = $db->sql_query($sql2)) )
 $i = 1;
 while( $row = $db->sql_fetchrow($result2) )
 {
-	$sql[] = "UPDATE " . $table_prefix . "garage_categories SET field_order = '$i' WHERE id = "$row['id'];
+	$sql[] = "UPDATE " . $table_prefix . "garage_categories SET field_order = '$i' WHERE id = ".$row['id'];
 	$i++;
 }
 
