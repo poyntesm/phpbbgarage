@@ -1223,7 +1223,7 @@ class garage_lib
 
 	        $html = '<select name="category_id" class="forminput">';
 	
-	        $sql = "SELECT * FROM " . GARAGE_CATEGORIES_TABLE . " ORDER BY title ASC";
+	        $sql = "SELECT * FROM " . GARAGE_CATEGORIES_TABLE . " ORDER BY field_order ASC";
 	
 	     	if ( !($result = $db->sql_query($sql)) )
 	      	{
