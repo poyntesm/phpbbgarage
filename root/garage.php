@@ -1376,7 +1376,7 @@ switch( $mode )
 		$garage_lib->build_sort_order_html($sort_order);
 
 		//Get All Insurance Data....
-		$data = $garage_lib->select_all_vehicle_data($search_data['where'], $order_by, $sort_order, $start, $garage_config['cars_per_page']);
+		$data = $garage_lib->select_all_insurance_data($search_data['where'], $order_by, $sort_order, $start, $garage_config['cars_per_page']);
 		for ($i = 0; $i < count($data); $i++)
       		{
 			$row_color = ( !($i % 2) ) ? $theme['td_color1'] : $theme['td_color2'];
@@ -1399,12 +1399,12 @@ switch( $mode )
 		}
 
 		//Count Total Returned For Pagination...Notice No $start or $end to get complete count
-		$count = $garage_lib->select_all_insurance_data($search_data['where'], $order_by, $sort_order, '', '');
-		$pagination = generate_pagination("garage.$phpEx?mode=search_insurance&amp;make_id=".$search_data['make_id']."&amp;model_id=".$search_data['model_id']."&amp;sort=$sort&amp;order=$sort_order", $count[0]['total'], $garage_config['cars_per_page'], $start). '&nbsp;';
+		$count = count($garage_lib->select_all_insurance_data($search_data['where'], $order_by, $sort_order, '', ''));
+		$pagination = generate_pagination("garage.$phpEx?mode=search_insurance&amp;make_id=".$search_data['make_id']."&amp;model_id=".$search_data['model_id']."&amp;sort=$sort&amp;order=$sort_order", $count, $garage_config['cars_per_page'], $start). '&nbsp;';
 
 		$template->assign_vars(array(
 			'PAGINATION' 	=> $pagination,
-			'PAGE_NUMBER' 	=> sprintf($lang['Page_of'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count[0]['total'] / $garage_config['cars_per_page'] )), 
+			'PAGE_NUMBER' 	=> sprintf($lang['Page_of'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count / $garage_config['cars_per_page'] )), 
 			'L_GOTO_PAGE' 	=> $lang['Goto_page'],
 			'L_SORTED_BY' 	=> $lang['Insurance_Sorted_By'],
 			'L_IN' 		=> $lang['In'],
@@ -1416,7 +1416,7 @@ switch( $mode )
 			'L_PREMIUM' 	=> $lang['Premium'],
 			'L_COVER_TYPE' 	=> $lang['Cover_Type'],
 			'L_BUSINESS'	=> $lang['Business_Name'],
-			'S_SORT_SELECT' => $select_sort,
+			'S_SORT_SELECT' => $garage_lib->build_selection_box('sort',$sort_types_text,$sort_types,$sort),
 			'S_MODE_ACTION' => append_sid("garage.$phpEx?mode=search_insurance"))
 		);
 
