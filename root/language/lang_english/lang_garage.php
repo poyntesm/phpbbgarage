@@ -577,6 +577,7 @@ $lang['Move_Down'] = 'Move Down';
 $lang['Add_Quota'] = 'Vehicle Quota';
 $lang['Upload_Quota'] = 'Upload Quota';
 $lang['Garage_Enable_Images'] = '<b>Enable Garage Images</b><br />This affects what if buttons within the Garage are displayed with a image or as text.';
+$lang['Garage_Error_Occured'] = 'Garage Error Occured';
 
 
 ?>

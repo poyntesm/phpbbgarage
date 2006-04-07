@@ -1471,11 +1471,12 @@ class garage_lib
 	{
 		global $HTTP_POST_FILES, $HTTP_POST_VARS;
 
-		if ( ((isset($HTTP_POST_FILES['FILE_UPLOAD'])) AND ($HTTP_POST_FILES['FILE_UPLOAD']['name'])) OR (!preg_match("/^http:\/\/$/i", $HTTP_POST_VARS['url_image'])) )
+		if ( ((isset($HTTP_POST_FILES['FILE_UPLOAD'])) AND ($HTTP_POST_FILES['FILE_UPLOAD']['name'])) OR ((!preg_match("/^http:\/\/$/i", $HTTP_POST_VARS['url_image'])) AND (!empty($HTTP_POST_VARS['url_image']))) )
 		{
+			//We Have A Image To Handle So Return True
 			return true;
 		}
-
+		
 		return false;
 	}
 	
@@ -1510,7 +1511,6 @@ class garage_lib
 	   		else
 			{
 				$garage_config['gd_version'] = 0;
-				//redirect(append_sid("garage.$phpEx?mode=error&EID=20", true));
 			}
 		}
 	       	else
@@ -3164,7 +3164,7 @@ class garage_lib
 	        $date_updated = $vehicle_row['date_updated'];
 	        $updated = create_date($board_config['default_dateformat'], $vehicle_row['date_updated'], $board_config['board_timezone']);
 	        $mileage = $vehicle_row['mileage'];
-	        $mileage_units = $vehicle_row[''];
+	        $mileage_units = $vehicle_row['mileage_units'];
 	        $purchased_price = $vehicle_row['price'];
 	        $currency = $vehicle_row['currency'];
 	        $total_mods = $vehicle_row['total_mods'];
