@@ -1016,6 +1016,12 @@ $images['garage_edit']			= "$current_template_images/{LANG}/garage_edit.gif";
 $images['garage_delete']		= "$current_template_images/{LANG}/garage_delete.gif";
 $images['garage_main_vehicle']		= "$current_template_images/{LANG}/garage_main_vehicle.gif";
 $images['garage_no_thumb']		= "$current_template_images/{LANG}/garage_no_thumb.gif";
+$images['garage_show_details']		= "$current_template_images/{LANG}/garage_show_details.gif";
+$images['garage_hide_details']		= "$current_template_images/{LANG}/garage_hide_details.gif";
+$images['garage_move_up']		= "$current_template_images/{LANG}/garage_move_up.gif";
+$images['garage_move_down']		= "$current_template_images/{LANG}/garage_move_down.gif";
+$images['garage_set_approved']		= "$current_template_images/{LANG}/garage_set_approved.gif";
+$images['garage_set_pending']		= "$current_template_images/{LANG}/garage_set_pending.gif";
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
 #
