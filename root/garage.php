@@ -3552,10 +3552,10 @@ switch( $mode )
 		$template->assign_vars(array(
 			'L_OWNER' 		=> $lang['Owner'],
 			'L_FEATURED_VEHICLE' 	=> $lang['Featured_Vehicle'],
-			'TOTAL_VEHICLES' 	=> $garage_lib->count_total_vehicles,
-			'TOTAL_VIEWS' 		=> $garage_lib->count_total_views,
-			'TOTAL_MODIFICATIONS' 	=> $garage_lib->count_total_modifications,
-			'TOTAL_COMMENTS'  	=> $garage_lib->count_total_comments)
+			'TOTAL_VEHICLES' 	=> $garage_lib->count_total_vehicles(),
+			'TOTAL_VIEWS' 		=> $garage_lib->count_total_views(),
+			'TOTAL_MODIFICATIONS' 	=> $garage_lib->count_total_modifications(),
+			'TOTAL_COMMENTS'  	=> $garage_lib->count_total_comments())
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer
