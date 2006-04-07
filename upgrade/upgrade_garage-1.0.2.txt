@@ -259,6 +259,27 @@ $profiledata['username']
 #
 urlencode($profiledata['username'])
 
+
+# 
+#-----[ OPEN ]----- 
+# 
+templates/subSilver/subSilver.cfg
+
+#
+#-----[ FIND ]------------------------------------------
+#
+$images['garage_no_thumb']		= "$current_template_images/{LANG}/garage_no_thumb.gif";
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+$images['garage_show_details']		= "$current_template_images/{LANG}/garage_show_details.gif";
+$images['garage_hide_details']		= "$current_template_images/{LANG}/garage_hide_details.gif";
+$images['garage_move_up']		= "$current_template_images/{LANG}/garage_move_up.gif";
+$images['garage_move_down']		= "$current_template_images/{LANG}/garage_move_down.gif";
+$images['garage_set_approved']		= "$current_template_images/{LANG}/garage_set_approved.gif";
+$images['garage_set_pending']		= "$current_template_images/{LANG}/garage_set_pending.gif";
+
 #
 #-----[ SAVE/CLOSE ALL FILES ]------------------------------------------
 #
