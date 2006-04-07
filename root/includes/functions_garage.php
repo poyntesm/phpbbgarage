@@ -1857,6 +1857,11 @@ class garage_lib
 			}
 			@chmod($phpbb_root_path . GARAGE_UPLOAD_PATH . $thumb_file_name, 0777);
 		} 
+
+		//We should ALWAYS clear the RAM used by this.
+		imagedestroy($thumb);
+		imagedestroy($src);
+
 		return;
 	}
 	
