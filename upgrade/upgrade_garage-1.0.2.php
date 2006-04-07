@@ -55,6 +55,20 @@ $sql = array();
 $sql[] = "UPDATE " . $table_prefix . "garage_config SET config_value = '1.0.4' WHERE config_name = 'version'";
 $sql[] = "ALTER TABLE " . $table_prefix . "garage_categories ADD `field_order` TINYINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'";
 
+//We Need To Setup Field Order Since It Will Be Blank
+$sql2 = "SELECT * FROM " . $table_prefix ."garage_categories";
+if ( !($result2 = $db->sql_query($sql2)) )
+{
+	message_die(GENERAL_ERROR, 'Could Select Business Data', '', __LINE__, __FILE__, $sql);
+}
+
+$i = 1;
+while( $row = $db->sql_fetchrow($result2) )
+{
+	$sql[] = "UPDATE " . $table_prefix . "garage_categories SET field_order = '$i' WHERE id = "$row['id'];
+	$i++;
+}
+
 for( $i = 0; $i < count($sql); $i++ )
 {
 	if( !$result = $db->sql_query ($sql[$i]) )
@@ -68,6 +82,9 @@ for( $i = 0; $i < count($sql); $i++ )
 		echo '<li>' . $sql[$i] . '<br /> +++ <font color="#00AA00"><b>Successfull</b></font></li><br />';
 	}
 }
+
+
+
 
 echo '</ul></span></td></tr><tr><td class="catBottom" height="28">&nbsp;</td></tr>';
 
