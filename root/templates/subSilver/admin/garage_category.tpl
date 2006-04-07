@@ -7,6 +7,8 @@
 <!--
 function rename ( selected )
 {
+	formErrors = false;    
+
 	if (document.manage_categories.elements['title_'+selected].value.length < 2)
 	{
 		formErrors = "{L_EMPTY_TITLE}";
@@ -15,15 +17,12 @@ function rename ( selected )
 	if (formErrors) 
 	{
 		alert(formErrors);
-		return false;
 	} 
 	else 
 	{
-		return true;
+		document.manage_categories.category_id.value = selected;
+		document.manage_categories.submit() ;
 	}
-
-	document.manage_categories.category_id.value = selected;
-	document.manage_categories.submit() ;
 }
 
 function checkForm() 
@@ -31,7 +30,7 @@ function checkForm()
 
 	formErrors = false;    
 
-	if (document.manage_categories.title.value.length < 2) 
+	if (document.new_category.title.value.length < 2) 
 	{
 		formErrors = "{L_EMPTY_TITLE}";
 	}

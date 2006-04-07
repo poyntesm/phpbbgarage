@@ -584,4 +584,5 @@ $lang['Enable_Top_Dynorun'] = '<b>Enable Top Dynoruns?</b><br />Allows the top d
 $lang['Max_Top_Dynorun'] = 'Max. no runs to show:';
 $lang['Bhp-Torque-Nitrous'] = 'Bhp / Torque / Nitrous';
 $lang['Purchase_Rating'] = 'Purchase Rating';
+$lang['Category_Updated'] = 'Category Name Updated';
 ?>
