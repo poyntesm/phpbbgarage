@@ -38,7 +38,7 @@
 				</tr>
         		</table>
 			</form>
-
+<!-- BEGIN search_by_insurance -->
 			<form method="post" name="search_by_insurance" action="{S_MODE_ACTION_2}">
 			<table width="100%" cellpadding="3" cellspacing="1" border="0" class="forumline">
 				<tr>
@@ -60,6 +60,7 @@
 				</tr>
         		</table>
 			</form>
+<!-- END search_by_insurance -->
 		</td>
 <script language="JavaScript1.1" type="text/javascript">
 <!--

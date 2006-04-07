@@ -1446,6 +1446,12 @@ switch( $mode )
 		);
 		$template->assign_var_from_handle('JAVASCRIPT', 'javascript');
 
+		//Show Search By Insurance If Insurance Enabled In ACP
+		if ( $garage_config['enable_insurance'] == TRUE )
+		{
+			$template->assign_block_vars('search_by_insurance', array());
+		}
+
 		$template->assign_block_vars('level2', array());
 		$template->assign_vars(array(
 			'L_SEARCH_GARAGE_TITLE' => $lang['Search_Garage'],
