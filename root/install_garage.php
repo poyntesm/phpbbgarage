@@ -100,6 +100,7 @@ $sql[] = "CREATE TABLE " . $table_prefix . "garage_categories (
 		`id` int(10) unsigned NOT NULL auto_increment,
 		`title` varchar(255) NOT NULL default '',
 		`image_id` int(10) unsigned default NULL,
+		`field_order` tinyint(4) unsigned default NULL,
 		PRIMARY KEY  (`id`),
 		KEY `title` (`title`(100)),
 		KEY `id` (`id`,`title`(100))
@@ -182,6 +183,7 @@ $sql[] = "CREATE TABLE " . $table_prefix . "garage_mods (
 		`price` int(10) unsigned NOT NULL default '0',
 		`install_price` int(10) unsigned NOT NULL default '0',
 		`product_rating` tinyint(2) default NULL,
+		`purchase_rating` tinyint(2) default NULL,
 		`install_rating` tinyint(2) default NULL,
 		`business_id` int(10) default NULL,
 		`install_business_id` int(10) default NULL,
@@ -317,15 +319,15 @@ $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('enable_user_su
 $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('version', '1.0.0')";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('garage_images', '1')";
 
-$sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (1, 'Engine', NULL)";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (2, 'Transmission', NULL)";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (3, 'Suspension', NULL)";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (4, 'Brakes', NULL)";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (5, 'Interior', NULL)";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (6, 'Exterior', NULL)";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (7, 'Audio', NULL)";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (8, 'Alloys &amp; Tyres', NULL)";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (9, 'Security', NULL)";
+$sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (1, 'Engine', NULL, 1)";
+$sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (2, 'Transmission', NULL, 2)";
+$sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (3, 'Suspension', NULL, 3)";
+$sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (4, 'Brakes', NULL, 4)";
+$sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (5, 'Interior', NULL, 5)";
+$sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (6, 'Exterior', NULL, 6)";
+$sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (7, 'Audio', NULL, 7)";
+$sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (8, 'Alloys &amp; Tyres', NULL, 8)";
+$sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (9, 'Security', NULL, 9)";
 
 $sql[] = "INSERT INTO " . $table_prefix . "garage_makes VALUES (1, 'AC', 0)";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_makes VALUES (2, 'Acura', 0)";

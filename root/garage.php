@@ -376,6 +376,7 @@ switch( $mode )
 			'L_HERE' 		=> $lang['Here'],
 			'L_REQUIRED' 		=> $lang['Required'],
 			'L_MODIFICATION' 	=> $lang['Modification'],
+			'L_PURCHASE_RATING' 	=> $lang['Purchase_Rating'],
 			'L_PURCHASED_PRICE' 	=> $lang['Purchased_Price'],
 			'L_PURCHASED_FROM' 	=> $lang['Purchased_From'],
 			'L_INSTALLED_BY' 	=> $lang['Installed_By'],
@@ -391,6 +392,7 @@ switch( $mode )
 			'U_SUBMIT_SHOP'		=> append_sid("garage.$phpEx?mode=user_submit_business&CID=$cid&TYPE=add_modification&BUSINESS=shop"),
 			'U_SUBMIT_GARAGE'	=> append_sid("garage.$phpEx?mode=user_submit_business&CID=$cid&TYPE=add_modification&BUSINESS=garage"),
 			'PRODUCT_RATING_LIST' 	=> $garage_lib->build_selection_box('product_rating',$rating_text,$rating_types,''),
+			'PURCHASE_RATING_LIST' 	=> $garage_lib->build_selection_box('purchase_rating',$rating_text,$rating_types,''),
 			'INSTALL_RATING_LIST' 	=> $garage_lib->build_selection_box('install_rating',$rating_text,$rating_types,''),
 			'CID' => $cid)
 		);
@@ -417,7 +419,7 @@ switch( $mode )
 		$garage_lib->check_own_vehicle($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('category_id', 'title', 'price', 'business_id', 'install_business_id', 'install_price', 'install_rating', 'product_rating', 'comments', 'install_comments');
+		$params = array('category_id', 'title', 'price', 'business_id', 'install_business_id', 'install_price', 'install_rating', 'product_rating', 'comments', 'install_comments', 'purchase_rating');
 		$data = $garage_lib->process_post_vars($params);
 		$data['time'] = time();
 		$vehicle = $garage_lib->select_vehicle_data($cid);
@@ -479,6 +481,7 @@ switch( $mode )
 			'L_CATEGORY' => $lang['Category'],
 			'L_TITLE' => $lang['Title'],
 			'L_MODIFICATION' => $lang['Modification'],
+       			'L_PURCHASE_RATING' => $lang['Purchase_Rating'],
        			'L_PURCHASED_PRICE' => $lang['Purchased_Price'],
 			'L_PURCHASED_FROM' => $lang['Purchased_From'],
 			'L_INSTALLED_BY' => $lang['Installed_By'],
@@ -501,6 +504,7 @@ switch( $mode )
 			'PRICE' => $data['price'],
 			'INSTALL_PRICE' => $data['install_price'],
 			'PRODUCT_RATING_LIST' => $garage_lib->build_selection_box('product_rating',$rating_text,$rating_types,$data['product_rating']),
+			'PURCHASE_RATING_LIST' => $garage_lib->build_selection_box('purchase_rating',$rating_text,$rating_types,$data['purchase_rating']),
 			'INSTALL_RATING_LIST' => $garage_lib->build_selection_box('install_rating',$rating_text,$rating_types,$data['install_rating']),
 			'COMMENTS' => $data['comments'],
 			'INSTALL_COMMENTS' => $data['install_comments'])
@@ -521,7 +525,7 @@ switch( $mode )
 		$garage_lib->check_own_vehicle($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('category_id', 'title', 'price', 'business_id', 'install_business_id', 'install_price', 'install_rating', 'product_rating', 'comments', 'install_comments', 'edit_upload', 'image_id');
+		$params = array('category_id', 'title', 'price', 'business_id', 'install_business_id', 'install_price', 'install_rating', 'product_rating', 'comments', 'install_comments', 'edit_upload', 'image_id', 'purchase_rating');
 		$data = $garage_lib->process_post_vars($params);
 		$data['time'] = time();
 
@@ -1130,7 +1134,7 @@ switch( $mode )
 		$data = $garage_lib->select_insurance_data($ins_id);
 
 		//Build Required HTML Components
-		$garage_lib->build_insurance_list_html($data['business_id'],$data['name']);
+		$garage_lib->build_insurance_list_html($data['business_id'],$data['title']);
 
 		$template->assign_block_vars('level2', array());
 		$template->assign_vars(array(
@@ -2238,7 +2242,7 @@ switch( $mode )
 			$where = "AND b.id = $single_business";
 		}
 
-		$sql = "SELECT b.* , sum( product_rating ) AS rating, count( * ) *10 AS total_rating
+		$sql = "SELECT b.* , sum( purchase_rating ) AS rating, count( * ) *10 AS total_rating
 			FROM " . GARAGE_BUSINESS_TABLE . " b, " . GARAGE_MODS_TABLE . " m
 			WHERE m.business_id = b.id
 				AND ( b.web_shop =1 OR b.retail_shop = 1 )
@@ -2304,7 +2308,7 @@ switch( $mode )
 			}
 
 			//Now Lets Go Get All Mods All Business's Have Installed
- 			$sql = "SELECT mods.id, mods.garage_id, mods.title AS mod_title, mods.price, mods.product_rating, mods.comments, u.username, u.user_id, makes.make, models.model, g.made_year, b.id as business_id
+ 			$sql = "SELECT mods.id, mods.garage_id, mods.title AS mod_title, mods.price, mods.purchase_rating, mods.product_rating, mods.comments, u.username, u.user_id, makes.make, models.model, g.made_year, b.id as business_id
 	               		FROM (" . GARAGE_MODS_TABLE . " mods, " . GARAGE_BUSINESS_TABLE . " b)
 	    				LEFT JOIN " . GARAGE_TABLE . " g ON ( mods.garage_id = g.id )
 			    		LEFT JOIN " . USERS_TABLE . " u ON ( mods.member_id = u.user_id )
@@ -2336,7 +2340,8 @@ switch( $mode )
 					'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" . $bus_mod_data['garage_id']),
 					'U_VIEW_MODIFICATION' => append_sid("garage.$phpEx?mode=view_modification&amp;CID=" . $bus_mod_data['garage_id'] ."&amp;MID=" . $bus_mod_data['id']),
 					'MODIFICATION' => $bus_mod_data['mod_title'],
-					'RATING' => $bus_mod_data['product_rating'],
+					'PURCHASE_RATING' => $bus_mod_data['purchase_rating'],
+					'PRODUCT_RATING' => $bus_mod_data['product_rating'],
 					'PRICE' => $bus_mod_data['price'])
 				);
 					
@@ -2390,6 +2395,7 @@ switch( $mode )
                		'L_CLICK_FOR_MORE_DETAIL' => $lang['Click_For_More_Detail'],
                		'L_VEHICLE' => $lang['Vehicle'],
                		'L_MODIFICATION' => $lang['Modification'],
+			'L_PURCHASE_RATING' => $lang['Purchase_Rating'],
 			'L_PRODUCT_RATING' => $lang['Product_Rating'],
 			'L_PRICE' => $lang['Price'],
                		'L_ADDRESS' => $lang['Address'],

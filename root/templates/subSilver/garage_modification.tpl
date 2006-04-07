@@ -8,43 +8,35 @@
 					<td class="catBottom" align="center" height="25" nowrap="nowrap" colspan="2"><span class="gen">{L_TITLE}</span></td>
 				</tr>
 				<tr>
-					<td class="row1" width="35%"><span class="gen"><b>{L_CATEGORY}</b></span></td>
-					<td class="row2">{CATEGORY_LIST} <span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</span></td></td>
+					<td class="row1" width="30%"><span class="gen"><b>{L_CATEGORY}</b></span></td>
+					<td class="row2">{CATEGORY_LIST}&nbsp;<span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</span></td>
 				</tr>
 				<tr>
-					<td class="row1" width="35%"><span class="gen"><b>{L_TITLE}</b></span></td>
-					<td class="row2"><input name="title" type="text" class="post" size="35" value="{TITLE}" /> <span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</span></td>
+					<td class="row1" width="30%"><span class="gen"><b>{L_MODIFICATION}</b></span></td>
+					<td class="row2"><input name="title" type="text" class="post" size="30" value="{TITLE}" />&nbsp;<span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font></span>&nbsp;<span class="gen"><b>{L_PRODUCT_RATING}</b>&nbsp;{PRODUCT_RATING_LIST}</span></td>
 				</tr>
 				<tr>
-					<td class="row1" width="35%"><span class="gen"><b>{L_PURCHASED_FROM}</b></span></td>
+					<td class="row1" width="30%"><span class="gen"><b>{L_PURCHASED_FROM}</b></span></td>
 				  	<td class="row2">{SHOP_LIST}&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="{U_SUBMIT_SHOP}">{L_HERE}</a></span></td>
 				</tr>
 				<tr>
-					<td class="row1" width="35%"><span class="gen"><b>{L_PURCHASED_PRICE}</b></span></td>
-					<td class="row2"><input name="price" type="text" class="post" size="35" value="{PRICE}" /></td>
+					<td class="row1" width="30%"><span class="gen"><b>{L_PURCHASED_PRICE}</b></span></td>
+					<td class="row2"><input name="price" type="text" class="post" size="10" value="{PRICE}" /><span class="gen">&nbsp;<b>{L_PURCHASE_RATING}</b>&nbsp;{PURCHASE_RATING_LIST}</td>
 				</tr>
 				<tr>
-					<td class="row1" width="35%"><span class="gen"><b>{L_PRODUCT_RATING}</b></span></td>
-				  	<td class="row2">{PRODUCT_RATING_LIST}</td>
-				</tr>
-				<tr>
-					<td class="row1" width="35%"><span class="gen"><b>{L_INSTALLED_BY}</b></span></td>
+					<td class="row1" width="30%"><span class="gen"><b>{L_INSTALLED_BY}</b></span></td>
 				  	<td class="row2">{GARAGE_INSTALL_LIST}&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="{U_SUBMIT_GARAGE}">{L_HERE}</a></span></td>
 				</tr>
 				<tr>
-					<td class="row1" width="35%"><span class="gen"><b>{L_INSTALLATION_PRICE}</b></span></td>
-					<td class="row2"><input name="install_price" type="text" class="post" size="35" value="{INSTALL_PRICE}" /></td>
+					<td class="row1" width="30%"><span class="gen"><b>{L_INSTALLATION_PRICE}</b></span></td>
+					<td class="row2"><input name="install_price" type="text" class="post" size="10" value="{INSTALL_PRICE}" /><span class="gen">&nbsp;<b>{L_INSTALLATION_RATING}</b>&nbsp;{INSTALL_RATING_LIST}</td>
 				</tr>
 				<tr>
-					<td class="row1" width="35%"><span class="gen"><b>{L_INSTALLATION_RATING}</b></span></td>
-				  	<td class="row2">{INSTALL_RATING_LIST}</td>
-				</tr>
-				<tr>
-					<td class="row1" width="35%"><span class="gen"><b>{L_DESCRIPTION}</b></span></td>
+					<td class="row1" width="30%"><span class="gen"><b>{L_DESCRIPTION}</b></span></td>
 					<td class="row2"><textarea name="comments" cols="60" rows="4" wrap="soft"   class="post">{COMMENTS}</textarea></td>
 				</tr>
 				<tr>
-					<td class="row1" width="35%"><span class="gen"><b>{L_INSTALL_COMMENTS}</b></span><br/><span class="gensmall">{L_ONLY_SHOW_IN_REVIEW}</span></td>
+					<td class="row1" width="30%"><span class="gen"><b>{L_INSTALL_COMMENTS}</b></span><br/><span class="gensmall">{L_ONLY_SHOW_IN_REVIEW}</span></td>
 					<td class="row2"><textarea name="install_comments" cols="60" rows="4" wrap="soft"   class="post">{INSTALL_COMMENTS}</textarea></td>
 				</tr>
 				<!-- BEGIN allow_images -->

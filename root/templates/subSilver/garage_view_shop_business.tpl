@@ -19,6 +19,7 @@
 					<td class="catBottom" align="center" height="28" ><span class="gen">{L_CUSTOMER}</span></td>
 					<td class="catBottom" align="center" height="28" ><span class="gen">{L_VEHICLE}</span></td>
 					<td class="catBottom" align="center" height="28" ><span class="gen">{L_MODIFICATION}</span></td>
+					<td class="catBottom" align="center" height="28" ><span class="gen">{L_PURCHASE_RATING}</span></td>
 					<td class="catBottom" align="center" height="28" ><span class="gen">{L_PRODUCT_RATING}</span></td>
 					<td class="catBottom" align="center" height="28" ><span class="gen">{L_PRICE}</span></td>
 				</tr>
@@ -28,7 +29,8 @@
 					<td class="row1" align="center" nowrap><span class="gensmall"><a href="{business_row.mod_row.U_VIEW_PROFILE}">{business_row.mod_row.USERNAME}</a></span></td>
 					<td class="row1" align="center" nowrap><span class="gensmall"><a href="{business_row.mod_row.U_VIEW_VEHICLE}">{business_row.mod_row.VEHICLE}</a></span></td>
 					<td class="row1" align="center" nowrap><span class="gensmall"><a href="{business_row.mod_row.U_VIEW_MODIFICATION}">{business_row.mod_row.MODIFICATION}</a></span></td>
-					<td class="row1" align="center" nowrap><span class="gensmall">{business_row.mod_row.RATING}</span></td>
+					<td class="row1" align="center" nowrap><span class="gensmall">{business_row.mod_row.PURCHASE_RATING}</span></td>
+					<td class="row1" align="center" nowrap><span class="gensmall">{business_row.mod_row.PRODUCT_RATING}</span></td>
 					<td class="row1" align="center" nowrap><span class="gensmall">{business_row.mod_row.PRICE}</span></td>
 				</tr>
 				<!-- END mod_row -->

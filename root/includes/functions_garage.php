@@ -192,7 +192,7 @@ class garage_lib
 		global $cid, $userdata, $db;
 
 		$sql = "INSERT INTO ". GARAGE_MODS_TABLE ."
-			SET garage_id = '$cid', member_id = '".$data['member_id']."', category_id = '".$data['category_id']."', title = '".$data['title']."', price = '".$data['price']."', install_price = '".$data['install_price']."', install_rating = '".$data['install_rating']."', product_rating = '".$data['product_rating']."', comments = '".$data['comments']."', date_created = '".$data['time']."', date_updated = '".$data['time']."', business_id = '".$data['business_id']."', install_business_id = '".$data['install_business_id']."', install_comments = '".$data['install_comments']."'";
+			SET garage_id = '$cid', member_id = '".$data['member_id']."', category_id = '".$data['category_id']."', title = '".$data['title']."', price = '".$data['price']."', install_price = '".$data['install_price']."', install_rating = '".$data['install_rating']."', product_rating = '".$data['product_rating']."', comments = '".$data['comments']."', date_created = '".$data['time']."', date_updated = '".$data['time']."', business_id = '".$data['business_id']."', install_business_id = '".$data['install_business_id']."', install_comments = '".$data['install_comments']."', purchase_rating = '".$data['purchase_rating']."'";
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -409,7 +409,7 @@ class garage_lib
 		global $db, $cid, $mid;
 
 		$sql = "UPDATE ". GARAGE_MODS_TABLE ."
-			SET category_id = '".$data['category_id']."', title = '".$data['title']."', price = '".$data['price']."', install_price = '".$data['install_price']."', install_rating = '".$data['install_rating']."', product_rating = '".$data['product_rating']."', comments = '".$data['comments']."', install_comments = '".$data['install_comments']."' , business_id = '".$data['business_id']."', install_business_id = '".$data['install_business_id']."', date_updated = '".$data['time']."'
+			SET category_id = '".$data['category_id']."', title = '".$data['title']."', price = '".$data['price']."', install_price = '".$data['install_price']."', install_rating = '".$data['install_rating']."', product_rating = '".$data['product_rating']."', comments = '".$data['comments']."', install_comments = '".$data['install_comments']."' , business_id = '".$data['business_id']."', install_business_id = '".$data['install_business_id']."', date_updated = '".$data['time']."', purchase_rating = '".$data['purchase_rating']."'
 			WHERE id = '$mid' and garage_id = '$cid'";
 
 		if(!$result = $db->sql_query($sql))
