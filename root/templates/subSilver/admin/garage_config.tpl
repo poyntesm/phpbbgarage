@@ -169,6 +169,10 @@
 		<td class="row2"><span class="genmed"><input type="radio" {QUARTERMILE_APPROVAL_ENABLED} name="enable_quartermile_approval" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" {QUARTERMILE_APPROVAL_DISABLED} name="enable_quartermile_approval" value="0" />{L_NO}</span></td>
 	</tr>
 	<tr>
+		<td class="row1"><span class="genmed">{L_ENABLE_QUARTERMILE_IMAGE_REQUIRED}</span></td>
+		<td class="row2"><span class="genmed"><input type="radio" {QUARTERMILE_IMAGE_REQUIRED_ON} name="quartermile_image_required" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" {QUARTERMILE_IMAGE_REQUIRED_OFF} name="quartermile_image_required" value="0" />{L_NO}</span><br />{L_QUARTEMILE_IMAGE_REQUIRED_LIMIT}&nbsp;<input class="post" type="text" maxlength="12" size="12" name="quartermile_image_required_limit" value="{QUARTERMILE_IMAGE_REQUIRED_LIMIT}" /></td>
+	</tr>
+	<tr>
 		<th class="thHead" colspan="2">{L_GARAGE_ROLLINGROAD_FEATURES}</th>
 	</tr>
 	<tr>
@@ -178,6 +182,10 @@
 	<tr>
 		<td class="row1"><span class="genmed">{L_REQUIRE_ROLLINGROAD_APPROVAL}</span></td>
 		<td class="row2"><span class="genmed"><input type="radio" {ROLLINGROAD_APPROVAL_ENABLED} name="enable_rollingroad_approval" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" {ROLLINGROAD_APPROVAL_DISABLED} name="enable_rollingroad_approval" value="0" />{L_NO}</span></td>
+	</tr>
+	<tr>
+		<td class="row1"><span class="genmed">{L_ENABLE_DYNORUN_IMAGE_REQUIRED}</span></td>
+		<td class="row2"><span class="genmed"><input type="radio" {DYNORUN_IMAGE_REQUIRED_ON} name="dynorun_image_required" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" {DYNORUN_IMAGE_REQUIRED_OFF} name="dynorun_image_required" value="0" />{L_NO}</span><br />{L_DYNORUN_IMAGE_REQUIRED_LIMIT}&nbsp;<input class="post" type="text" maxlength="12" size="12" name="dynorun_image_required_limit" value="{DYNORUN_IMAGE_REQUIRED_LIMIT}" /></td>
 	</tr>
 	<tr>
 		<th class="thHead" colspan="2">{L_GARAGE_INSURANCE_FEATURES}</th>

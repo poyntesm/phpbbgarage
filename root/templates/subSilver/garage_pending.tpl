@@ -165,6 +165,14 @@
 					</br>
 					<!-- END model_pending -->
 
+					<!-- BEGIN no_pending_items -->
+					<table width="100%" cellpadding="3" cellspacing="1" border="0" class="forumline">
+						<tr>
+      							<th colspan="13">{L_NO_PENDING_ITEMS}</th>
+						</tr>
+					</table>
+					</br>
+					<!-- END no_pending_items -->
 
 					<tr>
 						<td class="catbottom" colspan="9">

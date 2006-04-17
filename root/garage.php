@@ -30,8 +30,16 @@ include($phpbb_root_path . 'includes/bbcode.'.$phpEx);
 require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage.' . $phpEx);
 require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage_error.' . $phpEx);
 
-//Build All Garage Functions For $garage_lib->
+//Build All Garage Classes e.g $garage_images->
 require($phpbb_root_path . 'includes/functions_garage.' . $phpEx);
+require($phpbb_root_path . 'includes/functions_garage_business.' . $phpEx);
+require($phpbb_root_path . 'includes/functions_garage_dynoron.' . $phpEx);
+require($phpbb_root_path . 'includes/functions_garage_image.' . $phpEx);
+require($phpbb_root_path . 'includes/functions_garage_insurance.' . $phpEx);
+require($phpbb_root_path . 'includes/functions_garage_modification.' . $phpEx);
+require($phpbb_root_path . 'includes/functions_garage_quartermile.' . $phpEx);
+require($phpbb_root_path . 'includes/functions_garage_template.' . $phpEx);
+require($phpbb_root_path . 'includes/functions_garage_vehicle.' . $phpEx);
 
 // Start session management
 $userdata = session_pagestart($user_ip, PAGE_GARAGE);
@@ -669,6 +677,16 @@ switch( $mode )
 				$garage_lib->update_single_field(GARAGE_QUARTERMILE_TABLE,'image_id',$image_id,'id',$qmid);
 			}
 		}
+		else
+		{
+			//No Image Attached..We Need To Check If This Breaks The Site Rule
+			if ( ($garage_config['quartermile_image_required'] == '1') AND ($data['quart'] <= $garage_config['quartermile_image_required_limit']))
+			{
+				//That Time Requires An Image...Delete Entered Time And Notify User
+				$garage_lib->delete_quartermile_time($qmid);
+				redirect(append_sid("garage.$phpEx?mode=error&EID=26", true));
+			}
+		}
 
 		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
 
@@ -790,6 +808,16 @@ switch( $mode )
 				$garage_lib->update_single_field(GARAGE_QUARTERMILE_TABLE,'image_id',$image_id,'id',$qmid);
 			}
 		}
+		else
+		{
+			//No Image Attached..We Need To Check If This Breaks The Site Rule
+			if ( ($garage_config['quartermile_image_required'] == '1') AND ($data['quart'] <= $garage_config['quartermile_image_required_limit']))
+			{
+				//That Time Requires An Image...Delete Entered Time And Notify User
+				$garage_lib->delete_quartermile_time($qmid);
+				redirect(append_sid("garage.$phpEx?mode=error&EID=26", true));
+			}
+		}
 
 		if ( $data['pending_redirect'] == 'YES' )
 		{
@@ -904,6 +932,16 @@ switch( $mode )
 				$garage_lib->update_single_field(GARAGE_ROLLINGROAD_TABLE,'image_id',$image_id,'id',$rrid);
 			}
 		}
+		else
+		{
+			//No Image Attached..We Need To Check If This Breaks The Site Rule
+			if ( ($garage_config['dynorun_image_required'] == '1') AND ($data['bhp'] >= $garage_config['dynorun_image_required_limit']))
+			{
+				//That Time Requires An Image...Delete Entered Time And Notify User
+				$garage_lib->delete_rollingroad_run($rrid);
+				redirect(append_sid("garage.$phpEx?mode=error&EID=26", true));
+			}
+		}
 
 		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
 
@@ -1010,7 +1048,18 @@ switch( $mode )
 				$garage_lib->update_single_field(GARAGE_ROLLINGROAD_TABLE,'image_id',$image_id,'id',$rrid);
 			}
 		}
+		else
+		{
+			//No Image Attached..We Need To Check If This Breaks The Site Rule
+			if ( ($garage_config['dynorun_image_required'] == '1') AND ($data['bhp'] >= $garage_config['dynorun_image_required_limit']))
+			{
+				//That Time Requires An Image...Delete Entered Time And Notify User
+				//$garage_lib->delete_rollingroad_run($rrid);
+				redirect(append_sid("garage.$phpEx?mode=error&EID=26", true));
+			}
+		}
 
+		//If Editted From Pending Page Redirect Back To It.
 		if ( $data['pending_redirect'] == 'YES' )
 		{
 			redirect(append_sid("garage.$phpEx?mode=garage_pending", true));
@@ -2816,19 +2865,25 @@ switch( $mode )
 		);
 
 		//Build The Quartermile Table With Only Pending Times
-		$garage_lib->build_quartermile_table('YES');
+		$pending_quartermile_count = $garage_lib->build_quartermile_table('YES');
 
 		//Build The Rollingroad Table With Only Pending Runs
-		$garage_lib->build_rollingroad_table('YES');
+		$pending_dynorun_count = $garage_lib->build_rollingroad_table('YES');
 
 		//Build The Business Table With Only Pending Ones
-		$garage_lib->build_business_table('YES');
+		$pending_business_count = $garage_lib->build_business_table('YES');
 
-		//Build The Make Table With Only Pending Ones
-		$garage_lib->build_make_table('YES');
+		//Build The Make Table With Only Pending Ones + Return Count
+		$pending_make_count = $garage_lib->build_make_table('YES');
 
-		//Build The Model Table With Only Pending Ones
-		$garage_lib->build_model_table('YES');
+		//Build The Model Table With Only Pending Ones + Return Count
+		$pending_model_count = $garage_lib->build_model_table('YES');
+
+		//Display A Nice Message Saying Nothing Is Pending Approval If Needed
+		if ( $pending_quartermile_count == '0' AND $pending_dynorun_count == '0' AND $pending_business_count == '0' AND $pending_make_count == '0' AND  $pending_model_count == '0' )
+		{
+			$template->assign_block_vars('no_pending_items', array());
+		}
 
 		//Set Up Template Varibles
 		$template->assign_block_vars('level1', array());
@@ -2839,6 +2894,7 @@ switch( $mode )
 			'L_BUSINESS_PENDING' => $lang['Business_Pending'],
 			'L_MAKE_PENDING' => $lang['Make_Pending'],
 			'L_MODEL_PENDING' => $lang['Model_Pending'],
+			'L_NO_PENDING_ITEMS' => $lang['No_Pending_Items'],
 			'L_USERNAME' => $lang['Username'],
 			'L_GO' => $lang['Go'],
 			'L_SELECT' => $lang['Select_one'],
