@@ -52,7 +52,7 @@
 ##			templates/subSilver/overall_header.tpl
 ##			templates/subSilver/profile_view_body.tpl
 ##
-## Included Files: (84)
+## Included Files: (86)
 ##			Install Garage.txt
 ##			Upgrade.txt
 ##			contrib/Install Garage.txt
@@ -137,6 +137,8 @@
 ##			root/templates/subSilver/images/lang_english/icon_garage.gif
 ##			upgrade/upgrade_garage-1.0.0.php
 ##			upgrade/upgrade_garage-1.0.0.txt
+##			upgrade/upgrade_garage-1.0.2.php
+##			upgrade/upgrade_garage-1.0.2.txt
 ## License: http://opensource.org/licenses/gpl-license.php GNU General Public License v2 or any later version
 ######################################################################################
 ## For security purposes, please check: http://www.phpbb.com/mods/
@@ -152,6 +154,9 @@
 ##
 ######################################################################################
 ## MOD History: 
+##   18-04-2006 - Version 1.0.2
+##	- 0000001: (DB Version Support) Add support for MySQL5 (poyntesm)
+#
 ##   27-02-2006 - Version 1.0.2
 ##	- Fix javascript error on adding a new model
 ##	- Fix setting private permissions

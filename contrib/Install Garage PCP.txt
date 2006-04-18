@@ -33,7 +33,7 @@
 ##			This mod also provides an insurance,garage,shop review page. Users Can Add Business's Themselves.
 ##			Although for the business to appear in a review page the moderator must approve it.
 ##
-## MOD Version:		1.0.0 
+## MOD Version:		1.0.3 
 ## 
 ## Installation Level:	Easy
 ## Installation Time:	10 Minutes
@@ -53,9 +53,9 @@
 ##			templates/subSilver/overall_header.tpl
 ##
 ## Included Files: (104)
-##			Install Garage 1.0.0.txt
+##			Install Garage 1.0.3.txt
 ##			Upgrade.txt
-##			contrib/Install Garage 1.0.0 PCP.txt
+##			contrib/Install Garage 1.0.3 PCP.txt
 ##			contrib/profilcp/
 ##			contrib/templates/
 ## 			root/garage.php
@@ -313,12 +313,25 @@ viewtopic.php
 #-----[ FIND ]------------------------------------------
 #
 # this is a partial search : the full line is longer
-
-$sql = "SELECT u.*, p.*,  pt.post_text, pt.post_subject, pt.bbcode_uid
+//
+// Go ahead and pull all data for this topic
+//
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- modify
+#
+#-----[ FIND ]------------------------------------------
+#
+# this is a partial search : the full line is longer
+$sql = "SELECT u.username, u.user_id, u.user_posts, u.user_from
 #
 #-----[ IN-LINE FIND ]------------------------------------------
 #
+
 pt.post_text, pt.post_subject, pt.bbcode_uid
+
 #
 #-----[ IN-LINE AFTER, ADD ]------------------------------------------
 #
@@ -328,11 +341,70 @@ pt.post_text, pt.post_subject, pt.bbcode_uid
 #
 	FROM " . POSTS_TABLE . " p, " . USERS_TABLE . " u, " . POSTS_TEXT_TABLE . " pt
 #
+#-----[ IN-LINE FIND ]------------------------------------------
+#
+FROM
+
+#
+#-----[ IN-LINE AFTER,ADD ]------------------------------------------
+#
+ (
+#
+#-----[ IN-LINE FIND ]------------------------------------------
+#
+pt
+
+#
+#-----[ IN-LINE AFTER,ADD ]------------------------------------------
+#
+ )
+
+#
 #-----[ AFTER, ADD ]------------------------------------------
 #
-		LEFT JOIN " . GARAGE_TABLE ." AS g on g.member_id = p.poster_id and g.main_vehicle = 1
-                LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-                LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
+		LEFT JOIN " . GARAGE_TABLE ." g ON ( g.member_id = p.poster_id and g.main_vehicle = 1)
+                LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON (g.make_id = makes.id)
+                LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON (g.model_id = models.id)
+#
+#-----[ FIND ]------------------------------------------
+#
+	LIMIT $start, ".$board_config['posts_per_page'];
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+#
+#-----[ FIND ]------------------------------------------
+#
+
+	$poster_from = ( $postrow[$i]['user_from'] && $postrow[$i]['user_id'] != ANONYMOUS ) ? $lang['Location'] . ': ' . $postrow[$i]['user_from'] : '';
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+	$garage_id = $postrow[$i]['garage_id'];
+	$poster_car_year = ( $postrow[$i]['made_year'] && $postrow[$i]['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $postrow[$i]['made_year'] : '';
+	$poster_car_make = ( $postrow[$i]['make'] && $postrow[$i]['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $postrow[$i]['make'] : '';
+	$poster_car_model = ( $postrow[$i]['model'] && $postrow[$i]['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $postrow[$i]['model'] : '';
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+#
+#-----[ FIND ]------------------------------------------
+#
+		'POSTER_FROM' => $poster_from,
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+		'POSTER_CAR_MAKE' => $poster_car_make,
+		'POSTER_CAR_MODEL' => $poster_car_model,
+		'POSTER_CAR_YEAR' => $poster_car_year,
+		'VIEW_POSTER_CARPROFILE' => ($userdata['user_level'] != ADMIN)? append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" . $garage_id) : append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" . $garage_id) ,
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 # 
 #-----[ OPEN ]----- 
 # 
