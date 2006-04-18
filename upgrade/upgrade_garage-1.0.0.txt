@@ -250,7 +250,7 @@ garage.php
 #
 #-----[ IN-LINE FIND ]------------------------------------------
 #
-user.usernamme
+user.username
 
 #
 #-----[ IN-LINE AFTER, ADD ]------------------------------------------
