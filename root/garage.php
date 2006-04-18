@@ -2196,7 +2196,7 @@ switch( $mode )
 
 			//Now Lets Go Get All Mods All Business's Have Installed
  			$sql = "SELECT mods.id, mods.garage_id, mods.title AS mod_title, mods.install_price, mods.install_rating, mods.install_comments, u.username, u.user_id, makes.make, models.model, g.made_year, b.id as business_id
-	               		FROM " . GARAGE_MODS_TABLE . " AS mods, " . GARAGE_BUSINESS_TABLE . " AS b
+	               		FROM ( " . GARAGE_MODS_TABLE . " AS mods, " . GARAGE_BUSINESS_TABLE . " AS b )
 	    				LEFT JOIN " . GARAGE_TABLE . " AS g ON mods.garage_id = g.id
 			    		LEFT JOIN " . USERS_TABLE . " AS u ON mods.member_id = u.user_id
 		        		LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
@@ -2394,7 +2394,7 @@ switch( $mode )
 
 			//Now Lets Go Get All Mods All Business's Have Installed
  			$sql = "SELECT mods.id, mods.garage_id, mods.title AS mod_title, mods.price, mods.product_rating, mods.comments, u.username, u.user_id, makes.make, models.model, g.made_year, b.id as business_id
-	               		FROM " . GARAGE_MODS_TABLE . " AS mods, " . GARAGE_BUSINESS_TABLE . " AS b
+	               		FROM ( " . GARAGE_MODS_TABLE . " AS mods, " . GARAGE_BUSINESS_TABLE . " AS b )
 	    				LEFT JOIN " . GARAGE_TABLE . " AS g ON mods.garage_id = g.id
 			    		LEFT JOIN " . USERS_TABLE . " AS u ON mods.member_id = u.user_id
 		        		LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id

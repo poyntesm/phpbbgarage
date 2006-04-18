@@ -1,20 +1,19 @@
 #############################################################################################################
-## MOD Title:		Update phpBB Garage 1.0.0 -> phpBB Garage 1.0.2
+## MOD Title:		Update phpBB Garage 1.0.2 -> phpBB Garage 1.0.3
 ## MOD Author: poyntesm < esmond.poynton[at]gmail[dot]com > (Esmond Poynton) http://forums.phpbbgarage.com
 ## MOD Description:
-##			Updates phpBB Garage From 1.0.0 To 1.0.2
+##			Updates phpBB Garage From 1.0.2 To 1.0.3
 ##
-## MOD Version:		1.0.2
+## MOD Version:		1.0.3
 ## 
 ## Installation Level:	Easy
 ## Installation Time:	10 Minutes
-## Files To Edit: (4)
-## 			root/garage.php
-##			root/admin/admin_garage_permissions.php
-##			root/includes/functions_garage.php
-##			root/templates/subSilver/garage_vehicle.tpl
+## Files To Edit: (3)
+## 			garage.php
+## 			viewtopic.php
+## 			includes/functions_garage.php
 ##
-## Included Files: (84)
+## Included Files: (86)
 ##			Install Garage.txt
 ##			Upgrade.txt
 ##			contrib/Install Garage PCP.txt
@@ -99,6 +98,8 @@
 ##			root/templates/subSilver/images/lang_english/icon_garage.gif
 ##			upgrade/upgrade_garage-1.0.0.php
 ##			upgrade/upgrade_garage-1.0.0.txt
+##			upgrade/upgrade_garage-1.0.2.php
+##			upgrade/upgrade_garage-1.0.2.txt
 ## License: http://opensource.org/licenses/gpl-license.php GNU General Public License v2 or any later version
 ######################################################################################
 ## For security purposes, please check: http://www.phpbb.com/mods/
@@ -114,6 +115,9 @@
 ##
 ######################################################################################
 ## MOD History: 
+##   18-04-2006 - Version 1.0.3
+##	- 0000001: (DB Version Support) Add support for MySQL5 (poyntesm)
+##
 ##   27-02-2006 - Version 1.0.2
 ##	- Fix javascript error on adding a new model
 ##	- Fix setting private permissions
@@ -229,13 +233,13 @@
 #
 #-----[ COPY ]------------------------------------------
 #
-copy upgrade/upgrade_garage-1.0.0.php TO upgrade_garage-1.0.0.php
+copy upgrade/upgrade_garage-1.0.2.php TO upgrade_garage-1.0.2.php
 
 #
 #-----[ DIY INSTRUCTIONS ]------------------------------------------
 #
-Open in your web browser and run upgrade_garage-1.0.0.php
-Delete upgrade_garage-1.0.0.php if it ran succesfull
+Open in your web browser and run upgrade_garage-1.0.2.php
+Delete upgrade_garage-1.0.2.php if it ran succesfull
 
 # 
 #-----[ OPEN ]----- 
@@ -245,61 +249,50 @@ garage.php
 #
 #-----[ FIND ]------------------------------------------
 #
-			$sql = "SELECT i.*, g.made_year, b.title, b.id as business_id, makes.make, models.model, user.username  
+	               		FROM " . GARAGE_MODS_TABLE . " AS mods, " . GARAGE_BUSINESS_TABLE . " AS b
 
 #
-#-----[ IN-LINE FIND ]------------------------------------------
+#-----[ REPLACE WITH ]------------------------------------------
 #
-user.username
+	               		FROM ( " . GARAGE_MODS_TABLE . " AS mods, " . GARAGE_BUSINESS_TABLE . " AS b )
 
 #
-#-----[ IN-LINE AFTER, ADD ]------------------------------------------
+#-----[ FIND ]------------------------------------------
 #
-, user.user_id
+	               		FROM " . GARAGE_MODS_TABLE . " AS mods, " . GARAGE_BUSINESS_TABLE . " AS b
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+	               		FROM ( " . GARAGE_MODS_TABLE . " AS mods, " . GARAGE_BUSINESS_TABLE . " AS b )
 
 # 
 #-----[ OPEN ]----- 
 # 
-admin/admin_garage_permissions.php
+viewtopic.php
 
 #
 #-----[ FIND ]------------------------------------------
 #
-			$browse_groups = @implode(',', str_replace("\'", "''", htmlspecialchars(trim($HTTP_POST_VARS['browse']))));
+	FROM " . POSTS_TABLE . " p, " . USERS_TABLE . " u, " . POSTS_TEXT_TABLE . " pt
+#
+#-----[ IN-LINE FIND ]------------------------------------------
+#
+FROM
 
 #
-#-----[ REPLACE WITH ]------------------------------------------
+#-----[ IN-LINE AFTER,ADD ]------------------------------------------
 #
-			$browse_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['browse']));
+ (
+#
+#-----[ IN-LINE FIND ]------------------------------------------
+#
+pt
 
 #
-#-----[ FIND ]------------------------------------------
-# 
-			$interact_groups = @implode(',', str_replace("\'", "''", htmlspecialchars(trim($HTTP_POST_VARS['interact']))));
-
+#-----[ IN-LINE AFTER,ADD ]------------------------------------------
 #
-#-----[ REPLACE WITH ]------------------------------------------
-#
-			$interact_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['interact']));
- 
-#
-#-----[ FIND ]------------------------------------------
-#
-			$add_groups = @implode(',', str_replace("\'", "''", htmlspecialchars(trim($HTTP_POST_VARS['add']))));
-
-#
-#-----[ REPLACE WITH ]------------------------------------------
-#
-			$add_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['add']));
- 
-#
-#-----[ FIND ]------------------------------------------
-#
-			$upload_groups = @implode(',', str_replace("\'", "''", htmlspecialchars(trim($HTTP_POST_VARS['upload']))));
-#
-#-----[ REPLACE WITH ]------------------------------------------
-#
-			$upload_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['upload']));
+ )
 
 # 
 #-----[ OPEN ]----- 
@@ -309,48 +302,11 @@ includes/functions_garage.php
 #
 #-----[ FIND ]------------------------------------------
 #
-		$current_date = $my_array["tm_year"] +1901 ;
-
-#
-#-----[ IN-LINE FIND ]------------------------------------------
-#
-1901
-
-#
-#-----[ IN-LINE REPLACE WITH ]------------------------------------------
-#
-1900
- 	
-#
-#-----[ FIND ]------------------------------------------
-#
-	        //$end_year = $current_date['year'] + $garage_config['year_end'];
-	        $end_year = $current_date;
-
+     			FROM " . GARAGE_MODS_TABLE . " AS mods, " . GARAGE_TABLE . " AS g 
 #
 #-----[ REPLACE WITH ]------------------------------------------
 #
-	        $end_year = $current_date + $garage_config['year_end'];
- 
-# 
-#-----[ OPEN ]----- 
-# 
-templates/subSilver/garage_vehicle.tpl
-
-#
-#-----[ FIND ]------------------------------------------
-#
-<a href="javascript:add_model("YES")
-
-#
-#-----[ IN-LINE FIND ]------------------------------------------
-#
-("YES")
-
-#
-#-----[ IN-LINE REPLACE WITH ]------------------------------------------
-#
-('YES')
+     			FROM ( " . GARAGE_MODS_TABLE . " AS mods, " . GARAGE_TABLE . " AS g )
 
 #
 #-----[ SAVE/CLOSE ALL FILES ]------------------------------------------
