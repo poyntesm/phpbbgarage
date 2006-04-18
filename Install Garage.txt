@@ -328,11 +328,30 @@ pt.post_text, pt.post_subject, pt.bbcode_uid
 #
 	FROM " . POSTS_TABLE . " p, " . USERS_TABLE . " u, " . POSTS_TEXT_TABLE . " pt
 #
+#-----[ IN-LINE FIND ]------------------------------------------
+#
+FROM
+
+#
+#-----[ IN-LINE AFTER,ADD ]------------------------------------------
+#
+ (
+#
+#-----[ IN-LINE FIND ]------------------------------------------
+#
+pt
+
+#
+#-----[ IN-LINE AFTER,ADD ]------------------------------------------
+#
+ )
+
+#
 #-----[ AFTER, ADD ]------------------------------------------
 #
-		LEFT JOIN " . GARAGE_TABLE ." AS g on g.member_id = p.poster_id and g.main_vehicle = 1
-                LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-                LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
+		LEFT JOIN " . GARAGE_TABLE ." g ON ( g.member_id = p.poster_id and g.main_vehicle = 1)
+                LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON (g.make_id = makes.id)
+                LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON (g.model_id = models.id)
 #
 #-----[ FIND ]------------------------------------------
 #
