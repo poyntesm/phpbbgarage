@@ -1,5 +1,5 @@
 #############################################################################################################
-## MOD Title:		phpBB Garage 1.0.2
+## MOD Title:		phpBB Garage 1.0.3
 ## MOD Author: poyntesm < esmond.poynton[at]gmail[dot]com > (Esmond Poynton) http://forums.phpbbgarage.com/
 ## MOD Description:
 ##			This mod allows users of your forum to add details about their vehicles.
@@ -33,7 +33,7 @@
 ##			This mod also provides an insurance,garage,shop review page. Users Can Add Business's Themselves.
 ##			Although for the business to appear in a review page the moderator must approve it.
 ##
-## MOD Version:		1.0.2 
+## MOD Version:		1.0.3 
 ## 
 ## Installation Level:	Easy
 ## Installation Time:	10 Minutes

@@ -5,9 +5,11 @@
 #####################################################################################
 
 
-Each upgrade must be complete in sequence .i.e 1.0.0 -> 1.0.2 -> 1.0.4
+Each upgrade must be complete in sequence .i.e 1.0.0 -> 1.0.2 -> 1.0.3
 
-So if the current version is 1.0.4 and you are running 1.0.0 you will first need to complete the 1.0.2 upgrade.
+NOTE: Thre was no 1.0.1
+
+So if the current version is 1.0.3 and you are running 1.0.0 you will first need to complete the 1.0.2 upgrade.
 
 To complete a version upgrade you need to process the upgrade_garage.txt file and then run the upgrade_garage.php file. 
 Each of these files will have a version number showing which version it is the upgrade for.
