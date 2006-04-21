@@ -772,7 +772,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function display_vehicle($owned)
 	{
-		global $userdata, $template, $images, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $HTTP_POST_FILES, $HTTP_POST_VARS, $HTTP_GET_VARS, $rating_text, $rating_types, $cid, $mode, $garage;
+		global $userdata, $template, $images, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $HTTP_POST_FILES, $HTTP_POST_VARS, $HTTP_GET_VARS, $rating_text, $rating_types, $cid, $mode, $garage, $garage_template;
 
 		//Since We Called This Fuction Display Top Block With All Vehicle Info
 		$template->assign_block_vars('switch_top_block', array());
@@ -960,7 +960,7 @@ class garage_vehicle
 			{
 				$template->assign_block_vars('switch_top_block.owned_no.rating.rate', array());
 				$template->assign_vars(array(
-					'RATE_VEHICLE' => $this->build_selection_box('vehicle_rating',$rating_text,$rating_types,''))
+					'RATE_VEHICLE' => $garage_template->selection_dropdown('vehicle_rating',$rating_text,$rating_types,''))
 				);
 			}
 			//Rated Already But Permanent So Do Not Show Button
@@ -975,7 +975,7 @@ class garage_vehicle
 			{
 				$template->assign_block_vars('switch_top_block.owned_no.rating.rate', array());
 				$template->assign_vars(array(
-					'RATE_VEHICLE' => $this->build_selection_box('vehicle_rating',$rating_text,$rating_types,''),
+					'RATE_VEHICLE' => $garage_template->selection_dropdown('vehicle_rating',$rating_text,$rating_types,''),
 					'L_RATING_NOTICE' => $lang['Update_Rating'])
 				);
 			}
@@ -991,7 +991,7 @@ class garage_vehicle
 			{
 				$template->assign_block_vars('switch_top_block.owned_no.rating.rate', array());
 				$template->assign_vars(array(
-					'RATE_VEHICLE' =>$this->build_selection_box('vehicle_rating',$rating_text,$rating_types,''),
+					'RATE_VEHICLE' =>$garage_template->selection_dropdown('vehicle_rating',$rating_text,$rating_types,''),
 					'L_RATING_NOTICE' => $lang['Update_Rating'])
 				);
 			}

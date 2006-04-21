@@ -36,8 +36,19 @@ $phpbb_root_path = '../';
 require($phpbb_root_path . 'extension.inc');
 require('./pagestart.' . $phpEx);
 require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage.' . $phpEx);
-//Build All Garage Functions For $garage_lib->
-include($phpbb_root_path . 'includes/functions_garage.' . $phpEx);
+
+//Build All Garage Classes e.g $garage_images->
+require($phpbb_root_path . 'includes/class_garage.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_business.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_dynorun.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_image.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_insurance.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_modification.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_quartermile.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_template.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_vehicle.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_guestbook.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_model.' . $phpEx);
 
 if( isset( $HTTP_POST_VARS['mode'] ) || isset( $HTTP_GET_VARS['mode'] ) )
 {
@@ -55,14 +66,14 @@ switch($mode)
 
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('make');
-		$data = $garage_lib->process_post_vars($params);
+		$data = $garage->process_post_vars($params);
 
 		//Checks All Required Data Is Present
 		$params = array('make');
-		$garage_lib->check_required_vars($params);
+		$garage->check_required_vars($params);
 
 		//Update The DB With Data Acquired
-		$garage_lib->insert_make($data);
+		$garage_model->insert_make($data);
 
 		$message = $lang['New_Make_Created'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Makes'], "<a href=\"" . append_sid("admin_garage_models.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
 
@@ -124,14 +135,14 @@ switch($mode)
 
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('make_id', 'model');
-		$data = $garage_lib->process_post_vars($params);
+		$data = $garage->process_post_vars($params);
 
 		//Checks All Required Data Is Present
 		$params = array('make_id', 'model');
-		$garage_lib->check_required_vars($params);
+		$garage->check_required_vars($params);
 
 		//Update The DB With Data Acquired
-		$garage_lib->insert_model($data);
+		$garage_model->insert_model($data);
 
 		// Return a message...
 		$message = $lang['New_Model_Created'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Makes'], "<a href=\"" . append_sid("admin_garage_models.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
@@ -333,7 +344,7 @@ switch($mode)
 
 		);
 
-		$data = $garage_lib->select_make_data('');
+		$data = $garage_model->select_make_data('');
 
 		for( $i = 0; $i < count($data); $i++ )
 		{

@@ -35,7 +35,19 @@ require($phpbb_root_path . 'extension.inc');
 require('./pagestart.' . $phpEx);
 require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage.' . $phpEx);
 require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage_error.' . $phpEx);
-require($phpbb_root_path . 'includes/functions_garage.' . $phpEx);
+
+//Build All Garage Classes e.g $garage_images->
+require($phpbb_root_path . 'includes/class_garage.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_business.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_dynorun.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_image.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_insurance.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_modification.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_quartermile.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_template.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_vehicle.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_guestbook.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_model.' . $phpEx);
 
 if( isset( $HTTP_POST_VARS['mode'] ) || isset( $HTTP_GET_VARS['mode'] ) )
 {
@@ -124,52 +136,54 @@ switch($mode)
 		
 		//Right Now Lets Handle Private Usergroup Permissions If Any Permission Set To Private
 		$deny_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['deny']));
-		$garage_lib->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $deny_groups, 'config_name', 'private_deny_perms');
+		$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $deny_groups, 'config_name', 'private_deny_perms');
 
 		if ($HTTP_POST_VARS['BROWSE_PRIVATE'] == 1) 
 		{
 			$browse_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['browse']));
-			$garage_lib->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $browse_groups, 'config_name', 'private_browse_perms');
+			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $browse_groups, 'config_name', 'private_browse_perms');
 		}
 		else
 		{
-			$garage_lib->update_single_field(GARAGE_CONFIG_TABLE,'config_value', '', 'config_name', 'private_browse_perms');
+			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value', '', 'config_name', 'private_browse_perms');
 		}
 
 		if ($HTTP_POST_VARS['INTERACT_PRIVATE'] == 1) 
 		{
 			$interact_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['interact']));
-			$garage_lib->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $interact_groups, 'config_name', 'private_interact_perms');
+			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $interact_groups, 'config_name', 'private_interact_perms');
 		}
 		else
 		{
-			$garage_lib->update_single_field(GARAGE_CONFIG_TABLE,'config_value', '', 'config_name', 'private_interact_perms');
+			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value', '', 'config_name', 'private_interact_perms');
 		}
 
 		if ($HTTP_POST_VARS['ADD_PRIVATE'] == 1) 
 		{
 			$add_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['add']));
-			$garage_lib->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $add_groups, 'config_name', 'private_add_perms');
+			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $add_groups, 'config_name', 'private_add_perms');
+			//Set Add Quotas
 			$add_quota = str_replace(",,", "", (str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['add_quota']))));
-			$garage_lib->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $add_quota, 'config_name', 'private_add_quota');
+			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $add_quota, 'config_name', 'private_add_quota');
 		}
 		else
 		{
-			$garage_lib->update_single_field(GARAGE_CONFIG_TABLE,'config_value', '', 'config_name', 'private_add_perms');
-			$garage_lib->update_single_field(GARAGE_CONFIG_TABLE,'config_value', '', 'config_name', 'private_add_quota');
+			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value', '', 'config_name', 'private_add_perms');
+			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value', '', 'config_name', 'private_add_quota');
 		}
 
 		if ($HTTP_POST_VARS['UPLOAD_PRIVATE'] == 1) 
 		{
 			$upload_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['upload']));
-			$garage_lib->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $upload_groups, 'config_name', 'private_upload_perms');
+			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $upload_groups, 'config_name', 'private_upload_perms');
+			//Set Upload Quotas
 			$upload_quota = str_replace(",,", "", (str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['upload_quota']))));
-			$garage_lib->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $upload_quota, 'config_name', 'private_upload_quota');
+			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $upload_quota, 'config_name', 'private_upload_quota');
 		}
 		else
 		{
-			$garage_lib->update_single_field(GARAGE_CONFIG_TABLE,'config_value', '', 'config_name', 'private_upload_perms');
-			$garage_lib->update_single_field(GARAGE_CONFIG_TABLE,'config_value', '', 'config_name', 'private_upload_quota');
+			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value', '', 'config_name', 'private_upload_perms');
+			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value', '', 'config_name', 'private_upload_quota');
 		}
 
 		$template->set_filenames(array(
@@ -268,16 +282,7 @@ switch($mode)
 			}
 			else if ($permission_mode[$i] == 'upload')
 			{
-				$template->assign_vars(array(		//Get Deny Permission Info For Usergruops...Bit Messy But Works!!
-		$sql = "SELECT config_value as private_deny_groups
-			FROM ". GARAGE_CONFIG_TABLE ."
-			WHERE config_name = 'private_deny_perms'";
-		if( !$result = $db->sql_query($sql) )
-		{
-			message_die(GENERAL_ERROR, 'Could not get permissions', '', __LINE__, __FILE__, $sql);
-		}
-		$deny_perms = $db->sql_fetchrow($result);
-		$deny_groups = @explode(',', $deny_perms['private_deny_groups']);
+				$template->assign_vars(array(		
 					'UPLOAD_ALL_CHECKED' => $all_checked,
 					'UPLOAD_ADMIN_CHECKED' => $admin_checked,
 					'UPLOAD_MOD_CHECKED' => $mod_checked,
@@ -287,11 +292,6 @@ switch($mode)
 				);
 			}
 		}
-
-		if (!empty($private_found))
-		{
-
-			$template->assign_block_vars('private', array());
 
 			// Get the list of phpBB usergroups
 			$sql = "SELECT group_id, group_name
@@ -370,15 +370,14 @@ switch($mode)
 					'GROUP_ID' => $groupdata[$i]['group_id'],
 					'GROUP_NAME' => $groupdata[$i]['group_name'],
 					'DENY_CHECKED' => (in_array($groupdata[$i]['group_id'], $deny_groups)) ? 'checked="checked"' : '',
-					'ADD_QUOTA' => $garage_lib->get_group_add_quota($groupdata[$i]['group_id']),
-					'UPLOAD_QUOTA' => $garage_lib->get_group_upload_quota($groupdata[$i]['group_id']),
+					#'ADD_QUOTA' => $garage_lib->get_group_add_quota($groupdata[$i]['group_id']),
+					#'UPLOAD_QUOTA' => $garage_lib->get_group_upload_quota($groupdata[$i]['group_id']),
 					'BROWSE_CHECKED' => (in_array($groupdata[$i]['group_id'], $browse_groups)) ? 'checked="checked"' : '',
 					'INTERACT_CHECKED' => (in_array($groupdata[$i]['group_id'], $interact_groups)) ? 'checked="checked"' : '',
 					'ADD_CHECKED' => (in_array($groupdata[$i]['group_id'], $add_groups)) ? 'checked="checked"' : '',
 					'UPLOAD_CHECKED' => (in_array($groupdata[$i]['group_id'], $upload_groups)) ? 'checked="checked"' : '')
 				);
 			}
-		}//End If Private Set
 
 		$template->set_filenames(array(
 			"body" => "admin/garage_permissions.tpl")

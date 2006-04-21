@@ -34,7 +34,19 @@ $phpbb_root_path = '../';
 require($phpbb_root_path . 'extension.inc');
 require('./pagestart.' . $phpEx);
 require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage.' . $phpEx);
-include($phpbb_root_path . 'includes/functions_garage.' . $phpEx);
+
+//Build All Garage Classes e.g $garage_images->
+require($phpbb_root_path . 'includes/class_garage.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_business.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_dynorun.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_image.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_insurance.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_modification.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_quartermile.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_template.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_vehicle.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_guestbook.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_model.' . $phpEx);
 
 if( isset( $HTTP_POST_VARS['mode'] ) || isset( $HTTP_GET_VARS['mode'] ) )
 {
@@ -51,7 +63,7 @@ switch($mode)
 
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('title', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
-		$data = $garage_lib->process_post_vars($params);
+		$data = $garage->process_post_vars($params);
 		$data['pending'] = ($garage_config['enable_business_approval'] == '1') ? 1 : 0 ;
 		$data['insurance'] = ($data['insurance'] == 'on') ? 1 : 0 ;
 		$data['garage'] = ($data['garage'] == 'on') ? 1 : 0 ;
@@ -68,10 +80,10 @@ switch($mode)
 
 		//Checks All Required Data Is Present
 		$params = array('title');
-		$garage_lib->check_acp_required_vars($params , $message);
+		$garage->check_acp_required_vars($params , $message);
 
 		//Update The DB With Data Acquired
-		$garage_lib->insert_business($data);
+		$garage_business->insert_business($data);
 
 		$message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_business.$phpEx") . '">' . $lang['New_Business_Created'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Business'], "<a href=\"" . append_sid("admin_garage_business.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
 
@@ -83,7 +95,7 @@ switch($mode)
 
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('id', 'title', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
-		$data = $garage_lib->process_post_vars($params);
+		$data = $garage->process_post_vars($params);
 		$data['pending'] = ($garage_config['enable_business_approval'] == '1') ? 1 : 0 ;
 		$data['insurance'] = ($data['insurance'] == 'true') ? 1 : 0 ;
 		$data['garage'] = ($data['garage'] == 'true') ? 1 : 0 ;
@@ -96,7 +108,7 @@ switch($mode)
 			$data['website'] = "http://".$data['website'];
 		}
 
-		$garage_lib->update_business($data);
+		$garage_business->update_business($data);
 		
 		$message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_business.$phpEx") . '">' . $lang['Business_Updated'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Business'], "<a href=\"" . append_sid("admin_garage_business.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
 
@@ -112,11 +124,11 @@ switch($mode)
 
 		//Store Data Of Business We Are Deleting For Use In Action Variable
 		$params = array('id');
-		$data = $garage_lib->process_post_vars($params);
-		$data = $garage_lib->select_business_data($data['id']);
+		$data = $garage->process_post_vars($params);
+		$data = $garage_business->select_business_data($data['id']);
 
 		//Get All Business Data To Build Dropdown Of Where To Move Linked Items To
-		$all_data = $garage_lib->select_business_data('');
+		$all_data = $garage_business->select_business_data('');
 
 		//Build Dropdown Options For Where To Love Linked Items To
 		for ($i = 0; $i < count($all_data); $i++)
@@ -152,19 +164,19 @@ switch($mode)
 
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('id', 'target');
-		$data = $garage_lib->process_post_vars($params);
+		$data = $garage->process_post_vars($params);
 
 		//Set Message For Missing
 		$message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_business.$phpEx?mode=confirm_delete&id=".$data['id']."") . '">'. $lang['Missing_Required_Data']. "<br /><br />" . sprintf($lang['Click_Return_Garage_Business'], "<a href=\"" . append_sid("admin_garage_business.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
 
 		//Checks All Required Data Is Present
 		$params = array('id', 'target');
-		$garage_lib->check_acp_required_vars($params, $message);
+		$garage->check_acp_required_vars($params, $message);
 
 		//Move Any Existing Items To New Target Then Delete Business
-		$garage_lib->update_single_field(GARAGE_MODS_TABLE,'business_id',$data['target'],'business_id',$data['id']);
-		$garage_lib->update_single_field(GARAGE_MODS_TABLE,'install_business_id',$data['target'],'install_business_id',$data['id']);
-		$garage_lib->delete_rows(GARAGE_BUSINESS_TABLE,'id',$data['id']);
+		$garage->update_single_field(GARAGE_MODS_TABLE,'business_id',$data['target'],'business_id',$data['id']);
+		$garage->update_single_field(GARAGE_MODS_TABLE,'install_business_id',$data['target'],'install_business_id',$data['id']);
+		$garage->delete_rows(GARAGE_BUSINESS_TABLE,'id',$data['id']);
 
 		// Return a message...
 		$message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_business.$phpEx") . '">' . $lang['Business_Deleted'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Business'], "<a href=\"" . append_sid("admin_garage_business.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
@@ -177,9 +189,9 @@ switch($mode)
 
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('id');
-		$data = $garage_lib->process_int_vars($params);
+		$data = $garage->process_int_vars($params);
 
-		$garage_lib->update_single_field(GARAGE_BUSINESS_TABLE,'pending',1,'id',$data['id']);
+		$garage->update_single_field(GARAGE_BUSINESS_TABLE,'pending',1,'id',$data['id']);
 
 		$message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_business.$phpEx") . '">'. $lang['Business_Updated'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Business'], "<a href=\"" . append_sid("admin_garage_business.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
 
@@ -191,9 +203,9 @@ switch($mode)
 
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('id');
-		$data = $garage_lib->process_int_vars($params);
+		$data = $garage->process_int_vars($params);
 
-		$garage_lib->update_single_field(GARAGE_BUSINESS_TABLE,'pending',0,'id',$data['id']);
+		$garage->update_single_field(GARAGE_BUSINESS_TABLE,'pending',0,'id',$data['id']);
 
 		$message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_business.$phpEx") . '">'. $lang['Business_Updated'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Business'], "<a href=\"" . append_sid("admin_garage_business.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
 
@@ -242,7 +254,7 @@ switch($mode)
 		);
 
 		//Get All The Business Data
-		$data = $garage_lib->select_business_data('');
+		$data = $garage_business->select_business_data('');
 
 		for( $i = 0; $i < count($data); $i++ )
 		{

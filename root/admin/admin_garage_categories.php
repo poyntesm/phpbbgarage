@@ -35,8 +35,18 @@ require($phpbb_root_path . 'extension.inc');
 require('./pagestart.' . $phpEx);
 require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage.' . $phpEx);
 
-//Build All Garage Functions For $garage_lib->
-require($phpbb_root_path . 'includes/functions_garage.' . $phpEx);
+//Build All Garage Classes e.g $garage_images->
+require($phpbb_root_path . 'includes/class_garage.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_business.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_dynorun.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_image.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_insurance.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_modification.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_quartermile.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_template.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_vehicle.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_guestbook.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_model.' . $phpEx);
 
 if( isset( $HTTP_POST_VARS['mode'] ) || isset( $HTTP_GET_VARS['mode'] ) )
 {
@@ -52,7 +62,7 @@ switch ( $mode )
 	case 'confirm_delete':
 
 		//Get All The Categories Data
-		$data = $garage_lib->select_category_data();
+		$data = $garage->select_category_data();
 
 		//Build Drop Down Options Where To Move Linked Items
 		for ($i = 0; $i < count($data); $i++)
@@ -62,8 +72,8 @@ switch ( $mode )
 
 		//Store ID Of Category We Are Deleting For Use In Action Variable
 		$params = array('id');
-		$data = $garage_lib->process_post_vars($params);
-		$data = $garage_lib->select_category_data($data['id']);
+		$data = $garage->process_post_vars($params);
+		$data = $garage->select_category_data($data['id']);
 
 		$template->set_filenames(array(
 			'body' => 'admin/garage_confirm_delete.tpl')
@@ -92,12 +102,12 @@ switch ( $mode )
 
 	case 'new':
 
-		$count = $garage_lib->count_mod_catgories();
+		$count = $garage_modification->count_mod_catgories();
 		
 		if( isset($HTTP_POST_VARS['title']) )
 		{
-			// Get posting variables
-			$title = str_replace("\'", "''", htmlspecialchars(trim($HTTP_POST_VARS['title'])));
+		// Get posting variables
+		$title = str_replace("\'", "''", htmlspecialchars(trim($HTTP_POST_VARS['title'])));
 
 		// Here we insert a new row into the db
 		$sql = "INSERT INTO ". GARAGE_CATEGORIES_TABLE ." (title,field_order)
@@ -148,7 +158,7 @@ switch ( $mode )
 
 		//Checks All Required Data Is Present
 		$params = array('id', 'target');
-		$garage_lib->check_acp_required_vars($params, $message);
+		$garage->check_acp_required_vars($params, $message);
 		
 		$sql = "UPDATE ". GARAGE_MODS_TABLE ."
 			SET category_id = ".$data['target']."
@@ -177,7 +187,7 @@ switch ( $mode )
 
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('order');
-		$data = $garage_lib->process_post_vars($params);
+		$data = $garage->process_post_vars($params);
 		
 		$field_order = $data['order'];
 		$order_total = $field_order * 2 + (($mode == 'move_up') ? -1 : 1);
@@ -201,7 +211,7 @@ switch ( $mode )
 	case 'move_down':
 
 		$params = array('order');
-		$data = $garage_lib->process_post_vars($params);
+		$data = $garage->process_post_vars($params);
 
 		$field_order = $data['order'];
 		$order_total = $field_order * 2 + (($mode == 'move_up') ? -1 : 1);
@@ -243,7 +253,7 @@ switch ( $mode )
 			'S_GARAGE_MODE_NEW' => append_sid("admin_garage_categories.$phpEx?mode=new"))
 		);
 
-		$data = $garage_lib->select_category_data();
+		$data = $garage->select_category_data();
 
 		for( $i = 0; $i < count($data); $i++ )
 		{

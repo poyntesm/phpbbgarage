@@ -36,7 +36,19 @@ $phpbb_root_path = './../';
 require($phpbb_root_path . 'extension.inc');
 require('./pagestart.' . $phpEx);
 require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage.' . $phpEx);
-require($phpbb_root_path . 'includes/functions_garage.' . $phpEx);
+
+//Build All Garage Classes e.g $garage_images->
+require($phpbb_root_path . 'includes/class_garage.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_business.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_dynorun.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_image.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_insurance.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_modification.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_quartermile.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_template.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_vehicle.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_guestbook.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_model.' . $phpEx);
 
 if( isset( $HTTP_POST_VARS['mode'] ) || isset( $HTTP_GET_VARS['mode'] ) )
 {
