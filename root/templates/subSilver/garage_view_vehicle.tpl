@@ -83,6 +83,12 @@ function confirm_delete_rollingroad (car_id, rr_id)
 							<tr>
                         					<td align="center">{HILITE_IMAGE}<br /><span class="gensmall">{L_TOTAL_VIEWS}: {TOTAL_IMAGE_VIEWS}</span></td>
                     					</tr>
+			                                <tr>
+				                        	<td class="row1"><span class='gen'><b>{L_DESCRIPTION}</b></span></td>
+                                   			</tr> 
+			                                <tr>
+				                        	<td align="center"><span class='gen'>{DESCRIPTION}</span></td>
+                                   			</tr> 
 							<tr>
                         					<td align="center"><span class="gen">{MODERATE_VEHICLE}</span></td>
                     					</tr>
@@ -167,12 +173,6 @@ function confirm_delete_rollingroad (car_id, rr_id)
 								<span class="gensmall"><i> {L_RATING_NOTICE}</i></span></td>
                     					</tr>
 							<!-- END rating -->
-							<!-- END owned_no -->
-    							<tr>
-                        					<td class="row1"  valign="top"><span class="gen"><b>{L_DESCRIPTION}</b></span></td>
-                        					<td width="95%"><span class="gen">{DESCRIPTION}</span></td>
-                    					</tr>
-							<!-- BEGIN owned_no -->
 							<!-- BEGIN guestbook -->
         					 	<tr>
                         					<td class="row1"  valign="top"><span class="gen"><b>{L_GUESTBOOK}</b></span></td>
