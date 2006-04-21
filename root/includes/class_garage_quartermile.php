@@ -424,6 +424,7 @@ class garage_quartermile
 
 		return $count['total'];
 	}
+
 }
 
 $garage_quartermile = new garage_quartermile();

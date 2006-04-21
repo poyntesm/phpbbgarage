@@ -52,8 +52,8 @@ switch($mode)
 	case 'update_permissions':
 
 		//Now we loop through all permissions types...
-		$permission_mode = array('BROWSE', 'INTERACT', 'ADD', 'UPLOAD');
-		$permission_mode_lwr = array('browse', 'interact', 'add', 'upload');
+		$permission_mode = array('DENY', 'BROWSE', 'INTERACT', 'ADD', 'UPLOAD');
+		$permission_mode_lwr = array('deny', 'browse', 'interact', 'add', 'upload');
 		for($i = 0; $i < count($permission_mode); $i++)
 		{
 			$db_string = '';
@@ -123,6 +123,9 @@ switch($mode)
 		}//End For Loop
 		
 		//Right Now Lets Handle Private Usergroup Permissions If Any Permission Set To Private
+		$deny_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['deny']));
+		$garage_lib->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $deny_groups, 'config_name', 'private_deny_perms');
+
 		if ($HTTP_POST_VARS['BROWSE_PRIVATE'] == 1) 
 		{
 			$browse_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['browse']));
@@ -265,7 +268,16 @@ switch($mode)
 			}
 			else if ($permission_mode[$i] == 'upload')
 			{
-				$template->assign_vars(array(
+				$template->assign_vars(array(		//Get Deny Permission Info For Usergruops...Bit Messy But Works!!
+		$sql = "SELECT config_value as private_deny_groups
+			FROM ". GARAGE_CONFIG_TABLE ."
+			WHERE config_name = 'private_deny_perms'";
+		if( !$result = $db->sql_query($sql) )
+		{
+			message_die(GENERAL_ERROR, 'Could not get permissions', '', __LINE__, __FILE__, $sql);
+		}
+		$deny_perms = $db->sql_fetchrow($result);
+		$deny_groups = @explode(',', $deny_perms['private_deny_groups']);
 					'UPLOAD_ALL_CHECKED' => $all_checked,
 					'UPLOAD_ADMIN_CHECKED' => $admin_checked,
 					'UPLOAD_MOD_CHECKED' => $mod_checked,
@@ -295,6 +307,17 @@ switch($mode)
 			{
 				$groupdata[] = $row;
 			}
+
+			//Get Deny Permission Info For Usergruops...Bit Messy But Works!!
+			$sql = "SELECT config_value as private_deny_groups
+				FROM ". GARAGE_CONFIG_TABLE ."
+				WHERE config_name = 'private_deny_perms'";
+			if( !$result = $db->sql_query($sql) )
+			{
+				message_die(GENERAL_ERROR, 'Could not get permissions', '', __LINE__, __FILE__, $sql);
+			}
+			$deny_perms = $db->sql_fetchrow($result);
+			$deny_groups = @explode(',', $deny_perms['private_deny_groups']);
 
 			//Get Browse Permission Info For Usergruops...Bit Messy But Works!!
 			$sql = "SELECT config_value as private_browse_groups
@@ -346,6 +369,7 @@ switch($mode)
 				$template->assign_block_vars('usergroup', array(
 					'GROUP_ID' => $groupdata[$i]['group_id'],
 					'GROUP_NAME' => $groupdata[$i]['group_name'],
+					'DENY_CHECKED' => (in_array($groupdata[$i]['group_id'], $deny_groups)) ? 'checked="checked"' : '',
 					'ADD_QUOTA' => $garage_lib->get_group_add_quota($groupdata[$i]['group_id']),
 					'UPLOAD_QUOTA' => $garage_lib->get_group_upload_quota($groupdata[$i]['group_id']),
 					'BROWSE_CHECKED' => (in_array($groupdata[$i]['group_id'], $browse_groups)) ? 'checked="checked"' : '',
@@ -369,6 +393,7 @@ switch($mode)
 			'L_INTERACT' => $lang['Interact'],
 			'L_ADD' => $lang['Add'],
 			'L_UPLOAD' => $lang['Upload'],
+			'L_DENY' => $lang['Deny'],
 			'L_SELECT' => $lang['Select'],
 			'L_PRIVATE_PERMISSIONS' => $lang['Private_Permissions'],
 			'L_GRANULAR_PERMISSIONS' => $lang['Granular_Permissions'],

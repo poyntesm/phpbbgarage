@@ -96,6 +96,82 @@ class garage_business
 
 		return $data;
 	}
+
+	/*========================================================================*/
+	// Build Business List
+	// Usage: build_business_table('business id');
+	/*========================================================================*/
+	function build_business_table($pending)
+	{
+		global $db, $template, $images, $phpEx, $start, $sort, $sort_order, $garage_config, $lang, $theme, $mode, $HTTP_POST_VARS, $HTTP_GET_VARS;
+
+		$pending = ($pending == 'YES') ? 1 : 0;
+
+		$sql = "SELECT bus.* 
+			FROM " . GARAGE_BUSINESS_TABLE ." AS bus
+			WHERE bus.pending = 1";
+
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could not query users', '', __LINE__, __FILE__, $sql);
+		}
+
+		$count = $db->sql_numrows($result);
+
+		if ($count >= 1)
+		{
+			$template->assign_block_vars('business_pending', array());
+		}
+
+		// loop through users
+		$i = 1;
+		while ( $row = $db->sql_fetchrow($result) )
+		{
+            		$temp_url = append_sid("garage.$phpEx?mode=edit_business&amp;BUS_ID=".$row['id']);
+	            	$edit_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="'.$lang['Edit'].'" title="'.$lang['Edit'].'" border="0" /></a>';
+
+			//Work Out Type Of Business
+			if ( $row['insurance'] == '1' )
+			{
+		       	 	$type = $lang['Insurance'] ;
+			}
+			if ( ($row['garage'] == '1') AND ( ($row['web_shop'] == '1') OR ($row['retail_shop'] == '1')  ))
+			{
+				$type = $lang['Garage'] . ", " .  $lang['shop'] ;
+			}
+			if ( $row['garage'] == '1' )
+			{
+				$type = $lang['Garage'] ;
+			}
+			if ( $row['web_shop'] == '1' OR $row['retail_shop'] == '1' )
+			{
+				$type = $lang['Shop'];
+			}
+			
+			// setup user row template varibles
+			$template->assign_block_vars('business_pending.row', array(
+				'ROW_NUMBER' => $i + ( $HTTP_GET_VARS['start'] + 1 ),
+				'ROW_CLASS' => ( !($i % 2) ) ? $theme['td_class1'] : $theme['td_class2'],
+				'BUSID' => $row['id'],
+				'NAME' => $row['title'],
+				'ADDRESS' => $row['address'], 
+				'TELEPHONE' => $row['telephone'],
+				'FAX' => $row['fax'],
+				'WEBSITE' => $row['website'],
+				'EMAIL' => $row['email'],
+				'OPENING_HOURS' => $row['opening_hours'],
+				'TYPE' => $type,
+				'EDIT_LINK' => $edit_link)
+			);
+			$i++;
+			unset($type);
+		}
+		$db->sql_freeresult($result);
+
+		//Return Count Of Pending Items
+		return $count;
+	}
+
 }
 
 $garage_business = new garage_business();

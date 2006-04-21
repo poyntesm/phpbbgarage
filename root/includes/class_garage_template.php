@@ -30,7 +30,7 @@ class garage_template
 
 	/*========================================================================*/
 	// Builds HTML Variables For Version & Copywrite Notice
-	// Usage: build_notice();
+	// Usage: version_notice();
 	/*========================================================================*/
 	function version_notice()
 	{
@@ -107,7 +107,7 @@ class garage_template
 	/*========================================================================*/
 	function sidemenu()
 	{
-		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $images, $board_config;
+		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $images, $board_config, $garage;
 	
 		$template->set_filenames(array(
 			'menu' => 'garage_menu.tpl')
@@ -116,8 +116,8 @@ class garage_template
 		$user_id = $userdata['user_id'];
 		if (preg_match("/MAIN/",$garage_config['menu_selection']))
 		{
-			$main_menu = append_sid("garage.$phpEx?mode=main");
-			$menu .= '<a href="' . $main_menu . '">';
+			$main_menu_url = append_sid("garage.$phpEx?mode=main");
+			$menu .= '<a href="' . $main_menu_url . '">';
 			if ( $garage_config['garage_images'])
 			{
 				$menu .= '<img src="' . $images['garage_main_menu'] . '" alt="'.$lang['Main_Menu'].'" title="'.$lang['Main_Menu'].'" border="0" /></a><br />';
@@ -130,8 +130,8 @@ class garage_template
 		}
 		if (preg_match("/BROWSE/",$garage_config['menu_selection']))
 		{
-			$browse_garage = append_sid("garage.$phpEx?mode=browse");
-			$menu .= '<a href="' . $browse_garage . '">';
+			$browse_garage_url = append_sid("garage.$phpEx?mode=browse");
+			$menu .= '<a href="' . $browse_garage_url . '">';
 			if ( $garage_config['garage_images'])
 			{
 				$menu .= '<img src="' . $images['garage_browse'] . '" alt="'.$lang['Browse_Garage'].'" title="'.$lang['Browse_Garage'].'" border="0" /></a><br />';
@@ -143,8 +143,8 @@ class garage_template
 		}
 		if (preg_match("/SEARCH/",$garage_config['menu_selection']))
 		{
-			$search_garage = append_sid("garage.$phpEx?mode=search");
-			$menu .= '<a href="' . $search_garage . '">';
+			$search_garage_url = append_sid("garage.$phpEx?mode=search");
+			$menu .= '<a href="' . $search_garage_url . '">';
 			if ( $garage_config['garage_images'])
 			{
 				$menu .= '<img src="' . $images['garage_search'] . '" alt="'.$lang['Search_Garage'].'" title="'.$lang['Search_Garage'].'" border="0" /></a><br />';
@@ -156,8 +156,8 @@ class garage_template
 		}
 		if (preg_match("/INSURANCEREVIEW/",$garage_config['menu_selection']))
 		{
-			$insurance = append_sid("garage.$phpEx?mode=view_insurance_business");
-			$menu .= '<a href="' . $insurance . '">';
+			$insurance_url = append_sid("garage.$phpEx?mode=view_insurance_business");
+			$menu .= '<a href="' . $insurance_url . '">';
 			if ( $garage_config['garage_images'])
 			{
 				$menu .= '<img src="' . $images['garage_insurance_review'] . '" alt="'.$lang['Insurance_Summary'].'" title="'.$lang['Insurance_Summary'].'" border="0" /></a><br />';
@@ -169,8 +169,8 @@ class garage_template
 		}
 		if (preg_match("/GARAGEREVIEW/",$garage_config['menu_selection']))
 		{
-			$garage = append_sid("garage.$phpEx?mode=view_garage_business");
-			$menu .= '<a href="' . $garage . '">';
+			$garage_url = append_sid("garage.$phpEx?mode=view_garage_business");
+			$menu .= '<a href="' . $garage_url . '">';
 			if ( $garage_config['garage_images'])
 			{
 				$menu .= '<img src="' . $images['garage_garage_review'] . '" alt="'.$lang['Garage_Review'].'" title="'.$lang['Garage_Review'].'" border="0" /></a><br />';
@@ -182,8 +182,8 @@ class garage_template
 		}
 		if (preg_match("/SHOPREVIEW/",$garage_config['menu_selection']))
 		{
-			$garage = append_sid("garage.$phpEx?mode=view_shop_business");
-			$menu .= '<a href="' . $garage . '">';
+			$shop_url = append_sid("garage.$phpEx?mode=view_shop_business");
+			$menu .= '<a href="' . $shop_url . '">';
 			if ( $garage_config['garage_images'])
 			{
 				$menu .= '<img src="' . $images['garage_shop_review'] . '" alt="'.$lang['Shop_Review'].'" title="'.$lang['Shop_Review'].'" border="0" /></a><br />';
@@ -193,11 +193,10 @@ class garage_template
 				$menu .= $lang['Shop_Review'].'</a><br />';
 			}
 		}
-
 		if (preg_match("/QUARTERMILE/",$garage_config['menu_selection']))
 		{
-			$garage = append_sid("garage.$phpEx?mode=quartermile");
-			$menu .= '<a href="' . $garage . '">';
+			$quartermile_url = append_sid("garage.$phpEx?mode=quartermile");
+			$menu .= '<a href="' . $quartermile_url . '">';
 			if ( $garage_config['garage_images'])
 			{
 				$menu .= '<img src="' . $images['garage_quartermile_table'] . '" alt="'.$lang['Quartermile_Table'].'" title="'.$lang['Quartermile_Table'].'" border="0" /></a><br />';
@@ -209,8 +208,8 @@ class garage_template
 		}
 		if (preg_match("/ROLLINGROAD/",$garage_config['menu_selection']))
 		{
-			$garage = append_sid("garage.$phpEx?mode=rollingroad");
-			$menu .= '<a href="' . $garage . '">';
+			$dynorun_url = append_sid("garage.$phpEx?mode=rollingroad");
+			$menu .= '<a href="' . $dynorun_url . '">';
 			if ( $garage_config['garage_images'])
 			{
 				$menu .= '<img src="' . $images['garage_rollingroad_table'] . '" alt="'.$lang['Rollingroad_Table'].'" title="'.$lang['Rollingroad_Table'].'" border="0" /></a><br />';
@@ -273,7 +272,7 @@ class garage_template
 			$db->sql_freeresult($result);
 		}
 
-		if (!$this->check_permissions('BROWSE',''))
+		if (!$garage->check_permissions('BROWSE',''))
 		{
 			$template->pparse('menu');
 			return ;
@@ -676,9 +675,9 @@ class garage_template
 	/*========================================================================*/
 	function attach_image($type)
 	{
-		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
+		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $garage;
 	
-		if (!$this->check_permissions('UPLOAD',''))
+		if (!$garage->check_permissions('UPLOAD',''))
 		{
 			return ;
 		}
@@ -739,9 +738,9 @@ class garage_template
 	/*========================================================================*/
 	function edit_image($image_id, $image_name)
 	{
-		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
+		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $garage;
 	
-		if (!$this->check_permissions('UPLOAD',''))
+		if (!$garage->check_permissions('UPLOAD',''))
 		{
 			return ;
 		}
@@ -830,6 +829,142 @@ class garage_template
 		);
 		return;
 	}
+
+	function build_make_table($pending)
+	{
+		global $db, $template, $theme;
+
+		$pending = ($pending == 'YES') ? 1 : 0;
+
+		$sql = "SELECT make.* 
+			FROM " . GARAGE_MAKES_TABLE ." AS make
+			WHERE make.pending = 1";
+
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could not query users', '', __LINE__, __FILE__, $sql);
+		}
+
+		$count = $db->sql_numrows($result);
+
+		if ($count >= 1)
+		{
+			$template->assign_block_vars('make_pending', array());
+		}
+
+		// loop through users
+		$i = 1;
+		while ( $row = $db->sql_fetchrow($result) )
+		{
+			// setup user row template varibles
+			$template->assign_block_vars('make_pending.row', array(
+				'ROW_CLASS' => ( !($i % 2) ) ? $theme['td_class1'] : $theme['td_class2'],
+				'MAKE_ID' => $row['id'],
+				'MAKE' => $row['make'])
+			);
+			$i++;
+		}
+		$db->sql_freeresult($result);
+
+		//Return Count Of Pending Items
+		return $count;
+	}
+
+	function build_model_table($pending)
+	{
+		global $db, $template, $theme;
+
+		$sql = "SELECT model.* , make.make
+			FROM " . GARAGE_MODELS_TABLE ." AS model
+	        		LEFT JOIN " . GARAGE_MAKES_TABLE . " AS make ON model.make_id = make.id
+			WHERE model.pending = 1";
+
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could not query users', '', __LINE__, __FILE__, $sql);
+		}
+
+		$count = $db->sql_numrows($result);
+
+		if ($count >= 1)
+		{
+			$template->assign_block_vars('model_pending', array());
+		}
+
+		// loop through users
+		$i = 1;
+		while ( $row = $db->sql_fetchrow($result) )
+		{
+			// setup user row template varibles
+			$template->assign_block_vars('model_pending.row', array(
+				'ROW_CLASS' => ( !($i % 2) ) ? $theme['td_class1'] : $theme['td_class2'],
+				'MODEL_ID' => $row['id'],
+				'MAKE' => $row['make'],
+				'MODEL' => $row['model'])
+			);
+			$i++;
+		}
+		$db->sql_freeresult($result);
+
+		//Return Count Of Pending Items
+		return $count;
+
+	}
+
+	/*========================================================================*/
+	// Builds the array for a selecting for models
+	// Usage:  vehicle_array();
+	/*========================================================================*/
+	function vehicle_array()
+	{
+		global $db;
+
+		$make_q_id = "SELECT id, make FROM " . GARAGE_MAKES_TABLE . " ORDER BY make ASC";
+	
+		if( !($make_result = $db->sql_query($make_q_id)) )
+		{
+			message_die(GENERAL_ERROR, 'Could not query users', '', __LINE__, __FILE__, $sql);
+		}
+
+		while ( $make_row = $db->sql_fetchrow($make_result) )
+		{
+			// Start this makes row in the output, this is where it gets confusing!
+			$return .= 'cars["'.$make_row['make'].'"] = new Array("'.$make_row['id'].'", new Array(';
+
+			$make_row_id = $make_row['id'];
+        		$model_q_id = "SELECT id, model FROM " . GARAGE_MODELS_TABLE . " 
+                		       WHERE make_id = $make_row_id ORDER BY model ASC";
+
+			if( !($model_result = $db->sql_query($model_q_id)) )
+			{
+				message_die(GENERAL_ERROR, 'Could not query users', '', __LINE__, __FILE__, $sql);
+			} 
+
+	        	$model_string = '';
+			$model_id_string = '';
+
+			// Loop through all the models of this make
+			while ( $model_row = $db->sql_fetchrow($model_result) )
+			{
+				// Create the arrays that we will use in the output
+				$model_string    .= '"'.$model_row['model'].'",';
+				$model_id_string .= '"'.$model_row['id']   .'",';
+			}
+			$db->sql_freeresult($model_result);
+
+			// Strip off the last comma
+			$model_string    = substr($model_string,    0, -1);
+			$model_id_string = substr($model_id_string, 0, -1);
+
+			// Finish off this makes' row in the output
+			$return .= $model_string ."), new Array(". $model_id_string ."));\n";
+	        }
+		$db->sql_freeresult($make_result);
+
+	        return $return;
+	}
+
+
 }
 
 $garage_template = new garage_template();

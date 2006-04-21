@@ -24,10 +24,10 @@ if (!defined('IN_PHPBB'))
 	die('Hacking attempt');
 }
 
-class garage_models
+class garage_model
 {
 
-	var $classname = "garage_models";
+	var $classname = "garage_model";
 
 	/*========================================================================*/
 	// Inserts Make Into DB
@@ -109,6 +109,10 @@ class garage_models
 		return $row;
 	}
 
+	/*========================================================================*/
+	// Select Model Data From DB
+	// Usage: build_make_table('model id');
+	/*========================================================================*/
 	function build_make_table($pending)
 	{
 		global $db, $template, $theme;
@@ -149,6 +153,10 @@ class garage_models
 		return $count;
 	}
 
+	/*========================================================================*/
+	// Select Model Data From DB
+	// Usage: build_model_table('model id');
+	/*========================================================================*/
 	function build_model_table($pending)
 	{
 		global $db, $template, $theme;
@@ -190,12 +198,16 @@ class garage_models
 
 	}
 
+	/*========================================================================*/
+	// Build Search Data
+	// Usage: build_search_for_user_make_model();
+	/*========================================================================*/
 	function build_search_for_user_make_model()
 	{
-		global $template, $lang;
+		global $template, $lang, $garage;
 
 		$params = array('make_id', 'model_id', 'user');
-		$data = $this->process_post_vars($params);
+		$data = $garage->process_post_vars($params);
 
 		//Check If This Is A Search Including User
 		if (!empty($data['user']))
@@ -260,6 +272,6 @@ class garage_models
 	}
 }
 
-$garage_models = new garage_models();
+$garage_model = new garage_model();
 
 ?>

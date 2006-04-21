@@ -70,10 +70,10 @@ class garage_dynorun
 	}
 
 	/*========================================================================*/
-	// Returns Count Of Users Rollingroad Runs
-	// Usage: count_rollingroad_runs('garage id');
+	// Returns Count Of Dyno Runs Performed By Vehicle
+	// Usage: count_runs('garage id');
 	/*========================================================================*/
-	function count_rollingroad_runs($cid)
+	function count_runs($cid)
 	{
 		global $db;
 
@@ -87,7 +87,7 @@ class garage_dynorun
 		$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		return $row;
+		return $row['total'];
 	}
 
 	/*========================================================================*/
