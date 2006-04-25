@@ -237,6 +237,34 @@ class garage
 	}
 
 	/*========================================================================*/
+	// Get All Groups User Is Member Of
+	// Usage: get_group_membership('user id');
+	/*========================================================================*/
+	function get_group_membership($u_id)
+	{
+		global $db ;
+
+		$sql = "SELECT ug.group_id, g.group_name
+	             	FROM " . USER_GROUP_TABLE . " AS ug, " . GROUPS_TABLE ." g
+                	WHERE ug.user_id = $u_id
+				and ug.group_id = g.group_id and g.group_single_user <> " . TRUE ."
+			ORDER BY g.group_name ASC";
+       		if( !($result = $db->sql_query($sql)) )
+       		{
+         		message_die(GENERAL_ERROR, 'Could Not Select Groups', '', __LINE__, __FILE__, $sql);
+       		}
+
+		//Lets Populate An Array With All The Groups You Are Part Of
+		while( $grouprow = $db->sql_fetchrow($result) )
+		{
+			$groupdata[] = $grouprow;
+		}
+		$db->sql_freeresult($result);
+	
+		return $groupdata;
+	}
+
+	/*========================================================================*/
 	// Checks A User Is Allowed Perform An Action
 	// Usage: check_permissions('required permission'>, 'redirect url on failure');
 	/*========================================================================*/
@@ -263,7 +291,43 @@ class garage
 		{
 			$your_level = 'USER';
 		}		
+
+		//Get All Group Memberships
+		$groupdata = $this->get_group_membership($userdata['user_id']);
+
+		//Since We Now Allow A DENY We Need To Check That First
+		if ( !empty($garage_config['private_deny_perms']) AND $userdata['user_level'] == ADMIN )
+		{
+			//Lets Find Out Which Groups Are Denied Access
+			$sql = "SELECT config_value as private_groups
+				FROM ". GARAGE_CONFIG_TABLE ."
+				WHERE config_name = 'private_deny_perms'";
+			if( !$result = $db->sql_query($sql) )
+			{
+				message_die(GENERAL_ERROR, 'Could not get permissions', '', __LINE__, __FILE__, $sql);
+			}
+			$private_perms = $db->sql_fetchrow($result);
+			$private_groups = @explode(',', $private_perms['private_groups']);
 	
+			for ($i = 0; $i < count($groupdata); $i++)
+			{
+				if (in_array($groupdata[$i]['group_id'], $private_groups))
+				{
+					//You Were Found To Be A Member Of A Denied Group
+					if (!empty($redirect_url))
+					{
+						redirect(append_sid("$redirect_url", true));
+					}
+					//No URL To Redirect So We Will Just Return FALSE
+					else
+					{
+						return (FALSE);
+					}
+				}
+			}
+		}
+
+		//Right You Were Not Denied So Lets Check First For Global Permissions
 		if ($garage_config[$required_permission."_perms"] == '*')
 		{
 			//Looks Like Everyone Is Allowed Do This...So On Your Way
@@ -278,23 +342,6 @@ class garage
 		//Right We Need To Resort And See If Private Is Set For This Required Permission And See If You Qualify
 		else if (preg_match( "/PRIVATE/", $garage_config[$required_permission."_perms"]))
 		{
-			//Right We Need To See If You Are In Any User Group Granted This Permission
-			$sql = "SELECT ug.group_id, g.group_name
-	              		FROM " . USER_GROUP_TABLE . " AS ug, " . GROUPS_TABLE ." g
-	                        WHERE ug.user_id = " . $userdata['user_id'] . "
-					and ug.group_id = g.group_id and g.group_single_user <> " . TRUE ."
-				ORDER BY g.group_name ASC";
-	              	if( !($result = $db->sql_query($sql)) )
-	       		{
-	          		message_die(GENERAL_ERROR, 'Could Not Select Groups', '', __LINE__, __FILE__, $sql);
-	       		}
-	
-			//Lets Populate An Array With All The Groups You Are Part Of
-			while( $grouprow = $db->sql_fetchrow($result) )
-			{
-				$groupdata[] = $grouprow;
-			}
-	
 			//Lets Get All Private Groups Granted This Permission
 			$sql = "SELECT config_value as private_groups
 				FROM ". GARAGE_CONFIG_TABLE ."
@@ -351,6 +398,21 @@ class garage
 	
 		return $data;
 	}
+
+	/*========================================================================*/
+	// Select All Category Data
+	// Usage: remove_duplicate('vehicle id');
+	/*========================================================================*/
+	function remove_duplicate($array, $field)
+	{
+		foreach ($array as $sub)
+		$cmp[] = $sub[$field];
+		$unique = array_unique($cmp);
+		foreach ($unique as $k => $rien)
+		$new[] = $array[$k];
+		return $new;
+	}
+
 
 	/*========================================================================*/
 	// Seed Random Number Generator

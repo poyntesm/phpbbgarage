@@ -26,8 +26,85 @@ if (!defined('IN_PHPBB'))
 
 class garage_image
 {
-
 	var $classname = "garage_image";
+
+	/*========================================================================*/
+	// Gets User Image Upload Quota
+	// Usage: get_user_upload_quota();
+	/*========================================================================*/
+	function get_user_upload_quota()
+	{
+		global $userdata, $garage_config, $garage;
+	
+		if (empty($garage_config['private_upload_quota']))
+		{
+			//Since No Specific Group Value Exists Use Default Value
+			return $garage_config['max_car_images'];
+		}
+		//It Appears Some Groups Have Private Permissions & Quotas We Will Need To Check Them
+		else
+		{
+			//Get All Group Memberships
+			$groupdata = $garage->get_group_membership($userdata['user_id']);
+			
+			//Lets Get The Private Upload Groups & Quotas
+			$private_upload_groups = @explode(',', $garage_config['private_upload_perms']);
+			$private_upload_quotas = @explode(',', $garage_config['private_upload_quota']);
+
+			//Process All Groups You Are Member Of To See If Any Are Granted Permission & Quota
+			for ($i = 0; $i < count($groupdata); $i++)
+			{
+				if (in_array($groupdata[$i]['group_id'], $private_upload_groups))
+				{
+					//Your A Member Of A Group Granted Permission - Find Array Key
+					$index = array_search($groupdata[$i]['group_id'], $private_upload_groups);
+					//So Your Quota For This Group Is...
+					$quota[$i] = $private_upload_quotas[$index];
+				}
+			}
+
+			//Your Were Not Granted Any Private Permissions..Return Default Value
+			if  (empty($quota))
+			{
+				return $garage_config['max_car_images'];
+			}
+
+			//Return The Highest Quota You Were Granted
+			return max($quota);
+		}
+	}
+
+	/*========================================================================*/
+	// Gets Group Image Upload Quota - Used Only In ACP Page
+	// Usage: get_user_upload_quota();
+	/*========================================================================*/
+	function get_group_upload_quota($gid)
+	{
+		global $garage_config;
+
+		if (empty($garage_config['private_upload_quota']))
+		{
+			//Since No Specific Group Value Exists Use Default Value
+			return $garage_config['max_car_images'];
+		}
+		//It Appears Some Groups Have Private Permissions & Quotas We Will Need To Check Them
+		else
+		{
+			//Lets Get The Private Upload Groups & Quotas
+			$private_upload_groups = @explode(',', $garage_config['private_upload_perms']);
+			$private_upload_quota = @explode(',', $garage_config['private_upload_quota']);
+
+			//Find The Matching Index In Second Array For The Group ID
+			if (($index = array_search($gid, $private_upload_groups)) === FALSE)
+			{
+				//Hmmm..Group Has Currently No Private Upload Permissions...So Give It The Default Incase They Turn It On
+				return $garage_config['max_car_images'];
+			} 
+
+			//Return The Groups Quota
+			return $private_upload_quota[$index];
+		}
+	}
 
 	/*========================================================================*/
 	// Inserts Image Into Vehicle Gallery

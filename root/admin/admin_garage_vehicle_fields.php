@@ -1,5 +1,4 @@
 <?php
-define('IN_PHPBB', true);
 
 if( !empty($setmodules) )
 {
@@ -15,7 +14,7 @@ $phpEx = substr(strrchr(__FILE__, '.'), 1);
 require('pagestart.' . $phpEx);
 
 //Include One File To Add phpBB3 functions required to try get this working
-require($phpbb_root_path . 'includes/functions_garage_custom_fields.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_custom_fields.' . $phpEx);
 require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage.' . $phpEx);
 
 //Setup Some Capaturing Of POST vars..

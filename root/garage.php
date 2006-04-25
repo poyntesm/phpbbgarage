@@ -104,18 +104,10 @@ switch( $mode )
 		$count = $garage_vehicle->count_user_vehicles();
 
 		//Check To See If User Has Too Many Vehicles Already...If So Display Notice
-		if ( ($userdata['member_type'] == PREMIUM) AND ($count == $garage_config['max_premium_user_cars']) )
+		if ( $count >= $garage_vehicle->get_user_add_quota() ) 
 		{
 			redirect(append_sid("garage.$phpEx?mode=error&EID=5", true));
 		}
-		else if ( $count == $garage_config['max_user_cars'] AND $userdata['user_level'] != ADMIN )
-		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=5", true));
-		}
-
-		//Build All Required HTML 
-		$garage_template->year_dropdown();
-		$garage_template->attach_image('vehicle');
 
 		//Set Default Make 
 		$params = array('MAKE', 'MODEL');
@@ -138,6 +130,9 @@ switch( $mode )
 			$template->assign_block_vars('enable_user_submit_model', array());
 		}
 
+		//Build All Required HTML 
+		$garage_template->year_dropdown();
+		$garage_template->attach_image('vehicle');
 		$template->assign_vars(array(
 			'L_TITLE' => $lang['Create_New_Vehicle'],
 			'L_BUTTON' => $lang['Create_New_Vehicle'],
@@ -188,12 +183,8 @@ switch( $mode )
 		//Get Users Garage Size
 		$count = $garage_vehicle->count_user_vehicles();
 
-		//Check To See If User Has Too Many Vehicles Already
-		if ( ($userdata['member_type'] == PREMIUM) AND ($count == $garage_config['max_premium_user_cars']) )
-		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=5", true));
-		}
-		else if ($count == $garage_config['max_user_cars'] AND $userdata['user_level'] != ADMIN )
+		//Check To See If User Has Too Many Vehicles Already...If So Display Notice
+		if ( $count >= $garage_vehicle->get_user_add_quota() ) 
 		{
 			redirect(append_sid("garage.$phpEx?mode=error&EID=5", true));
 		}
@@ -1731,7 +1722,7 @@ switch( $mode )
 
 		if( $garage_image->image_attached() )
 		{
-			if ( count($gallery_data) < $garage_config['max_car_images'])
+			if ( count($gallery_data) < $garage_image->get_user_upload_quota() )
 			{
 				$image_id = $garage_image->process_image_attach('vehicle',$cid);
 				if (!empty($image_id))
@@ -1744,7 +1735,7 @@ switch( $mode )
 					}
 				}
 			}
-			else if ( count($gallery_data) >= $garage_config['max_car_images'])
+			else if ( count($gallery_data) >= $garage_image->get_user_upload_quota())
 			{
 				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true));
 			}
@@ -3170,7 +3161,7 @@ switch( $mode )
 		);
 
 		//Get Vehicle Data
-		$vehicle_data = $garage->select_vehicle_data($cid);
+		$vehicle_data = $garage_vehicle->select_vehicle_data($cid);
 
 		//Get All Comments Data
 		$comment_data = $garage_guestbook->select_vehicle_comments($cid);
@@ -3180,7 +3171,7 @@ switch( $mode )
 		{
 			$template->assign_block_vars('leave_comment', array());
 		}
-
+		
          	//Loop Processing All Mods Returned From Second Statements
 		if ( count($comment_data) < 1 )
 		{
@@ -3192,51 +3183,51 @@ switch( $mode )
 		else
 		{
 			for ($i = 0; $i < count($comment_data); $i++)
-         		{	
-				$username = $comment_data['username'];
-				$temp_url = append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$comment_data['user_id']);
-				$poster = '<a href="' . $temp_url . '">' . $comment_data['username'] . '</a>';
-				$poster_posts = ( $comment_data['user_id'] != ANONYMOUS ) ? $lang['Posts'] . ': ' . $comment_data['user_posts'] : '';
-				$poster_from = ( $comment_data['user_from'] && $comment_data['user_id'] != ANONYMOUS ) ? $lang['Location'] . ': ' . $comment_data['user_from'] : '';
+			{	
+				$username = $comment_data[$i]['username'];
+				$temp_url = append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$comment_data[$i]['user_id']);
+				$poster = '<a href="' . $temp_url . '">' . $comment_data[$i]['username'] . '</a>';
+				$poster_posts = ( $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang['Posts'] . ': ' . $comment_data[$i]['user_posts'] : '';
+				$poster_from = ( $comment_data[$i]['user_from'] && $comment_data['user_id'] != ANONYMOUS ) ? $lang['Location'] . ': ' . $comment_data[$i]['user_from'] : '';
 				$garage_id = $comment_data['garage_id'];
-				$poster_car_year = ( $comment_data['made_year'] && $comment_data['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $comment_data['made_year'] : '';
-				$poster_car_mark = ( $comment_data['make'] && $comment_data['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $comment_data['make'] : '';
-				$poster_car_model = ( $comment_data['model'] && $comment_data['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $comment_data['model'] : '';
-				$poster_joined = ( $comment_data['user_id'] != ANONYMOUS ) ? $lang['Joined'] . ': ' . create_date($lang['DATE_FORMAT'], $comment_data['user_regdate'], $board_config['board_timezone']) : '';
+				$poster_car_year = ( $comment_data[$i]['made_year'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $comment_data[$i]['made_year'] : '';
+				$poster_car_mark = ( $comment_data[$i]['make'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $comment_data[$i]['make'] : '';
+				$poster_car_model = ( $comment_data[$i]['model'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $comment_data[$i]['model'] : '';
+				$poster_joined = ( $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang['Joined'] . ': ' . create_date($lang['DATE_FORMAT'], $comment_data[$i]['user_regdate'], $board_config['board_timezone']) : '';
 
 				$poster_avatar = '';
-				if ( $data['user_avatar_type'] && $comment_data['user_id'] != ANONYMOUS && $comment_data['user_allowavatar'] )
+				if ( $data['user_avatar_type'] && $comment_data[$i]['user_id'] != ANONYMOUS && $comment_data[$i]['user_allowavatar'] )
 				{
 					switch( $row['user_avatar_type'] )
 					{
 						case USER_AVATAR_UPLOAD:
-							$poster_avatar = ( $board_config['allow_avatar_upload'] ) ? '<img src="' . $board_config['avatar_path'] . '/' . $comment_data['user_avatar'] . '" alt="" border="0" />' : '';
+							$poster_avatar = ( $board_config['allow_avatar_upload'] ) ? '<img src="' . $board_config['avatar_path'] . '/' . $comment_data[$i]['user_avatar'] . '" alt="" border="0" />' : '';
 							break;
 						case USER_AVATAR_REMOTE:
-							$poster_avatar = ( $board_config['allow_avatar_remote'] ) ? '<img src="' . $comment_data['user_avatar'] . '" alt="" border="0" />' : '';
+							$poster_avatar = ( $board_config['allow_avatar_remote'] ) ? '<img src="' . $comment_data[$i]['user_avatar'] . '" alt="" border="0" />' : '';
 							break;
 						case USER_AVATAR_GALLERY:
-							$poster_avatar = ( $board_config['allow_avatar_local'] ) ? '<img src="' . $board_config['avatar_gallery_path'] . '/' . $comment_data['user_avatar'] . '" alt="" border="0" />' : '';
+							$poster_avatar = ( $board_config['allow_avatar_local'] ) ? '<img src="' . $board_config['avatar_gallery_path'] . '/' . $comment_data[$i]['user_avatar'] . '" alt="" border="0" />' : '';
 							break;
 					}
 				}
 
 				// Handle anon users posting with usernames
-				if ( $comment_data['user_id'] == ANONYMOUS && $comment_data['post_username'] != '' )
+				if ( $comment_data[$i]['user_id'] == ANONYMOUS && $comment_data[$i]['post_username'] != '' )
 				{
-					$poster = $comment_data['post_username'];
+					$poster = $comment_data[$i]['post_username'];
 				}
 
 				$profile_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_profile'] . '" alt="' . $lang['Read_profile'] . '" title="' . $lang['Read_profile'] . '" border="0" /></a>';
 				$profile = '<a href="' . $temp_url . '">' . $lang['Read_profile'] . '</a>';
 
-				$temp_url = append_sid("privmsg.$phpEx?mode=post&amp;" . POST_USERS_URL . "=".$comment_data['user_id']);
+				$temp_url = append_sid("privmsg.$phpEx?mode=post&amp;" . POST_USERS_URL . "=".$comment_data[$i]['user_id']);
 				$pm_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_pm'] . '" alt="' . $lang['Send_private_message'] . '" title="' . $lang['Send_private_message'] . '" border="0" /></a>';
 				$pm = '<a href="' . $temp_url . '">' . $lang['Send_private_message'] . '</a>';
 
-				if ( !empty($comment_data['user_viewemail']) || $is_auth['auth_mod'] )
+				if ( !empty($comment_data[$i]['user_viewemail']) || $is_auth['auth_mod'] )
 				{
-					$email_uri = ( $board_config['board_email_form'] ) ? append_sid("profile.$phpEx?mode=email&amp;" . POST_USERS_URL .'=' . $comment_data['user_id']) : 'mailto:' . $comment_data['user_email'];
+					$email_uri = ( $board_config['board_email_form'] ) ? append_sid("profile.$phpEx?mode=email&amp;" . POST_USERS_URL .'=' . $comment_data[$i]['user_id']) : 'mailto:' . $comment_data['user_email'];
 
 					$email_img = '<a href="' . $email_uri . '"><img src="' . $images['icon_email'] . '" alt="' . $lang['Send_email'] . '" title="' . $lang['Send_email'] . '" border="0" /></a>';
 					$email = '<a href="' . $email_uri . '">' . $lang['Send_email'] . '</a>';
@@ -3247,14 +3238,14 @@ switch( $mode )
 					$email = '';
 				}
 
-				$www_img = ( $comment_data['user_website'] ) ? '<a href="' . $comment_data['user_website'] . '" target="_userwww"><img src="' . $images['icon_www'] . '" alt="' . $lang['Visit_website'] . '" title="' . $lang['Visit_website'] . '" border="0" /></a>' : '';
-				$www = ( $comment_data['user_website'] ) ? '<a href="' . $comment_data['user_website'] . '" target="_userwww">' . $lang['Visit_website'] . '</a>' : '';
+				$www_img = ( $comment_data[$i]['user_website'] ) ? '<a href="' . $comment_data[$i]['user_website'] . '" target="_userwww"><img src="' . $images['icon_www'] . '" alt="' . $lang['Visit_website'] . '" title="' . $lang['Visit_website'] . '" border="0" /></a>' : '';
+				$www = ( $comment_data[$i]['user_website'] ) ? '<a href="' . $comment_data[$i]['user_website'] . '" target="_userwww">' . $lang['Visit_website'] . '</a>' : '';
 
-				$temp_url = append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . "=".$comment_data['user_id']);
-				$posted = '<a href="' . $temp_url . '">' . $comment_data['username'] . '</a>';
-				$posted = create_date($board_config['default_dateformat'], $row['post_date'], $board_config['board_timezone']);
+				$temp_url = append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . "=".$comment_data[$i]['user_id']);
+				$posted = '<a href="' . $temp_url . '">' . $comment_data[$i]['username'] . '</a>';
+				$posted = create_date($board_config['default_dateformat'], $comment_data[$i]['post_date'], $board_config['board_timezone']);
 
-				$post = $comment_data['post'];
+				$post = $comment_data[$i]['post'];
 
 				if ( !$board_config['allow_html'] )
 				{
@@ -3284,11 +3275,11 @@ switch( $mode )
 
 				if ( $userdata['user_level'] == MOD || $userdata['user_level'] == ADMIN )
 				{
-					$temp_url = append_sid("garage.$phpEx?mode=edit_comment&amp;CID=$cid&amp;comment_id=" . $comment_data['comment_id'] . "&amp;sid=" . $userdata['session_id']);
+					$temp_url = append_sid("garage.$phpEx?mode=edit_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $userdata['session_id']);
 					$edit_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_edit'] . '" alt="' . $lang['Edit_delete_post'] . '" title="' . $lang['Edit_delete_post'] . '" border="0" /></a>';
 					$edit = '<a href="' . $temp_url . '">' . $lang['Edit_delete_post'] . '</a>';
 
-					$temp_url = append_sid("garage.$phpEx?mode=delete_comment&amp;CID=$cid&amp;comment_id=" . $comment_data['comment_id'] . "&amp;sid=" . $userdata['session_id']);
+					$temp_url = append_sid("garage.$phpEx?mode=delete_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $userdata['session_id']);
 					$delpost_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_delpost'] . '" alt="' . $lang['Delete_post'] . '" title="' . $lang['Delete_post'] . '" border="0" /></a>';
 					$delpost = '<a href="' . $temp_url . '">' . $lang['Delete_post'] . '</a>';
 				}

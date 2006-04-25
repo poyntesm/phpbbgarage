@@ -29,6 +29,87 @@ class garage_vehicle
 	var $classname = "garage_vehicle";
 
 	/*========================================================================*/
+	// Gets User Vehicle Quota
+	// Usage: get_user_vehicle_quota();
+	/*========================================================================*/
+	function get_user_add_quota()
+	{
+		global $db, $userdata, $garage_config, $garage;
+
+		if (empty($garage_config['private_add_quota']))
+		{
+			//Since No Specific Group Value Exists Use Default Value
+			return $garage_config['max_user_cars'];
+		}
+		//It Appears Some Groups Have Private Permissions & Quotas We Will Need To Check Them
+		else
+		{
+			//Get All Group Memberships
+			$groupdata = $garage->get_group_membership($userdata['user_id']);
+			
+			//Lets Get The Private Upload Groups & Quotas
+			$private_add_groups = @explode(',', $garage_config['private_add_perms']);
+			$private_add_quotas = @explode(',', $garage_config['private_add_quota']);
+
+			//Process All Groups You Are Member Of To See If Any Are Granted Permission & Quota
+			for ($i = 0; $i < count($groupdata); $i++)
+			{
+				if (in_array($groupdata[$i]['group_id'], $private_add_groups))
+				{
+					//Your A Member Of A Group Granted Permission - Find Array Key
+					$index = array_search($groupdata[$i]['group_id'], $private_add_groups);
+					//So Your Quota For This Group Is...
+					$quota[$i] = $private_add_quotas[$index];
+				}
+			}
+
+			//Your Were Not Granted Any Private Permissions..Return Default Value
+			if  (empty($quota))
+			{
+				return $garage_config['max_user_cars'];
+			}
+
+			//Return The Highest Quota You Were Granted
+			return max($quota);
+		}
+
+	}
+
+	/*========================================================================*/
+	// Gets Group Vehicle Quota - Used Only In ACP Page
+	// Usage: get_group_vehicle_quota('group id');
+	/*========================================================================*/
+	function get_group_add_quota($gid)
+	{
+		global $db, $userdata, $garage_config;
+
+		if (empty($garage_config['private_add_quota']))
+		{
+			//Since No Specific Group Value Exists Use Default Value
+			return $garage_config['max_user_cars'];
+		}
+		//It Appears Some Groups Have Private Permissions & Quotas We Will Need To Check Them
+		else
+		{
+			//Lets Get The Private Add Groups & Quotas
+			$private_add_groups = @explode(',', $garage_config['private_add_perms']);
+			$private_add_quota = @explode(',', $garage_config['private_add_quota']);
+
+			//Find The Matching Index In Second Array For The Group ID
+			if (($index = array_search($gid, $private_add_groups)) === FALSE)
+			{
+				//Hmmm..Group Has Currently No Private Add Permissions...So Give It The Default Incase They Turn It On
+				return $garage_config['max_user_cars'];
+			} 
+			
+			//Return The Groups Quota
+			return $private_add_quota[$index];
+		}
+
+	}
+
+
+	/*========================================================================*/
 	// Inserts Vehicle Into DB
 	// Usage: insert_vehicle(array());
 	/*========================================================================*/

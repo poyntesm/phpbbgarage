@@ -312,8 +312,83 @@ switch($mode)
 			"body" => "admin/garage_makes_models.tpl")
 		);
 
-		$template->assign_vars(array(
+		//Get All Makes & Models
+		$data = $garage_model->select_complete_model_list('');
 
+function array_unique_values ( $array )
+{
+   $unique_array = array( );
+   while ( list ( $key, $value ) = @each ( $array ) )
+   {
+      if ( ! in_array ( $value, $unique_array ) )
+      {
+         $unique_array[ $key ] = $value;
+      }
+   }
+   return $unique_array;
+} 
+
+		//Build An Error Of Just Makes
+		$makes = $garage->remove_duplicate($data, 'make_id');
+
+		for( $i = 0; $i < count($makes); $i++ )
+		{
+			$status_mode =  ( $makes[$i]['pending'] == TRUE ) ? 'set_approved' : 'set_pending' ;
+
+			$delete_url = append_sid("admin_garage_models.$phpEx?mode=confirm_delete&amp;id=" . $makes[$i]['make_id']);
+			$status_url = append_sid("admin_garage_models.$phpEx?mode=$status_mode&amp;id=" . $makes[$i]['make_id']);
+			$rename_url = 'javascript:rename('.$makes[$i]['make_id'].')';
+
+
+			$delete = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" />' : $lang['Delete'] ;
+			$status = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_'.$status_mode] . '" alt="'.$lang[$status_mode].'" title="'.$lang[$status_mode].'" border="0" />' : $lang[$status_mode];
+			$rename = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_edit'] . '" alt="'.$lang['Rename'].'" title="'.$lang['Rename'].'" border="0" />' : $lang['Rename'];
+
+			$template->assign_block_vars('make', array(
+				'COLOR' => ($i % 2) ? 'row1' : 'row2',
+				'ID' => $makes[$i]['make_id'],
+				'MAKE' => $makes[$i]['make'],
+				'DELETE' => $delete,
+				'STATUS' => $status,
+				'RENAME' => $rename,
+				'U_RENAME' => $rename_url,
+				'U_DELETE' => $delete_url,
+				'U_STATUS' => $status_url)
+			);
+
+			for( $j = 0; $j < count($data); $j++ )
+			{
+				if ( $makes[$i]['make_id'] != $data[$j]['make_id'] )
+				{
+					continue;
+				}
+
+				$status_mode =  ( $model_data[$j]['pending'] == TRUE ) ? 'set_approved' : 'set_pending' ;
+
+				$delete_url = append_sid("admin_garage_models.$phpEx?mode=confirm_delete&amp;id=" . $data[$j]['model_id']);
+				$status_url = append_sid("admin_garage_models.$phpEx?mode=$status_mode&amp;id=" . $data[$j]['model_id']);
+				$rename_url = 'javascript:rename('.$data[$j]['model_id'].')';
+
+
+				$delete = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" />' : $lang['Delete'] ;
+				$status = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_'.$status_mode] . '" alt="'.$lang[$status_mode].'" title="'.$lang[$status_mode].'" border="0" />' : $lang[$status_mode];
+				$rename = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_edit'] . '" alt="'.$lang['Rename'].'" title="'.$lang['Rename'].'" border="0" />' : $lang['Rename'];
+
+				$template->assign_block_vars('make.model', array(
+					'COLOR' => ($j % 2) ? 'row1' : 'row2',
+					'ID' => $data[$j]['mdodel_id'],
+					'MODEL' => $data[$j]['model'],
+					'DELETE' => $delete,
+					'STATUS' => $status,
+					'RENAME' => $rename,
+					'U_RENAME' => $rename_url,
+					'U_DELETE' => $delete_url,
+					'U_STATUS' => $status_url)
+				);
+			}
+		}
+
+		$template->assign_vars(array(
 			'L_GARAGE_MODELS_TITLE' => $lang['Garage_Models_Title'],
 			'L_GARAGE_MODELS_EXPLAIN' => $lang['Garage_Models_Explain'],
 			'L_MAKE' => $lang['Make'],
@@ -341,37 +416,7 @@ switch($mode)
 			'S_GARAGE_MODELS_ACTION' => append_sid('admin_garage_models.'.$phpEx),
 			'SHOW' => '<img src="../' . $images['garage_show_details'] . '" alt="'.$lang['Show_Details'].'" title="'.$lang['Show_Details'].'" border="0" />',
 			'HIDE' => '<img src="../' . $images['garage_hide_details'] . '" alt="'.$lang['Hide_Details'].'" title="'.$lang['Hide_Details'].'" border="0" />')
-
 		);
-
-		$data = $garage_model->select_make_data('');
-
-		for( $i = 0; $i < count($data); $i++ )
-		{
-			$status_mode =  ( $data[$i]['pending'] == TRUE ) ? 'set_approved' : 'set_pending' ;
-
-			$delete_url = append_sid("admin_garage_models.$phpEx?mode=confirm_delete&amp;id=" . $data[$i]['id']);
-			$status_url = append_sid("admin_garage_models.$phpEx?mode=$status_mode&amp;id=" . $data[$i]['id']);
-			$rename_url = 'javascript:rename('.$data[$i]['id'].')';
-
-
-			$delete = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" />' : $lang['Delete'] ;
-			$status = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_'.$status_mode] . '" alt="'.$lang[$status_mode].'" title="'.$lang[$status_mode].'" border="0" />' : $lang[$status_mode];
-			$rename = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_edit'] . '" alt="'.$lang['Rename'].'" title="'.$lang['Rename'].'" border="0" />' : $lang['Rename'];
-
-			$template->assign_block_vars('make', array(
-				'COLOR' => ($i % 2) ? 'row1' : 'row2',
-				'ID' => $data[$i]['id'],
-				'MAKE' => $data[$i]['make'],
-				'DELETE' => $delete,
-				'STATUS' => $status,
-				'RENAME' => $rename,
-				'U_RENAME' => $rename_url,
-				'U_DELETE' => $delete_url,
-				'U_STATUS' => $status_url)
-			);
-		}
-
 
 		$template->pparse("body");
 

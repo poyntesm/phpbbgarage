@@ -84,7 +84,7 @@
 
 
 <form method="post" name="manage_makes_models" action="{S_MODE_ACTION}">
-<table width="100%" cellpadding="3" cellspacing="1" border="0" class="forumline"> 
+<table width="100%" cellpadding="1" cellspacing="1" border="0" class="forumline"> 
 	<tr> 
 		<th class="thCornerL" width ="60%" height="20" valign="middle" nowrap="nowrap">{L_MAKE}</th> 
 		<th class="thTop" height="20" valign="middle" nowrap="nowrap">{L_RENAME}</th> 
@@ -117,8 +117,8 @@
 				</tr>
 <!-- BEGIN model --> 
 				<tr>
-					<td class="{make.COLOR}">{make.MAKE}</td>
-					<td class="{make.COLOR}"><input name="name" type="text" class="post" size="35" value="{make.model.MODEL}" /></td>
+					<td class="{make.COLOR}">{make.model.MODEL}</td>
+					<td class="{make.COLOR}"><input name="name" type="text" class="post" size="35" value="{}" /></td>
 					<td class="{make.COLOR}"><a href="{make.model.U_STATUS}">{make.model.STATUS}</a></td>
 					<td class="{make.COLOR}"><a href="{make.model.U_DELETE}">{make.model.DELETE}</a></td>
 				</tr> 

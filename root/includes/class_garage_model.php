@@ -89,6 +89,85 @@ class garage_model
 	}
 
 	/*========================================================================*/
+	// Select All Make Data From DB
+	// Usage: select_all_make_data();
+	/*========================================================================*/
+	function select_all_make_data()
+	{
+		global $db;
+
+		$sql = "SELECT make, id FROM " . GARAGE_MAKES_TABLE;
+
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could Not Select Make', '', __LINE__, __FILE__, $sql);
+		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$data[] = $row;
+		}
+
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/*========================================================================*/
+	// Select All Model From One Make Data From DB
+	// Usage: select_all_make_data();
+	/*========================================================================*/
+	function select_all_model_from_make_data($make_id)
+	{
+		global $db;
+
+		$sql = "SELECT model, id, make_id FROM " . GARAGE_MODELS_TABLE. " WHERE make_id = $make_id";
+
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could Not Select Make', '', __LINE__, __FILE__, $sql);
+		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$data[] = $row;
+		}
+
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/*========================================================================*/
+	// Select All Model Data From DB
+	// Usage: select_all_make_data();
+	/*========================================================================*/
+	function select_complete_model_list()
+	{
+		global $db;
+
+		$sql = "SELECT mdl.id as model_id, mdl.model, mk.id as make_id, mk.make 
+			FROM " . GARAGE_MODELS_TABLE. " mdl
+				LEFT JOIN " . GARAGE_MAKES_TABLE . " mk ON mdl.make_id = mk.id";
+
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could Not Select Make', '', __LINE__, __FILE__, $sql);
+		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$data[] = $row;
+		}
+
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+
+
+	/*========================================================================*/
 	// Select Model Data From DB
 	// Usage: select_model_data('model id');
 	/*========================================================================*/
@@ -96,7 +175,7 @@ class garage_model
 	{
 		global $db;
 
-		$sql = "SELECT model FROM " . GARAGE_MODELS_TABLE . " WHERE id = '$model_id' ";
+		$sql = "SELECT model FROM " . GARAGE_MODELS_TABLE . " WHERE id = $model_id";
 
 		if( !($result = $db->sql_query($sql)) )
 		{

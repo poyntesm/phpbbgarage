@@ -8,30 +8,43 @@
 	{
 		var obj = "";	
 
+		//if (document.manage_business.elements['title_'+selected].value);
+
 		// Check browser compatibility
 		if(document.getElementById)
+		{
 			obj = document.getElementById(id);
+		}
 		else if(document.all)
+		{
 			obj = document.all[id];
+		}
 		else if(document.layers)
+		{
 			obj = document.layers[id];
+		}
 		else
-			return 1;
+		{
+			return 1
+		}
 
-		if (!obj) {
-			return 1;
-		}
-		else if (obj.style) 
-		{			
-			obj.style.display = ( obj.style.display != "none" ) ? "none" : "";
-		}
-		else 
+
+		if(obj && obj.style) 
 		{ 
-			obj.visibility = "show"; 
-		}
+			if('none' == obj.style.display) 
+			{ 
+				obj.style.display = ''; 
+				obj2.style.display = ''; 
+			} 
+			else 
+			{ 
+				obj.style.display = 'none'; 
+				obj2.style.display = 'none'; 
+			} 
+		} 
 	}
 
-
+	//Check All Required Boxes As Global Permissions Have Been Clicked
 	function check_all(str_part) 
 	{
 		var f = document.permissions;
@@ -85,7 +98,7 @@
 				 f.BROWSE_ALL.checked  = true; 
 				 f.BROWSE_PRIVATE.checked  = false; 
 			}
-			if (str_part == 'BROW') 
+			if (str_part == 'INTE') 
 			{ 
 				f.INTERACT_ALL.checked = true; 
 				f.INTERACT_PRIVATE.checked = false; 
@@ -99,29 +112,6 @@
 			{ 
 				f.UPLOAD_ALL.checked = true; 
 				f.UPLOAD_PRIVATE.checked = false; 
-			}
-		}
-	}
-
-	function private_checked(str_part) 
-	{
-		var f = document.permissions;
-
-		//Here We Process And Turn On Admin,Mod,User,Guest Checkboxs In The Same Row.
-		for (var i = 0 ; i < f.elements.length; i++)
-		{
-			var e = f.elements[i];
-						
-			if ( (e.name != 'UPLOAD_ADMIN') && (e.name != 'BROWSE_ADMIN') && (e.name != 'INTERACT_ADMIN') && (e.name != 'ADD_ADMIN') && (e.name != 'UPLOAD_MOD') && (e.name != 'BROWSE_MOD') && (e.name != 'INTERACT_MOD') && (e.name != 'ADD_MOD') && (e.name != 'UPLOAD_PRIVATE') && (e.name != 'BROWSE_PRIVATE') && (e.name != 'INTERACT_PRIVATE') && (e.name != 'ADD_PRIVATE') && (e.type == 'checkbox') && (! e.disabled) )
-			{
-				s = e.name;
-				a = s.substring(0, 4);
-				
-				if (a == str_part)
-				{
-					e.checked = false;
-				}
-				
 			}
 		}
 	}
@@ -160,7 +150,8 @@
 				}
 			}
 		}
-				
+	
+		//Handle If All Boxes Are Ticked Turning Off Private & On Global			
 		if (totalboxes == total_on)
 		{
 			if (IDnumber == 1) 
@@ -203,87 +194,95 @@
 		<th class="thHead" height="25" nowrap="nowrap" colspan="6">{L_PERMISSION_ACCESS_LEVELS}</th>
 	</tr>
 	<tr>
-		<td class="catBottom" width=40% ><span class="gen">{L_NAME}</span></td>
-		<td class="catBottom" align ="center" width=12%><span class="gen">{L_DENY}</span></td>
-		<td class="catBottom" align ="center" width=12%><span class="gen">{L_BROWSE}</span></td>
-		<td class="catBottom" align ="center" width=12%><span class="gen">{L_INTERACT}</span></td>
-		<td class="catBottom" align ="center" width=12%><span class="gen">{L_ADD}</span></td>
-		<td class="catBottom" align ="center" width=12%><span class="gen">{L_UPLOAD}</span></td>
+		<td class="catBottom" width=25% ><span class="gen">{L_NAME}</span></td>
+		<td class="catBottom" align ="center" width=10%><span class="gen">{L_DENY}</span></td>
+		<td class="catBottom" align ="center" width=10%><span class="gen">{L_BROWSE}</span></td>
+		<td class="catBottom" align ="center" width=10%><span class="gen">{L_INTERACT}</span></td>
+		<td class="catBottom" align ="center" width=10%><span class="gen">{L_ADD}</span></td>
+		<td class="catBottom" align ="center" width=10%><span class="gen">{L_UPLOAD}</span></td>
 	</tr>
 	<tr>
 		<td class="row1" colspan="6"><span class="gen">{L_GLOBAL_ALL_MASKS}</td>
 	</tr>
 	<tr>
-		<td class="row2" width="40%" align="center" valign="middle"><div align="right" style="font-weight:bold">{L_ALL_MASKS}&nbsp;</div></td>
-		<td class="row1" width="12%" align="center"></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" onClick="check_all('BROW')" name="BROWSE_ALL" value="1" {BROWSE_ALL_CHECKED} /></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" onClick="check_all('INTE')" name="INTERACT_ALL" value="1" {INTERACT_ALL_CHECKED} /></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" onClick="check_all('ADD_')" name="ADD_ALL" value="1"{ADD_ALL_CHECKED} /></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" onClick="check_all('UPLO')" name="UPLOAD_ALL" value="1" {UPLOAD_ALL_CHECKED} /></td>
+		<td class="row2" width="25%" align="center" valign="middle"><div align="right" style="font-weight:bold">{L_GLOBAL_PERMISSIONS}&nbsp;</div></td>
+		<td class="row1" width="10%" align="center" ></td>
+		<td class="row1" width="10%" align="center" valign="middle" ><input type="checkbox" onClick="check_all('BROW')" name="BROWSE_ALL" value="1" {BROWSE_ALL_CHECKED} /></td>
+		<td class="row1" width="10%" align="center" valign="middle" ><input type="checkbox" onClick="check_all('INTE')" name="INTERACT_ALL" value="1" {INTERACT_ALL_CHECKED} /></td>
+		<td class="row1" width="10%" align="center" valign="middle" ><input type="checkbox" onClick="check_all('ADD_')" name="ADD_ALL" value="1"{ADD_ALL_CHECKED} /></td>
+		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" onClick="check_all('UPLO')" name="UPLOAD_ALL" value="1" {UPLOAD_ALL_CHECKED} /></td>
+	</tr>
+	<tr>
+		<td class="row2" width="25%" align="center" valign="middle"><div align="right" style="font-weight:bold">{L_OVERALL_QUOTA}&nbsp;</div></td>
+		<td class="row1" width="10%" align="center"></td>
+		<td class="row1" width="10%" align="center"></td>
+		<td class="row1" width="10%" align="center"></td>
+		<td class="row1" width="10%" align="center" valign="middle">{_ADD_QUOTA}<input name="max_user_cars" type="text" class="post" size="3" value="{MAX_USER_CARS}" /></td>
+		<td class="row1" width="10%" align="center" valign="middle">{_UPLOAD_QUOTA}<input name="max_car_images" type="text" class="post" size="3" value="{MAX_CAR_IMAGES}" /></td>
 	</tr>
 	<tr>
 		<td class="row1" colspan="6"><span class="gen">{L_GRANULAR_PERMISSIONS}</td>
 	</tr>
 	<tr>
-		<td class="row2" width="40%" align="center" valign="middle"><div align="right" style="font-weight:bold">{L_ADMINISTRATORS}&nbsp;</div></td>
-		<td class="row1" width="12%" align="center"></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" name="BROWSE_ADMIN" value="1" {BROWSE_ADMIN_CHECKED} onclick="obj_checked(1)" /></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" name="INTERACT_ADMIN" value="1" {INTERACT_ADMIN_CHECKED} onclick="obj_checked(2)" /></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" name="ADD_ADMIN" value="1" {ADD_ADMIN_CHECKED} onclick="obj_checked(3)" /></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" name="UPLOAD_ADMIN" value="1" {UPLOAD_ADMIN_CHECKED} onclick="obj_checked(4)" /></td>
+		<td class="row2" width="25%" align="center" valign="middle"><div align="right" style="font-weight:bold">{L_ADMINISTRATORS}&nbsp;</div></td>
+		<td class="row1" width="10%" align="center"></td>
+		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="BROWSE_ADMIN" value="1" {BROWSE_ADMIN_CHECKED} onclick="obj_checked(1)" /></td>
+		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="INTERACT_ADMIN" value="1" {INTERACT_ADMIN_CHECKED} onclick="obj_checked(2)" /></td>
+		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="ADD_ADMIN" value="1" {ADD_ADMIN_CHECKED} onclick="obj_checked(3)" /></td>
+		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="UPLOAD_ADMIN" value="1" {UPLOAD_ADMIN_CHECKED} onclick="obj_checked(4)" /></td>
 	</tr>
 	<tr>
-		<td class="row2" width="40%" align="center" valign="middle"><div align="right" style="font-weight:bold">{L_MODERATORS}&nbsp;</div></td>
-		<td class="row1" width="12%" align="center"></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" name="BROWSE_MOD" value="1" {BROWSE_MOD_CHECKED} onclick="obj_checked(1)" /></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" name="INTERACT_MOD" value="1" {INTERACT_MOD_CHECKED} onclick="obj_checked(2)" /></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" name="ADD_MOD" value="1" {ADD_MOD_CHECKED} onclick="obj_checked(3)" /></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" name="UPLOAD_MOD" value="1" {UPLOAD_MOD_CHECKED} onclick="obj_checked(4)" /></td>
+		<td class="row2" width="25%" align="center" valign="middle"><div align="right" style="font-weight:bold">{L_MODERATORS}&nbsp;</div></td>
+		<td class="row1" width="10%" align="center"></td>
+		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="BROWSE_MOD" value="1" {BROWSE_MOD_CHECKED} onclick="obj_checked(1)" /></td>
+		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="INTERACT_MOD" value="1" {INTERACT_MOD_CHECKED} onclick="obj_checked(2)" /></td>
+		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="ADD_MOD" value="1" {ADD_MOD_CHECKED} onclick="obj_checked(3)" /></td>
+		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="UPLOAD_MOD" value="1" {UPLOAD_MOD_CHECKED} onclick="obj_checked(4)" /></td>
 	</tr>
 	<tr>
-		<td class="row2" width="40%" align="center" valign="middle"><div align="right" style="font-weight:bold">{L_REGISTERED_USERS}&nbsp;</div></td>
-		<td class="row1" width="12%" align="center"></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" name="BROWSE_USER" value="1" {BROWSE_USER_CHECKED} onclick="obj_checked(1)" /></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" name="INTERACT_USER" value="1" {INTERACT_USER_CHECKED} onclick="obj_checked(2)" /></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" name="ADD_USER" value="1" {ADD_USER_CHECKED} onclick="obj_checked(3)" /></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" name="UPLOAD_USER" value="1" {UPLOAD_USER_CHECKED} onclick="obj_checked(4)" /></td>
+		<td class="row2" width="25%" align="center" valign="middle"><div align="right" style="font-weight:bold">{L_REGISTERED_USERS}&nbsp;</div></td>
+		<td class="row1" width="10%" align="center"></td>
+		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="BROWSE_USER" value="1" {BROWSE_USER_CHECKED} onclick="obj_checked(1)" /></td>
+		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="INTERACT_USER" value="1" {INTERACT_USER_CHECKED} onclick="obj_checked(2)" /></td>
+		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="ADD_USER" value="1" {ADD_USER_CHECKED} onclick="obj_checked(3)" /></td>
+		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="UPLOAD_USER" value="1" {UPLOAD_USER_CHECKED} onclick="obj_checked(4)" /></td>
 	</tr>
 	<tr>
-		<td class="row2" width="40%" align="center" valign="middle"><div align="right" style="font-weight:bold">{L_GUEST_USERS}&nbsp;</div></td>
-		<td class="row1" width="12%" align="center"></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" name="BROWSE_GUEST" value="1" {BROWSE_GUEST_CHECKED} onclick="obj_checked(1)" /></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" name="INTERACT_GUEST" value="1" {INTERACT_GUEST_CHECKED} onclick="obj_checked(2)" /></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" name="ADD_GUEST" value="1" {ADD_GUEST_CHECKED} onclick="obj_checked(3)" /></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" name="UPLOAD_GUEST" value="1" {UPLOAD_GUEST_CHECKED} onclick="obj_checked(4)" /></td>
+		<td class="row2" width="25%" align="center" valign="middle"><div align="right" style="font-weight:bold">{L_GUEST_USERS}&nbsp;</div></td>
+		<td class="row1" width="10%" align="center"></td>
+		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="BROWSE_GUEST" value="1" {BROWSE_GUEST_CHECKED} onclick="obj_checked(1)" /></td>
+		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="INTERACT_GUEST" value="1" {INTERACT_GUEST_CHECKED} onclick="obj_checked(2)" /></td>
+		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="ADD_GUEST" value="1" {ADD_GUEST_CHECKED} onclick="obj_checked(3)" /></td>
+		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="UPLOAD_GUEST" value="1" {UPLOAD_GUEST_CHECKED} onclick="obj_checked(4)" /></td>
 	</tr>
 	<tr>
-		<td class="row2" width="40%" align="center" valign="middle"><div align="right" style="font-weight:bold">{L_PRIVATE}&nbsp;</div></td>
-		<td class="row1" width="12%" align="center"></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" name="BROWSE_PRIVATE" value="1" {BROWSE_PRIVATE_CHECKED} onclick="obj_checked(1)" /></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" name="INTERACT_PRIVATE" value="1" {INTERACT_PRIVATE_CHECKED} onclick="obj_checked(2)" /></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" name="ADD_PRIVATE" value="1" {ADD_PRIVATE_CHECKED} onclick="obj_checked(3)" /></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" name="UPLOAD_PRIVATE" value="1" {UPLOAD_PRIVATE_CHECKED} onclick="obj_checked(4)" /></td>
+		<td class="row2" width="25%" align="center" valign="middle"><div align="right" style="font-weight:bold">{L_PRIVATE}&nbsp;</div></td>
+		<td class="row1" width="10%" align="center"></td>
+		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="BROWSE_PRIVATE" value="1" {BROWSE_PRIVATE_CHECKED} onclick="obj_checked(1)" /></td>
+		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="INTERACT_PRIVATE" value="1" {INTERACT_PRIVATE_CHECKED} onclick="obj_checked(2)" /></td>
+		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="ADD_PRIVATE" value="1" {ADD_PRIVATE_CHECKED} onclick="obj_checked(3)" /></td>
+		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="UPLOAD_PRIVATE" value="1" {UPLOAD_PRIVATE_CHECKED} onclick="obj_checked(4)" /></td>
 	</tr>
 	<tr>
 		<td class="row1" colspan="6"><span class="gen">{L_PRIVATE_PERMISSIONS}</td>
 	</tr>
 	<!-- BEGIN usergroup -->
 	<tr>
-		<td class="row2" width="40%" align="center" valign="middle"><div align="right" style="font-weight:bold">{usergroup.GROUP_NAME}&nbsp;</div></td>
-		<td class='row1' width='12%' align="middle" valign="middle"><input type='checkbox' name='deny[]' value='{usergroup.GROUP_ID}'{usergroup.DENY_CHECKED} /></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" name="browse[]" value="{usergroup.GROUP_ID}" {usergroup.BROWSE_CHECKED} onclick="obj_checked(1)" /></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" name="interact[]" value="{usergroup.GROUP_ID}" {usergroup.INTERACT_CHECKED} onclick="obj_checked(2)" /></td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" name="add[]" value="{usergroup.GROUP_ID}" {usergroup.ADD_CHECKED} onclick="javascript:handleClick('add{usergroup.GROUP_ID}')" />
-			<table cellpadding="5" cellspacing="1" border="0"> 
-				<tr id="add{usergroup.GROUP_ID}" style="display:none;">
-					<td>{L_ADD_QUOTA} : <input name="add_quota[]" type="text" class="post" size="3" value="{usergroup.ADD_QUOTA}" /></td>
+		<td class="row2" width="25%" align="center" valign="middle"><div align="right" style="font-weight:bold">{usergroup.GROUP_NAME}&nbsp;</div></td>
+		<td class='row1' width='10%' align="middle" valign="middle"><input type='checkbox' name='deny[]' value='{usergroup.GROUP_ID}'{usergroup.DENY_CHECKED} /></td>
+		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="browse[]" value="{usergroup.GROUP_ID}" {usergroup.BROWSE_CHECKED} onclick="private_checked(1)"/></td>
+		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="interact[]" value="{usergroup.GROUP_ID}" {usergroup.INTERACT_CHECKED} /></td>
+		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="add[]" value="{usergroup.GROUP_ID}" {usergroup.ADD_CHECKED} onclick="handleClick('add{usergroup.GROUP_ID}')" />
+			<table cellpadding="3" cellspacing="1" border="0"> 
+				<tr id="add{usergroup.GROUP_ID}" style="display:{usergroup.ADD_DISPLAY};">
+					<td align="center"><input name="add_quota_{usergroup.GROUP_ID}" type="text" class="post" size="3" value="{usergroup.ADD_QUOTA}" /></td>
 				</tr>
 			</table>
 		</td>
-		<td class="row1" width="12%" align="center" valign="middle"><input type="checkbox" name="upload[]" value="{usergroup.GROUP_ID}" {usergroup.UPLOAD_CHECKED} onclick="javascript:handleClick('upload{usergroup.GROUP_ID}')" />
-			<table cellpadding="5" cellspacing="1" border="0"> 
-				<tr id="upload{usergroup.GROUP_ID}" style="display:none;">
-					<td>{L_UPLOAD_QUOTA} : <input name="add_quota[]" type="text" class="post" size="3" value="{usergroup.UPLOAD_QUOTA}" /></td>
+		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="upload[]" value="{usergroup.GROUP_ID}" {usergroup.UPLOAD_CHECKED} onclick="handleClick('upload{usergroup.GROUP_ID}')" />
+			<table cellpadding="3" cellspacing="1" border="0"> 
+				<tr id="upload{usergroup.GROUP_ID}" style="display:{usergroup.UPLOAD_DISPLAY};">
+					<td align="center"><input name="upload_quota_{usergroup.GROUP_ID}" type="text" class="post" size="3" value="{usergroup.UPLOAD_QUOTA}" /></td>
 				</tr>
 			</table>
 		</td>
@@ -294,4 +293,3 @@
 	</tr>
 </table>
 </form>
-

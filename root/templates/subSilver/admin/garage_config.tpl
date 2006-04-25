@@ -24,10 +24,6 @@
 		<td class="row2"><input class="post" type="text" maxlength="12" size="5" name="year_end" value="{YEAR_END}" /></td>
 	</tr>
 	<tr>
-		<td class="row1"><span class="genmed">{L_MAX_USER_CARS}</span></td>
-		<td class="row2"><input class="post" type="text" maxlength="12" size="12" name="max_user_cars" value="{MAX_USER_CARS}" /></td>
-	</tr>
-	<tr>
 		<td class="row1"><span class="genmed">{L_LATEST_UPDATED_VEHCILE_ALL_PAGES}</span></td>
 		<td class="row2"><span class="genmed"><input type="radio" {LATEST_UPDATED_VEHCILE_ALL_PAGES_ENABLED} name="lastupdatedvehiclesmain_on" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" {LATEST_UPDATED_VEHCILE_ALL_PAGES_DISABLED} name="lastupdatedvehiclesmain_on" value="0" />{L_NO}</span><br />{L_MAX_MOST_VIEWED}&nbsp;<input class="post" type="text" maxlength="12" size="12" name="lastupdatedvehiclesmain_limit" value="{LASTUPDATEDVEHICLESMAIN_LIMIT}" /></td>
 	</tr>
@@ -124,10 +120,6 @@
 	<tr>
 		<td class="row1"><span class="genmed">{L_ALLOW_REMOTE_IMAGES}</span></td>
 		<td class="row2"><span class="genmed"><input type="radio" {ALLOW_REMOTE_IMAGES_ENABLED} name="allow_image_url" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" {ALLOW_REMOTE_IMAGES_DISABLED} name="allow_image_url" value="0" />{L_NO}</span></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_MAX_IMAGES_PER_GALLERY}</span></td>
-		<td class="row2"><input class="post" type="text" maxlength="12" size="12" name="max_car_images" value="{MAX_CAR_IMAGES}" /></td>
 	</tr>
 	<tr>
 		<td class="row1"><span class="genmed">{L_ALLOW_MOD_IMAGES}</span></td>

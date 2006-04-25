@@ -380,18 +380,21 @@ $lang['Remove_Selected_Orphans'] = 'Remove Selected Orphans';
 $lang['Garage_Business_Title'] = 'Garage Business Control';
 $lang['Garage_Business_Explain'] = 'On this screen you can manage your business\'s: create, edit, delete.';
 $lang['Garage_Permissions_Title'] = 'Garage Access Permissions Control';
-$lang['Garage_Permissions_Explain'] = '(Check box for access, uncheck to not allow access). \'Browse\' dictates whether a user will be able to view the garage. \'Interact\' dictates whether the user will be able to vote and leave comments in the Garage. \'Add\' dictates whether the user will be able to add,edit & delete vehicles and modifications to the Garage. \'Upload\' dictates whether the user will be able to upload images in the Garage.<br /><br /><b>NOTE:</b> Regardless of permission settings for Guests below they will not be allowed to add a new vehicle to the Garage and hence images as well. To Set Private Permissions Grant Private To A Permision And Save...Then Usergroups Will Appear. Now Select Group To Grant Permission To And Save.';
+$lang['Garage_Permissions_Explain'] = '<b><u>Permissions & Quotas Guide</u></b> : Check box for access, uncheck to remove access. <b>\'DENY\'</b> will override any other permission. <b>\'BROWSE\'</b> dictates whether a user will be able to view the garage. <b>\'INTERACT\'</b> dictates whether the user will be able to vote and leave comments in the Garage. <b>\'ADD\'</b> dictates whether the user will be able to add, edit & delete vehicles and modifications to the Garage. <b>\'UPLOAD\'</b> dictates whether the user will be able to upload images in the Garage. The default quota will apply to all users unless group membership grants them a higher value.<br /><br /><b>NOTE:</b> Regardless of permission settings for Guests below they will not be allowed to add a new vehicle to the Garage and hence images as well.<br /><b>NOTE:</b> When a user is a member of mutliple groups, each granted quotas the highest quota will apply.';
 $lang['Permission_Access_Levels'] = 'Permission Access Levels';
+$lang['Click_Return_Permissions'] = 'Click %sHere%s to return to the Garage Permissions Manager';
+
 $lang['Name'] = 'Name';
 $lang['Browse'] = 'Browse';
 $lang['Interact'] = 'Interact';
 $lang['Add'] = 'Add';
 $lang['Upload'] = 'Upload';
 $lang['Select'] = 'Select';
-$lang['Global_All_Masks'] = 'GLOBAL: All Current And Future Permissions - Overides All Settings Below';
-$lang['Granular_Permissions'] = 'Or: Adjust Permissions As Below With User Level\'s And User Groups ';
-$lang['Private_Permissions'] = 'Private Permissions: Select Usergroups To Grant Premissions To ';
-$lang['All_Masks'] = 'Global';
+$lang['Global_All_Masks'] = 'GLOBAL PERMISSIONS & DEFAULTS QUOTAS:';
+$lang['Granular_Permissions'] = 'USER LEVEL PERMISSIONS: ';
+$lang['Private_Permissions'] = 'GROUP PERMISSIONS & GROUP QUOTAS:';
+$lang['Global_Permissions'] = 'Global Permissions';
+$lang['Overall_Quota'] = 'Default Quotas';
 $lang['Quartermile_Table'] = '1/4 Mile Table';
 $lang['Search_User_Garage'] = 'Vehicle Garage Of';
 
@@ -590,4 +593,5 @@ $lang['Enable_Quartermile_Image_Required'] = '<b>Enable Quartermile Image Requir
 $lang['Enable_Dynorun_Image_Required'] = '<b>Enable Dynorun Image Required?</b><br />Makes all runs above a certain value require a image.';
 $lang['Quartermile_Image_Required_Limit'] = 'Seconds : ';
 $lang['Dynorun_Image_Required_Limit'] = 'BHP : ';
+$lang['Permissions_Quotas'] = 'Permissions & Quotas';
 ?>
