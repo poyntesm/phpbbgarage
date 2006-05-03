@@ -72,9 +72,9 @@ class garage_quartermile
 
 	/*========================================================================*/
 	// Delete Quartermile Entry Including Image 
-	// Usage: delete_quartermile_time('quartermile id');
+	// Usage: delete_quartermile('quartermile id');
 	/*========================================================================*/
-	function delete_quartermile_time($qmid)
+	function delete_quartermile($qmid)
 	{
 		global $userdata, $db, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	

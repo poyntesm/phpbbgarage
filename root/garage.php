@@ -2862,7 +2862,7 @@ switch( $mode )
 		$pending_quartermile_count = $garage_quartermile->build_quartermile_table('YES');
 
 		//Build The Rollingroad Table With Only Pending Runs
-		$pending_dynorun_count = $garage_dyorun->build_rollingroad_table('YES');
+		$pending_dynorun_count = $garage_dynorun->build_dynorun_table('YES');
 
 		//Build The Business Table With Only Pending Ones
 		$pending_business_count = $garage_business->build_business_table('YES');

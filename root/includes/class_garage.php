@@ -375,9 +375,9 @@ class garage
 
 	/*========================================================================*/
 	// Select All Category Data
-	// Usage: select_category_data('vehicle id');
+	// Usage: select_all_category_data();
 	/*========================================================================*/
-	function select_category_data()
+	function select_all_category_data()
 	{
 		global $db;
 
@@ -398,6 +398,32 @@ class garage
 	
 		return $data;
 	}
+
+	/*========================================================================*/
+	// Select All Category Data
+	// Usage: select_category_data('category id');
+	/*========================================================================*/
+	function select_category_data($category_id)
+	{
+		global $db;
+
+		$sql = "SELECT *
+			FROM " . GARAGE_CATEGORIES_TABLE . "
+			WHERE id = $category_id
+			ORDER BY field_order";
+
+      		if ( !($result = $db->sql_query($sql)) )
+      		{
+         		message_die(GENERAL_ERROR, 'Could Not Select Category Data', '', __LINE__, __FILE__, $sql);
+      		}
+
+		$row = $db->sql_fetchrow($result);
+
+		$db->sql_freeresult($result);
+	
+		return $row;
+	}
+
 
 	/*========================================================================*/
 	// Select All Category Data
@@ -423,7 +449,41 @@ class garage
 	   list($usec, $sec) = explode(' ', microtime());
 	   return (float) $sec + ((float) $usec * 100000);
 	}
+
+	/*========================================================================*/
+	// Write A Message To A Logfile
+	// Usage: write_logfile('file name', 'wb|ab'), 'message', 'no. tabs required';
+	/*========================================================================*/
+	function write_logfile ($log_file, $log_type, $message, $level=0)
+	{
+        	// Open that log up!
+	        $log_handle = @fopen( $log_file, $log_type );
+
+		//Make Sure We Have A File Handle
+		if ( empty($log_handle) == FALSE )
+		{
+			// Make sure we end with a new line
+			if ( !preg_match('/^.+?\n$/', $message) )
+			{
+				$message .= "\n";
+			}
+
+			// Prepend number of tabs equal to level
+			while ( $level > 0 )
+			{
+				$message = "\t".$message;
+				$level--;
+			}
 	
+			// Write the message to the log
+			@fwrite( $log_handle, $message );
+		}
+
+		//Finished Writting Required Message So Close Our File Handle
+ 		@fopen($log_handle);
+	}
+
+
 }
 
 $garage = new garage();

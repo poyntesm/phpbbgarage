@@ -33,7 +33,7 @@ class garage_dynorun
 	// Inserts Rollingroad Into DB
 	// Usage: insert_rollingroad(array());
 	/*========================================================================*/
-	function insert_rollingroad($data)
+	function insert_dynorun($data)
 	{
 		global $cid, $db;
 
@@ -54,7 +54,7 @@ class garage_dynorun
 	// Updates Rollingroad In DB
 	// Usage:  update_rollingroad(array());
 	/*========================================================================*/
-	function update_rollingroad($data)
+	function update_dynorun($data)
 	{
 		global $db, $rrid, $cid;
 
@@ -94,7 +94,7 @@ class garage_dynorun
 	// Delete Rollingroad Run Including Image 
 	// Usage: delete_rollingroad_run('rollingroad id');
 	/*========================================================================*/
-	function delete_rollingroad_run($rrid)
+	function delete_dynorun($rrid)
 	{
 		global $db;
 	
@@ -206,7 +206,7 @@ class garage_dynorun
 	// Select All Rollingroad Data From DB
 	// Usage: select_rollingroad_data('rollingroad id');
 	/*========================================================================*/
-	function select_rollingroad_data($rrid)
+	function select_dynorun_data($rrid)
 	{
 		global $db;
 
@@ -233,7 +233,7 @@ class garage_dynorun
 	// Build Rollingroad Table
 	// Usage: build_rollingroad_table('YES|NO');
 	/*========================================================================*/
-	function build_rollingroad_table($pending)
+	function build_dynorun_table($pending)
 	{
 		global $db, $template, $images, $start, $sort, $sort_order,$phpEx, $garage_config, $lang, $theme, $mode, $HTTP_POST_VARS, $HTTP_GET_VARS;
 
@@ -420,7 +420,6 @@ class garage_dynorun
 
 		return $count['total'];
 	}
-
 }
 
 $garage_dynorun = new garage_dynorun();

@@ -32,9 +32,8 @@ $lang['New_category_created'] = 'New category has been created successfully';
 $lang['Click_return_garage_category'] = 'Click %sHere%s to return to the Garage Categories Manager';
 $lang['Category_updated'] = 'This category has been updated successfully';
 $lang['Delete_Category'] = 'Delete Category';
-$lang['Move_Delete_Category_Button'] = 'Move Modifications and delete this category';
-$lang['Move_Delete_Category'] = '<b>Move all existing modifications in this category to which category?</b>';
-$lang['Remove_Category'] = '<b>Category to remove:</b>';
+$lang['Move_Delete_Category'] = 'Move all existing modifications in this category to which category?';
+$lang['Remove_Category'] = 'Category to remove:';
 $lang['Delete_Category_Explain'] = 'The form below will allow you to delete a category';
 $lang['Category_deleted'] = 'This category has been deleted successfully';
 
@@ -567,12 +566,13 @@ $lang['Show_Details'] = 'Show Details';
 $lang['Hide_Details'] = 'Hide Details';
 $lang['set_pending'] = 'Set To Pending';
 $lang['set_approved'] = 'Set To Approved';
-$lang['Delete_Business'] = 'Delete Category';
-$lang['Move_Delete_Business_Button'] = 'Move Related Items And Delete Category';
-$lang['Move_Delete_Business'] = '<b>Move all existing items related to this business to which existing business?</b>';
-$lang['Remove_Business'] = '<b>Business to remove:</b>';
-$lang['Missing_Required_Data'] = '<b>Missing Required Data</b>';
+$lang['Delete_Business_Button'] = 'Delete Business';
+$lang['Move_Delete_Business'] = 'Move all existing items related to this business to which existing business?';
+$lang['Remove_Business'] = 'Business to remove:';
+$lang['Missing_Required_Data'] = 'Missing Required Data';
 $lang['Delete_Business_Explain'] = 'The form below will allow you to delete a business. You need to decide which business related items will be moved to.';
+$lang['Delete_Make_Explain'] = 'The form below will allow you to delete a make. You need to decide which make related items will be moved to.';
+$lang['Delete_Model_Explain'] = 'The form below will allow you to delete a model. You need to decide which model related items will be moved to.';
 $lang['Models'] = 'Models';
 $lang['Reorder'] = 'Reorder';
 $lang['Move_Up'] = 'Move Up';
@@ -594,4 +594,10 @@ $lang['Enable_Dynorun_Image_Required'] = '<b>Enable Dynorun Image Required?</b><
 $lang['Quartermile_Image_Required_Limit'] = 'Seconds : ';
 $lang['Dynorun_Image_Required_Limit'] = 'BHP : ';
 $lang['Permissions_Quotas'] = 'Permissions & Quotas';
+$lang['Click_Return_Tools'] = 'Click %sHere%s to return to the Garage Tools Manager';
+$lang['Delete_Permenantly'] = 'Delete Permenantly';
+
+$lang['Move_Delete_Make'] = 'Move all existing entries of this make to which existing make?';
+$lang['Move_Delete_Model'] = 'Move all existing entries of this model to which existing model?';
+
 ?>

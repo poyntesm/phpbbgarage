@@ -38,15 +38,6 @@ require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/
 //Build All Garage Classes e.g $garage_images->
 require($phpbb_root_path . 'includes/class_garage.' . $phpEx);
 require($phpbb_root_path . 'includes/class_garage_business.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_dynorun.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_image.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_insurance.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_modification.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_quartermile.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_template.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_vehicle.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_guestbook.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_model.' . $phpEx);
 
 if( isset( $HTTP_POST_VARS['mode'] ) || isset( $HTTP_GET_VARS['mode'] ) )
 {
@@ -56,6 +47,12 @@ else
 {
 	$mode = '';
 }
+
+//Lets Setup Messages We Might Need...Just Easier On The Eye Doing This Seperatly
+$missing_data_message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_business.$phpEx") . '">'. $lang['Missing_Required_Data']. "<br /><br />" . sprintf($lang['Click_Return_Garage_Business'], "<a href=\"" . append_sid("admin_garage_business.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
+$business_created_message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_business.$phpEx") . '">' . $lang['New_Business_Created'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Business'], "<a href=\"" . append_sid("admin_garage_business.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
+$business_updated_message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_business.$phpEx") . '">' . $lang['Business_Updated'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Business'], "<a href=\"" . append_sid("admin_garage_business.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
+$business_deleted_message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_business.$phpEx") . '">' . $lang['Business_Deleted'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Business'], "<a href=\"" . append_sid("admin_garage_business.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
 
 switch($mode)
 {
@@ -75,19 +72,15 @@ switch($mode)
 			$data['website'] = "http://".$data['website'];
 		}
 
-		//Set Message For Missing Data
-		$message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_business.$phpEx") . '">'. $lang['Missing_Required_Data']. "<br /><br />" . sprintf($lang['Click_return_garage_business'], "<a href=\"" . append_sid("admin_garage_business.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-
 		//Checks All Required Data Is Present
 		$params = array('title');
-		$garage->check_acp_required_vars($params , $message);
+		$garage->check_acp_required_vars($params , $missing_data_message);
 
-		//Update The DB With Data Acquired
+		//Insert New Business Into DB
 		$garage_business->insert_business($data);
 
-		$message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_business.$phpEx") . '">' . $lang['New_Business_Created'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Business'], "<a href=\"" . append_sid("admin_garage_business.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-
-		message_die(GENERAL_MESSAGE, $message);
+		// Return a message...
+		message_die(GENERAL_MESSAGE, $business_created_message);
 				
 		break;
 
@@ -108,19 +101,15 @@ switch($mode)
 			$data['website'] = "http://".$data['website'];
 		}
 
+		//Update The Business With New Values
 		$garage_business->update_business($data);
 		
-		$message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_business.$phpEx") . '">' . $lang['Business_Updated'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Business'], "<a href=\"" . append_sid("admin_garage_business.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-
-		message_die(GENERAL_MESSAGE, $message);
+		// Return a message...
+		message_die(GENERAL_MESSAGE, $business_updated_message);
 		
 		break;
 
 	case 'confirm_delete':
-
-		$template->set_filenames(array(
-			'body' => 'admin/garage_confirm_delete.tpl')
-		);
 
 		//Store Data Of Business We Are Deleting For Use In Action Variable
 		$params = array('id');
@@ -141,16 +130,24 @@ switch($mode)
 			$select_to .= '<option value="'. $all_data[$i]['id'] .'">'. $all_data[$i]['title'] .'</option>';
 		}
 
+		$template->set_filenames(array(
+			'body' => 'admin/garage_confirm_delete.tpl')
+		);
+
 		//Send Needed Info To Template
 		$template->assign_vars(array(
-			'S_GARAGE_ACTION' => append_sid("admin_garage_business.$phpEx?id=".$data[0]['id']),
+			'S_GARAGE_ACTION' => append_sid("admin_garage_business.$phpEx?mode=delete_business&amp;id=".$data[0]['id']),
 			'S_TITLE' => $data[0]['title'],
+			'L_DELETE' => $lang['Delete_Business'],
+			'L_DELETE_EXPLAIN' => $lang['Delete_Business_Explain'],
 			'L_MOVE_CONTENTS' => $lang['Move_contents'],
 			'L_MOVE_DELETE' => $lang['Move_and_Delete'],
 			'L_REQUIRED' => $lang['Required'],
 			'L_REMOVE' => $lang['Remove_Business'],
 			'L_MOVE_DELETE' => $lang['Move_Delete_Business'],
-			'L_MOVE_DELETE_BUTTON' => $lang['Move_Delete_Business_Button'],
+			'L_MOVE_DELETE_BUTTON' => $lang['Delete_Business_Button'],
+			'L_OR' => $lang['Or'],
+			'L_DELETE_PERMENANTLY' => $lang['Delete_Permenantly'],
 			'MOVE_TO_LIST' => $select_to)
 		);
 
@@ -160,18 +157,23 @@ switch($mode)
 
 		break;
 
-	case 'delete':
+	case 'delete_business':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('id', 'target');
+		$params = array('id', 'target', 'permenant');
 		$data = $garage->process_post_vars($params);
 
-		//Set Message For Missing
-		$message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_business.$phpEx?mode=confirm_delete&id=".$data['id']."") . '">'. $lang['Missing_Required_Data']. "<br /><br />" . sprintf($lang['Click_Return_Garage_Business'], "<a href=\"" . append_sid("admin_garage_business.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
+		//If Set Delete Permentantly..And Finish
+		if ($data['permenant'] == '1')
+		{
+			$garage->delete_rows(GARAGE_BUSINESS_TABLE, 'id', $data['id']);
+
+			message_die(GENERAL_MESSAGE, $business_deleted_message);
+		}
 
 		//Checks All Required Data Is Present
 		$params = array('id', 'target');
-		$garage->check_acp_required_vars($params, $message);
+		$garage->check_acp_required_vars($params, $missing_data_message);
 
 		//Move Any Existing Items To New Target Then Delete Business
 		$garage->update_single_field(GARAGE_MODS_TABLE,'business_id',$data['target'],'business_id',$data['id']);
@@ -179,9 +181,7 @@ switch($mode)
 		$garage->delete_rows(GARAGE_BUSINESS_TABLE,'id',$data['id']);
 
 		// Return a message...
-		$message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_business.$phpEx") . '">' . $lang['Business_Deleted'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Business'], "<a href=\"" . append_sid("admin_garage_business.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-
-		message_die(GENERAL_MESSAGE, $message);
+		message_die(GENERAL_MESSAGE, $business_deleted_message);
 				
 		break;	
 
@@ -193,9 +193,8 @@ switch($mode)
 
 		$garage->update_single_field(GARAGE_BUSINESS_TABLE,'pending',1,'id',$data['id']);
 
-		$message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_business.$phpEx") . '">'. $lang['Business_Updated'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Business'], "<a href=\"" . append_sid("admin_garage_business.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-
-		message_die(GENERAL_MESSAGE, $message);
+		// Return a message...
+		message_die(GENERAL_MESSAGE, $business_updated_message);
 
 		break;
 
@@ -207,9 +206,8 @@ switch($mode)
 
 		$garage->update_single_field(GARAGE_BUSINESS_TABLE,'pending',0,'id',$data['id']);
 
-		$message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_business.$phpEx") . '">'. $lang['Business_Updated'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Business'], "<a href=\"" . append_sid("admin_garage_business.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-
-		message_die(GENERAL_MESSAGE, $message);
+		// Return a message...
+		message_die(GENERAL_MESSAGE, $business_updated_message);
 
 		break;
 

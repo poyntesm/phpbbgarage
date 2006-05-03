@@ -204,7 +204,7 @@ class garage_image
 	/*========================================================================*/
 	function process_image_attached($type, $id)
 	{
-		global $userdata, $template, $db, $SID, $lang, $images, $phpEx, $phpbb_root_path, $garage_config, $board_config, $HTTP_POST_FILES, $HTTP_POST_VARS;
+		global $userdata, $template, $db, $SID, $lang, $images, $phpEx, $phpbb_root_path, $garage_config, $board_config, $HTTP_POST_FILES, $HTTP_POST_VARS, $images;
 	
 		if (!$this->check_permissions('UPLOAD',''))
 		{
@@ -326,20 +326,7 @@ class garage_image
 			$thumb_file_name .= $url_image_ext;
 	
 			// Download the remote image to our temporary file
-			$infile = @fopen ($url_image, "rb");
-			$outfile = @fopen ($phpbb_root_path. GARAGE_UPLOAD_PATH . $tmp_file_name, "wb");
-	
-			// Set our custom timeout
-			socket_set_timeout($infile, $garage_config['remote_timeout']);
-	
-			while (!@feof ($infile)) 
-			{
-				@fwrite($outfile, @fread ($infile, 4096));
-			}
-			@fclose($outfile);
-			@fclose($infile);
-
-			@chmod($phpbb_root_path . GARAGE_UPLOAD_PATH . $tmp_file_name, 0777);
+			$this->download_remote_image($url_image, $tmp_file_name);
 
 			//Create The Thumbnail
 			if ( $garage_config['gd_version'] > 0 )
@@ -502,7 +489,7 @@ class garage_image
 	// Create Thumbnail From Sourcefile 
 	// Usage: create_thumbnail('source file', 'destination file', 'file type');
 	/*========================================================================*/
-	function create_thumbnail($source_file_name,$thumb_file_name,$file_ext)
+	function create_thumbnail($source_file_name, $thumb_file_name, $file_ext)
 	{
 		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
@@ -582,6 +569,33 @@ class garage_image
 
 		return;
 	}
+
+	/*========================================================================*/
+	// Return The Width Of An Image
+	// Usage: get_image_width('source file');
+	/*========================================================================*/
+	function get_image_width($source_file_name)
+	{
+		global $phpbb_root_path;
+
+		$imagesize = getimagesize($phpbb_root_path . GARAGE_UPLOAD_PATH . $source_file_name);
+
+		return $imagesize[0];
+	}
+
+	/*========================================================================*/
+	// Return The Height Of An Image
+	// Usage: get_image_height('source file');
+	/*========================================================================*/
+	function get_image_height($source_file_name)
+	{
+		global $phpbb_root_path;
+
+		$imagesize = getimagesize($phpbb_root_path . GARAGE_UPLOAD_PATH . $source_file_name);
+
+		return $imagesize[1];
+	}
+
 	
 	/*========================================================================*/
 	// Delete Image Including Actual File & Thumbnail
@@ -777,6 +791,52 @@ class garage_image
 		return $rows;
 	}
 
+	/*========================================================================*/
+	// Count All Images In The Garage
+	// Usage: count_total_images();
+	/*========================================================================*/
+	function count_total_images()
+	{
+		global $db;
+
+		$sql = "SELECT count(*) as total
+		       	FROM " . GARAGE_IMAGES_TABLE ;
+
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could Not Select Image Data', '', __LINE__, __FILE__, $sql);
+		}
+		
+		$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+	
+		return $row['total'];
+	}
+
+	/*========================================================================*/
+	// Download Remote Image
+	// Usage: download_remote_image('Image URL', 'Destination File Name');
+	/*========================================================================*/
+	function download_remote_image($remote_url, $destination_file)
+	{
+		global $garage_config;
+
+		// Download the remote image to our temporary file
+                $infile = @fopen ($remote_url, "rb");
+                $outfile = @fopen ( $phpbb_root_path . GARAGE_UPLOAD_PATH . $destination_file, "wb");
+
+                // Set our custom timeout
+                socket_set_timeout($infile, $garage_config['remote_timeout']);
+
+               	while (!@feof ($infile)) 
+		{
+	               	@fwrite($outfile, @fread ($infile, 4096));
+		}
+                @fclose($outfile);
+	        @fclose($infile);
+
+		@chmod($phpbb_root_path . GARAGE_UPLOAD_PATH . $destination_file, 0777);
+	}
 }
 
 $garage_image = new garage_image();

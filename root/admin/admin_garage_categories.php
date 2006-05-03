@@ -37,16 +37,6 @@ require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/
 
 //Build All Garage Classes e.g $garage_images->
 require($phpbb_root_path . 'includes/class_garage.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_business.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_dynorun.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_image.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_insurance.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_modification.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_quartermile.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_template.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_vehicle.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_guestbook.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_model.' . $phpEx);
 
 if( isset( $HTTP_POST_VARS['mode'] ) || isset( $HTTP_GET_VARS['mode'] ) )
 {
@@ -57,30 +47,76 @@ else
 	$mode = '';
 }
 
+//Lets Setup Messages We Might Need...Just Easier On The Eye Doing This Seperatly
+$missing_data_message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_categories.$phpEx?mode=confirm_delete&id=".$data['id']."") . '">'. $lang['Missing_Required_Data']. "<br /><br />" . sprintf($lang['Click_return_garage_category'], "<a href=\"" . append_sid("admin_garage_category.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
+$category_created_message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_categories.$phpEx") . '">'. $lang['New_category_created'] . "<br /><br />" . sprintf($lang['Click_return_garage_category'], "<a href=\"" . append_sid("admin_garage_categories.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
+$category_updated_message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_categories.$phpEx") . '">'. $lang['Category_Updated'] . "<br /><br />" . sprintf($lang['Click_return_garage_category'], "<a href=\"" . append_sid("admin_garage_categories.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
+$category_deleted_message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_categories.$phpEx") . '">'. $lang['Category_Deleted'] . "<br /><br />" . sprintf($lang['Click_return_garage_category'], "<a href=\"" . append_sid("admin_garage_categories.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
+$category_order_message = '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_garage_categories.$phpEx") . '">'. $lang['Category_Order_Updated'] . "<br /><br />" . sprintf($lang['Click_return_garage_category'], "<a href=\"" . append_sid("admin_garage_categories.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
+
 switch ( $mode )
 {
-	case 'confirm_delete':
+	case 'insert_category':
 
-		//Get All The Categories Data
-		$data = $garage->select_category_data();
+		//Count Current Categories..So We Can Work Out Order
+		$count = $garage_modification->count_mod_catgories();
 
-		//Build Drop Down Options Where To Move Linked Items
-		for ($i = 0; $i < count($data); $i++)
+		// Get posting variables
+		$params = array('title');
+		$data = $garage->process_post_vars($params);
+
+		// Here we insert a new row into the db
+		$sql = "INSERT INTO ". GARAGE_CATEGORIES_TABLE ." (title, field_order)
+			VALUES ('" . $data['title'] . "', " . $count + 1 . " )";
+		if(!$result = $db->sql_query($sql))
 		{
-			$select_to .= '<option value="'. $data[$i]['id'] .'">'. $data[$i]['title'] .'</option>';
+			message_die(GENERAL_ERROR, 'Could not create new Garage Category', '', __LINE__, __FILE__, $sql);
 		}
+
+		// Return a message...
+		message_die(GENERAL_MESSAGE, $category_created_message);
+
+		break;
+
+	case 'update_category':
+
+		// Get posting variables
+		$params = array('id', 'title');
+		$data = $garage->process_post_vars($params);
+
+		// Now we update this row
+		$garage->update_single_field(GARAGE_MODS_TABLE, 'title', $data['title'], 'id', $data['id']);
+
+		// Return a message...
+		message_die(GENERAL_MESSAGE, $category_updated_message);
+
+		break;
+
+	case 'confirm_delete':
 
 		//Store ID Of Category We Are Deleting For Use In Action Variable
 		$params = array('id');
 		$data = $garage->process_post_vars($params);
 		$data = $garage->select_category_data($data['id']);
+		$all_data = $garage->select_all_category_data();
+
+		//Build Dropdown Options For Where To Love Linked Items To
+		for ($i = 0; $i < count($all_data); $i++)
+		{
+			//Do Not List Category We Are Deleting..
+			if ( $data['id'] == $all_data[$i]['id'] )
+			{
+				continue;
+			}
+			$select_to .= '<option value="'. $all_data[$i]['id'] .'">'. $all_data[$i]['title'] .'</option>';
+		}
 
 		$template->set_filenames(array(
 			'body' => 'admin/garage_confirm_delete.tpl')
 		);
 
 		$template->assign_vars(array(
-			'S_GARAGE_ACTION' => append_sid("admin_garage_categories.$phpEx?id=".$data['id']),
+			'S_GARAGE_ACTION' => append_sid("admin_garage_categories.$phpEx?mode=delete_category&amp;id=".$data['id']),
 			'L_DELETE' => $lang['Delete_Category'],
 			'L_DELETE_EXPLAIN' => $lang['Delete_Category_Explain'],
 			'L_TITLE' => $lang['category'],
@@ -90,7 +126,9 @@ switch ( $mode )
 			'L_REQUIRED' => $lang['Required'],
 			'L_REMOVE' => $lang['Remove_Category'],
 			'L_MOVE_DELETE' => $lang['Move_Delete_Category'],
-			'L_MOVE_DELETE_BUTTON' => $lang['Move_Delete_Category_Button'],
+			'L_MOVE_DELETE_BUTTON' => $lang['Delete_Category'],
+			'L_OR' => $lang['Or'],
+			'L_DELETE_PERMENANTLY' => $lang['Delete_Permenantly'],
 			'MOVE_TO_LIST' => $select_to)
 		);
 
@@ -100,86 +138,32 @@ switch ( $mode )
 
 		break;
 
-	case 'new':
-
-		$count = $garage_modification->count_mod_catgories();
-		
-		if( isset($HTTP_POST_VARS['title']) )
-		{
-		// Get posting variables
-		$title = str_replace("\'", "''", htmlspecialchars(trim($HTTP_POST_VARS['title'])));
-
-		// Here we insert a new row into the db
-		$sql = "INSERT INTO ". GARAGE_CATEGORIES_TABLE ." (title,field_order)
-			VALUES ('$title', $field_order)";
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Could not create new Garage Category', '', __LINE__, __FILE__, $sql);
-		}
-
-		// Return a message...
-		$message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_categories.$phpEx") . '">'. $lang['New_category_created'] . "<br /><br />" . sprintf($lang['Click_return_garage_category'], "<a href=\"" . append_sid("admin_garage_categories.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-
-		message_die(GENERAL_MESSAGE, $message);
-	}
-
-		break;
-
-	case 'rename':
-
-		// Get posting variables
-		$id = (intval($HTTP_POST_VARS['category_id']));
-		$title = str_replace("\'", "''", htmlspecialchars(trim($HTTP_POST_VARS['title_'.$id])));
-
-		// Now we update this row
-		$sql = "UPDATE ". GARAGE_CATEGORIES_TABLE ."
-				SET title = '$title'
-				WHERE id = $id";
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Could not update this Garage Category', '', __LINE__, __FILE__, $sql);
-		}
-
-		// Return a message...
-		$message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_categories.$phpEx") . '">'. $lang['Category_Updated'] . "<br /><br />" . sprintf($lang['Click_return_garage_category'], "<a href=\"" . append_sid("admin_garage_categories.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-	
-		message_die(GENERAL_MESSAGE, $message);
-
-		break;
-
-	case 'delete':
+	case 'delete_category':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('id', 'target');
+		$params = array('id', 'target', 'permenant');
 		$data = $garage_lib->process_post_vars($params);
 
-		//Set Message For Missing Data
-		$message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_categories.$phpEx?mode=confirm_delete&id=".$data['id']."") . '">'. $lang['Missing_Required_Data']. "<br /><br />" . sprintf($lang['Click_return_garage_category'], "<a href=\"" . append_sid("admin_garage_category.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
+		//If Set Delete Permentantly
+		if ($data['permenant'] == '1')
+		{
+			$garage->delete_rows(GARAGE_CATEGORIES_TABLE, 'id', $data['id']);
+
+			// Return a message...
+			message_die(GENERAL_MESSAGE, $category_deleted_message);
+		}
 
 		//Checks All Required Data Is Present
 		$params = array('id', 'target');
-		$garage->check_acp_required_vars($params, $message);
+		$garage->check_acp_required_vars($params, $missing_data_message);
+
+		$garage->update_single_field(GARAGE_MODS_TABLE, 'category_id', $data['target'], 'category_id', $data['id']);
 		
-		$sql = "UPDATE ". GARAGE_MODS_TABLE ."
-			SET category_id = ".$data['target']."
-			WHERE category_id = ".$data['id'];
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Could not update this Category content', '', __LINE__, __FILE__, $sql);
-		}
+		//This category is now emptied, we can remove it!
+		$garage->delete_rows(GARAGE_CATEGORIES_TABLE, 'id', $data['id']);
 
-		// This category is now emptied, we can remove it!
-		$sql = "DELETE FROM ". GARAGE_CATEGORIES_TABLE ."
-			WHERE id = ".$data['id'];
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Could not delete this Category', '', __LINE__, __FILE__, $sql);
-		}
-
-		// Return a message...
-		$message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_categories.$phpEx") . '">'. $lang['Category_Deleted'] . "<br /><br />" . sprintf($lang['Click_return_garage_category'], "<a href=\"" . append_sid("admin_garage_categories.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-
-		message_die(GENERAL_MESSAGE, $message);
+		//Return a message...
+		message_die(GENERAL_MESSAGE, $category_deleted_message);
 
 		break;
 
@@ -202,9 +186,7 @@ switch ( $mode )
 		}
 
 		// Return a message...
-		$message = '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_garage_categories.$phpEx") . '">'. $lang['Category_Order_Updated'] . "<br /><br />" . sprintf($lang['Click_return_garage_category'], "<a href=\"" . append_sid("admin_garage_categories.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-
-		message_die(GENERAL_MESSAGE, $message);
+		message_die(GENERAL_MESSAGE, $category_order_message);
 
 		break;
 
@@ -226,9 +208,7 @@ switch ( $mode )
 		}
 
 		// Return a message...
-		$message = '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_garage_categories.$phpEx") . '">'. $lang['Category_Order_Updated'] . "<br /><br />" . sprintf($lang['Click_return_garage_category'], "<a href=\"" . append_sid("admin_garage_categories.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-
-		message_die(GENERAL_MESSAGE, $message);
+		message_die(GENERAL_MESSAGE, $category_order_message);
 
 		break;
 
@@ -249,11 +229,11 @@ switch ( $mode )
 			'L_CAT_TITLE' => $lang['New_Category_Title'],
 			'L_PANEL_TITLE' => $lang['Create_category'],
 			'L_EMPTY_TITLE' => $lang['Empty_Title'],
-			'S_GARAGE_MODE_RENAME' => append_sid("admin_garage_categories.$phpEx?mode=rename"),
-			'S_GARAGE_MODE_NEW' => append_sid("admin_garage_categories.$phpEx?mode=new"))
+			'S_GARAGE_MODE_RENAME' => append_sid("admin_garage_categories.$phpEx?mode=update_category"),
+			'S_GARAGE_MODE_NEW' => append_sid("admin_garage_categories.$phpEx?mode=insert_category"))
 		);
 
-		$data = $garage->select_category_data();
+		$data = $garage->select_all_category_data();
 
 		for( $i = 0; $i < count($data); $i++ )
 		{

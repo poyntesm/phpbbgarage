@@ -49,6 +49,27 @@ class garage_model
 	}
 
 	/*========================================================================*/
+	// Update Model Into DB
+	// Usage: update_model(array());
+	/*========================================================================*/
+	function update_make($data)
+	{
+		global $db;
+
+		$sql = "UPDATE ". GARAGE_MAKES_TABLE ." 
+			SET make='".$data['make']."'
+			WHERE id = ".$data['id'];
+
+		if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'Could Not Insert New Make', '', __LINE__, __FILE__, $sql);
+		}
+
+		return;
+	}
+
+
+	/*========================================================================*/
 	// Inserts Model Into DB
 	// Usage: insert_model(array());
 	/*========================================================================*/
@@ -68,6 +89,26 @@ class garage_model
 	}
 
 	/*========================================================================*/
+	// Update Model Into DB
+	// Usage: update_model(array());
+	/*========================================================================*/
+	function update_model($data)
+	{
+		global $db;
+
+		$sql = "UPDATE ". GARAGE_MODELS_TABLE ."
+			SET model = '".$data['model']."'
+			WHERE id = ".$data['id'];
+
+		if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'Could Not Insert New Make', '', __LINE__, __FILE__, $sql);
+		}
+
+		return;
+	}
+
+	/*========================================================================*/
 	// Select Make Data From DB
 	// Usage: select_make_data('make id');
 	/*========================================================================*/
@@ -75,7 +116,7 @@ class garage_model
 	{
 		global $db;
 
-		$sql = "SELECT make, id FROM " . GARAGE_MAKES_TABLE . " WHERE id = '$make_id' ";
+		$sql = "SELECT make, id FROM " . GARAGE_MAKES_TABLE . " WHERE id = $make_id";
 
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -146,7 +187,7 @@ class garage_model
 	{
 		global $db;
 
-		$sql = "SELECT mdl.id as model_id, mdl.model, mk.id as make_id, mk.make 
+		$sql = "SELECT mdl.id as model_id, mdl.model, mk.id as make_id, mk.make, mdl.pending as model_pending, mk.pending as make_pending
 			FROM " . GARAGE_MODELS_TABLE. " mdl
 				LEFT JOIN " . GARAGE_MAKES_TABLE . " mk ON mdl.make_id = mk.id";
 

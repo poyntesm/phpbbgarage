@@ -28,14 +28,6 @@
 		<td class="row2"><span class="genmed"><input type="radio" {LATEST_UPDATED_VEHCILE_ALL_PAGES_ENABLED} name="lastupdatedvehiclesmain_on" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" {LATEST_UPDATED_VEHCILE_ALL_PAGES_DISABLED} name="lastupdatedvehiclesmain_on" value="0" />{L_NO}</span><br />{L_MAX_MOST_VIEWED}&nbsp;<input class="post" type="text" maxlength="12" size="12" name="lastupdatedvehiclesmain_limit" value="{LASTUPDATEDVEHICLESMAIN_LIMIT}" /></td>
 	</tr>
 	<tr>
-		<td class="row1"><span class="genmed">{L_ENABLE_HTML_CAR}</span></td>
-		<td class="row2"><span class="genmed"><input type="radio" {ALLOW_CAR_HTML_ENABLED} name="allow_html_car" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" {ALLOW_CAR_HTML_DISABLED} name="allow_html_car" value="0" />{L_NO}</span></td>
-	</tr>
-	<tr>
-		<td class="row1"><span class="genmed">{L_ENABLE_HTML_MOD}</span></td>
-		<td class="row2"><span class="genmed"><input type="radio" {ALLOW_MOD_HTML_ENABLED} name="allow_html_mod" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" {ALLOW_MOD_HTML_DISABLED} name="allow_html_mod" value="0" />{L_NO}</span></td>
-	</tr>
-	<tr>
 		<td class="row1"><span class="genmed">{L_ENABLE_GUESTBOOK}</span></td>
 		<td class="row2"><span class="genmed"><input type="radio" {GUESTBOOK_ENABLED} name="enable_guestbooks" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" {GUESTBOOK_DISABLED} name="enable_guestbooks" value="0" />{L_NO}</span></td>
 	</tr>
