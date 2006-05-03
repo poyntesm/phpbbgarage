@@ -90,6 +90,25 @@ class garage_modification
 		return $row['total_mods'];
 	}
 
+	/*========================================================================*/
+	// Count The Modification Categories Within The Garage
+	// Usage: count_modification_categories();
+	/*========================================================================*/
+	function count_modification_categories()
+	{
+		global $db;
+
+	        // Get the total count of mods in the garage
+	        $sql = "SELECT count(*) AS total FROM " . GARAGE_CATEGORIES_TABLE;
+		if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'Error Counting Total Mods', '', __LINE__, __FILE__, $sql);
+		}
+        	$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $row['total'];
+	}
 			
 	/*========================================================================*/
 	// Delete Modification Entry Including image 

@@ -34,12 +34,10 @@
 			if('none' == obj.style.display) 
 			{ 
 				obj.style.display = ''; 
-				obj2.style.display = ''; 
 			} 
 			else 
 			{ 
 				obj.style.display = 'none'; 
-				obj2.style.display = 'none'; 
 			} 
 		} 
 	}

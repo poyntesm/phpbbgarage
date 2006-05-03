@@ -6,6 +6,34 @@
 <!-- 
 
 	//Function To Rename Make Or Model
+	function add_model ( selected )
+	{
+		formErrors = false;    
+		
+		//Check To Make Sure A Value Has Been Entered
+		if (document.manage_makes_models.elements['add_model_'+selected+'_title'].value.length < 2)
+		{
+			formErrors = "{L_EMPTY_TITLE}";
+		}
+
+		//Display If Needed Error Message Else Perform Work
+		if (formErrors) 
+		{
+			alert(formErrors);
+		} 
+		else
+		{
+			document.manage_makes_models.model.value = document.manage_makes_models.elements['add_model_'+selected+'_title'].value;
+			document.manage_makes_models.make_id.value = selected;
+			document.manage_makes_models.mode.value = "insert_model" ;
+	
+			//Submit The Form
+			document.manage_makes_models.submit() ;
+		}
+	}
+
+
+	//Function To Rename Make Or Model
 	function rename ( selected, obj )
 	{
 		formErrors = false;    
@@ -98,23 +126,22 @@
 </script>
 </head>
 
-<form name="add_make" action="{S_MODE_ACTION}" method="post">
+<form name="insert_make" action="{S_MODE_ACTION}" method="post">
 <table width="100%" cellpadding="3" cellspacing="1" border="0" class="forumline">
 	<tr>
 		<th class="thHead" height="25" nowrap="nowrap" colspan="2">{L_ADD_MAKE}</th>
 	</tr>
 	<tr>
 		<td class="row1" width="20%"><span class="gen">{L_VEHICLE_MAKE}</span></td>
-		<td class="row2"><input name="make" type="text" class="post" size="35" value="{S_MAKE}" /></td>
+		<td class="row2"><input name="make" type="text" class="post" size="35" value="" /></td>
 	</tr>
 	<tr>
-		<td class="catBottom" align="center" height="28" colspan="2"><input type="hidden" value="add_make" name="mode" /><input name="submit" type="submit" value="{L_ADD_MAKE_BUTTON}" class="liteoption" /></td>
+		<td class="catBottom" align="center" height="28" colspan="2"><input type="hidden" value="insert_make" name="mode" /><input name="submit" type="submit" value="{L_ADD_MAKE_BUTTON}" class="liteoption" /></td>
 	</tr>
 </table>
 </form>
 
-
-<form method="post" name="manage_makes_models" action="{S_MODE_ACTION}" >
+<form name="manage_makes_models" action="{S_MODE_ACTION}" method="post">
 <table width="100%" cellpadding="1" cellspacing="1" border="0" class="forumline"> 
 	<tr> 
 		<th class="thCornerL" width ="20%" valign="middle" nowrap="nowrap">{L_MAKE}</th> 
@@ -141,6 +168,12 @@
 		<td class="{make.COLOR}" width="100%" border="0" colspan="5"> 
 			<table class="forumline" width="100%" cellpadding="1" cellspacing="1" border="0"> 
 				<tr>
+					<th class="thTop" align="center" valign="middle" colspan="4">{L_ADD_MODEL}</td>
+				</tr>
+				<tr>
+					<td class="{make.COLOR}" align="center" colspan="4"><input name="add_model_{make.ID}_title" type="text" class="post" size="35" value="{}" /><span class="genmed">&nbsp;&nbsp;<a href="{make.U_ADD_MODEL}">{make.ADD_MODEL}</a></span></td>
+				</tr>
+				<tr>
 					<th class="thCornerL" width="20%" align="center" valign="middle" >{L_MODEL}</td>
 					<th class="thTop" align="center" valign="middle" >{L_RENAME}</td>
 					<th class="thTop" align="center" valign="middle" >{L_STATUS}</td>
@@ -159,6 +192,6 @@
 	</tr> 
 <!-- END make --> 
 	<tr>
-		<td class="catBottom" height="18" align="center" valign="middle" colspan="4"><input type="hidden" value="" name="id" /><input type="hidden" value="" name="make" /><input type="hidden" value="" name="mode" /><input type="hidden" value="" name="model" /></td>
+		<td class="catBottom" height="18" align="center" valign="middle" colspan="5"><input type="hidden" value="" name="id" /><input type="hidden" value="" name="make_id" /><input type="hidden" value="" name="make" /><input type="hidden" value="" name="mode" /><input type="hidden" value="" name="model" /></td>
 	</tr>
 </table>

@@ -37,6 +37,7 @@ require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/
 
 //Build All Garage Classes e.g $garage_images->
 require($phpbb_root_path . 'includes/class_garage.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_modification.' . $phpEx);
 
 if( isset( $HTTP_POST_VARS['mode'] ) || isset( $HTTP_GET_VARS['mode'] ) )
 {
@@ -59,15 +60,16 @@ switch ( $mode )
 	case 'insert_category':
 
 		//Count Current Categories..So We Can Work Out Order
-		$count = $garage_modification->count_mod_catgories();
+		$count = $garage_modification->count_modification_categories();
 
 		// Get posting variables
 		$params = array('title');
 		$data = $garage->process_post_vars($params);
+		$data['field_order'] = $count + 1;
 
 		// Here we insert a new row into the db
-		$sql = "INSERT INTO ". GARAGE_CATEGORIES_TABLE ." (title, field_order)
-			VALUES ('" . $data['title'] . "', " . $count + 1 . " )";
+		$sql = "INSERT INTO " . GARAGE_CATEGORIES_TABLE . " (title, field_order)
+			VALUES ('" . $data['title'] . "', " . $data['field_order'] . " )";
 		if(!$result = $db->sql_query($sql))
 		{
 			message_die(GENERAL_ERROR, 'Could not create new Garage Category', '', __LINE__, __FILE__, $sql);
@@ -85,7 +87,7 @@ switch ( $mode )
 		$data = $garage->process_post_vars($params);
 
 		// Now we update this row
-		$garage->update_single_field(GARAGE_MODS_TABLE, 'title', $data['title'], 'id', $data['id']);
+		$garage->update_single_field(GARAGE_CATEGORIES_TABLE, 'title', $data['title'], 'id', $data['id']);
 
 		// Return a message...
 		message_die(GENERAL_MESSAGE, $category_updated_message);
@@ -142,7 +144,7 @@ switch ( $mode )
 
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('id', 'target', 'permenant');
-		$data = $garage_lib->process_post_vars($params);
+		$data = $garage->process_post_vars($params);
 
 		//If Set Delete Permentantly
 		if ($data['permenant'] == '1')

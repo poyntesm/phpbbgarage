@@ -79,7 +79,7 @@ switch($mode)
 		//Insert New Business Into DB
 		$garage_business->insert_business($data);
 
-		// Return a message...
+		//Return a message...
 		message_die(GENERAL_MESSAGE, $business_created_message);
 				
 		break;
@@ -104,7 +104,7 @@ switch($mode)
 		//Update The Business With New Values
 		$garage_business->update_business($data);
 		
-		// Return a message...
+		//Return a message...
 		message_die(GENERAL_MESSAGE, $business_updated_message);
 		
 		break;
@@ -134,7 +134,6 @@ switch($mode)
 			'body' => 'admin/garage_confirm_delete.tpl')
 		);
 
-		//Send Needed Info To Template
 		$template->assign_vars(array(
 			'S_GARAGE_ACTION' => append_sid("admin_garage_business.$phpEx?mode=delete_business&amp;id=".$data[0]['id']),
 			'S_TITLE' => $data[0]['title'],
@@ -152,8 +151,6 @@ switch($mode)
 		);
 
 		$template->pparse('body');
-
-		include('./page_footer_admin.'.$phpEx);
 
 		break;
 
@@ -191,9 +188,10 @@ switch($mode)
 		$params = array('id');
 		$data = $garage->process_int_vars($params);
 
+		//Set Business To Pending
 		$garage->update_single_field(GARAGE_BUSINESS_TABLE,'pending',1,'id',$data['id']);
 
-		// Return a message...
+		//Return a message...
 		message_die(GENERAL_MESSAGE, $business_updated_message);
 
 		break;
@@ -204,9 +202,10 @@ switch($mode)
 		$params = array('id');
 		$data = $garage->process_int_vars($params);
 
+		//Set Business To Approved
 		$garage->update_single_field(GARAGE_BUSINESS_TABLE,'pending',0,'id',$data['id']);
 
-		// Return a message...
+		//Return a message...
 		message_die(GENERAL_MESSAGE, $business_updated_message);
 
 		break;
@@ -320,8 +319,6 @@ switch($mode)
 		}
 
 		$template->pparse('body');
-
-		include('./page_footer_admin.'.$phpEx);
 
 		break;
 

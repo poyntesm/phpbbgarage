@@ -181,15 +181,16 @@ class garage_model
 
 	/*========================================================================*/
 	// Select All Model Data From DB
-	// Usage: select_all_make_data();
+	// Usage: select_complete_model_list();
 	/*========================================================================*/
 	function select_complete_model_list()
 	{
 		global $db;
 
 		$sql = "SELECT mdl.id as model_id, mdl.model, mk.id as make_id, mk.make, mdl.pending as model_pending, mk.pending as make_pending
-			FROM " . GARAGE_MODELS_TABLE. " mdl
-				LEFT JOIN " . GARAGE_MAKES_TABLE . " mk ON mdl.make_id = mk.id";
+			FROM " . GARAGE_MAKES_TABLE. " mk 
+			LEFT JOIN " . GARAGE_MODELS_TABLE . " mdl ON mk.id = mdl.make_id
+			ORDER BY mk.make, mdl.model";
 
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -205,8 +206,6 @@ class garage_model
 
 		return $data;
 	}
-
-
 
 	/*========================================================================*/
 	// Select Model Data From DB

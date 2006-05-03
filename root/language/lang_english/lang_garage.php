@@ -588,6 +588,7 @@ $lang['Max_Top_Dynorun'] = 'Max. no runs to show:';
 $lang['Bhp-Torque-Nitrous'] = 'Bhp / Torque / Nitrous';
 $lang['Purchase_Rating'] = 'Purchase Rating';
 $lang['Category_Updated'] = 'Category Name Updated';
+$lang['Category_Deleted'] = 'Category Deleted';
 $lang['No_Pending_Items'] = 'No Pending Items';
 $lang['Enable_Quartermile_Image_Required'] = '<b>Enable Quartermile Image Required?</b><br />Makes all times below a certain value require a image.';
 $lang['Enable_Dynorun_Image_Required'] = '<b>Enable Dynorun Image Required?</b><br />Makes all runs above a certain value require a image.';

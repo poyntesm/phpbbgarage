@@ -84,7 +84,9 @@ function checkForm()
 		<td class="{catrow.COLOR}" align="center" nowrap="nowrap"><span class="genmed"><a href="{catrow.U_MOVE_UP}">{catrow.MOVE_UP}</a>&nbsp;<a href="{catrow.U_MOVE_DOWN}">{catrow.MOVE_DOWN}</a></span></td>
 	</tr>
 	<!-- END catrow -->
-	<input type="hidden" name="id" value="" /><input type="hidden" name="title" value="" />
+	<tr>
+		<td class="catBottom" height="18" align="center" valign="middle" colspan="5"><input type="hidden" value="" name="id" /><input type="hidden" value="" name="title" /></td>
+	</tr>
 </table>
 </form>
 
