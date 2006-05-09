@@ -21,7 +21,6 @@
 	</tr>
 </table>
 </form>
-<br />
 
 <form action="{S_GARAGE_ACTION}" method="post">
 <table width="100%" cellpadding="3" cellspacing="1" border="0" class="forumline">
@@ -37,4 +36,47 @@
 	</tr>
 </table>
 </form>
+
+<form action="{S_GARAGE_ACTION}" method="post">
+<table width="100%" cellpadding="3" cellspacing="1" border="0" class="forumline">
+	<tr>
+		<th class="thHead" height="25" nowrap="nowrap" colspan="2">{L_GARAGE_DB_BACKUP}</th>
+	</tr>
+	<tr>
+		<td class="row2" width="25%">{L_FULL_BACKUP}</td>
+		<td class="row2"><input type="radio" name="backup_type" value="full" checked /></td>
+	</tr>
+	<tr>
+		<td class="row1" width="25%">{L_STRUCTURE_BACKUP}</td>
+		<td class="row1"><input type="radio" name="backup_type" value="structure" /></td>
+	</tr>
+	<tr>
+		<td class="row2" width="25%">{L_DATA_BACKUP}</td>
+		<td class="row2"><input type="radio" name="backup_type" value="data" /></td>
+	</tr>
+	<tr>
+		<td class="row1" width="25%">{L_GZIP_COMPRESS}</td>
+		<td class="row1">{L_NO} <input type="radio" name="gzipcompress" value="0" checked /> &nbsp;{L_YES} <input type="radio" name="gzipcompress" value="1" /></td>
+	</tr>
+	<tr>
+		<td class="catBottom" colspan="2" align="center"><input type="hidden" name="mode" value="backup" /><input type="hidden" name="drop" value="1" /><input type="submit" name="backupstart" value="{L_START_BACKUP}" class="liteoption" /></td>
+	</tr>
+</table>
+</form>
+
+<form enctype="multipart/form-data" method="post" action="{S_GARAGE_ACTION}">
+<table width="100%" cellspacing="1" cellpadding="4" border="0" align="center" class="forumline">
+	<tr>
+		<th class="thHead" height="25" nowrap="nowrap" colspan="2">{L_GARAGE_DB_RESTORE}</th>
+	</tr>
+	<tr>
+		<td class="row1" width="25%">{L_SELECT_FILE}</td>
+		<td class="row1">&nbsp;<input type="file" name="backup_file"></td>
+	</tr>
+	<tr>
+		<td class="catBottom" colspan="2" align="center"><input type="hidden" name="mode" value="restore" /><input type="submit" name="restore_start" value="{L_START_RESTORE}" class="liteoption" />&nbsp;</td>
+	</tr>
+</table>
+</form>
+
 

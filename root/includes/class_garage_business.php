@@ -36,8 +36,8 @@ class garage_business
 	{
 		global $db;
 
-		$sql = "INSERT INTO ". GARAGE_BUSINESS_TABLE ." 
-			SET title = '".$data['title']."', address = '".$data['address']."', telephone = '".$data['telephone']."', fax = '".$data['fax']."', website = '".$data['website']."', email = '".$data['email']."', opening_hours = '".$data['opening_hours']."', insurance = '".$data['insurance']."', garage = '".$data['garage']."', retail_shop = '".$data['retail_shop']."', web_shop = '".$data['web_shop']."', pending = '".$data['pending']."'";
+		$sql = "INSERT INTO ". GARAGE_BUSINESS_TABLE ." (title, address, telephone, fax, website, email, opening_hours, insurance, garage, retail_shop, web_shop, pending)
+			VALUES ('".$data['title']."', '".$data['address']."', '".$data['telephone']."', '".$data['fax']."', '".$data['website']."', '".$data['email']."', '".$data['opening_hours']."', '".$data['insurance']."', '".$data['garage']."', '".$data['retail_shop']."', '".$data['web_shop']."', '".$data['pending']."')";
 	
 		if(!$result = $db->sql_query($sql))
 		{

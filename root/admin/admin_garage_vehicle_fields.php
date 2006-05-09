@@ -3,7 +3,7 @@
 if( !empty($setmodules) )
 {
 	$filename = basename(__FILE__);
-	$module['Garage']['Vehicle Fields'] = $filename;
+	$module['Garage']['Custom Fields'] = $filename;
 	return;
 }
 
@@ -14,7 +14,7 @@ $phpEx = substr(strrchr(__FILE__, '.'), 1);
 require('pagestart.' . $phpEx);
 
 //Include One File To Add phpBB3 functions required to try get this working
-require($phpbb_root_path . 'includes/class_garage_custom_fields.' . $phpEx);
+//require($phpbb_root_path . 'includes/class_garage_custom_fields.' . $phpEx);
 require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage.' . $phpEx);
 
 //Setup Some Capaturing Of POST vars..
@@ -29,8 +29,8 @@ $default_values = array(
 	FIELD_STRING	=> array('field_length' => 10, 'field_minlen' => 0, 'field_maxlen' => 20, 'field_validation' => '.*', 'field_novalue' => '', 'field_default_value' => ''),
 	FIELD_TEXT	=> array('field_length' => '5|80', 'field_minlen' => 0, 'field_maxlen' => 1000, 'field_validation' => '.*', 'field_novalue' => '', 'field_default_value' => ''),
 	FIELD_INT	=> array('field_length' => 5, 'field_minlen' => 0, 'field_maxlen' => 100, 'field_validation' => '', 'field_novalue' => 0, 'field_default_value' => 0),
-	FIELD_DATE	=> array('field_length' => 10, 'field_minlen' => 10, 'field_maxlen' => 10, 'field_validation' => '', 'field_novalue' => ' 0- 0-   0', 'field_default_value' => ' 0- 0-   0'),
-	FIELD_BOOL		=> array('field_length' => 1, 'field_minlen' => 0, 'field_maxlen' => 0, 'field_validation' => '', 'field_novalue' => 0, 'field_default_value' => 0),
+	FIELD_DATE	=> array('field_length' => 10, 'field_minlen' => 10, 'field_maxlen' => 10, 'field_validation' => '', 'field_novalue' => ' 0- 0-   0', 'field_default_value' => ' 0- 0- 0'),
+	FIELD_BOOL	=> array('field_length' => 1, 'field_minlen' => 0, 'field_maxlen' => 0, 'field_validation' => '', 'field_novalue' => 0, 'field_default_value' => 0),
 	FIELD_DROPDOWN	=> array('field_length' => 0, 'field_minlen' => 0, 'field_maxlen' => 5, 'field_validation' => '', 'field_novalue' => 0, 'field_default_value' => 0),
 );
 

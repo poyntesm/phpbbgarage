@@ -62,20 +62,15 @@ switch ( $mode )
 		//Count Current Categories..So We Can Work Out Order
 		$count = $garage_modification->count_modification_categories();
 
-		// Get posting variables
+		//Get posting variables
 		$params = array('title');
 		$data = $garage->process_post_vars($params);
 		$data['field_order'] = $count + 1;
 
-		// Here we insert a new row into the db
-		$sql = "INSERT INTO " . GARAGE_CATEGORIES_TABLE . " (title, field_order)
-			VALUES ('" . $data['title'] . "', " . $data['field_order'] . " )";
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Could not create new Garage Category', '', __LINE__, __FILE__, $sql);
-		}
+		//Insert New Category Into DB
+		$garage_admin->insert_category($data);
 
-		// Return a message...
+		//Return a message...
 		message_die(GENERAL_MESSAGE, $category_created_message);
 
 		break;
@@ -149,6 +144,7 @@ switch ( $mode )
 		//If Set Delete Permentantly
 		if ($data['permenant'] == '1')
 		{
+			//Delete It Without Looking For Child Objects!!
 			$garage->delete_rows(GARAGE_CATEGORIES_TABLE, 'id', $data['id']);
 
 			// Return a message...
@@ -159,9 +155,10 @@ switch ( $mode )
 		$params = array('id', 'target');
 		$garage->check_acp_required_vars($params, $missing_data_message);
 
+		//Move All Modifications To New Category
 		$garage->update_single_field(GARAGE_MODS_TABLE, 'category_id', $data['target'], 'category_id', $data['id']);
 		
-		//This category is now emptied, we can remove it!
+		//This Category Is Now Emptied, We Can Delete It!
 		$garage->delete_rows(GARAGE_CATEGORIES_TABLE, 'id', $data['id']);
 
 		//Return a message...
@@ -209,7 +206,7 @@ switch ( $mode )
 			message_die(GENERAL_ERROR, 'Could not create new Garage Category', '', __LINE__, __FILE__, $sql);
 		}
 
-		// Return a message...
+		//Return a message...
 		message_die(GENERAL_MESSAGE, $category_order_message);
 
 		break;
@@ -235,8 +232,10 @@ switch ( $mode )
 			'S_GARAGE_MODE_NEW' => append_sid("admin_garage_categories.$phpEx?mode=insert_category"))
 		);
 
+		//Get All Category Data...
 		$data = $garage->select_all_category_data();
 
+		//Process Each Category
 		for( $i = 0; $i < count($data); $i++ )
 		{
 			$order = $i + 1;

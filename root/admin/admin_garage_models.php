@@ -40,13 +40,7 @@ require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/
 //Build All Garage Classes e.g $garage_images->
 require($phpbb_root_path . 'includes/class_garage.' . $phpEx);
 require($phpbb_root_path . 'includes/class_garage_business.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_dynorun.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_image.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_insurance.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_modification.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_quartermile.' . $phpEx);
 require($phpbb_root_path . 'includes/class_garage_template.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_vehicle.' . $phpEx);
 require($phpbb_root_path . 'includes/class_garage_guestbook.' . $phpEx);
 require($phpbb_root_path . 'includes/class_garage_model.' . $phpEx);
 
@@ -61,14 +55,15 @@ else
 }
 
 //Lets Setup Messages We Might Need...Just Easier On The Eye Doing This Seperatly
-$missing_data_message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_business.$phpEx") . '">'. $lang['Missing_Required_Data']. "<br /><br />" . sprintf($lang['Click_Return_Garage_Makes'], "<a href=\"" . append_sid("admin_garage_models.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
+$missing_data_message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_models.$phpEx") . '">'. $lang['Missing_Required_Data']. "<br /><br />" . sprintf($lang['Click_Return_Garage_Makes'], "<a href=\"" . append_sid("admin_garage_models.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
 $make_created_message = '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_garage_models.$phpEx") . '">' . $lang['New_Make_Created'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Makes'], "<a href=\"" . append_sid("admin_garage_models.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
 $make_updated_message = '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_garage_models.$phpEx") . '">' . $lang['Make_Updated'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Makes'], "<a href=\"" . append_sid("admin_garage_models.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
 $make_updated_message = '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_garage_models.$phpEx") . '">' . $lang['Make_Updated'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Makes'], "<a href=\"" . append_sid("admin_garage_models.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
 $make_deleted_message = '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_garage_models.$phpEx") . '">' . $lang['Make_Deleted'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Makes'], "<a href=\"" . append_sid("admin_garage_models.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
+$make_exists_message = '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_garage_models.$phpEx") . '">' . $lang['Make_Exists'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Makes'], "<a href=\"" . append_sid("admin_garage_models.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
 $model_created_message = '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_garage_models.$phpEx") . '">' . $lang['New_Model_Created'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Makes'], "<a href=\"" . append_sid("admin_garage_models.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
 $model_updated_message = '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_garage_models.$phpEx") . '">' . $lang['Model_Updated'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Makes'], "<a href=\"" . append_sid("admin_garage_models.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-$modek_deleted_message = '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_garage_models.$phpEx") . '">' . $lang['Model_Deleted'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Makes'], "<a href=\"" . append_sid("admin_garage_models.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
+$model_deleted_message = '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_garage_models.$phpEx") . '">' . $lang['Model_Deleted'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Makes'], "<a href=\"" . append_sid("admin_garage_models.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
 
 switch($mode)
 {
@@ -81,6 +76,13 @@ switch($mode)
 		//Checks All Required Data Is Present
 		$params = array('make');
 		$garage->check_acp_required_vars($params, $missing_data_message);
+
+		//Check For Make With Same Name And Error If Exists
+		$count = $garage_model->count_make($data['make']);
+		if ( $count > 0)
+		{
+			message_die(GENERAL_MESSAGE, $make_exists_message);
+		}
 
 		//Insert New Make Into DB
 		$garage_model->insert_make($data);
@@ -99,6 +101,13 @@ switch($mode)
 		//Checks All Required Data Is Present
 		$params = array('id', 'make');
 		$garage->check_acp_required_vars($params , $missing_data_message);
+
+		//Check For Make With Same Name And Error If Exists
+		$count = $garage_model->count_make($data['make']);
+		if ( $count > 0)
+		{
+			message_die(GENERAL_MESSAGE, $make_exists_message);
+		}
 
 		//Update Make In DB
 		$garage_model->update_make($data);
@@ -121,7 +130,7 @@ switch($mode)
 		//Set Make To Pending
 		$garage->update_single_field(GARAGE_MAKES_TABLE, 'pending', '1' , 'id' , $data['id']);
 
-		// Return a message...
+		//Return a message...
 		message_die(GENERAL_MESSAGE, $make_updated_message);
 		
 		break;
@@ -209,11 +218,12 @@ switch($mode)
 		$params = array('id', 'target');
 		$garage->check_acp_required_vars($params, $missing_data_message);
 
-		//Move Any Existing Vehicles To New Target Make Then Delete Make
+		//Move Any Existing Vehicles And Existing Models To New Target Make Then Delete Make
 		$garage->update_single_field(GARAGE_TABLE,'make_id',$data['target'],'make_id',$data['id']);
+		$garage->update_single_field(GARAGE_MODELS_TABLE,'make_id',$data['target'],'make_id',$data['id']);
 		$garage->delete_rows(GARAGE_MAKES_TABLE, 'id', $data['id']);
 
-		// Return a message...
+		//Return a message...
 		message_die(GENERAL_MESSAGE, $make_deleted_message);
 
 		break;	
@@ -297,8 +307,8 @@ switch($mode)
 		$data = $garage->process_post_vars($params);
 		$data = $garage_model->select_model_data($data['id']);
 
-		//Get All Business Data To Build Dropdown Of Where To Move Linked Items To
-		$all_data = $garage_business->select_business_data('');
+		//Get All Models For Make Data To Build Dropdown Of Where To Move Linked Items To
+		$all_data = $garage_model->select_all_model_from_make_data($data['make_id']);
 
 		//Build Dropdown Options For Where To Love Linked Items To
 		for ($i = 0; $i < count($all_data); $i++)
@@ -359,7 +369,7 @@ switch($mode)
 		$garage->update_single_field(GARAGE_TABLE,'model_id',$data['target'],'model_id',$data['id']);
 		$garage->delete_rows(GARAGE_MODELS_TABLE, 'id', $data['id']);
 
-		// Return a message...
+		//Return a message...
 		message_die(GENERAL_MESSAGE, $model_deleted_message);
 
 		break;	

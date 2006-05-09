@@ -68,6 +68,28 @@ class garage_model
 		return;
 	}
 
+	/*========================================================================*/
+	// Count Makes With Certain Name
+	// Usage: count_make(array());
+	/*========================================================================*/
+	function count_make($data)
+	{
+		global $db;
+
+		$sql = "SELECT count(*) as total 
+			FROM ". GARAGE_MAKES_TABLE ." 
+			WHERE make = '$data'";
+
+		if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'Could Not Count Makes', '', __LINE__, __FILE__, $sql);
+		}
+
+		$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $row['total'];
+	}
 
 	/*========================================================================*/
 	// Inserts Model Into DB

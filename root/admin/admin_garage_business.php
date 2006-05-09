@@ -177,7 +177,7 @@ switch($mode)
 		$garage->update_single_field(GARAGE_MODS_TABLE,'install_business_id',$data['target'],'install_business_id',$data['id']);
 		$garage->delete_rows(GARAGE_BUSINESS_TABLE,'id',$data['id']);
 
-		// Return a message...
+		//Return a message...
 		message_die(GENERAL_MESSAGE, $business_deleted_message);
 				
 		break;	
@@ -255,6 +255,7 @@ switch($mode)
 
 		for( $i = 0; $i < count($data); $i++ )
 		{
+			//Get Business Approval Status
 			$status_mode =  ( $data[$i]['pending'] == TRUE ) ? 'set_approved' : 'set_pending' ;
 
 			$delete_url = append_sid("admin_garage_business.$phpEx?mode=confirm_delete&amp;id=".$data[$i]['id']);
@@ -265,33 +266,16 @@ switch($mode)
 			$delete = ( $garage_config['garage_images'] ) ? '<img src="../' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" />' : $lang['Delete'] ;
 			$status = ( $garage_config['garage_images'] ) ? '<img src="../' . $images['garage_'.$status_mode] . '" alt="'.$lang[$status_mode].'" title="'.$lang[$status_mode].'" border="0" />' : $lang[$status_mode];
 
-			//Work Out Type Of Business
+			//Work Out Type Of Business...
 			$type ='';
-			if ( $data[$i]['insurance'] == '1' )
-			{
-		       	 	$type = $lang['Insurance'] ;
-			}
+			$type = ( $data[$i]['insurance'] == '1' ) ? $lang['Insurance']: '' ;
 			if ( ($data[$i]['web_shop'] == '1') OR ($data[$i]['retail_shop'] == '1') )
 			{
-				if (empty($type))
-				{
-					$type = $lang['Shop'] ;
-				}
-				else
-				{
-					$type .= ", " . $lang['Shop'] ;
-				}
+				$type .= (empty($type)) ? $lang['Shop'] : ", " . $lang['Shop'] ;
 			}
 			if ( $data[$i]['garage'] == '1' )
 			{
-				if (empty($type))
-				{
-					$type = $lang['Garage'] ;
-				}
-				else
-				{
-					$type .= ", " . $lang['Garage'] ;
-				}
+				$type .= (empty($type)) ? $lang['Garage'] : ", " . $lang['Garage'] ;
 			}
 
 			$template->assign_block_vars('business', array(

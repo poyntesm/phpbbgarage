@@ -147,7 +147,6 @@ if (!empty($garage_config['featured_vehicle_from_block']))
 	$select_featured_by_block .= "<option value='".$garage_config['featured_vehicle_from_block']."' selected='selected'>".$garage_config['featured_vehicle_from_block']."</option>";
 }
 	
-// You may add/removed/edit the currency listings here.
 $select_featured_by_block .= "<option value=''>--------------</option>";
 $select_featured_by_block .= "<option value='".$lang['Newest_Vehicles']."'>".$lang['Newest_Vehicles']."</option>";
 $select_featured_by_block .= "<option value='".$lang['Last_Updated_Vehicles']."'>".$lang['Last_Updated_Vehicles']."</option>";
@@ -289,7 +288,7 @@ $template->assign_vars(array(
 	'BUSINESS_APPROVAL_ENABLED' => ($new['enable_business_approval'] == 1) ? 'checked="checked"' : '',
 	'BUSINESS_APPROVAL_DISABLED' => ($new['enable_business_approval'] == 0) ? 'checked="checked"' : '',
 
-	// GARAGE INSURANCE CONFIGURATION VAR
+	// GARAGE MILEAGE CONFIGURATION VAR
 	'MILEAGE_ENABLED' => ($new['enable_mileage'] == 1) ? 'checked="checked"' : '',
 	'MILEAGE_DISABLED' => ($new['enable_mileage'] == 0) ? 'checked="checked"' : '',
 
