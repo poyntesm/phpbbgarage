@@ -117,7 +117,7 @@ switch($mode)
 		$data = $garage_business->select_business_data($data['id']);
 
 		//Get All Business Data To Build Dropdown Of Where To Move Linked Items To
-		$all_data = $garage_business->select_business_data('');
+		$all_data = $garage_business->select_all_business_data('');
 
 		//Build Dropdown Options For Where To Love Linked Items To
 		for ($i = 0; $i < count($all_data); $i++)
@@ -251,7 +251,7 @@ switch($mode)
 		);
 
 		//Get All The Business Data
-		$data = $garage_business->select_business_data('');
+		$data = $garage_business->select_all_business_data('');
 
 		for( $i = 0; $i < count($data); $i++ )
 		{

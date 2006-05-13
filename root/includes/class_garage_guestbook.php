@@ -7,7 +7,7 @@
  *   email                : esmond.poynton@gmail.com
  *   description          : Provides Vehicle Garage System For phpBB
  *
- *   $Id: functions_garage.php 96 2006-04-18 06:57:24Z poyntesm $
+ *   $Id$
  *
  ***************************************************************************/
 

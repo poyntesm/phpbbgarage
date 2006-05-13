@@ -482,8 +482,6 @@ class garage
 		//Finished Writting Required Message So Close Our File Handle
  		@fopen($log_handle);
 	}
-
-
 }
 
 $garage = new garage();

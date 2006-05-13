@@ -7,7 +7,7 @@
  *   email                : esmond.poynton@gmail.com
  *   description          : Provides Vehicle Garage System For phpBB
  *
- *   $Id: functions_garage.php 91 2006-04-07 14:51:14Z poyntesm $
+ *   $Id$
  *
  ***************************************************************************/
 
@@ -75,12 +75,32 @@ class garage_business
 	{
 		global $db;
 
-		$sql = "SELECT * FROM " . GARAGE_BUSINESS_TABLE ;
-
-		if (!empty($bus_id))
-		{
-			$sql .= " WHERE id = '$bus_id'";
+		$sql = "SELECT * 
+			FROM " . GARAGE_BUSINESS_TABLE . "
+			WHERE id = '$bus_id'";
 		}
+
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could Not Select Business Data', '', __LINE__, __FILE__, $sql);
+		}
+
+		$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/*========================================================================*/
+	// Select All Business Data From DB
+	// Usage: select_all_business_data('business id');
+	/*========================================================================*/
+	function select_all_business_data()
+	{
+		global $db;
+
+		$sql = "SELECT * 
+			FROM " . GARAGE_BUSINESS_TABLE ;
 
 		if( !($result = $db->sql_query($sql)) )
 		{

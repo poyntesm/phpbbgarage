@@ -213,7 +213,7 @@ switch( $mode )
 		$garage->check_required_vars($params);
 
 		//Insert The Vehicle Into The DB And Get The CID
-		$cid = $garage->insert_vehicle($data);
+		$cid = $garage_vehicle->insert_vehicle($data);
 
 		//If Any Image Variables Set Enter The Image Handling
 		if( $garage_image->image_attached() )

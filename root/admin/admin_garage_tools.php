@@ -71,7 +71,7 @@ switch($mode)
 		$data['cycle'] = (empty($data['cycle'])) ? '20' : $data['cycle'] ;
 		$data['done'] = (empty($data['done'])) ? '0' : $data['done'] ;
 
-		rebuild_thumbs($data['start'], $data['cycle'], $data['done'], $data['file']);
+		$garage_image->rebuild_thumbs($data['start'], $data['cycle'], $data['done'], $data['file']);
 
 		break;
 
@@ -83,31 +83,24 @@ switch($mode)
 		$present_attach = array();
 		$orphan_attach = array();
 
-		// First let's compile a list of all the attachments that are currently known in DB
-	        $sql = "SELECT *
-			FROM  " . GARAGE_IMAGES_TABLE . "
-			ORDER BY attach_id ASC";
+		//Get All Images Data From The DB
+		$data = $garage_image->select_all_image_data();
 
-		if ( !($result = $db->sql_query($sql)) )
+		for( $i = 0; $i < count($data); $i++ )
 		{
-			message_die(GENERAL_ERROR, 'Error Getting Image Data', '', __LINE__, __FILE__, $sql);
-		}
-
-		while ( $row = $db->sql_fetchrow($result) )
-		{
-			// Since remote images aren't on our local drive we won't track them ;)
-			if ( !preg_match("/^http:\/\//i", $row['attach_location']) )
+			//Since Remote Images Aren't On Our Local Drive...We Can Ingore Them ;)
+			if ( !preg_match("/^http:\/\//i", $data[$i]['attach_location']) )
 			{
-				$active_attach[] = $row['attach_location'];
+				$active_attach[] = $data[$i]['attach_location'];
 			}
           
-			if ( !preg_match("/^http:\/\//i", $row['attach_thumb_location']) )
+			if ( !preg_match("/^http:\/\//i", $data[$i]['attach_thumb_location']) )
 			{
-				$active_attach[] = $row['attach_thumb_location'];
+				$active_attach[] = $data[$i]['attach_thumb_location'];
 			}
 		}
 
-		// Now let's grab the list of currently present attachments on the local drive
+		//Grab List Of Currently Present Attachments On Local Drive
 		$upload_dir = opendir($phpbb_root_path . GARAGE_UPLOAD_PATH);
 		while ( false !== ( $file = readdir($upload_dir) ) )
 		{
@@ -119,17 +112,13 @@ switch($mode)
 		}
 		closedir($upload_dir);
         
-		// Calculate which ones don't belong
+		//Work Out The Differences...These Are The Orphans
 		$orphan_attach = array_diff($present_attach, $active_attach);
 		
-		// If they don't have any, let them know
+		//If No Orphans Exists (Good News) Let Them Know...
 		if ( count($orphan_attach) <= 0 )
 		{
-			$template->set_filenames(array(
-				'body' => 'admin/garage_message.tpl')
-			);
-
-			$message = '<meta http-equiv="refresh" content="4;url=' . append_sid("admin_garage_tools.$phpEx") . '">' . $lang['No_Orphaned_Files'] . "<br /></br>" . sprintf($lang['Click_Return_Tools'], "<a href=\"" . append_sid("admin_garage_tools.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
+			$message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_tools.$phpEx") . '">' . $lang['No_Orphaned_Files'] . "<br /></br>" . sprintf($lang['Click_Return_Tools'], "<a href=\"" . append_sid("admin_garage_tools.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
 
 			message_die(GENERAL_MESSAGE, $message);
 		}
@@ -139,9 +128,6 @@ switch($mode)
 				'body' => 'admin/garage_orphans.tpl')
 			);
 
-			//-------------------------------
-			// Construct menu HTML
-			//-------------------------------
 			$template->assign_vars(array(
 				'L_GARAGE_ORPHANS_TITLE' => $lang['Garage_Orphans_Title'],
 				'L_GARAGE_ORPHANS_EXPLAIN' => $lang['Garage_Orphans_Explain'],
@@ -150,7 +136,7 @@ switch($mode)
 				'S_ACTION' => append_sid('admin_garage_tools.'.$phpEx))
 			);
 
-			// Otherwise print them all out baby!
+			//Otherwise Print Them All Out Baby!
 			foreach ($orphan_attach as $orphan_file)
 			{
 					$template->assign_block_vars('file', array(
@@ -511,174 +497,6 @@ switch($mode)
 		include('./page_footer_admin.'.$phpEx);
 
 		break;
-}
-
-
-//---------------------------------------------
-// Rebuild All Thumbnails
-//--------------------------------------------
-function rebuild_thumbs($start, $cycle, $done, $file) 
-{
-
-	global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $garage_image, $garage;
-
-	$output = array();
-	$end = $start + $cycle;
-	if (!empty($file))
-	{
-        	$log_file   = $phpbb_root_path . GARAGE_UPLOAD_PATH . $file;
-	}
-
-        // Are we logging?
-        if ( empty($log_file) == FALSE )
-        {
-        	//If we are just starting make sure we start with a clean file	esle Append
-		$log_type = ( $start == 0 ) ? 'wb' : 'ab';
-        }
-
-	//Count Total Images So We Know How Many Need Processing
-	$total = $garage_image->count_total_images();
-
-       	// Loop through the images avoiding limit
-        $sql = "SELECT *
-		FROM  " . GARAGE_IMAGES_TABLE . "
-		WHERE attach_is_image = 1 
-		ORDER BY attach_id ASC LIMIT $start, $cycle";
-
-	if ( !($result = $db->sql_query($sql)) )
-	{
-		message_die(GENERAL_ERROR, 'Error Getting Image Data', '', __LINE__, __FILE__, $sql);
-	}
-
-	//We Must Be Complete As We Have No More Images To Process
-	if ( $db->sql_numrows($result) < 1 )
-	{
-		$message = '<meta http-equiv="refresh" content="4;url=' . append_sid("admin_garage_tools.$phpEx") . '">' . $lang['Rebuild_Thumbnails_Complete'] . "<br /></br>" . sprintf($lang['Click_Return_Tools'], "<a href=\"" . append_sid("admin_garage_tools.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-
-		message_die(GENERAL_MESSAGE, $message);
-	}
-            
-        while ( $image_row = $db->sql_fetchrow($result) )
-      	{
-       		// Logging
-		_log($log_handle,$lang['Processing_Attach_ID'] . $image_row['attach_id']);
-
-       	        // The process is a little different for local vs. remote files
-               	if ( preg_match("/^http:\/\//i", $image_row['attach_location']) )
-                {
-			// This is a remote image!
-			$location = $image_row['attach_location'];
-			$file_name = preg_replace( "/^(.+?)\..+?$/", "\\1", $image_row['attach_file'] );
-
-                    	// Generate our temp file name
-       	            	$tmp_file_name = $file_name . '-' . time() . $image_row['attach_ext'];
-
-               	    	// Generate our thumb file name
-                    	if ( (empty($image_row['attach_thumb_location'])) OR ($image_row['attach_thumb_location'] == "remote") )
-       	            	{
-       		    		// We are going to use the attach_file name to create our _thumb
-				//   file name since this image did not have a thumb before.
-                       		$thumb_file_name = $file_name . time() . '_thumb' . $image_row['attach_ext'];
-                  
-			} 
-			else
-		       	{
-                       		// We already know the thumbnail filename :)
-	                        $thumb_file_name = $image_row['attach_thumb_location'];
-
-               		}
-
-	                _log($log_handle,$lang['Remote_Image'] . $image_row['attach_location'], 1);
-    	                _log($log_handle,$lang['File_Name'] . $file_name, 2);
-               		_log($log_handle,$lang['Temp_File_Name'] . $tmp_file_name, 2);
-
-                    	// Make sure it exists, or we'll get nasty errors!
-               		if ( $garage_image->remote_file_exist($image_row['attach_location']) )
-			{
-				// Download the remote image to our temporary file
-				$garage_image->download_remote_image($image_row['attach_location'], $tmp_file_name);
-
-				//Create The New Thumbnail
-				$garage_image->create_thumbnail($tmp_file_name, $thumb_file_name, $image_row['attach_ext']);
-
-				//Get Thumbnail Width & Height
-				$image_width = $garage_image->get_image_width($thumb_file_name);
-				$image_height = $garage_image->get_image_height($thumb_file_name);
-	
-				//Update the DB With New Thumbnail Details
-				$garage->update_single_field(GARAGE_IMAGES_TABLE, 'attach_thumb_location', $thumb_file_name, 'attach_id', $image_row['attach_id']);
-				$garage->update_single_field(GARAGE_IMAGES_TABLE, 'attach_thumb_width', $image_width, 'attach_id', $image_row['attach_id']);
-				$garage->update_single_field(GARAGE_IMAGES_TABLE, 'attach_thumb_height', $image_height, 'attach_id', $image_row['attach_id']);
-
-		                // Remove our temporary file!
-				@unlink($phpbb_root_path . GARAGE_UPLOAD_PATH . $tmp_file_name);
-
-                        	// Add the status message
-				$output[] = $lang['Rebuilt'] . $image_row['attach_location'] . ' -> '.$thumb_file_name;
-
-                        	_log($log_handle,$lang['Thumb_File'] . $thumb_file_name,1);
-
-                    	}
-			else
-			{
-                        	// Tell them that the remote file doesn't exists
-                        	$output[] = "<b><font color='red'>ERROR</font></b>".$lang['File_Does_Not_Exist']."(".$image_row['attach_file'].")";
-                        	_log($log_handle,$lang['File_Does_Not_Exist'],1);
-                    	}
-                }
-		else
-		{
-			$source_file = $phpbb_root_path . GARAGE_UPLOAD_PATH . $image_row['attach_location'];
-
-                    	// Generate our thumb file name
-                    	if ( empty($image_row['attach_thumb_location']) )
-                    	{
-                       		// We are going to use the attach_id to create our _thumb
-		                //   file name since this image did not have a thumb before.
-                	        $thumb_file_name = preg_replace( "/^(.+?)\..+?$/", "\\1", $image_row['attach_location'] );
-                       		$thumb_file_name .= '_thumb' . $image_row['attach_ext'];
-                    	}
-			else
-			{
-                        	// We already know the thumbnail filename :)
-                        	$thumb_file_name = $image_row['attach_thumb_location'];
-                    	}
-
-			//Make Sure The File Actually Exists Before Processing It
-			if (file_exists($phpbb_root_path . GARAGE_UPLOAD_PATH . $image_row['attach_location']))
-			{
-				//Create The New Thumbnail
-				$garage_image->create_thumbnail($image_row['attach_location'], $thumb_file_name, $image_row['attach_ext']);
-
-				//Get Thumbnail Width & Height
-				$image_width = $garage_image->get_image_width($thumb_file_name);
-				$image_height = $garage_image->get_image_height($thumb_file_name);
-	
-				//Update the DB With New Thumbnail Details
-				$garage->update_single_field(GARAGE_IMAGES_TABLE, 'attach_thumb_location', $thumb_file_name, 'attach_id', $image_row['attach_id']);
-				$garage->update_single_field(GARAGE_IMAGES_TABLE, 'attach_thumb_width', $image_width, 'attach_id', $image_row['attach_id']);
-				$garage->update_single_field(GARAGE_IMAGES_TABLE, 'attach_thumb_height', $image_height, 'attach_id', $image_row['attach_id']);
-
-	                    	// Add the status message
-        	            	$output[] = $lang['Rebuilt'] . $image_row['attach_location'].' -> '.$thumb_file_name;
-
-                	    	_log($log_handle,$lang['Thumb_File'] . $thumb_file_name, 1);
-			}
-			//Original Source File Is Missing
-			else
-			{
-        	            	$output[] = $lang['Source_Unavailable'] . $image_row['attach_location'];
-                	    	_log($log_handle,$lang['No_Source_File'], 1);
-			}
-		} // End if remote/local 
-
-              	$done++;
-
-	} // End while loop
-
-	$message = '<meta http-equiv="refresh" content="5;url=' . append_sid("admin_garage_tools.$phpEx?mode=rebuild_thumbs&amp;start=$end&amp;cycle=$cycle&amp;file=$file&amp;done=$done") . '">'."<div align=\"left\"><b>".$lang['Started_At']."$start <br />".$lang['Ended_At']."$end <br />".$lang['Have_Done']."$done<br />".$lang['Need_To_Process']."$total <br />".$lang['Log_To']."$log_file <br /></b></b><br /><br />".implode( "<br />", $output )."<br /></br>";
-
-	message_die(GENERAL_MESSAGE, $message);
 }
 
 ?>
