@@ -68,7 +68,7 @@ class garage_business
 	}
 
 	/*========================================================================*/
-	// Select Business Data From DB
+	// Select Single Business Data From DB
 	// Usage: select_business_data('business id');
 	/*========================================================================*/
 	function select_business_data($bus_id)
@@ -78,11 +78,10 @@ class garage_business
 		$sql = "SELECT * 
 			FROM " . GARAGE_BUSINESS_TABLE . "
 			WHERE id = '$bus_id'";
-		}
 
 		if( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'Could Not Select Business Data', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'Could Not Select Specific Business Data', '', __LINE__, __FILE__, $sql);
 		}
 
 		$row = $db->sql_fetchrow($result);
@@ -93,7 +92,7 @@ class garage_business
 
 	/*========================================================================*/
 	// Select All Business Data From DB
-	// Usage: select_all_business_data('business id');
+	// Usage: select_all_business_data();
 	/*========================================================================*/
 	function select_all_business_data()
 	{
@@ -104,7 +103,7 @@ class garage_business
 
 		if( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'Could Not Select Business Data', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'Could Not Select All Business Data', '', __LINE__, __FILE__, $sql);
 		}
 
 		while ($row = $db->sql_fetchrow($result) )
@@ -115,6 +114,123 @@ class garage_business
 		$db->sql_freeresult($result);
 
 		return $data;
+	}
+
+	/*========================================================================*/
+	// Select All Business Data From DB
+	// Usage: select_all_garage_business_data();
+	/*========================================================================*/
+	function select_all_garage_business_data($where, $start)
+	{
+		global $db;
+
+		$sql = "SELECT b.* , sum( install_rating ) AS rating, count( * ) *10 AS total_rating
+			FROM " . GARAGE_BUSINESS_TABLE . " b, " . GARAGE_MODS_TABLE . " m
+			WHERE m.install_business_id = b.id
+				AND b.garage =1
+				AND b.pending =0
+				$where
+			GROUP BY b.id
+			ORDER BY rating DESC
+			LIMIT $start, 25";
+			
+      		if ( !($result = $db->sql_query($sql)) )
+      		{
+         		message_die(GENERAL_ERROR, 'Could Select Business Data', '', __LINE__, __FILE__, $sql);
+      		}
+
+		while( $row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		return $rows;
+	}
+
+	/*========================================================================*/
+	// Select All Business Data From DB
+	// Usage: select_all_shop_business_data();
+	/*========================================================================*/
+	function select_all_shop_business_data($where, $start)
+	{
+		global $db;
+
+		$sql = "SELECT b.* , sum( purchase_rating ) AS rating, count( * ) *10 AS total_rating
+			FROM " . GARAGE_BUSINESS_TABLE . " b, " . GARAGE_MODS_TABLE . " m
+			WHERE m.business_id = b.id
+				AND ( b.web_shop =1 OR b.retail_shop = 1 )
+				AND b.pending =0
+				$where
+			GROUP BY b.id
+			ORDER BY rating DESC
+			LIMIT $start, 25";
+			
+      		if ( !($result = $db->sql_query($sql)) )
+      		{
+         		message_die(GENERAL_ERROR, 'Could Select Business Data', '', __LINE__, __FILE__, $sql);
+      		}
+
+		while( $row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		return $rows;
+	}
+
+
+	/*========================================================================*/
+	// Select All Business Data From DB
+	// Usage: count_garage_business_data();
+	/*========================================================================*/
+	function count_garage_business_data($additional_where)
+	{
+		global $db;
+
+		$sql = "SELECT count(DISTINCT b.title) as total
+			FROM " . GARAGE_BUSINESS_TABLE . " b, " . GARAGE_MODS_TABLE . " m
+			WHERE m.install_business_id = b.id
+				AND b.garage =1
+				AND b.pending =0
+				$additional_where";
+
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Error Getting Pagination Total', '', __LINE__, __FILE__, $sql);
+		}
+
+		$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $row['total'];
+	}
+
+	/*========================================================================*/
+	// Select All Business Data From DB
+	// Usage: count_shop_business_data();
+	/*========================================================================*/
+	function count_garage_business_data($additional_where)
+	{
+		global $db;
+
+		$sql = "SELECT count(DISTINCT b.title) as total
+			FROM " . GARAGE_BUSINESS_TABLE . " b, " . GARAGE_MODS_TABLE . " m
+			WHERE m.business_id = b.id
+				AND ( b.web_shop =1 OR b.retail_shop =1 )
+				AND b.pending =0
+				$additional_where";
+
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Error Getting Pagination Total', '', __LINE__, __FILE__, $sql);
+		}
+
+		$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $row['total'];
 	}
 
 	/*========================================================================*/

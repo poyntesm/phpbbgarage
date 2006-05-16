@@ -48,7 +48,6 @@ class garage_admin
 		return;
 	}
 
-
 	function gzip_PrintFourChars($Val)
 	{
 		for ($i = 0; $i < 4; $i ++)

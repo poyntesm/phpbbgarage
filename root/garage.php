@@ -155,8 +155,8 @@ switch( $mode )
 			'MAKE' 	=> $data['MAKE'],
 			'MODEL'	=> $data['MODEL'],
 			'ADDING_MODEL' => 'NO',
-			'CURRENCY_LIST'	=> $garage_template->selection_dropdown('currency',$currency_types,$currency_types,''),
-			'MILEAGE_UNIT_LIST' => $garage_template->selection_dropdown('mileage_units',$mileage_unit_types,$mileage_unit_types,''))
+			'CURRENCY_LIST'	=> $garage_template->selection_dropdown('currency', $currency_types, $currency_types, ''),
+			'MILEAGE_UNIT_LIST' => $garage_template->selection_dropdown('mileage_units', $mileage_unit_types, $mileage_unit_types, ''))
 		);
 
 		include($phpbb_root_path . 'includes/page_header.'.$phpEx);
@@ -218,13 +218,12 @@ switch( $mode )
 		//If Any Image Variables Set Enter The Image Handling
 		if( $garage_image->image_attached() )
 		{
+			//Create Thumbnail & DB Entry For Image
 			$image_id = $garage->process_image_attach('vehicle',$cid);
-			if (!empty($image_id))
-			{
-				$garage_image->insert_gallery_image($image_id);
-				//Set Image As Hilite Image
-				$garage->update_single_field(GARAGE_TABLE,'image_id',$image_id,'id',$cid);
-			}
+			//Insert Image Into Vehicles Gallery
+			$garage_image->insert_gallery_image($image_id);
+			//Set Image As Hilite Image For Vehicle
+			$garage->update_single_field(GARAGE_TABLE,'image_id',$image_id,'id',$cid);
 		}
 
 		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
@@ -337,6 +336,7 @@ switch( $mode )
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 
+		//Actually Delete The Vehicle..This Will Delete All Related Items!!
 		$garage_vehicle->delete_vehicle($cid);
 
 		redirect(append_sid("garage.$phpEx?mode=main_menu", true));
@@ -438,11 +438,10 @@ switch( $mode )
 
 		if( $garage_image->image_attached() )
 		{
+			//Create Thumbnail & DB Entry For Image
 			$image_id = $garage_image->process_image_attach('modification',$mid);
-			if (!empty($image_id))
-			{
-				$garage->update_single_field(GARAGE_MODS_TABLE,'image_id',$image_id,'id',$mid);
-			}
+			//Set Image To This Modification
+			$garage->update_single_field(GARAGE_MODS_TABLE,'image_id',$image_id,'id',$mid);
 		}
 
 		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
@@ -466,7 +465,7 @@ switch( $mode )
 		);
 		
 		//Pull Required Data From DB
-		$data = $garage->select_modification_data($mid);
+		$data = $garage_modification->select_modification_data($mid);
 
 		//Build All Required HTML parts
 		$garage_template->category_dropdown($data['category_id']);
@@ -537,6 +536,7 @@ switch( $mode )
 		//Update The DB With Data Acquired
 		$garage_modification->update_modification($data);
 
+		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
 		//User Has Chosen To Delete Existing Image
@@ -549,11 +549,10 @@ switch( $mode )
 		//Handle New Image Upload
 		if( $garage_image->image_attached() )
 		{
+			//Create Thumbnail & DB Entry For Image
 			$image_id = $garage_image->process_image_attach('modification',$mid);
-			if (!empty($image_id))
-			{
-				$garage->update_single_field(GARAGE_MODS_TABLE,'image_id',$image_id,'id',$mid);
-			}
+			//Set Image To This Modification
+			$garage->update_single_field(GARAGE_MODS_TABLE,'image_id',$image_id,'id',$mid);
 		}
 
 		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
@@ -567,6 +566,7 @@ switch( $mode )
 
 		$garage_modification->delete_modification($mid);
 
+		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
 		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
@@ -664,11 +664,10 @@ switch( $mode )
 
 		if( $garage_image->image_attached() )
 		{
+			//Create Thumbnail & DB Entry For Image + Link To Item
 			$image_id = $garage_image->process_image_attach('quartermile',$qmid);
-			if (!empty($image_id))
-			{
-				$garage->update_single_field(GARAGE_QUARTERMILE_TABLE,'image_id',$image_id,'id',$qmid);
-			}
+			$garage->update_single_field(GARAGE_QUARTERMILE_TABLE,'image_id',$image_id,'id',$qmid);
+		
 		}
 		else
 		{
@@ -786,6 +785,7 @@ switch( $mode )
 		//Update The Time Now...In Case We Get Redirected During Image Processing
 		$garage_vehicle->update_vehicle_time($cid);
 
+		//Removed The Old Image If Required By A Delete Or A New Image Existing
 		if ( ($data['editupload'] == 'delete') OR ($data['editupload'] == 'new') )
 		{
 			$garage_image->delete_image($data['image_id']);
@@ -795,11 +795,9 @@ switch( $mode )
 		//Since We Have Removed The Old Image Lets Handle The New One Now
 		if( $garage_image->image_attached() )
 		{
+			//Create Thumbnail & DB Entry For Image
 			$image_id = $garage_image->process_image_attach('quartermile',$qmid);
-			if (!empty($image_id))
-			{
-				$garage->update_single_field(GARAGE_QUARTERMILE_TABLE,'image_id',$image_id,'id',$qmid);
-			}
+			$garage->update_single_field(GARAGE_QUARTERMILE_TABLE,'image_id',$image_id,'id',$qmid);
 		}
 		else
 		{
@@ -812,14 +810,13 @@ switch( $mode )
 			}
 		}
 
+		//If Editting From Pending Page Redirect Back To There Instead
 		if ( $data['pending_redirect'] == 'YES' )
 		{
 			redirect(append_sid("garage.$phpEx?mode=garage_pending", true));
 		}
-		else
-		{
-			redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
-		}
+
+		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
 
 		break;
 
@@ -830,6 +827,7 @@ switch( $mode )
 
 		$garage_quartermile->delete_quartermile_time($qmid);
 
+		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
 		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
@@ -919,11 +917,9 @@ switch( $mode )
 
 		if( $garage_image->image_attached() )
 		{
+			//Create Thumbnail & DB Entry For Image
 			$image_id = $garage_image->process_image_attach('rollingroad',$rrid);
-			if (!empty($image_id))
-			{
-				$garage->update_single_field(GARAGE_ROLLINGROAD_TABLE,'image_id',$image_id,'id',$rrid);
-			}
+			$garage->update_single_field(GARAGE_ROLLINGROAD_TABLE,'image_id',$image_id,'id',$rrid);
 		}
 		else
 		{
@@ -995,7 +991,6 @@ switch( $mode )
 			'TORQUE_UNIT_LIST' => $garage_template->selection_dropdown('torque_unit',$power_types,$power_types,$data['torque_unit']),
 			'BHP_UNIT_LIST' => $garage_template->selection_dropdown('bhp_unit',$power_types,$power_types,$data['bhp_unit']),
 			'S_MODE_ACTION' => append_sid("garage.$phpEx?mode=update_rollingroad"))
-
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
@@ -1026,6 +1021,7 @@ switch( $mode )
 		// Update The Time Now...In Case We Get Redirected During Image Processing
 		$garage_vehicle->update_vehicle_time($cid);
 
+		//Removed The Old Image If Required By A Delete Or A New Image Existing
 		if ( ($data['editupload'] == 'delete') OR ($data['editupload'] == 'new') )
 		{
 			$garage->delete_image($data['image_id']);
@@ -1035,11 +1031,9 @@ switch( $mode )
 		//Since We Have Removed The Old Image Lets Handle The New One Now
 		if( $garage_image->image_attached() )
 		{
+			//Create Thumbnail & DB Entry For Image
 			$image_id = $garage_image->process_image_attach('rollingroad',$rrid);
-			if (!empty($image_id))
-			{
-				$garage->update_single_field(GARAGE_ROLLINGROAD_TABLE,'image_id',$image_id,'id',$rrid);
-			}
+			$garage->update_single_field(GARAGE_ROLLINGROAD_TABLE,'image_id',$image_id,'id',$rrid);
 		}
 		else
 		{
@@ -1052,15 +1046,13 @@ switch( $mode )
 			}
 		}
 
-		//If Editted From Pending Page Redirect Back To It.
+		//If Editting From Pending Page Redirect Back To There Instead
 		if ( $data['pending_redirect'] == 'YES' )
 		{
 			redirect(append_sid("garage.$phpEx?mode=garage_pending", true));
 		}
-		else
-		{
-			redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
-		}
+
+		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
 
 		break;
 
@@ -1071,6 +1063,7 @@ switch( $mode )
 	
 		$garage_dynorun->delete_rollingroad_run($rrid);
 
+		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
 		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
@@ -1151,6 +1144,7 @@ switch( $mode )
 		//Update The DB With Data Acquired
 		$garage_insurance->insert_insurance($data);
 
+		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
 		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
@@ -1220,6 +1214,7 @@ switch( $mode )
 		//Update The DB With Data Acquired
 		$garage_insurnace->update_insurance($data);
 
+		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
 		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
@@ -1233,6 +1228,7 @@ switch( $mode )
 
 		$garage_insurance->delete_insurance($ins_id);
 
+		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
 		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
@@ -1560,6 +1556,7 @@ switch( $mode )
 		//Pull Required Data From DB
 		$data = $garage_modification->select_modification_data($mid);
 
+		//Build The Owners Avatar Image If Any...
 		$avatar_img = '';
 		if ( $data['user_avatar_type'] AND $data['user_allowavatar'] )
 		{
@@ -1724,15 +1721,13 @@ switch( $mode )
 		{
 			if ( count($gallery_data) < $garage_image->get_user_upload_quota() )
 			{
+				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attach('vehicle',$cid);
-				if (!empty($image_id))
+				$garage_image->insert_gallery_image($image_id);
+				// Check If First Image And Set As Vehicle Hilite Image If So
+				if ( empty($data['image_id']))
 				{
-					$garage_image->insert_gallery_image($image_id);
-					// Check If First Image And Set As Hilite If So
-					if ( empty($data['image_id']))
-					{
-						$garage->update_single_field(GARAGE_TABLE,'image_id',$image_id,'id',$cid);
-					}
+					$garage->update_single_field(GARAGE_TABLE,'image_id',$image_id,'id',$cid);
 				}
 			}
 			else if ( count($gallery_data) >= $garage_image->get_user_upload_quota())
@@ -1741,6 +1736,7 @@ switch( $mode )
 			}
 		}
 
+		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
 		redirect(append_sid("garage.$phpEx?mode=manage_vehicle_gallery&CID=$cid", true));
@@ -1835,7 +1831,6 @@ switch( $mode )
 				'HILITE' => $hilite)
 			);
 		}
-		$db->sql_freeresult($result);
 
 		$template->assign_vars(array(
         	    	'L_NOTE' => $lang['Manage_Vehicle_Gallery_Note'],
@@ -1865,6 +1860,7 @@ switch( $mode )
 
 		$garage->update_single_field(GARAGE_TABLE,'image_id',$image_id,'id',$cid);
 
+		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
 		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
@@ -1878,6 +1874,7 @@ switch( $mode )
 
 		$garage_image->delete_gallery_image($image_id);
 
+		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
 		redirect(append_sid("garage.$phpEx?mode=manage_vehicle_gallery&CID=$cid", true));
@@ -1894,9 +1891,11 @@ switch( $mode )
 			'body'   => 'garage_view_insurance_business.tpl')
 		);
 
-		//Let See If We Are Only Going To Display A Specific Business
-		$single_business = intval($HTTP_GET_VARS['business_id']);
+		//Get All Data Posted And Make It Safe To Use
+		$params = array('business_id', 'start');
+		$data = $garage->process_post_vars($params);
 
+		$single_business = intval($HTTP_GET_VARS['business_id']);
 		$start = (isset($HTTP_GET_VARS['start'])) ? intval($HTTP_GET_VARS['start']) : 0;
 
 		if (empty($single_business))
@@ -1909,7 +1908,7 @@ switch( $mode )
 			$limit = 20;
 		}
 
-		// Get Insurance Business Data
+		//Get All Insurance Business Data
 		$business = $garage_insurance->select_insurance_business_data($start,$where);
 
 		if ( count($business) < 1 )
@@ -1939,89 +1938,43 @@ switch( $mode )
             			'WEBSITE' => $business[$i]['website'],
 	            		'EMAIL' => $business[$i]['email'],
 				'OPENING_HOURS' => $business[$i]['opening_hours'])
-         		);
+			);
 
-			if (empty($single_business))
-			{
-        	 		$template->assign_block_vars('business_row.more_detail', array());
-			}
-			else
-			{
-				$template->assign_block_vars('business_row.insurance_detail', array());
-			}
+			//Setup Template Block For Detail Being Displayed...
+			$detail = (empty($single_business)) ? 'business_row.more_detail' : 'business_row.insurance_detail';
+        	 	$template->assign_block_vars($detail, array());
 
-			//Now we loop through all insurance types...
+			//Now Loop Through All Insurance Cover Types...
 			for($j = 0; $j < count($cover_types); $j++)
 			{
-				
-				$sql = "SELECT round(max( i.premium ),2) AS max, round(min( i.premium ),2) AS min, round(avg( i.premium ),2) AS avg
-					FROM " . GARAGE_BUSINESS_TABLE . " b, " . GARAGE_INSURANCE_TABLE . " i
-					WHERE i.business_id = b.id
-						AND b.id = " . $business[$i]['id'] . " 
-						AND b.insurance =1
-						AND i.cover_type = '".htmlspecialchars($cover_types[$j])."'
-						AND i.premium > 0";
-
-         			if( !($result = $db->sql_query($sql)) )
-         			{
-		            		message_die(GENERAL_ERROR, 'Could Not Select Business', '', __LINE__, __FILE__, $sql);
-         			}
-
-         			//Loop Processing Values From SQL...man are we loopy or what!!!!
-	         		while ( $cover_row = $db->sql_fetchrow($result) )
-        	 		{
-            				$minimum = $cover_row['min'];
-            				$average = $cover_row['avg'];
-            				$maximum = $cover_row['max'];
-
-	            			//Setup user_row Template Varibles
-        	    			$template->assign_block_vars('business_row.cover_row', array(
-               					'COVER_TYPE' => $cover_types[$j],
-               					'MINIMUM' => $minimum,
-               					'AVERAGE' => $average,
-               					'MAXIMUM' => $maximum)
-	            			);
-         			}// end WHILE
-	         		$db->sql_freeresult($result);
-			}//end FOR Loop - Insurance Types
-
-			//Pull All Insurance Data Into A Large Array
-			$sql = "SELECT i.*, g.made_year, b.title, b.id as business_id, makes.make, models.model, user.username, user.user_id
-        			FROM " . GARAGE_INSURANCE_TABLE . " i 
-                	    		LEFT JOIN " . GARAGE_TABLE . " g ON ( i.garage_id = g.id )
-        	        	    	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " b ON ( i.business_id = b.id )
-			        	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
-			        	LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
-				        LEFT JOIN " . USERS_TABLE . " user ON ( g.member_id = user.user_id )
-				WHERE i.business_id = b.id
-					AND b.insurance =1
-					AND b.pending = 0
-					AND b.id = " . $business[$i]['id'] . "
-					AND makes.pending = 0 AND models.pending = 0 
-				GROUP BY i.id";
-		   	if ( !($result = $db->sql_query($sql)) )
-      			{
-         			message_die(GENERAL_ERROR, 'Could Select Business Data', '', __LINE__, __FILE__, $sql);
-      			}
-
-			$matched = 1;
+				//Pull MIN/MAX/AVG Of Specific Cover Type By Business ID
+				$premium_data = $garage_insurance->select_insurance_premium_data($business[$i]['id'], $cover_types[$j]);
+        	    		$template->assign_block_vars('business_row.cover_row', array(
+               				'COVER_TYPE' => $cover_types[$j],
+               				'MINIMUM' => $premium_data['min'],
+               				'AVERAGE' => $premium_data['avg'],
+               				'MAXIMUM' => $premium_data['max'])
+	            		);
+			}
+			
+			//If Display Single Insurance Company We Then Need To Get All Premium Data
 			if  (!empty($single_business))
 			{
-				while( $insurance_data = $db->sql_fetchrow($result) )
+				//Pull All Insurance Premiums Data For Specific Insurance Company
+				$insurance_data = $garage_insurance->select_all_premiums_data($business[$i]['id']);
+				for($k = 0; $k < count($insurance_data); $k++)
 				{
-					// setup user row template varibles
 					$template->assign_block_vars('business_row.insurance_detail.premiums', array(
-						'USERNAME' => $insurance_data['username'],
-						'VEHICLE' => $insurance_data['made_year'] . ' ' . $insurance_data['make'] . ' ' . $insurance_data['model'],
-						'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=" . $insurance_data['user_id']),
-						'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" . $insurance_data['garage_id']),
-						'PREMIUM' => $insurance_data['premium'],
-						'COVER_TYPE' => $insurance_data['cover_type'])
+						'USERNAME' => $insurance_data[$k]['username'],
+						'VEHICLE' => $insurance_data[$k]['vehicle'],
+						'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=" . $insurance_data[$k]['user_id']),
+						'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" . $insurance_data[$k]['garage_id']),
+						'PREMIUM' => $insurance_data[$k]['premium'],
+						'COVER_TYPE' => $insurance_data[$k]['cover_type'])
 					);
-				}//end FOR Loop - Insurance Premiums
-				$db->sql_freeresult($result);
+				}
 			}
-      		}// end FOR of outer loop - Business's
+      		}
 
 		// Get Insurance Business Data For Pagination
 		$count = $garage_insurance->select_insurance_business_data('',$where);
@@ -2072,49 +2025,33 @@ switch( $mode )
 			'body' => 'garage_view_garage_business.tpl')
 		);
 
-		//Let See If We Are Only Going To Display A Specific Business
-		$single_business = str_replace("\'", "''", trim($HTTP_GET_VARS['business_id']));
+		//Get All Data Posted And Make It Safe To Use
+		$params = array('business_id', 'start');
+		$data = $garage->process_post_vars($params);
 
-		$start = (isset($HTTP_GET_VARS['start'])) ? intval($HTTP_GET_VARS['start']) : 0;
-
-		if (empty($single_business))
+		//Build SQL Parameters Based On If We Are Displaying One Business Or Not
+		if (empty($data['business_id']))
 		{
 			$limit = '5';
 		}
-		else
+		else if (!empty($data['business_id']))
 		{
 			$limit = '20';
-			$where = "AND b.id = $single_business";
+			$where = "AND b.id = " . $data['business_id'];
 		}
 
-		$sql = "SELECT b.* , sum( install_rating ) AS rating, count( * ) *10 AS total_rating
-			FROM " . GARAGE_BUSINESS_TABLE . " b, " . GARAGE_MODS_TABLE . " m
-			WHERE m.install_business_id = b.id
-				AND b.garage =1
-				AND b.pending =0
-				$where
-			GROUP BY b.id
-			ORDER BY rating DESC
-			LIMIT $start, 25";
-			
-      		if ( !($result = $db->sql_query($sql)) )
-      		{
-         		message_die(GENERAL_ERROR, 'Could Select Business Data', '', __LINE__, __FILE__, $sql);
-      		}
+		//Get Required Garage Business Data
+		$business = $garage_business->select_all_garage_business_data($where,$start)
 
-		if ( $db->sql_numrows($result) < 1 )
+		//If No Business Let The User Know..
+		if ( count($business) < 1 )
 		{
 			redirect(append_sid("garage.$phpEx?mode=error&EID=1", true));
 		}
 
-		while( $row = $db->sql_fetchrow($result) )
-		{
-			$business[] = $row;
-		}
-		$db->sql_freeresult($result);
-
 		include($phpbb_root_path . 'includes/page_header.'.$phpEx);
 
+		//Setup Breadcrumb Trail Correctly...
 		if (!empty($single_business))
 		{
 			$template->assign_block_vars('level2', array());
@@ -2124,7 +2061,7 @@ switch( $mode )
 			);
 		}
 
-      		//Loop Processing All Categoires Returned From First Select Statement (now in a
+      		//Process All Garages......
       		for ($i = 0; $i < count($business); $i++)
       		{
 			if (empty($business[$i]['rating']))
@@ -2132,7 +2069,6 @@ switch( $mode )
 				$business[$i]['rating'] = '0';
 			}
 
-			//Setup cat_row Template Varibles
          		$template->assign_block_vars('business_row', array(
 				'U_VIEW_BUSINESS' => append_sid("garage.$phpEx?mode=view_garage_business&amp;business_id=".$business[$i]['id']),
             			'NAME' => $business[$i]['title'],
@@ -2146,49 +2082,30 @@ switch( $mode )
 				'OPENING_HOURS' => $business[$i]['opening_hours'])
          		);
 			$template->assign_block_vars('business_row.customers', array());
-			
-			if (empty($single_business))
+
+			//	
+			if (empty($data['business_id']))
 			{
          			$template->assign_block_vars('business_row.more_detail', array());
 			}
 
-			//Now Lets Go Get All Mods All Business's Have Installed
- 			$sql = "SELECT mods.id, mods.garage_id, mods.title AS mod_title, mods.install_price, mods.install_rating, mods.install_comments, u.username, u.user_id, makes.make, models.model, g.made_year, b.id as business_id
-	               		FROM (" . GARAGE_MODS_TABLE . " mods, " . GARAGE_BUSINESS_TABLE . " b)
-	    				LEFT JOIN " . GARAGE_TABLE . " g ON ( mods.garage_id = g.id )
-			    		LEFT JOIN " . USERS_TABLE . " u ON ( mods.member_id = u.user_id )
-		        		LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
-        				LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
-				WHERE mods.install_business_id = b.id
-					AND b.garage =1
-					AND b.pending = 0
-					AND b.id = " . $business[$i]['id'] . "
-					AND makes.pending = 0 AND models.pending = 0
-				ORDER BY mods.id, mods.date_created DESC
-				LIMIT $limit";
+			//Now Lets Go Get Mods Business Has Installed
+			$bus_mod_data = $garage_modification->get_modifications_by_install_business($business[$i]['id'],$limit)
 
-			$matched = 1;
-
-			if ( !($result = $db->sql_query($sql)) )
-      			{
-         			message_die(GENERAL_ERROR, 'Could Select Business Data', '', __LINE__, __FILE__, $sql);
-      			}
-
-
-			while( $bus_mod_data = $db->sql_fetchrow($result) )
+			while($j = 0 ; $j < count($bus_mod_data); $j++)
 			{
-				// setup user row template varibles
 				$template->assign_block_vars('business_row.mod_row', array(
-					'USERNAME' => $bus_mod_data['username'],
-					'VEHICLE' => $bus_mod_data['made_year'] . ' ' . $bus_mod_data['make'] . ' ' . $bus_mod_data['model'],
-					'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=" . $bus_mod_data['user_id']),
-					'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" . $bus_mod_data['garage_id']),
-					'U_VIEW_MODIFICATION' => append_sid("garage.$phpEx?mode=view_modification&amp;CID=" . $bus_mod_data['garage_id'] ."&amp;MID=" . $bus_mod_data['id']),
-					'MODIFICATION' => $bus_mod_data['mod_title'],
-					'INSTALL_RATING' => $bus_mod_data['install_rating'])
+					'USERNAME' => $bus_mod_data[$j]['username'],
+					'VEHICLE' => $bus_mod_data[$j]['vehicle'],
+					'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=" . $bus_mod_data[$j]['user_id']),
+					'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" . $bus_mod_data[$j]['garage_id']),
+					'U_VIEW_MODIFICATION' => append_sid("garage.$phpEx?mode=view_modification&amp;CID=" . $bus_mod_data[$j]['garage_id'] ."&amp;MID=" . $bus_mod_data[$j]['id']),
+					'MODIFICATION' => $bus_mod_data[$j]['mod_title'],
+					'INSTALL_RATING' => $bus_mod_data[$j]['install_rating'])
 				);
-					
-				if (!empty($business_mod_data['install_comments']))
+
+				//Setup Comments For Installation Of Modification...	
+				if (!empty($bus_mod_data[$j]['install_comments']))
 				{
 					if ( $comments != 'SET')
 					{
@@ -2196,38 +2113,23 @@ switch( $mode )
 					}
 					$comments = 'SET';
 					$template->assign_block_vars('business_row.customer_comments', array(
-						'COMMENTS' => $business_mod_data['username'] . ' -> ' .$business_mod_data['install_comments'])
+						'COMMENTS' => $bus_mod_data[$j]['username'] . ' -> ' .$bus_mod_data[$j]['install_comments'])
 					);
 				}
-
-				//Increment Number Of Mods We Have Listed For This Business
-				$matched++;
 			}
+
+			//Reset Comments For Next Business..
 			$comments = '';
-			$db->sql_freeresult($result);
-      		}// end FOR of outer loop
-
-		$sql = "SELECT count(DISTINCT b.title) as total
-			FROM " . GARAGE_BUSINESS_TABLE . " b, " . GARAGE_MODS_TABLE . " m
-			WHERE m.install_business_id = b.id
-				AND b.garage =1
-				AND b.pending =0
-				$where";
-
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Error Getting Pagination Total', '', __LINE__, __FILE__, $sql);
 		}
 
-		$count = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
-
-		$pagination = generate_pagination("garage.$phpEx?mode=view_garage_business", $count['total'], 25, $start). '&nbsp;';
+		//Get Count & Perform Pagination...
+		$count = $garage_business->count_garage_business_data($where);
+		$pagination = generate_pagination("garage.$phpEx?mode=view_garage_business", $count, 25, $start). '&nbsp;';
 
 		$template->assign_block_vars('level1', array());
 		$template->assign_vars(array(
 			'PAGINATION' => $pagination,
-			'PAGE_NUMBER' => sprintf($lang['Page_of'], (floor($start / 25) + 1), ceil($count['total'] / 25)), 
+			'PAGE_NUMBER' => sprintf($lang['Page_of'], (floor($start / 25) + 1), ceil($count / 25)), 
 			'L_GOTO_PAGE' => $lang['Goto_page'],
 	 		'L_LEVEL1' => $lang['Garage_Review'],
                		'U_LEVEL1' => append_sid("garage.$phpEx?mode=view_garage_business"),
@@ -2270,50 +2172,33 @@ switch( $mode )
 			'body' => 'garage_view_shop_business.tpl')
 		);
 
-		//Let See If We Are Only Going To Display A Specific Business
-		$single_business = str_replace("\'", "''", trim($HTTP_GET_VARS['business_id']));
 
-		$start = (isset($HTTP_GET_VARS['start'])) ? intval($HTTP_GET_VARS['start']) : 0;
+		//Get All Data Posted And Make It Safe To Use
+		$params = array('business_id', 'start');
+		$data = $garage->process_post_vars($params);
 
-		if (empty($single_business))
+		if (empty($data['business_id']))
 		{
 			$limit = '5';
 		}
 		else
 		{
 			$limit = '20';
-			$where = "AND b.id = $single_business";
+			$where = "AND b.id = " . $data['business_id'];
 		}
 
-		$sql = "SELECT b.* , sum( purchase_rating ) AS rating, count( * ) *10 AS total_rating
-			FROM " . GARAGE_BUSINESS_TABLE . " b, " . GARAGE_MODS_TABLE . " m
-			WHERE m.business_id = b.id
-				AND ( b.web_shop =1 OR b.retail_shop = 1 )
-				AND b.pending =0
-				$where
-			GROUP BY b.id
-			ORDER BY rating DESC
-			LIMIT $start, 25";
-			
-      		if ( !($result = $db->sql_query($sql)) )
-      		{
-         		message_die(GENERAL_ERROR, 'Could Select Business Data', '', __LINE__, __FILE__, $sql);
-      		}
+		//Get Required Shop Business Data
+		$business = $garage_business->select_all_shop_business_data($where,$start)
 
-		if ( $db->sql_numrows($result) < 1 )
+		//If No Business Let The User Know..
+		if ( count($business) < 1 )
 		{
 			redirect(append_sid("garage.$phpEx?mode=error&EID=1", true));
 		}
 
-		while( $row = $db->sql_fetchrow($result) )
-		{
-			$business[] = $row;
-		}
-		$db->sql_freeresult($result);
-
 		include($phpbb_root_path . 'includes/page_header.'.$phpEx);
 
-		if (!empty($single_business))
+		if (!empty($data['business_id']))
 		{
 			$template->assign_block_vars('level2', array());
 			$template->assign_vars(array(
@@ -2322,7 +2207,7 @@ switch( $mode )
 			);
 		}
 
-      		//Loop Processing All Categoires Returned From First Select Statement (now in a
+      		//Process All Shops......
       		for ($i = 0; $i < count($business); $i++)
       		{
 			if (empty($business[$i]['rating']))
@@ -2330,7 +2215,6 @@ switch( $mode )
 				$business[$i]['rating'] = '0';
 			}
 
-			//Setup cat_row Template Varibles
          		$template->assign_block_vars('business_row', array(
 				'U_VIEW_BUSINESS' => append_sid("garage.$phpEx?mode=view_shop_business&amp;business_id=".$business[$i]['id']),
             			'NAME' => $business[$i]['title'],
@@ -2345,50 +2229,29 @@ switch( $mode )
          		);
 			$template->assign_block_vars('business_row.customers', array());
 			
-			if (empty($single_business))
+			if (empty($data['business_id']))
 			{
          			$template->assign_block_vars('business_row.more_detail', array());
 			}
 
-			//Now Lets Go Get All Mods All Business's Have Installed
- 			$sql = "SELECT mods.id, mods.garage_id, mods.title AS mod_title, mods.price, mods.purchase_rating, mods.product_rating, mods.comments, u.username, u.user_id, makes.make, models.model, g.made_year, b.id as business_id
-	               		FROM (" . GARAGE_MODS_TABLE . " mods, " . GARAGE_BUSINESS_TABLE . " b)
-	    				LEFT JOIN " . GARAGE_TABLE . " g ON ( mods.garage_id = g.id )
-			    		LEFT JOIN " . USERS_TABLE . " u ON ( mods.member_id = u.user_id )
-		        		LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
-        				LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
-				WHERE mods.business_id = b.id
-					AND ( b.web_shop =1 OR b.retail_shop =1 )
-					AND b.pending = 0
-					AND b.id = " . $business[$i]['id'] . "
-					AND makes.pending = 0 AND models.pending = 0 
-				ORDER BY mods.id, mods.date_created DESC
-				LIMIT $limit";
+			//Now Lets Go Get All Mods All Business's Have Sold
+			$bus_mod_data = $garage_modifciation->get_modifications_by_business($business[$i]['id'], $limit)
 
-			$matched = 1;
-
-			if ( !($result = $db->sql_query($sql)) )
-      			{
-         			message_die(GENERAL_ERROR, 'Could Select Business Data', '', __LINE__, __FILE__, $sql);
-      			}
-
-
-			while( $bus_mod_data = $db->sql_fetchrow($result) )
+			while($j = 0; $j < count($bus_mod_data); $j++ )
 			{
-				// setup user row template varibles
 				$template->assign_block_vars('business_row.mod_row', array(
-					'USERNAME' => $bus_mod_data['username'],
-					'VEHICLE' => $bus_mod_data['made_year'] . ' ' . $bus_mod_data['make'] . ' ' . $bus_mod_data['model'],
-					'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=" . $bus_mod_data['user_id']),
-					'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" . $bus_mod_data['garage_id']),
-					'U_VIEW_MODIFICATION' => append_sid("garage.$phpEx?mode=view_modification&amp;CID=" . $bus_mod_data['garage_id'] ."&amp;MID=" . $bus_mod_data['id']),
-					'MODIFICATION' => $bus_mod_data['mod_title'],
-					'PURCHASE_RATING' => $bus_mod_data['purchase_rating'],
-					'PRODUCT_RATING' => $bus_mod_data['product_rating'],
-					'PRICE' => $bus_mod_data['price'])
+					'USERNAME' => $bus_mod_data[$j]['username'],
+					'VEHICLE' => $bus_mod_data[$j]['vehicle'],
+					'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=" . $bus_mod_data[$j]['user_id']),
+					'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" . $bus_mod_data[$j]['garage_id']),
+					'U_VIEW_MODIFICATION' => append_sid("garage.$phpEx?mode=view_modification&amp;CID=" . $bus_mod_data[$j]['garage_id'] ."&amp;MID=" . $bus_mod_data[$j]['id']),
+					'MODIFICATION' => $bus_mod_data[$j]['mod_title'],
+					'PURCHASE_RATING' => $bus_mod_data[$j]['purchase_rating'],
+					'PRODUCT_RATING' => $bus_mod_data[$j]['product_rating'],
+					'PRICE' => $bus_mod_data[$j]['price'])
 				);
 					
-				if (!empty($bus_mod_data['comments']))
+				if (!empty($bus_mod_data[$j]['comments']))
 				{
 					if ( $comments != 'SET')
 					{
@@ -2396,38 +2259,23 @@ switch( $mode )
 					}
 					$comments = 'SET';
 					$template->assign_block_vars('business_row.customer_comments', array(
-						'COMMENTS' => $bus_mod_data['username'] . ' -> ' .$bus_mod_data['comments'])
+						'COMMENTS' => $bus_mod_data[$j]['username'] . ' -> ' .$bus_mod_data[$j]['comments'])
 					);
 				}
-
-				//Increment Number Of Mods We Have Listed For This Business
-				$matched++;
 			}
+
+			//Reset Comments For Next Business..
 			$comments = '';
-			$db->sql_freeresult($result);
-      		}// end FOR of outer loop
-
-		$sql = "SELECT count(DISTINCT b.title) as total
-			FROM " . GARAGE_BUSINESS_TABLE . " b, " . GARAGE_MODS_TABLE . " m
-			WHERE m.business_id = b.id
-				AND ( b.web_shop =1 OR b.retail_shop =1 )
-				AND b.pending =0
-				$where";
-
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Error Getting Pagination Total', '', __LINE__, __FILE__, $sql);
 		}
 
-		$count = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
-
-		$pagination = generate_pagination("garage.$phpEx?mode=view_shop_business", $count['total'], 25, $start). '&nbsp;';
+		//Get Count & Perform Pagination...
+		$count = $garage_business->count_shop_business_data($where);
+		$pagination = generate_pagination("garage.$phpEx?mode=view_shop_business", $count, 25, $start). '&nbsp;';
 
 		$template->assign_block_vars('level1', array());
 		$template->assign_vars(array(
 			'PAGINATION' => $pagination,
-			'PAGE_NUMBER' => sprintf($lang['Page_of'], (floor($start / 25) + 1), ceil($count['total'] / 25)), 
+			'PAGE_NUMBER' => sprintf($lang['Page_of'], (floor($start / 25) + 1), ceil($count / 25)), 
 			'L_GOTO_PAGE' => $lang['Goto_page'],
 	 		'L_LEVEL1' => $lang['Shop_Review'],
                		'U_LEVEL1' => append_sid("garage.$phpEx?mode=view_shop_business"),
@@ -3318,7 +3166,6 @@ switch( $mode )
 					'POST' => $post)
 				);
 			}
-			$db->sql_freeresult($result);
 		}
 
 		$template->assign_block_vars('level1', array());

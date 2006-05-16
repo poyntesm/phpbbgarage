@@ -338,6 +338,80 @@ class garage_modification
 		return $row;
 	}
 
+	/*========================================================================*/
+	// Select All Modification Data From DB
+	// Usage: get_installed_mods_by_business_data('modification id', 'limit');
+	/*========================================================================*/
+	function get_modifications_by_install_business($business_id, $limit)
+	{
+		global $db;
+	
+		$sql = "SELECT mods.id, mods.garage_id, mods.title AS mod_title, mods.install_price, mods.install_rating, mods.install_comments, u.username, u.user_id, makes.make, models.model, g.made_year, b.id as business_id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
+               		FROM (" . GARAGE_MODS_TABLE . " mods, " . GARAGE_BUSINESS_TABLE . " b)
+    				LEFT JOIN " . GARAGE_TABLE . " g ON ( mods.garage_id = g.id )
+		    		LEFT JOIN " . USERS_TABLE . " u ON ( mods.member_id = u.user_id )
+	        		LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+       				LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
+			WHERE mods.install_business_id = b.id
+				AND b.garage =1
+				AND b.pending = 0
+				AND b.id = " . $business[$i]['id'] . "
+				AND makes.pending = 0 AND models.pending = 0
+			ORDER BY mods.id, mods.date_created DESC
+			LIMIT $limit";
+
+      		if ( !($result = $db->sql_query($sql)) )
+      		{
+         		message_die(GENERAL_ERROR, 'Could Not Select Modification Data', '', __LINE__, __FILE__, $sql);
+      		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
+
+		$db->sql_freeresult($result);
+
+		return $rows;
+	}
+
+	/*========================================================================*/
+	// Select All Modification Data From DB
+	// Usage: get_installed_mods_by_business_data('modification id', 'limit');
+	/*========================================================================*/
+	function get_modifications_by_business_data($business_id, $limit)
+	{
+		global $db;
+	
+		$sql = "SELECT mods.id, mods.garage_id, mods.title AS mod_title, mods.price, mods.purchase_rating, mods.product_rating, mods.comments, u.username, u.user_id, makes.make, models.model, g.made_year, b.id as business_id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
+               		FROM (" . GARAGE_MODS_TABLE . " mods, " . GARAGE_BUSINESS_TABLE . " b)
+    				LEFT JOIN " . GARAGE_TABLE . " g ON ( mods.garage_id = g.id )
+		    		LEFT JOIN " . USERS_TABLE . " u ON ( mods.member_id = u.user_id )
+	        		LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
+       				LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
+			WHERE mods.business_id = b.id
+				AND ( b.web_shop =1 OR b.retail_shop =1 )
+				AND b.pending = 0
+				AND b.id = $business_id
+				AND makes.pending = 0 AND models.pending = 0 
+			ORDER BY mods.id, mods.date_created DESC
+			LIMIT $limit";
+
+      		if ( !($result = $db->sql_query($sql)) )
+      		{
+         		message_die(GENERAL_ERROR, 'Could Not Select Modification Data', '', __LINE__, __FILE__, $sql);
+      		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
+
+		$db->sql_freeresult($result);
+
+		return $rows;
+	}
+
 }
 
 $garage_modification = new garage_modification();
