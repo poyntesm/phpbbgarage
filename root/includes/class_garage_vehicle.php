@@ -297,11 +297,11 @@ class garage_vehicle
 	/*========================================================================*/
 	function update_vehicle_time($cid)
 	{
-		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
+		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $garage;
 		
 		$data['time'] = time();
 
-		$this->update_single_field(GARAGE_TABLE, 'date_updated', $data['time'], 'id', $cid);
+		$garage->update_single_field(GARAGE_TABLE, 'date_updated', $data['time'], 'id', $cid);
 	
 		return;
 	}

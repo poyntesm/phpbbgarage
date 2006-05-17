@@ -409,7 +409,7 @@ class garage_template
 	{
 		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
-		$html = "<select name='id' class='forminput'>";
+		$html = "<select name='target_id' class='forminput'>";
 	
 		$sql = "SELECT id, title	
 			FROM " . GARAGE_BUSINESS_TABLE . " 

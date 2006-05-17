@@ -439,15 +439,30 @@ class garage
 		return $new;
 	}
 
-
 	/*========================================================================*/
 	// Seed Random Number Generator
 	// Usage: make_seed();
 	/*========================================================================*/
 	function make_seed()
 	{
-	   list($usec, $sec) = explode(' ', microtime());
-	   return (float) $sec + ((float) $usec * 100000);
+		list($usec, $sec) = explode(' ', microtime());
+		return (float) $sec + ((float) $usec * 100000);
+	}
+
+	/*========================================================================*/
+	// Seed Random Number Generator
+	// Usage: check_pending_items();
+	/*========================================================================*/
+	function check_pending_items()
+	{
+		global $garage_config;
+
+		if ($garage_config['items_pending'] == 1)
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 	/*========================================================================*/

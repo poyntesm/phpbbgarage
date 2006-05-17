@@ -211,7 +211,7 @@ class garage_business
 	// Select All Business Data From DB
 	// Usage: count_shop_business_data();
 	/*========================================================================*/
-	function count_garage_business_data($additional_where)
+	function count_shop_business_data($additional_where)
 	{
 		global $db;
 

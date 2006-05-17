@@ -22,7 +22,7 @@
 
 define('IN_PHPBB', true);
 
-// Let's set the root dir for phpBB & load normal phpBB required files
+//Let's Set The Root Dir For phpBB And Load Normal phpBB Required Files
 $phpbb_root_path = './';
 require($phpbb_root_path . 'extension.inc');
 include($phpbb_root_path . 'common.'.$phpEx);
@@ -43,11 +43,11 @@ require($phpbb_root_path . 'includes/class_garage_vehicle.' . $phpEx);
 require($phpbb_root_path . 'includes/class_garage_guestbook.' . $phpEx);
 require($phpbb_root_path . 'includes/class_garage_model.' . $phpEx);
 
-// Start session management
+//Start Session Management
 $userdata = session_pagestart($user_ip, PAGE_GARAGE);
 init_userprefs($userdata);
 
-// Set The Page Title
+//Set The Page Title
 $page_title = $lang['Garage'];
 $garage_template->version_notice();
 
@@ -390,8 +390,8 @@ switch( $mode )
 			'L_CREATE_NEW_MOD' 	=> $lang['Create_New_Mod'],
 			'L_BUTTON' 		=> $lang['Add_Modification'],
 			'L_TITLE' 		=> $lang['Add_Modification'],
-			'U_SUBMIT_SHOP'		=> append_sid("garage.$phpEx?mode=user_submit_business&CID=$cid&TYPE=add_modification&BUSINESS=shop"),
-			'U_SUBMIT_GARAGE'	=> append_sid("garage.$phpEx?mode=user_submit_business&CID=$cid&TYPE=add_modification&BUSINESS=garage"),
+			'U_SUBMIT_SHOP'		=> append_sid("garage.$phpEx?mode=user_submit_business&CID=$cid&mode_redirect=add_modification&BUSINESS=shop"),
+			'U_SUBMIT_GARAGE'	=> append_sid("garage.$phpEx?mode=user_submit_business&CID=$cid&mode_redirect=add_modification&BUSINESS=garage"),
 			'PRODUCT_RATING_LIST' 	=> $garage_template->selection_dropdown('product_rating',$rating_text,$rating_types,''),
 			'PURCHASE_RATING_LIST' 	=> $garage_template->selection_dropdown('purchase_rating',$rating_text,$rating_types,''),
 			'INSTALL_RATING_LIST' 	=> $garage_template->selection_dropdown('install_rating',$rating_text,$rating_types,''),
@@ -656,6 +656,12 @@ switch( $mode )
 		$params = array('quart');
 		$garage->check_required_vars($params);
 
+		//If Item Will Be Pending Update Overall Config Telling Us We Have A Pending Item
+		if ( $data['pending'] == 1 )
+		{
+			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value',$data['pending'],'config_name','items_pending');
+		}
+
 		//Update The DB With Data Acquired
 		$qmid = $garage_quartermile->insert_quartermile($data);
 
@@ -909,8 +915,14 @@ switch( $mode )
 		$params = array('bhp', 'bhp_unit');
 		$garage->check_required_vars($params);
 
+		//If Item Will Be Pending Update Overall Config Telling Us We Have A Pending Item
+		if ( $data['pending'] == 1 )
+		{
+			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value',$data['pending'],'config_name','items_pending');
+		}
+
 		//Update The DB With Data Acquired
-		$rrid = $garage_dynorun->insert_rollingroad($data);
+		$rrid = $garage_dynorun->insert_dynorun($data);
 
 		// Update The Time Now...In Case We Get Redirected During Image Processing
 		$garage_vehicle->update_vehicle_time($cid);
@@ -1106,7 +1118,7 @@ switch( $mode )
 			'L_COVER_TYPE' => $lang['Cover_Type'],
 			'L_COMMENTS' => $lang['Comments'],
 			'S_MODE_ACTION' => append_sid("garage.$phpEx?mode=insert_insurance"),
-			'U_SUBMIT_BUSINESS' => append_sid("garage.$phpEx?mode=user_submit_business&CID=$cid&TYPE=add_insurance&BUSINESS=insurance"),
+			'U_SUBMIT_BUSINESS' => append_sid("garage.$phpEx?mode=user_submit_business&CID=$cid&mode_redirect=add_insurance&BUSINESS=insurance"),
 			'CID' => $cid,
 			'COVER_TYPE_LIST' => $garage_template->selection_dropdown('cover_type',$cover_types,$cover_types,''))
 		);
@@ -1537,6 +1549,7 @@ switch( $mode )
 		$garage_template->sidemenu();
       		$template->pparse('body'); 
 
+		//Update View Count For Vehicle
 		$garage->update_view_count(GARAGE_TABLE, 'views', 'id', $cid);
 
 		break;
@@ -1807,7 +1820,8 @@ switch( $mode )
 		$data = $garage_image->select_gallery_data($cid);
 
 		for ($i = 0; $i < count($data); $i++)
-      		{
+		{
+			//Work Out If Image Is Current Hilite Else Produce Link To Make It So..
 			if ( $data[$i]['image_id'] == $vehicle_data['image_id'] )
 			{
 				$hilite = '<i>'.$lang['Current_Hilite_Image'].'</i>';
@@ -1818,6 +1832,7 @@ switch( $mode )
 				$hilite= '<a href="'.$temp_url.'">' .$lang['Set_Hilite_Image']. "</a>";
 			}
 
+			//Produce Actual Image Thumbnail And Link It To Full Size Version..
 			if ( ($data[$i]['image_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location'])) )
 			{
 				// Form the image link
@@ -1858,6 +1873,7 @@ switch( $mode )
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 
+		//Set Image As Hilite Image For Vehicle
 		$garage->update_single_field(GARAGE_TABLE,'image_id',$image_id,'id',$cid);
 
 		//Update Timestamp For Vehicle
@@ -1872,6 +1888,7 @@ switch( $mode )
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 
+		//Remove Image From Vehicle Gallery & Deletes Image
 		$garage_image->delete_gallery_image($image_id);
 
 		//Update Timestamp For Vehicle
@@ -1894,11 +1911,9 @@ switch( $mode )
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('business_id', 'start');
 		$data = $garage->process_post_vars($params);
+		$data['start'] = (empty($data['start'])) ? 0 : $data['start'];
 
-		$single_business = intval($HTTP_GET_VARS['business_id']);
-		$start = (isset($HTTP_GET_VARS['start'])) ? intval($HTTP_GET_VARS['start']) : 0;
-
-		if (empty($single_business))
+		if (empty($data['business_id']))
 		{	
 			$limit = 1;
 		}
@@ -2028,6 +2043,7 @@ switch( $mode )
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('business_id', 'start');
 		$data = $garage->process_post_vars($params);
+		$data['start'] = (empty($data['start'])) ? 0 : $data['start'];
 
 		//Build SQL Parameters Based On If We Are Displaying One Business Or Not
 		if (empty($data['business_id']))
@@ -2041,7 +2057,7 @@ switch( $mode )
 		}
 
 		//Get Required Garage Business Data
-		$business = $garage_business->select_all_garage_business_data($where,$start)
+		$business = $garage_business->select_all_garage_business_data($where,$start);
 
 		//If No Business Let The User Know..
 		if ( count($business) < 1 )
@@ -2090,9 +2106,9 @@ switch( $mode )
 			}
 
 			//Now Lets Go Get Mods Business Has Installed
-			$bus_mod_data = $garage_modification->get_modifications_by_install_business($business[$i]['id'],$limit)
+			$bus_mod_data = $garage_modification->get_modifications_by_install_business($business[$i]['id'], $limit);
 
-			while($j = 0 ; $j < count($bus_mod_data); $j++)
+			for($j = 0 ; $j < count($bus_mod_data); $j++)
 			{
 				$template->assign_block_vars('business_row.mod_row', array(
 					'USERNAME' => $bus_mod_data[$j]['username'],
@@ -2176,6 +2192,7 @@ switch( $mode )
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('business_id', 'start');
 		$data = $garage->process_post_vars($params);
+		$data['start'] = (empty($data['start'])) ? 0 : $data['start'];
 
 		if (empty($data['business_id']))
 		{
@@ -2188,7 +2205,7 @@ switch( $mode )
 		}
 
 		//Get Required Shop Business Data
-		$business = $garage_business->select_all_shop_business_data($where,$start)
+		$business = $garage_business->select_all_shop_business_data($where, $start);
 
 		//If No Business Let The User Know..
 		if ( count($business) < 1 )
@@ -2235,9 +2252,9 @@ switch( $mode )
 			}
 
 			//Now Lets Go Get All Mods All Business's Have Sold
-			$bus_mod_data = $garage_modifciation->get_modifications_by_business($business[$i]['id'], $limit)
+			$bus_mod_data = $garage_modifciation->get_modifications_by_business($business[$i]['id'], $limit);
 
-			while($j = 0; $j < count($bus_mod_data); $j++ )
+			for ($j = 0; $j < count($bus_mod_data); $j++)
 			{
 				$template->assign_block_vars('business_row.mod_row', array(
 					'USERNAME' => $bus_mod_data[$j]['username'],
@@ -2328,7 +2345,7 @@ switch( $mode )
 		);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('BUSINESS', 'TYPE');
+		$params = array('BUSINESS', 'mode_redirect');
 		$data = $garage->process_post_vars($params);
 		$data['insurance'] = ($data['BUSINESS'] == 'insurance') ? 'checked="checked"' : '' ;
 		$data['garage'] = ($data['BUSINESS'] == 'garage') ? 'checked="checked"' : '' ;
@@ -2336,7 +2353,7 @@ switch( $mode )
 		$data['web_shop'] = ($data['BUSINESS'] == 'shop') ? 'checked="checked"' : '' ;
 
 		$template->assign_vars(array(
-			'S_MODE_ACTION' 	=> append_sid("garage.$phpEx?mode=user_insert_business"),
+			'S_MODE_ACTION' 	=> append_sid("garage.$phpEx?mode=insert_business"),
 			'L_ADD_NEW_BUSINESS' 	=> $lang['Add_New_Business'],
 			'L_BUSINESS_NAME' 	=> $lang['Business_Name'],
 			'L_BUSINESS_NOTICE' 	=> $lang['Business_Notice'],
@@ -2357,7 +2374,7 @@ switch( $mode )
 			'RETAIL_CHECKED' 	=> $data['retail_shop'],
 			'WEBSHOP_CHECKED' 	=> $data['web_shop'],
 			'CID' 			=> $cid,
-			'TYPE' 			=> $data['TYPE'])
+			'MODE_REDIRECT'		=> $data['mode_redirect'])
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
@@ -2367,13 +2384,13 @@ switch( $mode )
 
 		break;
 
-	case 'user_insert_business':
+	case 'insert_business':
 
 		//Let Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD',"garage.$phpEx?mode=error&EID=14");
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('TYPE', 'name', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
+		$params = array('mode_redirect', 'name', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
 		$data = $garage->process_post_vars($params);
 		$data['pending'] = ($garage_config['enable_business_approval'] == '1') ? 1 : 0 ;
 		$data['insurance'] = ($data['insurance'] == 'on') ? 1 : 0 ;
@@ -2390,12 +2407,17 @@ switch( $mode )
 		$params = array('name');
 		$garage->check_required_vars($params);
 
-		//Update The DB With Data Acquired
+		//If Item Will Be Pending Update Overall Config Telling Us We Have A Pending Item
+		if ( $data['pending'] == 1 )
+		{
+			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value',$data['pending'],'config_name','items_pending');
+		}
+
+		//Create The Business Now...
 		$garage_business->insert_business($data);
 
-		$mode_redirect = $data['TYPE'];
-
-		redirect(append_sid("garage.$phpEx?mode=$mode_redirect&CID=$cid", true));
+		//Send Them Back To Whatever Page Them Came From..Now With Their Required Business :)
+		redirect(append_sid("garage.$phpEx?mode=".$data['mode_redirect']."&CID=$cid", true));
 
 		break;
 
@@ -2445,7 +2467,7 @@ switch( $mode )
 			'WEBSITE'		=> $data['website'],
 			'EMAIL'			=> $data['email'],
 			'OPENING_HOURS'		=> $data['opening_hours'],
-			'BUS_ID'		=> $data['id'])
+			'BUSINESS_ID'		=> $data['id'])
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
@@ -2461,7 +2483,7 @@ switch( $mode )
 		$garage->check_permissions('ADD',"garage.$phpEx?mode=error&EID=14");
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('BUS_ID', 'name', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
+		$params = array('id', 'name', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
 		$data = $garage->process_post_vars($params);
 		$data['pending'] = ($garage_config['enable_business_approval'] == '1') ? 1 : 0 ;
 		$data['insurance'] = ($data['insurance'] == 'on') ? 1 : 0 ;
@@ -2522,7 +2544,7 @@ switch( $mode )
 
 		break;
 
-	case 'add_make':
+	case 'insert_make':
 
 		//User Is Annoymous...So Not Allowed To Create A Vehicle
 		if ( $userdata['user_id'] == -1 )
@@ -2540,6 +2562,12 @@ switch( $mode )
 		//Checks All Required Data Is Present
 		$params = array('make');
 		$garage->check_required_vars($params);
+
+		//If Item Will Be Pending Update Overall Config Telling Us We Have A Pending Item
+		if ( $data['pending'] == 1 )
+		{
+			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value',$data['pending'],'config_name','items_pending');
+		}
 
 		//Update The DB With Data Acquired
 		$garage_model->insert_make($data);
@@ -2598,7 +2626,7 @@ switch( $mode )
 
 		break;
 
-	case 'add_model':
+	case 'insert_model':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if (!$userdata['session_logged_in'])
@@ -2616,6 +2644,12 @@ switch( $mode )
 		//Checks All Required Data Is Present
 		$params = array('make', 'make_id', 'model');
 		$garage->check_required_vars($params);
+
+		//If Item Will Be Pending Update Overall Config Telling Us We Have A Pending Item
+		if ( $data['pending'] == 1 )
+		{
+			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value',$data['pending'],'config_name','items_pending');
+		}
 
 		//Update The DB With Data Acquired
 		$garage_model->insert_model($data);
@@ -2637,14 +2671,12 @@ switch( $mode )
 			'body' => 'garage_quartermile_table.tpl')
 		);
 
-		//Build All Required Javascript And Arrays
+		//Build Required HTML, Javascript And Arrays
+		$garage_template->sort_order($sort_order);
 		$template->assign_vars(array(
 			'VEHICLE_ARRAY' => $garage_template->vehicle_array())
 		);
 		$template->assign_var_from_handle('JAVASCRIPT', 'javascript');
-
-		make_jumpbox('viewforum.'.$phpEx);
-		$garage_template->sort_order($sort_order);
 
 		//Build Actual Table With No Pending Runs
 		$garage_quartermile->build_quartermile_table('NO');
@@ -2693,7 +2725,7 @@ switch( $mode )
 		}
 
 		//Check The User Is Allowed To View This Page...If Not Send Them On There Way Nicely
-		if ($userdata['user_level'] == REGULAR )
+		if (!in_array($userdata['user_level'], array(ADMIN, MOD)) )
 		{
 			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true));
 		}
@@ -2803,7 +2835,7 @@ switch( $mode )
 		}
 
 		//Check The User Is Allowed To View This Page...If Not Send Them On There Way Nicely
-		if ($userdata['user_level'] == REGULAR )
+		if ( !in_array($userdata['user_level'], array(ADMIN, MOD)) )
 		{
 			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true));
 		}
@@ -2853,7 +2885,7 @@ switch( $mode )
 				'L_REASSIGN_TO' => $lang['Reassign_To'],
 				'L_REASSIGN_BUTTON' => $lang['Reassign_Button'],
 				'NAME' => $data['title'],
-				'BUS_ID' => $data['id'])
+				'BUSINESS_ID' => $data['id'])
 			);
 
 			//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
@@ -2867,14 +2899,15 @@ switch( $mode )
 		//Process Each Pending Type For Updates
 		while( list($ids, $table) = @each($params) )
 		{
+			//Check We Have Been Passed ID's To Work On
 			if ( !empty($HTTP_POST_VARS[$ids]) )
 			{
 				$pending_ids = $HTTP_POST_VARS[$ids];
-				$i = 0;
 
+				//Process For Remoinv
 				if ( $data['action'] == 'REMOVE' )
 				{
-					while( $i < count($pending_ids) )
+					for ($i = 0 ; $i < count($pending_ids); $i++)
 					{
 						$id = intval($pending_ids[$i]);
 
@@ -2892,9 +2925,9 @@ switch( $mode )
 						{
 							$garage->delete_rows($table,'id',$id);
 						}
-						$i++;
 					}
 				}
+				//Process For Approval...
 				else if ( $data['action'] == 'APPROVE' )
 				{
 					while( $i < count($pending_ids) )
@@ -2920,26 +2953,26 @@ switch( $mode )
 		}
 
 		//Check The User Is Allowed To View This Page...If Not Send Them On There Way Nicely
-		if ($userdata['user_level'] == REGULAR )
+		if ( !in_array($userdata['user_level'], array(ADMIN, MOD)) )
 		{
 			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true));
 		}
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('BUS_ID', 'id');
+		$params = array('business_id', 'target_id');
 		$data = $garage->process_post_vars($params);
 
 		//Checks All Required Data Is Present
-		$params = array('BUS_ID', 'id');
+		$params = array('business_id', 'target_id');
 		$garage->check_required_vars($params);
 
 		//Lets Update All Possible Business Fields With The Reassigned Business
-		$garage->update_single_field(GARAGE_MODS_TABLE,'business_id',$data['id'],'business_id',$data['BUS_ID']);
-		$garage->update_single_field(GARAGE_MODS_TABLE,'install_business_id',$data['id'],'install_business_id',$data['BUS_ID']);
-		$garage->update_single_field(GARAGE_INSURANCE_TABLE,'business_id',$data['id'],'business_id',$data['BUS_ID']);
+		$garage->update_single_field(GARAGE_MODS_TABLE,'business_id',$data['target_id'],'business_id',$data['business_id']);
+		$garage->update_single_field(GARAGE_MODS_TABLE,'install_business_id',$data['target_id'],'install_business_id',$data['business_id']);
+		$garage->update_single_field(GARAGE_INSURANCE_TABLE,'business_id',$data['target_id'],'business_id',$data['business_id']);
 
 		//Since We Have Updated All Item Lets Do The Original Delete Now
-		$garage->delete_rows(GARAGE_BUSINESS_TABLE,'id',$data['BUS_ID']);
+		$garage->delete_rows(GARAGE_BUSINESS_TABLE,'id',$data['business_id']);
 
 		redirect(append_sid("garage.$phpEx?mode=garage_pending", true));
 
@@ -2957,14 +2990,12 @@ switch( $mode )
 			'body' => 'garage_rollingroad_table.tpl')
 		);
 
-		//Build All Required Javascript And Arrays
+		//Build All Required HTML, Javascript And Arrays
+		$garage_template->sort_order($sort_order);
 		$template->assign_vars(array(
 			'VEHICLE_ARRAY' => $garage_template->vehicle_array())
 		);
 		$template->assign_var_from_handle('JAVASCRIPT', 'javascript');
-
-		make_jumpbox('viewforum.'.$phpEx);
-		$garage_template->sort_order($sort_order);
 
 		$garage_dynorun->build_rollingroad_table('NO');
 
@@ -3121,7 +3152,7 @@ switch( $mode )
 				// till recently it wasn't XHTML compliant)
 				$post = str_replace("\n", "\n<br />\n", $post);
 
-				if ( $userdata['user_level'] == MOD || $userdata['user_level'] == ADMIN )
+				if ( in_array($userdata['user_level'], array(ADMIN, MOD)) )
 				{
 					$temp_url = append_sid("garage.$phpEx?mode=edit_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $userdata['session_id']);
 					$edit_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_edit'] . '" alt="' . $lang['Edit_delete_post'] . '" title="' . $lang['Edit_delete_post'] . '" border="0" /></a>';
@@ -3235,7 +3266,7 @@ switch( $mode )
 	case 'edit_comment':
 
 		//Only Allow Moderators Or Administrators Perform This Action
-		if ( $userdata['user_level'] == REGULAR ) 
+		if ( !in_array($userdata['user_level'], array(ADMIN, MOD)) )
 		{
 			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true));
 		}
@@ -3270,7 +3301,7 @@ switch( $mode )
 	case 'update_comment':
 
 		//Only Allow Moderators Or Administrators Perform This Action
-		if ( $userdata['user_level'] == REGULAR ) 
+		if ( !in_array($userdata['user_level'], array(ADMIN, MOD)) )
 		{
 			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true));
 		}
@@ -3283,6 +3314,7 @@ switch( $mode )
 		$params = array('comments', 'COMMENT_ID');
 		$garage->check_required_vars($params);
 
+		//Update The Comment In The Vehicle Guestbook
 		$garage->update_single_field(GARAGE_GUESTBOOKS_TABLE,'post',$data['comments'],'id',$data['COMMENT_ID']);
 
 		redirect(append_sid("garage.$phpEx?mode=view_guestbook&CID=$cid", true));
@@ -3292,7 +3324,7 @@ switch( $mode )
 	case 'delete_comment':
 
 		//Only Allow Moderators Or Administrators Perform This Action
-		if ( $userdata['user_level'] == REGULAR ) 
+		if ( !in_array($userdata['user_level'], array(ADMIN, MOD)) )
 		{
 			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true));
 		}
@@ -3301,6 +3333,7 @@ switch( $mode )
 		$params = array('comment_id');
 		$data = $garage->process_post_vars($params);
 
+		//Delete The Comment From The Guestbook
 		$garage->delete_rows(GARAGE_GUESTBOOKS_TABLE,'id',$data['comment_id']);
 
 		redirect(append_sid("garage.$phpEx?mode=view_guestbook&CID=$cid", true));

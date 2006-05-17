@@ -13,7 +13,7 @@
 					<td class="row1">{BUSINESS_SELECT}</td>
 				</tr>
 				<tr>
-					<td class="catBottom" colspan="2" align="center"><input type="hidden" name="BUS_ID" value="{BUS_ID}" /><input type="submit" name="submit" value="{L_REASSIGN_BUTTON}" class="mainoption" /></td>
+					<td class="catBottom" colspan="2" align="center"><input type="hidden" name="business_id" value="{BUSINESS_ID}" /><input type="submit" name="submit" value="{L_REASSIGN_BUTTON}" class="mainoption" /></td>
 				</tr>
   			</table>
 			</form>
