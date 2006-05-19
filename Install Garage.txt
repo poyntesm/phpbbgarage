@@ -523,6 +523,22 @@ $admin_link = ( $userdata['user_level'] == ADMIN ) ? '<a href="admin/index.' . $
 
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
+require($phpbb_root_path . 'includes/class_garage.' . $phpEx);
+if ( in_array($userdata['user_level'], array(ADMIN, MOD)) )
+{
+	//If Pending Items Exist Then Create Link
+	if ($garage->check_pending_items)
+	{
+		$template->assign_vars(array(
+			'PENDING_LINK' => $pending_link)
+		);
+	}
+}
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
 if ( $userdata['user_level'] == ADMIN )
 {
 	$sql = "SELECT count(*) AS total
@@ -622,17 +638,6 @@ if ( $userdata['user_level'] == ADMIN )
 }
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
-# 
-#-----[ FIND ]----- 
-# 
-	'TRANSLATION_INFO' => (isset($lang['TRANSLATION_INFO'])) ? $lang['TRANSLATION_INFO'] : ((isset($lang['TRANSLATION'])) ? $lang['TRANSLATION'] : ''),
-#
-#-----[ AFTER, ADD ]------------------------------------------
-#
-//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-	'PENDING_LINK' => $pending_link,
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 # 
 #-----[ OPEN ]----- 
 # 
