@@ -523,117 +523,17 @@ $admin_link = ( $userdata['user_level'] == ADMIN ) ? '<a href="admin/index.' . $
 
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
-require($phpbb_root_path . 'includes/class_garage.' . $phpEx);
+include_once($phpbb_root_path . 'includes/class_garage.' . $phpEx);
 if ( in_array($userdata['user_level'], array(ADMIN, MOD)) )
 {
 	//If Pending Items Exist Then Create Link
-	if ($garage->check_pending_items)
+	if ( $garage->check_pending_items() )
 	{
+		$temp_url = append_sid("garage.$phpEx?mode=garage_pending");
+		$pending_link = '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;';
 		$template->assign_vars(array(
 			'PENDING_LINK' => $pending_link)
 		);
-	}
-}
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-
-
-//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-if ( $userdata['user_level'] == ADMIN )
-{
-	$sql = "SELECT count(*) AS total
-		FROM ". GARAGE_QUARTERMILE_TABLE ." qm
-		WHERE qm.pending = 1";
-	if( !($result = $db->sql_query($sql)) )
-	{
-		message_die(GENERAL_ERROR, 'Could not query information', '', __LINE__, __FILE__, $sql);
-	}
-
-	$count = $db->sql_fetchrow($result);
-	$db->sql_freeresult($result);
-
-	$temp_url = append_sid("garage.$phpEx?mode=garage_pending");
-	//We Have At Least One Pending Image So Display Link
-	if ( $count['total'] > 0 )
-	{
-		$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
-	}
-	//Not Found A Pending Item So Lets Keep Checking Other Types
-	else
-	{
-		$sql = "SELECT count(*) AS total
-			FROM ". GARAGE_ROLLINGROAD_TABLE ." rr
-			WHERE rr.pending = 1";
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could not query pics information', '', __LINE__, __FILE__, $sql);
-		}
-
-		$count = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
-		//We Have At Least One Pending Image So Display Link
-		if ( $count['total'] > 0 )
-		{
-			$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
-		}
-		//Still Not Found A Pending Item So Lets Keep Checking Other Types
-		else
-		{
-			$sql = "SELECT count(*) AS total
-				FROM ". GARAGE_BUSINESS_TABLE ." bus
-				WHERE bus.pending = 1";
-			if( !($result = $db->sql_query($sql)) )
-			{
-				message_die(GENERAL_ERROR, 'Could not query pics information', '', __LINE__, __FILE__, $sql);
-			}
-
-			$count = $db->sql_fetchrow($result);
-			$db->sql_freeresult($result);
-			if ( $count['total'] > 0 )
-			{
-				$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
-			}
-			//Still Not Found A Pending Item So Lets Keep Checking Other Types
-			else
-			{
-				$sql = "SELECT count(*) AS total
-					FROM ". GARAGE_MODELS_TABLE ." models
-					WHERE models.pending = 1";
-				if( !($result = $db->sql_query($sql)) )
-				{
-					message_die(GENERAL_ERROR, 'Could not query pics information', '', __LINE__, __FILE__, $sql);
-				}
-
-				$count = $db->sql_fetchrow($result);
-				$db->sql_freeresult($result);
-				if ( $count['total'] > 0 )
-				{
-					$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
-				}
-				else
-				{
-					$sql = "SELECT count(*) AS total
-						FROM ". GARAGE_MAKES_TABLE ." makes
-						WHERE makes.pending = 1";
-					if( !($result = $db->sql_query($sql)) )
-					{
-						message_die(GENERAL_ERROR, 'Could not query pics information', '', __LINE__, __FILE__, $sql);
-					}
-
-					$count = $db->sql_fetchrow($result);
-					$db->sql_freeresult($result);
-					if ( $count['total'] > 0 )
-					{
-						$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
-					}
-					//Out Of Luck No More Tables To Check
-					else
-					{
-						$pending_link = '';
-					}
-				}
-			}
-		}
 	}
 }
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------

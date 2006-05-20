@@ -466,6 +466,43 @@ class garage
 	}
 
 	/*========================================================================*/
+	// Seed Random Number Generator
+	// Usage: check_pending_items();
+	/*========================================================================*/
+	function pending_notification()
+	{
+		global $lang, $garage_guestbook, $userdata, $db, $phpEx;
+
+		$sql ="SELECT user_id
+			FROM " . PHPBB_USERS ."
+			WHERE user_level = " . ADMIN;
+
+		if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'Error Counting Views', '', __LINE__, __FILE__, $sql);
+		}
+
+		//Process All Admin Users And Send Them A PM...
+		while ($row = $db->sql_fetchrow($result))
+		{
+			//Build Required PM Data
+			$data['date'] = date("U");
+			$data['pm_subject'] = $lang['Pending_Items'];
+			$data['link'] = '<a href="garage.'.$phpEx.'?mode=garage_pending">'.$lang['Here'].'</a>';
+			$data['pm_text'] = (sprintf($lang['Pending_Notify_Text'],$data['link']));
+			$data['author_id'] = $userdata['user_id'];
+			$data['user_id'] = $row['user_id'];
+	
+			//Now We Have All Data Lets Send The PM!!
+			$garage_guestbook->send_user_pm($data);
+		}
+
+		$db->sql_freeresult($result);
+
+		return;
+	}
+
+	/*========================================================================*/
 	// Write A Message To A Logfile
 	// Usage: write_logfile('file name', 'wb|ab'), 'message', 'no. tabs required';
 	/*========================================================================*/

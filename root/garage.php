@@ -391,9 +391,9 @@ switch( $mode )
 			'L_TITLE' 		=> $lang['Add_Modification'],
 			'U_SUBMIT_SHOP'		=> append_sid("garage.$phpEx?mode=user_submit_business&CID=$cid&mode_redirect=add_modification&BUSINESS=shop"),
 			'U_SUBMIT_GARAGE'	=> append_sid("garage.$phpEx?mode=user_submit_business&CID=$cid&mode_redirect=add_modification&BUSINESS=garage"),
-			'PRODUCT_RATING_LIST' 	=> $garage_template->selection_dropdown('product_rating',$rating_text,$rating_types,''),
-			'PURCHASE_RATING_LIST' 	=> $garage_template->selection_dropdown('purchase_rating',$rating_text,$rating_types,''),
-			'INSTALL_RATING_LIST' 	=> $garage_template->selection_dropdown('install_rating',$rating_text,$rating_types,''),
+			'PRODUCT_RATING_LIST' 	=> $garage_template->selection_dropdown('product_rating', $rating_text, $rating_types,''),
+			'PURCHASE_RATING_LIST' 	=> $garage_template->selection_dropdown('purchase_rating', $rating_text, $rating_types,''),
+			'INSTALL_RATING_LIST' 	=> $garage_template->selection_dropdown('install_rating', $rating_text, $rating_types,''),
 			'CID' => $cid)
 		);
 
@@ -464,7 +464,7 @@ switch( $mode )
 			'body'   => 'garage_modification.tpl')
 		);
 		
-		//Pull Required Data From DB
+		//Pull Required Modification Data From DB
 		$data = $garage_modification->select_modification_data($mid);
 
 		//Build All Required HTML parts
@@ -503,9 +503,9 @@ switch( $mode )
 			'MODEL' => $data['model'],
 			'PRICE' => $data['price'],
 			'INSTALL_PRICE' => $data['install_price'],
-			'PRODUCT_RATING_LIST' => $garage_template->selection_dropdown('product_rating',$rating_text,$rating_types,$data['product_rating']),
-			'PURCHASE_RATING_LIST' => $garage_template->selection_dropdown('purchase_rating',$rating_text,$rating_types,$data['purchase_rating']),
-			'INSTALL_RATING_LIST' => $garage_template->selection_dropdown('install_rating',$rating_text,$rating_types,$data['install_rating']),
+			'PRODUCT_RATING_LIST' => $garage_template->selection_dropdown('product_rating', $rating_text, $rating_types, $data['product_rating']),
+			'PURCHASE_RATING_LIST' => $garage_template->selection_dropdown('purchase_rating', $rating_text, $rating_types, $data['purchase_rating']),
+			'INSTALL_RATING_LIST' => $garage_template->selection_dropdown('install_rating', $rating_text, $rating_types, $data['install_rating']),
 			'COMMENTS' => $data['comments'],
 			'INSTALL_COMMENTS' => $data['install_comments'])
 		);
@@ -712,7 +712,7 @@ switch( $mode )
 		$params = array('PENDING');
 		$redirect = $garage->process_post_vars($params);
 
-		//Pull Required Data From DB
+		//Pull Required Quartermile Data From DB
 		$data = $garage->select_quartermile_data($qmid);
 
 		//If Dynorun Is Already Linked Display Dropdown Correctly
@@ -797,6 +797,7 @@ switch( $mode )
 			$garage_image->delete_image($data['image_id']);
 			$garage->update_single_field(GARAGE_QUARTERMILE_TABLE,'image_id','NULL','id',$qmid);
 		}
+
 		//If Any Image Variables Set Enter The Image Handling
 		if( $garage_image->image_attached() )
 		{
@@ -919,10 +920,10 @@ switch( $mode )
 			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value',$data['pending'],'config_name','items_pending');
 		}
 
-		//Update The DB With Data Acquired
+		//Update The Dynorun With Data Acquired
 		$rrid = $garage_dynorun->insert_dynorun($data);
 
-		// Update The Time Now...In Case We Get Redirected During Image Processing
+		//Update The Time Now...In Case We Get Redirected During Image Processing
 		$garage_vehicle->update_vehicle_time($cid);
 
 		//If Any Image Variables Set Enter The Image Handling
@@ -961,7 +962,7 @@ switch( $mode )
 			'body'   => 'garage_rollingroad.tpl')
 		);
 
-		//Pull Required Data From DB
+		//Pull Required Dynorun Data From DB
 		$data = $garage_dynorun->select_rollingroad_data($rrid);
 
 		//See If We Got Sent Here By Pending Page...If So We Need To Tell Update To Redirect Correctly
@@ -994,10 +995,10 @@ switch( $mode )
 			'NITROUS' => $data['nitrous'],
 			'PEAKPOINT' => $data['peakpoint'],
 			'PENDING_REDIRECT' => $redirect['PENDING'],
-			'NITROUS_UNIT_LIST' => $garage_template->selection_dropdown('nitrous',$nitrous_types_text,$nitrous_types,$data['nitrous']),
-			'BOOST_UNIT_LIST' => $garage_template->selection_dropdown('boost_unit',$boost_types,$boost_types,$data['boost_unit']),
-			'TORQUE_UNIT_LIST' => $garage_template->selection_dropdown('torque_unit',$power_types,$power_types,$data['torque_unit']),
-			'BHP_UNIT_LIST' => $garage_template->selection_dropdown('bhp_unit',$power_types,$power_types,$data['bhp_unit']),
+			'NITROUS_UNIT_LIST' => $garage_template->selection_dropdown('nitrous', $nitrous_types_text, $nitrous_types, $data['nitrous']),
+			'BOOST_UNIT_LIST' => $garage_template->selection_dropdown('boost_unit', $boost_types, $boost_types, $data['boost_unit']),
+			'TORQUE_UNIT_LIST' => $garage_template->selection_dropdown('torque_unit', $power_types, $power_types, $data['torque_unit']),
+			'BHP_UNIT_LIST' => $garage_template->selection_dropdown('bhp_unit', $power_types, $power_types, $data['bhp_unit']),
 			'S_MODE_ACTION' => append_sid("garage.$phpEx?mode=update_rollingroad"))
 		);
 
@@ -1023,10 +1024,10 @@ switch( $mode )
 		$params = array('bhp', 'bhp_unit');
 		$garage->check_required_vars($params);
 
-		//Update The DB With Data Acquired
-		$garage_dynorun->update_rollingroad($data);
+		//Update The Dynorun With Data Acquired
+		$garage_dynorun->update_dynorun($data);
 
-		// Update The Time Now...In Case We Get Redirected During Image Processing
+		//Update The Time Now...In Case We Get Redirected During Image Processing
 		$garage_vehicle->update_vehicle_time($cid);
 
 		//Removed The Old Image If Required By A Delete Or A New Image Existing
@@ -1147,8 +1148,8 @@ switch( $mode )
 		$params = array('business_id', 'premium', 'cover_type');
 		$garage->check_required_vars($params);
 
-		//Update The DB With Data Acquired
-		$garage_insurance->insert_insurance($data);
+		//Insert The Insurnace Premium
+		$garage_insurance->insert_premium($data);
 
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
@@ -1218,7 +1219,7 @@ switch( $mode )
 		$garage->check_required_vars($params);
 
 		//Update The Insurance Premium With Data Acquired
-		$garage_insurnace->update_insurance($data);
+		$garage_insurnace->update_premium($data);
 
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
@@ -1233,7 +1234,7 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Delete Insurance Premium
-		$garage_insurance->delete_insurance($ins_id);
+		$garage_insurance->delete_premium($ins_id);
 
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
@@ -1442,7 +1443,7 @@ switch( $mode )
 			'L_PREMIUM' 	=> $lang['Premium'],
 			'L_COVER_TYPE' 	=> $lang['Cover_Type'],
 			'L_BUSINESS'	=> $lang['Business_Name'],
-			'S_HIDDEN_DATA' => $s_hidden_data;
+			//'S_HIDDEN_DATA' => $s_hidden_data;
 			'S_SORT_SELECT' => $garage_template->selection_dropdown('sort',$sort_types_text,$sort_types,$sort),
 			'S_MODE_ACTION' => append_sid("garage.$phpEx?mode=search_insurance"))
 		);
@@ -2888,7 +2889,7 @@ switch( $mode )
 			{
 				$pending_ids = $HTTP_POST_VARS[$ids];
 
-				//Process For Remoinv
+				//Process For Removing
 				if ( $data['action'] == 'REMOVE' )
 				{
 					for ($i = 0 ; $i < count($pending_ids); $i++)
@@ -2981,7 +2982,8 @@ switch( $mode )
 		);
 		$template->assign_var_from_handle('JAVASCRIPT', 'javascript');
 
-		$garage_dynorun->build_rollingroad_table('NO');
+		//Build Dynorun Table With No Pending Runs
+		$garage_dynorun->build_dynorun_table('NO');
 
 		$template->assign_block_vars('level1', array());
 		$template->assign_vars(array(
@@ -3035,7 +3037,7 @@ switch( $mode )
 			$template->assign_block_vars('leave_comment', array());
 		}
 		
-         	//Loop Processing All Mods Returned From Second Statements
+         	//Check If This Is Firs Comment
 		if ( count($comment_data) < 1 )
 		{
 			$template->assign_block_vars('first_comment', array());
@@ -3043,6 +3045,7 @@ switch( $mode )
 				'LEAVE_FIRST_COMMENT'  => $lang['Add_First_Comment'])
 			);
 		}
+		//If Not First Comment Display All Existing Comments
 		else
 		{
 			for ($i = 0; $i < count($comment_data); $i++)
@@ -3219,7 +3222,7 @@ switch( $mode )
 		$params = array('comments');
 		$garage->check_required_vars($params);
 
-		//Insert The Comment
+		//Insert The Comment Into Vehicle Guestbook
 		$garage_guestbook->insert_vehicle_comment($data);
 
 		//Get Vehicle Data So We Can Check If We Need To PM User
@@ -3227,6 +3230,7 @@ switch( $mode )
 		$data['author_id'] = $userdata['user_id'];
 		$data['time'] = time();
 
+		//If User Has Requested Notification On Comments Sent Them A PM
 		if ( $data['guestbook_pm_notify'] == TRUE )
 		{
 			//Build Rest Of Required Data
@@ -3255,7 +3259,7 @@ switch( $mode )
 			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true));
 		}
 
-		//Pull Required Data From DB
+		//Pull Required Comment Data From DB
 		$data = $garage_guestbook->select_comment_data($comment_id);	
 		
 		$template->assign_block_vars('level1', array());
@@ -3374,11 +3378,13 @@ switch( $mode )
 		}
 
 		$count = $garage_vehicle->count_vehicle_ratings($data);
-		
+
+		//If You Have Not Rated This Vehicle..Create A Rating	
 		if ( $count['total'] < 1 )
 		{
 			$garage_vehicle->insert_vehicle_rating($data);
 		}
+		//You Already Have Rated It..So Just Update The Rating	
 		else
 		{
 			$garage_vehicle->update_vehicle_rating($data);

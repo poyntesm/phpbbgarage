@@ -141,10 +141,10 @@ class garage_guestbook
 	/*========================================================================*/
 	function send_user_pm($data)
 	{
-		global $db;
+		global $db, $garage;
 
-		$this->update_single_field(USERS_TABLE, 'user_new_privmsg', '1', 'user_id', $data['user_id']);	
-		$this->update_single_field(USERS_TABLE, 'user_last_privmsg', '9999999999', 'user_id', $data['user_id']);	
+		$garage->update_single_field(USERS_TABLE, 'user_new_privmsg', '1', 'user_id', $data['user_id']);	
+		$garage->update_single_field(USERS_TABLE, 'user_last_privmsg', '9999999999', 'user_id', $data['user_id']);	
 		$sql = "INSERT INTO " . PRIVMSGS_TABLE . " (privmsgs_type, privmsgs_subject, privmsgs_from_userid, privmsgs_to_userid, privmsgs_date, privmsgs_enable_html, privmsgs_enable_bbcode, privmsgs_enable_smilies, privmsgs_attach_sig) VALUES ('0', '".$data['pm_subject']."', '".$data['author_id']."', '".$data['user_id']."', '".$data['date']."', '0', '1', '1', '0')";
            	
 	 	if ( !$db->sql_query($sql) )
