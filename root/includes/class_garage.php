@@ -29,14 +29,12 @@ $sql = "SELECT config_name, config_value FROM ". GARAGE_CONFIG_TABLE;
 
 if(!$result = $db->sql_query($sql))
 {
-	message_die(GENERAL_ERROR, "Could not query Garage config information", "", __LINE__, __FILE__, $sql);
+	message_die(GENERAL_ERROR, "Could Not Query Garage Config Information", "", __LINE__, __FILE__, $sql);
 }
 
 while( $row = $db->sql_fetchrow($result) )
 {
-	$garage_config_name = $row['config_name'];
-	$garage_config_value = $row['config_value'];
-	$garage_config[$garage_config_name] = $garage_config_value;
+	$garage_config[$row['config_name']] = $row['config_value'];
 }
 
 //Setup Arrays Used To Build Drop Down Selection Boxes
@@ -194,7 +192,7 @@ class garage
 
 		if( !$result = $db->sql_query($sql) )
 		{
-			message_die(GENERAL_ERROR, 'Could Not Update Garage DB', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'Could Not Update DB', '', __LINE__, __FILE__, $sql);
 		}
 	
 		return;
@@ -230,7 +228,7 @@ class garage
 
 		if( !$result = $db->sql_query($sql) )
 		{
-			message_die(GENERAL_ERROR, 'Could Not Update Garage DB', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'Could Not Perform Delete', '', __LINE__, __FILE__, $sql);
 		}
 
 		return;
@@ -266,9 +264,9 @@ class garage
 
 	/*========================================================================*/
 	// Checks A User Is Allowed Perform An Action
-	// Usage: check_permissions('required permission'>, 'redirect url on failure');
+	// Usage: check_permissions('required permission', 'redirect url on failure');
 	/*========================================================================*/
-	function check_permissions($required_permission,$redirect_url)
+	function check_permissions($required_permission, $redirect_url)
 	{
 		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
@@ -387,7 +385,7 @@ class garage
 
       		if ( !($result = $db->sql_query($sql)) )
       		{
-         		message_die(GENERAL_ERROR, 'Could Not Select Category Data', '', __LINE__, __FILE__, $sql);
+         		message_die(GENERAL_ERROR, 'Could Not Select All Categories Data', '', __LINE__, __FILE__, $sql);
       		}
 
 		while ($row = $db->sql_fetchrow($result) )
@@ -400,7 +398,7 @@ class garage
 	}
 
 	/*========================================================================*/
-	// Select All Category Data
+	// Select Specific Category Data
 	// Usage: select_category_data('category id');
 	/*========================================================================*/
 	function select_category_data($category_id)
@@ -426,7 +424,7 @@ class garage
 
 
 	/*========================================================================*/
-	// Select All Category Data
+	// Remove Duplicate Entries In An Array
 	// Usage: remove_duplicate('vehicle id');
 	/*========================================================================*/
 	function remove_duplicate($array, $field)
@@ -450,7 +448,7 @@ class garage
 	}
 
 	/*========================================================================*/
-	// Seed Random Number Generator
+	// Check If Any Pending Items Exists
 	// Usage: check_pending_items();
 	/*========================================================================*/
 	function check_pending_items()
@@ -466,7 +464,7 @@ class garage
 	}
 
 	/*========================================================================*/
-	// Seed Random Number Generator
+	// Send All Admins A PM Notifing Them Of Pending Items
 	// Usage: check_pending_items();
 	/*========================================================================*/
 	function pending_notification()
@@ -479,7 +477,7 @@ class garage
 
 		if(!$result = $db->sql_query($sql))
 		{
-			message_die(GENERAL_ERROR, 'Error Counting Views', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'Could Not Select Admin Users', '', __LINE__, __FILE__, $sql);
 		}
 
 		//Process All Admin Users And Send Them A PM...

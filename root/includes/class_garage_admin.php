@@ -47,7 +47,10 @@ class garage_admin
 
 		return;
 	}
-
+	/*========================================================================*/
+	// Inserts Category Into DB
+	// Usage: insert_category();
+	/*========================================================================*/
 	function gzip_PrintFourChars($Val)
 	{
 		for ($i = 0; $i < 4; $i ++)
@@ -58,9 +61,10 @@ class garage_admin
 		return $return;
 	} 
 
-	//
-	// This function is used for grabbing the sequences for postgres...
-	//
+	/*========================================================================*/
+	// Used for grabbing the sequences for postgres...
+	// Usage: pg_get_sequences('line feed', 'backup type');
+	/*========================================================================*/
 	function pg_get_sequences($crlf, $backup_type)
 	{
 		global $db;
@@ -118,12 +122,10 @@ class garage_admin
 	
 	} // End function...
 	
-	//
-	// The following functions will return the "CREATE TABLE syntax for the
-	// varying DBMS's
-	//
-	// This function returns, will return the table def's for postgres...
-	//
+	/*========================================================================*/
+	// Will Return The "CREATE TABLE syntax For Postgres
+	// Usage: get_table_def_postgresql('table name', 'line feed');
+	/*========================================================================*/
 	function get_table_def_postgresql($table, $crlf)
 	{
 		global $drop, $db;
