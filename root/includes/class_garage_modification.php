@@ -1,6 +1,6 @@
 <?php
 /***************************************************************************
- *                              functions_garage.php
+ *                              class_garage_modification.php
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton
@@ -38,11 +38,13 @@ class garage_modification
 		global $cid, $userdata, $db;
 
 		$sql = "INSERT INTO ". GARAGE_MODS_TABLE ."
-			SET garage_id = '$cid', member_id = '".$data['member_id']."', category_id = '".$data['category_id']."', title = '".$data['title']."', price = '".$data['price']."', install_price = '".$data['install_price']."', install_rating = '".$data['install_rating']."', product_rating = '".$data['product_rating']."', comments = '".$data['comments']."', date_created = '".$data['time']."', date_updated = '".$data['time']."', business_id = '".$data['business_id']."', install_business_id = '".$data['install_business_id']."', install_comments = '".$data['install_comments']."', purchase_rating = '".$data['purchase_rating']."'";
+			(garage_id, member_id, category_id, title, price, install_price, install_rating, product_rating, comments, date_created, date_updated, business_id, install_business_id, install_comments, purchase_rating)
+			VALUES
+			($cid, ".$data['member_id'].", ".$data['category_id'].", '".$data['title']."', '".$data['price']."', '".$data['install_price']."', '".$data['install_rating']."', '".$data['product_rating']."', '".$data['comments']."', '".$data['time']."', '".$data['time']."', '".$data['business_id']."', '".$data['install_business_id']."', '".$data['install_comments']."', '".$data['purchase_rating']."')";
 
 		if(!$result = $db->sql_query($sql))
 		{
-			message_die(GENERAL_ERROR, 'Could Not Insert Vehicle', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'Could Not Insert Modification', '', __LINE__, __FILE__, $sql);
 		}
 	
 		$mid = $db->sql_nextid();
@@ -79,11 +81,14 @@ class garage_modification
 		global $db;
 
 	        // Get the total count of mods in the garage
-	        $sql = "SELECT count(*) AS total_mods FROM " . GARAGE_MODS_TABLE;
+		$sql = "SELECT count(*) AS total_mods 
+			FROM " . GARAGE_MODS_TABLE;
+
 		if(!$result = $db->sql_query($sql))
 		{
 			message_die(GENERAL_ERROR, 'Error Counting Total Mods', '', __LINE__, __FILE__, $sql);
 		}
+
         	$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
@@ -91,32 +96,12 @@ class garage_modification
 	}
 
 	/*========================================================================*/
-	// Count The Modification Categories Within The Garage
-	// Usage: count_modification_categories();
-	/*========================================================================*/
-	function count_modification_categories()
-	{
-		global $db;
-
-	        // Get the total count of mods in the garage
-	        $sql = "SELECT count(*) AS total FROM " . GARAGE_CATEGORIES_TABLE;
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Error Counting Total Mods', '', __LINE__, __FILE__, $sql);
-		}
-        	$row = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
-
-		return $row['total'];
-	}
-			
-	/*========================================================================*/
 	// Delete Modification Entry Including image 
 	// Usage: delete_modification('modification id');
 	/*========================================================================*/
 	function delete_modification($mid)
 	{
-		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
+		global $garage;
 	
 		//Right They Want To Delete A Modification Time
 		if (empty($mid))
@@ -133,12 +118,12 @@ class garage_modification
 			if ( (!empty($data['attach_location'])) OR (!empty($data['attach_thumb_location'])) )
 			{
 				//Seems To Be An Image To Delete, Let Call The Function
-				$this->delete_image($data['image_id']);
+				$garage->delete_image($data['image_id']);
 			}
 		}
 	
 		//Time To Delete The Actual Modification Now
-		$this->delete_rows(GARAGE_MODS_TABLE, 'id', $mid);
+		$garage->delete_rows(GARAGE_MODS_TABLE, 'id', $mid);
 	
 		return ;
 	}
@@ -411,7 +396,6 @@ class garage_modification
 
 		return $rows;
 	}
-
 }
 
 $garage_modification = new garage_modification();

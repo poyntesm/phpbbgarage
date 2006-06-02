@@ -2027,18 +2027,14 @@ switch( $mode )
 		$data['start'] = (empty($data['start'])) ? 0 : $data['start'];
 
 		//Build SQL Parameters Based On If We Are Displaying One Business Or Not
-		if (empty($data['business_id']))
-		{
-			$limit = '5';
-		}
-		else if (!empty($data['business_id']))
+		if (!empty($data['business_id']))
 		{
 			$limit = '20';
 			$where = "AND b.id = " . $data['business_id'];
 		}
 
 		//Get Required Garage Business Data
-		$business = $garage_business->select_all_garage_business_data($where,$start);
+		$business = $garage_business->select_all_garage_business_data($where, $start, $limit);
 
 		//If No Business Let The User Know..
 		if ( count($business) < 1 )

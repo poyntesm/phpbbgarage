@@ -1,6 +1,6 @@
 <?php
 /***************************************************************************
- *                              functions_garage.php
+ *                              class_garage.php
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton
@@ -167,13 +167,15 @@ class garage
 	function count_total_views()
 	{
 		global $db;
-
 		// Get the total count of vehicles and views in the garage
-        	$sql ="SELECT SUM(views) AS total_views FROM " . GARAGE_TABLE;
+		$sql = "SELECT SUM(views) AS total_views 
+			FROM " . GARAGE_TABLE;
+
 		if(!$result = $db->sql_query($sql))
 		{
 			message_die(GENERAL_ERROR, 'Error Counting Views', '', __LINE__, __FILE__, $sql);
 		}
+
 	        $row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
@@ -210,7 +212,7 @@ class garage
 
 		if ( !$db->sql_query($sql) )
 		{
-			message_die(GENERAL_ERROR, "Could Not Update Count", '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, "Could Not Update View Count", '', __LINE__, __FILE__, $sql);
 		}
 
 		return;
@@ -246,13 +248,13 @@ class garage
 	             	FROM " . USER_GROUP_TABLE . " AS ug, " . GROUPS_TABLE ." g
                 	WHERE ug.user_id = $u_id
 				and ug.group_id = g.group_id and g.group_single_user <> " . TRUE ."
-			ORDER BY g.group_name ASC";
+				ORDER BY g.group_name ASC";
+
        		if( !($result = $db->sql_query($sql)) )
        		{
          		message_die(GENERAL_ERROR, 'Could Not Select Groups', '', __LINE__, __FILE__, $sql);
        		}
 
-		//Lets Populate An Array With All The Groups You Are Part Of
 		while( $grouprow = $db->sql_fetchrow($result) )
 		{
 			$groupdata[] = $grouprow;
@@ -300,23 +302,26 @@ class garage
 			$sql = "SELECT config_value as private_groups
 				FROM ". GARAGE_CONFIG_TABLE ."
 				WHERE config_name = 'private_deny_perms'";
+
 			if( !$result = $db->sql_query($sql) )
 			{
 				message_die(GENERAL_ERROR, 'Could not get permissions', '', __LINE__, __FILE__, $sql);
 			}
+
 			$private_perms = $db->sql_fetchrow($result);
 			$private_groups = @explode(',', $private_perms['private_groups']);
+			$db->sql_freeresult($result);
 	
 			for ($i = 0; $i < count($groupdata); $i++)
 			{
 				if (in_array($groupdata[$i]['group_id'], $private_groups))
 				{
-					//You Were Found To Be A Member Of A Denied Group
+					//You Were Found To Be A Member Of A Denied Group And We Know Where To Send You
 					if (!empty($redirect_url))
 					{
 						redirect(append_sid("$redirect_url", true));
 					}
-					//No URL To Redirect So We Will Just Return FALSE
+					//You Were Found To Be A Member Of A Denied Group But No URL So Return False
 					else
 					{
 						return (FALSE);
@@ -344,12 +349,15 @@ class garage
 			$sql = "SELECT config_value as private_groups
 				FROM ". GARAGE_CONFIG_TABLE ."
 				WHERE config_name = 'private_".$required_permission."_perms'";
+
 			if( !$result = $db->sql_query($sql) )
 			{
 				message_die(GENERAL_ERROR, 'Could not get permissions', '', __LINE__, __FILE__, $sql);
 			}
+
 			$private_perms = $db->sql_fetchrow($result);
 			$private_groups = @explode(',', $private_perms['private_groups']);
+			$db->sql_freeresult($result);
 	
 			for ($i = 0; $i < count($groupdata); $i++)
 			{
@@ -416,7 +424,6 @@ class garage
       		}
 
 		$row = $db->sql_fetchrow($result);
-
 		$db->sql_freeresult($result);
 	
 		return $row;
@@ -464,23 +471,23 @@ class garage
 	}
 
 	/*========================================================================*/
-	// Send All Admins A PM Notifing Them Of Pending Items
+	// Send All Admins & Moderators A PM Notifing Them Of Pending Items
 	// Usage: check_pending_items();
 	/*========================================================================*/
 	function pending_notification()
 	{
 		global $lang, $garage_guestbook, $userdata, $db, $phpEx;
 
-		$sql ="SELECT user_id
+		$sql = "SELECT user_id
 			FROM " . PHPBB_USERS ."
-			WHERE user_level = " . ADMIN;
+			WHERE user_level = " . ADMIN . " or user_level = " . MOD;
 
 		if(!$result = $db->sql_query($sql))
 		{
-			message_die(GENERAL_ERROR, 'Could Not Select Admin Users', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'Could Not Select Admin Or Moderator Users', '', __LINE__, __FILE__, $sql);
 		}
 
-		//Process All Admin Users And Send Them A PM...
+		//Process All Selected Users And Send Them A PM...
 		while ($row = $db->sql_fetchrow($result))
 		{
 			//Build Required PM Data

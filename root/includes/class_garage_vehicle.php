@@ -1,6 +1,6 @@
 <?php
 /***************************************************************************
- *                              functions_garage.php
+ *                              class_garage_vehicle.php
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton
@@ -72,7 +72,6 @@ class garage_vehicle
 			//Return The Highest Quota You Were Granted
 			return max($quota);
 		}
-
 	}
 
 	/*========================================================================*/
@@ -105,9 +104,7 @@ class garage_vehicle
 			//Return The Groups Quota
 			return $private_add_quota[$index];
 		}
-
 	}
-
 
 	/*========================================================================*/
 	// Inserts Vehicle Into DB
@@ -118,16 +115,18 @@ class garage_vehicle
 		global $userdata, $db;
 
 		$sql = "INSERT INTO ". GARAGE_TABLE ."
-			SET made_year = '".$data['year']."', make_id = '".$data['make_id']."', model_id = '".$data['model_id']."', color = '".$data['colour']."', mileage = '".$data['mileage']."', mileage_units = '".$data['mileage_units']."', price = '".$data['price']."', currency = '".$data['currency']."', comments = '".$data['comments']."', member_id = '".$userdata['user_id']."', date_created = '".$data['time']."', date_updated = '".$data['time']."', main_vehicle = '".$data['main_vehicle']."', guestbook_pm_notify = '".$data['guestbook_pm_notify']."'";
+			(made_year, make_id, model_id, color, mileage, mileage_units, price, currency, comments, member_id, date_created, date_updated, main_vehicle, guestbook_pm_notify)
+			VALUES
+			('".$data['year']."', '".$data['make_id']."', '".$data['model_id']."', '".$data['colour']."', '".$data['mileage']."', '".$data['mileage_units']."', '".$data['price']."', '".$data['currency']."', '".$data['comments']."', '".$userdata['user_id']."', '".$data['time']."', '".$data['time']."', '".$data['main_vehicle']."', '".$data['guestbook_pm_notify']."')";
 	
 		if(!$result = $db->sql_query($sql))
 		{
 			message_die(GENERAL_ERROR, 'Could Not Insert Vehicle', '', __LINE__, __FILE__, $sql);
 		}
 	
-		$cid = $db->sql_nextid();
+		$id = $db->sql_nextid();
 
-		return $cid;
+		return $id;
 	}
 
 	/*========================================================================*/
@@ -138,8 +137,10 @@ class garage_vehicle
 	{
 		global $cid, $db;
 
-		$sql = "INSERT INTO ". GARAGE_RATING_TABLE ." (garage_id,rating,user_id,rate_date)
-			VALUES ('$cid', '".$data['vehicle_rating']."', '".$data['user_id']."', '".$data['rate_date']."')";
+		$sql = "INSERT INTO ". GARAGE_RATING_TABLE ." 
+			(garage_id,rating,user_id,rate_date)
+			VALUES 
+			('$cid', '".$data['vehicle_rating']."', '".$data['user_id']."', '".$data['rate_date']."')";
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -157,11 +158,13 @@ class garage_vehicle
 	{
 		global $userdata, $db;
 
-		$sql = "SELECT count(id) AS total FROM " . GARAGE_TABLE . " WHERE member_id = " . $userdata['user_id'];
+		$sql = "SELECT count(id) AS total 
+			FROM " . GARAGE_TABLE . " 
+			WHERE member_id = " . $userdata['user_id'];
 
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'Error Getting Total Vehicles', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'Error Counting User Vehicles', '', __LINE__, __FILE__, $sql);
 		}
 
 		$row = $db->sql_fetchrow($result);
@@ -199,7 +202,8 @@ class garage_vehicle
 	{
 		global $db, $cid;
 
-		$sql = "UPDATE ". GARAGE_RATING_TABLE ." SET rating = '".$data['vehicle_rating']."', rate_date = '".$data['rate_date']."'
+		$sql = "UPDATE ". GARAGE_RATING_TABLE ." 
+			SET rating = '".$data['vehicle_rating']."', rate_date = '".$data['rate_date']."'
 	       		WHERE user_id = '".$data['user_id']."' AND garage_id = '$cid';";
 
 		if(!$result = $db->sql_query($sql))
@@ -219,11 +223,14 @@ class garage_vehicle
 		global $db;
 
 		// Get the total count of vehicles and views in the garage
-        	$sql ="SELECT count(*) AS total_vehicles FROM " . GARAGE_TABLE;
+		$sql = "SELECT count(*) AS total_vehicles 
+			FROM " . GARAGE_TABLE;
+
 		if(!$result = $db->sql_query($sql))
 		{
 			message_die(GENERAL_ERROR, 'Error Counting Vehicles', '', __LINE__, __FILE__, $sql);
 		}
+
 	        $row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
@@ -239,7 +246,8 @@ class garage_vehicle
 		global $cid , $db;
 
 		//Lets See If This Is To Update Or Insert A Rating
-	       	$sql = "SELECT count(*) as total FROM " . GARAGE_RATING_TABLE . "
+		$sql = "SELECT count(*) as total 
+			FROM " . GARAGE_RATING_TABLE . "
 			WHERE user_id = '".$data['user_id']."' AND garage_id = '$cid'";
 
 		if(!$result = $db->sql_query($sql))
@@ -266,7 +274,9 @@ class garage_vehicle
 	 		message_die(GENERAL_ERROR, 'Vehicle ID Not Entered..', '', __LINE__, __FILE__);
 		}
 	
-		$sql = "SELECT g.member_id FROM " . GARAGE_TABLE . " AS g WHERE g.id = $cid ";
+		$sql = "SELECT g.member_id 
+			FROM " . GARAGE_TABLE . " g 
+			WHERE g.id = $cid ";
 	
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -487,11 +497,11 @@ class garage_vehicle
 	        $limit = $garage_config['lastupdatedvehicles_limit'] ? $garage_config['lastupdatedvehicles_limit'] : 10;
 	
 	 	$sql = "SELECT g.id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, 
-	                       g.member_id, g.date_updated AS POI, m.username 
-	               	FROM " . GARAGE_TABLE . " AS g 
-	                       	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-	       	                LEFT JOIN " . USERS_TABLE . " AS m ON g.member_id = m.user_id
+	                       g.member_id, g.date_updated AS POI, u.username 
+	               	FROM " . GARAGE_TABLE . " g 
+	                       	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
+	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
+	       	                LEFT JOIN " . USERS_TABLE . " u ON g.member_id = u.user_id
 			WHERE makes.pending = 0 AND models.pending = 0
 	                ORDER BY POI DESC LIMIT $limit";
 	 		            
@@ -541,12 +551,12 @@ class garage_vehicle
 	        $limit = $garage_config['mostmoneyspent_limit'] ? $garage_config['mostmoneyspent_limit'] : 10;
 	 		
 	 	$sql = "SELECT g.id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, 
-	                        g.member_id, (SUM(mods.install_price) + SUM(mods.price)) AS POI, m.username, g.currency 
-	                FROM " . GARAGE_TABLE . " AS g 
-	                	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-	                        LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON mods.garage_id = g.id 
-	                        LEFT JOIN " . USERS_TABLE . " AS m ON g.member_id = m.user_id
+	                        g.member_id, (SUM(mods.install_price) + SUM(mods.price)) AS POI, u.username, g.currency 
+	                FROM " . GARAGE_TABLE . " g 
+	                	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
+	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
+	                        LEFT JOIN " . GARAGE_MODS_TABLE . " mods ON mods.garage_id = g.id 
+	                        LEFT JOIN " . USERS_TABLE . " u ON g.member_id = u.user_id
 			WHERE makes.pending = 0 AND models.pending = 0
 	                GROUP BY g.id 
 	                ORDER BY POI DESC LIMIT $limit";
@@ -597,11 +607,11 @@ class garage_vehicle
 	        $limit = $garage_config['mostviewed_limit'] ? $garage_config['mostviewed_limit'] : 10;
 	 		 		
 	 	$sql = "SELECT g.id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, 
-	                        g.member_id, g.views AS POI, m.username 
-	                FROM " . GARAGE_TABLE . " AS g 
-	                        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-	                        LEFT JOIN " . USERS_TABLE . " AS m ON g.member_id = m.user_id
+	                        g.member_id, g.views AS POI, u.username 
+	                FROM " . GARAGE_TABLE . " g 
+	                        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
+	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
+	                        LEFT JOIN " . USERS_TABLE . " u ON g.member_id = u.user_id
 			WHERE makes.pending = 0 AND models.pending = 0
 	                ORDER BY POI DESC LIMIT $limit";
 	 		            
@@ -650,12 +660,12 @@ class garage_vehicle
 	        // What's the count? Default to 10
 	        $limit = $garage_config['toprated_limit'] ? $garage_config['toprated_limit'] : 10;
 	
-		$sql =  "SELECT g.id, g.member_id, m.username, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, sum( r.rating ) AS rating, count( * ) *10 AS total_rating
-			 FROM " . GARAGE_RATING_TABLE . " AS r
-				LEFT JOIN " . GARAGE_TABLE . " AS g ON r.garage_id = g.id
-	                        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-	                        LEFT JOIN " . USERS_TABLE . " AS m ON g.member_id = m.user_id
+		$sql =  "SELECT g.id, g.member_id, u.username, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, sum( r.rating ) AS rating, count( * ) *10 AS total_rating
+			 FROM " . GARAGE_RATING_TABLE . " r
+				LEFT JOIN " . GARAGE_TABLE . " g ON r.garage_id = g.id
+	                        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
+	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
+	                        LEFT JOIN " . USERS_TABLE . " u ON g.member_id = u.user_id
 			 WHERE makes.pending = 0 AND models.pending = 0
 			 GROUP BY garage_id
 			 ORDER BY rating DESC LIMIT $limit";
@@ -706,11 +716,11 @@ class garage_vehicle
 	        $limit = $garage_config['newestvehicles_limit'] ? $garage_config['newestvehicles_limit'] : 10;
 	 		 		
 	 	$sql = "SELECT g.id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, 
-	                        g.member_id, g.date_created AS POI, m.username 
-	                FROM " . GARAGE_TABLE . " AS g 
-	                	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-	                        LEFT JOIN " . USERS_TABLE . " AS m ON g.member_id = m.user_id
+	                        g.member_id, g.date_created AS POI, u.username 
+	                FROM " . GARAGE_TABLE . " g 
+	                	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
+	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
+	                        LEFT JOIN " . USERS_TABLE . " u ON g.member_id = u.user_id
 			WHERE makes.pending = 0 AND models.pending = 0
 	                ORDER BY POI DESC LIMIT $limit";
 	 		            
@@ -756,7 +766,9 @@ class garage_vehicle
 		}
 	
 		//Right User Want To Delete Vehicle Let Get All Quartermile Times Associated With It 
-		$quartermile_sql = "SELECT id FROM " . GARAGE_QUARTERMILE_TABLE . " WHERE garage_id = $cid";
+		$quartermile_sql = "SELECT id 
+			FROM " . GARAGE_QUARTERMILE_TABLE . " 
+			WHERE garage_id = $cid";
 	
 	     	if ( !($quartermile_result = $db->sql_query($quartermile_sql)) )
 	      	{
@@ -771,7 +783,9 @@ class garage_vehicle
 		$db->sql_freeresult($quartermile_result);
 	
 		//Right User Want To Delete Vehicle Let Get All Rolling Road Times Associated With It 
-		$rollingroad_sql = "SELECT id FROM " . GARAGE_ROLLINGROAD_TABLE . " WHERE garage_id = $cid";
+		$rollingroad_sql = "SELECT id 
+			FROM " . GARAGE_ROLLINGROAD_TABLE . " 
+			WHERE garage_id = $cid";
 	
 	     	if ( !($rollingroad_result = $db->sql_query($rollingroad_sql)) )
 	     	{
@@ -786,7 +800,9 @@ class garage_vehicle
 		$db->sql_freeresult($rollingroad_result);
 	
 		//Right User Want To Delete Vehicle Let Get All Insurance Premiums Associated With It 
-		$insurance_sql = "SELECT id FROM " . GARAGE_INSURANCE_TABLE . " WHERE garage_id = $cid";
+		$insurance_sql = "SELECT id 
+			FROM " . GARAGE_INSURANCE_TABLE . " 
+			WHERE garage_id = $cid";
 	
 		if ( !($insurance_result = $db->sql_query($insurance_sql)) )
 	     	{
@@ -801,7 +817,9 @@ class garage_vehicle
 		$db->sql_freeresult($insurance_result);
 
 		//Right User Want To Delete Vehicle Let Get All GuestBook Associated With It
-		$gb_sql = "SELECT id FROM " . GARAGE_GUESTBOOKS_TABLE . " WHERE garage_id = $cid";
+		$gb_sql = "SELECT id 
+			FROM " . GARAGE_GUESTBOOKS_TABLE . " 
+			WHERE garage_id = $cid";
 
 		if ( !($db_result = $db->sql_query($gb_sql)) )
 		{
@@ -814,7 +832,9 @@ class garage_vehicle
 		}
 
 		//Right User Want To Delete Vehicle Let Get All Ratings Associated With It
-		$rating_sql = "SELECT id FROM " . GARAGE_RATING_TABLE . " WHERE garage_id = $cid";
+		$rating_sql = "SELECT id 
+			FROM " . GARAGE_RATING_TABLE . " 
+			WHERE garage_id = $cid";
 
 		if ( !($rating_result = $db->sql_query($rating_sql)) )
 		{
@@ -827,7 +847,9 @@ class garage_vehicle
 		} 
 	
 		// Right Lets Delete All Images For This Vehicle
-		$sql = "SELECT image_id	FROM " . GARAGE_GALLERY_TABLE . " WHERE garage_id = $cid ";
+		$sql = "SELECT image_id	
+			FROM " . GARAGE_GALLERY_TABLE . " 
+			WHERE garage_id = $cid ";
 	
 	     	if ( !($result = $db->sql_query($sql)) )
 	     	{
@@ -1028,7 +1050,6 @@ class garage_vehicle
 			      	WHERE user_id = " . $userdata['user_id'] ." 
 					AND garage_id = $cid
 				GROUP BY id";
-				
 	
 			if(!$result = $db->sql_query($sql))
 			{
@@ -1235,29 +1256,22 @@ class garage_vehicle
 	               			'MODIFICATION' => $modification)
 	            		);
 	
-				// LET SEE IF MOD HAS AN IMAGE ATTACHED AND DISPLAY IN GALLERY IF NEEDED
-				if ( $owned == 'NO' )
+				//See If Mod Has An Image Attached And Display Gallery If Needed
+				if ( ( $owned == 'NO' ) AND ($garage_config['show_mod_gallery'] == 1) AND ( $usermods_row['attach_is_image'] ) )
 				{
-		               		// BEGIN mod gallery, if it's enabled!
-	                    		if ($garage_config['show_mod_gallery'] == 1)
+			        	//If we have a set limit, make sure we haven't hit it
+	  		               	if ( ($garage_config['limit_mod_gallery'] >= $mod_images_found) OR !$garage_config['limit_mod_gallery'])
 			                {
-			                        // If we have a set limit, make sure we haven't hit it
-	  		                      	if ( ($garage_config['limit_mod_gallery'] >= $mod_images_found) OR !$garage_config['limit_mod_gallery'])
-			                        {
-							$mod_images_displayed = $mod_images_found;
-			                        	if ( $usermods_row['attach_is_image'] )
-	                           			{
-	                					// Do we have a thumbnail?  If so, our job is simple here :)
-								if ( (empty($usermods_row['attach_thumb_location']) == FALSE) AND ($usermods_row['attach_thumb_location'] != $usermods_row['attach_location']) )
-	                					{
-			                    				// Form the image link
-									$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $usermods_row['attach_thumb_location'];
-									$id = $usermods_row['attach_id'];
-									$title = $usermods_row['attach_file'];
-									$gallery_modification_images .= '<a href="garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .'" title="' . $title .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
-	               						} 
-							}
-						}
+						$mod_images_displayed = $mod_images_found;
+	                			//Do we have a thumbnail?  If so, our job is simple here :)
+						if ( (empty($usermods_row['attach_thumb_location']) == FALSE) AND ($usermods_row['attach_thumb_location'] != $usermods_row['attach_location']) )
+	                			{
+			               			//Form the image link
+							$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $usermods_row['attach_thumb_location'];
+							$id = $usermods_row['attach_id'];
+							$title = $usermods_row['attach_file'];
+							$gallery_modification_images .= '<a href="garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .'" title="' . $title .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
+	               				} 
 					}
 				}
 	         	}// end WHILE of inner loop
@@ -1321,14 +1335,6 @@ class garage_vehicle
 	         	while ( $quartermile_row = $db->sql_fetchrow($result) )
 	         	{
 				$qmid = $quartermile_row['id'];
-				$rt = $quartermile_row['rt'];
-				$sixty = $quartermile_row['sixty'];
-				$three = $quartermile_row['three'];
-				$eight = $quartermile_row['eight'];
-				$eightmph = $quartermile_row['eightmph'];
-				$thou = $quartermile_row['thou'];
-				$quart = $quartermile_row['quart'];
-				$quartmph = $quartermile_row['quartmph'];
 				$image_id = $quartermile_row['image_id'];
 				if (!empty($image_id))
 				{
@@ -1346,14 +1352,14 @@ class garage_vehicle
 				}
 
 				$template->assign_block_vars('quartermile.run', array(
-					'RT' => $rt,
-					'SIXTY' => $sixty,
-					'THREE' => $three,
-					'EIGHT' => $eight,
-					'EIGHTMPH' => $eightmph,
-					'THOU' => $thou,
-					'QUART' => $quart,
-					'QUARTMPH' => $quartmph,
+					'RT' => $quartermile_row['rt'],
+					'SIXTY' => $quartermile_row['sixty'],
+					'THREE' => $quartermile_row['three'],
+					'EIGHT' => $quartermile_row['eight'],
+					'EIGHTMPH' => $quartermile_row['eightmph'],
+					'THOU' => $quartermile_row['thou'],
+					'QUART' => $quartermile_row['quart'],
+					'QUARTMPH' => $quartermile_row['quartmph'],
 					'SLIP_IMAGE' => $slip_image,
 					'EDIT_LINK' => $edit_link,
 					'DELETE_LINK' => $delete_link)
@@ -1380,15 +1386,6 @@ class garage_vehicle
          		while ( $rollingroad_row = $db->sql_fetchrow($result) )
          		{
 				$rrid = $rollingroad_row['id'];
-				$dynocenter = $rollingroad_row['dynocenter'];
-				$bhp = $rollingroad_row['bhp'];
-				$bhp_unit = $rollingroad_row['bhp_unit'];
-				$torque = $rollingroad_row['torque'];
-				$torque_unit = $rollingroad_row['torque_unit'];
-				$boost = $rollingroad_row['boost'];
-				$boost_unit = $rollingroad_row['boost_unit'];
-				$nitrous = $rollingroad_row['nitrous'];
-				$peakpoint = $rollingroad_row['peakpoint'];
 				$image_id = $rollingroad_row['image_id'];
 				if (!empty($image_id))
 				{
@@ -1406,15 +1403,15 @@ class garage_vehicle
 				}
 
 				$template->assign_block_vars('rollingroad.run', array(
-					'DYNOCENTER' => $dynocenter,
-					'BHP' => $bhp,
-					'BHP_UNIT' => $bhp_unit,
-					'TORQUE' => $torque,
-					'TORQUE_UNIT' => $torque_unit,
-					'BOOST' => $boost,
-					'BOOST_UNIT' => $boost_unit,
-					'NITROUS' => $nitrous,
-					'PEAKPOINT' => $peakpoint,
+					'DYNOCENTER' => $rollingroad_row['dynocenter'],
+					'BHP' => $rollingroad_row['bhp'],
+					'BHP_UNIT' => $rollingroad_row['bhp_unit'],
+					'TORQUE' => $rollingroad_row['torque'],
+					'TORQUE_UNIT' => $rollingroad_row['torque_unit'],
+					'BOOST' => $rollingroad_row['boost'],
+					'BOOST_UNIT' => $rollingroad_row['boost_unit'],
+					'NITROUS' => $rollingroad_row['nitrous'],
+					'PEAKPOINT' => $$rollingroad_row['peakpoint'],
 					'SLIP_IMAGE' => $slip_image,
 					'EDIT_LINK' => $edit_link,
 					'DELETE_LINK' => $delete_link)
@@ -1584,7 +1581,7 @@ class garage_vehicle
 	// Select All Vehicles Data From Db
 	// Usage: select_all_vehicle_data();
 	/*========================================================================*/
-	function select_all_vehicle_data($additional_where, $order_by, $sort_order, $start, $end)
+	function select_all_vehicle_data($additional_where, $order_by, $sort_order, $start=0, $end=10000)
 	{
 		global $db;
 		//Select All Vehicles Information
@@ -1597,11 +1594,8 @@ class garage_vehicle
 			WHERE makes.pending = 0 AND models.pending = 0
 				".$search_data['where']."
 		        GROUP BY g.id
-			ORDER BY $order_by $sort_order";
-		if ( (!empty($start)) AND (!empty($end)) )
-		{
-			$sql .= "LIMIT $start, $end";
-		}
+			ORDER BY $order_by $sort_order
+			LIMIT $start, $end";
 
       		if ( !($result = $db->sql_query($sql)) )
       		{

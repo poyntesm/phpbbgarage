@@ -1,6 +1,6 @@
 <?php
 /***************************************************************************
- *                              functions_garage.php
+ *                              class_garage_business.php
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton
@@ -36,8 +36,10 @@ class garage_business
 	{
 		global $db;
 
-		$sql = "INSERT INTO ". GARAGE_BUSINESS_TABLE ." (title, address, telephone, fax, website, email, opening_hours, insurance, garage, retail_shop, web_shop, pending)
-			VALUES ('".$data['title']."', '".$data['address']."', '".$data['telephone']."', '".$data['fax']."', '".$data['website']."', '".$data['email']."', '".$data['opening_hours']."', '".$data['insurance']."', '".$data['garage']."', '".$data['retail_shop']."', '".$data['web_shop']."', '".$data['pending']."')";
+		$sql = "INSERT INTO ". GARAGE_BUSINESS_TABLE ." 
+			(title, address, telephone, fax, website, email, opening_hours, insurance, garage, retail_shop, web_shop, pending)
+			VALUES 
+			('".$data['title']."', '".$data['address']."', '".$data['telephone']."', '".$data['fax']."', '".$data['website']."', '".$data['email']."', '".$data['opening_hours']."', '".$data['insurance']."', '".$data['garage']."', '".$data['retail_shop']."', '".$data['web_shop']."', '".$data['pending']."')";
 	
 		if(!$result = $db->sql_query($sql))
 		{
@@ -48,7 +50,7 @@ class garage_business
 	}
 
 	/*========================================================================*/
-	// Updates Business Into DB
+	// Update Single Business
 	// Usage: update_business(array());
 	/*========================================================================*/
 	function update_business($data)
@@ -117,14 +119,14 @@ class garage_business
 	}
 
 	/*========================================================================*/
-	// Select All Business Data From DB
-	// Usage: select_all_garage_business_data();
+	// Select All Garage Business Data From DB
+	// Usage: select_all_garage_business_data('additional where', 'row start point', 'limit');
 	/*========================================================================*/
-	function select_all_garage_business_data($where, $start)
+	function select_garage_business_data($where, $start, $limit=5)
 	{
 		global $db;
 
-		$sql = "SELECT b.* , sum( install_rating ) AS rating, count( * ) *10 AS total_rating
+		$sql = "SELECT b.*, sum( install_rating ) AS rating, count( * ) *10 AS total_rating
 			FROM " . GARAGE_BUSINESS_TABLE . " b, " . GARAGE_MODS_TABLE . " m
 			WHERE m.install_business_id = b.id
 				AND b.garage =1
@@ -132,7 +134,7 @@ class garage_business
 				$where
 			GROUP BY b.id
 			ORDER BY rating DESC
-			LIMIT $start, 25";
+			LIMIT $start, $limit";
 			
       		if ( !($result = $db->sql_query($sql)) )
       		{
@@ -149,14 +151,14 @@ class garage_business
 	}
 
 	/*========================================================================*/
-	// Select All Business Data From DB
-	// Usage: select_all_shop_business_data();
+	// Select All Shop Business Data From DB
+	// Usage: select_all_shop_business_data('additional where', 'row start point', 'limit');
 	/*========================================================================*/
-	function select_all_shop_business_data($where, $start)
+	function select_shop_business_data($where, $start, $limit=5)
 	{
 		global $db;
 
-		$sql = "SELECT b.* , sum( purchase_rating ) AS rating, count( * ) *10 AS total_rating
+		$sql = "SELECT b.*, sum( purchase_rating ) AS rating, count( * ) *10 AS total_rating
 			FROM " . GARAGE_BUSINESS_TABLE . " b, " . GARAGE_MODS_TABLE . " m
 			WHERE m.business_id = b.id
 				AND ( b.web_shop =1 OR b.retail_shop = 1 )
@@ -164,7 +166,7 @@ class garage_business
 				$where
 			GROUP BY b.id
 			ORDER BY rating DESC
-			LIMIT $start, 25";
+			LIMIT $start, $limit";
 			
       		if ( !($result = $db->sql_query($sql)) )
       		{
@@ -180,10 +182,39 @@ class garage_business
 		return $rows;
 	}
 
+	/*========================================================================*/
+	// Select All Insurance Business Data From DB
+	// Usage: select_insurance_business_data('additional where', 'row start point', 'limit')
+	/*========================================================================*/
+	function select_insurance_business_data($where, $start, $limit=5)
+	{
+		global $db, $where;
+
+      		$sql = "SELECT b.*, COUNT(DISTINCT b.id) as total
+       	 		FROM  " . GARAGE_BUSINESS_TABLE . " b 
+       			WHERE b.insurance = 1 
+				AND b.pending = 0
+				$where
+			GROUP BY b.id
+			LIMIT $start, 25";
+	
+      		if ( !($result = $db->sql_query($sql)) )
+      		{
+         		message_die(GENERAL_ERROR, 'Could Select Business Data', '', __LINE__, __FILE__, $sql);
+      		}
+
+		while( $row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
+      		$db->sql_freeresult($result);
+
+		return $rows;
+	}
 
 	/*========================================================================*/
-	// Select All Business Data From DB
-	// Usage: count_garage_business_data();
+	// Count Garage Business Data In DB
+	// Usage: count_garage_business_data('additional where');
 	/*========================================================================*/
 	function count_garage_business_data($additional_where)
 	{
@@ -208,8 +239,8 @@ class garage_business
 	}
 
 	/*========================================================================*/
-	// Select All Business Data From DB
-	// Usage: count_shop_business_data();
+	// Count Shop Business Data In DB
+	// Usage: count_shop_business_data('additional where');
 	/*========================================================================*/
 	function count_shop_business_data($additional_where)
 	{
@@ -234,8 +265,8 @@ class garage_business
 	}
 
 	/*========================================================================*/
-	// Build Business List
-	// Usage: build_business_table('business id');
+	// Build Business List With Or Without Pending Items
+	// Usage: build_business_table('YES|NO');
 	/*========================================================================*/
 	function build_business_table($pending)
 	{
@@ -284,7 +315,6 @@ class garage_business
 				$type = $lang['Shop'];
 			}
 			
-			// setup user row template varibles
 			$template->assign_block_vars('business_pending.row', array(
 				'ROW_NUMBER' => $i + ( $HTTP_GET_VARS['start'] + 1 ),
 				'ROW_CLASS' => ( !($i % 2) ) ? $theme['td_class1'] : $theme['td_class2'],
@@ -307,7 +337,6 @@ class garage_business
 		//Return Count Of Pending Items
 		return $count;
 	}
-
 }
 
 $garage_business = new garage_business();

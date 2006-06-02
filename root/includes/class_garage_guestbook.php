@@ -1,6 +1,6 @@
 <?php
 /***************************************************************************
- *                              functions_garage.php
+ *                              class_garage_guestbook.php
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton
@@ -38,11 +38,14 @@ class garage_guestbook
 		global $db;
 
         	// Get the total count of comments in the garage
-	        $sql = "SELECT count(*) AS total_comments FROM " . GARAGE_GUESTBOOKS_TABLE;
+		$sql = "SELECT count(*) AS total_comments 
+			FROM " . GARAGE_GUESTBOOKS_TABLE;
+
 		if(!$result = $db->sql_query($sql))
 		{
 			message_die(GENERAL_ERROR, 'Error Counting Comments', '', __LINE__, __FILE__, $sql);
 		}
+
         	$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
@@ -58,7 +61,9 @@ class garage_guestbook
 		global $cid, $db, $user_ip;
 
 		$sql = "INSERT INTO ". GARAGE_GUESTBOOKS_TABLE ."
-			SET garage_id = '$cid', author_id = '".$data['author_id']."', post_date = '".$data['post_date']."', ip_address = '$user_ip', post = '".$data['comments']."'";
+			(garage_id, author_id, post_date, ip_address, post)
+			VALUES
+			('$cid', '".$data['author_id']."', '".$data['post_date']."', '$user_ip', '".$data['comments']."')";
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -126,7 +131,7 @@ class garage_guestbook
 
               	if( !($result = $db->sql_query($sql)) )
        		{
-          		message_die(GENERAL_ERROR, 'Could Not Select Vehicle Comment', '', __LINE__, __FILE__, $sql);
+          		message_die(GENERAL_ERROR, 'Could Not Select Comment Data', '', __LINE__, __FILE__, $sql);
        		}
 
 		$row = $db->sql_fetchrow($result);
@@ -165,7 +170,7 @@ class garage_guestbook
 	}
 
 	/*========================================================================*/
-	// Build Last Commented Vehicle HTML If Required 
+	// Build Last Commented Vehicle Table
 	// Usage: show_lastcommented();
 	/*========================================================================*/
 	function show_lastcommented()

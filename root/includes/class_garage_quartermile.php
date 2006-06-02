@@ -1,6 +1,6 @@
 <?php
 /***************************************************************************
- *                              functions_garage_quartermile.php
+ *                              class_garage_quartermile.php
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton
@@ -38,11 +38,13 @@ class garage_quartermile
 		global $cid, $db;
 
 		$sql = "INSERT INTO ". GARAGE_QUARTERMILE_TABLE ."
-			SET garage_id = '$cid', rt = '".$data['rt']."', sixty = '".$data['sixty']."', three = '".$data['three']."', eight = '".$data['eight']."', eightmph = '".$data['eightmph']."', thou = '".$data['thou']."', quart = '".$data['quart']."', quartmph = '".$data['quartmph']."', date_created = '".$data['time']."', rr_id = '".$data['rr_id']."', date_updated = '".$data[time]."', pending = '".$data['pending']."'";
+			(garage_id, rt, sixty, three, eight, eightmph, thou, quart, quartmph, date_created, rr_id, date_updated, pending)
+			VALUES
+			($cid, '".$data['rt']."', '".$data['sixty']."', '".$data['three']."', '".$data['eight']."', '".$data['eightmph']."', '".$data['thou']."', '".$data['quart']."', '".$data['quartmph']."', '".$data['time']."', ".$data['rr_id'].", '".$data[time]."', '".$data['pending']."')";
 		
 		if(!$result = $db->sql_query($sql))
 		{
-			message_die(GENERAL_ERROR, 'Could Not Insert Vehicle', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'Could Not Insert Quartermile', '', __LINE__, __FILE__, $sql);
 		}
 	
 		$qmid = $db->sql_nextid();
@@ -76,7 +78,7 @@ class garage_quartermile
 	/*========================================================================*/
 	function delete_quartermile($qmid)
 	{
-		global $userdata, $db, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
+		global $garage;
 	
 		//Right They Want To Delete A QuarterMile Time
 		if (empty($qmid))
@@ -93,12 +95,12 @@ class garage_quartermile
 			if ( (!empty($data['attach_location'])) OR (!empty($data['attach_thumb_location'])) )
 			{
 				//Seems To Be An Image To Delete, Let Call The Function
-				$this->delete_image($data['image_id']);
+				$garage->delete_image($data['image_id']);
 			}
 		}
 
 		//Time To Delete The Actual Quartermile Time Now
-		$this->delete_rows(GARAGE_QUARTERMILE_TABLE, 'id', $qmid);
+		$garage->delete_rows(GARAGE_QUARTERMILE_TABLE, 'id', $qmid);
 
 		return ;
 	}
@@ -216,7 +218,10 @@ class garage_quartermile
 
 		return $row;
 	}
-
+	/*========================================================================*/
+	// Build Quartermile Table With/Without Pending Itesm
+	// Usage: build_quartermile_table('YES|NO');
+	/*========================================================================*/
 	function build_quartermile_table($pending)
 	{
 		global $db, $template, $images, $sort, $phpEx, $sort_order, $garage_config, $lang, $theme, $mode, $HTTP_POST_VARS, $HTTP_GET_VARS;
@@ -424,7 +429,6 @@ class garage_quartermile
 
 		return $count['total'];
 	}
-
 }
 
 $garage_quartermile = new garage_quartermile();

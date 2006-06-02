@@ -1,6 +1,6 @@
 <?php
 /***************************************************************************
- *                              functions_garage.php
+ *                              class_garage_dynorun.php
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton
@@ -30,29 +30,31 @@ class garage_dynorun
 	var $classname = "garage_dynorun";
 
 	/*========================================================================*/
-	// Inserts Rollingroad Into DB
-	// Usage: insert_rollingroad(array());
+	// Inserts Dynorun Into DB
+	// Usage: insert_dynorun(array());
 	/*========================================================================*/
 	function insert_dynorun($data)
 	{
 		global $cid, $db;
 
 		$sql = "INSERT INTO ". GARAGE_ROLLINGROAD_TABLE ."
-				SET garage_id = '$cid', dynocenter = '".$data['dynocenter']."', bhp = '".$data['bhp']."', bhp_unit = '".$data['bhp_unit']."', torque = '".$data['torque']."', torque_unit = '".$data['torque_unit']."', boost = '".$data['boost']."', boost_unit = '".$data['boost_unit']."', nitrous = '".$data['nitrous']."', peakpoint = '".$data['peakpoint']."', date_created = '".$data['time']."', date_updated = '".$data['time']."', pending = '".$data['pending']."'";
+			(garage_id, dynocenter, bhp, bhp_unit, torque, torque_unit, boost, boost_unit, nitrous, peakpoint, date_created, date_updated, pending)
+			VALUES
+			('$cid', '".$data['dynocenter']."', '".$data['bhp']."', '".$data['bhp_unit']."', '".$data['torque']."', '".$data['torque_unit']."', '".$data['boost']."', '".$data['boost_unit']."', '".$data['nitrous']."', '".$data['peakpoint']."', '".$data['time']."', '".$data['time']."', '".$data['pending']."')";
 
 		if(!$result = $db->sql_query($sql))
 		{
-			message_die(GENERAL_ERROR, 'Could Not Insert Rollingroad For Vehicle', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'Could Not Insert Dynorun', '', __LINE__, __FILE__, $sql);
 		}
 
-		$rrid = $db->sql_nextid();
+		$id = $db->sql_nextid();
 
-		return $rrid;
+		return $id;
 	}
 
 	/*========================================================================*/
-	// Updates Rollingroad In DB
-	// Usage:  update_rollingroad(array());
+	// Updates Dynorun In DB
+	// Usage:  update_dynorun(array());
 	/*========================================================================*/
 	function update_dynorun($data)
 	{
@@ -61,27 +63,30 @@ class garage_dynorun
 		$sql = "UPDATE ". GARAGE_ROLLINGROAD_TABLE ."
 			SET dynocenter = '".$data['dynocenter']."', bhp = '".$data['bhp']."', bhp_unit = '".$data['bhp_unit']."', torque = '".$data['torque']."', torque_unit = '".$data['torque_unit']."', boost = '".$data['boost']."', boost_unit = '".$data['boost_unit']."', nitrous = '".$data['nitrous']."', peakpoint = '".$data['peakpoint']."', pending = '".$data['pending']."'
 			WHERE id = '$rrid' and garage_id = '$cid'";
+
 		if(!$result = $db->sql_query($sql))
 		{
-			message_die(GENERAL_ERROR, 'Could Not Update Rollingroad Data For Vehicle', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'Could Not Update Dynorun Data', '', __LINE__, __FILE__, $sql);
 		}
 
 		return;
 	}
 
 	/*========================================================================*/
-	// Returns Count Of Dyno Runs Performed By Vehicle
+	// Returns Count Of Dynoruns Performed By Vehicle
 	// Usage: count_runs('garage id');
 	/*========================================================================*/
 	function count_runs($cid)
 	{
 		global $db;
 
-		$sql = "SELECT count(id) AS total FROM " . GARAGE_ROLLINGROAD_TABLE . " WHERE garage_id = $cid";
+		$sql = "SELECT count(id) AS total 
+			FROM " . GARAGE_ROLLINGROAD_TABLE . " 
+			WHERE garage_id = $cid";
 
 		if ( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'Error Getting Total Vehicles', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'Error Counting Dynoruns', '', __LINE__, __FILE__, $sql);
 		}
 
 		$row = $db->sql_fetchrow($result);
@@ -91,21 +96,21 @@ class garage_dynorun
 	}
 
 	/*========================================================================*/
-	// Delete Rollingroad Run Including Image 
-	// Usage: delete_rollingroad_run('rollingroad id');
+	// Delete Dynorun Including Image 
+	// Usage: delete_dynorun('dynorun id');
 	/*========================================================================*/
 	function delete_dynorun($rrid)
 	{
-		global $db;
+		global $db, $garage_image, $garage;
 	
-		//Right They Want To Delete A QuarterMile Time
+		//Right They Want To Delete A Dynorun
 		if (empty($rrid))
 		{
-	 		message_die(GENERAL_ERROR, 'Rollingroad ID Not Entered', '', __LINE__, __FILE__);
+	 		message_die(GENERAL_ERROR, 'Dynorun ID Not Entered', '', __LINE__, __FILE__);
 		}
 	
-		//Let Assign Variables To All Collected Info
-		$data = $this->select_rollingroad_data($rrid);
+		//Get All Required Data
+		$data = $this->select_dynorun_data($rrid);
 	
 		//Lets See If There Is An Image Associated With This Run
 		if (!empty($data['image_id']))
@@ -113,22 +118,22 @@ class garage_dynorun
 			if ( (!empty($data['attach_location'])) OR (!empty($data['attach_thumb_location'])) )
 			{
 				//Seems To Be An Image To Delete, Let Call The Function
-				$this->delete_image($data['image_id']);
+				$garage_images->delete_image($data['image_id']);
 			}
 		}
 	
 		//Update Quartermile Table For An Matched Times
-		$this->update_single_field(GARAGE_QUARTERMILE_TABLE, 'rr_id', 'NULL', 'rr_id', $rrid);	
+		$garage->update_single_field(GARAGE_QUARTERMILE_TABLE, 'rr_id', 'NULL', 'rr_id', $rrid);	
 	
 		//Time To Delete The Actual RollingRoad Run Now
-		$this->delete_rows(GARAGE_ROLLINGROAD_TABLE, 'id', $rrid);
+		$garage->delete_rows(GARAGE_ROLLINGROAD_TABLE, 'id', $rrid);
 	
 		return ;
 	}
 	
 	/*========================================================================*/
 	// Build Top Dyno Runs HTML If Required 
-	// Usage: show_topquartermile();
+	// Usage: show_topdynorun();
 	/*========================================================================*/
 	function show_topdynorun()
 	{
@@ -203,8 +208,8 @@ class garage_dynorun
 	}	
 
 	/*========================================================================*/
-	// Select All Rollingroad Data From DB
-	// Usage: select_rollingroad_data('rollingroad id');
+	// Select All Dynorun Data From DB
+	// Usage: select_dynorun_data('dynorun id');
 	/*========================================================================*/
 	function select_dynorun_data($rrid)
 	{
@@ -230,12 +235,12 @@ class garage_dynorun
 	}
 
 	/*========================================================================*/
-	// Build Rollingroad Table
-	// Usage: build_rollingroad_table('YES|NO');
+	// Build Dynorun Table
+	// Usage: build_dynorun_table('YES|NO');
 	/*========================================================================*/
 	function build_dynorun_table($pending)
 	{
-		global $db, $template, $images, $start, $sort, $sort_order,$phpEx, $garage_config, $lang, $theme, $mode, $HTTP_POST_VARS, $HTTP_GET_VARS;
+		global $db, $template, $images, $start, $sort, $sort_order,$phpEx, $garage_config, $lang, $theme, $mode, $HTTP_POST_VARS, $HTTP_GET_VARS, $garage_model;
 
 		$pending = ($pending == 'YES') ? 1 : 0;
 
@@ -274,7 +279,7 @@ class garage_dynorun
 			if (!empty($make_id))
 			{
 				//Pull Required Data From DB
-				$data = $this->select_make_data($make_id);
+				$data = $garage_model->select_make_data($make_id);
 				$addtional_where .= "AND g.make_id = '$make_id'";
 			}
 		}
@@ -286,7 +291,7 @@ class garage_dynorun
 			if (!empty($model_id))
 			{
 				//Pull Required Data From DB
-				$data .= $this->select_model_data($model_id);
+				$data .= $garage->select_model_data($model_id);
 				$addtional_where .= "AND g.model_id = '$model_id'";
 			}
 		}

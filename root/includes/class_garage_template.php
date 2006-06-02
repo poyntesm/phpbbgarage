@@ -1,6 +1,6 @@
 <?php
 /***************************************************************************
- *                              functions_garage.php
+ *                              class_garage_template.php
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton
@@ -60,7 +60,7 @@ class garage_template
 	
 		if( !($make_result = $db->sql_query($make_q_id)) )
 		{
-			message_die(GENERAL_ERROR, 'Could not query users', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'Could not query makes', '', __LINE__, __FILE__, $sql);
 		}
 
 		while ( $make_row = $db->sql_fetchrow($make_result) )
@@ -74,7 +74,7 @@ class garage_template
 
 			if( !($model_result = $db->sql_query($model_q_id)) )
 			{
-				message_die(GENERAL_ERROR, 'Could not query users', '', __LINE__, __FILE__, $sql);
+				message_die(GENERAL_ERROR, 'Could not query models', '', __LINE__, __FILE__, $sql);
 			} 
 
 	        	$model_string = '';
@@ -324,7 +324,6 @@ class garage_template
 		global $garage_config, $template;
 	
 		// Grab the current year
-	        //$current_date = getdate();
 		$my_array = localtime(time(), 1) ;
 		$current_date = $my_array["tm_year"] +1900 ;
 	
@@ -332,13 +331,15 @@ class garage_template
 	        $end_year = $current_date + $garage_config['year_end'];
 	
 		// A simple check to prevent infinite loop
-		if ( $garage_config['year_start'] > $end_year ) {
+		if ( $garage_config['year_start'] > $end_year ) 
+		{
 			return;
 		}	
 	
 		$year_list = "<select name='year' class='forminput'>";
 	
-		for ( $year = $end_year; $year >= $garage_config['year_start']; $year-- ) {
+		for ( $year = $end_year; $year >= $garage_config['year_start']; $year-- ) 
+		{
 			if ( $year == $selected ) 
 			{
 				$year_list .= "<option value='$year' selected='selected'>$year</option>";
@@ -379,7 +380,10 @@ class garage_template
 			$garage_install_list .= "<option value=''>------</option>";
 		}
 	
-		$sql = "SELECT id, title FROM " . GARAGE_BUSINESS_TABLE . " WHERE garage = 1 ORDER BY title ASC";
+		$sql = "SELECT id, title 
+			FROM " . GARAGE_BUSINESS_TABLE . " 
+			WHERE garage = 1 
+			ORDER BY title ASC";
 	
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -459,7 +463,9 @@ class garage_template
 			$business_list .= "<option value=''>------</option>";
 		}
 	
-		$sql = "SELECT id, title FROM " . GARAGE_BUSINESS_TABLE . " ORDER BY title ASC";
+		$sql = "SELECT id, title 
+			FROM " . GARAGE_BUSINESS_TABLE . " 
+			ORDER BY title ASC";
 	
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -502,7 +508,10 @@ class garage_template
 			$insurance_list .= "<option value=''>------</option>";
 		}
 	
-		$sql = "SELECT id, title FROM " . GARAGE_BUSINESS_TABLE . " WHERE insurance = 1 ORDER BY title ASC";
+		$sql = "SELECT id, title 
+			FROM " . GARAGE_BUSINESS_TABLE . " 
+			WHERE insurance = 1 
+			ORDER BY title ASC";
 	
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -587,9 +596,12 @@ class garage_template
 		else
 		{
 			$rr_list .= "<option value=''>".$lang['Select_A_Option']."</option>";
+			$shop_list .= "<option value=''>------</option>";
 		}
 	
-		$sql = "SELECT id, bhp, bhp_unit FROM " . GARAGE_ROLLINGROAD_TABLE . " WHERE garage_id = $cid";
+		$sql = "SELECT id, bhp, bhp_unit 
+			FROM " . GARAGE_ROLLINGROAD_TABLE . " 
+			WHERE garage_id = $cid";
 	
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -621,7 +633,8 @@ class garage_template
 
 	        $html = '<select name="category_id" class="forminput">';
 	
-	        $sql = "SELECT * FROM " . GARAGE_CATEGORIES_TABLE . " ORDER BY field_order ASC";
+		$sql = "SELECT id, title
+			FROM " . GARAGE_CATEGORIES_TABLE . " ORDER BY field_order ASC";
 	
 	     	if ( !($result = $db->sql_query($sql)) )
 	      	{

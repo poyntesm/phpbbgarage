@@ -1,6 +1,6 @@
 <?php
 /***************************************************************************
- *                              functions_garage.php
+ *                              class_garage_admin.php
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton
@@ -37,8 +37,10 @@ class garage_admin
 	{
 		global $db;
 
-		$sql = "INSERT INTO ". GARAGE_CATEGORIES_TABLE ." (title, field_order)
-			VALUES ('" . $data['title'] . "', " . $data['field_order'] . " )";
+		$sql = "INSERT INTO ". GARAGE_CATEGORIES_TABLE ." 
+			(title, field_order)
+			VALUES 
+			('" . $data['title'] . "', " . $data['field_order'] . " )";
 	
 		if(!$result = $db->sql_query($sql))
 		{
@@ -47,6 +49,30 @@ class garage_admin
 
 		return;
 	}
+
+	/*========================================================================*/
+	// Count The Modification Categories Within The Garage
+	// Usage: count__categories();
+	/*========================================================================*/
+	function count_categories()
+	{
+		global $db;
+
+	        // Get the total count of mods in the garage
+		$sql = "SELECT count(*) AS total 
+			FROM " . GARAGE_CATEGORIES_TABLE;
+
+		if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'Error Counting Categories', '', __LINE__, __FILE__, $sql);
+		}
+
+        	$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $row['total'];
+	}
+
 	/*========================================================================*/
 	// Inserts Category Into DB
 	// Usage: insert_category();
@@ -217,10 +243,8 @@ class garage_admin
 			$schema_create .= ",$crlf";
 	
 		}
-		//
+
 		// Get the listing of primary keys.
-		//
-	
 		$sql_pri_keys = "SELECT ic.relname AS index_name, bc.relname AS tab_name, ta.attname AS column_name, i.indisunique AS unique_key, i.indisprimary AS primary_key
 			FROM pg_class bc, pg_class ic, pg_index i, pg_attribute ta, pg_attribute ia
 			WHERE (bc.oid = i.indrelid)
@@ -253,10 +277,8 @@ class garage_admin
 			}
 			else
 			{
-				//
 				// We have to store this all this info because it is possible to have a multi-column key...
 				// we can loop through it again and build the statement
-				//
 				$index_rows[$row['index_name']]['table'] = $table;
 				$index_rows[$row['index_name']]['unique'] = ($row['unique_key'] == 't') ? ' UNIQUE ' : '';
 				$index_rows[$row['index_name']]['column_names'] .= $row['column_name'] . ', ';
@@ -277,9 +299,7 @@ class garage_admin
 			$schema_create .= "	CONSTRAINT $primary_key_name PRIMARY KEY ($primary_key),$crlf";
 		}
 	
-		//
 		// Generate constraint clauses for CHECK constraints
-		//
 		$sql_checks = "SELECT rcname as index_name, rcsrc
 			FROM pg_relcheck, pg_class bc
 			WHERE rcrelid = bc.oid
@@ -299,9 +319,7 @@ class garage_admin
 			message_die(GENERAL_ERROR, "Failed in get_table_def (show fields)", "", __LINE__, __FILE__, $sql_checks);
 		}
 	
-		//
 		// Add the constraints to the sql file.
-		//
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$schema_create .= '	CONSTRAINT ' . $row['index_name'] . ' CHECK ' . $row['rcsrc'] . ",$crlf";
@@ -317,16 +335,15 @@ class garage_admin
 			$schema_create .= $index_create;
 		}
 	
-		//
 		// Ok now we've built all the sql return it to the calling function.
-		//
 		return (stripslashes($schema_create));
 	
 	}
 	
-	//
-	// This function returns the "CREATE TABLE" syntax for mysql dbms...
-	//
+	/*========================================================================*/
+	// Create the 'CREATE TABLE' statements For MySQL
+	// Usage: get_table_def_mysql('table name', 'line feed');
+	/*========================================================================*/
 	function get_table_def_mysql($table, $crlf)
 	{
 		global $drop, $db;
@@ -335,10 +352,8 @@ class garage_admin
 		$field_query = "SHOW FIELDS FROM $table";
 		$key_query = "SHOW KEYS FROM $table";
 	
-		//
 		// If the user has selected to drop existing tables when doing a restore.
 		// Then we add the statement to drop the tables....
-		//
 		if ($drop == 1)
 		{
 			$schema_create .= "DROP TABLE IF EXISTS $table;$crlf";
@@ -346,9 +361,7 @@ class garage_admin
 	
 		$schema_create .= "CREATE TABLE $table($crlf";
 	
-		//
 		// Ok lets grab the fields...
-		//
 		$result = $db->sql_query($field_query);
 		if(!$result)
 		{
@@ -376,14 +389,10 @@ class garage_admin
 	
 			$schema_create .= ",$crlf";
 		}
-		//
 		// Drop the last ',$crlf' off ;)
-		//
 		$schema_create = ereg_replace(',' . $crlf . '$', "", $schema_create);
 	
-		//
 		// Get any Indexed fields from the database...
-		//
 		$result = $db->sql_query($key_query);
 		if(!$result)
 		{
@@ -438,28 +447,15 @@ class garage_admin
 	
 	} // End get_table_def_mysql
 	
-	
-	//
-	// This fuction will return a tables create definition to be used as an sql
-	// statement.
-	//
-	//
-	// The following functions Get the data from the tables and format it as a
-	// series of INSERT statements, for each different DBMS...
-	// After every row a custom callback function $handler gets called.
-	// $handler must accept one parameter ($sql_insert);
-	//
-	//
-	// Here is the function for postgres...
-	//
+	/*========================================================================*/
+	// Create the 'INSERT' statements For Postgre
+	// Usage: get_table_content_postgresql('table name', 'handler');
+	/*========================================================================*/
 	function get_table_content_postgresql($table, $handler)
 	{
 		global $db, $garage_admin;
 	
-		//
 		// Grab all of the data from current table.
-		//
-	
 		$result = $db->sql_query("SELECT * FROM $table");
 	
 		if (!$result)
@@ -539,10 +535,10 @@ class garage_admin
 	
 	}// end function get_table_content_postgres...
 	
-	//
-	// This function is for getting the data from a mysql table.
-	//
-	
+	/*========================================================================*/
+	// Create the 'INSERT' statements For MySQL
+	// Usage: get_table_content_mysql('table name', 'handler');
+	/*========================================================================*/
 	function get_table_content_mysql($table, $handler)
 	{
 		global $db, $garage_admin;
@@ -582,12 +578,10 @@ class garage_admin
 	
 					if(!isset($row[$field_names[$j]]))
 					{
-						//
 						// If there is no data for the column set it to null.
 						// There was a problem here with an extra space causing the
 						// sql file not to reimport if the last column was null in
 						// any table.  Should be fixed now :) JLH
-						//
 						$schema_insert .= 'NULL';
 					}
 					elseif ($row[$field_names[$j]] != '')
@@ -611,7 +605,11 @@ class garage_admin
 	
 		return(true);
 	}
-	
+
+	/*========================================================================*/
+	// Output All The Content
+	// Usage: output_table_content('content');
+	/*========================================================================*/
 	function output_table_content($content)
 	{
 		global $tempfile;
@@ -621,7 +619,6 @@ class garage_admin
 		echo $content ."\n";
 		return;
 	}
-	
 }
 
 $garage_admin = new garage_admin();

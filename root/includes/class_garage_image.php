@@ -1,6 +1,6 @@
 <?php
 /***************************************************************************
- *                              functions_garage.php
+ *                              class_garage_image.php
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton
@@ -474,8 +474,10 @@ class garage_image
 	{
 		global $db;
 
-		$sql = "INSERT INTO ". GARAGE_IMAGES_TABLE ." (attach_location, attach_hits, attach_ext, attach_file, attach_thumb_location, attach_thumb_width, attach_thumb_height, attach_is_image, attach_date, attach_filesize)
-			VALUES ('".$data['location']."', '0', '".$data['ext']."', '".$data['file']."', '".$data['thumb_location']."', '".$data['thumb_width']."', '".$data['thumb_height']."', '".$data['is_image']."', '".$data['date']."', '".$data['filesize']."')";
+		$sql = "INSERT INTO ". GARAGE_IMAGES_TABLE ." 
+			(attach_location, attach_hits, attach_ext, attach_file, attach_thumb_location, attach_thumb_width, attach_thumb_height, attach_is_image, attach_date, attach_filesize)
+			VALUES 
+			('".$data['location']."', '0', '".$data['ext']."', '".$data['file']."', '".$data['thumb_location']."', '".$data['thumb_width']."', '".$data['thumb_height']."', '".$data['is_image']."', '".$data['date']."', '".$data['filesize']."')";
 
 		if( !$result = $db->sql_query($sql) )
 		{
@@ -756,6 +758,33 @@ class garage_image
 	}
 
 	/*========================================================================*/
+	// Select Random Image(s) Data From DB
+	// Usage: select_random_image_data('image numbers');
+	/*========================================================================*/
+	function select_random_image_data($required=5)
+	{
+		global $db;
+
+		$sql = "SELECT  * 
+			FROM " . GARAGE_IMAGES_TABLE . " 
+			ORDER BY rand() LIMIT $required";
+
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could Not Select Random Image Data', '', __LINE__, __FILE__, $sql);
+		}
+		
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
+		$db->sql_freeresult($result);
+	
+		return $rows;
+	}
+
+
+	/*========================================================================*/
 	// Select All Image Data From DB
 	// Usage: select_all_image_data();
 	/*========================================================================*/
@@ -837,7 +866,7 @@ class garage_image
 	/*========================================================================*/
 	function download_remote_image($remote_url, $destination_file)
 	{
-		global $garage_config;
+		global $garage_config, $phpbb_root_path;
 
 		//Download The Remote Image To Our Temporary file
                 $infile = @fopen ($remote_url, "rb");

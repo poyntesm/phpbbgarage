@@ -1,6 +1,6 @@
 <?php
 /***************************************************************************
- *                              functions_garage.php
+ *                              class_garage_insurance.php
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton
@@ -37,7 +37,9 @@ class garage_insurance
 		global $cid, $db;
 
 		$sql = "INSERT INTO ". GARAGE_INSURANCE_TABLE ."
-			SET garage_id = '$cid', premium = '".$data['premium']."', cover_type = '".$data['cover_type']."', comments = '".$data['comments']."', business_id = '".$data['business_id']."'";
+			(garage_id, premium, cover_type, comments, business_id)
+			VALUES
+			('$cid', '".$data['premium']."', '".$data['cover_type']."', '".$data['comments']."', '".$data['business_id']."')";
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -55,7 +57,6 @@ class garage_insurance
 	{
 		global $db, $cid, $ins_id;
 
-		// Now we update this row
 		$sql = "UPDATE ". GARAGE_INSURANCE_TABLE ."
 			SET business_id = '".$data['business_id']."', premium = '".$data['premium']."', cover_type = '".$data['cover_type']."', comments = '".$data['comments']."' 
 			WHERE id = '$ins_id' and garage_id = '$cid'";
@@ -76,7 +77,7 @@ class garage_insurance
 	{
 		global $db;
 	
-		//Right They Want To Delete A QuarterMile Time
+		//Right They Want To Delete A Insurance
 		if (empty($ins_id))
 		{
 	 		message_die(GENERAL_ERROR, 'Insurance ID Not Entered', '', __LINE__, __FILE__);
@@ -89,13 +90,13 @@ class garage_insurance
 	}
 	
 	/*========================================================================*/
-	// Select All Insurance Data From Db
+	// Select All Insurance Data From DB
 	// Usage: select_all_vehicle_data();
 	/*========================================================================*/
 	function select_all_insurance_data($additional_where, $order_by, $sort_order, $start, $end)
 	{
 		global $db;
-		//Select All Vehicles Information
+
 		$sql = "SELECT i.*, g.*, b.title, b.id as business_id, makes.make, models.model, user.username, user.user_id,
                         ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent,
 			CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
@@ -110,6 +111,7 @@ class garage_insurance
 				".$search_data['where']."
 		        GROUP BY i.id
 			ORDER BY $order_by $sort_order";
+
 		if ( (!empty($start)) AND (!empty($end)) )
 		{
 			$sql .= "LIMIT $start, $end";
@@ -158,7 +160,7 @@ class garage_insurance
 
 	/*========================================================================*/
 	// Select All Insurance Premium Data From Specific Insurance Company From DB
-	// Usage: get_insurance_data('business id');
+	// Usage: get_all_premiuminsurance_data('business id');
 	/*========================================================================*/
 	function select_all_premiums_data($business_id)
 	{
@@ -191,56 +193,22 @@ class garage_insurance
 		return $rows;
 	}
 
-	/*========================================================================*/
-	// Select Model Data From DB
-	// Usage: select_insurance_business_data('model id');
-	/*========================================================================*/
-	function select_insurance_business_data($start, $where)
-	{
-		global $db, $where;
-
-		// Select Each Business
-      		$sql = "SELECT b.*, COUNT(DISTINCT b.id) as total
-       	 		FROM  " . GARAGE_BUSINESS_TABLE . " b 
-       			WHERE b.insurance = 1 
-				AND b.pending = 0
-				$where
-			GROUP BY b.id";
-		if (!empty($start))
-		{
-			$sql .=	"LIMIT $start, 25";
-		}
-
-      		if ( !($result = $db->sql_query($sql)) )
-      		{
-         		message_die(GENERAL_ERROR, 'Could Select Business Data', '', __LINE__, __FILE__, $sql);
-      		}
-
-		while( $row = $db->sql_fetchrow($result) )
-		{
-			$rows[] = $row;
-		}
-      		$db->sql_freeresult($result);
-
-		return $rows;
-
-	}
 
 	/*========================================================================*/
-	// Select Model Data From DB
-	// Usage: select_model_data('model id');
+	// Select Insurance Premiums By Business From DB
+	// Usage: select_insurance_premium_data('model id');
 	/*========================================================================*/
-	function select_insurance_premium_data($business_id, $cover_type)
+	function select_premiums_from_business_data($business_id, $cover_type)
 	{
 		global $db, $where;
 
 		$sql = "SELECT round(max( i.premium ),2) AS max, round(min( i.premium ),2) AS min, round(avg( i.premium ),2) AS avg
 			FROM " . GARAGE_BUSINESS_TABLE . " b, " . GARAGE_INSURANCE_TABLE . " i
-				WHERE i.business_id = b.id
-					AND b.id = $business_id 
-					AND b.insurance =1
-					AND i.cover_type = '".htmlspecialchars($cover_type)."'
-					AND i.premium > 0";
+			WHERE i.business_id = b.id
+				AND b.id = $business_id 
+				AND b.insurance =1
+				AND i.cover_type = '".htmlspecialchars($cover_type)."'
+				AND i.premium > 0";
 
 		if( !($result = $db->sql_query($sql)) )
        		{
@@ -252,8 +220,6 @@ class garage_insurance
 
 		return $row;
 	}
-
-
 }
 
 $garage_insurance = new garage_insurance();

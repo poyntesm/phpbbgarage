@@ -1,6 +1,6 @@
 <?php
 /***************************************************************************
- *                              functions_garage.php
+ *                              class_garage_model.php
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton
@@ -37,8 +37,10 @@ class garage_model
 	{
 		global $db;
 
-		$sql = "INSERT INTO ". GARAGE_MAKES_TABLE ." (make)
-			VALUES ('".$data['make']."')";
+		$sql = "INSERT INTO ". GARAGE_MAKES_TABLE ." 
+			(make)
+			VALUES 
+			('".$data['make']."')";
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -99,12 +101,14 @@ class garage_model
 	{
 		global $db;
 
-		$sql = "INSERT INTO ". GARAGE_MODELS_TABLE ." (make_id, model)
-			VALUES ('".$data['make_id']."', '".$data['model']."')";
+		$sql = "INSERT INTO ". GARAGE_MODELS_TABLE ." 
+			(make_id, model)
+			VALUES 
+			('".$data['make_id']."', '".$data['model']."')";
 
 		if(!$result = $db->sql_query($sql))
 		{
-			message_die(GENERAL_ERROR, 'Could Not Insert New Make', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'Could Not Insert New Model', '', __LINE__, __FILE__, $sql);
 		}
 
 		return;
@@ -124,7 +128,7 @@ class garage_model
 
 		if(!$result = $db->sql_query($sql))
 		{
-			message_die(GENERAL_ERROR, 'Could Not Insert New Make', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'Could Not Update Model', '', __LINE__, __FILE__, $sql);
 		}
 
 		return;
@@ -138,7 +142,9 @@ class garage_model
 	{
 		global $db;
 
-		$sql = "SELECT make, id FROM " . GARAGE_MAKES_TABLE . " WHERE id = $make_id";
+		$sql = "SELECT make, id 
+			FROM " . GARAGE_MAKES_TABLE . " 
+			WHERE id = $make_id";
 
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -159,11 +165,12 @@ class garage_model
 	{
 		global $db;
 
-		$sql = "SELECT make, id FROM " . GARAGE_MAKES_TABLE;
+		$sql = "SELECT make, id 
+			FROM " . GARAGE_MAKES_TABLE;
 
 		if( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'Could Not Select Make', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'Could Not All Select Make Data', '', __LINE__, __FILE__, $sql);
 		}
 
 		while ($row = $db->sql_fetchrow($result) )
@@ -184,11 +191,13 @@ class garage_model
 	{
 		global $db;
 
-		$sql = "SELECT model, id, make_id FROM " . GARAGE_MODELS_TABLE. " WHERE make_id = $make_id";
+		$sql = "SELECT model, id, make_id 
+			FROM " . GARAGE_MODELS_TABLE. " 
+			WHERE make_id = $make_id";
 
 		if( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'Could Not Select Make', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'Could Not Select Models From Make', '', __LINE__, __FILE__, $sql);
 		}
 
 		while ($row = $db->sql_fetchrow($result) )
@@ -211,12 +220,12 @@ class garage_model
 
 		$sql = "SELECT mdl.id as model_id, mdl.model, mk.id as make_id, mk.make, mdl.pending as model_pending, mk.pending as make_pending
 			FROM " . GARAGE_MAKES_TABLE. " mk 
-			LEFT JOIN " . GARAGE_MODELS_TABLE . " mdl ON mk.id = mdl.make_id
+				LEFT JOIN " . GARAGE_MODELS_TABLE . " mdl ON mk.id = mdl.make_id
 			ORDER BY mk.make, mdl.model";
 
 		if( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'Could Not Select Make', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'Could Not Select All Makes And Models', '', __LINE__, __FILE__, $sql);
 		}
 
 		while ($row = $db->sql_fetchrow($result) )
@@ -237,7 +246,9 @@ class garage_model
 	{
 		global $db;
 
-		$sql = "SELECT model FROM " . GARAGE_MODELS_TABLE . " WHERE id = $model_id";
+		$sql = "SELECT model 
+			FROM " . GARAGE_MODELS_TABLE . " 
+			WHERE id = $model_id";
 
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -266,7 +277,7 @@ class garage_model
 
 		if( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'Could not query users', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'Could Not Select Makes', '', __LINE__, __FILE__, $sql);
 		}
 
 		$count = $db->sql_numrows($result);
@@ -276,11 +287,9 @@ class garage_model
 			$template->assign_block_vars('make_pending', array());
 		}
 
-		// loop through users
 		$i = 1;
 		while ( $row = $db->sql_fetchrow($result) )
 		{
-			// setup user row template varibles
 			$template->assign_block_vars('make_pending.row', array(
 				'ROW_CLASS' => ( !($i % 2) ) ? $theme['td_class1'] : $theme['td_class2'],
 				'MAKE_ID' => $row['id'],
@@ -319,11 +328,9 @@ class garage_model
 			$template->assign_block_vars('model_pending', array());
 		}
 
-		// loop through users
 		$i = 1;
 		while ( $row = $db->sql_fetchrow($result) )
 		{
-			// setup user row template varibles
 			$template->assign_block_vars('model_pending.row', array(
 				'ROW_CLASS' => ( !($i % 2) ) ? $theme['td_class1'] : $theme['td_class2'],
 				'MODEL_ID' => $row['id'],
