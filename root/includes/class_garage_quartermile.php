@@ -218,6 +218,35 @@ class garage_quartermile
 
 		return $row;
 	}
+
+	/*========================================================================*/
+	// Select All Quartermile Data
+	// Usage: select_quartermile_data('quartermile id');
+	/*========================================================================*/
+	function select_quartermile_by_vehicle_data($qmid)
+	{
+		global $db;
+	
+		$sql = "SELECT qm.*,images.attach_id, images.attach_hits, images.attach_ext, images.attach_file, images.attach_thumb_location, images.attach_is_image, images.attach_location
+	          	FROM " . GARAGE_QUARTERMILE_TABLE . " as qm
+	                	LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = qm.image_id
+		       	WHERE garage_id = $cid";
+	
+	       	if( !($result = $db->sql_query($sql)) )
+	       	{
+	        	message_die(GENERAL_ERROR, 'Could Not Select Quartermile Data', '', __LINE__, __FILE__, $sql);
+		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$data[] = $row;
+		}
+
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
 	/*========================================================================*/
 	// Build Quartermile Table With/Without Pending Itesm
 	// Usage: build_quartermile_table('YES|NO');

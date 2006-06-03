@@ -1316,23 +1316,14 @@ class garage_vehicle
 			}
 		}
 	
-		// Next Lets See If We Have Any QuarterMile Runs //
-	       	$sql = "SELECT qm.*,images.attach_id, images.attach_hits, images.attach_ext, 
-	                        images.attach_file, images.attach_thumb_location, images.attach_is_image, images.attach_location
-	          	FROM " . GARAGE_QUARTERMILE_TABLE . " as qm
-	                	LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = qm.image_id
-		       	WHERE garage_id = $cid";
+		//Next Lets See If We Have Any QuarterMile Runs
+		$quartermile_data = $garage_quartermile->select_quartermile_by_vehicle_data($cid);
 	
-	       	if( !($result = $db->sql_query($sql)) )
-	       	{
-	        	message_die(GENERAL_ERROR, 'Could Not Select Quartermile Data', '', __LINE__, __FILE__, $sql);
-	       	}
-	
-	        //Loop Processing All Mods Returned From Second Statements
-		if ( $db->sql_numrows($result) > 0 )
+         	//If Any Quartermiles Exist Process Them...
+		if ( count($quartermile_data) > 0 )
 		{
 			$template->assign_block_vars('quartermile', array());
-	         	while ( $quartermile_row = $db->sql_fetchrow($result) )
+	         	for ( $i = 0; $i < count($rollingroad_data); $i++  )
 	         	{
 				$qmid = $quartermile_row['id'];
 				$image_id = $quartermile_row['image_id'];
@@ -1367,26 +1358,17 @@ class garage_vehicle
 			}
 		}
 
-		// Next Lets See If We Have Any QuarterMile Runs //
-	       	$sql = "SELECT rr.*,images.attach_id, images.attach_hits, images.attach_ext, 
-                        images.attach_file, images.attach_thumb_location, images.attach_is_image, images.attach_location
-         		FROM " . GARAGE_ROLLINGROAD_TABLE . " as rr
-                        	LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = rr.image_id
-	       		WHERE garage_id = $cid";
+		//Get All Dynoruns For Vehicle
+		$rollingroad_data = $garage_dynorun->select_dynorun_by_vehicle_data($cid);
 	
-       		if( !($result = $db->sql_query($sql)) )
-       		{
-          		message_die(GENERAL_ERROR, 'Could Not Select Rollingroad Data', '', __LINE__, __FILE__, $sql);
-       		}
-	
-         	//Loop Processing All Mods Returned From Second Statements
-		if ( $db->sql_numrows($result) > 0 )
+         	//If Any Dynoruns Exist Process Them...
+		if ( count($rollingroad_data) > 0 )
 		{
 			$template->assign_block_vars('rollingroad', array());
-         		while ( $rollingroad_row = $db->sql_fetchrow($result) )
+         		for ( $i = 0; $i < count($rollingroad_data); $i++ )
          		{
-				$rrid = $rollingroad_row['id'];
-				$image_id = $rollingroad_row['image_id'];
+				$rrid = $rollingroad_data[$i]['id'];
+				$image_id = $rollingroad_data[$i]['image_id'];
 				if (!empty($image_id))
 				{
 					$slip_image = '<a href="garage.'. $phpEx .'?mode=view_gallery_item&amp;image_id='. $image_id .'" target="_blank"><img src="' . $images['slip_image_attached'] . '" alt="'.$lang['Slip_Image_Attached'].'" title="'.$lang['Slip_Image_Attached'].'" border="0" /></a>';
@@ -1403,15 +1385,15 @@ class garage_vehicle
 				}
 
 				$template->assign_block_vars('rollingroad.run', array(
-					'DYNOCENTER' => $rollingroad_row['dynocenter'],
-					'BHP' => $rollingroad_row['bhp'],
-					'BHP_UNIT' => $rollingroad_row['bhp_unit'],
-					'TORQUE' => $rollingroad_row['torque'],
-					'TORQUE_UNIT' => $rollingroad_row['torque_unit'],
-					'BOOST' => $rollingroad_row['boost'],
-					'BOOST_UNIT' => $rollingroad_row['boost_unit'],
-					'NITROUS' => $rollingroad_row['nitrous'],
-					'PEAKPOINT' => $$rollingroad_row['peakpoint'],
+					'DYNOCENTER' => $rollingroad_data[$i]['dynocenter'],
+					'BHP' => $rollingroad_data[$i]['bhp'],
+					'BHP_UNIT' => $rollingroad_data[$i]['bhp_unit'],
+					'TORQUE' => $rollingroad_data[$i]['torque'],
+					'TORQUE_UNIT' => $rollingroad_data[$i]['torque_unit'],
+					'BOOST' => $rollingroad_data[$i]['boost'],
+					'BOOST_UNIT' => $rollingroad_data[$i]['boost_unit'],
+					'NITROUS' => $rollingroad_data[$i]['nitrous'],
+					'PEAKPOINT' => $$rollingroad_data[$i]['peakpoint'],
 					'SLIP_IMAGE' => $slip_image,
 					'EDIT_LINK' => $edit_link,
 					'DELETE_LINK' => $delete_link)
@@ -1421,40 +1403,31 @@ class garage_vehicle
 			
 		if ( $owned == 'NO' )
 		{
-			// WORK OUT DISPLAYING VEHICLE IMAGES AND IF NEEDED MODIFICATION IMAGES 
-		       	$gallery_query_id = "SELECT gallery.id, images.attach_id, images.attach_hits, images.attach_ext, 
-	                        	        images.attach_file, images.attach_thumb_location, images.attach_is_image,
-	                	                images.attach_location
-	                                     FROM " . GARAGE_IMAGES_TABLE . " AS images 
-						LEFT JOIN " . GARAGE_GALLERY_TABLE . " AS gallery ON images.attach_id = gallery.image_id 
-	                                     	LEFT JOIN " . GARAGE_TABLE . " AS garage ON gallery.garage_id = garage.id 
-	                                     WHERE garage.id = $cid";
-			if ( !($result = $db->sql_query($gallery_query_id)) )
-      			{
-         			message_die(GENERAL_ERROR, 'Could Not Select Image Data For Vehicle', '', __LINE__, __FILE__, $sql);
-	      		}
-		
+			//Set Inital Count To Zero
 			$vehicle_images_found = 0;	
-		
-        		while ( $gallery_data = $db->sql_fetchrow($result) )
+
+			//Get All Gallery Data Required
+			$gallery_data = $garage_image->select_gallery_data($cid)
+
+			//Process Each Image From Vehicle Gallery	
+        		for ( $i = 0; $i < count($gallery_data); $i++ )
 	        	{
-        	    		if ( $gallery_data['attach_is_image'] )
+        	    		if ( $gallery_data[$i]['attach_is_image'] )
             			{
 				        $vehicle_images_found++;
 		
         	        		// Do we have a thumbnail?  If so, our job is simple here :)
-					if ( (empty($gallery_data['attach_thumb_location']) == FALSE) AND ($gallery_data['attach_thumb_location'] != $gallery_data['attach_location']) )
+					if ( (empty($gallery_data[$i]['attach_thumb_location']) == FALSE) AND ($gallery_data[$i]['attach_thumb_location'] != $gallery_data[$i]['attach_location']) )
                 			{
                     				// Form the image link
-						$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $gallery_data['attach_thumb_location'];
-						$id = $gallery_data['attach_id'];
-						$title = $gallery_data['attach_file'];
-						$gallery_vehicle_images .= '<a href="garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .'" title="' . $title .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
+						$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $gallery_data[$i]['attach_thumb_location'];
+						$gallery_vehicle_images .= '<a href="garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $gallery_data[$i]['attach_id'] .'" title="' . $gallery_data[$i]['attach_file'] .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
                				} 
 				}
-	        	} // End while $gallery_data
+	        	}
 		}
-	
+
+		//Display Both Vehicle Gallery & Modification Gallery	
 		if ( (empty($gallery_modification_images) == FALSE) AND (empty($gallery_vehicle_images) == FALSE) )
 		{
 
@@ -1463,14 +1436,16 @@ class garage_vehicle
 				'MODIFICATION_IMAGES' => $gallery_modification_images)
 			);
 		}
-	
+
+		//Display Just Vehicle Gallery	
 		if ( (empty($gallery_modification_images) == TRUE) AND (empty($gallery_vehicle_images) == FALSE) )
 		{
 			$template->assign_block_vars('switch_top_block.owned_no.gallery_vehicle', array(
 				'VEHICLE_IMAGES' => $gallery_vehicle_images)
 			);
 		}
-	
+
+		//Display Just Modification Gallery	
 		if ( (empty($gallery_modification_images) == FALSE) AND (empty($gallery_vehicle_images) == TRUE) )
 		{
 			$template->assign_block_vars('switch_top_block.owned_no.gallery_modification', array(

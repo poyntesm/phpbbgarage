@@ -235,6 +235,36 @@ class garage_dynorun
 	}
 
 	/*========================================================================*/
+	// Select All Dynorun Data From DB
+	// Usage: select_dynorun_data('dynorun id');
+	/*========================================================================*/
+	function select_dynorun_by_vehicle_data($cid)
+	{
+		global $db;
+
+	       	$sql = "SELECT rr.*,images.attach_id, images.attach_hits, images.attach_ext, 
+                        images.attach_file, images.attach_thumb_location, images.attach_is_image, images.attach_location
+         		FROM " . GARAGE_ROLLINGROAD_TABLE . " as rr
+                        	LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = rr.image_id
+				WHERE garage_id = $cid";
+
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could Not Select Dynorun By Vehicle', '', __LINE__, __FILE__, $sql);
+		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$data[] = $row;
+		}
+
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+
+	/*========================================================================*/
 	// Build Dynorun Table
 	// Usage: build_dynorun_table('YES|NO');
 	/*========================================================================*/
