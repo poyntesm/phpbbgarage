@@ -223,7 +223,7 @@ class garage_quartermile
 	// Select All Quartermile Data
 	// Usage: select_quartermile_data('quartermile id');
 	/*========================================================================*/
-	function select_quartermile_by_vehicle_data($qmid)
+	function select_quartermile_by_vehicle_data($cid)
 	{
 		global $db;
 	
