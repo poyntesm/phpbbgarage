@@ -144,6 +144,7 @@ $sql[] = "CREATE TABLE " . $table_prefix . "garage_images (
 		`attach_is_image` tinyint(1) NOT NULL default '0',
 		`attach_date` int(10) NOT NULL default '0',
 		`attach_filesize` int(10) NOT NULL default '0',
+		`attach_thumb_filesize` int(10) NOT NULL default '0',
 		PRIMARY KEY  (`attach_id`)
 		)";
 

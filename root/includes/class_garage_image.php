@@ -333,6 +333,7 @@ class garage_image
 				//Get Thumbnail Width & Height
 				$data['thumb_width'] = $this->get_image_width($data['thumb_location']);
 				$data['thumb_height'] = $this->get_image_height($data['thumb_location']);
+				$data['thumb_filesize'] = $this->get_image_filesize($data['thumb_location']);
 
 			}
 			//No GD So Use Default Image
@@ -451,6 +452,7 @@ class garage_image
 				//Get Thumbnail Width & Height
 				$data['thumb_width'] = $this->get_image_width($data['thumb_location']);
 				$data['thumb_height'] = $this->get_image_height($data['thumb_location']);
+				$data['thumb_filesize'] = $this->get_image_filesize($data['thumb_location']);
 			}
 			else
 			{
@@ -475,9 +477,9 @@ class garage_image
 		global $db;
 
 		$sql = "INSERT INTO ". GARAGE_IMAGES_TABLE ." 
-			(attach_location, attach_hits, attach_ext, attach_file, attach_thumb_location, attach_thumb_width, attach_thumb_height, attach_is_image, attach_date, attach_filesize)
+			(attach_location, attach_hits, attach_ext, attach_file, attach_thumb_location, attach_thumb_width, attach_thumb_height, attach_is_image, attach_date, attach_filesize, attach_thumb_filesize)
 			VALUES 
-			('".$data['location']."', '0', '".$data['ext']."', '".$data['file']."', '".$data['thumb_location']."', '".$data['thumb_width']."', '".$data['thumb_height']."', '".$data['is_image']."', '".$data['date']."', '".$data['filesize']."')";
+			('".$data['location']."', '0', '".$data['ext']."', '".$data['file']."', '".$data['thumb_location']."', '".$data['thumb_width']."', '".$data['thumb_height']."', '".$data['is_image']."', '".$data['date']."', '".$data['filesize']."', '".$data['thumb_filesize']."')";
 
 		if( !$result = $db->sql_query($sql) )
 		{
@@ -599,6 +601,18 @@ class garage_image
 
 		return $imagesize[1];
 	}
+
+	/*========================================================================*/
+	// Return The Filesize Of An Image
+	// Usage: get_image_height('source file');
+	/*========================================================================*/
+	function get_image_height($source_file_name)
+	{
+		global $phpbb_root_path;
+
+		return filesize($phpbb_root_path . GARAGE_UPLOAD_PATH . $source_file_name);
+	}
+
 	
 	/*========================================================================*/
 	// Delete Image Including Actual File & Thumbnail
