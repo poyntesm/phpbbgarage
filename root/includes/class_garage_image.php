@@ -205,9 +205,9 @@ class garage_image
 	/*========================================================================*/
 	function process_image_attached($type, $id)
 	{
-		global $userdata, $template, $db, $SID, $lang, $images, $phpEx, $phpbb_root_path, $garage_config, $board_config, $HTTP_POST_FILES, $HTTP_POST_VARS;
+		global $userdata, $template, $db, $SID, $lang, $images, $phpEx, $phpbb_root_path, $garage_config, $board_config, $HTTP_POST_FILES, $HTTP_POST_VARS, $garage;
 	
-		if (!$this->check_permissions('UPLOAD',''))
+		if (!$garage->check_permissions('UPLOAD',''))
 		{
 			return ;
 		}

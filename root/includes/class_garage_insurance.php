@@ -160,7 +160,7 @@ class garage_insurance
 
 	/*========================================================================*/
 	// Select All Insurance Premium Data From Specific Insurance Company From DB
-	// Usage: get_all_premiuminsurance_data('business id');
+	// Usage: select_all_premiums_data('business id');
 	/*========================================================================*/
 	function select_all_premiums_data($business_id)
 	{
@@ -178,7 +178,8 @@ class garage_insurance
 				AND b.pending = 0
 				AND b.id = $business_id
 				AND makes.pending = 0 AND models.pending = 0 
-			GROUP BY i.id";
+				GROUP BY i.id";
+
 	   	if ( !($result = $db->sql_query($sql)) )
       		{
        			message_die(GENERAL_ERROR, 'Could Select All Insuance Data', '', __LINE__, __FILE__, $sql);
@@ -198,7 +199,7 @@ class garage_insurance
 	// Select Insurance Premiums By Business From DB
 	// Usage: select_insurance_premium_data('model id');
 	/*========================================================================*/
-	function select_premiums_from_business_data($business_id, $cover_type)
+	function select_premiums_by_business_data($business_id, $cover_type)
 	{
 		global $db, $where;
 
@@ -220,6 +221,35 @@ class garage_insurance
 
 		return $row;
 	}
+
+	/*========================================================================*/
+	// Select Insurance Premiums By Vehicle From DB
+	// Usage: select_premiums_by_vehicle_data('vehicle id');
+	/*========================================================================*/
+	function select_premiums_by_vehicle_data($cid)
+	{
+		global $db;
+
+		$sql = "SELECT ins.*, bus.title
+	        	FROM " . GARAGE_INSURANCE_TABLE . " as ins
+	                	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " AS bus ON ins.business_id = bus.id
+		       	WHERE garage_id = $cid";
+	
+	       	if( !($result = $db->sql_query($sql)) )
+	       	{
+	        	message_die(GENERAL_ERROR, 'Could Not Select Insurance Data', '', __LINE__, __FILE__, $sql);
+		}
+
+		while( $row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
+      		$db->sql_freeresult($result);
+
+		return $rows;
+	}
+
+
 }
 
 $garage_insurance = new garage_insurance();

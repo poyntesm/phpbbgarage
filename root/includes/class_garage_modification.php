@@ -325,6 +325,37 @@ class garage_modification
 
 	/*========================================================================*/
 	// Select All Modification Data From DB
+	// Usage: select_modification_data('modification id');
+	/*========================================================================*/
+	function select_modifications_by_category_data($cid, $category_id)
+	{
+		global $db;
+
+		$sql = "SELECT m.*,images.attach_id, images.attach_hits, images.attach_ext, images.attach_location,
+	                       images.attach_file, images.attach_thumb_location, images.attach_is_image 
+	       		FROM " . GARAGE_MODS_TABLE . " as m
+				LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = m.image_id
+		       	WHERE garage_id = $cid 
+				AND category_id = $category_id
+	                ORDER BY title ASC";
+
+      		if ( !($result = $db->sql_query($sql)) )
+      		{
+         		message_die(GENERAL_ERROR, 'Could Not Select Modification Data', '', __LINE__, __FILE__, $sql);
+		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
+
+		$db->sql_freeresult($result);
+
+		return $rows;
+	}
+
+	/*========================================================================*/
+	// Select All Modification Data From DB
 	// Usage: get_installed_mods_by_business_data('modification id', 'limit');
 	/*========================================================================*/
 	function get_modifications_by_install_business($business_id, $limit)

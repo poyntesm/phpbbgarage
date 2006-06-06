@@ -875,7 +875,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function display_vehicle($owned)
 	{
-		global $userdata, $template, $images, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $HTTP_POST_FILES, $HTTP_POST_VARS, $HTTP_GET_VARS, $rating_text, $rating_types, $cid, $mode, $garage, $garage_template;
+		global $userdata, $template, $images, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $HTTP_POST_FILES, $HTTP_POST_VARS, $HTTP_GET_VARS, $rating_text, $rating_types, $cid, $mode, $garage, $garage_template, $garage_modification, $garage_insurance, $garage_quartermile, $garage_dynorun;
 
 		//Since We Called This Fuction Display Top Block With All Vehicle Info
 		$template->assign_block_vars('switch_top_block', array());
@@ -930,9 +930,8 @@ class garage_vehicle
 		}
 	
 		$user_id = $vehicle_row['member_id'];
-		$username =  $vehicle_row['username'];
 		$temp_url = append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=$user_id");
-		$owner = '<a href="' . $temp_url . '">' . $username . '</a>';
+		$owner = '<a href="' . $temp_url . '">' . $vehicle_row['username'] . '</a>';
 	
 		if ( $owned == 'YES' )
 		{
@@ -1150,16 +1149,11 @@ class garage_vehicle
 	
 	       	$db->sql_freeresult($result);
 	
-		// initialize vars
-		$category = array();
-		$category_id = array();
-	
-		// This will give us the number of categories available
-	      	$cat_count = 0;
+		//Set Counter To Zero
 	      	$mod_images_found = 0;
 	     
-	      	// Select Categories For Which A User Has Mods
-	      	$sql = "SELECT DISTINCT m.garage_id, m.category_id , c.title, c.id
+	      	//Select Categories For Which A User Has Mods
+	      	$sql = "SELECT DISTINCT c.title, c.id
 	       		FROM  " . GARAGE_MODS_TABLE . " m, " . GARAGE_CATEGORIES_TABLE . " c
 	       		WHERE m.garage_id = $cid
 	       			AND m.category_id = c.id
@@ -1168,148 +1162,101 @@ class garage_vehicle
 	      	if ( !($result = $db->sql_query($sql)) )
 	      	{
 	       		message_die(GENERAL_ERROR, 'Could Not Select Mofication Category Data', '', __LINE__, __FILE__, $sql);
-	      	}
+		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$category_data[] = $row;
+		}
+
+		$db->sql_freeresult($result);
 	
-	      	// we'll populate some arrays(one for each field we need) with the SQL-results ..
-	      	// ... will use this later to make the outer loop!
-	      	if ( $cat_fields = $db->sql_fetchrow($result) )
-	      	{
-	       		do
-	       		{
-	               		array_push($category, $cat_fields['title']);
-	               		array_push($category_id, $cat_fields['category_id']);
-	               		$cat_count++;
-	       		}
-	       		while ( $cat_fields = $db->sql_fetchrow($result) );
-	      	} // done reading categories
-	      	$db->sql_freeresult($result);
-	
-	      	//Loop Processing All Categoires Returned From First Select Statement (now in a
-	      	for ($i=0; $i < $cat_count; $i++)
+	      	//Loop Processing All Categoires Returned....
+	      	for ( $i=0; $i < count($category_data); $i++ )
 	      	{
 	       		//Setup cat_row Template Varibles
 	       		$template->assign_block_vars('cat_row', array(
-	           		'CATEGORY_TITLE' => $category[$i])
+	           		'CATEGORY_TITLE' => $category_data[$i]['title'])
 	       		);
 	
-	       		// Select All Mods From This Car For Category We Are Currently Processing
-			$sql = "SELECT m.*,images.attach_id, images.attach_hits, images.attach_ext, images.attach_location,
-	                        images.attach_file, images.attach_thumb_location, images.attach_is_image 
-	         		FROM " . GARAGE_MODS_TABLE . " as m
-	                        	LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = m.image_id
-		       		WHERE garage_id = $cid 
-					AND category_id = $category_id[$i]
-	                        ORDER BY title ASC";
-	
-	       		if( !($result = $db->sql_query($sql)) )
+			// Select All Mods From This Car For Category We Are Currently Processing
+			$modification_data = $garage_modification->select_modifications_by_category_data($cid, $category_data[$i]['id']);
+
+	       		//Process Modifications From This Category..
+        		for ( $j = 0; $j < count($modification_data); $j++ )
 	       		{
-	        		message_die(GENERAL_ERROR, 'Could Not Select Modification Data', '', __LINE__, __FILE__, $sql);
-	       		}
-	
-	       		//Loop Processing All Mods Returned From Second Statements
-	       		while ( $usermods_row = $db->sql_fetchrow($result) )
-	       		{
-	       			$mid = $usermods_row['id'];
-	       			$cost = $usermods_row['price'];
-	       			$install = $usermods_row['install_price'];
-	       			$product_rating = $usermods_row['product_rating'];
-				if ( $owned == 'YES' )
-				{
-	       				$modification = $usermods_row['title'];
-				}
-				else if ( $owned == 'NO' )
-				{
-					$temp_url = append_sid("garage.$phpEx?mode=view_modification&amp;CID=$cid&amp;MID=$mid");
-					$modification = '<a href="' . $temp_url . '">' . $usermods_row['title'] . '</a>';
-				}
-				$image_id = $usermods_row['image_id'];
+	       			$mid = $modification_data[$j]['id'];
+				$temp_url = append_sid("garage.$phpEx?mode=view_modification&amp;CID=$cid&amp;MID=$mid");
+				$modification = '<a href="' . $temp_url . '">' . $modification_data[$j]['title'] . '</a>';
+				$image_id = $modification_data[$j]['image_id'];
+				$image_attached ='';
 	           		if ($image_id)
 				{
 					$image_attached ='<a href="garage.'. $phpEx .'?mode=view_gallery_item&amp;image_id='. $image_id .'" target="_blank"><img src="' . $images['vehicle_image_attached'] . '" alt="'.$lang['Modification_Image_Attached'].'" title="'.$lang['Modification_Image_Attached'].'" border="0" /></a>';
 		                        $mod_images_found++;
 				}
-				else
-				{
-					$image_attached ='';
-				}
 	
-	            		$temp_url = append_sid("garage.$phpEx?mode=edit_modification&amp;MID=$mid&amp;CID=$cid");
 				if ( $owned == 'YES' )
 				{
+	            			$temp_url = append_sid("garage.$phpEx?mode=edit_modification&amp;MID=$mid&amp;CID=$cid");
 	            			$edit_mod_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="'.$lang['Edit'].'" title="'.$lang['Edit'].'" border="0" /></a>';
 					$delete_mod_link = '<a href="javascript:confirm_delete_mod(' . $cid . ',' . $mid . ')"><img src="' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" /></a>';
 				}
 	
-				$updated = create_date('D M d, Y G:i', $usermods_row['date_updated'], $board_config['board_timezone']);
-				$created = create_date('D M d, Y G:i', $usermods_row['date_created'], $board_config['board_timezone']);
-	
-	            		//Setup user_row Template Varibles
 	            		$template->assign_block_vars('cat_row.user_row', array(
 	               			'IMAGE_ATTACHED' => $image_attached,
 	               			'EDIT_MOD_LINK' => $edit_mod_link,
 	               			'DELETE_MOD_LINK' => $delete_mod_link,
-	               			'COST' => $cost,
-	               			'INSTALL' => $install,
-	               			'RATING' => $product_rating,
-	               			'CREATED' => $created,
-	               			'UPDATED' => $updated,
+	               			'COST' => $modification_data[$j]['price'],
+	               			'INSTALL' => $modification_data[$j]['install_price'],
+	               			'RATING' => $modification_data[$j]['product_rating'],
+	               			'CREATED' => create_date('D M d, Y G:i', $modification_data[$j]['date_created'], $board_config['board_timezone']),
+	               			'UPDATED' => create_date('D M d, Y G:i', $modification_data[$j]['date_updated'], $board_config['board_timezone']),
 	               			'MODIFICATION' => $modification)
 	            		);
 	
 				//See If Mod Has An Image Attached And Display Gallery If Needed
-				if ( ( $owned == 'NO' ) AND ($garage_config['show_mod_gallery'] == 1) AND ( $usermods_row['attach_is_image'] ) )
+				if ( ( $owned == 'NO' ) AND ($garage_config['show_mod_gallery'] == 1) AND ( $modification_data[$j]['attach_is_image'] ) )
 				{
 			        	//If we have a set limit, make sure we haven't hit it
 	  		               	if ( ($garage_config['limit_mod_gallery'] >= $mod_images_found) OR !$garage_config['limit_mod_gallery'])
 			                {
 						$mod_images_displayed = $mod_images_found;
 	                			//Do we have a thumbnail?  If so, our job is simple here :)
-						if ( (empty($usermods_row['attach_thumb_location']) == FALSE) AND ($usermods_row['attach_thumb_location'] != $usermods_row['attach_location']) )
+						if ( (empty($modification_data[$i]['attach_thumb_location']) == FALSE) AND ($modification_data[$j]['attach_thumb_location'] != $modification_data[$j]['attach_location']) )
 	                			{
 			               			//Form the image link
-							$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $usermods_row['attach_thumb_location'];
-							$id = $usermods_row['attach_id'];
-							$title = $usermods_row['attach_file'];
+							$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $modification_data[$j]['attach_thumb_location'];
+							$id = $modification_data[$j]['attach_id'];
+							$title = $modification_data[$j]['attach_file'];
 							$gallery_modification_images .= '<a href="garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .'" title="' . $title .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
 	               				} 
 					}
 				}
-	         	}// end WHILE of inner loop
-	         	$db->sql_freeresult($result);
-	      	}// end FOR of outer loop
+	         	}
+	      	}
 	
-		// Next Lets See If We Have Any Insurance Premiums //
-		$sql = "SELECT ins.*, bus.title
-	        	FROM " . GARAGE_INSURANCE_TABLE . " as ins
-	                	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " AS bus ON ins.business_id = bus.id
-		       	WHERE garage_id = $cid";
+		// Next Lets See If We Have Any Insurance Premiums
+		$insurance_data = $garage_insurance->select_premiums_by_vehicle_data($cid);
 	
-	       	if( !($result = $db->sql_query($sql)) )
-	       	{
-	        	message_die(GENERAL_ERROR, 'Could Not Select Insurance Data', '', __LINE__, __FILE__, $sql);
-	       	}
-	
-	        //Loop Processing All Mods Returned From Second Statements
-		if ( $db->sql_numrows($result) > 0 )
+         	//If Any Premiums Exist Process Them...
+		if ( count($insurance_data) > 0 )
 		{
 			$template->assign_block_vars('insurance', array());
-	         	while ( $insurance_row = $db->sql_fetchrow($result) )
+        		for ( $i = 0; $i < count($insurance_data); $i++ )
 	         	{
-				$ins_id = $insurance_row['id'];
-				$company = $insurance_row['title'];
-				$premium = $insurance_row['premium'];
-				$cover_type = $insurance_row['cover_type'];
-				$temp_url = append_sid("garage.$phpEx?mode=edit_insurance&amp;INS_ID=$ins_id&amp;CID=$cid");
+				$ins_id = $insurance_data[$i]['id'];
 				if ( $owned == 'YES' )
 				{
+					$temp_url = append_sid("garage.$phpEx?mode=edit_insurance&amp;INS_ID=$ins_id&amp;CID=$cid");
 	            			$edit_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="'.$lang['Edit'].'" title="'.$lang['Edit'].'" border="0" /></a>';
 					$delete_link = '<a href="javascript:confirm_delete_insurance(' . $cid . ',' . $ins_id . ')"><img src="' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" /></a>';
 				}
 
 				$template->assign_block_vars('insurance.premium', array(
-					'COMPANY' => $company,
-					'PREMIUM' => $premium,
-					'COVER_TYPE' => $cover_type,
+					'COMPANY' => $insurance_data[$i]['title'],
+					'PREMIUM' => $insurance_data[$i]['premium'],
+					'COVER_TYPE' => $insurance_data[$i]['cover_type'],
 					'EDIT_LINK' => $edit_link,
 					'DELETE_LINK' => $delete_link)
 				);
@@ -1323,34 +1270,31 @@ class garage_vehicle
 		if ( count($quartermile_data) > 0 )
 		{
 			$template->assign_block_vars('quartermile', array());
-	         	for ( $i = 0; $i < count($rollingroad_data); $i++  )
+        		for ( $i = 0; $i < count($quartermile_data); $i++ )
 	         	{
-				$qmid = $quartermile_row['id'];
-				$image_id = $quartermile_row['image_id'];
+				$qmid = $quartermile_data[$i]['id'];
+				$image_id = $quartermile_data[$i]['image_id'];
+				$slip_image = '';
 				if (!empty($image_id))
 				{
 					$slip_image = '<a href="garage.'. $phpEx .'?mode=view_gallery_item&amp;image_id='. $image_id .'" target="_blank"><img src="' . $images['slip_image_attached'] . '" alt="'.$lang['Slip_Image_Attached'].'" title="'.$lang['Slip_Image_Attached'].'" border="0" /></a>';
 				}
-				else
-				{
-					$slip_image = '';
-				}
-				$temp_url = append_sid("garage.$phpEx?mode=edit_quartermile&amp;QMID=$qmid&amp;CID=$cid");
 				if ( $owned == 'YES' )
 				{
+					$temp_url = append_sid("garage.$phpEx?mode=edit_quartermile&amp;QMID=$qmid&amp;CID=$cid");
 	            			$edit_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="'.$lang['Edit'].'" title="'.$lang['Edit'].'" border="0" /></a>';
 					$delete_link = '<a href="javascript:confirm_delete_quartermile(' . $cid . ',' . $qmid . ')"><img src="' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" /></a>';
 				}
 
 				$template->assign_block_vars('quartermile.run', array(
-					'RT' => $quartermile_row['rt'],
-					'SIXTY' => $quartermile_row['sixty'],
-					'THREE' => $quartermile_row['three'],
-					'EIGHT' => $quartermile_row['eight'],
-					'EIGHTMPH' => $quartermile_row['eightmph'],
-					'THOU' => $quartermile_row['thou'],
-					'QUART' => $quartermile_row['quart'],
-					'QUARTMPH' => $quartermile_row['quartmph'],
+					'RT' => $quartermile_data[$i]['rt'],
+					'SIXTY' => $quartermile_data[$i]['sixty'],
+					'THREE' => $quartermile_data[$i]['three'],
+					'EIGHT' => $quartermile_data[$i]['eight'],
+					'EIGHTMPH' => $quartermile_data[$i]['eightmph'],
+					'THOU' => $quartermile_data[$i]['thou'],
+					'QUART' => $quartermile_data[$i]['quart'],
+					'QUARTMPH' => $quartermile_data[$i]['quartmph'],
 					'SLIP_IMAGE' => $slip_image,
 					'EDIT_LINK' => $edit_link,
 					'DELETE_LINK' => $delete_link)
@@ -1369,17 +1313,14 @@ class garage_vehicle
          		{
 				$rrid = $rollingroad_data[$i]['id'];
 				$image_id = $rollingroad_data[$i]['image_id'];
+				$slip_image = '';
 				if (!empty($image_id))
 				{
 					$slip_image = '<a href="garage.'. $phpEx .'?mode=view_gallery_item&amp;image_id='. $image_id .'" target="_blank"><img src="' . $images['slip_image_attached'] . '" alt="'.$lang['Slip_Image_Attached'].'" title="'.$lang['Slip_Image_Attached'].'" border="0" /></a>';
 				}
-				else
-				{
-					$slip_image = '';
-				}
-				$temp_url = append_sid("garage.$phpEx?mode=edit_rollingroad&amp;RRID=$rrid&amp;CID=$cid");
 				if ( $owned == 'YES' )
 				{
+					$temp_url = append_sid("garage.$phpEx?mode=edit_rollingroad&amp;RRID=$rrid&amp;CID=$cid");
             				$edit_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="'.$lang['Edit'].'" title="'.$lang['Edit'].'" border="0" /></a>';
 					$delete_link = '<a href="javascript:confirm_delete_rollingroad(' . $cid . ',' . $rrid . ')"><img src="' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" /></a>';
 				}
@@ -1393,7 +1334,7 @@ class garage_vehicle
 					'BOOST' => $rollingroad_data[$i]['boost'],
 					'BOOST_UNIT' => $rollingroad_data[$i]['boost_unit'],
 					'NITROUS' => $rollingroad_data[$i]['nitrous'],
-					'PEAKPOINT' => $$rollingroad_data[$i]['peakpoint'],
+					'PEAKPOINT' => $rollingroad_data[$i]['peakpoint'],
 					'SLIP_IMAGE' => $slip_image,
 					'EDIT_LINK' => $edit_link,
 					'DELETE_LINK' => $delete_link)
@@ -1407,7 +1348,7 @@ class garage_vehicle
 			$vehicle_images_found = 0;	
 
 			//Get All Gallery Data Required
-			$gallery_data = $garage_image->select_gallery_data($cid)
+			$gallery_data = $garage_image->select_gallery_data($cid);
 
 			//Process Each Image From Vehicle Gallery	
         		for ( $i = 0; $i < count($gallery_data); $i++ )

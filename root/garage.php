@@ -27,6 +27,12 @@ $phpbb_root_path = './';
 require($phpbb_root_path . 'extension.inc');
 include($phpbb_root_path . 'common.'.$phpEx);
 include($phpbb_root_path . 'includes/bbcode.'.$phpEx);
+
+//Setup Garage Language Files...
+if(empty($board_config['default_lang']))
+{
+	$board_config['default_lang'] = 'english';
+}
 require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage.' . $phpEx);
 require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage_error.' . $phpEx);
 
@@ -220,7 +226,7 @@ switch( $mode )
 		if( $garage_image->image_attached() )
 		{
 			//Create Thumbnail & DB Entry For Image
-			$image_id = $garage->process_image_attach('vehicle',$cid);
+			$image_id = $garage->process_image_attached('vehicle',$cid);
 			//Insert Image Into Vehicles Gallery
 			$garage_image->insert_gallery_image($image_id);
 			//Set Image As Hilite Image For Vehicle
@@ -439,7 +445,7 @@ switch( $mode )
 		if( $garage_image->image_attached() )
 		{
 			//Create Thumbnail & DB Entry For Image
-			$image_id = $garage_image->process_image_attach('modification',$mid);
+			$image_id = $garage_image->process_image_attached('modification',$mid);
 			//Set Image To This Modification
 			$garage->update_single_field(GARAGE_MODS_TABLE,'image_id',$image_id,'id',$mid);
 		}
@@ -522,7 +528,7 @@ switch( $mode )
 	case 'update_modification':
 
 		//Check Vehicle Ownership
-		$garage_vheicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('category_id', 'title', 'price', 'business_id', 'install_business_id', 'install_price', 'install_rating', 'product_rating', 'comments', 'install_comments', 'edit_upload', 'image_id', 'purchase_rating');
@@ -550,7 +556,7 @@ switch( $mode )
 		if( $garage_image->image_attached() )
 		{
 			//Create Thumbnail & DB Entry For Image
-			$image_id = $garage_image->process_image_attach('modification',$mid);
+			$image_id = $garage_image->process_image_attached('modification',$mid);
 			//Set Image To This Modification
 			$garage->update_single_field(GARAGE_MODS_TABLE,'image_id',$image_id,'id',$mid);
 		}
@@ -673,7 +679,7 @@ switch( $mode )
 		if( $garage_image->image_attached() )
 		{
 			//Create Thumbnail & DB Entry For Image + Link To Item
-			$image_id = $garage_image->process_image_attach('quartermile',$qmid);
+			$image_id = $garage_image->process_image_attached('quartermile',$qmid);
 			$garage->update_single_field(GARAGE_QUARTERMILE_TABLE,'image_id',$image_id,'id',$qmid);
 		}
 		//No Image Attached..We Need To Check If This Breaks The Site Rule
@@ -802,7 +808,7 @@ switch( $mode )
 		if( $garage_image->image_attached() )
 		{
 			//Create Thumbnail & DB Entry For Image
-			$image_id = $garage_image->process_image_attach('quartermile',$qmid);
+			$image_id = $garage_image->process_image_attached('quartermile',$qmid);
 			$garage->update_single_field(GARAGE_QUARTERMILE_TABLE,'image_id',$image_id,'id',$qmid);
 		}
 		//No Image Attached..We Need To Check If This Breaks The Site Rule
@@ -930,7 +936,7 @@ switch( $mode )
 		if( $garage_image->image_attached() )
 		{
 			//Create Thumbnail & DB Entry For Image
-			$image_id = $garage_image->process_image_attach('rollingroad',$rrid);
+			$image_id = $garage_image->process_image_attached('rollingroad',$rrid);
 			$garage->update_single_field(GARAGE_ROLLINGROAD_TABLE,'image_id',$image_id,'id',$rrid);
 		}
 		//No Image Attached..We Need To Check If This Breaks The Site Rule
@@ -1041,7 +1047,7 @@ switch( $mode )
 		if( $garage_image->image_attached() )
 		{
 			//Create Thumbnail & DB Entry For Image
-			$image_id = $garage_image->process_image_attach('rollingroad',$rrid);
+			$image_id = $garage_image->process_image_attached('rollingroad',$rrid);
 			$garage->update_single_field(GARAGE_ROLLINGROAD_TABLE,'image_id',$image_id,'id',$rrid);
 		}
 		//No Image Attached..We Need To Check If This Breaks The Site Rule
@@ -1713,7 +1719,7 @@ switch( $mode )
 			if ( count($gallery_data) < $garage_image->get_user_upload_quota() )
 			{
 				//Create Thumbnail & DB Entry For Image
-				$image_id = $garage_image->process_image_attach('vehicle',$cid);
+				$image_id = $garage_image->process_image_attached('vehicle',$cid);
 				$garage_image->insert_gallery_image($image_id);
 				//If First Image And Set As Vehicle Hilite Image
 				if ( empty($data['image_id']))
