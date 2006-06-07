@@ -128,7 +128,7 @@ class garage
 	/*========================================================================*/
 	function check_required_vars($params = array())
 	{
-		global $SID, $phpEx, $data;
+		global $phpEx, $data;
 
 		while( list($var, $param) = @each($params) )
 		{
@@ -167,7 +167,7 @@ class garage
 	function count_total_views()
 	{
 		global $db;
-		// Get the total count of vehicles and views in the garage
+
 		$sql = "SELECT SUM(views) AS total_views 
 			FROM " . GARAGE_TABLE;
 
@@ -248,7 +248,7 @@ class garage
 	             	FROM " . USER_GROUP_TABLE . " AS ug, " . GROUPS_TABLE ." g
                 	WHERE ug.user_id = $u_id
 				and ug.group_id = g.group_id and g.group_single_user <> " . TRUE ."
-				ORDER BY g.group_name ASC";
+			ORDER BY g.group_name ASC";
 
        		if( !($result = $db->sql_query($sql)) )
        		{
@@ -270,7 +270,7 @@ class garage
 	/*========================================================================*/
 	function check_permissions($required_permission, $redirect_url)
 	{
-		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
+		global $userdata, $template, $db, $garage_config;
 	
 		$required_permission = strtolower($required_permission);
 	
@@ -312,14 +312,14 @@ class garage
 			$private_groups = @explode(',', $private_perms['private_groups']);
 			$db->sql_freeresult($result);
 	
-			for ($i = 0; $i < count($groupdata); $i++)
+			for ( $i = 0; $i < count($groupdata); $i++ )
 			{
-				if (in_array($groupdata[$i]['group_id'], $private_groups))
+				if ( in_array($groupdata[$i]['group_id'], $private_groups) )
 				{
 					//You Were Found To Be A Member Of A Denied Group And We Know Where To Send You
 					if (!empty($redirect_url))
 					{
-						redirect(append_sid("$redirect_url", true));
+						redirect(append_sid($redirect_url, true));
 					}
 					//You Were Found To Be A Member Of A Denied Group But No URL So Return False
 					else
@@ -429,7 +429,6 @@ class garage
 		return $row;
 	}
 
-
 	/*========================================================================*/
 	// Remove Duplicate Entries In An Array
 	// Usage: remove_duplicate('vehicle id');
@@ -480,7 +479,7 @@ class garage
 
 		$sql = "SELECT user_id
 			FROM " . PHPBB_USERS ."
-			WHERE user_level = " . ADMIN . " or user_level = " . MOD;
+			WHERE user_level = " . ADMIN . " OR user_level = " . MOD;
 
 		if(!$result = $db->sql_query($sql))
 		{
