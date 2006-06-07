@@ -209,7 +209,7 @@ class garage_image
 	
 		if (!$garage->check_permissions('UPLOAD',''))
 		{
-			return ;
+			return;
 		}
 
 		if ( (empty($type)) OR (empty($id)) )
@@ -249,7 +249,6 @@ class garage_image
 		//Lets Check Its Writeable '16895' Is Octal For drwxrwxrwx Thats What We Need.....And If Not Let User Know To Contact Administrator With Helpful Pointer
 		if ( !fileperms($phpbb_root_path. GARAGE_UPLOAD_PATH) == '16895')
 		{
-
 			redirect(append_sid("garage.$phpEx?mode=error&EID=25", true));
 		}
 
@@ -526,7 +525,7 @@ class garage_image
 		}
 		else if( ($width > $garage_config['thumbnail_resolution']) or ($height > $garage_config['thumbnail_resolution']) )
 		{
-			// Resize it
+			//Resize it
 			if ($width > $height)
 			{
 				$thumb_width = $garage_config['thumbnail_resolution'];
@@ -539,12 +538,11 @@ class garage_image
 			}
 
 			$thumb = ($garage_config['gd_version'] == 1) ? @imagecreate($thumb_width, $thumb_height) : @imagecreatetruecolor($thumb_width, $thumb_height);
-
 			$resize_function = ($garage_config['gd_version'] == 1) ? 'imagecopyresized' : 'imagecopyresampled';
-
 			@$resize_function($thumb, $src, 0, 0, 0, 0, $thumb_width, $thumb_height, $width, $height);
 
 		}
+		//Source Is Bigger Than Thumb...So Just Use Source..
 		else
 		{
 			$thumb = $src;
@@ -604,15 +602,112 @@ class garage_image
 
 	/*========================================================================*/
 	// Return The Filesize Of An Image
-	// Usage: get_image_height('source file');
+	// Usage: get_image_filesize('source file');
 	/*========================================================================*/
-	function get_image_height($source_file_name)
+	function get_image_filesize($source_file_name)
 	{
 		global $phpbb_root_path;
 
 		return filesize($phpbb_root_path . GARAGE_UPLOAD_PATH . $source_file_name);
 	}
 
+	/*========================================================================*/
+	// Return The Disk Space Used By Any User..
+	// Usage: get_image_space_used('user_id');
+	/*========================================================================*/
+	function get_image_space_used($user_id)
+	{
+		global $db;
+
+		//Set Inital Counter To Zero
+		$space = 0;
+
+		//Get All Space Used By Vehicle Images
+		$sql = "SELECT ( SUM(img.attach_filesize) + SUM(img.attach_thumb_filesize) ) as image_bytes
+			FROM phpbb_garage AS g
+				LEFT JOIN phpbb_garage_gallery gallery ON gallery.garage_id = g.id
+				LEFT JOIN phpbb_garage_images img ON img.attach_id = gallery.image_id
+			WHERE g.member_id = 2 AND img.attach_id IS NOT NULL
+			GROUP BY img.attach_id";
+
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could Not Select Vehicle Image Size Data', '', __LINE__, __FILE__, $sql);
+		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$space =  $space + $row['image_bytes'];
+		}
+
+		$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		//Get All Space Used By Modification Images
+		$sql = "SELECT ( SUM(img.attach_filesize) + SUM(img.attach_thumb_filesize) ) as image_bytes
+			FROM phpbb_garage AS g
+				LEFT JOIN phpbb_garage_mods mods ON mods.garage_id = g.id
+				LEFT JOIN phpbb_garage_images img ON img.attach_id = mods.image_id
+			WHERE g.member_id = 2 AND img.attach_id IS NOT NULL
+			GROUP BY img.attach_id";
+
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could Not Select Vehicle Image Size Data', '', __LINE__, __FILE__, $sql);
+		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$space =  $space + $row['image_bytes'];
+		}
+
+		$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		//Get All Space Used By Quartermile Images
+		$sql = "SELECT ( SUM(img.attach_filesize) + SUM(img.attach_thumb_filesize) ) as image_bytes
+			FROM phpbb_garage AS g
+				LEFT JOIN phpbb_garage_quartermile qm ON qm.garage_id = g.id
+				LEFT JOIN phpbb_garage_images img ON img.attach_id = qm.image_id
+			WHERE g.member_id = 2 AND img.attach_id IS NOT NULL
+			GROUP BY img.attach_id";
+
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could Not Select Vehicle Image Size Data', '', __LINE__, __FILE__, $sql);
+		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$space =  $space + $row['image_bytes'];
+		}
+
+		$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		//Get All Space Used By Dynorun Images
+		$sql = "SELECT ( SUM(img.attach_filesize) + SUM(img.attach_thumb_filesize) ) as image_bytes
+			FROM phpbb_garage AS g
+				LEFT JOIN phpbb_garage_rollingroad rr ON rr.garage_id = g.id
+				LEFT JOIN phpbb_garage_images img ON img.attach_id = rr.image_id
+			WHERE g.member_id = 2 AND img.attach_id IS NOT NULL
+			GROUP BY img.attach_id";
+
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could Not Select Vehicle Image Size Data', '', __LINE__, __FILE__, $sql);
+		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$space =  $space + $row['image_bytes'];
+		}
+
+		$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+	
+		return $space;
+	}
 	
 	/*========================================================================*/
 	// Delete Image Including Actual File & Thumbnail
@@ -758,7 +853,7 @@ class garage_image
 
 		$sql = "SELECT  * 
 			FROM " . GARAGE_IMAGES_TABLE . " 
-			WHERE attach_id ='$image_id'";
+			WHERE attach_id =$image_id";
 
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -858,20 +953,7 @@ class garage_image
 	/*========================================================================*/
 	function count_total_images()
 	{
-		global $db;
-
-		$sql = "SELECT count(*) as total
-		       	FROM " . GARAGE_IMAGES_TABLE ;
-
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Count Images In DB', '', __LINE__, __FILE__, $sql);
-		}
-		
-		$row = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
-	
-		return $row['total'];
+		return count($this->select_all_image_data());
 	}
 
 	/*========================================================================*/
@@ -974,13 +1056,11 @@ class garage_image
 	       		    		// We are going to use the attach_file name to create our _thumb
 					//   file name since this image did not have a thumb before.
 	                       		$thumb_file_name = $file_name . time() . '_thumb' . $image_row['attach_ext'];
-	                  
 				} 
 				else
 			       	{
 	                       		// We already know the thumbnail filename :)
 		                        $thumb_file_name = $image_row['attach_thumb_location'];
-	
 	               		}
 	
 		                $garage->write_logfile($log_file, $log_type, $lang['Remote_Image'] . $image_row['attach_location'], 1);
@@ -999,11 +1079,13 @@ class garage_image
 					//Get Thumbnail Width & Height
 					$image_width = $this->get_image_width($thumb_file_name);
 					$image_height = $this->get_image_height($thumb_file_name);
+					$image_filesize = $this->get_image_filesize($thumb_file_name);
 		
 					//Update the DB With New Thumbnail Details
 					$garage->update_single_field(GARAGE_IMAGES_TABLE, 'attach_thumb_location', $thumb_file_name, 'attach_id', $image_row['attach_id']);
 					$garage->update_single_field(GARAGE_IMAGES_TABLE, 'attach_thumb_width', $image_width, 'attach_id', $image_row['attach_id']);
 					$garage->update_single_field(GARAGE_IMAGES_TABLE, 'attach_thumb_height', $image_height, 'attach_id', $image_row['attach_id']);
+					$garage->update_single_field(GARAGE_IMAGES_TABLE, 'attach_thumb_filesize', $image_filesize, 'attach_id', $image_row['attach_id']);
 	
 			                // Remove our temporary file!
 					@unlink($phpbb_root_path . GARAGE_UPLOAD_PATH . $tmp_file_name);
@@ -1012,7 +1094,6 @@ class garage_image
 					$output[] = $lang['Rebuilt'] . $image_row['attach_location'] . ' -> '.$thumb_file_name;
 	
 	                        	$garage->write_logfile($log_file, $log_type, $lang['Thumb_File'] . $thumb_file_name, 1);
-	
 	                    	}
 				else
 				{
@@ -1048,11 +1129,13 @@ class garage_image
 					//Get Thumbnail Width & Height
 					$image_width = $this->get_image_width($thumb_file_name);
 					$image_height = $this->get_image_height($thumb_file_name);
+					$image_filesize = $this->get_image_filesize($thumb_file_name);
 		
 					//Update the DB With New Thumbnail Details
 					$garage->update_single_field(GARAGE_IMAGES_TABLE, 'attach_thumb_location', $thumb_file_name, 'attach_id', $image_row['attach_id']);
 					$garage->update_single_field(GARAGE_IMAGES_TABLE, 'attach_thumb_width', $image_width, 'attach_id', $image_row['attach_id']);
 					$garage->update_single_field(GARAGE_IMAGES_TABLE, 'attach_thumb_height', $image_height, 'attach_id', $image_row['attach_id']);
+					$garage->update_single_field(GARAGE_IMAGES_TABLE, 'attach_thumb_filesize', $image_filesize, 'attach_id', $image_row['attach_id']);
 	
 		                    	// Add the status message
 	        	            	$output[] = $lang['Rebuilt'] . $image_row['attach_location'].' -> '.$thumb_file_name;
@@ -1066,10 +1149,8 @@ class garage_image
 	                	    	$garage->write_logfile($log_file, $log_type, $lang['No_Source_File'], 1);
 				}
 			} // End if remote/local 
-	
 	              	$done++;
-	
-		} // End while loop
+		}
 	
 		$message = '<meta http-equiv="refresh" content="5;url=' . append_sid("admin_garage_tools.$phpEx?mode=rebuild_thumbs&amp;start=$end&amp;cycle=$cycle&amp;file=$file&amp;done=$done") . '">'."<div align=\"left\"><b>".$lang['Started_At']."$start <br />".$lang['Ended_At']."$end <br />".$lang['Have_Done']."$done<br />".$lang['Need_To_Process']."$total <br />".$lang['Log_To']."$log_file <br /></b></b><br /><br />".implode( "<br />", $output )."<br /></br>";
 	

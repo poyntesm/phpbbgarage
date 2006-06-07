@@ -66,7 +66,7 @@ class garage_dynorun
 
 		if(!$result = $db->sql_query($sql))
 		{
-			message_die(GENERAL_ERROR, 'Could Not Update Dynorun Data', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'Could Not Update Dynorun', '', __LINE__, __FILE__, $sql);
 		}
 
 		return;
@@ -235,8 +235,8 @@ class garage_dynorun
 	}
 
 	/*========================================================================*/
-	// Select All Dynorun Data From DB
-	// Usage: select_dynorun_data('dynorun id');
+	// Select Dynorun Data By Vehicle From DB
+	// Usage: select_dynorun_by_vehicle_data('vehicle id');
 	/*========================================================================*/
 	function select_dynorun_by_vehicle_data($cid)
 	{
@@ -246,7 +246,7 @@ class garage_dynorun
                         images.attach_file, images.attach_thumb_location, images.attach_is_image, images.attach_location
          		FROM " . GARAGE_ROLLINGROAD_TABLE . " as rr
                         	LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = rr.image_id
-				WHERE garage_id = $cid";
+			WHERE rr.garage_id = $cid";
 
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -262,7 +262,6 @@ class garage_dynorun
 
 		return $data;
 	}
-
 
 	/*========================================================================*/
 	// Build Dynorun Table
@@ -290,7 +289,6 @@ class garage_dynorun
 			$sort_order = 'DESC';
 		}
 
-		// Sorting Via QuarterMile
 		$sort_types_text = array($lang['Dynocenter'], $lang['Bhp'], $lang['Bhp_Unit'], $lang['Torque'], $lang['Torque_Unit'], $lang['Boost'],  $lang['Boost_Unit'], $lang['Nitrous'], $lang['Peakpoint']);
 		$sort_types = array('rr.dynocenter', 'bhp', 'rr.bhp_unit, bhp', 'rr.torque', 'rr.torque_unit, rr.torque', 'rr.boost', 'rr.boost_unit, rr.boost', 'rr.nitrous', 'peakpoint');
 
@@ -352,7 +350,6 @@ class garage_dynorun
 			$template->assign_block_vars('rollingroad_pending', array());
 		}
 
-	
 		//Now Process All Rows Returned And Get Rest Of Required Data	
 		$i = 0;
 		while ($row = $db->sql_fetchrow($first_result) )

@@ -79,7 +79,7 @@ class garage_business
 
 		$sql = "SELECT * 
 			FROM " . GARAGE_BUSINESS_TABLE . "
-			WHERE id = '$bus_id'";
+			WHERE id = $bus_id";
 
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -270,7 +270,7 @@ class garage_business
 	/*========================================================================*/
 	function build_business_table($pending)
 	{
-		global $db, $template, $images, $phpEx, $start, $sort, $sort_order, $garage_config, $lang, $theme, $mode, $HTTP_POST_VARS, $HTTP_GET_VARS;
+		global $db, $template, $images, $phpEx, $start, $sort, $sort_order, $lang, $theme, $HTTP_GET_VARS;
 
 		$pending = ($pending == 'YES') ? 1 : 0;
 

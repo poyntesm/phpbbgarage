@@ -335,8 +335,8 @@ class garage_modification
 	                       images.attach_file, images.attach_thumb_location, images.attach_is_image 
 	       		FROM " . GARAGE_MODS_TABLE . " as m
 				LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = m.image_id
-		       	WHERE garage_id = $cid 
-				AND category_id = $category_id
+		       	WHERE m.garage_id = $cid 
+				AND m.category_id = $category_id
 	                ORDER BY title ASC";
 
       		if ( !($result = $db->sql_query($sql)) )
@@ -355,10 +355,10 @@ class garage_modification
 	}
 
 	/*========================================================================*/
-	// Select All Modification Data From DB
-	// Usage: get_installed_mods_by_business_data('modification id', 'limit');
+	// Select Modifications By Install Buisness Data From DB
+	// Usage: select_modifications_by_install_business_data('business id', 'limit');
 	/*========================================================================*/
-	function get_modifications_by_install_business($business_id, $limit)
+	function select_modifications_by_install_business_data($business_id, $limit)
 	{
 		global $db;
 	
@@ -392,10 +392,10 @@ class garage_modification
 	}
 
 	/*========================================================================*/
-	// Select All Modification Data From DB
-	// Usage: get_installed_mods_by_business_data('modification id', 'limit');
+	// Select Modifications By Business Data From DB
+	// Usage: select_modifications_by_business_data('modification id', 'limit');
 	/*========================================================================*/
-	function get_modifications_by_business_data($business_id, $limit)
+	function select_modifications_by_business_data($business_id, $limit)
 	{
 		global $db;
 	

@@ -52,7 +52,7 @@ class garage_admin
 
 	/*========================================================================*/
 	// Count The Modification Categories Within The Garage
-	// Usage: count__categories();
+	// Usage: count_categories();
 	/*========================================================================*/
 	function count_categories()
 	{
@@ -180,17 +180,12 @@ class garage_admin
 			$schema_create .= "DROP TABLE $table;$crlf";
 		} // end if
 	
-		//
 		// Ok now we actually start building the SQL statements to restore the tables
-		//
-	
 		$schema_create .= "CREATE TABLE $table($crlf";
 	
 		while ($row = $db->sql_fetchrow($result))
 		{
-			//
 			// Get the data from the table
-			//
 			$sql_get_default = "SELECT d.adsrc AS rowdefault
 				FROM pg_attrdef d, pg_class c
 				WHERE (c.relname = '$table')

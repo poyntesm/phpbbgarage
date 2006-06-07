@@ -363,7 +363,7 @@ class garage_template
 	// Builds The HTML For A Selecting A Garage
 	// Usage: garage_install_dropdown('business id', 'business name');
 	/*========================================================================*/
-	function garage_install_dropdown($selected,$selected_name)
+	function garage_install_dropdown($selected, $selected_name)
 	{
 		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
@@ -407,7 +407,7 @@ class garage_template
 
 	/*========================================================================*/
 	// Builds The HTML For A Selecting A Business To Reassign To
-	// Usage: reassign_business_dropdown('business id');
+	// Usage: reassign_business_dropdown('excluding business id');
 	/*========================================================================*/
 	function reassign_business_dropdown($exclude)
 	{
@@ -444,7 +444,7 @@ class garage_template
 	
 	/*========================================================================*/
 	// Builds The HTML For Selecting Any Business
-	// Usage:  business_dropdown('business id', 'business name');
+	// Usage: business_dropdown('business id', 'business name');
 	/*========================================================================*/
 	function business_dropdown($selected,$selected_name)
 	{
@@ -579,7 +579,7 @@ class garage_template
 	}
 	
 	/*========================================================================*/
-	// Builds The HTML For Selecting A Rollingroad Entry
+	// Builds The HTML For Selecting A Dynorun Entry
 	// Usage: dynorun_dropdown('rollingroad id', 'bhp @ bhp_type', 'vehicle id');
 	/*========================================================================*/
 	function dynorun_dropdown($selected,$selected_name,$cid)
@@ -895,8 +895,6 @@ class garage_template
 
 	        return $return;
 	}
-
-
 }
 
 $garage_template = new garage_template();

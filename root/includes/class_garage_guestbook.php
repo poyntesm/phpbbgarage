@@ -53,7 +53,7 @@ class garage_guestbook
 	}
 
 	/*========================================================================*/
-	// Insurance Insurance Into DB
+	// Insert Comment Into DB
 	// Usage: insert_vehicle_comment(array());
 	/*========================================================================*/
 	function insert_vehicle_comment($data)
@@ -110,9 +110,8 @@ class garage_guestbook
 		return $rows;
 	}
 
-
 	/*========================================================================*/
-	// Select All Guestbook Comment Data From DB
+	// Select Guestbook Comment Data From DB
 	// Usage: select_comment_data('comment id');
 	/*========================================================================*/
 	function select_comment_data($comment_id)

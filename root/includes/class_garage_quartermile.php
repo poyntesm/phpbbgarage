@@ -192,7 +192,7 @@ class garage_quartermile
 	}
 
 	/*========================================================================*/
-	// Select All Quartermile Data
+	// Select Quartermile Data
 	// Usage: select_quartermile_data('quartermile id');
 	/*========================================================================*/
 	function select_quartermile_data($qmid)
@@ -220,8 +220,8 @@ class garage_quartermile
 	}
 
 	/*========================================================================*/
-	// Select All Quartermile Data
-	// Usage: select_quartermile_data('quartermile id');
+	// Select Quartermile Data By Vehicle
+	// Usage: select_quartermile_by_vehicle_data('garage id');
 	/*========================================================================*/
 	function select_quartermile_by_vehicle_data($cid)
 	{
@@ -230,7 +230,7 @@ class garage_quartermile
 		$sql = "SELECT qm.*,images.attach_id, images.attach_hits, images.attach_ext, images.attach_file, images.attach_thumb_location, images.attach_is_image, images.attach_location
 	          	FROM " . GARAGE_QUARTERMILE_TABLE . " as qm
 	                	LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = qm.image_id
-		       	WHERE garage_id = $cid";
+		       	WHERE qm.garage_id = $cid";
 	
 	       	if( !($result = $db->sql_query($sql)) )
 	       	{

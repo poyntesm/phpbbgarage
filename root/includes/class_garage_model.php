@@ -52,7 +52,7 @@ class garage_model
 
 	/*========================================================================*/
 	// Update Model Into DB
-	// Usage: update_model(array());
+	// Usage: update_make(array());
 	/*========================================================================*/
 	function update_make($data)
 	{
@@ -159,9 +159,9 @@ class garage_model
 
 	/*========================================================================*/
 	// Select All Make Data From DB
-	// Usage: select_all_make_data();
+	// Usage: select_all_makes_data();
 	/*========================================================================*/
-	function select_all_make_data()
+	function select_all_makes_data()
 	{
 		global $db;
 
@@ -185,9 +185,9 @@ class garage_model
 
 	/*========================================================================*/
 	// Select All Model From One Make Data From DB
-	// Usage: select_all_make_data();
+	// Usage: select_all_models_from_make__data();
 	/*========================================================================*/
-	function select_all_model_from_make_data($make_id)
+	function select_all_models_from_make_data($make_id)
 	{
 		global $db;
 
@@ -212,9 +212,9 @@ class garage_model
 
 	/*========================================================================*/
 	// Select All Model Data From DB
-	// Usage: select_complete_model_list();
+	// Usage: select_all_models_data();
 	/*========================================================================*/
-	function select_complete_model_list()
+	function select_all_models_data()
 	{
 		global $db;
 
@@ -262,14 +262,12 @@ class garage_model
 	}
 
 	/*========================================================================*/
-	// Select Model Data From DB
-	// Usage: build_make_table('model id');
+	// Build Pending Make Table
+	// Usage: build_make_table();
 	/*========================================================================*/
-	function build_make_table($pending)
+	function build_make_table()
 	{
 		global $db, $template, $theme;
-
-		$pending = ($pending == 'YES') ? 1 : 0;
 
 		$sql = "SELECT make.* 
 			FROM " . GARAGE_MAKES_TABLE ." AS make
@@ -282,7 +280,7 @@ class garage_model
 
 		$count = $db->sql_numrows($result);
 
-		if ($count >= 1)
+		if ( $count >= 1 )
 		{
 			$template->assign_block_vars('make_pending', array());
 		}
@@ -304,10 +302,10 @@ class garage_model
 	}
 
 	/*========================================================================*/
-	// Select Model Data From DB
-	// Usage: build_model_table('model id');
+	// Build Pending Model Table
+	// Usage: build_model_table();
 	/*========================================================================*/
-	function build_model_table($pending)
+	function build_model_table()
 	{
 		global $db, $template, $theme;
 
@@ -323,7 +321,7 @@ class garage_model
 
 		$count = $db->sql_numrows($result);
 
-		if ($count >= 1)
+		if ( $count >= 1 )
 		{
 			$template->assign_block_vars('model_pending', array());
 		}
