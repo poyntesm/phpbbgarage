@@ -30,16 +30,16 @@ class garage_image
 
 	/*========================================================================*/
 	// Gets User Image Upload Quota
-	// Usage: get_user_upload_quota();
+	// Usage: get_user_upload_image_quota();
 	/*========================================================================*/
-	function get_user_upload_quota()
+	function get_user_upload_image_quota()
 	{
 		global $userdata, $garage_config, $garage;
 	
 		//If No Specific Group Value Exists Use Default Value
 		if (empty($garage_config['private_upload_quota']))
 		{
-			return $garage_config['max_car_images'];
+			return $garage_config['max_upload_images'];
 		}
 		//It Appears Some Groups Have Private Permissions & Quotas We Will Need To Check Them
 		else
@@ -66,7 +66,52 @@ class garage_image
 			//Your Were Not Granted Any Private Permissions..Return Default Value
 			if  (empty($quota))
 			{
-				return $garage_config['max_car_images'];
+				return $garage_config['max_upload_images'];
+			}
+
+			//Return The Highest Quota You Were Granted
+			return max($quota);
+		}
+	}
+	/*========================================================================*/
+	// Gets User Remote Image Quota
+	// Usage: get_user_upload_image_quota();
+	/*========================================================================*/
+	function get_user_remote_image_quota()
+	{
+		global $userdata, $garage_config, $garage;
+	
+		//If No Specific Group Value Exists Use Default Value
+		if (empty($garage_config['private_remote_quota']))
+		{
+			return $garage_config['max_remote_images'];
+		}
+		//It Appears Some Groups Have Private Permissions & Quotas We Will Need To Check Them
+		else
+		{
+			//Get All Group Memberships
+			$groupdata = $garage->get_group_membership($userdata['user_id']);
+			
+			//Lets Get The Private Upload Groups & Remote Quotas
+			$private_upload_groups = @explode(',', $garage_config['private_upload_perms']);
+			$private_remote_quotas = @explode(',', $garage_config['private_remote_quota']);
+
+			//Process All Groups You Are Member Of To See If Any Are Granted Permission & Quota
+			for ($i = 0; $i < count($groupdata); $i++)
+			{
+				if (in_array($groupdata[$i]['group_id'], $private_upload_groups))
+				{
+					//Your A Member Of A Group Granted Permission - Find Array Key
+					$index = array_search($groupdata[$i]['group_id'], $private_upload_groups);
+					//So Your Quota For This Group Is...
+					$quota[$i] = $private_remote_quotas[$index];
+				}
+			}
+
+			//Your Were Not Granted Any Private Permissions..Return Default Value
+			if  (empty($quota))
+			{
+				return $garage_config['max_remote_images'];
 			}
 
 			//Return The Highest Quota You Were Granted
@@ -76,16 +121,16 @@ class garage_image
 
 	/*========================================================================*/
 	// Gets Group Image Upload Quota - Used Only In ACP Page
-	// Usage: get_group_upload_quota('group id');
+	// Usage: get_group_upload_image_quota('group id');
 	/*========================================================================*/
-	function get_group_upload_quota($gid)
+	function get_group_upload_image_quota($gid)
 	{
 		global $garage_config;
 
 		//If No Specific Group Value Exists Use Default Value
 		if (empty($garage_config['private_upload_quota']))
 		{
-			return $garage_config['max_car_images'];
+			return $garage_config['max_upload_images'];
 		}
 		//It Appears Some Groups Have Private Permissions & Quotas We Will Need To Check Them
 		else
@@ -98,11 +143,43 @@ class garage_image
 			if (($index = array_search($gid, $private_upload_groups)) === FALSE)
 			{
 				//Hmmm..Group Has Currently No Private Upload Permissions...So Give It The Default Incase They Turn It On
-				return $garage_config['max_car_images'];
+				return $garage_config['max_upload_images'];
 			} 
 
 			//Return The Groups Quota
 			return $private_upload_quota[$index];
+		}
+	}
+
+	/*========================================================================*/
+	// Gets Group Remote Image Quota - Used Only In ACP Page
+	// Usage: get_group_remote_image_quota('group id');
+	/*========================================================================*/
+	function get_group_remote_image_quota($gid)
+	{
+		global $garage_config;
+
+		//If No Specific Group Value Exists Use Default Value
+		if (empty($garage_config['private_remote_quota']))
+		{
+			return $garage_config['max_remote_images'];
+		}
+		//It Appears Some Groups Have Private Permissions & Quotas We Will Need To Check Them
+		else
+		{
+			//Lets Get The Private Upload Groups & Quotas
+			$private_upload_groups = @explode(',', $garage_config['private_upload_perms']);
+			$private_remote_quota = @explode(',', $garage_config['private_remote_quota']);
+
+			//Find The Matching Index In Second Array For The Group ID
+			if (($index = array_search($gid, $private_upload_groups)) === FALSE)
+			{
+				//Hmmm..Group Has Currently No Private Upload Permissions...So Give It The Default Incase They Turn It On
+				return $garage_config['max_remote_images'];
+			} 
+
+			//Return The Groups Quota
+			return $private_remote_quota[$index];
 		}
 	}
 
@@ -198,6 +275,49 @@ class garage_image
 		//No Image To Handle So Return False	
 		return false;
 	}
+
+	/*========================================================================*/
+	// Return True/False Depending On If Image Is Remote
+	// Usage: image_is_remote();
+	/*========================================================================*/
+	function image_is_remote()
+	{
+		global $HTTP_POST_VARS;
+
+		//Lets Make Sure It's Not Just A Default http:// 
+		$url_image = str_replace("\'", "''", trim($HTTP_POST_VARS['url_image']));
+		if ( preg_match( "/^http:\/\/$/i", $url_image ) )
+		{
+			$url_image = "";
+		}
+
+		//Is Image Remote
+		if ( !empty($url_image) )
+		{
+			return true;
+		}
+
+		//Image Is Not Remote So Return False	
+		return false;
+	}
+
+	/*========================================================================*/
+	// Return True/False Depending On If Image Is Locally Uploaded
+	// Usage: image_is_local();
+	/*========================================================================*/
+	function image_is_local()
+	{
+		global $HTTP_POST_FILES;
+
+		//Is Image Local
+		if ( (isset($HTTP_POST_FILES['FILE_UPLOAD'])) AND (!empty($HTTP_POST_FILES['FILE_UPLOAD']['name'])) )
+		{
+			return true;
+		}
+
+		//Image Is Not Local So Return False	
+		return false;
+	}
 	
 	/*========================================================================*/
 	// Handle Image Upload And Thumbnail Creation For Remote/Local Images
@@ -234,13 +354,6 @@ class garage_image
 			}
 		}
 
-		//Lets Make Sure It's Not Just A Default http:// 
-		$url_image = str_replace("\'", "''", trim($HTTP_POST_VARS['url_image']));
-		if ( preg_match( "/^http:\/\/$/i", $url_image ) )
-		{
-			$url_image = "";
-		}
-
 		//Lets Check Directory Exists...And If Not Let User Know To Contact Administrator With Helpful Pointer
 		if (!file_exists($phpbb_root_path. GARAGE_UPLOAD_PATH))
 		{
@@ -253,13 +366,14 @@ class garage_image
 		}
 
 		//Check For Both A Remote Image & Image Upload..Not Allowed
-		if ( (!empty($url_image)) AND (!empty($HTTP_POST_FILES['FILE_UPLOAD']['name'])) )
+		if ( ($this->image_is_remote()) AND ($this->image_is_local()) )
 		{
 			redirect(append_sid("garage.$phpEx?mode=error&EID=11", true));
 		}
 		//Process The Remote Image
-		else if ( (!empty($url_image)) AND ( $HTTP_POST_FILES['FILE_UPLOAD']['name'] == "" OR !$HTTP_POST_FILES['FILE_UPLOAD']['name'] OR  ($HTTP_POST_FILES['FILE_UPLOAD']['name'] == "none") ) )
+		else if ( $this->image_is_remote() )
 		{
+			$url_image = str_replace("\'", "''", trim($HTTP_POST_VARS['url_image']));
 			$data['location'] = $url_image;
 			//Stop dynamic images and display correct error message
 			if ( preg_match( "/[?&;]/", $data['location'] ) )
@@ -352,7 +466,7 @@ class garage_image
 			return $image_id;
 		}
 		//Uploaded Image Not Remote Image
-		else if ( (isset($HTTP_POST_FILES['FILE_UPLOAD'])) AND (!empty($HTTP_POST_FILES['FILE_UPLOAD']['name'])) )
+		else if ( $this->image_is_local() )
 		{
 			$data['filetype'] = $HTTP_POST_FILES['FILE_UPLOAD']['type'];
 			$data['filesize'] = $HTTP_POST_FILES['FILE_UPLOAD']['size'];

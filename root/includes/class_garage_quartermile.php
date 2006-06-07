@@ -40,7 +40,7 @@ class garage_quartermile
 		$sql = "INSERT INTO ". GARAGE_QUARTERMILE_TABLE ."
 			(garage_id, rt, sixty, three, eight, eightmph, thou, quart, quartmph, date_created, rr_id, date_updated, pending)
 			VALUES
-			($cid, '".$data['rt']."', '".$data['sixty']."', '".$data['three']."', '".$data['eight']."', '".$data['eightmph']."', '".$data['thou']."', '".$data['quart']."', '".$data['quartmph']."', '".$data['time']."', ".$data['rr_id'].", '".$data[time]."', '".$data['pending']."')";
+			($cid, '".$data['rt']."', '".$data['sixty']."', '".$data['three']."', '".$data['eight']."', '".$data['eightmph']."', '".$data['thou']."', '".$data['quart']."', '".$data['quartmph']."', '".$data['time']."', '".$data['rr_id']."', '".$data[time]."', '".$data['pending']."')";
 		
 		if(!$result = $db->sql_query($sql))
 		{

@@ -122,7 +122,7 @@ class garage_business
 	// Select All Garage Business Data From DB
 	// Usage: select_all_garage_business_data('additional where', 'row start point', 'limit');
 	/*========================================================================*/
-	function select_garage_business_data($where, $start, $limit=5)
+	function select_garage_business_data($where, $start= 0, $limit = 20)
 	{
 		global $db;
 
@@ -154,7 +154,7 @@ class garage_business
 	// Select All Shop Business Data From DB
 	// Usage: select_all_shop_business_data('additional where', 'row start point', 'limit');
 	/*========================================================================*/
-	function select_shop_business_data($where, $start, $limit=5)
+	function select_shop_business_data($where, $start = 0, $limit = 20)
 	{
 		global $db;
 
@@ -186,7 +186,7 @@ class garage_business
 	// Select All Insurance Business Data From DB
 	// Usage: select_insurance_business_data('additional where', 'row start point', 'limit')
 	/*========================================================================*/
-	function select_insurance_business_data($where, $start, $limit=5)
+	function select_insurance_business_data($where, $start = 0,  $limit = 20)
 	{
 		global $db, $where;
 
@@ -196,7 +196,7 @@ class garage_business
 				AND b.pending = 0
 				$where
 			GROUP BY b.id
-			LIMIT $start, 25";
+			LIMIT $start, $limit";
 	
       		if ( !($result = $db->sql_query($sql)) )
       		{

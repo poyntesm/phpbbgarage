@@ -88,7 +88,7 @@ while( list($var, $param) = @each($params) )
 //Decide What Mode The User Is Doing
 switch( $mode )
 {
-	//Mode To Display Create Vehicle Sceen //
+	//Mode To Display Create Vehicle Sceen
 	case 'create_vehicle':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
@@ -442,7 +442,7 @@ switch( $mode )
 		$garage_vehicle->update_vehicle_time($cid);
 
 		//If Any Image Variables Set Enter The Image Handling
-		if( $garage_image->image_attached() )
+		if ( ( $garage_image->image_attached() ) AND (not too much disk used) )
 		{
 			//Create Thumbnail & DB Entry For Image
 			$image_id = $garage_image->process_image_attached('modification',$mid);
@@ -549,7 +549,7 @@ switch( $mode )
 		if ( ($data['editupload'] == 'delete') OR ( $data['editupload'] == 'new') )
 		{
 			$garage_image->delete_image($data['image_id']);
-			$garage->update_single_field(GARAGE_MODS_TABLE,'image_id','NULL','id',$mid);
+			$garage->update_single_field(GARAGE_MODS_TABLE, 'image_id', 'NULL', 'id', $mid);
 		}
 
 		//If Any Image Variables Set Enter The Image Handling
@@ -558,7 +558,7 @@ switch( $mode )
 			//Create Thumbnail & DB Entry For Image
 			$image_id = $garage_image->process_image_attached('modification',$mid);
 			//Set Image To This Modification
-			$garage->update_single_field(GARAGE_MODS_TABLE,'image_id',$image_id,'id',$mid);
+			$garage->update_single_field(GARAGE_MODS_TABLE, 'image_id', $image_id, 'id', $mid);
 		}
 
 		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
@@ -662,13 +662,6 @@ switch( $mode )
 		$params = array('quart');
 		$garage->check_required_vars($params);
 
-		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
-		if ( $data['pending'] == 1 )
-		{
-			$garage->pending_notification();
-			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value',$data['pending'],'config_name','items_pending');
-		}
-
 		//Update Quartermile With Data Acquired
 		$qmid = $garage_quartermile->insert_quartermile($data);
 
@@ -679,15 +672,22 @@ switch( $mode )
 		if( $garage_image->image_attached() )
 		{
 			//Create Thumbnail & DB Entry For Image + Link To Item
-			$image_id = $garage_image->process_image_attached('quartermile',$qmid);
-			$garage->update_single_field(GARAGE_QUARTERMILE_TABLE,'image_id',$image_id,'id',$qmid);
+			$image_id = $garage_image->process_image_attached('quartermile', $qmid);
+			$garage->update_single_field(GARAGE_QUARTERMILE_TABLE, 'image_id', $image_id, 'id', $qmid);
 		}
 		//No Image Attached..We Need To Check If This Breaks The Site Rule
 		else if ( ($garage_config['quartermile_image_required'] == '1') AND ($data['quart'] <= $garage_config['quartermile_image_required_limit']))
 		{
 			//That Time Requires An Image...Delete Entered Time And Notify User
-			$garage_quartermile->delete_quartermile_time($qmid);
+			$garage_quartermile->delete_quartermile($qmid);
 			redirect(append_sid("garage.$phpEx?mode=error&EID=26", true));
+		}
+
+		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
+		if ( $data['pending'] == 1 )
+		{
+			$garage->pending_notification();
+			$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', $data['pending'], 'config_name', 'items_pending');
 		}
 
 		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
@@ -719,20 +719,20 @@ switch( $mode )
 		$redirect = $garage->process_post_vars($params);
 
 		//Pull Required Quartermile Data From DB
-		$data = $garage->select_quartermile_data($qmid);
+		$data = $garage_quartermile->select_quartermile_data($qmid);
 
 		//If Dynorun Is Already Linked Display Dropdown Correctly
 		if ( (!empty($data['rr_id'])) AND ($count > 0) )
 		{
-			$bhp_statement = ''.$data['bhp'].' BHP @ '.$data['bhp_unit'].'';
+			$bhp_statement = $data['bhp'].' BHP @ '.$data['bhp_unit'];
 			$template->assign_block_vars('link_rr', array());
-			$garage_template->dynorun_dropdown($data['rr_id'],$bhp_statement,$cid);
+			$garage_template->dynorun_dropdown($data['rr_id'], $bhp_statement, $cid);
 		}
 		//Allow User To Link To Dynorun
 		else if ( (empty($data['rr_id'])) AND ($count > 0) )
 		{
 			$template->assign_block_vars('link_rr', array());
-			$garage_template->dynrorun_dropdown('','',$cid);
+			$garage_template->dynorun_dropdown('','',$cid);
 		}
 
 		//Build All HTML Parts
@@ -801,15 +801,15 @@ switch( $mode )
 		if ( ($data['editupload'] == 'delete') OR ($data['editupload'] == 'new') )
 		{
 			$garage_image->delete_image($data['image_id']);
-			$garage->update_single_field(GARAGE_QUARTERMILE_TABLE,'image_id','NULL','id',$qmid);
+			$garage->update_single_field(GARAGE_QUARTERMILE_TABLE, 'image_id', 'NULL', 'id', $qmid);
 		}
 
 		//If Any Image Variables Set Enter The Image Handling
 		if( $garage_image->image_attached() )
 		{
 			//Create Thumbnail & DB Entry For Image
-			$image_id = $garage_image->process_image_attached('quartermile',$qmid);
-			$garage->update_single_field(GARAGE_QUARTERMILE_TABLE,'image_id',$image_id,'id',$qmid);
+			$image_id = $garage_image->process_image_attached('quartermile', $qmid);
+			$garage->update_single_field(GARAGE_QUARTERMILE_TABLE, 'image_id', $image_id, 'id', $qmid);
 		}
 		//No Image Attached..We Need To Check If This Breaks The Site Rule
 		else if ( ($garage_config['quartermile_image_required'] == '1') AND ($data['quart'] <= $garage_config['quartermile_image_required_limit']))
@@ -919,13 +919,6 @@ switch( $mode )
 		$params = array('bhp', 'bhp_unit');
 		$garage->check_required_vars($params);
 
-		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
-		if ( $data['pending'] == 1 )
-		{
-			$garage->pending_notification();
-			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value',$data['pending'],'config_name','items_pending');
-		}
-
 		//Update The Dynorun With Data Acquired
 		$rrid = $garage_dynorun->insert_dynorun($data);
 
@@ -936,15 +929,22 @@ switch( $mode )
 		if( $garage_image->image_attached() )
 		{
 			//Create Thumbnail & DB Entry For Image
-			$image_id = $garage_image->process_image_attached('rollingroad',$rrid);
-			$garage->update_single_field(GARAGE_ROLLINGROAD_TABLE,'image_id',$image_id,'id',$rrid);
+			$image_id = $garage_image->process_image_attached('rollingroad', $rrid);
+			$garage->update_single_field(GARAGE_ROLLINGROAD_TABLE,'image_id', $image_id, 'id', $rrid);
 		}
 		//No Image Attached..We Need To Check If This Breaks The Site Rule
 		else if ( ($garage_config['dynorun_image_required'] == '1') AND ($data['bhp'] >= $garage_config['dynorun_image_required_limit']))
 		{
 			//That Time Requires An Image...Delete Entered Time And Notify User
-			$garage_dynorun->delete_rollingroad_run($rrid);
+			$garage_dynorun->delete_dynorun($rrid);
 			redirect(append_sid("garage.$phpEx?mode=error&EID=26", true));
+		}
+
+		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
+		if ( $data['pending'] == 1 )
+		{
+			$garage->pending_notification();
+			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value',$data['pending'],'config_name','items_pending');
 		}
 
 		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
@@ -969,7 +969,7 @@ switch( $mode )
 		);
 
 		//Pull Required Dynorun Data From DB
-		$data = $garage_dynorun->select_rollingroad_data($rrid);
+		$data = $garage_dynorun->select_dynorun_data($rrid);
 
 		//See If We Got Sent Here By Pending Page...If So We Need To Tell Update To Redirect Correctly
 		$params = array('PENDING');
@@ -1040,15 +1040,15 @@ switch( $mode )
 		if ( ($data['editupload'] == 'delete') OR ($data['editupload'] == 'new') )
 		{
 			$garage->delete_image($data['image_id']);
-			$garage->update_single_field(GARAGE_ROLLINGROAD_TABLE,'image_id','NULL','id',$rrid);
+			$garage->update_single_field(GARAGE_ROLLINGROAD_TABLE, 'image_id', 'NULL', 'id', $rrid);
 		}
 
 		//If Any Image Variables Set Enter The Image Handling
 		if( $garage_image->image_attached() )
 		{
 			//Create Thumbnail & DB Entry For Image
-			$image_id = $garage_image->process_image_attached('rollingroad',$rrid);
-			$garage->update_single_field(GARAGE_ROLLINGROAD_TABLE,'image_id',$image_id,'id',$rrid);
+			$image_id = $garage_image->process_image_attached('rollingroad', $rrid);
+			$garage->update_single_field(GARAGE_ROLLINGROAD_TABLE, 'image_id', $image_id, 'id', $rrid);
 		}
 		//No Image Attached..We Need To Check If This Breaks The Site Rule
 		else if ( ($garage_config['dynorun_image_required'] == '1') AND ($data['bhp'] >= $garage_config['dynorun_image_required_limit']))
@@ -1121,7 +1121,7 @@ switch( $mode )
 			'S_MODE_ACTION' => append_sid("garage.$phpEx?mode=insert_insurance"),
 			'U_SUBMIT_BUSINESS' => append_sid("garage.$phpEx?mode=user_submit_business&CID=$cid&mode_redirect=add_insurance&BUSINESS=insurance"),
 			'CID' => $cid,
-			'COVER_TYPE_LIST' => $garage_template->selection_dropdown('cover_type',$cover_types,$cover_types,''))
+			'COVER_TYPE_LIST' => $garage_template->selection_dropdown('cover_type', $cover_types, $cover_types, ''))
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
@@ -1183,7 +1183,7 @@ switch( $mode )
 		$data = $garage_insurance->select_insurance_data($ins_id);
 
 		//Build Required HTML Components
-		$garage_template->insurance_dropdown($data['business_id'],$data['title']);
+		$garage_template->insurance_dropdown($data['business_id'], $data['title']);
 
 		$template->assign_block_vars('level2', array());
 		$template->assign_vars(array(
@@ -1201,7 +1201,7 @@ switch( $mode )
 			'CID' 			=> $cid,
 			'PREMIUM' 		=> $data['premium'],
 			'COMMENTS' 		=> $data['comments'],
-			'COVER_TYPE_LIST' 	=> $garage_template->selection_dropdown('cover_type',$cover_types,$cover_types,$data['cover_type']))
+			'COVER_TYPE_LIST' 	=> $garage_template->selection_dropdown('cover_type', $cover_types, $cover_types, $data['cover_type']))
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
@@ -1321,7 +1321,7 @@ switch( $mode )
 		}
 
 		//Count Total Returned For Pagination...Notice No $start or $end to get complete count
-		$count = $garage_vehicle->select_all_vehicle_data($search_data['where'], $order_by, $sort_order, '', '');
+		$count = $garage_vehicle->select_all_vehicle_data($search_data['where'], $order_by, $sort_order);
 
 		$pagination = generate_pagination("garage.$phpEx?mode=browse&amp".$search_data['make_pagination'].$search_data['model_pagination'].$search_data['pagination'].";sort=$sort&amp;order=$sort_order", $count[0]['total'], $garage_config['cars_per_page'], $start). '&nbsp;';
 
@@ -1899,18 +1899,13 @@ switch( $mode )
 		$data = $garage->process_post_vars($params);
 		$data['start'] = (empty($data['start'])) ? 0 : $data['start'];
 
-		if (empty($data['business_id']))
-		{	
-			$limit = 1;
-		}
-		else
+		if (!empty($data['business_id']))
 		{
-			$where = "AND b.id = $single_business";
-			$limit = 20;
+			$where = "AND b.id = " . $data['business_id'];
 		}
 
 		//Get All Insurance Business Data
-		$business = $garage_insurance->select_insurance_business_data($start,$where);
+		$business = $garage_business->select_insurance_business_data($where, $data['start']);
 
 		//If No Business Error Nicely Rather Than Display Nothing To The User
 		if ( count($business) < 1 )
@@ -1950,7 +1945,7 @@ switch( $mode )
 			for($j = 0; $j < count($cover_types); $j++)
 			{
 				//Pull MIN/MAX/AVG Of Specific Cover Type By Business ID
-				$premium_data = $garage_insurance->select_insurance_premium_data($business[$i]['id'], $cover_types[$j]);
+				$premium_data = $garage_insurance->select_premiums_stats_by_business_and_covertype_data($business[$i]['id'], $cover_types[$j]);
         	    		$template->assign_block_vars('business_row.cover_row', array(
                				'COVER_TYPE' => $cover_types[$j],
                				'MINIMUM' => $premium_data['min'],
@@ -1963,7 +1958,7 @@ switch( $mode )
 			if  (!empty($data['business_id']))
 			{
 				//Pull All Insurance Premiums Data For Specific Insurance Company
-				$insurance_data = $garage_insurance->select_all_premiums_data($business[$i]['id']);
+				$insurance_data = $garage_insurance->select_all_premiums_by_business_data($business[$i]['id']);
 				for($k = 0; $k < count($insurance_data); $k++)
 				{
 					$template->assign_block_vars('business_row.insurance_detail.premiums', array(
@@ -1979,7 +1974,7 @@ switch( $mode )
       		}
 
 		// Get Insurance Business Data For Pagination
-		$count = $garage_insurance->select_insurance_business_data('',$where);
+		$count = $garage_business->select_insurance_business_data($where);
 		$pagination = generate_pagination("garage.$phpEx?mode=view_insurance_business", $count[0]['total'], 25, $start). '&nbsp;';
 
 		$template->assign_block_vars('level1', array());
@@ -2035,12 +2030,11 @@ switch( $mode )
 		//Build SQL Parameters Based On If We Are Displaying One Business Or Not
 		if (!empty($data['business_id']))
 		{
-			$limit = '20';
 			$where = "AND b.id = " . $data['business_id'];
 		}
 
 		//Get Required Garage Business Data
-		$business = $garage_business->select_all_garage_business_data($where, $start, $limit);
+		$business = $garage_business->select_garage_business_data($where, $data['start']);
 
 		//If No Business Let The User Know..
 		if ( count($business) < 1 )
@@ -2051,7 +2045,7 @@ switch( $mode )
 		include($phpbb_root_path . 'includes/page_header.'.$phpEx);
 
 		//Setup Breadcrumb Trail Correctly...
-		if (!empty($single_business))
+		if (!empty($data['business_id']))
 		{
 			$template->assign_block_vars('level2', array());
 			$template->assign_vars(array(
@@ -2089,7 +2083,7 @@ switch( $mode )
 			}
 
 			//Now Lets Go Get Mods Business Has Installed
-			$bus_mod_data = $garage_modification->get_modifications_by_install_business($business[$i]['id'], $limit);
+			$bus_mod_data = $garage_modification->select_modifications_by_install_business_data($business[$i]['id']);
 
 			for($j = 0 ; $j < count($bus_mod_data); $j++)
 			{
@@ -2177,18 +2171,13 @@ switch( $mode )
 		$data = $garage->process_post_vars($params);
 		$data['start'] = (empty($data['start'])) ? 0 : $data['start'];
 
-		if (empty($data['business_id']))
+		if (!empty($data['business_id']))
 		{
-			$limit = '5';
-		}
-		else
-		{
-			$limit = '20';
 			$where = "AND b.id = " . $data['business_id'];
 		}
 
 		//Get Required Shop Business Data
-		$business = $garage_business->select_all_shop_business_data($where, $start);
+		$business = $garage_business->select_shop_business_data($where, $data['start']);
 
 		//If No Business Let The User Know..
 		if ( count($business) < 1 )
@@ -2235,7 +2224,7 @@ switch( $mode )
 			}
 
 			//Now Lets Go Get All Mods All Business's Have Sold
-			$bus_mod_data = $garage_modifciation->get_modifications_by_business($business[$i]['id'], $limit);
+			$bus_mod_data = $garage_modification->select_modifications_by_business_data($business[$i]['id']);
 
 			for ($j = 0; $j < count($bus_mod_data); $j++)
 			{
@@ -2901,12 +2890,12 @@ switch( $mode )
 						//If Quartermile Need To Call Correct Function To Delete Images Too
 						if ( $table ==  GARAGE_QUARTERMILE_TABLE)
 						{
-							$garage->delete_quartermile_time($id);
+							$garage_quartermile->delete_quartermile($id);
 						}
 						//If Rollingroad Need To Call Correct Function To Delete Images Too
 						else if  ( $table ==  GARAGE_ROLLINGROAD_TABLE)
 						{
-							$garage->delete_rollingroad_run($id);
+							$garage_dynorun->delete_dynorun($id);
 						}
 						else
 						{

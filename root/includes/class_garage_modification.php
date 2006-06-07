@@ -356,9 +356,9 @@ class garage_modification
 
 	/*========================================================================*/
 	// Select Modifications By Install Buisness Data From DB
-	// Usage: select_modifications_by_install_business_data('business id', 'limit');
+	// Usage: select_modifications_by_install_business_data('business id', 'start row', 'end row');
 	/*========================================================================*/
-	function select_modifications_by_install_business_data($business_id, $limit)
+	function select_modifications_by_install_business_data($business_id, $start = 0 , $limit = 20)
 	{
 		global $db;
 	
@@ -371,10 +371,10 @@ class garage_modification
 			WHERE mods.install_business_id = b.id
 				AND b.garage =1
 				AND b.pending = 0
-				AND b.id = " . $business[$i]['id'] . "
+				AND b.id = $business_id
 				AND makes.pending = 0 AND models.pending = 0
 			ORDER BY mods.id, mods.date_created DESC
-			LIMIT $limit";
+			LIMIT $start, $limit";
 
       		if ( !($result = $db->sql_query($sql)) )
       		{
@@ -393,9 +393,9 @@ class garage_modification
 
 	/*========================================================================*/
 	// Select Modifications By Business Data From DB
-	// Usage: select_modifications_by_business_data('modification id', 'limit');
+	// Usage: select_modifications_by_business_data('business id', 'start row', 'end row');
 	/*========================================================================*/
-	function select_modifications_by_business_data($business_id, $limit)
+	function select_modifications_by_business_data($business_id, $start = 0, $limit = 20)
 	{
 		global $db;
 	
@@ -411,7 +411,7 @@ class garage_modification
 				AND b.id = $business_id
 				AND makes.pending = 0 AND models.pending = 0 
 			ORDER BY mods.id, mods.date_created DESC
-			LIMIT $limit";
+			LIMIT $start, $limit";
 
       		if ( !($result = $db->sql_query($sql)) )
       		{

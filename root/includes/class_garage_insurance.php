@@ -120,7 +120,7 @@ class garage_insurance
 	// Select All Insurance Premiums Data From DB
 	// Usage: select_all_premiums_data('additional where', 'order', 'ASC|DESC', 'start', 'end');
 	/*========================================================================*/
-	function select_all_premiums_data($additional_where, $order_by, $sort_order, $start=0, $end=10000)
+	function select_all_premiums_data($additional_where = NULL, $order_by, $sort_order, $start = 0, $end = 10000)
 	{
 		global $db;
 

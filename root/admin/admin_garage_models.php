@@ -381,7 +381,7 @@ switch($mode)
 		);
 
 		//Get All Makes & Models
-		$data = $garage_model->select_complete_model_list('');
+		$data = $garage_model->select_all_models_data('');
 
 		//Build An Array Of Just Makes
 		$makes = $garage->remove_duplicate($data, 'make_id');

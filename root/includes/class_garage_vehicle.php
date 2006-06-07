@@ -875,7 +875,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function display_vehicle($owned)
 	{
-		global $userdata, $template, $images, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $HTTP_POST_FILES, $HTTP_POST_VARS, $HTTP_GET_VARS, $rating_text, $rating_types, $cid, $mode, $garage, $garage_template, $garage_modification, $garage_insurance, $garage_quartermile, $garage_dynorun;
+		global $userdata, $template, $images, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $HTTP_POST_FILES, $HTTP_POST_VARS, $HTTP_GET_VARS, $rating_text, $rating_types, $cid, $mode, $garage, $garage_template, $garage_modification, $garage_insurance, $garage_quartermile, $garage_dynorun, $garage_image;
 
 		//Since We Called This Fuction Display Top Block With All Vehicle Info
 		$template->assign_block_vars('switch_top_block', array());
@@ -1497,10 +1497,10 @@ class garage_vehicle
 	// Select All Vehicles Data From Db
 	// Usage: select_all_vehicle_data();
 	/*========================================================================*/
-	function select_all_vehicle_data($additional_where, $order_by, $sort_order, $start=0, $end=10000)
+	function select_all_vehicle_data($additional_where = NULL, $order_by, $sort_order, $start = 0, $end = 10000)
 	{
 		global $db;
-		//Select All Vehicles Information
+
 		$sql = "SELECT g.*, makes.make, models.model, user.username, count(mods.id) AS total_mods, count(*) as total
         		FROM " . GARAGE_TABLE . " AS g 
                     		LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON mods.garage_id = g.id

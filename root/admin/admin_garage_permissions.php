@@ -181,28 +181,32 @@ case 'update_permissions':
 		{
 			$upload_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['upload']));
 			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $upload_groups, 'config_name', 'private_upload_perms');
-			//Now Lets Get Quota For Groups That Have Been Granted Permission
+			//Now Lets Get Image Quota For Groups That Have Been Granted Permission
 			foreach ( $HTTP_POST_VARS['upload'] as $id)
 			{
 				$group_id = intval($id);
 				$upload_quota .= intval($HTTP_POST_VARS['upload_quota_'.$group_id]).',';
+				$remote_quota .= intval($HTTP_POST_VARS['remote_quota_'.$group_id]).',';
 			}
-			//Set Upload Quotas
+			//Set Image Quotas
 			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value', substr($upload_quota, 0, -1), 'config_name', 'private_upload_quota');
+			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value', substr($remote_quota, 0, -1), 'config_name', 'private_remote_quota');
 		}
 		else
 		{
 			//No Private Permisssion Set...So Blank DB Fields
 			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value', '', 'config_name', 'private_upload_perms');
 			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value', '', 'config_name', 'private_upload_quota');
+			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value', '', 'config_name', 'private_remote_quota');
 		}
 
 		//Handle Default User Quotas
-		$default_upload_qouta = intval($HTTP_POST_VARS['max_car_images']);
-		$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $default_upload_quota, 'config_name', 'max_car_images');
+		$default_upload_quota = intval($HTTP_POST_VARS['max_upload_images']);
+		$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $default_upload_quota, 'config_name', 'max_upload_images');
+		$default_remote_quota = intval($HTTP_POST_VARS['max_remote_images']);
+		$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $default_remote_quota, 'config_name', 'max_remote_images');
 		$default_add_quota = intval($HTTP_POST_VARS['max_user_cars']);
 		$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $default_add_quota, 'config_name', 'max_user_cars');
-
 
 		//Assemble Message With Redirect That All Permissions Updated
 		$message = '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_garage_permissions.$phpEx") . '">' . $lang['Permissions_Updated'] . "<br /><br />" . sprintf($lang['Click_Return_Permissions'], "<a href=\"" . append_sid("admin_garage_permissions.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
@@ -380,7 +384,8 @@ case 'update_permissions':
 				'GROUP_NAME' => $groupdata[$i]['group_name'],
 				'DENY_CHECKED' => (in_array($groupdata[$i]['group_id'], $deny_groups)) ? 'checked="checked"' : '',
 				'ADD_QUOTA' => $garage_vehicle->get_group_add_quota($groupdata[$i]['group_id']),
-				'UPLOAD_QUOTA' => $garage_image->get_group_upload_quota($groupdata[$i]['group_id']),
+				'UPLOAD_QUOTA' => $garage_image->get_group_upload_image_quota($groupdata[$i]['group_id']),
+				'REMOTE_QUOTA' => $garage_image->get_group_remote_image_quota($groupdata[$i]['group_id']),
 				'BROWSE_CHECKED' => (in_array($groupdata[$i]['group_id'], $browse_groups)) ? 'checked="checked"' : '',
 				'INTERACT_CHECKED' => (in_array($groupdata[$i]['group_id'], $interact_groups)) ? 'checked="checked"' : '',
 				'ADD_CHECKED' => (in_array($groupdata[$i]['group_id'], $add_groups)) ? 'checked="checked"' : '',
@@ -418,8 +423,11 @@ case 'update_permissions':
 			'L_SAVE' => $lang['Save'],
 			'L_ADD_QUOTA' => $lang['Add_Quota'],
 			'L_UPLOAD_QUOTA' => $lang['Upload_Quota'],
+			'L_REMOTE' => $lang['Remote'],
+			'L_LOCAL' => $lang['Local'],
 			'MAX_USER_CARS' => $garage_config['max_user_cars'],
-			'MAX_CAR_IMAGES' => $garage_config['max_car_images'],
+			'MAX_UPLOAD_IMAGES' => $garage_config['max_upload_images'],
+			'MAX_REMOTE_IMAGES' => $garage_config['max_remote_images'],
 			'S_GARAGE_ACTION' => append_sid("admin_garage_permissions.$phpEx?mode=update_permissions"))
 		);
 
