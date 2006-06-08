@@ -225,12 +225,23 @@ switch( $mode )
 		//If Any Image Variables Set Enter The Image Handling
 		if( $garage_image->image_attached() )
 		{
-			//Create Thumbnail & DB Entry For Image
-			$image_id = $garage->process_image_attached('vehicle',$cid);
-			//Insert Image Into Vehicles Gallery
-			$garage_image->insert_gallery_image($image_id);
-			//Set Image As Hilite Image For Vehicle
-			$garage->update_single_field(GARAGE_TABLE,'image_id',$image_id,'id',$cid);
+			$user_upload_image_data = $garage_image->select_user_upload_images($userdata['user_id']);
+			$user_remote_image_data = $garage_image->select_user_remote_images($userdata['user_id']);
+			//Check For Remote & Local Image Quotas
+			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			{
+				//Create Thumbnail & DB Entry For Image
+				$image_id = $garage->process_image_attached('vehicle',$cid);
+				//Insert Image Into Vehicles Gallery
+				$garage_image->insert_gallery_image($image_id);
+				//Set Image As Hilite Image For Vehicle
+				$garage->update_single_field(GARAGE_TABLE,'image_id',$image_id,'id',$cid);
+			}
+			//You Have Reached Your Image Quota..Error Nicely
+			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			{
+				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true));
+			}
 		}
 
 		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
@@ -442,12 +453,23 @@ switch( $mode )
 		$garage_vehicle->update_vehicle_time($cid);
 
 		//If Any Image Variables Set Enter The Image Handling
-		if ( ( $garage_image->image_attached() ) AND (not too much disk used) )
+		if ( $garage_image->image_attached() )
 		{
-			//Create Thumbnail & DB Entry For Image
-			$image_id = $garage_image->process_image_attached('modification',$mid);
-			//Set Image To This Modification
-			$garage->update_single_field(GARAGE_MODS_TABLE,'image_id',$image_id,'id',$mid);
+			$user_upload_image_data = $garage_image->select_user_upload_images($userdata['user_id']);
+			$user_remote_image_data = $garage_image->select_user_remote_images($userdata['user_id']);
+			//Check For Remote & Local Image Quotas
+			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			{
+				//Create Thumbnail & DB Entry For Image
+				$image_id = $garage_image->process_image_attached('modification',$mid);
+				//Set Image To This Modification
+				$garage->update_single_field(GARAGE_MODS_TABLE,'image_id',$image_id,'id',$mid);
+			}
+			//You Have Reached Your Image Quota..Error Nicely
+			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			{
+				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true));
+			}
 		}
 
 		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
@@ -555,10 +577,21 @@ switch( $mode )
 		//If Any Image Variables Set Enter The Image Handling
 		if( $garage_image->image_attached() )
 		{
-			//Create Thumbnail & DB Entry For Image
-			$image_id = $garage_image->process_image_attached('modification',$mid);
-			//Set Image To This Modification
-			$garage->update_single_field(GARAGE_MODS_TABLE, 'image_id', $image_id, 'id', $mid);
+			$user_upload_image_data = $garage_image->select_user_upload_images($userdata['user_id']);
+			$user_remote_image_data = $garage_image->select_user_remote_images($userdata['user_id']);
+			//Check For Remote & Local Image Quotas
+			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			{
+				//Create Thumbnail & DB Entry For Image
+				$image_id = $garage_image->process_image_attached('modification',$mid);
+				//Set Image To This Modification
+				$garage->update_single_field(GARAGE_MODS_TABLE, 'image_id', $image_id, 'id', $mid);
+			}
+			//You Have Reached Your Image Quota..Error Nicely
+			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			{
+				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true));
+			}
 		}
 
 		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
@@ -671,9 +704,20 @@ switch( $mode )
 		//If Any Image Variables Set Enter The Image Handling
 		if( $garage_image->image_attached() )
 		{
-			//Create Thumbnail & DB Entry For Image + Link To Item
-			$image_id = $garage_image->process_image_attached('quartermile', $qmid);
-			$garage->update_single_field(GARAGE_QUARTERMILE_TABLE, 'image_id', $image_id, 'id', $qmid);
+			$user_upload_image_data = $garage_image->select_user_upload_images($userdata['user_id']);
+			$user_remote_image_data = $garage_image->select_user_remote_images($userdata['user_id']);
+			//Check For Remote & Local Image Quotas
+			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			{
+				//Create Thumbnail & DB Entry For Image + Link To Item
+				$image_id = $garage_image->process_image_attached('quartermile', $qmid);
+				$garage->update_single_field(GARAGE_QUARTERMILE_TABLE, 'image_id', $image_id, 'id', $qmid);
+			}
+			//You Have Reached Your Image Quota..Error Nicely
+			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			{
+				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true));
+			}
 		}
 		//No Image Attached..We Need To Check If This Breaks The Site Rule
 		else if ( ($garage_config['quartermile_image_required'] == '1') AND ($data['quart'] <= $garage_config['quartermile_image_required_limit']))
@@ -807,9 +851,20 @@ switch( $mode )
 		//If Any Image Variables Set Enter The Image Handling
 		if( $garage_image->image_attached() )
 		{
-			//Create Thumbnail & DB Entry For Image
-			$image_id = $garage_image->process_image_attached('quartermile', $qmid);
-			$garage->update_single_field(GARAGE_QUARTERMILE_TABLE, 'image_id', $image_id, 'id', $qmid);
+			$user_upload_image_data = $garage_image->select_user_upload_images($userdata['user_id']);
+			$user_remote_image_data = $garage_image->select_user_remote_images($userdata['user_id']);
+			//Check For Remote & Local Image Quotas
+			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			{
+				//Create Thumbnail & DB Entry For Image
+				$image_id = $garage_image->process_image_attached('quartermile', $qmid);
+				$garage->update_single_field(GARAGE_QUARTERMILE_TABLE, 'image_id', $image_id, 'id', $qmid);
+			}
+			//You Have Reached Your Image Quota..Error Nicely
+			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			{
+				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true));
+			}
 		}
 		//No Image Attached..We Need To Check If This Breaks The Site Rule
 		else if ( ($garage_config['quartermile_image_required'] == '1') AND ($data['quart'] <= $garage_config['quartermile_image_required_limit']))
@@ -928,9 +983,20 @@ switch( $mode )
 		//If Any Image Variables Set Enter The Image Handling
 		if( $garage_image->image_attached() )
 		{
-			//Create Thumbnail & DB Entry For Image
-			$image_id = $garage_image->process_image_attached('rollingroad', $rrid);
-			$garage->update_single_field(GARAGE_ROLLINGROAD_TABLE,'image_id', $image_id, 'id', $rrid);
+			$user_upload_image_data = $garage_image->select_user_upload_images($userdata['user_id']);
+			$user_remote_image_data = $garage_image->select_user_remote_images($userdata['user_id']);
+			//Check For Remote & Local Image Quotas
+			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			{
+				//Create Thumbnail & DB Entry For Image
+				$image_id = $garage_image->process_image_attached('rollingroad', $rrid);
+				$garage->update_single_field(GARAGE_ROLLINGROAD_TABLE,'image_id', $image_id, 'id', $rrid);
+			}
+			//You Have Reached Your Image Quota..Error Nicely
+			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			{
+				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true));
+			}
 		}
 		//No Image Attached..We Need To Check If This Breaks The Site Rule
 		else if ( ($garage_config['dynorun_image_required'] == '1') AND ($data['bhp'] >= $garage_config['dynorun_image_required_limit']))
@@ -1046,9 +1112,20 @@ switch( $mode )
 		//If Any Image Variables Set Enter The Image Handling
 		if( $garage_image->image_attached() )
 		{
-			//Create Thumbnail & DB Entry For Image
-			$image_id = $garage_image->process_image_attached('rollingroad', $rrid);
-			$garage->update_single_field(GARAGE_ROLLINGROAD_TABLE, 'image_id', $image_id, 'id', $rrid);
+			$user_upload_image_data = $garage_image->select_user_upload_images($userdata['user_id']);
+			$user_remote_image_data = $garage_image->select_user_remote_images($userdata['user_id']);
+			//Check For Remote & Local Image Quotas
+			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			{
+				//Create Thumbnail & DB Entry For Image
+				$image_id = $garage_image->process_image_attached('rollingroad', $rrid);
+				$garage->update_single_field(GARAGE_ROLLINGROAD_TABLE, 'image_id', $image_id, 'id', $rrid);
+			}
+			//You Have Reached Your Image Quota..Error Nicely
+			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			{
+				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true));
+			}
 		}
 		//No Image Attached..We Need To Check If This Breaks The Site Rule
 		else if ( ($garage_config['dynorun_image_required'] == '1') AND ($data['bhp'] >= $garage_config['dynorun_image_required_limit']))
@@ -1709,14 +1786,13 @@ switch( $mode )
 		//Pull Vehicle Data So We Can Check For Hilite Image
 		$data = $garage_vehicle->select_vehicle_data($cid);
 
-		//Pull Gallery Data From DB For Vehicle
-		$gallery_data = $garage_image->select_gallery_data($cid);
-
 		//If Any Image Variables Set Enter The Image Handling
 		if( $garage_image->image_attached() )
 		{
-			//If Your Below Your Image Data Proceed
-			if ( count($gallery_data) < $garage_image->get_user_upload_quota() )
+			$user_upload_image_data = $garage_image->select_user_upload_images($userdata['user_id']);
+			$user_remote_image_data = $garage_image->select_user_remote_images($userdata['user_id']);
+			//Check For Remote & Local Image Quotas
+			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('vehicle',$cid);
@@ -1728,7 +1804,7 @@ switch( $mode )
 				}
 			}
 			//You Have Reached Your Image Quota..Error Nicely
-			else if ( count($gallery_data) >= $garage_image->get_user_upload_quota())
+			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
 			{
 				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true));
 			}
