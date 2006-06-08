@@ -231,7 +231,7 @@ switch( $mode )
 			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
 			{
 				//Create Thumbnail & DB Entry For Image
-				$image_id = $garage->process_image_attached('vehicle',$cid);
+				$image_id = $garage->process_image_attached('vehicle', $cid);
 				//Insert Image Into Vehicles Gallery
 				$garage_image->insert_gallery_image($image_id);
 				//Set Image As Hilite Image For Vehicle
@@ -553,7 +553,7 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('category_id', 'title', 'price', 'business_id', 'install_business_id', 'install_price', 'install_rating', 'product_rating', 'comments', 'install_comments', 'edit_upload', 'image_id', 'purchase_rating');
+		$params = array('category_id', 'title', 'price', 'business_id', 'install_business_id', 'install_price', 'install_rating', 'product_rating', 'comments', 'install_comments', 'editupload', 'image_id', 'purchase_rating');
 		$data = $garage->process_post_vars($params);
 		$data['time'] = time();
 
@@ -570,6 +570,7 @@ switch( $mode )
 		//User Has Chosen To Delete Existing Image
 		if ( ($data['editupload'] == 'delete') OR ( $data['editupload'] == 'new') )
 		{
+			echo "Hello";
 			$garage_image->delete_image($data['image_id']);
 			$garage->update_single_field(GARAGE_MODS_TABLE, 'image_id', 'NULL', 'id', $mid);
 		}
@@ -1105,7 +1106,7 @@ switch( $mode )
 		//Removed The Old Image If Required By A Delete Or A New Image Existing
 		if ( ($data['editupload'] == 'delete') OR ($data['editupload'] == 'new') )
 		{
-			$garage->delete_image($data['image_id']);
+			$garage_image->delete_image($data['image_id']);
 			$garage->update_single_field(GARAGE_ROLLINGROAD_TABLE, 'image_id', 'NULL', 'id', $rrid);
 		}
 
@@ -1131,7 +1132,7 @@ switch( $mode )
 		else if ( ($garage_config['dynorun_image_required'] == '1') AND ($data['bhp'] >= $garage_config['dynorun_image_required_limit']))
 		{
 			//That Time Requires An Image...Delete Entered Time And Notify User
-			$garage_dynorun->delete_rollingroad_run($rrid);
+			$garage_dynorun->delete_dynorun($rrid);
 			redirect(append_sid("garage.$phpEx?mode=error&EID=26", true));
 		}
 

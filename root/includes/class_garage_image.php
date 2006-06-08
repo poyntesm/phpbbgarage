@@ -325,7 +325,7 @@ class garage_image
 	/*========================================================================*/
 	function process_image_attached($type, $id)
 	{
-		global $userdata, $template, $db, $SID, $lang, $images, $phpEx, $phpbb_root_path, $garage_config, $board_config, $HTTP_POST_FILES, $HTTP_POST_VARS, $garage;
+		global $userdata, $template, $db, $SID, $lang, $images, $phpEx, $phpbb_root_path, $garage_config, $board_config, $HTTP_POST_FILES, $HTTP_POST_VARS, $garage, $cid;
 	
 		if (!$garage->check_permissions('UPLOAD',''))
 		{
@@ -414,18 +414,22 @@ class garage_image
 			if ( $type == 'vehicle')
 			{
 				$data['tmp_name'] = 'garage_gallery-' . $id . '-' . $data['date'];
+				$data['garage_id'] = $id;
 			}
 			if ( $type == 'modification')
 			{
 				$data['tmp_name'] = 'garage_mod-' . $id . '-' . $data['date'];
+				$data['garage_id'] = $cid;
 			}
 			if ( $type == 'quartermile')
 			{
 				$data['tmp_name'] = 'garage_quartermile-' . $id . '-' . $data['date'];
+				$data['garage_id'] = $cid;
 			}
 			if ( $type == 'rollingroad')
 			{
 				$data['tmp_name'] = 'garage_rollingroad-' . $id . '-' . $data['date'];
+				$data['garage_id'] = $cid;
 			}
 	
 			$data['thumb_location'] = $data['tmp_name'] . '_thumb';
@@ -510,18 +514,22 @@ class garage_image
 			if ( $type == 'vehicle')
 			{
 				$prefix = 'garage_gallery-' . $id . '-' . $data['date'];
+				$data['garage_id'] = $id;
 			}
 			else if ( $type == 'modification')
 			{
 				$prefix = 'garage_mod-' . $id . '-' . $data['date'];
+				$data['garage_id'] = $cid;
 			}
 			else if ( $type == 'quartermile')
 			{
 				$prefix = 'garage_quartermile-' . $id . '-' . $data['date'];
+				$data['garage_id'] = $cid;
 			}
 			else if ( $type == 'rollingroad')
 			{
 				$prefix = 'garage_rollingroad-' . $id . '-' . $data['date'];
+				$data['garage_id'] = $cid;
 			}
 			$data['location'] = $prefix . $data['ext'];
 			$data['thumb_location'] = $prefix . '_thumb' . $data['ext'];
@@ -590,9 +598,9 @@ class garage_image
 		global $db;
 
 		$sql = "INSERT INTO ". GARAGE_IMAGES_TABLE ." 
-			(attach_location, attach_hits, attach_ext, attach_file, attach_thumb_location, attach_thumb_width, attach_thumb_height, attach_is_image, attach_date, attach_filesize, attach_thumb_filesize)
+			(garage_id, attach_location, attach_hits, attach_ext, attach_file, attach_thumb_location, attach_thumb_width, attach_thumb_height, attach_is_image, attach_date, attach_filesize, attach_thumb_filesize)
 			VALUES 
-			('".$data['location']."', '0', '".$data['ext']."', '".$data['file']."', '".$data['thumb_location']."', '".$data['thumb_width']."', '".$data['thumb_height']."', '".$data['is_image']."', '".$data['date']."', '".$data['filesize']."', '".$data['thumb_filesize']."')";
+			('".$data['garage_id']."', '".$data['location']."', '0', '".$data['ext']."', '".$data['file']."', '".$data['thumb_location']."', '".$data['thumb_width']."', '".$data['thumb_height']."', '".$data['is_image']."', '".$data['date']."', '".$data['filesize']."', '".$data['thumb_filesize']."')";
 
 		if( !$result = $db->sql_query($sql) )
 		{
@@ -736,89 +744,18 @@ class garage_image
 		//Set Inital Counter To Zero
 		$space = 0;
 
-		//Get All Space Used By Vehicle Images
-		$sql = "SELECT ( SUM(img.attach_filesize) + SUM(img.attach_thumb_filesize) ) as image_bytes
-			FROM phpbb_garage AS g
-				LEFT JOIN phpbb_garage_gallery gallery ON gallery.garage_id = g.id
-				LEFT JOIN phpbb_garage_images img ON img.attach_id = gallery.image_id
-			WHERE g.member_id = 2 AND img.attach_id IS NOT NULL
-			GROUP BY img.attach_id";
+		//Get All Space Used By Uploaded & Remote Images
+		$uploaded_image_data = $this->select_user_upload_images($user_id);
+		$remote_image_data = $this->select_user_upload_images($user_id);
 
-		if( !($result = $db->sql_query($sql)) )
+		for ( $i=0 ; count($uploaded_image_data); $i++ )
 		{
-			message_die(GENERAL_ERROR, 'Could Not Select Vehicle Image Size Data', '', __LINE__, __FILE__, $sql);
+			$space =  $space + ( $data['attach_filesize'] + $data['attach_thumb_filesize'] );
 		}
-
-		while ($row = $db->sql_fetchrow($result) )
+		for ( $i=0 ; count($remote_image_data); $i++ )
 		{
-			$space =  $space + $row['image_bytes'];
+			$space =  $space + ( $data['attach_filesize'] + $data['attach_thumb_filesize'] );
 		}
-
-		$row = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
-
-		//Get All Space Used By Modification Images
-		$sql = "SELECT ( SUM(img.attach_filesize) + SUM(img.attach_thumb_filesize) ) as image_bytes
-			FROM phpbb_garage AS g
-				LEFT JOIN phpbb_garage_mods mods ON mods.garage_id = g.id
-				LEFT JOIN phpbb_garage_images img ON img.attach_id = mods.image_id
-			WHERE g.member_id = 2 AND img.attach_id IS NOT NULL
-			GROUP BY img.attach_id";
-
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Select Vehicle Image Size Data', '', __LINE__, __FILE__, $sql);
-		}
-
-		while ($row = $db->sql_fetchrow($result) )
-		{
-			$space =  $space + $row['image_bytes'];
-		}
-
-		$row = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
-
-		//Get All Space Used By Quartermile Images
-		$sql = "SELECT ( SUM(img.attach_filesize) + SUM(img.attach_thumb_filesize) ) as image_bytes
-			FROM phpbb_garage AS g
-				LEFT JOIN phpbb_garage_quartermile qm ON qm.garage_id = g.id
-				LEFT JOIN phpbb_garage_images img ON img.attach_id = qm.image_id
-			WHERE g.member_id = 2 AND img.attach_id IS NOT NULL
-			GROUP BY img.attach_id";
-
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Select Vehicle Image Size Data', '', __LINE__, __FILE__, $sql);
-		}
-
-		while ($row = $db->sql_fetchrow($result) )
-		{
-			$space =  $space + $row['image_bytes'];
-		}
-
-		$row = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
-
-		//Get All Space Used By Dynorun Images
-		$sql = "SELECT ( SUM(img.attach_filesize) + SUM(img.attach_thumb_filesize) ) as image_bytes
-			FROM phpbb_garage AS g
-				LEFT JOIN phpbb_garage_rollingroad rr ON rr.garage_id = g.id
-				LEFT JOIN phpbb_garage_images img ON img.attach_id = rr.image_id
-			WHERE g.member_id = 2 AND img.attach_id IS NOT NULL
-			GROUP BY img.attach_id";
-
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Select Vehicle Image Size Data', '', __LINE__, __FILE__, $sql);
-		}
-
-		while ($row = $db->sql_fetchrow($result) )
-		{
-			$space =  $space + $row['image_bytes'];
-		}
-
-		$row = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
 	
 		return $space;
 	}
@@ -829,7 +766,7 @@ class garage_image
 	/*========================================================================*/
 	function delete_image($image_id)
 	{
-		global $phpbb_root_path;
+		global $phpbb_root_path, $garage;
 	
 		//Right They Want To Delete A Image
 		if (empty($image_id))
@@ -843,7 +780,7 @@ class garage_image
 		if ( (!empty($data['attach_location'])) OR (!empty($data['attach_thumb_location'])) )
 		{
 			//Right Image Exists So Lets Delete From DB First
-			$this->delete_rows(GARAGE_IMAGES_TABLE, 'attach_id', $image_id);
+			$garage->delete_rows(GARAGE_IMAGES_TABLE, 'attach_id', $image_id);
 
 			//Delete Thumbnail	
 			@unlink($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['attach_thumb_location']);
@@ -864,19 +801,19 @@ class garage_image
 	/*========================================================================*/
 	function delete_gallery_image($image_id)
 	{
-		global $db, $cid;
+		global $db, $cid, $garage_vehicle, $garage;
 
 		$this->delete_image($image_id);
 	
-		$data = $this->select_vehicle_data($cid);
+		$data = $garage_vehicle->select_vehicle_data($cid);
 	
 		if ( $data['image_id']  == $image_id)
 		{
-			$this->update_single_field(GARAGE_TABLE,'image_id','NULL','image_id',$image_id);
+			$garage->update_single_field(GARAGE_TABLE,'image_id','NULL','image_id',$image_id);
 		}
 
 		// Remove From Gallery DB Table
-		$this->delete_rows(GARAGE_GALLERY_TABLE, 'image_id', $image_id);
+		$garage->delete_rows(GARAGE_GALLERY_TABLE, 'image_id', $image_id);
 
 		return;
 	}
@@ -1046,6 +983,60 @@ class garage_image
         			LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = gallery.image_id 
         		WHERE gallery.garage_id = $cid
 			GROUP BY gallery.id";
+
+      		if ( !($result = $db->sql_query($sql)) )
+      		{
+         		message_die(GENERAL_ERROR, 'Could Not Select Vehicle Gallery Images Data', '', __LINE__, __FILE__, $sql);
+      		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
+		$db->sql_freeresult($result);
+	
+		return $rows;
+	}
+
+	/*========================================================================*/
+	// Select All Uploaded Images From User
+	// Usage: select_user_upload_images('user id');
+	/*========================================================================*/
+	function select_user_upload_images($user_id)
+	{
+		global $db;
+
+		$sql = "SELECT img.*
+     			FROM " . GARAGE_IMAGES_TABLE . " AS img
+        			LEFT JOIN " . GARAGE_TABLE . " AS g ON g.id = img.garage_id 
+        		WHERE g.member_id = $user_id";
+
+      		if ( !($result = $db->sql_query($sql)) )
+      		{
+         		message_die(GENERAL_ERROR, 'Could Not Select User Uploaded Images Data', '', __LINE__, __FILE__, $sql);
+      		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
+		$db->sql_freeresult($result);
+	
+		return $rows;
+	}
+
+	/*========================================================================*/
+	// Select All Remote Images From User
+	// Usage: select_user_remote_images('user id');
+	/*========================================================================*/
+	function select_user_remote_images($user_id)
+	{
+		global $db;
+
+		$sql = "SELECT img.*
+     			FROM " . GARAGE_IMAGES_TABLE . " AS img
+        			LEFT JOIN " . GARAGE_TABLE . " AS g ON g.id = img.garage_id 
+        		WHERE g.member_id = $user_id";
 
       		if ( !($result = $db->sql_query($sql)) )
       		{

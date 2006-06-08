@@ -134,6 +134,7 @@ $sql[] = "CREATE TABLE " . $table_prefix . "garage_guestbooks (
 
 $sql[] = "CREATE TABLE " . $table_prefix . "garage_images (
 		`attach_id` int(10) unsigned NOT NULL auto_increment,
+		`garage_id` int(10) unsigned NOT NULL default '0',
 		`attach_location` varchar(255) NOT NULL default '',
 		`attach_hits` int(10) unsigned NOT NULL default '0',
 		`attach_ext` varchar(10) NOT NULL default '',

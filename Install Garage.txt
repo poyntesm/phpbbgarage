@@ -564,7 +564,8 @@ make_jumpbox('viewforum.'.$phpEx);
 //-- add
 require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage.' . $phpEx);
 require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage_error.' . $phpEx);
-require($phpbb_root_path . 'includes/functions_garage.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_image.' . $phpEx);
 
 $sql = "SELECT g.*, images.*, makes.make, models.model, user.username, user.user_avatar_type,
 	user.user_allowavatar, user.user_avatar,
@@ -594,29 +595,19 @@ if ( $db->sql_numrows($result) > 0 )
 	//Display Just Thumbnails Of All Images Or Just One Main Image
 	if ( $garage_config['profile_thumbs'] == 1 )
 	{
-	       	$gallery_query = "SELECT gallery.id, images.attach_id, images.attach_hits, images.attach_ext, 
-                        	        images.attach_file, images.attach_thumb_location, images.attach_is_image,
-                	                images.attach_location
-                                     FROM " . GARAGE_IMAGES_TABLE . " images 
-					LEFT JOIN " . GARAGE_GALLERY_TABLE . " gallery ON (images.attach_id = gallery.image_id)
-                                     	LEFT JOIN " . GARAGE_TABLE . " garage ON (gallery.garage_id = garage.id)
-                                     WHERE garage.id = " . $vehicle_row['id'] .";";
-		if ( !($result = $db->sql_query($gallery_query)) )
-      		{
-         		message_die(GENERAL_ERROR, 'Could Not Select Image Data For Vehicle', '', __LINE__, __FILE__, $sql);
-	      	}
-	
-        	while ( $gallery_data = $db->sql_fetchrow($result) )
+
+		$gallery_data = $garage_image->select_gallery_data($vehicle_row['id']);
+        	while ( $i=0; $i < count($gallery_data); $i++ )
 	       	{
-            		if ( $gallery_data['attach_is_image'] )
+            		if ( $gallery_data[$i]['attach_is_image'] )
            		{
                 		// Do we have a thumbnail?  If so, our job is simple here :)
-				if ( (empty($gallery_data['attach_thumb_location']) == FALSE) AND ($gallery_data['attach_thumb_location'] != $gallery_data['attach_location']) AND ( $vehicle_images_found <= 12) )
+				if ( (empty($gallery_data[$i]['attach_thumb_location']) == FALSE) AND ($gallery_data[$i]['attach_thumb_location'] != $gallery_data[$i]['attach_location']) AND ( $vehicle_images_found <= 12) )
                 		{
                     			// Form the image link
-					$thumb_image = GARAGE_UPLOAD_PATH . $gallery_data['attach_thumb_location'];
-					$id = $gallery_data['attach_id'];
-					$title = $gallery_data['attach_file'];
+					$thumb_image = GARAGE_UPLOAD_PATH . $gallery_data[$i]['attach_thumb_location'];
+					$id = $gallery_data[$i]['attach_id'];
+					$title = $gallery_data[$i]['attach_file'];
 					$hilite_image .= '<a href=garage.php?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
                			} 
 			}
