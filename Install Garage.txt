@@ -464,13 +464,6 @@ define('GARAGE_VEHICLE_FIELDS_DATA_TABLE', $table_prefix.'garage_vehicle_fields_
 define('GARAGE_VEHICLE_FIELDS_LANG_TABLE', $table_prefix.'garage_vehicle_fields_lang');
 define('GARAGE_VEHICLE_LANG_TABLE', $table_prefix.'garage_vehicle_lang');
 define('GARAGE_UPLOAD_PATH', 'garage/upload/');
-define('FIELD_INT', 1);
-define('FIELD_STRING', 2);
-define('FIELD_TEXT', 3);
-define('FIELD_BOOL', 4);
-define('FIELD_DROPDOWN', 5);
-define('FIELD_DATE', 6);
-define('PAGE_GARAGE', -2120);
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 # 
 #-----[ OPEN ]----- 
@@ -803,23 +796,6 @@ templates/subSilver/overall_footer.tpl
 # 
 #-----[ OPEN ]----- 
 # 
-templates/subSilver/overall_header.tpl
-
-#
-#-----[ FIND ]------------------------------------------
-#
-<td align="center" valign="top" nowrap="nowrap"><span class="mainmenu">
-#
-#-----[ IN-LINE FIND ]------------------------------------------
-#
-<span class="mainmenu">&nbsp;
-#
-#-----[ IN-LINE AFTER, ADD ]------------------------------------------
-#
-<a href="{U_GARAGE}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_GARAGE}" hspace="3" />{L_GARAGE}</a>&nbsp; &nbsp;<a href="{U_QUARTERMILE}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_QUARTERMILE_TABLE}" hspace="3" />{L_QUARTERMILE_TABLE}</a>&nbsp; &nbsp;
-# 
-#-----[ OPEN ]----- 
-# 
 templates/subSilver/profile_view_body.tpl
 
 #
@@ -938,6 +914,166 @@ $images['garage_set_pending']		= "$current_template_images/{LANG}/garage_set_pen
 #
 #
 
-open language/en/acp/permission_phpbb.php
-find 	'acl_a_search'		=> array('lang' => 'Can manage search backends and settings', 'cat' => 'misc'),
-after add 	'acl_a_garage'		=> array('lang' => 'Can alter phpBB Garage settings', 'cat' => 'garage'),
+# 
+#-----[ OPEN ]----- 
+# 
+language/en/acp/permission_phpbb.php
+
+#
+#-----[ FIND ]------------------------------------------
+#
+ 	'acl_a_search'		=> array('lang' => 'Can manage search backends and settings', 'cat' => 'misc'),
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+
+ 	'acl_a_garage'		=> array('lang' => 'Can alter phpBB Garage settings', 'cat' => 'garage'),
+
+
+# 
+#-----[ OPEN ]----- 
+# 
+templates/subSilver/overall_header.html
+
+#
+#-----[ FIND ]------------------------------------------
+#
+<td class="genmed" align="right">
+
+#
+#-----[ IN-LINE FIND ]------------------------------------------
+#
+<td class="genmed" align="right">
+
+#
+#-----[ IN-LINE AFTER, ADD ]------------------------------------------
+#
+<a href="{U_GARAGE}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_GARAGE}" hspace="3" /> {L_GARAGE}</a>&nbsp; &nbsp;
+
+# 
+#-----[ OPEN ]----- 
+# 
+templates/subSilver/overall_footer.html
+
+#
+#-----[ FIND ]------------------------------------------
+#
+<span class="gensmall">
+
+#
+#-----[ IN-LINE FIND ]------------------------------------------
+#
+<span class="gensmall">
+
+#
+#-----[ IN-LINE AFTER, ADD ]------------------------------------------
+#
+#
+{GARGE_PENDING_LINK}
+
+# 
+#-----[ OPEN ]----- 
+# 
+includes/functions.php
+
+#
+#-----[ FIND ]------------------------------------------
+#
+<?php
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+#
+#-----[ FIND ]------------------------------------------
+#
+		'U_FAQ'					=> append_sid("{$phpbb_root_path}faq.$phpEx"),
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+		'U_GARAGE' => append_sid("garage.$phpEx"),
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+# 
+#-----[ OPEN ]----- 
+# 
+language/en/common.php
+#
+#-----[ FIND ]------------------------------------------
+#
+<?php
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+#
+#-----[ FIND ]------------------------------------------
+#
+	'FAQ'					=> 'FAQ',
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+	'GARAGE'				=> 'Garage',
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+# 
+#-----[ OPEN ]----- 
+# 
+includes/constants.php
+
+#
+#-----[ FIND ]------------------------------------------
+#
+<?php
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+#
+#-----[ FIND ]------------------------------------------
+#
+?>
+
+#
+#-----[ BEFORE, ADD ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+define('GARAGE_TABLE', $table_prefix.'garage');
+define('GARAGE_CONFIG_TABLE', $table_prefix.'garage_config');
+define('GARAGE_CATEGORIES_TABLE', $table_prefix.'garage_categories');
+define('GARAGE_GALLERY_TABLE', $table_prefix.'garage_gallery');
+define('GARAGE_GUESTBOOKS_TABLE', $table_prefix.'garage_guestbooks');
+define('GARAGE_IMAGES_TABLE', $table_prefix.'garage_images');
+define('GARAGE_MAKES_TABLE', $table_prefix.'garage_makes');
+define('GARAGE_MODELS_TABLE', $table_prefix.'garage_models');
+define('GARAGE_MODS_TABLE', $table_prefix.'garage_mods');
+define('GARAGE_QUARTERMILE_TABLE', $table_prefix.'garage_quartermile');
+define('GARAGE_ROLLINGROAD_TABLE', $table_prefix.'garage_rollingroad');
+define('GARAGE_BUSINESS_TABLE', $table_prefix.'garage_business');
+define('GARAGE_INSURANCE_TABLE', $table_prefix.'garage_insurance');
+define('GARAGE_RATING_TABLE', $table_prefix.'garage_rating');
+define('GARAGE_VEHICLE_FIELDS_TABLE', $table_prefix.'garage_vehicle_fields');
+define('GARAGE_VEHICLE_FIELDS_DATA_TABLE', $table_prefix.'garage_vehicle_fields_data');
+define('GARAGE_VEHICLE_FIELDS_LANG_TABLE', $table_prefix.'garage_vehicle_fields_lang');
+define('GARAGE_VEHICLE_LANG_TABLE', $table_prefix.'garage_vehicle_lang');
+define('GARAGE_UPLOAD_PATH', 'garage/upload/');
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+

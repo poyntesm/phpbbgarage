@@ -151,12 +151,10 @@ switch( $mode )
 			'MILEAGE_UNIT_LIST' => $garage_template->dropdown('mileage_units', $mileage_unit_types, $mileage_unit_types))
 		);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 		
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();		
-		$template->pparse('body');
 
 		break;
 
@@ -294,12 +292,10 @@ switch( $mode )
 			'COMMENTS' => $data['comments'])
 		);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();
-		$template->pparse('body');
 
 		break;
 
@@ -362,7 +358,7 @@ switch( $mode )
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_modification.html')
@@ -403,9 +399,7 @@ switch( $mode )
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();
-		$template->pparse('body');
 
 		break;
 
@@ -528,12 +522,10 @@ switch( $mode )
 			'INSTALL_COMMENTS' => $data['install_comments'])
 		);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();		
-		$template->pparse('body');
 
 		break;
 
@@ -626,7 +618,7 @@ switch( $mode )
 			$garage_template->dynorun_dropdown(NULL, NULL, $cid);
 		}
 		
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
@@ -657,9 +649,7 @@ switch( $mode )
          	);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();
-		$template->pparse('body');
 
 		break;
 
@@ -743,7 +733,7 @@ switch( $mode )
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_quartermile.html')
@@ -808,9 +798,7 @@ switch( $mode )
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();
-		$template->pparse('body');
 
 		break;
 
@@ -909,7 +897,7 @@ switch( $mode )
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 		
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_rollingroad.html')
@@ -940,9 +928,7 @@ switch( $mode )
          	);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();
-		$template->pparse('body');
 
 		break;
 
@@ -1026,7 +1012,7 @@ switch( $mode )
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_rollingroad.html')
@@ -1073,9 +1059,7 @@ switch( $mode )
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();
-		$template->pparse('body');
 
 		break;
 
@@ -1174,7 +1158,7 @@ switch( $mode )
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_insurance.html')
@@ -1202,9 +1186,7 @@ switch( $mode )
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();
-		$template->pparse('body');
 
 		break;
 
@@ -1250,7 +1232,7 @@ switch( $mode )
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_insurance.html')
@@ -1282,9 +1264,7 @@ switch( $mode )
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();
-		$template->pparse('body');
 
 		break;
 
@@ -1342,7 +1322,7 @@ switch( $mode )
 			'body'   => 'garage_browse.html')
 		);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 
 		//Check If This Is A Search....If So We Have A Bit More Work To Do.....
 		if ((isset($HTTP_GET_VARS['search'])) OR (isset($HTTP_POST_VARS['search'])))
@@ -1437,9 +1417,7 @@ switch( $mode )
 		}
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();
-		$template->pparse('body');
 
 		break;
 
@@ -1454,7 +1432,7 @@ switch( $mode )
 		$order_by = (empty($sort)) ? 'premium' : $sort;
 		$sort_order = (empty($order)) ? 'ASC' : $order;
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 
 		$search_data = $garage_model->build_search_for_user_make_model();
 		
@@ -1531,9 +1509,7 @@ switch( $mode )
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();
-		$template->pparse('body');
 
 		break;
 
@@ -1543,7 +1519,7 @@ switch( $mode )
 		//Let Check The User Is Allowed Perform This Action
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'javascript' => 'garage_vehicle_select_javascript.html',
@@ -1580,9 +1556,7 @@ switch( $mode )
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();
-		$template->pparse('body');
 
 		break;
 
@@ -1591,7 +1565,7 @@ switch( $mode )
 		//Let Check The User Is Allowed Perform This Action
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_view_vehicle.html')
@@ -1601,9 +1575,7 @@ switch( $mode )
 		$garage_vehicle->display_vehicle('NO');
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();
-      		$template->pparse('body'); 
 
 		//Update View Count For Vehicle
 		$garage->update_view_count(GARAGE_TABLE, 'views', 'id', $cid);
@@ -1615,8 +1587,7 @@ switch( $mode )
 		//Let Check The User Is Allowed Perform This Action
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
-
+		page_header($page_title);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_view_modification.html')
@@ -1691,9 +1662,7 @@ switch( $mode )
          	);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();
-      		$template->pparse('body'); 
 
 		break;
 
@@ -1705,7 +1674,7 @@ switch( $mode )
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_view_vehicle.html')
@@ -1715,9 +1684,7 @@ switch( $mode )
 		$garage_vehicle->display_vehicle('YES');
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();
-      		$template->pparse('body'); 
 
 		break;
 
@@ -1729,7 +1696,7 @@ switch( $mode )
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_view_vehicle.html')
@@ -1739,9 +1706,7 @@ switch( $mode )
 		$garage_vehicle->display_vehicle('YES');
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();
-      		$template->pparse('body'); 
 
 		break;
 
@@ -1922,12 +1887,10 @@ switch( $mode )
 			'CID' => $cid)
          	);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();		
-		$template->pparse('body');
 
 		break;
 
@@ -2080,12 +2043,10 @@ switch( $mode )
                		'L_OPENING_HOURS' => $lang['Opening_Hours'])
             	);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();
-		$template->pparse('body');
 
 		break;
 
@@ -2119,7 +2080,7 @@ switch( $mode )
 			redirect(append_sid("garage.$phpEx?mode=error&EID=1", true));
 		}
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 
 		//Setup Breadcrumb Trail Correctly...
 		if (!empty($data['business_id']))
@@ -2225,9 +2186,7 @@ switch( $mode )
             	);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();
-		$template->pparse('body');
 
 		break;
 
@@ -2261,7 +2220,7 @@ switch( $mode )
 			redirect(append_sid("garage.$phpEx?mode=error&EID=1", true));
 		}
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 
 		if (!empty($data['business_id']))
 		{
@@ -2369,9 +2328,7 @@ switch( $mode )
             	);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();
-		$template->pparse('body');
 
 		break;
 
@@ -2386,7 +2343,7 @@ switch( $mode )
 		//Let Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_user_submit.html')
@@ -2426,9 +2383,7 @@ switch( $mode )
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();
-		$template->pparse('body');
 
 		break;
 
@@ -2475,7 +2430,7 @@ switch( $mode )
 		//Let Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_user_submit.html')
@@ -2520,9 +2475,7 @@ switch( $mode )
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();
-		$template->pparse('body');
 
 		break;
 
@@ -2573,7 +2526,7 @@ switch( $mode )
 		//Let Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD',"garage.$phpEx?mode=error&EID=14");
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_user_submit_make.html')
@@ -2587,9 +2540,7 @@ switch( $mode )
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();
-		$template->pparse('body');
 
 		break;
 
@@ -2643,7 +2594,7 @@ switch( $mode )
 		//Let Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD',"garage.$phpEx?mode=error&EID=14");
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_user_submit_model.html')
@@ -2670,9 +2621,7 @@ switch( $mode )
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();
-		$template->pparse('body');
 
 		break;
 
@@ -2715,7 +2664,7 @@ switch( $mode )
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
 		$page_title = $lang['Car_Quart'];
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 
 		$template->set_filenames(array(
 			'javascript' => 'garage_vehicle_select_javascript.html',
@@ -2763,8 +2712,6 @@ switch( $mode )
 			'S_MODE_ACTION' 	=> append_sid("garage.$phpEx?mode=quartermile"))
 		);
 
-		$template->pparse('body');
-
 		break;
 
 	case 'garage_pending':
@@ -2782,8 +2729,7 @@ switch( $mode )
 		}
 
 		//Generate Page Header
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
-
+		page_header($page_title);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_pending.html')
@@ -2872,9 +2818,7 @@ switch( $mode )
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();
-		$template->pparse('body');
 
 		break;
 
@@ -2916,7 +2860,7 @@ switch( $mode )
 			$data = $garage_business->select_business_data($bus_id);
 
 			//Generate Page Header
-			include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+			page_header($page_title);
 
 			$template->set_filenames(array(
 				'header' => 'garage_header.html',
@@ -2941,9 +2885,7 @@ switch( $mode )
 			);
 
 			//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-			$template->pparse('header');
 			$garage_template->sidemenu();
-			$template->pparse('body');
 
 			break;
 		}
@@ -3035,7 +2977,7 @@ switch( $mode )
 		//Let Check The User Is Allowed Perform This Action
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 
 		$template->set_filenames(array(
 			'javascript' => 'garage_vehicle_select_javascript.html',
@@ -3077,8 +3019,6 @@ switch( $mode )
 			'S_MODE_ACTION' 	=> append_sid("garage.$phpEx?mode=rollingroad"))
 		);
 
-		$template->pparse('body');
-
 		break;
 
 	case 'view_guestbook':
@@ -3086,7 +3026,7 @@ switch( $mode )
 		//Let Check The User Is Allowed Perform This Action
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_view_guestbook.html')
@@ -3268,9 +3208,7 @@ switch( $mode )
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();
-		$template->pparse('body');
 
 		break;
 
@@ -3340,16 +3278,14 @@ switch( $mode )
 		);
 
 		//Produce The Page
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_edit_comment.html')
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();
-		$template->pparse('body');
 
 		break;
 
@@ -3397,7 +3333,7 @@ switch( $mode )
 
 	case 'error':
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
@@ -3410,9 +3346,7 @@ switch( $mode )
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$template->pparse('header');
 		$garage_template->sidemenu();
-		$template->pparse('body');
 
 		break;
 
