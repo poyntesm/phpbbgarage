@@ -33,56 +33,42 @@ if(empty($board_config['default_lang']))
 {
 	$board_config['default_lang'] = 'english';
 }
-require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage.' . $phpEx);
-require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage_error.' . $phpEx);
-
-//Build All Garage Classes e.g $garage_images->
-require($phpbb_root_path . 'includes/class_garage.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_business.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_dynorun.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_image.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_insurance.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_modification.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_quartermile.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_template.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_vehicle.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_guestbook.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_model.' . $phpEx);
 
 //Start Session Management
-$userdata = session_pagestart($user_ip, PAGE_GARAGE);
-init_userprefs($userdata);
+$user->session_begin();
+$auth->acl($user->data);
+$user->setup(array('mods/garage'));
+
+//Build All Garage Classes e.g $garage_images->
+require($phpbb_root_path . 'language/' . $user->data['user_lang'] . '/mods/garage.' . $phpEx);
+require($phpbb_root_path . 'language/' . $user->data['user_lang'] . '/mods/garage_error.' . $phpEx);
+require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
+require($phpbb_root_path . 'includes/mods/class_garage_business.' . $phpEx);
+require($phpbb_root_path . 'includes/mods/class_garage_dynorun.' . $phpEx);
+require($phpbb_root_path . 'includes/mods/class_garage_image.' . $phpEx);
+require($phpbb_root_path . 'includes/mods/class_garage_insurance.' . $phpEx);
+require($phpbb_root_path . 'includes/mods/class_garage_modification.' . $phpEx);
+require($phpbb_root_path . 'includes/mods/class_garage_quartermile.' . $phpEx);
+require($phpbb_root_path . 'includes/mods/class_garage_template.' . $phpEx);
+require($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
+require($phpbb_root_path . 'includes/mods/class_garage_guestbook.' . $phpEx);
+require($phpbb_root_path . 'includes/mods/class_garage_model.' . $phpEx);
 
 //Set The Page Title
-$page_title = $lang['Garage'];
-$garage_template->version_notice();
+$page_title = $user->lang['Garage'];
 
 //Get All String Parameters And Make Safe
 $params = array('mode' => 'mode', 'sort' => 'sort', 'start' => 'start', 'order' => 'order');
 while( list($var, $param) = @each($params) )
 {
-	if ( !empty($HTTP_POST_VARS[$param]) || !empty($HTTP_GET_VARS[$param]) )
-	{
-		$$var = ( !empty($HTTP_POST_VARS[$param]) ) ? str_replace("\'", "''", trim(htmlspecialchars($HTTP_POST_VARS[$param]))) : str_replace("\'", "''", trim(htmlspecialchars($HTTP_GET_VARS[$param])));
-	}
-	else
-	{
-		$$var = '';
-	}
+	$$var = request_var($param, '');
 }
 
 //Get All Non-String Parameters
 $params = array('cid' => 'CID', 'mid' => 'MID', 'rrid' => 'RRID', 'qmid' => 'QMID', 'ins_id' => 'INS_ID', 'eid' => 'EID', 'image_id' => 'image_id', 'comment_id' => 'comment_id', 'bus_id' => 'BUS_ID');
 while( list($var, $param) = @each($params) )
 {
-	if ( !empty($HTTP_POST_VARS[$param]) || !empty($HTTP_GET_VARS[$param]) )
-	{
-		$$var = (!empty($HTTP_POST_VARS[$param])) ? intval($HTTP_POST_VARS[$param]) : intval($HTTP_GET_VARS[$param]);
-	}
-	else
-	{
-		$$var = '';
-	}
+	$$var = request_var($param, '');
 }
 
 //Decide What Mode The User Is Doing
@@ -101,9 +87,9 @@ switch( $mode )
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'javascript' => 'garage_vehicle_select_javascript.tpl',
-			'body'   => 'garage_vehicle.tpl')
+			'header' => 'garage_header.html',
+			'javascript' => 'garage_vehicle_select_javascript.html',
+			'body'   => 'garage_vehicle.html')
 		);
 
 		//Count Vehicles User Already Has
@@ -178,7 +164,7 @@ switch( $mode )
 	case 'insert_vehicle':
 
 		//User Is Annoymous...So Not Allowed To Create A Vehicle
-		if ( $userdata['user_id'] == ANONYMOUS )
+		if ( $user->data['user_id'] == ANONYMOUS )
 		{
 			redirect(append_sid("garage.$phpEx?mode=error&EID=2", true));
 		}
@@ -226,11 +212,11 @@ switch( $mode )
 		if( $garage_image->image_attached() )
 		{
 			//Get All Users Images So We Can Workout Current Quota Usage
-			$user_upload_image_data = $garage_image->select_user_upload_images($userdata['user_id']);
-			$user_remote_image_data = $garage_image->select_user_remote_images($userdata['user_id']);
+			$user_upload_image_data = $garage_image->select_user_upload_images($user->data['user_id']);
+			$user_remote_image_data = $garage_image->select_user_remote_images($user->data['user_id']);
 
 			//Check For Remote & Local Image Quotas
-			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('vehicle', $cid);
@@ -240,7 +226,7 @@ switch( $mode )
 				$garage->update_single_field(GARAGE_TABLE, 'image_id', $image_id, 'id', $cid);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
-			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
 			{
 				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true));
 			}
@@ -254,7 +240,7 @@ switch( $mode )
 	case 'edit_vehicle':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if (!$userdata['session_logged_in'])
+		if (!$user->data['session_logged_in'])
 		{
 			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=edit_vehicle&CID=$cid", true));
 		}
@@ -263,9 +249,9 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'javascript' => 'garage_vehicle_select_javascript.tpl',
-			'body'   => 'garage_vehicle.tpl')
+			'header' => 'garage_header.html',
+			'javascript' => 'garage_vehicle_select_javascript.html',
+			'body'   => 'garage_vehicle.html')
 		);
 
 		//Pull Required Vehicle Data From DB
@@ -321,7 +307,7 @@ switch( $mode )
 	case 'update_vehicle':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if (!$userdata['session_logged_in'])
+		if (!$user->data['session_logged_in'])
 		{
 			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=edit_vehicle&CID=$cid", true));
 		}
@@ -368,7 +354,7 @@ switch( $mode )
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if (!$userdata['session_logged_in'])
+		if (!$user->data['session_logged_in'])
 		{
 			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=add_modification&CID=$cid", true));
 		}
@@ -378,8 +364,8 @@ switch( $mode )
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body'   => 'garage_modification.tpl')
+			'header' => 'garage_header.html',
+			'body'   => 'garage_modification.html')
 		);
 
 		//Build HTML Components
@@ -429,7 +415,7 @@ switch( $mode )
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if (!$userdata['session_logged_in'])
+		if (!$user->data['session_logged_in'])
 		{
 			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=add_modification&CID=$cid", true));
 		}
@@ -458,8 +444,8 @@ switch( $mode )
 		if ( $garage_image->image_attached() )
 		{
 			//Get All Users Images So We Can Workout Current Quota Usage
-			$user_upload_image_data = $garage_image->select_user_upload_images($userdata['user_id']);
-			$user_remote_image_data = $garage_image->select_user_remote_images($userdata['user_id']);
+			$user_upload_image_data = $garage_image->select_user_upload_images($user->data['user_id']);
+			$user_remote_image_data = $garage_image->select_user_remote_images($user->data['user_id']);
 
 			//Check For Remote & Local Image Quotas
 			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
@@ -492,8 +478,8 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body'   => 'garage_modification.tpl')
+			'header' => 'garage_header.html',
+			'body'   => 'garage_modification.html')
 		);
 		
 		//Pull Required Modification Data From DB
@@ -643,8 +629,8 @@ switch( $mode )
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body'   => 'garage_quartermile.tpl')
+			'header' => 'garage_header.html',
+			'body'   => 'garage_quartermile.html')
 		);
 
 		//Pre Build All Side Menus
@@ -759,8 +745,8 @@ switch( $mode )
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body'   => 'garage_quartermile.tpl')
+			'header' => 'garage_header.html',
+			'body'   => 'garage_quartermile.html')
 		);
 
 		//Count Dynoruns For Vehicle
@@ -925,8 +911,8 @@ switch( $mode )
 		
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body'   => 'garage_rollingroad.tpl')
+			'header' => 'garage_header.html',
+			'body'   => 'garage_rollingroad.html')
 		);
 
 		//Build Required HTML Components Like Drop Down Boxes.....
@@ -1042,8 +1028,8 @@ switch( $mode )
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body'   => 'garage_rollingroad.tpl')
+			'header' => 'garage_header.html',
+			'body'   => 'garage_rollingroad.html')
 		);
 
 		//Pull Required Dynorun Data From DB
@@ -1190,8 +1176,8 @@ switch( $mode )
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body'   => 'garage_insurance.tpl')
+			'header' => 'garage_header.html',
+			'body'   => 'garage_insurance.html')
 		);
 
 		//Build All Required HTML Components
@@ -1266,8 +1252,8 @@ switch( $mode )
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body'   => 'garage_insurance.tpl')
+			'header' => 'garage_header.html',
+			'body'   => 'garage_insurance.html')
 		);
 
 		//Pull Required Insurance Premium Data From DB
@@ -1352,8 +1338,8 @@ switch( $mode )
 		$sort_order = (empty($order)) ? 'DESC' : $order;
 
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body'   => 'garage_browse.tpl')
+			'header' => 'garage_header.html',
+			'body'   => 'garage_browse.html')
 		);
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
@@ -1492,8 +1478,8 @@ switch( $mode )
 		);
 
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body' => 'garage_browse_insurance.tpl')
+			'header' => 'garage_header.html',
+			'body' => 'garage_browse_insurance.html')
 		);
 
 		//Pre Build All Side Menus
@@ -1559,9 +1545,9 @@ switch( $mode )
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'javascript' => 'garage_vehicle_select_javascript.tpl',
-			'body'   => 'garage_search.tpl')
+			'header' => 'garage_header.html',
+			'javascript' => 'garage_vehicle_select_javascript.html',
+			'body'   => 'garage_search.html')
 		);
 
 		//Build All Required Javascript And Arrays
@@ -1607,8 +1593,8 @@ switch( $mode )
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body'   => 'garage_view_vehicle.tpl')
+			'header' => 'garage_header.html',
+			'body'   => 'garage_view_vehicle.html')
 		);
 
 		//Display Vehicle With Owner Set to 'NO'
@@ -1632,8 +1618,8 @@ switch( $mode )
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body'   => 'garage_view_modification.tpl')
+			'header' => 'garage_header.html',
+			'body'   => 'garage_view_modification.html')
 		);
 
 		//Pull Required Modification Data From DB
@@ -1721,8 +1707,8 @@ switch( $mode )
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body'   => 'garage_view_vehicle.tpl')
+			'header' => 'garage_header.html',
+			'body'   => 'garage_view_vehicle.html')
 		);
 
 		//Display Vehicle With Owner Set to 'YES'
@@ -1745,8 +1731,8 @@ switch( $mode )
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body'   => 'garage_view_vehicle.tpl')
+			'header' => 'garage_header.html',
+			'body'   => 'garage_view_vehicle.html')
 		);
 
 		//Display Vehicle With Owner Set to 'YES'..Since You Are Moderating You Need To See All Owner Options
@@ -1882,8 +1868,8 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 		
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body'   => 'garage_manage_vehicle_gallery.tpl')
+			'header' => 'garage_header.html',
+			'body'   => 'garage_manage_vehicle_gallery.html')
 		);
 
 		//Pre Build All Side Menus
@@ -1981,8 +1967,8 @@ switch( $mode )
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body'   => 'garage_view_insurance_business.tpl')
+			'header' => 'garage_header.html',
+			'body'   => 'garage_view_insurance_business.html')
 		);
 
 		//Get All Data Posted And Make It Safe To Use
@@ -2109,8 +2095,8 @@ switch( $mode )
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body' => 'garage_view_garage_business.tpl')
+			'header' => 'garage_header.html',
+			'body' => 'garage_view_garage_business.html')
 		);
 
 		//Get All Data Posted And Make It Safe To Use
@@ -2251,8 +2237,8 @@ switch( $mode )
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body' => 'garage_view_shop_business.tpl')
+			'header' => 'garage_header.html',
+			'body' => 'garage_view_shop_business.html')
 		);
 
 
@@ -2402,8 +2388,8 @@ switch( $mode )
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body'   => 'garage_user_submit.tpl')
+			'header' => 'garage_header.html',
+			'body'   => 'garage_user_submit.html')
 		);
 
 		//Get All Data Posted And Make It Safe To Use
@@ -2491,8 +2477,8 @@ switch( $mode )
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body'   => 'garage_user_submit.tpl')
+			'header' => 'garage_header.html',
+			'body'   => 'garage_user_submit.html')
 		);
 
 		//Pull Required Business Data From DB
@@ -2589,8 +2575,8 @@ switch( $mode )
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body'   => 'garage_user_submit_make.tpl')
+			'header' => 'garage_header.html',
+			'body'   => 'garage_user_submit_make.html')
 		);
 
 		$template->assign_vars(array(
@@ -2659,8 +2645,8 @@ switch( $mode )
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body'   => 'garage_user_submit_model.tpl')
+			'header' => 'garage_header.html',
+			'body'   => 'garage_user_submit_model.html')
 		);
 
 		//Get All Data Posted And Make It Safe To Use
@@ -2732,8 +2718,8 @@ switch( $mode )
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 
 		$template->set_filenames(array(
-			'javascript' => 'garage_vehicle_select_javascript.tpl',
-			'body' => 'garage_quartermile_table.tpl')
+			'javascript' => 'garage_vehicle_select_javascript.html',
+			'body' => 'garage_quartermile_table.html')
 		);
 
 		//Build Required HTML, Javascript And Arrays
@@ -2799,8 +2785,8 @@ switch( $mode )
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body'   => 'garage_pending.tpl')
+			'header' => 'garage_header.html',
+			'body'   => 'garage_pending.html')
 		);
 
 		//Build The Quartermile Table With Only Pending Times And Get Returned Count
@@ -2933,8 +2919,8 @@ switch( $mode )
 			include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 
 			$template->set_filenames(array(
-				'header' => 'garage_header.tpl',
-				'body'   => 'garage_reassign_business.tpl')
+				'header' => 'garage_header.html',
+				'body'   => 'garage_reassign_business.html')
 			);
 
 			//Build Dropdown Box Of Business's To Reassign It To
@@ -3052,8 +3038,8 @@ switch( $mode )
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 
 		$template->set_filenames(array(
-			'javascript' => 'garage_vehicle_select_javascript.tpl',
-			'body' => 'garage_rollingroad_table.tpl')
+			'javascript' => 'garage_vehicle_select_javascript.html',
+			'body' => 'garage_rollingroad_table.html')
 		);
 
 		//Build All Required HTML, Javascript And Arrays
@@ -3102,8 +3088,8 @@ switch( $mode )
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body'   => 'garage_view_guestbook.tpl')
+			'header' => 'garage_header.html',
+			'body'   => 'garage_view_guestbook.html')
 		);
 
 		//Get Vehicle Data
@@ -3356,8 +3342,8 @@ switch( $mode )
 		//Produce The Page
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body'   => 'garage_edit_comment.tpl')
+			'header' => 'garage_header.html',
+			'body'   => 'garage_edit_comment.html')
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
@@ -3414,8 +3400,8 @@ switch( $mode )
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 
 		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body'   => 'garage_error.tpl')
+			'header' => 'garage_header.html',
+			'body'   => 'garage_error.html')
 		);
 
 		$template->assign_vars(array(
@@ -3480,12 +3466,10 @@ switch( $mode )
 		//Let Check The User Is Allowed Perform This Action
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		page_header($page_title);
 
-		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body'   => 'garage.tpl')
-		);
+		//Display Page...In Order Header->Menu->Body->Footer
+		$garage_template->sidemenu();
 
 		//Display If Needed Featured Vehicle
 		$garage_vehicle->show_featuredvehicle();
@@ -3505,27 +3489,27 @@ switch( $mode )
 		$garage_vehicle->show_toprated();
 
 		$template->assign_vars(array(
-			'L_OWNER' 		=> $lang['Owner'],
-			'L_FEATURED_VEHICLE' 	=> $lang['Featured_Vehicle'],
 			'TOTAL_VEHICLES' 	=> $garage_vehicle->count_total_vehicles(),
 			'TOTAL_VIEWS' 		=> $garage->count_total_views(),
 			'TOTAL_MODIFICATIONS' 	=> $garage_modification->count_total_modifications(),
 			'TOTAL_COMMENTS'  	=> $garage_guestbook->count_total_comments())
 		);
 
-		//Display Page...In Order Header->Menu->Body->Footer
-		$template->pparse('header');
-		$garage_template->sidemenu();
-		$template->pparse('body');
+		$template->set_filenames(array(
+			'header' => 'garage_header.html',
+			'menu' => 'garage_menu.html',
+			'body' => 'garage.html')
+		);
 
 		break;
 }
 
-$template->set_filenames(array(
-	'garage_footer' => 'garage_footer.tpl')
-);
-$template->pparse('garage_footer');
+$garage_template->version_notice();
 
-include($phpbb_root_path . 'includes/page_tail.' . $phpEx);
+$template->set_filenames(array(
+	'garage_footer' => 'garage_footer.html')
+);
+
+page_footer();
 
 ?>

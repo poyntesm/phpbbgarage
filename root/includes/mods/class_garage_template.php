@@ -110,7 +110,7 @@ class garage_template
 		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $images, $board_config, $garage;
 	
 		$template->set_filenames(array(
-			'menu' => 'garage_menu.tpl')
+			'menu' => 'garage_menu.html')
 		);
 
 		$user_id = $userdata['user_id'];
@@ -274,7 +274,7 @@ class garage_template
 
 		if (!$garage->check_permissions('BROWSE', NULL))
 		{
-			$template->pparse('menu');
+			//$template->display('menu');
 			return ;
 		}
 
@@ -309,7 +309,7 @@ class garage_template
 			$db->sql_freeresult($result);
 		}
 
-		$template->pparse('menu');
+		//$template->display('menu');
 		return ;
 	}
 

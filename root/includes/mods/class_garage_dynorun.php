@@ -154,7 +154,7 @@ class garage_dynorun
 		);
 	
 	        // What's the count? Default to 10
-	        $limit = $garage_config['topdyno_limit'] ? $garage_config['topdyno_limit'] : 10;
+	        $limit = $garage_config['topdynorun_limit'] ? $garage_config['topdynorun_limit'] : 10;
 	
 		$sql = "SELECT  rr.garage_id, MAX(rr.bhp) as bhp
 			FROM " . GARAGE_ROLLINGROAD_TABLE . " rr

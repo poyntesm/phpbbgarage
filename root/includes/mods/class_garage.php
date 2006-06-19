@@ -39,7 +39,7 @@ while( $row = $db->sql_fetchrow($result) )
 }
 
 //Setup Arrays Used To Build Drop Down Selection Boxes
-$currency_types = array('GBP', 'USD', 'EUR', 'CAD', 'YEN');
+/*$currency_types = array('GBP', 'USD', 'EUR', 'CAD', 'YEN');
 $mileage_unit_types = array($lang['Miles'], $lang['Kilometers']);
 $boost_types = array('PSI', 'BAR');
 $power_types = array($lang['Wheel'], $lang['Hub'], $lang['Flywheel']);
@@ -47,7 +47,7 @@ $cover_types = array($lang['Third_Party'], $lang['Third_Party_Fire_Theft'], $lan
 $rating_types = array( '10', '9', '8', '7', '6', '5', '4', '3', '2', '1');
 $rating_text = array( '10', '9', '8', '7', '6', '5', '4', '3', '2', '1');
 $nitrous_types = array('0', '25', '50', '75', '100');
-$nitrous_types_text = array($lang['No_Nitrous'], $lang['25_BHP_Shot'], $lang['50_BHP_Shot'], $lang['75_BHP_Shot'], $lang['100_BHP_Shot']);
+$nitrous_types_text = array($lang['No_Nitrous'], $lang['25_BHP_Shot'], $lang['50_BHP_Shot'], $lang['75_BHP_Shot'], $lang['100_BHP_Shot']);*/
 
 class garage 
 {
@@ -249,13 +249,13 @@ class garage
 	/*========================================================================*/
 	function get_group_membership($u_id)
 	{
-		global $db ;
+		global $db;
 
-		$sql = "SELECT ug.group_id, g.group_name
-	             	FROM " . USER_GROUP_TABLE . " ug, " . GROUPS_TABLE ." g
-                	WHERE ug.user_id = $u_id
-				AND ug.group_id = g.group_id AND g.group_single_user <> " . TRUE ."
-			ORDER BY g.group_name ASC";
+
+		$sql = 'SELECT ug.*, u.username, u.user_email
+			FROM ' . USER_GROUP_TABLE . ' ug, ' . USERS_TABLE . ' u
+			WHERE ug.user_id = u.user_id 
+				AND ug.user_id = ' . $u_id;
 
        		if( !($result = $db->sql_query($sql)) )
        		{
@@ -277,33 +277,33 @@ class garage
 	/*========================================================================*/
 	function check_permissions($required_permission, $redirect_url)
 	{
-		global $userdata, $template, $db, $garage_config;
+		global $user, $template, $db, $garage_config;
 	
 		$required_permission = strtolower($required_permission);
 	
 		//Right Lets Start And Work Out Your User Level
-		if ( $userdata['user_id'] == ANONYMOUS )
+		if ( $user->data['user_id'] == ANONYMOUS )
 		{
 			$your_level = 'GUEST';
 		}
-		else if ( $userdata['user_level'] == ADMIN )
-		{
-			$your_level = 'ADMIN';
-		}
-		else if ( $userdata['user_level'] == MOD )
-		{
-			$your_level = 'MOD';
-		}
+		//else if ( $user->data['user_level'] == ADMIN )
+		//{
+	//		$your_level = 'ADMIN';
+	//	}
+	//	else if ( $user->data['user_level'] == MOD )
+	//	{
+	//		$your_level = 'MOD';
+	//	}
 		else
 		{
 			$your_level = 'USER';
 		}		
 
 		//Get All Group Memberships
-		$groupdata = $this->get_group_membership($userdata['user_id']);
+		$groupdata = $this->get_group_membership($user->data['user_id']);
 
 		//Since We Now Allow A DENY We Need To Check That First
-		if ( !empty($garage_config['private_deny_perms']) AND $userdata['user_level'] == ADMIN )
+		if ( !empty($garage_config['private_deny_perms']) AND $user->data['user_level'] == ADMIN )
 		{
 			//Lets Find Out Which Groups Are Denied Access
 			$sql = "SELECT config_value AS private_groups
