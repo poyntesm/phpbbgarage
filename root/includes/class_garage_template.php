@@ -272,7 +272,7 @@ class garage_template
 			$db->sql_freeresult($result);
 		}
 
-		if (!$garage->check_permissions('BROWSE',''))
+		if (!$garage->check_permissions('BROWSE', NULL))
 		{
 			$template->pparse('menu');
 			return ;
@@ -282,8 +282,6 @@ class garage_template
 		{
 			$template->assign_block_vars('lastupdatedvehiclesmain_on', array());
 
-			$limit = $garage_config['lastupdatedvehiclesmain_limit'];
-
 			$sql = "SELECT g.id, g.made_year, g.member_id, g.date_updated, user.username, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
        				FROM " . GARAGE_TABLE . " AS g 
 	        			LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
@@ -291,7 +289,7 @@ class garage_template
 					LEFT JOIN " . USERS_TABLE . " AS user ON g.member_id = user.user_id 
 				WHERE makes.pending = 0 AND models.pending = 0 
 		        	ORDER BY g.date_updated DESC
-				LIMIT 0, $limit";
+				LIMIT 0, " . $garage_config['lastupdatedvehiclesmain_limit'];
 
 			if( !($result = $db->sql_query($sql)) )
 			{
@@ -363,7 +361,7 @@ class garage_template
 	// Builds The HTML For A Selecting A Garage
 	// Usage: garage_install_dropdown('business id', 'business name');
 	/*========================================================================*/
-	function garage_install_dropdown($selected, $selected_name)
+	function garage_install_dropdown($selected = NULL, $selected_name = NULL)
 	{
 		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
@@ -446,7 +444,7 @@ class garage_template
 	// Builds The HTML For Selecting Any Business
 	// Usage: business_dropdown('business id', 'business name');
 	/*========================================================================*/
-	function business_dropdown($selected,$selected_name)
+	function business_dropdown($selected = NULL, $selected_name = NULL)
 	{
 		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
@@ -491,7 +489,7 @@ class garage_template
 	// Builds The HTML For Selecting Insurance Business
 	// Usage: insurance_dropdown('<business id', 'business name');
 	/*========================================================================*/
-	function insurance_dropdown($selected,$selected_name)
+	function insurance_dropdown($selected = NULL, $selected_name = NULL)
 	{
 		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
@@ -537,7 +535,7 @@ class garage_template
 	// Builds The HTML For Selecting A Shop
 	// Usage: shop_dropdown('business id', 'business name');
 	/*========================================================================*/
-	function shop_dropdown($selected,$selected_name)
+	function shop_dropdown($selected = NULL, $selected_name = NULL)
 	{
 		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
@@ -582,7 +580,7 @@ class garage_template
 	// Builds The HTML For Selecting A Dynorun Entry
 	// Usage: dynorun_dropdown('rollingroad id', 'bhp @ bhp_type', 'vehicle id');
 	/*========================================================================*/
-	function dynorun_dropdown($selected,$selected_name,$cid)
+	function dynorun_dropdown($selected, $selected_name, $cid)
 	{
 		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
@@ -627,7 +625,7 @@ class garage_template
 	// Builds The HTML For Selecting Category Type Of Modification
 	// Usage: category_dropdown('category id');
 	/*========================================================================*/
-	function category_dropdown($selected)
+	function category_dropdown($selected = NULL)
 	{
 		global $template, $db;
 
@@ -658,9 +656,9 @@ class garage_template
 	
 	/*========================================================================*/
 	// Builds The HTML For Selection Box
-	// Usage: selection_dropdown('select name', 'options text', 'options values', 'selected option');
+	// Usage: dropdown('select name', 'options text', 'options values', 'selected option');
 	/*========================================================================*/
-	function selection_dropdown($select_name,$select_text,$select_types,$selected_option)
+	function dropdown($select_name, $select_text, $select_types, $selected_option = NULL)
 	{
 		global $template, $lang;
 	

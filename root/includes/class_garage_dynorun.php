@@ -60,8 +60,8 @@ class garage_dynorun
 	{
 		global $db, $rrid, $cid;
 
-		$sql = "UPDATE ". GARAGE_ROLLINGROAD_TABLE ."
-			SET dynocenter = '".$data['dynocenter']."', bhp = '".$data['bhp']."', bhp_unit = '".$data['bhp_unit']."', torque = '".$data['torque']."', torque_unit = '".$data['torque_unit']."', boost = '".$data['boost']."', boost_unit = '".$data['boost_unit']."', nitrous = '".$data['nitrous']."', peakpoint = '".$data['peakpoint']."', pending = '".$data['pending']."'
+		$sql = "UPDATE " . GARAGE_ROLLINGROAD_TABLE . "
+			SET dynocenter = '" . $data['dynocenter'] . "', bhp = '" . $data['bhp'] . "', bhp_unit = '" . $data['bhp_unit'] . "', torque = '" . $data['torque'] . "', torque_unit = '" . $data['torque_unit'] . "', boost = '" . $data['boost'] . "', boost_unit = '" . $data['boost_unit'] . "', nitrous = '" . $data['nitrous'] . "', peakpoint = '" . $data['peakpoint'] . "', pending = '" . $data['pending'] . "'
 			WHERE id = '$rrid' and garage_id = '$cid'";
 
 		if(!$result = $db->sql_query($sql))
@@ -157,11 +157,11 @@ class garage_dynorun
 	        $limit = $garage_config['topdyno_limit'] ? $garage_config['topdyno_limit'] : 10;
 	
 		$sql = "SELECT  rr.garage_id, MAX(rr.bhp) as bhp
-			FROM " . GARAGE_ROLLINGROAD_TABLE ." AS rr
-				LEFT JOIN " . GARAGE_TABLE ." AS g ON rr.garage_id = g.id
-				LEFT JOIN " . USERS_TABLE ." AS user ON g.member_id = user.user_id
-			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-        			LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
+			FROM " . GARAGE_ROLLINGROAD_TABLE . " rr
+				LEFT JOIN " . GARAGE_TABLE . " g ON rr.garage_id = g.id
+				LEFT JOIN " . USERS_TABLE . " user ON g.member_id = user.user_id
+			        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id
+        			LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
 			WHERE rr.pending = 0
 				AND makes.pending = 0 AND models.pending = 0 
 			GROUP BY rr.garage_id
@@ -176,14 +176,12 @@ class garage_dynorun
 		$i = 0;
 		while ($row = $db->sql_fetchrow($first_result) )
 		{
-				$sql = "SELECT g.id, g.made_year, g.member_id, makes.make, models.model, user.username, rr.dynocenter, round(rr.bhp,0) as bhp, 
-					rr.bhp_unit, round(rr.torque,0) as torque, rr.torque_unit, rr.boost, rr.boost_unit, rr.nitrous, round(rr.peakpoint,0) as peakpoint, 
-					rr.id as rr_id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, rr.nitrous
-				FROM " . GARAGE_ROLLINGROAD_TABLE ." AS rr
-					LEFT JOIN " . GARAGE_TABLE ." AS g ON rr.garage_id = g.id
-					LEFT JOIN " . USERS_TABLE ." AS user ON g.member_id = user.user_id
-				        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-        				LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
+				$sql = "SELECT g.id, g.made_year, g.member_id, makes.make, models.model, user.username, rr.dynocenter, round(rr.bhp,0) as bhp, rr.bhp_unit, round(rr.torque,0) as torque, rr.torque_unit, rr.boost, rr.boost_unit, rr.nitrous, round(rr.peakpoint,0) as peakpoint, rr.id as rr_id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, rr.nitrous
+				FROM " . GARAGE_ROLLINGROAD_TABLE . " rr
+					LEFT JOIN " . GARAGE_TABLE . " g ON rr.garage_id = g.id
+					LEFT JOIN " . USERS_TABLE . " user ON g.member_id = user.user_id
+				        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id
+        				LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
 				WHERE rr.garage_id = " . $row['garage_id'] . " AND rr.bhp = " . $row['bhp'];	
 	 		if(!$result = $db->sql_query($sql))
 			{
@@ -216,11 +214,11 @@ class garage_dynorun
 		global $db;
 
 	   	$sql = "SELECT rr.*, images.* , g.made_year, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
-                    	FROM " . GARAGE_ROLLINGROAD_TABLE . " AS rr
-		          	LEFT JOIN " . GARAGE_TABLE . " AS g ON rr.garage_id = g.id
-		          	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-                        	LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-        			LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = rr.image_id 
+                    	FROM " . GARAGE_ROLLINGROAD_TABLE . " rr
+		          	LEFT JOIN " . GARAGE_TABLE . " g ON rr.garage_id = g.id
+		          	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id
+                        	LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
+        			LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON images.attach_id = rr.image_id 
                     	WHERE rr.id = $rrid";
 
 		if ( !($result = $db->sql_query($sql)) )
@@ -244,8 +242,8 @@ class garage_dynorun
 
 	       	$sql = "SELECT rr.*,images.attach_id, images.attach_hits, images.attach_ext, 
                         images.attach_file, images.attach_thumb_location, images.attach_is_image, images.attach_location
-         		FROM " . GARAGE_ROLLINGROAD_TABLE . " as rr
-                        	LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = rr.image_id
+         		FROM " . GARAGE_ROLLINGROAD_TABLE . " rr
+                        	LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON images.attach_id = rr.image_id
 			WHERE rr.garage_id = $cid";
 
 		if( !($result = $db->sql_query($sql)) )
@@ -326,11 +324,11 @@ class garage_dynorun
 
 		//First Query To Return Top Time For All Or For Selected Filter...
 		$sql = "SELECT  rr.garage_id, MAX(rr.bhp) as bhp
-			FROM " . GARAGE_ROLLINGROAD_TABLE ." AS rr
-				LEFT JOIN " . GARAGE_TABLE ." AS g ON rr.garage_id = g.id
-				LEFT JOIN " . USERS_TABLE ." AS user ON g.member_id = user.user_id
-			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-        			LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
+			FROM " . GARAGE_ROLLINGROAD_TABLE ." rr
+				LEFT JOIN " . GARAGE_TABLE ." g ON rr.garage_id = g.id
+				LEFT JOIN " . USERS_TABLE ." user ON g.member_id = user.user_id
+			        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id
+        			LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
 			WHERE rr.pending = $pending 
 				AND makes.pending = 0 AND models.pending = 0 
 				$addtional_where 
@@ -355,14 +353,13 @@ class garage_dynorun
 		while ($row = $db->sql_fetchrow($first_result) )
 		{
 			//Second Query To Return All Other Data For Top Quartermile Run
-			$sql = "SELECT g.id, g.made_year, g.member_id, makes.make, models.model, user.username,
-				rr.dynocenter, rr.bhp, rr.bhp_unit, rr.torque, rr.torque_unit, rr.boost, rr.boost_unit, rr.nitrous, round(rr.peakpoint,0) as peakpoint, images.attach_id as image_id, rr.id as rr_id
-				FROM " . GARAGE_ROLLINGROAD_TABLE ." AS rr
-					LEFT JOIN " . GARAGE_TABLE ." AS g ON rr.garage_id = g.id
-					LEFT JOIN " . USERS_TABLE ." AS user ON g.member_id = user.user_id
-				        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-        				LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-		                	LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = rr.image_id
+			$sql = "SELECT g.id, g.made_year, g.member_id, makes.make, models.model, user.username,	rr.dynocenter, rr.bhp, rr.bhp_unit, rr.torque, rr.torque_unit, rr.boost, rr.boost_unit, rr.nitrous, round(rr.peakpoint,0) as peakpoint, images.attach_id as image_id, rr.id as rr_id
+				FROM " . GARAGE_ROLLINGROAD_TABLE ." rr
+					LEFT JOIN " . GARAGE_TABLE ." g ON rr.garage_id = g.id
+					LEFT JOIN " . USERS_TABLE ." user ON g.member_id = user.user_id
+				        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id
+        				LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
+		                	LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON images.attach_id = rr.image_id
 				WHERE rr.garage_id = " . $row['garage_id'] . " AND rr.bhp = " . $row['bhp'];
 
 			if( !($result = $db->sql_query($sql)) )
@@ -384,14 +381,14 @@ class garage_dynorun
 			$row_class = ( !($i % 2) ) ? $theme['td_class1'] : $theme['td_class2'];
 			if ($full_row['image_id'])
 			{
-				$data['image_link'] ='<a href="garage.'. $phpEx .'?mode=view_gallery_item&amp;image_id='. $full_row['image_id'] .'" target="_blank"><img src="' . $images['slip_image_attached'] . '" alt="'.$lang['Slip_Image_Attached'].'" title="'.$lang['Slip_Image_Attached'].'" border="0" /></a>';
+				$data['image_link'] ='<a href="garage.' . $phpEx . '?mode=view_gallery_item&amp;image_id='. $full_row['image_id'] . '" target="_blank"><img src="' . $images['slip_image_attached'] . '" alt="' . $lang['Slip_Image_Attached'] . '" title="' . $lang['Slip_Image_Attached'] . '" border="0" /></a>';
 			}
 			else
 			{
 				$data['image_link'] ='';
 			}
 			
-            		$temp_url = append_sid("garage.$phpEx?mode=edit_rollingroad&amp;RRID=".$full_row['rr_id']."&amp;CID=".$full_row['id']."&amp;PENDING=YES");
+            		$temp_url = append_sid("garage.$phpEx?mode=edit_rollingroad&amp;RRID=" . $full_row['rr_id'] . "&amp;CID=" . $full_row['id'] . "&amp;PENDING=YES");
 	            	$edit_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="'.$lang['Edit'].'" title="'.$lang['Edit'].'" border="0" /></a>';
 
 
@@ -425,10 +422,10 @@ class garage_dynorun
 
 		$sql = "SELECT count(DISTINCT rr.garage_id) AS total
 				FROM " . GARAGE_ROLLINGROAD_TABLE . " rr
-				LEFT JOIN " . GARAGE_TABLE ." AS g ON rr.garage_id = g.id
-				LEFT JOIN " . USERS_TABLE ." AS user ON g.member_id = user.user_id
-			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-        			LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
+				LEFT JOIN " . GARAGE_TABLE ." g ON rr.garage_id = g.id
+				LEFT JOIN " . USERS_TABLE ." user ON g.member_id = user.user_id
+			        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id
+        			LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
 			WHERE rr.pending = $pending 
 				AND ( makes.pending = 0 AND models.pending = 0 )
 				$addtional_where";
@@ -441,7 +438,7 @@ class garage_dynorun
 		$count = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		$pagination = generate_pagination("garage.$phpEx?mode=$mode&amp;order=$sort_order", $count['total'], $garage_config['cars_per_page'], $start). '&nbsp;';
+		$pagination = generate_pagination("garage.$phpEx?mode=$mode&amp;order=$sort_order", $count['total'], $garage_config['cars_per_page'], $start);
 		
 		$template->assign_vars(array(
 			'S_MODE_SELECT' => $select_sort_mode,

@@ -36,10 +36,10 @@ class garage_business
 	{
 		global $db;
 
-		$sql = "INSERT INTO ". GARAGE_BUSINESS_TABLE ." 
+		$sql = "INSERT INTO " . GARAGE_BUSINESS_TABLE . " 
 			(title, address, telephone, fax, website, email, opening_hours, insurance, garage, retail_shop, web_shop, pending)
 			VALUES 
-			('".$data['title']."', '".$data['address']."', '".$data['telephone']."', '".$data['fax']."', '".$data['website']."', '".$data['email']."', '".$data['opening_hours']."', '".$data['insurance']."', '".$data['garage']."', '".$data['retail_shop']."', '".$data['web_shop']."', '".$data['pending']."')";
+			('" . $data['title'] . "', '" . $data['address'] . "', '" . $data['telephone'] . "', '" . $data['fax'] . "', '" . $data['website'] . "', '" . $data['email'] . "', '" . $data['opening_hours'] . "', '" . $data['insurance'] . "', '" . $data['garage'] . "', '" . $data['retail_shop'] . "', '" . $data['web_shop'] . "', '" . $data['pending'] . "')";
 	
 		if(!$result = $db->sql_query($sql))
 		{
@@ -57,9 +57,9 @@ class garage_business
 	{
 		global $db;
 
-		$sql = "UPDATE ". GARAGE_BUSINESS_TABLE ." 
-			SET title = '".$data['title']."', address = '".$data['address']."', telephone = '".$data['telephone']."', fax = '".$data['fax']."', website = '".$data['website']."', email = '".$data['email']."', opening_hours = '".$data['opening_hours']."', insurance = '".$data['insurance']."', garage = '".$data['garage']."', retail_shop = '".$data['retail_shop']."', web_shop = '".$data['web_shop']."', pending = '".$data['pending']."'
-			WHERE id = '".$data['id']."'";
+		$sql = "UPDATE " . GARAGE_BUSINESS_TABLE . " 
+			SET title = '" . $data['title'] . "', address = '" . $data['address'] . "', telephone = '" . $data['telephone'] . "', fax = '" . $data['fax'] . "', website = '" . $data['website'] . "', email = '" . $data['email'] . "', opening_hours = '" . $data['opening_hours'] . "', insurance = '" . $data['insurance'] . "', garage = '" . $data['garage'] . "', retail_shop = '" . $data['retail_shop'] . "', web_shop = '" . $data['web_shop'] . "', pending = '" . $data['pending'] . "'
+			WHERE id = '" . $data['id'] . "'";
 	
 		if(!$result = $db->sql_query($sql))
 		{
@@ -122,7 +122,7 @@ class garage_business
 	// Select All Garage Business Data From DB
 	// Usage: select_all_garage_business_data('additional where', 'row start point', 'limit');
 	/*========================================================================*/
-	function select_garage_business_data($where, $start= 0, $limit = 20)
+	function select_garage_business_data($where, $start = 0, $limit = 20)
 	{
 		global $db;
 
@@ -280,7 +280,7 @@ class garage_business
 
 		if( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'Could not query users', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'Could Not Query Pending Business List', '', __LINE__, __FILE__, $sql);
 		}
 
 		$count = $db->sql_numrows($result);
@@ -294,8 +294,8 @@ class garage_business
 		$i = 1;
 		while ( $row = $db->sql_fetchrow($result) )
 		{
-            		$temp_url = append_sid("garage.$phpEx?mode=edit_business&amp;BUS_ID=".$row['id']);
-	            	$edit_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="'.$lang['Edit'].'" title="'.$lang['Edit'].'" border="0" /></a>';
+            		$temp_url = append_sid("garage.$phpEx?mode=edit_business&amp;BUS_ID=" . $row['id']);
+	            	$edit_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="' . $lang['Edit'] . '" title="' . $lang['Edit'] . '" border="0" /></a>';
 
 			//Work Out Type Of Business
 			if ( $row['insurance'] == '1' )

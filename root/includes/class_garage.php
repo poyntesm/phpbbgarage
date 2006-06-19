@@ -25,7 +25,8 @@ if (!defined('IN_PHPBB'))
 }
 
 // Build Up Garage Config...We Will Use These Values Many A Time
-$sql = "SELECT config_name, config_value FROM ". GARAGE_CONFIG_TABLE;
+$sql = "SELECT config_name, config_value 
+	FROM " . GARAGE_CONFIG_TABLE;
 
 if(!$result = $db->sql_query($sql))
 {
@@ -186,11 +187,13 @@ class garage
 	// Update A Single Field For A Single Entry
 	// Usage:  update_single_field('table name', 'set field' 'set value', 'where field', 'where value');
 	/*========================================================================*/
-	function update_single_field($table,$set_field,$set_value,$where_field,$where_value)
+	function update_single_field($table, $set_field, $set_value, $where_field, $where_value)
 	{
 		global $db;
 
-		$sql = "UPDATE $table SET $set_field = '$set_value' WHERE $where_field = '$where_value'";
+		$sql = "UPDATE $table 
+			SET $set_field = '$set_value' 
+			WHERE $where_field = '$where_value'";
 
 		if( !$result = $db->sql_query($sql) )
 		{
@@ -208,7 +211,9 @@ class garage
 	{
 		global $db;
 
-		$sql = "UPDATE $table SET $set_field = $set_field + 1 WHERE $where_field = $where_value";
+		$sql = "UPDATE $table 
+			SET $set_field = $set_field + 1 
+			WHERE $where_field = $where_value";
 
 		if ( !$db->sql_query($sql) )
 		{
@@ -222,11 +227,13 @@ class garage
 	// Delete Row/Rows From DB
 	// Usage:  build_selection_box('table name', 'where field', 'where value');
 	/*========================================================================*/
-	function delete_rows($table,$where_field,$where_value)
+	function delete_rows($table, $where_field, $where_value)
 	{
 		global $db;
 
-		$sql = "DELETE FROM $table WHERE $where_field = '$where_value'";
+		$sql = "DELETE 
+			FROM $table 
+			WHERE $where_field = '$where_value'";
 
 		if( !$result = $db->sql_query($sql) )
 		{
@@ -245,9 +252,9 @@ class garage
 		global $db ;
 
 		$sql = "SELECT ug.group_id, g.group_name
-	             	FROM " . USER_GROUP_TABLE . " AS ug, " . GROUPS_TABLE ." g
+	             	FROM " . USER_GROUP_TABLE . " ug, " . GROUPS_TABLE ." g
                 	WHERE ug.user_id = $u_id
-				and ug.group_id = g.group_id and g.group_single_user <> " . TRUE ."
+				AND ug.group_id = g.group_id AND g.group_single_user <> " . TRUE ."
 			ORDER BY g.group_name ASC";
 
        		if( !($result = $db->sql_query($sql)) )
@@ -299,7 +306,7 @@ class garage
 		if ( !empty($garage_config['private_deny_perms']) AND $userdata['user_level'] == ADMIN )
 		{
 			//Lets Find Out Which Groups Are Denied Access
-			$sql = "SELECT config_value as private_groups
+			$sql = "SELECT config_value AS private_groups
 				FROM ". GARAGE_CONFIG_TABLE ."
 				WHERE config_name = 'private_deny_perms'";
 
@@ -331,24 +338,24 @@ class garage
 		}
 
 		//Right You Were Not Denied So Lets Check First For Global Permissions
-		if ($garage_config[$required_permission."_perms"] == '*')
+		if ($garage_config[$required_permission . "_perms"] == '*')
 		{
 			//Looks Like Everyone Is Allowed Do This...So On Your Way
 			return (TRUE);
 		}	
 		//Since Not Globally Allowed Lets See If Your Level Is Allowed For The Permission You Are Requesting
-		else if (preg_match( "/$your_level/", $garage_config[$required_permission."_perms"]))
+		else if (preg_match( "/$your_level/", $garage_config[$required_permission . "_perms"]))
 		{
 			//Good News Your User Level Is Allowed
 			return (TRUE);
 		}
 		//Right We Need To Resort And See If Private Is Set For This Required Permission And See If You Qualify
-		else if (preg_match( "/PRIVATE/", $garage_config[$required_permission."_perms"]))
+		else if (preg_match( "/PRIVATE/", $garage_config[$required_permission . "_perms"]))
 		{
 			//Lets Get All Private Groups Granted This Permission
-			$sql = "SELECT config_value as private_groups
+			$sql = "SELECT config_value AS private_groups
 				FROM ". GARAGE_CONFIG_TABLE ."
-				WHERE config_name = 'private_".$required_permission."_perms'";
+				WHERE config_name = 'private_" . $required_permission . "_perms'";
 
 			if( !$result = $db->sql_query($sql) )
 			{
@@ -492,7 +499,7 @@ class garage
 			//Build Required PM Data
 			$data['date'] = date("U");
 			$data['pm_subject'] = $lang['Pending_Items'];
-			$data['link'] = '<a href="garage.'.$phpEx.'?mode=garage_pending">'.$lang['Here'].'</a>';
+			$data['link'] = '<a href="garage.' . $phpEx . '?mode=garage_pending">' . $lang['Here'] . '</a>';
 			$data['pm_text'] = (sprintf($lang['Pending_Notify_Text'],$data['link']));
 			$data['author_id'] = $userdata['user_id'];
 			$data['user_id'] = $row['user_id'];

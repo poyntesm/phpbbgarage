@@ -60,10 +60,10 @@ class garage_guestbook
 	{
 		global $cid, $db, $user_ip;
 
-		$sql = "INSERT INTO ". GARAGE_GUESTBOOKS_TABLE ."
+		$sql = "INSERT INTO " . GARAGE_GUESTBOOKS_TABLE . "
 			(garage_id, author_id, post_date, ip_address, post)
 			VALUES
-			('$cid', '".$data['author_id']."', '".$data['post_date']."', '$user_ip', '".$data['comments']."')";
+			('$cid', '" . $data['author_id'] . "', '" . $data['post_date'] . "', '$user_ip', '" . $data['comments'] . "')";
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -82,12 +82,7 @@ class garage_guestbook
 		global $db;
 
 		// Get Guestbook Entries
-        	$sql = "SELECT gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address,
-				u.username, u.user_id, u.user_posts, u.user_from, u.user_website, u.user_email, u.user_icq,
-			       	u.user_aim, u.user_yim, u.user_regdate, u.user_msnm, u.user_viewemail, u.user_rank,
-			       	u.user_sig, u.user_sig_bbcode_uid, u.user_avatar, u.user_avatar_type, u.user_allowavatar,
-			       	u.user_allowsmile, u.user_allow_viewonline, u.user_session_time,
-				g.made_year, g.id as garage_id, makes.make, models.model
+        	$sql = "SELECT gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address,	u.username, u.user_id, u.user_posts, u.user_from, u.user_website, u.user_email, u.user_icq, u.user_aim, u.user_yim, u.user_regdate, u.user_msnm, u.user_viewemail, u.user_rank,	u.user_sig, u.user_sig_bbcode_uid, u.user_avatar, u.user_avatar_type, u.user_allowavatar, u.user_allowsmile, u.user_allow_viewonline, u.user_session_time, g.made_year, g.id as garage_id, makes.make, models.model
                         FROM " . GARAGE_GUESTBOOKS_TABLE . " gb 
                         	LEFT JOIN " . USERS_TABLE . " u ON gb.author_id = u.user_id 
 				LEFT JOIN " . GARAGE_TABLE ." g ON g.member_id = gb.author_id and g.main_vehicle = 1 
@@ -118,13 +113,12 @@ class garage_guestbook
 	{
 		global $db;
 
-		$sql = "SELECT gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, gb.garage_id,
-				g.made_year, makes.make, models.model, u.username, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
-               	        FROM " . GARAGE_GUESTBOOKS_TABLE . " AS gb 
-				LEFT JOIN " . GARAGE_TABLE ." AS g on g.id = gb.garage_id
-                        	LEFT JOIN " . USERS_TABLE . " AS u ON g.member_id = u.user_id 
-       				LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-                		LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
+		$sql = "SELECT gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, gb.garage_id, g.made_year, makes.make, models.model, u.username, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
+               	        FROM " . GARAGE_GUESTBOOKS_TABLE . " gb 
+				LEFT JOIN " . GARAGE_TABLE . " g on g.id = gb.garage_id
+                        	LEFT JOIN " . USERS_TABLE . " u ON g.member_id = u.user_id 
+       				LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id
+                		LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
                         WHERE gb.id = $comment_id
                         ORDER BY gb.post_date ASC";
 
@@ -149,7 +143,10 @@ class garage_guestbook
 
 		$garage->update_single_field(USERS_TABLE, 'user_new_privmsg', '1', 'user_id', $data['user_id']);	
 		$garage->update_single_field(USERS_TABLE, 'user_last_privmsg', '9999999999', 'user_id', $data['user_id']);	
-		$sql = "INSERT INTO " . PRIVMSGS_TABLE . " (privmsgs_type, privmsgs_subject, privmsgs_from_userid, privmsgs_to_userid, privmsgs_date, privmsgs_enable_html, privmsgs_enable_bbcode, privmsgs_enable_smilies, privmsgs_attach_sig) VALUES ('0', '".$data['pm_subject']."', '".$data['author_id']."', '".$data['user_id']."', '".$data['date']."', '0', '1', '1', '0')";
+		$sql = "INSERT INTO " . PRIVMSGS_TABLE . " 
+			(privmsgs_type, privmsgs_subject, privmsgs_from_userid, privmsgs_to_userid, privmsgs_date, privmsgs_enable_html, privmsgs_enable_bbcode, privmsgs_enable_smilies, privmsgs_attach_sig)
+			VALUES 
+			('0', '" . $data['pm_subject'] . "', '" . $data['author_id'] . "', '" . $data['user_id'] . "', '" . $data['date'] . "', '0', '1', '1', '0')";
            	
 	 	if ( !$db->sql_query($sql) )
          	{
@@ -158,7 +155,10 @@ class garage_guestbook
    
       		$id = $db->sql_nextid();
 
-		$sql = "INSERT INTO " . PRIVMSGS_TEXT_TABLE . " (privmsgs_text_id, privmsgs_text) VALUES ($id, '".$data['pm_text']."' )";
+		$sql = "INSERT INTO " . PRIVMSGS_TEXT_TABLE . " 
+			(privmsgs_text_id, privmsgs_text) 
+			VALUES 
+			($id, '" . $data['pm_text'] . "' )";
 
            	if ( !$db->sql_query($sql) )
          	{
@@ -181,8 +181,8 @@ class garage_guestbook
 			return;
 		}
 
-		$template_block = 'block_'.$required_position;
-		$template_block_row = 'block_'.$required_position.'.row';
+		$template_block = 'block_' . $required_position;
+		$template_block_row = 'block_' . $required_position . '.row';
 		$template->assign_block_vars($template_block, array(
 			'BLOCK_TITLE' => $lang['Latest_Vehicle_Comments'],
 			'COLUMN_1_TITLE' => $lang['Vehicle'],
@@ -193,13 +193,12 @@ class garage_guestbook
 	        // What's the count? Default to 10
 	        $limit = $garage_config['lastcommented_limit'] ? $garage_config['lastcommented_limit'] : 10;
 	 		 		
-	 	$sql = "SELECT gb.garage_id AS id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, 
-	                        gb.author_id AS member_id, gb.post_date AS POI, m.username 
-	                FROM " . GARAGE_GUESTBOOKS_TABLE . " AS gb 
-	                	LEFT JOIN " . GARAGE_TABLE . " AS g ON gb.garage_id = g.id
-	                        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-	                        LEFT JOIN " . USERS_TABLE . " AS m ON gb.author_id = m.user_id
+	 	$sql = "SELECT gb.garage_id AS id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, gb.author_id AS member_id, gb.post_date AS POI, m.username 
+	                FROM " . GARAGE_GUESTBOOKS_TABLE . " gb 
+	                	LEFT JOIN " . GARAGE_TABLE . " g ON gb.garage_id = g.id
+	                        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
+	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
+	                        LEFT JOIN " . USERS_TABLE . " m ON gb.author_id = m.user_id
 			WHERE makes.pending = 0 AND models.pending = 0
 	                ORDER BY POI DESC LIMIT $limit";
 	
@@ -211,8 +210,8 @@ class garage_guestbook
 	 	while ( $vehicle_data = $db->sql_fetchrow($result) )
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id']),
+				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" . $vehicle_data['id']),
+				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . "=" . $vehicle_data['member_id']),
 				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
 				'COLUMN_2_TITLE' => $vehicle_data['username'],
 				'COLUMN_3' => create_date('D M d, Y G:i', $vehicle_data['POI'], $board_config['board_timezone']))

@@ -36,10 +36,10 @@ class garage_insurance
 	{
 		global $cid, $db;
 
-		$sql = "INSERT INTO ". GARAGE_INSURANCE_TABLE ."
+		$sql = "INSERT INTO " . GARAGE_INSURANCE_TABLE . "
 			(garage_id, premium, cover_type, comments, business_id)
 			VALUES
-			('$cid', '".$data['premium']."', '".$data['cover_type']."', '".$data['comments']."', '".$data['business_id']."')";
+			('$cid', '" . $data['premium'] . "', '" . $data['cover_type'] . "', '" . $data['comments'] . "', '" . $data['business_id'] . "')";
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -57,8 +57,8 @@ class garage_insurance
 	{
 		global $db, $cid, $ins_id;
 
-		$sql = "UPDATE ". GARAGE_INSURANCE_TABLE ."
-			SET business_id = '".$data['business_id']."', premium = '".$data['premium']."', cover_type = '".$data['cover_type']."', comments = '".$data['comments']."' 
+		$sql = "UPDATE " . GARAGE_INSURANCE_TABLE . "
+			SET business_id = '" . $data['business_id'] . "', premium = '".$data['premium']."', cover_type = '".$data['cover_type']."', comments = '".$data['comments']."' 
 			WHERE id = '$ins_id' and garage_id = '$cid'";
 
 		if(!$result = $db->sql_query($sql))
