@@ -934,3 +934,10 @@ $images['garage_set_pending']		= "$current_template_images/{LANG}/garage_set_pen
 #-----[ SAVE/CLOSE ALL FILES ]------------------------------------------
 #
 # EoM
+#
+#
+#
+
+open language/en/acp/permission_phpbb.php
+find 	'acl_a_search'		=> array('lang' => 'Can manage search backends and settings', 'cat' => 'misc'),
+after add 	'acl_a_garage'		=> array('lang' => 'Can alter phpBB Garage settings', 'cat' => 'garage'),
