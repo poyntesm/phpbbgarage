@@ -7,7 +7,7 @@
  *   email                : esmond.poynton@gmail.com
  *   description          : Provides Vehicle Garage System For phpBB
  *
- *   $Id$
+ *   $Id: garage.php 165 2006-06-19 07:46:52Z poyntesm $
  *
  ***************************************************************************/
 
@@ -98,7 +98,7 @@ $lang = array_merge($lang, array(
 	'Enable_Featured_Vehicle' => '<b>Enable Featured Vehicle?</b><br />This will hilite a particular vehicle directly on the front page of the Garage.',
 	'Featured_Vehcile_ID' => '<b>Featured Vehicle</b><br />Selecy the Vehicle To Feature, By ID, Random Or Top Vehicle From Block.',
 	'Featured_Vehcile_Description' => '<b>Featured Vehicle Description</b><br />Enter a quick description of the featured vehicle.',
-	'Date_Format'] ='<b>Date/Time Format</b><br />Enter the format for the Date/Time strings. See <a href="http://www.php.net/manual/en/function.date.php">php.net</a> for possible variables.<br /><br /><b>DEFAULT</b>: m-j-y H:i',
+	'Date_Format' => '<b>Date/Time Format</b><br />Enter the format for the Date/Time strings. See <a href="http://www.php.net/manual/en/function.date.php">php.net</a> for possible variables.<br /><br /><b>DEFAULT</b>: m-j-y H:i',
 	'Enable_Newest_Vehicle' => '<b>Enable Newest Vehicles?</b><br />Allows the newest added vehicles to be shown on the main menu.',
 	'Enable_Updated_Vehicle' => '<b>Enable Updated Vehicles?</b><br />Allows the latest updated vehicles to be shown on the main menu.',
 	'Enable_Newest_Modifications' => '<b>Enable Newest Modifications?</b><br />Allows the newest added modifications to be shown on the main menu.',
@@ -235,13 +235,13 @@ $lang = array_merge($lang, array(
 
 	'Image_Attachments' => 'Image Attachments',
 	'Image_Attach' => 'You may attach an image.',
-	'Maximum_Image_File_Size'] ='Maximum file size',
+	'Maximum_Image_File_Size' => 'Maximum file size',
 	'Maximum_Image_Resolution' => 'Maximum resolution',
 	'Enter_Image_Url' => 'Enter a URL to an online image',
 	'Add_New_Image' => 'Add New Image',
 	'Image_Upload_Too_Big_Vehicle_Created_No_Image' => 'Uploaded Image Has A File Size That Is Greater Than Allowed<br />Vehicle Has Been Created But No Image Uploaded<br />Please Use Manage Vehicle Gallery To Upload A Smaller File',
-	'Not_Allowed_File_Type_Vehicle_Created_No_Image'] ='Uploaded Image Has A File Type That Is Not Allowed<br />Vehicle Has Been Created But No Image Uploaded<br />Please Use Manage Vehicle Gallery To Upload A Different File Type',
-	'Upload_Image_Size_Too_Big_Vehicle_Created_No_Image'] ='Uploaded Image Has A Resolution That Is Greater Than Allowed <br />Vehicle Has Been Created But No Image Uploaded<br />Please Use Manage Vehicle Gallery To Upload A Smaller Resolution File',
+	'Not_Allowed_File_Type_Vehicle_Created_No_Image' => 'Uploaded Image Has A File Type That Is Not Allowed<br />Vehicle Has Been Created But No Image Uploaded<br />Please Use Manage Vehicle Gallery To Upload A Different File Type',
+	'Upload_Image_Size_Too_Big_Vehicle_Created_No_Image' => 'Uploaded Image Has A Resolution That Is Greater Than Allowed <br />Vehicle Has Been Created But No Image Uploaded<br />Please Use Manage Vehicle Gallery To Upload A Smaller Resolution File',
 	'Modification_Updated' => 'Modification Updated',
 
 	'Manage_Vehicle_Gallery_Note' => 'Note: Only this particular vehicle gallery images are maintained through this interface. You may add new images above or delete existing images below. You may select your vehicles hilite image below. Your modification images will not be shown on this page.',
@@ -254,7 +254,7 @@ $lang = array_merge($lang, array(
 	'Current_Hilite_Image' => 'Current Hilite Image',
 	'Set_Hilite_Image' => 'Set Hilite Image',
 
-	'Add_New_Quartermile_Time' => 'Add New Quarter Mile Time' ;
+	'Add_New_Quartermile_Time' => 'Add New Quarter Mile Time',
 	'Add_New_Rollingroad_Run' => 'Add New Rolling Road Run',
 	'Garage_Quartermile_Times' => 'Garage QuarterMile Time',
 	'Add_New_Time' => 'Add New Time',
@@ -268,7 +268,7 @@ $lang = array_merge($lang, array(
 	'Quartmph_Explain' => '<b>1/4 Mile MPH</b><br />Enter Your 1/4 Mile Speed',
 	'Garage_Rollingroad_Runs' => 'Garage Rolling Road Runs',
 	'Add_New_Run' => 'Add New Run',
-	'Boost_Explain']  = '<b>Boost</b><br />Enter Your Boost',
+	'Boost_Explain' => '<b>Boost</b><br />Enter Your Boost',
 	'Dyno_Center' => '<b>Dyno Center</b><br />Enter Dyno Center Used',
 	'Peakpoint_Explain' => '<b>Peak Point</b><br />RPM @ Which Power Peaked',
 	'Bhp_Explain' => '<b>BHP</b><br />Enter Your BHP',
