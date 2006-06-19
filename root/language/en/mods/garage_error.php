@@ -1,6 +1,6 @@
 <?php
 /***************************************************************************
- *                              langugae/en/garage_error.php [English]
+ *                              langugae/en/mods/garage_error.php [English]
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton

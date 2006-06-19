@@ -1,6 +1,6 @@
 <?php
 /***************************************************************************
- *                              language/en/garage.php [English]
+ *                              language/en/acp/garage.php [English]
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton
