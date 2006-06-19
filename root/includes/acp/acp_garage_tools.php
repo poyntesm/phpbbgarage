@@ -34,7 +34,7 @@ if( !empty($setmodules) )
 //
 $no_page_header = TRUE;
 $phpbb_root_path = './../';
-require($phpbb_root_path . 'extension.inc');
+$phpEx = substr(strrchr(__FILE__, '.'), 1);
 require('./pagestart.' . $phpEx);
 include($phpbb_root_path . 'includes/sql_parse.'.$phpEx);
 require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage.' . $phpEx);

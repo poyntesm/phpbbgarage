@@ -33,7 +33,7 @@ if( !empty($setmodules) )
 // Let's set the root dir for phpBB
 //
 $phpbb_root_path = '../';
-require($phpbb_root_path . 'extension.inc');
+$phpEx = substr(strrchr(__FILE__, '.'), 1);
 require('./pagestart.' . $phpEx);
 require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage.' . $phpEx);
 

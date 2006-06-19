@@ -24,6 +24,7 @@ define('IN_PHPBB', true);
 
 //Let's Set The Root Dir For phpBB And Load Normal phpBB Required Files
 $phpbb_root_path = './';
+$phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
 include($phpbb_root_path . 'includes/bbcode.' . $phpEx);
 
