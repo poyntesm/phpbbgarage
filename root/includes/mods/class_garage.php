@@ -39,7 +39,7 @@ while( $row = $db->sql_fetchrow($result) )
 }
 
 //Setup Arrays Used To Build Drop Down Selection Boxes
-/*$currency_types = array('GBP', 'USD', 'EUR', 'CAD', 'YEN');
+$currency_types = array('GBP', 'USD', 'EUR', 'CAD', 'YEN');
 $mileage_unit_types = array($lang['Miles'], $lang['Kilometers']);
 $boost_types = array('PSI', 'BAR');
 $power_types = array($lang['Wheel'], $lang['Hub'], $lang['Flywheel']);
@@ -47,7 +47,7 @@ $cover_types = array($lang['Third_Party'], $lang['Third_Party_Fire_Theft'], $lan
 $rating_types = array( '10', '9', '8', '7', '6', '5', '4', '3', '2', '1');
 $rating_text = array( '10', '9', '8', '7', '6', '5', '4', '3', '2', '1');
 $nitrous_types = array('0', '25', '50', '75', '100');
-$nitrous_types_text = array($lang['No_Nitrous'], $lang['25_BHP_Shot'], $lang['50_BHP_Shot'], $lang['75_BHP_Shot'], $lang['100_BHP_Shot']);*/
+$nitrous_types_text = array($lang['No_Nitrous'], $lang['25_BHP_Shot'], $lang['50_BHP_Shot'], $lang['75_BHP_Shot'], $lang['100_BHP_Shot']);
 
 class garage 
 {
@@ -64,60 +64,7 @@ class garage
 
 		while( list($var, $param) = @each($params) )
 		{
-			if (!empty($HTTP_POST_VARS[$param]))
-			{
-				$data[$param] = str_replace("\'", "''", trim(htmlspecialchars($HTTP_POST_VARS[$param])));
-			}
-			else if (!empty($HTTP_GET_VARS[$param]))
-			{
-				$data[$param] = str_replace("\'", "''", trim(htmlspecialchars($HTTP_GET_VARS[$param])));
-			}
-		}
-
-		return $data;
-	}
-
-	/*========================================================================*/
-	// Makes Safe Any Posted Int Variables
-	// Usage: process_int_vars(array());
-	/*========================================================================*/
-	function process_int_vars($params = array())
-	{
-		global $HTTP_POST_VARS, $HTTP_GET_VARS;
-
-		while( list($var, $param) = @each($params) )
-		{
-			if (!empty($HTTP_POST_VARS[$param]))
-			{
-				$data[$param] = intval($HTTP_POST_VARS[$param]);
-			}
-			else if (!empty($HTTP_GET_VARS[$param]))
-			{
-				$data[$param] = intval($HTTP_GET_VARS[$param]);
-			}
-		}
-
-		return $data;
-	}
-
-	/*========================================================================*/
-	// Makes Safe Any Posted String Variables
-	// Usage: process_str_vars(array());
-	/*========================================================================*/
-	function process_str_vars($params = array())
-	{
-		global $HTTP_POST_VARS, $HTTP_GET_VARS;
-
-		while( list($var, $param) = @each($params) )
-		{
-			if (!empty($HTTP_POST_VARS[$param]))
-			{
-				$data[$param] = str_replace("\'", "''", trim(htmlspecialchars($HTTP_POST_VARS[$param])));
-			}
-			else if (!empty($HTTP_GET_VARS[$param]))
-			{
-				$data[$param] = str_replace("\'", "''", trim(htmlspecialchars($HTTP_GET_VARS[$param])));
-			}
+			$data[$param] = request_var($param, '');
 		}
 
 		return $data;
@@ -277,7 +224,7 @@ class garage
 	/*========================================================================*/
 	function check_permissions($required_permission, $redirect_url)
 	{
-		global $user, $template, $db, $garage_config;
+		global $auth, $user, $template, $db, $garage_config;
 	
 		$required_permission = strtolower($required_permission);
 	
@@ -286,10 +233,10 @@ class garage
 		{
 			$your_level = 'GUEST';
 		}
-		//else if ( $user->data['user_level'] == ADMIN )
-		//{
-	//		$your_level = 'ADMIN';
-	//	}
+		else if ($auth->acl_get('a_') && $user->data['is_registered'])
+		{
+			$your_level = 'ADMIN';
+		}
 	//	else if ( $user->data['user_level'] == MOD )
 	//	{
 	//		$your_level = 'MOD';

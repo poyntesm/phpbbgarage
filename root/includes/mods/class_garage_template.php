@@ -107,13 +107,13 @@ class garage_template
 	/*========================================================================*/
 	function sidemenu()
 	{
-		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $images, $board_config, $garage;
+		global $user, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $images, $board_config, $garage;
 	
 		$template->set_filenames(array(
 			'menu' => 'garage_menu.html')
 		);
 
-		$user_id = $userdata['user_id'];
+		$user_id = $user->data['user_id'];
 		if (preg_match("/MAIN/",$garage_config['menu_selection']))
 		{
 			$main_menu_url = append_sid("garage.$phpEx?mode=main");
@@ -245,7 +245,7 @@ class garage_template
 	       		'L_CREATE_VEHICLE' => $create_vehicle_link)
 		);
 
-		if ( $userdata['session_logged_in'] )
+		if ( $user->data['user_id'] != ANONYMOUS )
 		{
 			$template->assign_block_vars('show_vehicles', array());
 
@@ -301,7 +301,8 @@ class garage_template
        				$template->assign_block_vars('lastupdatedvehiclesmain_on.updated_vehicles', array(
        					'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_updated['id']),
        					'VEHICLE' => $vehicle_updated['vehicle'],
-       					'UPDATED_TIME' => create_date($board_config['default_dateformat'], $vehicle_updated['date_updated'], $board_config['board_timezone']),
+       					//'UPDATED_TIME' => create_date($board_config['default_dateformat'], $vehicle_updated['date_updated'], $board_config['board_timezone']),
+       					'UPDATED_TIME' => $user->format_date($vehicle_updated['date_updated']),
 		       			'USERNAME' => $vehicle_updated['username'],
 		       			'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_updated['member_id']))
       				);

@@ -390,109 +390,7 @@ pt
 		'POSTER_CAR_YEAR' => $poster_car_year,
 		'VIEW_POSTER_CARPROFILE' => ($userdata['user_level'] != ADMIN)? append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" . $garage_id) : append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" . $garage_id) ,
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-# 
-#-----[ OPEN ]----- 
-# 
-viewonline.php
 
-#
-#-----[ FIND ]------------------------------------------
-#
-<?php
-
-#
-#-----[ AFTER, ADD ]------------------------------------------
-#
-//-- mod : Garage ----------------------------------------------------------------------------------------------------------
-# 
-#-----[ FIND ]----- 
-# 
-				case PAGE_FAQ:
-					$location = $lang['Viewing_FAQ'];
-					$location_url = "faq.$phpEx";
-					break;
-#
-#-----[ AFTER, ADD ]------------------------------------------
-#
-//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-				case PAGE_GARAGE:
-					$location = $lang['Viewing_Garage'];
-					$location_url = "garage.$phpEx";
-					break;
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-# 
-#-----[ OPEN ]----- 
-# 
-includes/constants.php
-
-#
-#-----[ FIND ]------------------------------------------
-#
-<?php
-
-#
-#-----[ AFTER, ADD ]------------------------------------------
-#
-//-- mod : Garage ----------------------------------------------------------------------------------------------------------
-#
-#-----[ FIND ]------------------------------------------
-#
-?>
-
-#
-#-----[ BEFORE, ADD ]------------------------------------------
-#
-//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-define('GARAGE_TABLE', $table_prefix.'garage');
-define('GARAGE_CONFIG_TABLE', $table_prefix.'garage_config');
-define('GARAGE_CATEGORIES_TABLE', $table_prefix.'garage_categories');
-define('GARAGE_GALLERY_TABLE', $table_prefix.'garage_gallery');
-define('GARAGE_GUESTBOOKS_TABLE', $table_prefix.'garage_guestbooks');
-define('GARAGE_IMAGES_TABLE', $table_prefix.'garage_images');
-define('GARAGE_MAKES_TABLE', $table_prefix.'garage_makes');
-define('GARAGE_MODELS_TABLE', $table_prefix.'garage_models');
-define('GARAGE_MODS_TABLE', $table_prefix.'garage_mods');
-define('GARAGE_QUARTERMILE_TABLE', $table_prefix.'garage_quartermile');
-define('GARAGE_ROLLINGROAD_TABLE', $table_prefix.'garage_rollingroad');
-define('GARAGE_BUSINESS_TABLE', $table_prefix.'garage_business');
-define('GARAGE_INSURANCE_TABLE', $table_prefix.'garage_insurance');
-define('GARAGE_RATING_TABLE', $table_prefix.'garage_rating');
-define('GARAGE_VEHICLE_FIELDS_TABLE', $table_prefix.'garage_vehicle_fields');
-define('GARAGE_VEHICLE_FIELDS_DATA_TABLE', $table_prefix.'garage_vehicle_fields_data');
-define('GARAGE_VEHICLE_FIELDS_LANG_TABLE', $table_prefix.'garage_vehicle_fields_lang');
-define('GARAGE_VEHICLE_LANG_TABLE', $table_prefix.'garage_vehicle_lang');
-define('GARAGE_UPLOAD_PATH', 'garage/upload/');
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-# 
-#-----[ OPEN ]----- 
-# 
-includes/page_header.php
-
-#
-#-----[ FIND ]------------------------------------------
-#
-<?php
-
-#
-#-----[ AFTER, ADD ]------------------------------------------
-#
-//-- mod : Garage ----------------------------------------------------------------------------------------------------------
-#
-#-----[ FIND ]------------------------------------------
-#
-	'L_FAQ' => $lang['FAQ'],
-#
-#-----[ AFTER, ADD ]------------------------------------------
-#
-//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-	'L_GARAGE' => $lang['Garage'],
-	'L_QUARTERMILE_TABLE' => $lang['Quartermile_Table'],
-	'U_GARAGE' => append_sid("garage.$phpEx"),
-	'U_QUARTERMILE' => append_sid("garage.$phpEx?mode=quartermile"),
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 # 
 #-----[ OPEN ]----- 
 # 
@@ -1069,11 +967,35 @@ define('GARAGE_VEHICLE_LANG_TABLE', $table_prefix.'garage_vehicle_lang');
 define('GARAGE_UPLOAD_PATH', 'garage/upload/');
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
+# 
+#-----[ OPEN ]----- 
+# 
+viewonline.php
 
+#
+#-----[ FIND ]------------------------------------------
+#
+<?php
 
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod : Garage ----------------------------------------------------------------------------------------------------------
 
-
-
+#
+#-----[ FIND ]------------------------------------------
+#
+		case 'report':
+			$location = $user->lang['REPORTING_POST'];
+			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
+		break;
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+		case 'garage':
+			$location = $user->lang['VIEWING_GARAGE'];
+			$location_url = append_sid("{$phpbb_root_path}garage.$phpEx");
+		break;
 
 
 

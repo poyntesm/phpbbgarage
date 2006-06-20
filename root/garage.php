@@ -71,6 +71,12 @@ while( list($var, $param) = @each($params) )
 	$$var = request_var($param, '');
 }
 
+//Build Inital Navlink...Yes Forum Name!! We Use phpBB3 Standard Navlink Process!!
+$template->assign_block_vars('navlinks', array(
+	'FORUM_NAME'	=> $lang['Garage'],
+	'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx"))
+);
+
 //Decide What Mode The User Is Doing
 switch( $mode )
 {
@@ -78,7 +84,7 @@ switch( $mode )
 	case 'create_vehicle':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if (!$userdata['session_logged_in'])
+		if ( $user->data['user_id'] == ANONYMOUS )
 		{
 			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=create_vehicle", true));
 		}
@@ -107,10 +113,10 @@ switch( $mode )
 		$data['MAKE'] = (empty($data['MAKE'])) ? '' : $data['MAKE'];
 
 		//Build All Required Javascript And Arrays
+		$template->assign_block_vars('javascript', array());
 		$template->assign_vars(array(
 			'VEHICLE_ARRAY' => $garage_template->vehicle_array())
 		);
-		$template->assign_var_from_handle('JAVASCRIPT', 'javascript');
 
 		//Check If User Should Be Able To Submit New Makes & Models
 		if ($garage_config['enable_user_submit_make'])
@@ -238,7 +244,7 @@ switch( $mode )
 	case 'edit_vehicle':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if (!$user->data['session_logged_in'])
+		if ( $user->data['user_id'] == ANONYMOUS )
 		{
 			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=edit_vehicle&CID=$cid", true));
 		}
@@ -257,10 +263,10 @@ switch( $mode )
 
 		//Build All Required Javascript And Arrays
 		$garage_template->year_dropdown($data['made_year']);
+		$template->assign_block_vars('javascript', array());
 		$template->assign_vars(array(
 			'VEHICLE_ARRAY' => $garage_template->vehicle_array())
 		);
-		$template->assign_var_from_handle('JAVASCRIPT', 'javascript');
 
 		$template->assign_vars(array(
 			'S_MODE_ACTION' => append_sid("garage.$phpEx?mode=update_vehicle"),
@@ -303,7 +309,7 @@ switch( $mode )
 	case 'update_vehicle':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if (!$user->data['session_logged_in'])
+		if ( $user->data['user_id'] == ANONYMOUS )
 		{
 			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=edit_vehicle&CID=$cid", true));
 		}
@@ -350,7 +356,7 @@ switch( $mode )
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if (!$user->data['session_logged_in'])
+		if ( $user->data['user_id'] == ANONYMOUS )
 		{
 			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=add_modification&CID=$cid", true));
 		}
@@ -409,7 +415,7 @@ switch( $mode )
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if (!$user->data['session_logged_in'])
+		if ( $user->data['user_id'] == ANONYMOUS )
 		{
 			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=add_modification&CID=$cid", true));
 		}
@@ -442,7 +448,7 @@ switch( $mode )
 			$user_remote_image_data = $garage_image->select_user_remote_images($user->data['user_id']);
 
 			//Check For Remote & Local Image Quotas
-			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('modification', $mid);
@@ -450,7 +456,7 @@ switch( $mode )
 				$garage->update_single_field(GARAGE_MODS_TABLE, 'image_id', $image_id, 'id', $mid);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
-			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
 			{
 				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true));
 			}
@@ -463,7 +469,7 @@ switch( $mode )
 	case 'edit_modification':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if (!$userdata['session_logged_in'])
+		if ( $user->data['user_id'] == ANONYMOUS )
 		{
 			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=edit_modification&MID=$mid&CID=$cid", true));
 		}
@@ -560,11 +566,11 @@ switch( $mode )
 		if( $garage_image->image_attached() )
 		{
 			//Get All Users Images So We Can Workout Current Quota Usage
-			$user_upload_image_data = $garage_image->select_user_upload_images($userdata['user_id']);
-			$user_remote_image_data = $garage_image->select_user_remote_images($userdata['user_id']);
+			$user_upload_image_data = $garage_image->select_user_upload_images($user->data['user_id']);
+			$user_remote_image_data = $garage_image->select_user_remote_images($user->data['user_id']);
 
 			//Check For Remote & Local Image Quotas
-			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('modification', $mid);
@@ -572,7 +578,7 @@ switch( $mode )
 				$garage->update_single_field(GARAGE_MODS_TABLE, 'image_id', $image_id, 'id', $mid);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
-			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
 			{
 				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true));
 			}
@@ -687,18 +693,18 @@ switch( $mode )
 		if( $garage_image->image_attached() )
 		{
 			//Get All Users Images So We Can Workout Current Quota Usage
-			$user_upload_image_data = $garage_image->select_user_upload_images($userdata['user_id']);
-			$user_remote_image_data = $garage_image->select_user_remote_images($userdata['user_id']);
+			$user_upload_image_data = $garage_image->select_user_upload_images($user->data['user_id']);
+			$user_remote_image_data = $garage_image->select_user_remote_images($user->data['user_id']);
 
 			//Check For Remote & Local Image Quotas
-			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
 			{
 				//Create Thumbnail & DB Entry For Image + Link To Item
 				$image_id = $garage_image->process_image_attached('quartermile', $qmid);
 				$garage->update_single_field(GARAGE_QUARTERMILE_TABLE, 'image_id', $image_id, 'id', $qmid);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
-			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
 			{
 				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true));
 			}
@@ -725,7 +731,7 @@ switch( $mode )
 	case 'edit_quartermile':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if (!$userdata['session_logged_in'])
+		if ( $user->data['user_id'] == ANONYMOUS )
 		{
 			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=edit_quartermile&QMID=$qmid&CID=$cid", true));
 		}
@@ -834,18 +840,18 @@ switch( $mode )
 		if( $garage_image->image_attached() )
 		{
 			//Get All Users Images So We Can Workout Current Quota Usage
-			$user_upload_image_data = $garage_image->select_user_upload_images($userdata['user_id']);
-			$user_remote_image_data = $garage_image->select_user_remote_images($userdata['user_id']);
+			$user_upload_image_data = $garage_image->select_user_upload_images($user->data['user_id']);
+			$user_remote_image_data = $garage_image->select_user_remote_images($user->data['user_id']);
 
 			//Check For Remote & Local Image Quotas
-			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('quartermile', $qmid);
 				$garage->update_single_field(GARAGE_QUARTERMILE_TABLE, 'image_id', $image_id, 'id', $qmid);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
-			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
 			{
 				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true));
 			}
@@ -966,18 +972,18 @@ switch( $mode )
 		if( $garage_image->image_attached() )
 		{
 			//Get All Users Images So We Can Workout Current Quota Usage
-			$user_upload_image_data = $garage_image->select_user_upload_images($userdata['user_id']);
-			$user_remote_image_data = $garage_image->select_user_remote_images($userdata['user_id']);
+			$user_upload_image_data = $garage_image->select_user_upload_images($user->data['user_id']);
+			$user_remote_image_data = $garage_image->select_user_remote_images($user->data['user_id']);
 
 			//Check For Remote & Local Image Quotas
-			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('rollingroad', $rrid);
 				$garage->update_single_field(GARAGE_ROLLINGROAD_TABLE,'image_id', $image_id, 'id', $rrid);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
-			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
 			{
 				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true));
 			}
@@ -1004,7 +1010,7 @@ switch( $mode )
 	case 'edit_rollingroad':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if (!$userdata['session_logged_in'])
+		if ( $user->data['user_id'] == ANONYMOUS )
 		{
 			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=edit_rollingroad&RRID=$rrid&CID=$cid", true));
 		}
@@ -1095,18 +1101,18 @@ switch( $mode )
 		if( $garage_image->image_attached() )
 		{
 			//Get All Users Images So We Can Workout Current Quota Usage
-			$user_upload_image_data = $garage_image->select_user_upload_images($userdata['user_id']);
-			$user_remote_image_data = $garage_image->select_user_remote_images($userdata['user_id']);
+			$user_upload_image_data = $garage_image->select_user_upload_images($user->data['user_id']);
+			$user_remote_image_data = $garage_image->select_user_remote_images($user->data['user_id']);
 
 			//Check For Remote & Local Image Quotas
-			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('rollingroad', $rrid);
 				$garage->update_single_field(GARAGE_ROLLINGROAD_TABLE, 'image_id', $image_id, 'id', $rrid);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
-			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
 			{
 				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true));
 			}
@@ -1224,7 +1230,7 @@ switch( $mode )
 	case 'edit_insurance':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if (!$userdata['session_logged_in'])
+		if ( $user->data['user_id'] == ANONYMOUS )
 		{
 			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=edit_insurance&IND_ID=$ins_id&CID=$cid", true));
 		}
@@ -1367,7 +1373,7 @@ switch( $mode )
 				'YEAR' => $data[$i]['made_year'],
 				'MAKE' => $data[$i]['make'],
 				'COLOUR' => $data[$i]['color'],
-				'UPDATED' => create_date($board_config['default_dateformat'], $data[$i]['date_updated'], $board_config['board_timezone']),
+				'UPDATED' => $user->format_date($data[$i]['date_updated']),
 				'VIEWS' => $data[$i]['views'],
 				'MODS' => $data[$i]['total_mods'],
 				'MODEL' => $data[$i]['model'],
@@ -1381,6 +1387,12 @@ switch( $mode )
 		$count = $garage_vehicle->select_all_vehicle_data($search_data['where'], $order_by, $sort_order);
 
 		$pagination = generate_pagination("garage.$phpEx?mode=browse&amp" . $search_data['make_pagination'] . $search_data['model_pagination'] . $search_data['pagination'] . ";sort=$sort&amp;order=$sort_order", $count[0]['total'], $garage_config['cars_per_page'], $start);
+
+		//Build Navlinks
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $lang['Browse'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx?mode=browse"))
+		);
 
 		$template->assign_block_vars('level2', array());
 		$template->assign_vars(array(
@@ -1527,10 +1539,10 @@ switch( $mode )
 		);
 
 		//Build All Required Javascript And Arrays
+		$template->assign_block_vars('javascript', array());
 		$template->assign_vars(array(
 			'VEHICLE_ARRAY' => $garage_template->vehicle_array())
 		);
-		$template->assign_var_from_handle('JAVASCRIPT', 'javascript');
 
 		//Show Search By Insurance If Insurance Enabled In ACP
 		if ( $garage_config['enable_insurance'] == TRUE )
@@ -1627,7 +1639,7 @@ switch( $mode )
 		        'L_INSTALLATION_RATING' => $lang['Installation_Rating'],
 		        'L_INSTALLED_BY' => $lang['Installed_By'],
             		'L_CREATED' => $lang['Created'],
-            		'L_UPDATED' => create_date($board_config['default_dateformat'], $data['date_updated'], $board_config['board_timezone']), 
+            		'L_UPDATED' => $user->format_date($data['date_updated']), 
             		'L_VEHICLE' => $lang['Vehicle'],
             		'L_PURCHASED_FROM' => $lang['Purchased_From'],
             		'L_PURCHASED_PRICE' => $lang['Purchased_Price'],
@@ -1729,7 +1741,7 @@ switch( $mode )
 		}
 		else
 		{
-			$garage->update_single_field(GARAGE_TABLE, 'main_vehicle', 0, 'member_id', $userdata['user_id']);
+			$garage->update_single_field(GARAGE_TABLE, 'main_vehicle', 0, 'member_id', $user->data['user_id']);
 		}
 
 		//Now We Update This Vehicle To The Main Vehicle
@@ -1754,11 +1766,11 @@ switch( $mode )
 		if( $garage_image->image_attached() )
 		{
 			//Get All Users Images So We Can Workout Current Quota Usage
-			$user_upload_image_data = $garage_image->select_user_upload_images($userdata['user_id']);
-			$user_remote_image_data = $garage_image->select_user_remote_images($userdata['user_id']);
+			$user_upload_image_data = $garage_image->select_user_upload_images($user->data['user_id']);
+			$user_remote_image_data = $garage_image->select_user_remote_images($user->data['user_id']);
 
 			//Check For Remote & Local Image Quotas
-			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('vehicle', $cid);
@@ -1770,7 +1782,7 @@ switch( $mode )
 				}
 			}
 			//You Have Reached Your Image Quota..Error Nicely
-			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($userdata['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($userdata['user_id']))) )
+			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
 			{
 				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true));
 			}
@@ -2335,7 +2347,7 @@ switch( $mode )
 	case 'user_submit_business':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if (!$userdata['session_logged_in'])
+		if ( $user->data['user_id'] == ANONYMOUS )
 		{
 			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=user_submit_business", true));
 		}
@@ -2512,7 +2524,7 @@ switch( $mode )
 	case 'user_submit_make':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if (!$userdata['session_logged_in'])
+		if ( $user->data['user_id'] == ANONYMOUS )
 		{
 			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=user_submit_make", true));
 		}
@@ -2547,7 +2559,7 @@ switch( $mode )
 	case 'insert_make':
 
 		//User Is Annoymous...So Not Allowed To Create A Vehicle
-		if ( $userdata['user_id'] == -1 )
+		if ( $user->data['user_id'] == ANONYMOUS )
 		{
 			redirect(append_sid("garage.$phpEx?mode=error&EID=2", true));
 		}
@@ -2580,7 +2592,7 @@ switch( $mode )
 	case 'user_submit_model':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if (!$userdata['session_logged_in'])
+		if ( $user->data['user_id'] == ANONYMOUS )
 		{
 			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=user_submit_model", true));
 		}
@@ -2628,7 +2640,7 @@ switch( $mode )
 	case 'insert_model':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if (!$userdata['session_logged_in'])
+		if ( $user->data['user_id'] == ANONYMOUS )
 		{
 			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=user_submit_model", true));
 		}
@@ -2673,10 +2685,10 @@ switch( $mode )
 
 		//Build Required HTML, Javascript And Arrays
 		$garage_template->sort_order($sort_order);
+		$template->assign_block_vars('javascript', array());
 		$template->assign_vars(array(
 			'VEHICLE_ARRAY' => $garage_template->vehicle_array())
 		);
-		$template->assign_var_from_handle('JAVASCRIPT', 'javascript');
 
 		//Build Actual Table With No Pending Runs
 		$garage_quartermile->build_quartermile_table('NO');
@@ -2717,7 +2729,7 @@ switch( $mode )
 	case 'garage_pending':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if (!$userdata['session_logged_in'])
+		if ( $user->data['user_id'] == ANONYMOUS )
 		{
 			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=garage_pending", true));
 		}
@@ -2825,7 +2837,7 @@ switch( $mode )
 	case 'garage_approval':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if (!$userdata['session_logged_in'])
+		if ( $user->data['user_id'] == ANONYMOUS )
 		{
 			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=quartermile_pending", true));
 		}
@@ -2941,7 +2953,7 @@ switch( $mode )
 	case 'reassign_business':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if (!$userdata['session_logged_in'])
+		if ( $user->data['user_id'] == ANONYMOUS )
 		{
 			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=quartermile_pending", true));
 		}
@@ -2986,10 +2998,10 @@ switch( $mode )
 
 		//Build All Required HTML, Javascript And Arrays
 		$garage_template->sort_order($sort_order);
+		$template->assign_block_vars('javascript', array());
 		$template->assign_vars(array(
 			'VEHICLE_ARRAY' => $garage_template->vehicle_array())
 		);
-		$template->assign_var_from_handle('JAVASCRIPT', 'javascript');
 
 		//Build Dynorun Table With No Pending Runs
 		$garage_dynorun->build_dynorun_table('NO');
@@ -3066,7 +3078,7 @@ switch( $mode )
 				$poster_car_year = ( $comment_data[$i]['made_year'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $comment_data[$i]['made_year'] : '';
 				$poster_car_mark = ( $comment_data[$i]['make'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $comment_data[$i]['make'] : '';
 				$poster_car_model = ( $comment_data[$i]['model'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $comment_data[$i]['model'] : '';
-				$poster_joined = ( $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang['Joined'] . ': ' . create_date($board_config['default_dateformat'], $comment_data[$i]['user_regdate'], $board_config['board_timezone']) : '';
+				$poster_joined = ( $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang['Joined'] . ': ' . $user->format_date($comment_data[$i]['user_regdate']) : '';
 
 				$poster_avatar = '';
 				if ( $data['user_avatar_type'] && $comment_data[$i]['user_id'] != ANONYMOUS && $comment_data[$i]['user_allowavatar'] )
@@ -3116,7 +3128,7 @@ switch( $mode )
 
 				$temp_url = append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . "=".$comment_data[$i]['user_id']);
 				$posted = '<a href="' . $temp_url . '">' . $comment_data[$i]['username'] . '</a>';
-				$posted = create_date($board_config['default_dateformat'], $comment_data[$i]['post_date'], $board_config['board_timezone']);
+				$posted = $user->format_date($comment_data[$i]['post_date']);
 
 				$post = $comment_data[$i]['post'];
 
@@ -3148,11 +3160,11 @@ switch( $mode )
 
 				if ( in_array($userdata['user_level'], array(ADMIN, MOD)) )
 				{
-					$temp_url = append_sid("garage.$phpEx?mode=edit_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $userdata['session_id']);
+					$temp_url = append_sid("garage.$phpEx?mode=edit_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']);
 					$edit_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_edit'] . '" alt="' . $lang['Edit_delete_post'] . '" title="' . $lang['Edit_delete_post'] . '" border="0" /></a>';
 					$edit = '<a href="' . $temp_url . '">' . $lang['Edit_delete_post'] . '</a>';
 
-					$temp_url = append_sid("garage.$phpEx?mode=delete_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $userdata['session_id']);
+					$temp_url = append_sid("garage.$phpEx?mode=delete_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']);
 					$delpost_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_delpost'] . '" alt="' . $lang['Delete_post'] . '" title="' . $lang['Delete_post'] . '" border="0" /></a>';
 					$delpost = '<a href="' . $temp_url . '">' . $lang['Delete_post'] . '</a>';
 				}
@@ -3220,7 +3232,7 @@ switch( $mode )
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('comments');
 		$data = $garage->process_post_vars($params);
-		$data['author_id'] = $userdata['user_id'];
+		$data['author_id'] = $user->data['user_id'];
 		$data['post_date'] = time();
 
 		//Checks All Required Data Is Present
@@ -3232,7 +3244,7 @@ switch( $mode )
 
 		//Get Vehicle Data So We Can Check If We Need To PM User
 		$data = $garage_vehicle->select_vehicle_data($cid);		
-		$data['author_id'] = $userdata['user_id'];
+		$data['author_id'] = $user->data['user_id'];
 		$data['time'] = time();
 
 		//If User Has Requested Notification On Comments Sent Them A PM
@@ -3341,8 +3353,8 @@ switch( $mode )
 		);
 
 		$template->assign_vars(array(
-			'ERROR_MESSAGE' => $lang['Garage_Error_' . $eid],
-			'L_GARAGE_ERROR_OCCURED' => $lang['Garage_Error_Occured'])
+			'ERROR_MESSAGE' => $lang['GARAGE_ERROR_' . $eid],
+			'L_GARAGE_ERROR_OCCURED' => $lang['GARAGE_ERROR_OCCURED'])
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
@@ -3359,7 +3371,7 @@ switch( $mode )
 		$params = array('vehicle_rating');
 		$data = $garage->process_post_vars($params);
 		$data['rate_date'] = time();
-		$data['user_id'] = $userdata['user_id'];
+		$data['user_id'] = $user->data['user_id'];
 
 		//Checks All Required Data Is Present
 		$params = array('vehicle_rating', 'rate_date', 'user_id');
@@ -3370,7 +3382,7 @@ switch( $mode )
 
 		//If User Is Guest Generate Unique Number For User ID....
 		srand($garage->make_seed());
-		$data['user_id'] = (!$userdata['session_logged_in']) ? '-' . (rand(2,99999)) : $userdata['user_id'];
+		$data['user_id'] = ( $user->data['user_id'] == ANONYMOUS ) ? '-' . (rand(2,99999)) : $user->data['user_id'];
 
 		//Check If User Owns Vehicle
 		if ( $vehicle_data['member_id'] == $data['user_id'] )

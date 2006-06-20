@@ -34,7 +34,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function get_user_add_quota()
 	{
-		global $db, $userdata, $garage_config, $garage;
+		global $db, $user, $garage_config, $garage;
 
 		if (empty($garage_config['private_add_quota']))
 		{
@@ -45,7 +45,7 @@ class garage_vehicle
 		else
 		{
 			//Get All Group Memberships
-			$groupdata = $garage->get_group_membership($userdata['user_id']);
+			$groupdata = $garage->get_group_membership($user->data['user_id']);
 			
 			//Lets Get The Private Upload Groups & Quotas
 			$private_add_groups = @explode(',', $garage_config['private_add_perms']);
@@ -80,7 +80,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function get_group_add_quota($gid)
 	{
-		global $db, $userdata, $garage_config;
+		global $db, $garage_config;
 
 		if (empty($garage_config['private_add_quota']))
 		{
@@ -112,13 +112,13 @@ class garage_vehicle
 	/*========================================================================*/
 	function insert_vehicle($data)
 	{
-		global $userdata, $db;
+		global $user, $db;
 
 		$sql = "INSERT INTO ". GARAGE_TABLE ."
 			(made_year, make_id, model_id, color, mileage, mileage_units, price, currency, comments, member_id, date_created, date_updated, main_vehicle, guestbook_pm_notify)
 			VALUES
-			('".$data['year']."', '".$data['make_id']."', '".$data['model_id']."', '".$data['colour']."', '".$data['mileage']."', '".$data['mileage_units']."', '".$data['price']."', '".$data['currency']."', '".$data['comments']."', '".$userdata['user_id']."', '".$data['time']."', '".$data['time']."', '".$data['main_vehicle']."', '".$data['guestbook_pm_notify']."')";
-	
+			('".$data['year']."', '".$data['make_id']."', '".$data['model_id']."', '".$data['colour']."', '".$data['mileage']."', '".$data['mileage_units']."', '".$data['price']."', '".$data['currency']."', '".$data['comments']."', '".$user->data['user_id']."', '".$data['time']."', '".$data['time']."', '".$data['main_vehicle']."', '".$data['guestbook_pm_notify']."')";
+
 		if(!$result = $db->sql_query($sql))
 		{
 			message_die(GENERAL_ERROR, 'Could Not Insert Vehicle', '', __LINE__, __FILE__, $sql);
@@ -156,11 +156,11 @@ class garage_vehicle
 	/*========================================================================*/
 	function count_user_vehicles()
 	{
-		global $userdata, $db;
+		global $user, $db;
 
 		$sql = "SELECT count(id) AS total 
 			FROM " . GARAGE_TABLE . " 
-			WHERE member_id = " . $userdata['user_id'];
+			WHERE member_id = " . $user->data['user_id'];
 
 		if ( !($result = $db->sql_query($sql)) )
 		{
@@ -267,7 +267,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function check_ownership($cid)
 	{
-		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
+		global $user, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
 		if (empty($cid))
 		{
@@ -291,7 +291,7 @@ class garage_vehicle
 			//Allow A Moderator Or Administrator Do What They Want....
 			return;
 		}
-		else if ( $vehicle['member_id'] != $userdata['user_id'] )
+		else if ( $vehicle['member_id'] != $user->data['user_id'] )
 		{
 			$message = $lang['Not_Vehicle_Owner'] . "<br /><br />" . sprintf($lang['Click_return_garage'], "<a href=\"" . append_sid("garage.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_index'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");
 	
@@ -307,7 +307,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function update_vehicle_time($cid)
 	{
-		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $garage;
+		global $garage;
 		
 		$data['time'] = time();
 
@@ -322,7 +322,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function show_featuredvehicle()
 	{
-		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
+		global $user, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
 		if ( $garage_config['enable_featured_vehicle'] == 1 )
 		{
@@ -477,7 +477,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function show_updated_vehicles()
 	{
-		global $required_position, $userdata, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config;
+		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config;
 	
 		if ( $garage_config['lastupdatedvehicles_on'] != TRUE )
 		{
@@ -517,7 +517,7 @@ class garage_vehicle
 				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id']),
 				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
 				'COLUMN_2_TITLE' => $vehicle_data['username'],
-				'COLUMN_3' => create_date('D M d, Y G:i', $vehicle_data['POI'], $board_config['board_timezone']))
+				'COLUMN_3' => $user->format_date($vehicle_data['POI']))
 			);
 	 	}
 	
@@ -531,7 +531,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function show_most_spent()
 	{
-		global $required_position, $userdata, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config;
+		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config;
 	
 		if ( $garage_config['mostmoneyspent_on'] != TRUE )
 		{
@@ -587,7 +587,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function show_most_viewed()
 	{
-		global $required_position, $userdata, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config;
+		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config;
 	
 		if ( $garage_config['mostviewed_on'] != TRUE )
 		{
@@ -641,7 +641,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function show_toprated()
 	{
-		global $required_position, $userdata, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config;
+		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config;
 	
 		if ( $garage_config['toprated_on'] != TRUE )
 		{
@@ -696,7 +696,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function show_newest_vehicles()
 	{
-		global $required_position, $userdata, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config;
+		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config;
 	
 		if ( $garage_config['newestvehicles_on'] != TRUE )
 		{
@@ -736,7 +736,7 @@ class garage_vehicle
 				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id']),
 				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
 				'COLUMN_2_TITLE' => $vehicle_data['username'],
-				'COLUMN_3' => create_date('D M d, Y G:i', $vehicle_data['POI'], $board_config['board_timezone']))
+				'COLUMN_3' => $user->format_date($vehicle_data['POI']))
 			);
 	 	}
 	
@@ -750,7 +750,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function delete_vehicle($cid)
 	{
-		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
+		global $user, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
 		//Right User Want To Delete Vehicle Let Get All Mods Associated With It 
 		$mods_sql = "SELECT id FROM " . GARAGE_MODS_TABLE . " WHERE garage_id = $cid";
@@ -875,7 +875,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function display_vehicle($owned)
 	{
-		global $userdata, $template, $images, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $HTTP_POST_FILES, $HTTP_POST_VARS, $HTTP_GET_VARS, $rating_text, $rating_types, $cid, $mode, $garage, $garage_template, $garage_modification, $garage_insurance, $garage_quartermile, $garage_dynorun, $garage_image;
+		global $user, $template, $images, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $HTTP_POST_FILES, $HTTP_POST_VARS, $HTTP_GET_VARS, $rating_text, $rating_types, $cid, $mode, $garage, $garage_template, $garage_modification, $garage_insurance, $garage_quartermile, $garage_dynorun, $garage_image;
 
 		//Since We Called This Fuction Display Top Block With All Vehicle Info
 		$template->assign_block_vars('switch_top_block', array());
@@ -1000,7 +1000,7 @@ class garage_vehicle
 		$model = $vehicle_row['model'];
 	        $colour = $vehicle_row['color'];
 	        $date_updated = $vehicle_row['date_updated'];
-	        $updated = create_date($board_config['default_dateformat'], $vehicle_row['date_updated'], $board_config['board_timezone']);
+	        $updated = $user->format_date($vehicle_row['date_updated']);
 	        $mileage = $vehicle_row['mileage'];
 	        $mileage_units = $vehicle_row['mileage_units'];
 	        $purchased_price = $vehicle_row['price'];
@@ -1046,7 +1046,7 @@ class garage_vehicle
 	
 			$sql = "SELECT count(*) as total, rate_date 
 				FROM " . GARAGE_RATING_TABLE . "
-			      	WHERE user_id = " . $userdata['user_id'] ." 
+			      	WHERE user_id = " . $user->data['user_id'] ." 
 					AND garage_id = $cid
 				GROUP BY id";
 	
@@ -1210,8 +1210,8 @@ class garage_vehicle
 	               			'COST' => $modification_data[$j]['price'],
 	               			'INSTALL' => $modification_data[$j]['install_price'],
 	               			'RATING' => $modification_data[$j]['product_rating'],
-	               			'CREATED' => create_date('D M d, Y G:i', $modification_data[$j]['date_created'], $board_config['board_timezone']),
-	               			'UPDATED' => create_date('D M d, Y G:i', $modification_data[$j]['date_updated'], $board_config['board_timezone']),
+	               			'CREATED' => $user->format_date($modification_data[$j]['date_created']),
+	               			'UPDATED' => $user->format_date($modification_data[$j]['date_updated']),
 	               			'MODIFICATION' => $modification)
 	            		);
 	
@@ -1535,7 +1535,7 @@ class garage_vehicle
 	{
 		global $db;
 		//Select All Vehicle Information
-	   	$sql = "SELECT g.*, images.*, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_allowavatar, user.user_avatar, user.user_id
+	   	$sql = "SELECT g.*, images.*, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.*
                       	FROM " . GARAGE_TABLE . " AS g  
 				LEFT JOIN " . USERS_TABLE ." AS user ON g.member_id = user.user_id
 	                       	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
