@@ -597,7 +597,7 @@ if ( $db->sql_numrows($result) > 0 )
 	{
 
 		$gallery_data = $garage_image->select_gallery_data($vehicle_row['id']);
-        	while ( $i=0; $i < count($gallery_data); $i++ )
+        	for ( $i=0; $i < count($gallery_data); $i++ )
 	       	{
             		if ( $gallery_data[$i]['attach_is_image'] )
            		{
@@ -618,7 +618,7 @@ if ( $db->sql_numrows($result) > 0 )
                         images.attach_location
          		FROM " . GARAGE_MODS_TABLE . " m
                         LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON (images.attach_id = m.image_id)
-	       		WHERE garage_id = " . $vehicle_row['id'] .";";
+	       		WHERE m.garage_id = " . $vehicle_row['id'] .";";
 		if ( !($result = $db->sql_query($mod_query)) )
       		{
          		message_die(GENERAL_ERROR, 'Could Not Select Image Data For Vehicle', '', __LINE__, __FILE__, $sql);
