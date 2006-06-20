@@ -118,7 +118,7 @@ class garage_dynorun
 			if ( (!empty($data['attach_location'])) OR (!empty($data['attach_thumb_location'])) )
 			{
 				//Seems To Be An Image To Delete, Let Call The Function
-				$garage_images->delete_image($data['image_id']);
+				$garage_image->delete_image($data['image_id']);
 			}
 		}
 	

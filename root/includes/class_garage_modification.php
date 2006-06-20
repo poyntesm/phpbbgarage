@@ -101,7 +101,7 @@ class garage_modification
 	/*========================================================================*/
 	function delete_modification($mid)
 	{
-		global $garage;
+		global $garage, $garage_image;
 	
 		//Right They Want To Delete A Modification Time
 		if (empty($mid))
@@ -118,7 +118,7 @@ class garage_modification
 			if ( (!empty($data['attach_location'])) OR (!empty($data['attach_thumb_location'])) )
 			{
 				//Seems To Be An Image To Delete, Let Call The Function
-				$garage->delete_image($data['image_id']);
+				$garage_image->delete_image($data['image_id']);
 			}
 		}
 	

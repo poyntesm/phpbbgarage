@@ -750,7 +750,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function delete_vehicle($cid)
 	{
-		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
+		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $garage, $garage_modification, $garage_dynorun, $garage_insurance, $garage_image;
 	
 		//Right User Want To Delete Vehicle Let Get All Mods Associated With It 
 		$mods_sql = "SELECT id FROM " . GARAGE_MODS_TABLE . " WHERE garage_id = $cid";
@@ -762,7 +762,7 @@ class garage_vehicle
 	
 		while ($mods_row = $db->sql_fetchrow($mods_result) )
 		{
-			$this->delete_modification($mods_row['id']);
+			$garage_modification->delete_modification($mods_row['id']);
 		}
 	
 		//Right User Want To Delete Vehicle Let Get All Quartermile Times Associated With It 
@@ -778,7 +778,7 @@ class garage_vehicle
 		while ($quartermile_row = $db->sql_fetchrow($quartermile_result) )
 		{
 			$qmid = $quartermile_row['id'];
-			$this->delete_quartermile_time($qmid);
+			$garage_quartermile->delete_quartermile($qmid);
 		}
 		$db->sql_freeresult($quartermile_result);
 	
@@ -795,7 +795,7 @@ class garage_vehicle
 		while ($rollingroad_row = $db->sql_fetchrow($rollingroad_result) )
 		{
 			$rrid = $rollingroad_row['id'];
-			$this->delete_rollingroad_run($rrid);
+			$garage_dynorun->delete_dynorun($rrid);
 		}
 		$db->sql_freeresult($rollingroad_result);
 	
@@ -812,7 +812,7 @@ class garage_vehicle
 		while ($insurance_row = $db->sql_fetchrow($insurance_result) )
 		{
 			$ins_id = $insurance_row['id'];
-			$this->delete_insurance($ins_id);
+			$garage_insurance->delete_premium($ins_id);
 		}
 		$db->sql_freeresult($insurance_result);
 
@@ -828,7 +828,7 @@ class garage_vehicle
 
 		while ($gb_row = $db->sql_fetchrow($mods_result) )
 		{
-			$this->delete_rows(GARAGE_GUESTBOOKS, 'id', $gb_row['id']);
+			$garage->delete_rows(GARAGE_GUESTBOOKS, 'id', $gb_row['id']);
 		}
 
 		//Right User Want To Delete Vehicle Let Get All Ratings Associated With It
@@ -843,7 +843,7 @@ class garage_vehicle
 
 		while ($rating_row = $db->sql_fetchrow($mods_result) )
 		{
-   			$this->delete_rows(GARAGE_RATING_TABLE, 'id', $rating_row['id']);
+   			$garage->delete_rows(GARAGE_RATING_TABLE, 'id', $rating_row['id']);
 		} 
 	
 		// Right Lets Delete All Images For This Vehicle
@@ -859,12 +859,12 @@ class garage_vehicle
 		while ($gallery_row = $db->sql_fetchrow($result) )
 		{
 			$image_id = $gallery_row['image_id'];
-			$this->delete_image($image_id);
+			$garage_image->delete_image($image_id);
 		}
 		$db->sql_freeresult($result);
 	
 		// Right We Have Deleted Modifications & Images Next The Actual Vehicle
-		$this->delete_rows(GARAGE_TABLE, 'id', $cid);
+		$garage->delete_rows(GARAGE_TABLE, 'id', $cid);
 	
 		return;
 	}

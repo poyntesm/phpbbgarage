@@ -78,7 +78,7 @@ class garage_quartermile
 	/*========================================================================*/
 	function delete_quartermile($qmid)
 	{
-		global $garage;
+		global $garage, $garage_image;
 	
 		//Right They Want To Delete A QuarterMile Time
 		if (empty($qmid))
@@ -95,7 +95,7 @@ class garage_quartermile
 			if ( (!empty($data['attach_location'])) OR (!empty($data['attach_thumb_location'])) )
 			{
 				//Seems To Be An Image To Delete, Let Call The Function
-				$garage->delete_image($data['image_id']);
+				$garage_image->delete_image($data['image_id']);
 			}
 		}
 

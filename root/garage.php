@@ -900,7 +900,7 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Delete The Quartermie Time
-		$garage_quartermile->delete_quartermile_time($qmid);
+		$garage_quartermile->delete_quartermile($qmid);
 
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);

@@ -75,7 +75,7 @@ class garage_insurance
 	/*========================================================================*/
 	function delete_premium($ins_id)
 	{
-		global $db;
+		global $garage;
 	
 		//Right They Want To Delete A Insurance
 		if (empty($ins_id))
@@ -84,7 +84,7 @@ class garage_insurance
 		}
 
 		//Time To Delete The Actual Insurance Premium
-		$this->delete_rows(GARAGE_INSURANCE_TABLE, 'id', $ins_id);	
+		$garage->delete_rows(GARAGE_INSURANCE_TABLE, 'id', $ins_id);	
 	
 		return ;
 	}
