@@ -29,7 +29,7 @@
 					<td class="{vehiclerow.ROW_CLASS}" align="center"><span class="gensmall">{vehiclerow.MAKE}</span></td>
 					<td class="{vehiclerow.ROW_CLASS}" align="center"><span class="gensmall"><a href="{vehiclerow.U_VIEW_VEHICLE}">{vehiclerow.MODEL}</a></span></td>
 					<td class="{vehiclerow.ROW_CLASS}" align="center"><span class="gensmall">{vehiclerow.COLOUR}</span></td>
-					<td class="{vehiclerow.ROW_CLASS}" align="center"><span class="gen"><a href="{vehiclerow.U_VIEW_VEHICLE}">{vehiclerow.OWNER}</a></span></td>
+					<td class="{vehiclerow.ROW_CLASS}" align="center"><span class="gen"><a href="{vehiclerow.U_VIEW_PROFILE}">{vehiclerow.OWNER}</a></span></td>
 					<td class="{vehiclerow.ROW_CLASS}" align="center"><span class="gensmall">{vehiclerow.VIEWS}</span></td>
 					<td class="{vehiclerow.ROW_CLASS}" align="center"><span class="gensmall">{vehiclerow.MODS}</span></td>
 					<td class="{vehiclerow.ROW_CLASS}" align="center"><span class="gensmall">{vehiclerow.UPDATED}</span></td>

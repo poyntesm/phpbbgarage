@@ -485,7 +485,7 @@ class garage
 		global $lang, $garage_guestbook, $userdata, $db, $phpEx;
 
 		$sql = "SELECT user_id
-			FROM " . PHPBB_USERS ."
+			FROM " . USERS_TABLE ."
 			WHERE user_level = " . ADMIN . " OR user_level = " . MOD;
 
 		if(!$result = $db->sql_query($sql))

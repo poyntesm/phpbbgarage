@@ -1406,8 +1406,8 @@ switch( $mode )
 				'MODS' => $data[$i]['total_mods'],
 				'MODEL' => $data[$i]['model'],
 				'OWNER' => $data[$i]['username'],
-				'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" . $data['id']),
-				'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . "=" . $data['member_id']))
+				'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" . $data[$i]['id']),
+				'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . "=" . $data[$i]['member_id']))
 			);
 		}
 

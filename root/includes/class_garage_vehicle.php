@@ -750,7 +750,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function delete_vehicle($cid)
 	{
-		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $garage, $garage_modification, $garage_dynorun, $garage_insurance, $garage_image;
+		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $garage, $garage_modification, $garage_dynorun, $garage_insurance, $garage_image, $garage_quartermile;
 	
 		//Right User Want To Delete Vehicle Let Get All Mods Associated With It 
 		$mods_sql = "SELECT id FROM " . GARAGE_MODS_TABLE . " WHERE garage_id = $cid";
