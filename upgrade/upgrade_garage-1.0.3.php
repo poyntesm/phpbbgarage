@@ -44,17 +44,35 @@ if( $userdata['user_level'] != ADMIN )
 	message_die(GENERAL_MESSAGE, 'You are not authorised to access this page');
 }
 
-$page_title = 'Upgrading To phpBB Garage Version 1.0.4';
+$page_title = 'Upgrading To phpBB Garage Version 1.2.0';
 include($phpbb_root_path . 'includes/page_header.'.$phpEx);
 
 echo '<table width="100%" cellspacing="1" cellpadding="2" border="0" class="forumline">';
-echo '<tr><th>Upgrading To phpBB Garage Version 1.0.4</th></tr><tr><td class="row1" ><span class="genmed"><ul type="circle">';
+echo '<tr><th>Upgrading To phpBB Garage Version 1.2.0</th></tr><tr><td class="row1" ><span class="genmed"><ul type="circle">';
 
 $sql = array();
 
-$sql[] = "UPDATE " . $table_prefix . "garage_config SET config_value = '1.0.4' WHERE config_name = 'version'";
+//Update Existing Fields
+$sql[] = "UPDATE " . $table_prefix . "garage_config SET config_value = '1.2.0' WHERE config_name = 'version'";
+
+//Alter Exsiting Fields
 $sql[] = "ALTER TABLE " . $table_prefix . "garage_categories ADD `field_order` TINYINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'";
-ALTER TABLE `phpbb_garage_images` ADD `attach_thumb_filesize` INT( 10 ) NOT NULL DEFAULT '0';
+$sql[] = "ALTER TABLE " . $table_prefix . "garage_images` ADD `attach_thumb_filesize` INT( 10 ) NOT NULL DEFAULT '0'";
+$sql[] = "ALTER TABLE " . $table_prefix . "garage_images ADD `garage_id` int(10) unsigned NOT NULL default '0'";
+
+//Create New Entries
+$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('max_upload_images', '5')";
+$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('max_remote_images', '5')";
+$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('private_upload_quota', '')";
+$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('private_remote_quota', '')";
+$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('topdynorun_on', '1')";
+$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('topdynorun_limit', '5')";
+$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('quartermile_image_required', '1')";
+$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('quartermile_image_required_limit', '13')";
+$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('dynorun_image_required', '1')";
+$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('dynorun_image_required_limit', '300')";
+$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('items_pending', '0')";
+$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('private_deny_perms', '')";
 
 //We Need To Setup Field Order Since It Will Be Blank
 $sql2 = "SELECT * FROM " . $table_prefix ."garage_categories";
