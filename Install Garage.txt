@@ -1,5 +1,5 @@
 #############################################################################################################
-## MOD Title:		phpBB Garage 1.0.x
+## MOD Title:		phpBB Garage 1.2.0
 ## MOD Author: poyntesm < esmond.poynton[at]gmail[dot]com > (Esmond Poynton) http://forums.phpbbgarage.com/
 ## MOD Description:
 ##			This mod allows users of your forum to add details about their vehicles.
@@ -33,7 +33,7 @@
 ##			This mod also provides an insurance,garage,shop review page. Users Can Add Business's Themselves.
 ##			Although for the business to appear in a review page the moderator must approve it.
 ##
-## MOD Version:		1.0.x 
+## MOD Version:		1.2.0 
 ## 
 ## Installation Level:	Easy
 ## Installation Time:	10 Minutes
@@ -150,6 +150,16 @@
 ##
 ######################################################################################
 ## MOD History: 
+##   xx-xx-2006 - Version 1.2.0
+##	- Add 'DENY' permission
+##	- Add vehicle quotas by group
+## 	- Add upload image quotas by group
+## 	- Add remote image quotas by group
+## 	- Add disk space limits
+##
+##   xx-xx-2006 - Version 1.0.3
+##	- Add support for MySQL5
+##
 ##   27-02-2006 - Version 1.0.2
 ##	- Fix javascript error on adding a new model
 ##	- Fix setting private permissions
@@ -160,108 +170,6 @@
 ##	- Version Submitted To phpBB.com's MOD DB. (Resubmitted with changes 01-02-2006)
 ##	- Version Submitted To phpBB.com's MOD DB. (Resubmitted with one change 08-01-2006)
 ##
-##   06-01-2006 - Version 0.9.4
-##	- 0000120: [Vehicle] Update should be required for new rating if set in ACP (poyntesm)
-##	- 0000117: [ACP] submission fix : Missing language in admin_garage_tools.php (poyntesm)
-##	- 0000110: [General] submission fix : Use socket_set_timeout as it works on all versions of PHP 4 and PHP 5 (poyntesm)
-##	- 0000107: [Installation] submission fix : Identifier "year" is a reserved keyword in MySQL (poyntesm)
-##	- 0000108: [Installation] submission fix : Identifier "name" is a reserved keyword in MySQL (poyntesm)
-##	- 0000109: [General] submission fix : SQL queries passed to mysql_query should not end in semicolons. (poyntesm)
-##	- 0000104: [General] submission fix : Use POST_USERS_URL constant where needed (poyntesm)
-##	- 0000111: [General] submission fix : Move some javascript from functions into .tpl files (poyntesm)
-##	- 0000119: [ACP] submission fix : Missing language in admin_garage_models.php (poyntesm)
-##	- 0000114: [ACP] submission fix : Remove possible SQL injection from admin_garage_config.php (poyntesm)
-##	- 0000113: [ACP] submission fix : Remove possible SQL injection from admin_garage_models.php (poyntesm)
-##	- 0000115: [ACP] submission fix : Missing language for block types in featured block dropdown (poyntesm)
-##	- 0000106: [General] submission fix : {USERNAME}'s {L_VEHICLE}</span> replaced with {USERNAME} : {L_VEHICLE} (poyntesm)
-##	- 0000103: [General] submission fix : Make sure all <a href=...></a> are done using <a href=""></a> (poyntesm)
-##	- 0000112: [General] submission fix : Missing language for business type in pending list (poyntesm)
-##	- 0000116: [General] submission fix : Make sure all './../' are replaced with $phpbb_root_path instead. (poyntesm)
-##	- 0000102: [ACP] submission fix : replace .php with $phpEx (poyntesm)
-##	- 0000118: [ACP] submission fix : Missing language in admin_garage_permissions.php (poyntesm)
-##	- 0000105: [General] submission fix : srand needs to be called before rand (poyntesm)
-##	- 0000101: [General] submission fix : make check_permissions clearer (poyntesm)
-##
-##   12-12-2005 - Version 0.9.3
-##	- 0000100: [Modification] Invalid link when editting modification for adding business. (poyntesm)
-##
-##   09-12-2005 - Version 0.9.2
-##	- 0000099: [Vehicle] Unknown userlevels can cause permission problems. (poyntesm)
-##	- 0000098: [Vehicle] Call to undefined function: build_selection_box() in includes/functions_garage.php (poyntesm)
-##	- 0000096: [Quartermile Table] No sort option avialable (poyntesm)
-##	- 0000097: [Rollingroad Table] No sort option avialable (poyntesm)
-##
-##   23-11-2005 - Version 0.9.1
-##	- 0000094: [Vehicle] Link for Add Tank has no image (poyntesm)
-##	- 0000093: [General] Profile Links Broken In Top Rated & Top Quartermile Blocks (poyntesm)
-##	- 0000092: [General] Enable duplicate business in pending to be deleted - but to assign existing entry to all items (poyntesm)
-##	- 0000084: [Installation] Install scripts needs to work out what needs to be done (poyntesm)
-##	- 0000091: [Quartermile] Deleing rollingroad, quartermile from pending list leaves images behind.. (poyntesm)
-##	- 0000090: [General] Opening hours not entered in DB for user submitted business's (poyntesm)
-##	- 0000087: [General] Include a edit link for within pending view.. (poyntesm)
-##	- 0000089: [Insurance] User submitting business is not redirected back correctly. (poyntesm)
-##	- 0000088: [Rollingroad] Editting rollingroads does not set it to pending if required via ACP (poyntesm)
-##	- 0000086: [Insurance] Unable to delete premium (poyntesm)
-##	- 0000085: [Modification] Dropdown category box not correct on edit (poyntesm)
-##	- 0000083: [General] Featured vehicle can be a pending make/model (poyntesm)
-##	- 0000082: [Insurance] Adding business not appending SID (poyntesm)
-##	- 0000081: [Modification] Adding business not appending SID (poyntesm)
-##
-##   03-11-2005 - Version 0.9.0
-##	- Support For GDv1
-##	- Icon Set Introduced
-##	- Users Can Submit Vehicle Makes - configurable in ACP
-##	- Users Can Submit Vehicle Models - configurable in ACP
-##	- Single View Of All Pending Items
-##	- Insurance Business Review Page Overhauled
-##	- Garage Business Review Page Overhauled
-##	- Shop Business Review Page Introduced
-##	- Some Of The Bug Fixes Below - Many many more...
-##        - 0000076: [Quartermile] Pagination broken (poyntesm)
-##        - 0000077: [Rollingroad] Pagination broken (poyntesm)
-##        - 0000069: [Vehicle] Uploaded images not working on vehicle creation (poyntesm)
-##        - 0000067: [Search] Hardcoded English Text in garage.php (poyntesm)
-##        - 0000055: [Template] view_vehicle on IE is displaying incorrectly. (poyntesm)
-##        - 0000061: [Vehicle] Mouse over thumbnail of featured vehicle produces "target=_blank" (poyntesm)
-##        - 0000054: [General] $lang not used in overall_header.tpl (poyntesm)
-##        - 0000060: [ACP] Rebuild thumbnails can produce errors if original file is missing (poyntesm)
-##
-##   17-09-2005 - Version 0.1.2
-##	- Rollingroad can be enabled/disabled via ACP
-##	- Rollingroad can be enabled/disabled via ACP
-##	- Integration with phpBB profile view
-##
-##   20-07-2005 - Version 0.1.1
-##	See inlcuded changelog for fuller details :
-##	- New Rating System - Including New Frontpage Block
-##	- 1/4 Mile Table Now Only Returns Top Run Per Vehicle - Including New Frontpage Block
-##	- Quartermile/Business Approval Now ACP Customizable
-##	- Front Page Blocks Now Position Dynamically, Not Fixed To Left Or Right Column
-##	- Bug Fixes
-##
-##   17-06-2005 - Version 0.1.0
-##	See inlcuded changelog for fuller details :
-##	- Full Permissions System
-##	- Main Menu ACP Customizable
-##	- Featured Vehicle Can Now Be Selected From Blocks
-##	- Bug Fixes
-## 
-##   02-06-2005 - Version 0.0.9
-##	See inlcuded changelog for fuller details :
-##	- Support For Remote Images
-##	- Rebuildng Of Thumbnails
-##	- Bug Fixes
-##
-##   20-05-2005 - Version 0.0.8
-##	See inlcuded changelog for fuller details :
-##	- Moderation Of All Vehicle Details (quartermile,rollingroad,insurance)
-##	- Bug Fixes
-## 			
-##   27-04-2005 - Version 0.0.7
-##	First public release of the phpBB garage mod :
-##	- Major garage functionality all working
-##	- ACP panels for all major admin functions
-## 			
 ###################################################################################### 
 ## Before Adding This MOD To Your Forum, You Should Back Up All Files Related To This MOD 
 ###################################################################################### 
@@ -464,12 +372,6 @@ define('GARAGE_VEHICLE_FIELDS_DATA_TABLE', $table_prefix.'garage_vehicle_fields_
 define('GARAGE_VEHICLE_FIELDS_LANG_TABLE', $table_prefix.'garage_vehicle_fields_lang');
 define('GARAGE_VEHICLE_LANG_TABLE', $table_prefix.'garage_vehicle_lang');
 define('GARAGE_UPLOAD_PATH', 'garage/upload/');
-define('FIELD_INT', 1);
-define('FIELD_STRING', 2);
-define('FIELD_TEXT', 3);
-define('FIELD_BOOL', 4);
-define('FIELD_DROPDOWN', 5);
-define('FIELD_DATE', 6);
 define('PAGE_GARAGE', -2120);
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 # 
@@ -583,7 +485,7 @@ $sql = "SELECT g.*, images.*, makes.make, models.model, user.username, user.user
                 LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON (g.model_id = models.id)
 		LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON (images.attach_id = g.image_id)
         WHERE g.member_id = " . $profiledata['user_id'] . " AND g.main_vehicle = 1
-                GROUP BY g.id";
+        GROUP BY g.id";
 
 if ( !($result = $db->sql_query($sql)) )
 {
