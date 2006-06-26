@@ -52,10 +52,11 @@
 ##			templates/subSilver/overall_header.tpl
 ##			templates/subSilver/profile_view_body.tpl
 ##
-## Included Files: (84)
+## Included Files: (89)
 ##			Install Garage.txt
+##			READ ME FIRST.txt
 ##			Upgrade.txt
-##			contrib/Install Garage.txt
+##			contrib/Install Garage PCP.txt
 ##			contrib/profilcp/
 ##			contrib/templates/
 ## 			root/garage.php
@@ -135,6 +136,12 @@
 ##			root/templates/subSilver/images/lang_english/garage_shop_review.gif
 ##			root/templates/subSilver/images/lang_english/garage_view_vehicle.gif
 ##			root/templates/subSilver/images/lang_english/icon_garage.gif
+##			upgrade/upgrade_garage-1.0.0.txt
+##			upgrade/upgrade_garage-1.0.0.php
+##			upgrade/upgrade_garage-1.0.2.txt
+##			upgrade/upgrade_garage-1.0.2.php
+##			upgrade/upgrade_garage-1.0.3.txt
+##			upgrade/upgrade_garage-1.0.3.php
 ## License: http://opensource.org/licenses/gpl-license.php GNU General Public License v2 or any later version
 ######################################################################################
 ## For security purposes, please check: http://www.phpbb.com/mods/
@@ -157,7 +164,7 @@
 ## 	- Add remote image quotas by group
 ## 	- Add disk space limits
 ##
-##   xx-xx-2006 - Version 1.0.3
+##   18-04-2006 - Version 1.0.3
 ##	- Add support for MySQL5
 ##
 ##   27-02-2006 - Version 1.0.2
