@@ -1,0 +1,9 @@
+Welcome to phpBB Garage
+
+If you are installing for the first time and do not have the PCP MOD installed please use the 'Install Garage.txt' instruction file.
+
+If you are installing for the first time and do have the PCP MOD installed please use the 'contrib/Install Garage PCP.txt' instruction file.
+
+If you are upgrading please use the 'Upgrade.txt' instruction file.
+
+Enjoy phpBB Garage
