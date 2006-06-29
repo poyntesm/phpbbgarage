@@ -1,9 +1,16 @@
 Welcome to phpBB Garage
 
+This file is to help you understand what all the directories & files in the ZIP are for. 
+
+   1. File 'Install Garage.txt' - This is the main install file. All actions/edits from this need to be completed.
+   2. File 'Upgrade Garage.txt' - This provides details on which upgrade files to following depending on your current version.
+   2. Directory `/root` - Holds all the included files, e.g. *.php, *.tpl, *.gif
+   3. Directory `/contrib` - Holds upgrade files, screenshots and additional documentations.
+   4. Directory `/translations` - Holds install files for languages other than English.
+   5. Directory `/templates` - Holds install files for templates other than the standard phpBB template subSilver.
+
 If you are installing for the first time and do not have the PCP MOD installed please use the 'Install Garage.txt' instruction file.
-
-If you are installing for the first time and do have the PCP MOD installed please use the 'contrib/Install Garage PCP.txt' instruction file.
-
-If you are upgrading please use the 'Upgrade.txt' instruction file.
+If you are installing for the first time and do have the PCP MOD installed please use the 'contrib/ProfileCP/Install Garage.txt' instruction file.
+If you are upgrading from any version please use the 'Upgrade Garage.txt' instruction file.
 
 Enjoy phpBB Garage
