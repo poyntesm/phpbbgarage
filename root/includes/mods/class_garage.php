@@ -431,7 +431,7 @@ class garage
 	{
 		global $lang, $garage_guestbook, $userdata, $db, $phpEx;
 
-		$sql = "SELECT user_id
+		/*$sql = "SELECT user_id
 			FROM " . PHPBB_USERS ."
 			WHERE user_level = " . ADMIN . " OR user_level = " . MOD;
 
@@ -457,7 +457,7 @@ class garage
 
 		$db->sql_freeresult($result);
 
-		return;
+		return;*/
 	}
 
 	/*========================================================================*/

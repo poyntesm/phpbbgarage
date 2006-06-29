@@ -1550,7 +1550,11 @@ switch( $mode )
 			$template->assign_block_vars('search_by_insurance', array());
 		}
 
-		$template->assign_block_vars('level2', array());
+		//Build Navlinks
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $lang['SEARCH'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx?mode=search"))
+		);
 		$template->assign_vars(array(
 			'L_SEARCH_GARAGE_TITLE' => $lang['Search_Garage'],
 			'L_SEARCH_BY_MEMBER' 	=> $lang['Search_By_Member'],
@@ -1561,8 +1565,6 @@ switch( $mode )
 			'L_MODEL' 		=> $lang['Model'],
 			'L_SELECT_MODEL' 	=> $lang['Select_Model'],
 			'L_ANY_MODEL' 		=> $lang['Any_Model'],
-			'U_LEVEL2' 		=> append_sid("garage.$phpEx?mode=search"),
-			'L_LEVEL2' 		=> $lang['Search'],
 			'S_MODE_ACTION_2' 	=> append_sid("garage.$phpEx?mode=search_insurance"),
 			'S_MODE_ACTION' 	=> append_sid("garage.$phpEx?mode=browse"))
 		);
@@ -2735,7 +2737,7 @@ switch( $mode )
 		}
 
 		//Check The User Is Allowed To View This Page...If Not Send Them On There Way Nicely
-		if (!in_array($userdata['user_level'], array(ADMIN, MOD)) )
+		if (!$auth->acl_get('m_garage'))
 		{
 			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true));
 		}
@@ -2772,7 +2774,6 @@ switch( $mode )
 		//Set Up Template Varibles
 		$template->assign_block_vars('level1', array());
 		$template->assign_vars(array(
-			'U_LEVEL1' => append_sid($phpbb_root_path . 'garage.' . $phpEx . '?mode=garage_pending'),
 			'L_QUARTERMILE_PENDING' => $lang['Quartermile_Pending'],
 			'L_ROLLINGROAD_PENDING' => $lang['Rollingroad_Pending'],
 			'L_BUSINESS_PENDING' => $lang['Business_Pending'],
@@ -2843,7 +2844,7 @@ switch( $mode )
 		}
 
 		//Check The User Is Allowed To View This Page...If Not Send Them On There Way Nicely
-		if ( !in_array($userdata['user_level'], array(ADMIN, MOD)) )
+		if (!$auth->acl_get('m_garage'))
 		{
 			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true));
 		}
@@ -2959,7 +2960,7 @@ switch( $mode )
 		}
 
 		//Check The User Is Allowed To View This Page...If Not Send Them On There Way Nicely
-		if ( !in_array($userdata['user_level'], array(ADMIN, MOD)) )
+		if (!$auth->acl_get('m_garage'))
 		{
 			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true));
 		}
@@ -3158,7 +3159,12 @@ switch( $mode )
 				// till recently it wasn't XHTML compliant)
 				$post = str_replace("\n", "\n<br />\n", $post);
 
-				if ( in_array($userdata['user_level'], array(ADMIN, MOD)) )
+				$edit_img = '';
+				$edit = '';
+				$delpost_img = '';
+				$delpost = '';
+
+			 	if ( $auth->acl_get('m_garage') )
 				{
 					$temp_url = append_sid("garage.$phpEx?mode=edit_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']);
 					$edit_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_edit'] . '" alt="' . $lang['Edit_delete_post'] . '" title="' . $lang['Edit_delete_post'] . '" border="0" /></a>';
@@ -3167,13 +3173,7 @@ switch( $mode )
 					$temp_url = append_sid("garage.$phpEx?mode=delete_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']);
 					$delpost_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_delpost'] . '" alt="' . $lang['Delete_post'] . '" title="' . $lang['Delete_post'] . '" border="0" /></a>';
 					$delpost = '<a href="' . $temp_url . '">' . $lang['Delete_post'] . '</a>';
-				}
-				else
-				{
-					$edit_img = '';
-					$edit = '';
-					$delpost_img = '';
-					$delpost = '';
+
 				}
 
 				$template->assign_block_vars('comments', array(
@@ -3271,7 +3271,7 @@ switch( $mode )
 	case 'edit_comment':
 
 		//Only Allow Moderators Or Administrators Perform This Action
-		if ( !in_array($userdata['user_level'], array(ADMIN, MOD)) )
+		if (!$auth->acl_get('m_garage'))
 		{
 			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true));
 		}
@@ -3304,7 +3304,7 @@ switch( $mode )
 	case 'update_comment':
 
 		//Only Allow Moderators Or Administrators Perform This Action
-		if ( !in_array($userdata['user_level'], array(ADMIN, MOD)) )
+		if (!$auth->acl_get('m_garage'))
 		{
 			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true));
 		}
@@ -3327,7 +3327,7 @@ switch( $mode )
 	case 'delete_comment':
 
 		//Only Allow Moderators Or Administrators Perform This Action
-		if ( !in_array($userdata['user_level'], array(ADMIN, MOD)) )
+		if (!$auth->acl_get('m_garage'))
 		{
 			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true));
 		}

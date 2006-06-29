@@ -26,14 +26,14 @@
 					<th class="thCornerR" nowrap="nowrap">{L_BUSINESS}</th>
 				</tr>
 				<!-- BEGIN vehiclerow -->
-				<tr> 
-	  				<td class="{vehiclerow.ROW_CLASS}" align="center" valign="middle"><span class="gensmall"><a href="{vehiclerow.U_VIEW_VEHICLE}">{vehiclerow.VEHICLE}</a></span></td>
-					<td class="{vehiclerow.ROW_CLASS}" align="center" valign="middle"><span class="gensmall">{vehiclerow.PRICE}</span></td>
-					<td class="{vehiclerow.ROW_CLASS}" align="center" valign="middle"><span class="gensmall">{vehiclerow.MOD_PRICE}</span></td>
-					<td class="{vehiclerow.ROW_CLASS}" align="center" valign="middle"><span class="gensmall"><a href="{vehiclerow.U_VIEW_PROFILE}">{vehiclerow.USERNAME}</a></span></td>
-					<td class="{vehiclerow.ROW_CLASS}" align="center" valign="middle"><span class="gensmall">{vehiclerow.PREMIUM}</span></td>
-					<td class="{vehiclerow.ROW_CLASS}" align="center" valign="middle"><span class="gensmall">{vehiclerow.COVER_TYPE}</span></td>
-					<td class="{vehiclerow.ROW_CLASS}" align="center" valign="middle"><span class="gensmall"><a href="{vehiclerow.U_VIEW_BUSINESS}">{vehiclerow.BUSINESS}</a></span></td>
+<!-- IF vehiclerow.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+	  				<td align="center" valign="middle"><span class="gensmall"><a href="{vehiclerow.U_VIEW_VEHICLE}">{vehiclerow.VEHICLE}</a></span></td>
+					<td align="center" valign="middle"><span class="gensmall">{vehiclerow.PRICE}</span></td>
+					<td align="center" valign="middle"><span class="gensmall">{vehiclerow.MOD_PRICE}</span></td>
+					<td align="center" valign="middle"><span class="gensmall"><a href="{vehiclerow.U_VIEW_PROFILE}">{vehiclerow.USERNAME}</a></span></td>
+					<td align="center" valign="middle"><span class="gensmall">{vehiclerow.PREMIUM}</span></td>
+					<td align="center" valign="middle"><span class="gensmall">{vehiclerow.COVER_TYPE}</span></td>
+					<td align="center" valign="middle"><span class="gensmall"><a href="{vehiclerow.U_VIEW_BUSINESS}">{vehiclerow.BUSINESS}</a></span></td>
 				</tr>
 				<!-- END vehiclerow -->
 				<tr>
@@ -48,3 +48,7 @@
 			</table>
 			</form>
 		</td>
+
+<!-- INCLUDE garage_footer.html -->
+
+<!-- INCLUDE overall_footer.html -->

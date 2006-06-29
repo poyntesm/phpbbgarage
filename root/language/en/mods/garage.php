@@ -759,6 +759,7 @@ $lang = array_merge($lang, array(
 	'GARAGE_ERROR_24' => '<b>No Upload Directory Created</b><br /><br />The directory for uploading images has not been created. Please inform the site owner. The item will still be created however no image will be attached to it.',
 	'GARAGE_ERROR_25' => '<b>Incorrect Permissions On Upload Directory</b><br /><br />The directory permissions for uploading images are not correct. Please inform the site owner.The item will still be created however no image will be attached to it.',
 	'GARAGE_ERROR_26' => '<b>Image Proof Required</b><br /><br />You have entered a quartermile/dynorun that the administrator of this site has set to require an image. Please resubmit this item with an image attached.',
+	'SEARCH' => 'Search',
 
 ));
 

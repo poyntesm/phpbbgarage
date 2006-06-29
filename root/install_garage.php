@@ -246,8 +246,27 @@ $sql[] = "CREATE TABLE " . $table_prefix . "garage_rating (
 		`user_id` int(10) NOT NULL default '0',
 		`rate_date` int(10) default NULL,
 		PRIMARY KEY  (`id`)
-		)";
+	)";
 
+
+//Setup ACL Auth Options
+$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_browse', '1', '0', '0')";
+$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_search', '1', '0', '0')";
+$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_add_vehicle', '1', '0', '0')";
+$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_add_mod', '1', '0', '0')";
+$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_add_quart', '1', '0', '0')";
+$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_add_dyno', '1', '0', '0')";
+$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_add_insuran', '1', '0', '0')";
+$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_add_busines', '1', '0', '0')";
+$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_add_make', '1', '0', '0')";
+$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_rate', '1', '0', '0')";
+$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_comment', '1', '0', '0')";
+$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_upload_img', '1', '0', '0')";
+$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_remote_img', '1', '0', '0')";
+$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('m_garage', '1', '0', '0')";
+$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('a_garage', '1', '0', '0')";
+
+//Setup All Garage Setting Options
 $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('max_user_cars', '1')";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('year_start', '1980')";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('year_end', '1')";
@@ -321,6 +340,7 @@ $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('enable_user_su
 $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('version', '1.2.0')";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('garage_images', '1')";
 
+//Setup Default Modification Categories
 $sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (1, 'Engine', NULL, 1)";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (2, 'Transmission', NULL, 2)";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (3, 'Suspension', NULL, 3)";
@@ -331,6 +351,7 @@ $sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (7, 'Audio',
 $sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (8, 'Alloys &amp; Tyres', NULL, 8)";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (9, 'Security', NULL, 9)";
 
+//Setup Default Make List
 $sql[] = "INSERT INTO " . $table_prefix . "garage_makes VALUES (1, 'AC', 0)";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_makes VALUES (2, 'Acura', 0)";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_makes VALUES (3, 'Aixam', 0)";
@@ -427,6 +448,7 @@ $sql[] = "INSERT INTO " . $table_prefix . "garage_makes VALUES (93, 'Westfield',
 $sql[] = "INSERT INTO " . $table_prefix . "garage_makes VALUES (94, 'Yugo', 0)";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_makes VALUES (95, 'Nissan', 0)";
 
+//Setup Default Model List
 $sql[] = "INSERT INTO " . $table_prefix . "garage_models VALUES (1, 1, 'Ace', 0)";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_models VALUES (2, 1, 'Cobra', 0)";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_models VALUES (3, 1, 'Superblower', 0)";
@@ -1339,7 +1361,6 @@ for( $i = 0; $i < count($sql); $i++ )
 		echo '<li>' . $sql[$i] . '<br /> +++ <font color="#00AA00"><b>Successfull</b></font></li><br />';
 	}
 }
-
 
 echo '</ul></span></td></tr><tr><td class="catBottom" height="28">&nbsp;</td></tr>';
 
