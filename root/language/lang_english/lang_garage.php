@@ -88,7 +88,7 @@ $lang['Enable_Html_Mod'] = '<b>Allow HTML for Modification Comments?</b><br />Th
 $lang['Allow_Guestbooks'] = '<b>Enable Vehicle Guest Books?</b>';
 $lang['Garage_Features'] = 'Garage Main Menu Features';
 $lang['Enable_Featured_Vehicle'] = '<b>Enable Featured Vehicle?</b><br />This will hilite a particular vehicle directly on the front page of the Garage.';
-$lang['Featured_Vehcile_ID'] = '<b>Featured Vehicle</b><br />Selecy the Vehicle To Feature, By ID, Random Or Top Vehicle From Block.';
+$lang['Featured_Vehcile_ID'] = '<b>Featured Vehicle</b><br />Select the Vehicle To Feature, By ID, Random Or Top Vehicle From Block.';
 $lang['Featured_Vehcile_Description'] = '<b>Featured Vehicle Description</b><br />Enter a quick description of the featured vehicle.';
 $lang['Date_Format'] ='<b>Date/Time Format</b><br />Enter the format for the Date/Time strings. See <a href="http://www.php.net/manual/en/function.date.php">php.net</a> for possible variables.<br /><br /><b>DEFAULT</b>: m-j-y H:i';
 $lang['Enable_Newest_Vehicle'] = '<b>Enable Newest Vehicles?</b><br />Allows the newest added vehicles to be shown on the main menu.';
