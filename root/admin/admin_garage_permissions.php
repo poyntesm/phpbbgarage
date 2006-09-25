@@ -56,7 +56,7 @@ switch($mode)
 {
 case 'update_permissions':
 
-		//Right First Lets Handle Private Usergroups With 'DENY' Setup..
+		//Right First Update Private Usergroups With 'DENY' Setup..
 		$deny_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['deny']));
 		$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $deny_groups, 'config_name', 'private_deny_perms');
 
@@ -74,50 +74,20 @@ case 'update_permissions':
 			//Since All Permissions Or Global Not Set...Work Out Which Were....
 			else
 			{
-				$admin = ($HTTP_POST_VARS[$permission_mode[$i]."_ADMIN"] == 1) ? 'ADMIN' : '' ;
-				if (!empty($admin) AND empty($db_string))
+				//Cycle Through All User Types...Updating DB string
+				$user_type = array('ADMIN', 'MOD', 'USER', 'GUEST', 'PRIVATE');
+				for($j = 0; $j < count($user_type); $j++)
 				{
-					$db_string = "$admin";
-				}
-
-				$mod = ($HTTP_POST_VARS[$permission_mode[$i]."_MOD"] == 1) ? 'MOD' : '' ;
-				if (!empty($mod) AND !empty($db_string))
-				{
-					$db_string .= ",$mod";
-				}
-				else if  (!empty($mod) AND empty($db_string))
-				{
-					$db_string = "$mod";
-				}
-
-				$user = ($HTTP_POST_VARS[$permission_mode[$i]."_USER"] == 1) ? 'USER' : '' ;
-				if (!empty($user) AND !empty($db_string))
-				{
-					$db_string .= ",$user";
-				}
-				else if  (!empty($user) AND empty($db_string))
-				{
-					$db_string = "$user";
-				}
-
-				$guest = ($HTTP_POST_VARS[$permission_mode[$i]."_GUEST"] == 1) ? 'GUEST' : '' ;
-				if (!empty($guest) AND !empty($db_string))
-				{
-					$db_string .= ",$guest";
-				}
-				else if  (!empty($guest) AND empty($db_string))
-				{
-					$db_string = "$guest";
-				}
-
-				$private = ($HTTP_POST_VARS[$permission_mode[$i]."_PRIVATE"] == 1) ? 'PRIVATE' : '' ;
-				if (!empty($private) AND !empty($db_string))
-				{
-					$db_string .= ",$private";
-				}
-				else if  (!empty($private) AND empty($db_string))
-				{
-					$db_string = "$private";
+					$str = '';
+					$str = ($HTTP_POST_VARS[$permission_mode[$i] . "_" . $user_type[$j]] == 1) ? $user_type[$j : '' ;
+					if (!empty($str) AND !empty($db_string))
+					{
+						$db_string .= ",$str";
+					}
+					else if (!empty($str) AND empty($db_string))
+					{
+						$db_string = "$str";
+					}
 				}
 			}
 
@@ -129,7 +99,7 @@ case 'update_permissions':
 				message_die(GENERAL_ERROR, 'Could Not Update The Config', '', __LINE__, __FILE__, $sql);
 			}
 
-		}//End For Loop
+		}
 		
 		//Let See If Any Private 'BROWSE' Permisssions Are Set
 		if ($HTTP_POST_VARS['BROWSE_PRIVATE'] == 1) 
