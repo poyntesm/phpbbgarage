@@ -53,39 +53,33 @@ require($phpbb_root_path . 'includes/class_garage_model.' . $phpEx);
 $userdata = session_pagestart($user_ip, PAGE_GARAGE);
 init_userprefs($userdata);
 
-//Set The Page Title
+//Set The Page Title & Version Notice
 $page_title = $lang['Garage'];
 $garage_template->version_notice();
 
-//Get All String Parameters And Make Safe
+//Get Common String Parameters And Make Safe
 $params = array('mode' => 'mode', 'sort' => 'sort', 'start' => 'start', 'order' => 'order');
 while( list($var, $param) = @each($params) )
 {
+	$$var = '';
 	if ( !empty($HTTP_POST_VARS[$param]) || !empty($HTTP_GET_VARS[$param]) )
 	{
 		$$var = ( !empty($HTTP_POST_VARS[$param]) ) ? str_replace("\'", "''", trim(htmlspecialchars($HTTP_POST_VARS[$param]))) : str_replace("\'", "''", trim(htmlspecialchars($HTTP_GET_VARS[$param])));
 	}
-	else
-	{
-		$$var = '';
-	}
 }
 
-//Get All Non-String Parameters
+//Get Common Non-String Parameters
 $params = array('cid' => 'CID', 'mid' => 'MID', 'rrid' => 'RRID', 'qmid' => 'QMID', 'ins_id' => 'INS_ID', 'eid' => 'EID', 'image_id' => 'image_id', 'comment_id' => 'comment_id', 'bus_id' => 'BUS_ID');
 while( list($var, $param) = @each($params) )
 {
+	$$var = '';
 	if ( !empty($HTTP_POST_VARS[$param]) || !empty($HTTP_GET_VARS[$param]) )
 	{
 		$$var = (!empty($HTTP_POST_VARS[$param])) ? intval($HTTP_POST_VARS[$param]) : intval($HTTP_GET_VARS[$param]);
 	}
-	else
-	{
-		$$var = '';
-	}
 }
 
-//Decide What Mode The User Is Doing
+//Decide What Mode The User Is Calling
 switch( $mode )
 {
 	//Mode To Display Create Vehicle Sceen
@@ -97,7 +91,7 @@ switch( $mode )
 			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=create_vehicle", true));
 		}
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
 		$template->set_filenames(array(
@@ -106,10 +100,10 @@ switch( $mode )
 			'body'   => 'garage_vehicle.tpl')
 		);
 
-		//Count Vehicles User Already Has
+		//Count Vehicles User Already Owns
 		$count = $garage_vehicle->count_user_vehicles();
 
-		//Check To See If User Has Too Many Vehicles Already...If So Display Notice
+		//Check If User Has Too Many Vehicles Already...If So Display Notice
 		if ( $count >= $garage_vehicle->get_user_add_quota() ) 
 		{
 			redirect(append_sid("garage.$phpEx?mode=error&EID=5", true));
@@ -183,7 +177,7 @@ switch( $mode )
 			redirect(append_sid("garage.$phpEx?mode=error&EID=2", true));
 		}
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
 		//Count Vehicles User Already Has
@@ -364,7 +358,7 @@ switch( $mode )
 	//Mode To Display Add Modification Page
 	case 'add_modification':
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
@@ -425,7 +419,7 @@ switch( $mode )
 
 	case 'insert_modification':
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
@@ -621,7 +615,7 @@ switch( $mode )
 
 	case 'add_quartermile':
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
 		//Let Check That Quartermile Times Are Allowed...If Not Redirect
@@ -679,10 +673,10 @@ switch( $mode )
 
 	case 'insert_quartermile':
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
-		//Let Check That Quartermile Times Are Allowed...If Not Redirect
+		//Check That Quartermile Times Are Allowed...If Not Redirect
 		if ($garage_config['enable_quartermile'] == '0')
 		{
 			redirect(append_sid("garage.$phpEx?mode=error&EID=18", true));
@@ -917,7 +911,7 @@ switch( $mode )
 			redirect(append_sid("garage.$phpEx?mode=error&EID=18", true));
 		}
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
 		//Check Vehicle Ownership
@@ -968,7 +962,7 @@ switch( $mode )
 			redirect(append_sid("garage.$phpEx?mode=error&EID=18", true));
 		}
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
 		//Check Vehicle Ownership
@@ -1182,7 +1176,7 @@ switch( $mode )
 			redirect(append_sid("garage.$phpEx?mode=error&EID=18", true));
 		}
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
 		//Check Vehicle Ownership
@@ -1230,7 +1224,7 @@ switch( $mode )
 			redirect(append_sid("garage.$phpEx?mode=error&EID=18", true));
 		}
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
 		//Check Vehicle Ownership
@@ -1343,7 +1337,7 @@ switch( $mode )
 	//Mode To Display A List Of Vehicles..Also Used To Display Search Results For Search By Make/Model/User
 	case 'browse':
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
 		//Set Required Values To Defaults If They Are Empty
@@ -1460,7 +1454,7 @@ switch( $mode )
 	//Mode To Display Searches Of Insurance
 	case 'search_insurance':
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('BROWSE',"garage.$phpEx?mode=error&EID=15");
 
 		//Set Required Values To Defaults If They Are Empty
@@ -1554,7 +1548,7 @@ switch( $mode )
 	//Display Search Options Page...
 	case 'search':
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
@@ -1602,7 +1596,7 @@ switch( $mode )
 
 	case 'view_vehicle':
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
@@ -1626,7 +1620,7 @@ switch( $mode )
 
 	case 'view_modification':
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
@@ -1713,7 +1707,7 @@ switch( $mode )
 
 	case 'view_own_vehicle':
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
 		//Check Vehicle Ownership
@@ -1737,7 +1731,7 @@ switch( $mode )
 
 	case 'moderate_vehicle':
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
 		//Check Vehicle Ownership
@@ -1761,7 +1755,7 @@ switch( $mode )
 
 	case 'set_main':
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
 		//Check Vehicle Ownership
@@ -1790,7 +1784,7 @@ switch( $mode )
 
 	case 'insert_gallery_image':
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('UPLOAD', "garage.$phpEx?mode=error&EID=16");
 
 		//Check Vehicle Ownership
@@ -1834,7 +1828,7 @@ switch( $mode )
 
 	case 'view_gallery_item':
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
 		//Increment View Counter For This Image
@@ -1875,7 +1869,7 @@ switch( $mode )
 
 	case 'manage_vehicle_gallery':
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('UPLOAD', "garage.$phpEx?mode=error&EID=16");
 
 		//Check Vehicle Ownership		
@@ -1977,7 +1971,7 @@ switch( $mode )
 
 	case 'view_insurance_business':
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
 		$template->set_filenames(array(
@@ -2105,7 +2099,7 @@ switch( $mode )
 
 	case 'view_garage_business':
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
 		$template->set_filenames(array(
@@ -2247,7 +2241,7 @@ switch( $mode )
 
 	case 'view_shop_business':
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
 		$template->set_filenames(array(
@@ -2397,7 +2391,7 @@ switch( $mode )
 			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=user_submit_business", true));
 		}
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
@@ -2448,7 +2442,7 @@ switch( $mode )
 
 	case 'insert_business':
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD',"garage.$phpEx?mode=error&EID=14");
 
 		//Get All Data Posted And Make It Safe To Use
@@ -2486,7 +2480,7 @@ switch( $mode )
 
 	case 'edit_business':
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
@@ -2542,7 +2536,7 @@ switch( $mode )
 
 	case 'update_business':
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
 		//Get All Data Posted And Make It Safe To Use
@@ -2584,7 +2578,7 @@ switch( $mode )
 			redirect(append_sid("garage.$phpEx?mode=error&EID=18", true));
 		}
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD',"garage.$phpEx?mode=error&EID=14");
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
@@ -2615,7 +2609,7 @@ switch( $mode )
 			redirect(append_sid("garage.$phpEx?mode=error&EID=2", true));
 		}
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD',"garage.$phpEx?mode=error&EID=14");
 
 		//Get All Data Posted And Make It Safe To Use
@@ -2654,7 +2648,7 @@ switch( $mode )
 			redirect(append_sid("garage.$phpEx?mode=error&EID=18", true));
 		}
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD',"garage.$phpEx?mode=error&EID=14");
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
@@ -2698,7 +2692,7 @@ switch( $mode )
 			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=user_submit_model", true));
 		}
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD',"garage.$phpEx?mode=error&EID=14");
 
 		//Get All Data Posted And Make It Safe To Use
@@ -2725,7 +2719,7 @@ switch( $mode )
 
 	case 'quartermile':
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
 		$page_title = $lang['Car_Quart'];
@@ -3046,7 +3040,7 @@ switch( $mode )
 
 	case 'rollingroad':
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
@@ -3097,7 +3091,7 @@ switch( $mode )
 
 	case 'view_guestbook':
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
@@ -3290,7 +3284,7 @@ switch( $mode )
 
 	case 'insert_comment':
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('INTERACT', "garage.$phpEx?mode=error&EID=17");
 
 		//Get All Data Posted And Make It Safe To Use
@@ -3432,7 +3426,7 @@ switch( $mode )
 
 	case 'rate_vehicle':
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('INTERACT', "garage.$phpEx?mode=error&EID=17");
 
 		//Get All Data Posted And Make It Safe To Use
@@ -3477,7 +3471,7 @@ switch( $mode )
 
 	default:
 
-		//Let Check The User Is Allowed Perform This Action
+		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);

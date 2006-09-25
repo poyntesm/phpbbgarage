@@ -10,13 +10,10 @@ If you are running 1.0.0 you need to complete the following 1.0.0 -> 1.0.2 -> 1.
 If you are running 1.0.2 you need to complete the following 1.0.2 -> 1.0.3 -> 1.2.0
 If you are running 1.0.3 you need to complete the following 1.0.3 -> 1.2.0
 
-To complete a version upgrade you need to process the upgrade_garage.txt file and then run the upgrade_garage.php file for that upgrade. 
-
-Each of these files will have a version number showing which version it is the upgrade for.
+To complete a version upgrade you need to process the actions from upgrade_garage.txt file & run the upgrade_garage.php file for that upgrade. Each upgrade file will have a version number showing which version it is the upgrade for.
 
 So for example to upgrade 1.0.0 -> 1.0.2 the files will be named as follows.
 upgrade_garage-1.0.0.txt
 upgrade_garage-1.0.0.php
 
-All these files can be found in the upgrade folder.
-
+All these files can be found in the `/contrib/upgrade` folder of this ZIP.

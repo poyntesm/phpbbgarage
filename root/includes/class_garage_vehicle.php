@@ -1508,7 +1508,7 @@ class garage_vehicle
 			        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id 
 			        LEFT JOIN " . USERS_TABLE . " AS user ON g.member_id = user.user_id 
 			WHERE makes.pending = 0 AND models.pending = 0
-				".$search_data['where']."
+				" . $additional_where . "
 		        GROUP BY g.id
 			ORDER BY $order_by $sort_order
 			LIMIT $start, $end";

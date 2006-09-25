@@ -23,14 +23,8 @@ $phpbb_root_path = './';
 include($phpbb_root_path . 'extension.inc');
 include($phpbb_root_path . 'common.'.$phpEx);
 
-//
-// Start session management
-//
 $userdata = session_pagestart($user_ip, PAGE_INDEX);
 init_userprefs($userdata);
-//
-// End session management
-//
 
 if( !$userdata['session_logged_in'] )
 {
@@ -1277,7 +1271,7 @@ for( $i = 0; $i < count($sql); $i++ )
 
 echo '</ul></span></td></tr><tr><td class="catBottom" height="28">&nbsp;</td></tr>';
 
-echo '<tr><th>End</th></tr><tr><td><span class="genmed">Installation is now finished. Please be sure to delete this file now.<br />If you have run into any errors, please visit the <a href="http://www.phpbb.com/phpBB/viewtopic.php?t=290641" target="_phpbbsupport">Garage Support Thread</a> and ask someone for help.</span></td></tr>';
+echo '<tr><th>End</th></tr><tr><td><span class="genmed">Installation is now finished. Please be sure to delete this file now.<br />If you have run into any errors, please visit the <a href="http://www.phpbbgarage.com" target="_phpbbsupport">phpBB Garage Website</a> and ask for help.</span></td></tr>';
 echo '<tr><td class="catBottom" height="28" align="center"><span class="genmed"><a href="' . append_sid("index.$phpEx") . '">Have a nice day</a></span></td></table>';
 
 include($phpbb_root_path . 'includes/page_tail.'.$phpEx);

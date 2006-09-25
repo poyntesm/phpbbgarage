@@ -1173,7 +1173,7 @@ class garage_image
 	               		$garage->write_logfile($log_file, $log_type, $lang['Temp_File_Name'] . $tmp_file_name, 2);
 	
 	                    	// Make sure it exists, or we'll get nasty errors!
-	               		if ( $this->remote_file_exist($image_row['attach_location']) )
+	               		if ( $this->remote_file_exists($image_row['attach_location']) )
 				{
 					// Download the remote image to our temporary file
 					$this->download_remote_image($image_row['attach_location'], $tmp_file_name);

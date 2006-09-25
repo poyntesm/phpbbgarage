@@ -60,7 +60,7 @@ switch ( $mode )
 	case 'insert_category':
 
 		//Count Current Categories..So We Can Work Out Order
-		$count = $garage_modification->count_modification_categories();
+		$count = count($garage->select_all_category_data());
 
 		//Get posting variables
 		$params = array('title');

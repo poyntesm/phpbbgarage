@@ -24,7 +24,7 @@
 ##			- Top 1/4 Mile Vehicle (configurable number)
 ##			- Last Commented Vehicle (configurable number)
 ##			
-##			A complete premissions systems is available...allowing you to select what users can do.
+##			A complete premissions & quota systems is available...allowing you to select what users can do.
 ##
 ##			This mod also provides a 1/4 table see http://www.imoc.co.uk/forums/garage.php?mode=quartermile
 ##			Each time is taking from vehicles in the garage and requires approval to stop messing

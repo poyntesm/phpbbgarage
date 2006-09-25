@@ -59,6 +59,7 @@ $sql[] = "UPDATE " . $table_prefix . "garage_config SET config_value = '1.2.0' W
 $sql[] = "ALTER TABLE " . $table_prefix . "garage_categories ADD `field_order` TINYINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'";
 $sql[] = "ALTER TABLE " . $table_prefix . "garage_images` ADD `attach_thumb_filesize` INT( 10 ) NOT NULL DEFAULT '0'";
 $sql[] = "ALTER TABLE " . $table_prefix . "garage_images ADD `garage_id` int(10) unsigned NOT NULL default '0'";
+$sql[] = "ALTER TABLE " . $table_prefix . "garage_mods` ADD `purchase_rating` TINYINT( 2 ) NULL AFTER `install_comments`";
 
 //Create New Entries
 $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('max_upload_images', '5')";
@@ -73,6 +74,7 @@ $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('dynorun_image_
 $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('dynorun_image_required_limit', '300')";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('items_pending', '0')";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('private_deny_perms', '')";
+$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('garage_images', '1')";
 
 //We Need To Setup Field Order Since It Will Be Blank
 $sql2 = "SELECT * FROM " . $table_prefix ."garage_categories";
