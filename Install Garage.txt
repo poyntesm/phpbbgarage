@@ -2,41 +2,12 @@
 ## MOD Title:		phpBB Garage 1.2.0
 ## MOD Author: poyntesm < esmond.poynton[at]gmail[dot]com > (Esmond Poynton) http://forums.phpbbgarage.com/
 ## MOD Description:
-##			This mod allows users of your forum to add details about their vehicles.
-##			Each user can store a configurable number of vehicles and the following data about them
-##			- Vehicle Details (including images)
-##			- Modifications (including images)
-##			- QuarterMile Times (including images)
-##			- Rolling Road Runs (including images)
-##			- Insurance Premiums
-##			- Vehicle Guestbook - Allowing other users leave comments
-##			- Vehicle Ratings - Allowing other users to rate the vehicle
+##			This MOD allows users of your forum to add details about their vehicles.
 ##			
-##			The front page can be configured to display as requested the following
-##			- Newest Vehicle (configurable number)
-##			- Last Updated Vehicle (configurable number)
-##			- Newest Modification (configurable number)
-##			- Last Updated Modification (configurable number)
-##			- Most Modified (configurable number)
-##			- Most Money Spent (configurable number)
-##			- Featured Vehicle (set vehicle or a random one)
-##			- Top Rated Vehicle (configurable number)
-##			- Top 1/4 Mile Vehicle (configurable number)
-##			- Last Commented Vehicle (configurable number)
-##			
-##			A complete premissions & quota systems is available...allowing you to select what users can do.
-##
-##			This mod also provides a 1/4 table see http://www.imoc.co.uk/forums/garage.php?mode=quartermile
-##			Each time is taking from vehicles in the garage and requires approval to stop messing
-##			Approval is via a link that dynamically appears at the bottom of any page if a time requires it.
-##
-##			This mod also provides an insurance,garage,shop review page. Users Can Add Business's Themselves.
-##			Although for the business to appear in a review page the moderator must approve it.
-##
 ## MOD Version:		1.2.0 
 ## 
 ## Installation Level:	Easy
-## Installation Time:	10 Minutes
+## Installation Time:	15 Minutes
 ## Files To Edit: (13)
 ## 			viewtopic.php
 ## 			viewonline.php
@@ -58,7 +29,6 @@
 ##			Upgrade.txt
 ##			contrib/Install Garage PCP.txt
 ##			contrib/profilcp/
-##			contrib/templates/
 ## 			root/garage.php
 ## 			root/install_garage.php
 ##			root/admin/admin_garage_business.php
