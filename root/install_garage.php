@@ -41,7 +41,7 @@ if( $userdata['user_level'] != ADMIN )
 }*/
 
 
-$page_title = 'Installing Vehicle Garage Version 1.0.0';
+$page_title = 'Installing Vehicle Garage Version 2.0.0';
 
 // Output the page
 page_header($page_title);
@@ -253,16 +253,16 @@ $sql[] = "CREATE TABLE " . $table_prefix . "garage_rating (
 $sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_browse', '1', '0', '0')";
 $sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_search', '1', '0', '0')";
 $sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_add_vehicle', '1', '0', '0')";
-$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_add_mod', '1', '0', '0')";
-$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_add_quart', '1', '0', '0')";
-$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_add_dyno', '1', '0', '0')";
-$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_add_insuran', '1', '0', '0')";
+$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_add_modification', '1', '0', '0')";
+$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_add_quartermile', '1', '0', '0')";
+$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_add_dynorun', '1', '0', '0')";
+$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_add_insurance', '1', '0', '0')";
 $sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_add_busines', '1', '0', '0')";
 $sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_add_make', '1', '0', '0')";
 $sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_rate', '1', '0', '0')";
 $sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_comment', '1', '0', '0')";
-$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_upload_img', '1', '0', '0')";
-$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_remote_img', '1', '0', '0')";
+$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_upload_image', '1', '0', '0')";
+$sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('u_garage_remote_image', '1', '0', '0')";
 $sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('m_garage', '1', '0', '0')";
 $sql[] = "INSERT INTO " . $table_prefix . "acl_options (auth_option, is_global, is_local, founder_only) VALUES ('a_garage', '1', '0', '0')";
 
