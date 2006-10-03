@@ -288,7 +288,7 @@ styles/subSilver/imageset/imageset.cfg
 #
 #-----[ FIND ]------------------------------------------
 #
-img_attach_progress_bar = attach_progress_bar.gif*16*280
+img_button_topic_reply = {LANG}/button_topic_reply.gif*27*97
 
 #
 #-----[ AFTER, ADD ]------------------------------------------
@@ -391,7 +391,7 @@ language/en/acp/permission_phpbb.php
 # 
 #-----[ OPEN ]----- 
 # 
-templates/subSilver/overall_header.html
+styles/subSilver/templates/overall_header.html
 
 #
 #-----[ FIND ]------------------------------------------
@@ -448,7 +448,7 @@ includes/functions.php
 #
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
-		'U_GARAGE' => append_sid("garage.$phpEx"),
+		'U_GARAGE' => append_sid("{$phpbb_root_path}garage.$phpEx"),
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
 #
@@ -562,10 +562,13 @@ viewonline.php
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
 		case 'garage':
 			$location = $user->lang['VIEWING_GARAGE'];
 			$location_url = append_sid("{$phpbb_root_path}garage.$phpEx");
 		break;
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
 # 
 #-----[ OPEN ]----- 
@@ -591,6 +594,8 @@ language/en/acp/common.php
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
 	'ACP_GARAGE'			=> 'Garage',
 	'ACP_GARAGE_BUSINESS'		=> 'Business Management',
 	'ACP_GARAGE_CATEGORIES'		=> 'Category Management',
@@ -598,6 +603,7 @@ language/en/acp/common.php
 	'ACP_GARAGE_MODELS'	 	=> 'Make/Model Managment',
 	'ACP_GARAGE_PERMISSIONS'	=> 'Permissions',
 	'ACP_GARAGE_TOOLS'		=> 'Tools',
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
 #
 #-----[ SAVE/CLOSE ALL FILES ]------------------------------------------
