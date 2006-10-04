@@ -824,74 +824,63 @@ class garage_image
 	/*========================================================================*/
 	function remote_file_exists($url)
 	{
-	        // Make sure php will allow us to do this...
-	        if ( ini_get('allow_url_fopen') )
+		$head = '';
+		$url_p = parse_url ($url);
+	
+	       	if (isset ($url_p['host']))
+		{
+			$host = $url_p['host']; 
+		}
+	        else
 	        {
-	        	$head = '';
-	        	$url_p = parse_url ($url);
+	             	return false;
+	        }
 	
-	        	if (isset ($url_p['host']))
-	            	{
-				$host = $url_p['host']; 
-			}
-	            	else
-	            	{
-	                	return false;
-	            	}
+	        $path = (isset ($url_p['path'])) ? $url_p['path'] : '';
 	
-	            	$path = (isset ($url_p['path'])) ? $url_p['path'] : '';
-	
-	            	$fp = @fsockopen ($host, 80, $errno, $errstr, 20);
-	            	if (!$fp)
-	            	{
-	               		return false;
-	            	}
-	            	else
-	            	{
-	               		$parse = parse_url($url);
-	               		$host = $parse['host'];
-	
-				@fputs($fp, 'HEAD '.$url." HTTP/1.1\r\n");
-	               		@fputs($fp, 'HOST: '.$host."\r\n");
-	               		@fputs($fp, "Connection: close\r\n\r\n");
-	               		$headers = '';
-	               		while (!@feof ($fp))
-	               		{ 
-					$headers .= @fgets ($fp, 128); 
-				}
-	            	}
-	            	@fclose ($fp);
-	
-	            	$arr_headers = explode("\n", $headers);
-	            	if (isset ($arr_headers[0]))    
-			{
-	               		if(strpos ($arr_headers[0], '200') !== false)
-	               		{ 
-					return true; 
-				}
-	               		if( (strpos ($arr_headers[0], '404') !== false) || (strpos ($arr_headers[0], '509') !== false) || (strpos ($arr_headers[0], '410') !== false))
-	               		{ 
-					return false; 
-				}
-	               		if( (strpos ($arr_headers[0], '301') !== false) || (strpos ($arr_headers[0], '302') !== false))
-				{
-	                   		preg_match("/Location:\s*(.+)\r/i", $headers, $matches);
-	                   		if(!isset($matches[1]))
-					{
-	                       			return false;
-					}
-	                   		$nextloc = $matches[1];
-					return $this->remote_file_exists($nextloc);
-	               		}
-	            	}
-	            	// If we are still here then we got an unexpected header
-	            	return false;
+	        $fp = @fsockopen ($host, 80, $errno, $errstr, 20);
+	        if (!$fp)
+	        {
+	        	return false;
 	        }
 	        else
 	        {
-	        	// Since we aren't allowed to use URL's bomb out
-	        	return false;
-	        }
+	        	$parse = parse_url($url);
+	               	$host = $parse['host'];
+	
+			@fputs($fp, 'HEAD '.$url." HTTP/1.1\r\n");
+	               	@fputs($fp, 'HOST: '.$host."\r\n");
+	               	@fputs($fp, "Connection: close\r\n\r\n");
+	               	$headers = '';
+	               	while (!@feof ($fp))
+	               	{ 
+				$headers .= @fgets ($fp, 128); 
+			}
+	       	}
+	       	@fclose ($fp);
+	
+	       	$arr_headers = explode("\n", $headers);
+	       	if (isset ($arr_headers[0]))    
+		{
+	       		if(strpos ($arr_headers[0], '200') !== false)
+	       		{ 
+				return true; 
+			}
+	       		if( (strpos ($arr_headers[0], '404') !== false) || (strpos ($arr_headers[0], '509') !== false) || (strpos ($arr_headers[0], '410') !== false))
+	       		{ 
+				return false; 
+			}
+	       		if( (strpos ($arr_headers[0], '301') !== false) || (strpos ($arr_headers[0], '302') !== false))
+			{
+	               		preg_match("/Location:\s*(.+)\r/i", $headers, $matches);
+	               		if(!isset($matches[1]))
+				{
+	               			return false;
+				}
+	               		$nextloc = $matches[1];
+				return $this->remote_file_exists($nextloc);
+	       		}
+	       	}
 	}
 	
 	/*========================================================================*/
@@ -1069,19 +1058,46 @@ class garage_image
 	{
 		global $garage_config, $phpbb_root_path;
 
-		//Download The Remote Image To Our Temporary file
-                $infile = @fopen ($remote_url, "rb");
-                $outfile = @fopen ( $phpbb_root_path . GARAGE_UPLOAD_PATH . $destination_file, "wb");
+	        if ( ini_get('allow_url_fopen') )
+        	{
+			$infile = @fopen ($remote_url, "rb");
+                	$outfile = @fopen ( $phpbb_root_path . GARAGE_UPLOAD_PATH . $destination_file, "wb");
 
-                //Set Our Custom Timeout
-                socket_set_timeout($infile, $garage_config['remote_timeout']);
+	                //Set Our Custom Timeout
+       		         socket_set_timeout($infile, $garage_config['remote_timeout']);
 
-               	while (!@feof ($infile)) 
-		{
-	               	@fwrite($outfile, @fread ($infile, 4096));
+               		while (!@feof ($infile)) 
+			{
+	               		@fwrite($outfile, @fread ($infile, 4096));
+			}
+	                @fclose($outfile);
+		        @fclose($infile);
 		}
-                @fclose($outfile);
-	        @fclose($infile);
+		//Not allowed use fopen so use fsockopen
+		else
+		{
+   			$url = parse_url($remote_url);
+			$port = isset($url['port']) ? $url['port'] : 80;
+
+			$infile = fsockopen($url['host'], $port);
+
+			$query  = 'GET ' . $url['path'] . " HTTP/1.0\n";
+			$query .= 'Host: ' . $url['host'];
+			$query .= "\n\n";
+
+			fwrite($infile, $query);
+
+			while ($tmp = fread($infile, 1024))
+			{
+				$buffer .= $tmp;
+			}
+
+			preg_match('/Content-Length: ([0-9]+)/', $buffer, $parts);
+   			return substr($buffer, - $parts[1]); 
+
+                	$outfile = @fopen ( $phpbb_root_path . GARAGE_UPLOAD_PATH . $destination_file, "wb");
+		}
+
 
 		@chmod($phpbb_root_path . GARAGE_UPLOAD_PATH . $destination_file, 0777);
 
