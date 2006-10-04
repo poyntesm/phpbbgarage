@@ -15,7 +15,7 @@
 					<td class="row1" width="30%"><span class="gen"><b>{L_MAKE}</b></span></td>
 					<td class="row2"><select name="make_id" onchange="updateModelSelect(this.form.model_id, this.options[this.selectedIndex].text, '');" class="forminput"><option value="{MAKE_ID}">{L_SELECT_MODEL}</option></select>&nbsp;<span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font></span>
 					<!-- BEGIN enable_user_submit_make -->
-						&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="{U_USER_SUBMIT_MAKE}">{L_HERE}</a></span>
+						&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="javascript:add_make()">{L_HERE}</a></span>
 					<!-- END enable_user_submit_make -->
 					</td>
 				</tr>
@@ -23,7 +23,7 @@
 					<td class="row1" width="30%"><span class="gen"><b>{L_MODEL}</b></span></td>
 					<td class="row2"><select name="model_id" class="forminput"><option value="">{L_ANY_MODEL}</option></select>&nbsp;<span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font></span>
 					<!-- BEGIN enable_user_submit_model -->
-						&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<input type="hidden" name="adding_model" value="{ADDING_MODEL}" /><a href="javascript:add_model('YES')">{L_HERE}</a></span>
+						&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="javascript:add_model()">{L_HERE}</a></span>
 					<!-- END enable_user_submit_model -->
 					</td>
 				</tr>
@@ -65,7 +65,7 @@
 				<!-- END remote_images -->
 				<!-- END allow_images -->
 				<tr>
-					<td class="catBottom" align="center" height="28" colspan="2"><input type="hidden" value="{CID}" name="CID" /><input name="edit_vehicle" type="submit" value="{L_BUTTON}" class="liteoption" /></td>
+					<td class="catBottom" align="center" height="28" colspan="2"><input type="hidden" value="{CID}" name="CID" /><input name="edit_vehicle" type="submit" value="{L_BUTTON}" class="liteoption" /><input type="hidden" value="{MODE}" name="mode" /></td>
 				</tr>
 			</form>
 			</table>
@@ -80,10 +80,16 @@ updateModelSelect(document.edit_vehicle.model_id, '{MAKE}', '{MODEL}');
 
 <script language="JavaScript" type="text/javascript">
 <!--
-function add_model ( selected )
+function add_model ()
 {
-  document.edit_vehicle.adding_model.value = selected ;
+  document.edit_vehicle.mode.value = 'user_submit_model' ;
   document.edit_vehicle.submit() ;
+}
+
+function add_make ()
+{
+  document.edit_vehicle.mode.value = 'user_submit_make' ;
+  document.edit_vehicle.submit();
 }
 -->
 </script>

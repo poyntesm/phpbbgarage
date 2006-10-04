@@ -9,7 +9,7 @@
 					<td class="row2"><input name="make" type="text" class="post" size="35" value="{MAKE}" /></td>
 				</tr>
 				<tr>
-					<td class="catBottom" align="center" height="28" colspan="2"><input type="hidden" value="insert_make" name="mode" /><input name="submit" type="submit" value="{L_ADD_MAKE_BUTTON}" class="liteoption" /></td>
+					<td class="catBottom" align="center" height="28" colspan="2"><input type="hidden" value="insert_make" name="mode" /><input type="hidden" value="{YEAR}" name="year" /><input name="submit" type="submit" value="{L_ADD_MAKE_BUTTON}" class="liteoption" /></td>
 				</tr>
 			</table>
 			</form>

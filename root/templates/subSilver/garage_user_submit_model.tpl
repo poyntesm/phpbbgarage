@@ -13,7 +13,7 @@
 					<td class="row2"><input name="model" type="text" class="post" size="35" value="{S_MODEL}" /></td>
 				</tr>
 				<tr>
-					<td class="catBottom" align="center" height="28" colspan="2"><input type="hidden" value="insert_model" name="mode" /><input type="hidden" value="{MAKE_ID}" name="make_id" /><input type="hidden" value="{MAKE}" name="make" /><input name="submit" type="submit" value="{L_ADD_MODEL_BUTTON}" class="liteoption" /></td>
+					<td class="catBottom" align="center" height="28" colspan="2"><input type="hidden" value="insert_model" name="mode" /><input type="hidden" value="{MAKE_ID}" name="make_id" /><input type="hidden" value="{MAKE}" name="make" /><input type="hidden" value="{YEAR}" name="year" /><input name="submit" type="submit" value="{L_ADD_MODEL_BUTTON}" class="liteoption" /></td>
 				</tr>
 			</table>
 			</form>
