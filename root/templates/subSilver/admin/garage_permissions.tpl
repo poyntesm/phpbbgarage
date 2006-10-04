@@ -216,7 +216,7 @@
 		<td class="row1" width="10%" align="center"></td>
 		<td class="row1" width="10%" align="center"></td>
 		<td class="row1" width="10%" align="center" valign="middle"><input name="max_user_cars" type="text" class="post" size="3" value="{MAX_USER_CARS}" /></td>
-		<td class="row1" width="10%" align="center" valign="middle">{L_LOCAL}<input name="max_upload_images" type="text" class="post" size="3" value="{MAX_UPLOAD_IMAGES}" />&nbsp;{L_REMOTE}<input name="max_remote_images" type="text" class="post" size="3" value="{MAX_REMOTE_IMAGES}" /></td>
+		<td class="row1" width="10%" align="center" valign="middle">{L_LOCAL}&nbsp;<input name="max_upload_images" type="text" class="post" size="3" value="{MAX_UPLOAD_IMAGES}" /><br />{L_REMOTE}&nbsp;<input name="max_remote_images" type="text" class="post" size="3" value="{MAX_REMOTE_IMAGES}" /></td>
 	</tr>
 	<tr>
 		<td class="row1" colspan="6"><span class="gen">{L_GRANULAR_PERMISSIONS}</td>
@@ -280,7 +280,7 @@
 		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="upload[]" value="{usergroup.GROUP_ID}" {usergroup.UPLOAD_CHECKED} onclick="handleClick('upload{usergroup.GROUP_ID}')" />
 			<table cellpadding="3" cellspacing="1" border="0"> 
 				<tr id="upload{usergroup.GROUP_ID}" style="display:{usergroup.UPLOAD_DISPLAY};">
-					<td align="center">{L_LOCAL}<input name="upload_quota_{usergroup.GROUP_ID}" type="text" class="post" size="3" value="{usergroup.UPLOAD_QUOTA}" />&nbsp;{L_REMOTE}<input name="remote_quota_{usergroup.GROUP_ID}" type="text" class="post" size="3" value="{usergroup.REMOTE_QUOTA}" /> </td>
+					<td align="center">{L_LOCAL}&nbsp;<input name="upload_quota_{usergroup.GROUP_ID}" type="text" class="post" size="3" value="{usergroup.UPLOAD_QUOTA}" /><br />{L_REMOTE}&nbsp;<input name="remote_quota_{usergroup.GROUP_ID}" type="text" class="post" size="3" value="{usergroup.REMOTE_QUOTA}" /> </td>
 				</tr>
 			</table>
 		</td>
