@@ -79,7 +79,7 @@ case 'update_permissions':
 				for($j = 0; $j < count($user_type); $j++)
 				{
 					$str = '';
-					$str = ($HTTP_POST_VARS[$permission_mode[$i] . "_" . $user_type[$j]] == 1) ? $user_type[$j : '' ;
+					$str = ($HTTP_POST_VARS[$permission_mode[$i] . "_" . $user_type[$j]] == 1) ? $user_type[$j] : '' ;
 					if (!empty($str) AND !empty($db_string))
 					{
 						$db_string .= ",$str";
@@ -126,12 +126,12 @@ case 'update_permissions':
 		}
 
 		//Let See If Any Private 'ADD' Permisssions & Quotas Are Set
-		if ($HTTP_POST_VARS['ADD_PRIVATE'] == 1) 
+		if ( ($HTTP_POST_VARS['ADD_PRIVATE'] == 1) AND (!empty($HTTP_POST_VARS['add'])) ) 
 		{
 			$add_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['add']));
 			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $add_groups, 'config_name', 'private_add_perms');
 			//Now Lets Get Quota For Groups That Have Been Granted Permission
-			foreach ( $HTTP_POST_VARS['upload'] as $id)
+			foreach ( $HTTP_POST_VARS['add'] as $id)
 			{
 				$group_id = intval($id);
 				$add_quota .= intval($HTTP_POST_VARS['add_quota_'.$group_id]).',';
@@ -147,7 +147,7 @@ case 'update_permissions':
 		}
 
 		//Let See If Any Private 'UPLOAD' Permisssions & Quotas Are Set
-		if ($HTTP_POST_VARS['UPLOAD_PRIVATE'] == 1) 
+		if ( ($HTTP_POST_VARS['UPLOAD_PRIVATE'] == 1) AND (!empty($HTTP_POST_VARS['upload'])) )  
 		{
 			$upload_groups = str_replace("\'", "''", @implode(',', $HTTP_POST_VARS['upload']));
 			$garage->update_single_field(GARAGE_CONFIG_TABLE,'config_value', $upload_groups, 'config_name', 'private_upload_perms');
