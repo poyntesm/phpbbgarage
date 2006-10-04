@@ -21,7 +21,7 @@
  ***************************************************************************/
 
 $lang['Garage_Error_Default'] = '<b>Unknown Problem</b><br /><br />Sorry But We Seem To Have Had A Problem, However It Was Not Listed In Our Error Database.<br /><br />Please Contact The Administrator And Detail Exactly What You Were Doing When The Problem Occured';
-$lang['Garage_Error_1'] = '<b>No Business Approved To Be Listed Yet</b><br /><br />Either No Insurance Business Has Been Added Or Any Insurance Business Approved By The Site Administrator To Be Listed Here Yet';
+$lang['Garage_Error_1'] = '<b>No Business Approved To Be Listed Yet</b><br /><br />Either No Business Has Been Added Or No Business Approved By The Site Administrator To Be Listed Here Yet';
 $lang['Garage_Error_2'] = '<b>Need To Sign In</b><br /><br />You must be signed in to create a new vehicle. Please sign in and try again';
 $lang['Garage_Error_3'] = '<b>Required Field Missing</b><br /><br />A Field Marked As <font color="#FF0000">[Required]</font> Was Not Filled In<br /> Please Use Your Browsers Back Button And Fill It In';
 $lang['Garage_Error_4'] = '<b>Vehicle Image Threshold</b><br /><br />You Have Reached The Number Of Images Per Vehicle That The Administrator Has Set. To Upload Anymore Please Delete An Existing Image';
@@ -48,4 +48,5 @@ $lang['Garage_Error_23'] = '<b>No Make Selected</b><br /><br />Sorry but you sel
 $lang['Garage_Error_24'] = '<b>No Upload Directory Created</b><br /><br />The directory for uploading images has not been created. Please inform the site owner. The item will still be created however no image will be attached to it.';
 $lang['Garage_Error_25'] = '<b>Incorrect Permissions On Upload Directory</b><br /><br />The directory permissions for uploading images are not correct. Please inform the site owner.The item will still be created however no image will be attached to it.';
 $lang['Garage_Error_26'] = '<b>Image Proof Required</b><br /><br />You have entered a quartermile/dynorun that the administrator of this site has set to require an image. Please resubmit this item with an image attached.';
+$lang['Garage_Error_27'] = '<b>Make Already Exists</b><br /><br />You have entered a make that already exists in the database. Please select it from the dropdown.';
 ?>
