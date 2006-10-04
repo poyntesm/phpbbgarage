@@ -110,7 +110,7 @@ switch( $mode )
 		}
 
 		//Set Default Make 
-		$params = array('MAKE', 'MODEL');
+		$params = array('MAKE', 'MODEL', 'YEAR');
 		$data = $garage->process_post_vars($params);
 		$data['MAKE'] = (empty($data['MAKE'])) ? '' : $data['MAKE'];
 
@@ -131,7 +131,7 @@ switch( $mode )
 		}
 
 		//Build All Required HTML 
-		$garage_template->year_dropdown();
+		$garage_template->year_dropdown($data['YEAR']);
 		$garage_template->attach_image('vehicle');
 		$template->assign_vars(array(
 			'L_TITLE' => $lang['Create_New_Vehicle'],
@@ -150,8 +150,9 @@ switch( $mode )
 			'L_DESCRIPTION' => $lang['Description'],
 			'L_NOT_LISTED_YET' => $lang['Not_Listed_Yet'],
 			'L_HERE' => $lang['Here'],
-			'S_MODE_ACTION' => append_sid("garage.$phpEx?mode=insert_vehicle"),
+			'S_MODE_ACTION' => append_sid("garage.$phpEx"),
 			'U_USER_SUBMIT_MAKE' => append_sid("garage.$phpEx?mode=user_submit_make"),
+			'MODE' 	=> 'insert_vehicle',
 			'MAKE' 	=> $data['MAKE'],
 			'MODEL'	=> $data['MODEL'],
 			'ADDING_MODEL' => 'NO',
@@ -194,17 +195,6 @@ switch( $mode )
 		$data = $garage->process_post_vars($params);
 		$data['guestbook_pm_notify'] = ($data['guestbook_pm_notify'] == 'on') ? 1 : 0;
 		$data['time'] = time();
-
-		//We Need To Check If We Have Been Sent Here To Add A Model...
-		if ( $data['adding_model'] == 'YES' )
-		{
-			//We Are Adding A Model But No Make Given..Error Nicely
-			if ( empty($data['make_id']) )
-			{
-				redirect(append_sid("garage.$phpEx?mode=error&EID=23", true));
-			}
-			redirect(append_sid("garage.$phpEx?mode=user_submit_model&MAKE_ID=".$data['make_id'], true));
-		}
 
 		//Set As Main User Vehicle If No Other Vehicle Exists For User
 		$data['main_vehicle'] = ( $count == 0 ) ? 1 : 0;
@@ -273,7 +263,7 @@ switch( $mode )
 		$template->assign_var_from_handle('JAVASCRIPT', 'javascript');
 
 		$template->assign_vars(array(
-			'S_MODE_ACTION' => append_sid("garage.$phpEx?mode=update_vehicle"),
+			'S_MODE_ACTION' => append_sid("garage.$phpEx"),
 			'L_REQUIRED' => $lang['Required'],
 			'L_CHECK_FOR_PM' => $lang['Check_For_PM'],
 			'L_VEHICLE_INFO' => $lang['Vehicle_Info'],
@@ -288,6 +278,7 @@ switch( $mode )
 			'L_DESCRIPTION' => $lang['Description'],
        			'L_TITLE' => $lang['Edit_Vehicle'],
        			'L_BUTTON' => $lang['Edit_Vehicle'],
+			'MODE' 	=> 'update_vehicle',
 			'CID' => $cid,
 			'MAKE' => $data['make'],
 			'MODEL' => $data['model'],
@@ -2581,6 +2572,10 @@ switch( $mode )
 		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD',"garage.$phpEx?mode=error&EID=14");
 
+		//Get All Data Posted And Make It Safe To Use
+		$params = array('year');
+		$data = $garage->process_post_vars($params);
+
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
 			'header' => 'garage_header.tpl',
@@ -2591,6 +2586,7 @@ switch( $mode )
 			'L_ADD_MAKE' 		 => $lang['Add_Make'],
 			'L_ADD_MAKE_BUTTON' 	 => $lang['Add_Make_Button'],
 			'L_VEHICLE_MAKE' 	 => $lang['Vehicle_Make'],
+			'YEAR' 			 => $data['year'],
 			'S_GARAGE_MODELS_ACTION' => append_sid('admin_garage_models.' . $phpEx))
 		);
 
@@ -2613,24 +2609,27 @@ switch( $mode )
 		$garage->check_permissions('ADD',"garage.$phpEx?mode=error&EID=14");
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('make');
+		$params = array('make', 'year');
 		$data = $garage->process_post_vars($params);
 
 		//Checks All Required Data Is Present
-		$params = array('make');
+		$params = array('make', 'year');
 		$garage->check_required_vars($params);
 
-		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
-		if ( $data['pending'] == 1 )
+		//Check Make Does Not Already Exist
+		if ($garage_model->count_make($data['make']) > 0)
 		{
-			$garage->pending_notification();
-			$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', $data['pending'], 'config_name', 'items_pending');
+			redirect(append_sid("garage.$phpEx?mode=error&EID=27", true));
 		}
 
 		//Create The Make
 		$garage_model->insert_make($data);
 
-		redirect(append_sid("garage.$phpEx?mode=create_vehicle&MAKE=" . $data['make'], true));
+		//All Makes & Models Require Approval
+		$garage->pending_notification();
+		$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', '1', 'config_name', 'items_pending');
+
+		redirect(append_sid("garage.$phpEx?mode=create_vehicle&MAKE=" . $data['make'] . "&YEAR=" . $data['year'], true));
 
 		break;
 
@@ -2658,21 +2657,23 @@ switch( $mode )
 		);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('MAKE_ID');
+		$params = array('make_id', 'year');
 		$data = $garage->process_post_vars($params);
+		$year = $data['year'];
 
 		//Checks All Required Data Is Present
-		$params = array('MAKE_ID');
+		$params = array('make_id');
 		$garage->check_required_vars($params);
 
 		//Pull Required Make Data From DB
-		$data = $garage_model->select_make_data($data['MAKE_ID']);
+		$data = $garage_model->select_make_data($data['make_id']);
 
 		$template->assign_vars(array(
 			'L_ADD_MODEL' 		=> $lang['Add_Model'],
 			'L_ADD_MODEL_BUTTON' 	=> $lang['Add_Model_Button'],
 			'L_VEHICLE_MAKE' 	=> $lang['Vehicle_Make'],
 			'L_VEHICLE_MODEL' 	=> $lang['Vehicle_Model'],
+			'YEAR' 			=> $year,
 			'MAKE_ID' 		=> $data['id'],
 			'MAKE' 			=> $data['make'])
 		);
@@ -2696,24 +2697,20 @@ switch( $mode )
 		$garage->check_permissions('ADD',"garage.$phpEx?mode=error&EID=14");
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('make', 'make_id', 'model');
+		$params = array('make', 'make_id', 'model', 'year');
 		$data = $garage->process_post_vars($params);
 
 		//Checks All Required Data Is Present
 		$params = array('make', 'make_id', 'model');
 		$garage->check_required_vars($params);
 
-		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
-		if ( $data['pending'] == 1 )
-		{
-			$garage->pending_notification();
-			$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', $data['pending'], 'config_name', 'items_pending');
-		}
+		$garage->pending_notification();
+		$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', '1', 'config_name', 'items_pending');
 
 		//Create The Model
 		$garage_model->insert_model($data);
 
-		redirect(append_sid("garage.$phpEx?mode=create_vehicle&MAKE=" . $data['make'] . "&MODEL=" . $data['model'], true));
+		redirect(append_sid("garage.$phpEx?mode=create_vehicle&MAKE=" . $data['make'] . "&MODEL=" . $data['model'] . "&YEAR=" . $data['year'], true));
 
 		break;
 
@@ -2904,10 +2901,6 @@ switch( $mode )
 		$params = array('action');
 		$data = $garage->process_post_vars($params);
 
-		//Setup Arrays Needed For Data
-		$qm_id = array(); $rr_id = array(); $bus_id = array(); $mk_id = array(); $mdl_id = array();
-		$params = array('qm_id' => GARAGE_QUARTERMILE_TABLE, 'rr_id' => GARAGE_ROLLINGROAD_TABLE, 'bus_id' => GARAGE_BUSINESS_TABLE, 'mk_id' => GARAGE_MAKES_TABLE, 'mdl_id' => GARAGE_MODELS_TABLE);
-
 		//Check If We Are Doing A Business Reassign
 		if ( $data['action'] == 'REASSIGN' )
 		{
@@ -2920,7 +2913,6 @@ switch( $mode )
 
 			//Get Business ID We Are Going To Delete
 			$bus_id = intval($HTTP_POST_VARS['bus_id'][0]);
-
 			$data = $garage_business->select_business_data($bus_id);
 
 			//Generate Page Header
@@ -2956,6 +2948,16 @@ switch( $mode )
 			break;
 		}
 
+		//Setup Arrays Needed For Data
+		$qm_id = array(); 
+		$rr_id = array(); 
+		$bus_id = array(); 
+		$mk_id = array(); 
+		$mdl_id = array();
+
+		//Setup Different Pending ID's & Matching Tables
+		$params = array('qm_id' => GARAGE_QUARTERMILE_TABLE, 'rr_id' => GARAGE_ROLLINGROAD_TABLE, 'bus_id' => GARAGE_BUSINESS_TABLE, 'mk_id' => GARAGE_MAKES_TABLE, 'mdl_id' => GARAGE_MODELS_TABLE);
+
 		//Process Each Pending Type For Updates
 		while( list($ids, $table) = @each($params) )
 		{
@@ -2990,11 +2992,10 @@ switch( $mode )
 				//Process For Approval...
 				else if ( $data['action'] == 'APPROVE' )
 				{
-					while( $i < count($pending_ids) )
+					for ($i = 0 ; $i < count($pending_ids); $i++)
 					{
 						$id = intval($pending_ids[$i]);
 						$garage->update_single_field($table, 'pending', 0, 'id', $id);
-						$i++;
 					}
 				}
 			}
