@@ -151,7 +151,6 @@ switch( $mode )
 			'L_NOT_LISTED_YET' => $lang['Not_Listed_Yet'],
 			'L_HERE' => $lang['Here'],
 			'S_MODE_ACTION' => append_sid("garage.$phpEx"),
-			'U_USER_SUBMIT_MAKE' => append_sid("garage.$phpEx?mode=user_submit_make"),
 			'MODE' 	=> 'insert_vehicle',
 			'MAKE' 	=> $data['MAKE'],
 			'MODEL'	=> $data['MODEL'],
