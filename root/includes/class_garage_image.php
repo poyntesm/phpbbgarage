@@ -73,6 +73,7 @@ class garage_image
 			return max($quota);
 		}
 	}
+
 	/*========================================================================*/
 	// Gets User Remote Image Quota
 	// Usage: get_user_upload_image_quota();
@@ -832,15 +833,15 @@ class garage_image
 			$host = $url_p['host']; 
 		}
 	        else
-	        {
+		{
 	             	return false;
 	        }
 	
-	        $path = (isset ($url_p['path'])) ? $url_p['path'] : '';
-	
+		$path = (isset ($url_p['path'])) ? $url_p['path'] : '';
+
 	        $fp = @fsockopen ($host, 80, $errno, $errstr, 20);
 	        if (!$fp)
-	        {
+		{
 	        	return false;
 	        }
 	        else
@@ -857,8 +858,8 @@ class garage_image
 				$headers .= @fgets ($fp, 128); 
 			}
 	       	}
-	       	@fclose ($fp);
-	
+		@fclose ($fp);
+
 	       	$arr_headers = explode("\n", $headers);
 	       	if (isset ($arr_headers[0]))    
 		{
@@ -867,7 +868,7 @@ class garage_image
 				return true; 
 			}
 	       		if( (strpos ($arr_headers[0], '404') !== false) || (strpos ($arr_headers[0], '509') !== false) || (strpos ($arr_headers[0], '410') !== false))
-	       		{ 
+			{ 
 				return false; 
 			}
 	       		if( (strpos ($arr_headers[0], '301') !== false) || (strpos ($arr_headers[0], '302') !== false))
@@ -880,7 +881,10 @@ class garage_image
 	               		$nextloc = $matches[1];
 				return $this->remote_file_exists($nextloc);
 	       		}
-	       	}
+		}
+
+	        // If we are still here then we got an unexpected header
+	        return false;
 	}
 	
 	/*========================================================================*/
@@ -893,7 +897,7 @@ class garage_image
 
 		$sql = "SELECT  * 
 			FROM " . GARAGE_IMAGES_TABLE . " 
-			WHERE attach_id =$image_id";
+			WHERE attach_id = $image_id";
 
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -931,7 +935,6 @@ class garage_image
 	
 		return $rows;
 	}
-
 
 	/*========================================================================*/
 	// Select All Image Data From DB
@@ -998,7 +1001,7 @@ class garage_image
 		$sql = "SELECT img.*
      			FROM " . GARAGE_IMAGES_TABLE . " AS img
         			LEFT JOIN " . GARAGE_TABLE . " AS g ON g.id = img.garage_id 
-        		WHERE g.member_id = $user_id";
+        		WHERE g.member_id = $user_id AND img.attach_location NOT LIKE 'http://'";
 
       		if ( !($result = $db->sql_query($sql)) )
       		{
@@ -1025,7 +1028,7 @@ class garage_image
 		$sql = "SELECT img.*
      			FROM " . GARAGE_IMAGES_TABLE . " AS img
         			LEFT JOIN " . GARAGE_TABLE . " AS g ON g.id = img.garage_id 
-        		WHERE g.member_id = $user_id";
+        		WHERE g.member_id = $user_id AND img.attach_location LIKE 'http://'";
 
       		if ( !($result = $db->sql_query($sql)) )
       		{
@@ -1051,6 +1054,58 @@ class garage_image
 	}
 
 	/*========================================================================*/
+	// Downloads A File Without HTML Headers
+	// Usage: fsockopen_url('URL');
+	/*========================================================================*/
+	function fsockopen_url($url) 
+	{
+		$url_parsed = parse_url($url);
+		$host = $url_parsed["host"];
+		$port = $url_parsed["port"];
+		if ($port==0)
+		{
+			$port = 80;
+		}
+
+		$path = $url_parsed["path"];
+		if (empty($path))
+		{
+			$path="/";
+		}
+	
+		if ($url_parsed["query"] != "")
+		{
+			$path .= "?".$url_parsed["query"];
+		}
+
+	  	$out = "GET $path HTTP/1.0\r\nHost: $host\r\n\r\n";
+	  	$fp = fsockopen($host, $port, $errno, $errstr, 5);
+	  	if (!$fp) 
+		{    
+			return false;
+	  	} 
+		else 
+		{
+			fwrite($fp, $out);
+			$body = false;
+			while (!feof($fp)) 
+			{
+		  		$s = fgets($fp, 1024);
+		  		if ( $body )
+				{
+					$in .= $s;
+				}
+		  		if ( $s == "\r\n" )
+				{
+					$body = true;
+				}
+			} 
+		}
+	  	fclose($fp);
+	  	return $in;
+	}
+
+	/*========================================================================*/
 	// Download Remote Image
 	// Usage: download_remote_image('Image URL', 'Destination File Name');
 	/*========================================================================*/
@@ -1058,8 +1113,9 @@ class garage_image
 	{
 		global $garage_config, $phpbb_root_path;
 
+		//If Allowed By Host Use fopen....
 	        if ( ini_get('allow_url_fopen') )
-        	{
+		{
 			$infile = @fopen ($remote_url, "rb");
                 	$outfile = @fopen ( $phpbb_root_path . GARAGE_UPLOAD_PATH . $destination_file, "wb");
 
@@ -1073,31 +1129,15 @@ class garage_image
 	                @fclose($outfile);
 		        @fclose($infile);
 		}
-		//Not allowed use fopen so use fsockopen
+		//Not Allowed Use fopen So Use fsockopen...So Everyone Is Happy
 		else
 		{
-   			$url = parse_url($remote_url);
-			$port = isset($url['port']) ? $url['port'] : 80;
-
-			$infile = fsockopen($url['host'], $port);
-
-			$query  = 'GET ' . $url['path'] . " HTTP/1.0\n";
-			$query .= 'Host: ' . $url['host'];
-			$query .= "\n\n";
-
-			fwrite($infile, $query);
-
-			while ($tmp = fread($infile, 1024))
-			{
-				$buffer .= $tmp;
-			}
-
-			preg_match('/Content-Length: ([0-9]+)/', $buffer, $parts);
-   			return substr($buffer, - $parts[1]); 
-
-                	$outfile = @fopen ( $phpbb_root_path . GARAGE_UPLOAD_PATH . $destination_file, "wb");
+			$infile = $this->fsockopen_url($remote_url);
+			$outfile = @fopen($phpbb_root_path . GARAGE_UPLOAD_PATH . $destination_file,"w+");
+			@fwrite($outfile,$infile);
+			@fclose($outfile);
+			@fclose($infile);
 		}
-
 
 		@chmod($phpbb_root_path . GARAGE_UPLOAD_PATH . $destination_file, 0777);
 
