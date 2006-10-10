@@ -7,7 +7,7 @@ TOP LEVEL FILES
 
 DIRECTORIES
   1. Directory `/root` - Holds all the included files, e.g. *.php, *.tpl, *.gif
-  2. Directory `/contrib` - Holds upgrade files, screenshots and additional documentations. You only need files from this location if an instruction tells to use a file from here.
+  2. Directory `/contrib` - Holds upgrade files and additional documentations. You only need files from this location if an instruction tells to use a file from here.
   3. Directory `/translations` - Holds install files for languages other than English. Only needed for sites using languages other than English.
   4. Directory `/templates` - Holds install files for templates other than the standard phpBB template subSilver. You only need files from this location if you are using a template other than subSilver. Please note if your template is not here I do not have detailed install instructions. You will need to try adapt the install from the standard one.
 

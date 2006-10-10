@@ -427,6 +427,37 @@ class garage_modification
 
 		return $rows;
 	}
+
+	/*========================================================================*/
+	// Select Modifications By Business Data From DB
+	// Usage: select_modifications_by_business_data('garage id');
+	/*========================================================================*/
+	function select_modifications_by_vehicle_data($cid)
+	{
+
+		global $db;
+
+		$sql = "SELECT m.*, images.*, 
+         		FROM " . GARAGE_MODS_TABLE . " m
+				LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON (images.attach_id = m.image_id)
+			WHERE m.garage_id = $cid";
+
+		if ( !($result = $db->sql_query($sql)) )
+      		{
+         		message_die(GENERAL_ERROR, 'Could Not Select Modification Data', '', __LINE__, __FILE__, $sql);
+      		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
+
+		$db->sql_freeresult($result);
+
+		return $rows;
+	}
+
+
 }
 
 $garage_modification = new garage_modification();

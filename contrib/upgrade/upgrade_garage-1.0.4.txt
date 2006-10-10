@@ -1,8 +1,8 @@
 #############################################################################################################
-## MOD Title:		Update phpBB Garage 1.0.3 -> phpBB Garage 1.2.0
+## MOD Title:		Update phpBB Garage 1.0.4 -> phpBB Garage 1.2.0
 ## MOD Author: poyntesm < esmond.poynton[at]gmail[dot]com > (Esmond Poynton) http://forums.phpbbgarage.com
 ## MOD Description:
-##			Updates phpBB Garage From 1.0.3 To 1.2.0
+##			Updates phpBB Garage From 1.0.4 To 1.2.0
 ##
 ## MOD Version:		1.2.0
 ## 

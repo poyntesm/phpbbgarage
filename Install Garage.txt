@@ -7,8 +7,9 @@
 ## MOD Version:		1.2.0 
 ## 
 ## Installation Level:	Easy
-## Installation Time:	15 Minutes
-## Files To Edit: (13)
+## Installation Time:	20 Minutes
+## Files To Edit: (15)
+##			memberlist.php
 ## 			viewtopic.php
 ## 			viewonline.php
 ## 			includes/constants.php
@@ -17,18 +18,20 @@
 ## 			includes/usercp_viewprofile.php
 ##			language/lang_english/lang_admin.php
 ##			language/lang_english/lang_main.php
+## 			templates/subSilver/memberlist_body.tpl
 ## 			templates/subSilver/subSilver.cfg
 ## 			templates/subSilver/viewtopic_body.tpl
 ## 			templates/subSilver/overall_footer.tpl
 ##			templates/subSilver/overall_header.tpl
 ##			templates/subSilver/profile_view_body.tpl
 ##
-## Included Files: (89)
+## Included Files: (91)
 ##			Install Garage.txt
 ##			READ ME FIRST.txt
 ##			Upgrade.txt
-##			contrib/Install Garage PCP.txt
-##			contrib/profilcp/
+##			contrib/profilcp/Install Garage PCP.txt
+##			contrib/profilcp/profil_garage_body.tpl
+##			contrib/profilcp/profilcp_public_garage.php
 ## 			root/garage.php
 ## 			root/install_garage.php
 ##			root/admin/admin_garage_business.php
@@ -112,6 +115,8 @@
 ##			upgrade/upgrade_garage-1.0.2.php
 ##			upgrade/upgrade_garage-1.0.3.txt
 ##			upgrade/upgrade_garage-1.0.3.php
+##			upgrade/upgrade_garage-1.0.4.txt
+##			upgrade/upgrade_garage-1.0.4.php
 ## License: http://opensource.org/licenses/gpl-license.php GNU General Public License v2 or any later version
 ######################################################################################
 ## For security purposes, please check: http://www.phpbb.com/mods/
@@ -133,6 +138,10 @@
 ## 	- Add upload image quotas by group
 ## 	- Add remote image quotas by group
 ## 	- Add disk space limits
+##	- Support sites with allow_url_fopen disabled
+##
+##   07-10-2006 - Version 1.0.4
+##	- Fix performance issue
 ##
 ##   18-04-2006 - Version 1.0.3
 ##	- Add support for MySQL5
@@ -165,6 +174,101 @@ Chmod ./garage/ to 755
 Chmod ./garage/upload to 777
 Open your web browser and run install_garage.php
 Delete install_garage.php if it ran succesfully
+
+# 
+#-----[ OPEN ]----- 
+# 
+memberlist.php
+
+#
+#-----[ FIND ]------------------------------------------
+#
+<?php
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+
+#
+#-----[ FIND ]------------------------------------------
+#
+	'L_WEBSITE' => $lang['Website'],
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+	'L_GARAGE' => $lang['Garage'],
+//-- mod finsh : Garage ----------------------------------------------------------------------------------------------------
+
+#
+#-----[ FIND ]------------------------------------------
+#
+		$search = '<a href="' . $temp_url . '">' . sprintf($lang['Search_user_posts'], $username) . '</a>';
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+		$garage_img = ( $row['garage_id'] ) ?'<a href="' . append_sid("garage.$phpEx?mode=browse&search=yes&user=" . $row['username'] . "") . '"><img src="' . $images['icon_garage'] . '" alt="'.$lang['View_Users_Garage'].'" title="'.$lang['View_Users_Garage'].'" border="0" /></a>' : '';
+//-- mod finsh : Garage ----------------------------------------------------------------------------------------------------
+
+#
+#-----[ FIND ]------------------------------------------
+#
+			'WWW_IMG' => $www_img,
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+			'GARAGE_IMG' => $garage_img,
+//-- mod finsh : Garage ----------------------------------------------------------------------------------------------------
+
+#
+#-----[ FIND ]------------------------------------------
+#
+	default:
+		$order_by = "user_regdate $sort_order LIMIT $start, " . $board_config['topics_per_page'];
+		break;
+}
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- modify
+
+#
+#-----[ FIND ]------------------------------------------
+#
+$sql = "SELECT username, user_id, user_viewemail, user_posts, user_regdate, user_from, user_website, user_email, user_icq, user_aim, user_yim, user_msnm, user_avatar, user_avatar_type, user_allowavatar 
+#-----[ IN-LINE FIND ]------------------------------------------
+#
+user_allowavatar
+#
+#-----[ IN-LINE AFTER, ADD ]------------------------------------------
+#
+, g.id as garage_id
+
+#
+#-----[ FIND ]------------------------------------------
+#
+	FROM " . USERS_TABLE . "
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+		LEFT JOIN " . GARAGE_TABLE ." g ON ( g.member_id = user_id and g.main_vehicle = 1)
+
+#
+#-----[ FIND ]------------------------------------------
+#
+	ORDER BY $order_by";
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod finsh : Garage ----------------------------------------------------------------------------------------------------
 
 # 
 #-----[ OPEN ]----- 
@@ -256,6 +360,7 @@ pt
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 	$garage_id = $postrow[$i]['garage_id'];
+	$garage_img = ( $postrow[$i]['garage_id'] ) ?'<a href="' . append_sid("garage.$phpEx?mode=browse&search=yes&user=".$postrow[$i]['username']."") . '"><img src="' . $images['icon_garage'] . '" alt="'.$lang['View_Users_Garage'].'" title="'.$lang['View_Users_Garage'].'" border="0" /></a>' : '';
 	$poster_car_year = ( $postrow[$i]['made_year'] && $postrow[$i]['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $postrow[$i]['made_year'] : '';
 	$poster_car_make = ( $postrow[$i]['make'] && $postrow[$i]['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $postrow[$i]['make'] : '';
 	$poster_car_model = ( $postrow[$i]['model'] && $postrow[$i]['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $postrow[$i]['model'] : '';
@@ -270,6 +375,7 @@ pt
 #
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
+		'GARAGE_IMG' => $garage_img,
 		'POSTER_CAR_MAKE' => $poster_car_make,
 		'POSTER_CAR_MODEL' => $poster_car_model,
 		'POSTER_CAR_YEAR' => $poster_car_year,
@@ -441,144 +547,10 @@ make_jumpbox('viewforum.'.$phpEx);
 
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
-//Setup Garage Language Files...
-if(empty($board_config['default_lang']))
-{
-	$board_config['default_lang'] = 'english';
-}
-require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage.' . $phpEx);
-require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage_error.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_image.' . $phpEx);
-
-$sql = "SELECT g.*, images.*, makes.make, models.model, user.username, user.user_avatar_type,
-	user.user_allowavatar, user.user_avatar,
-        count(mods.id) AS total_mods,  
-        ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent 
-        FROM " . GARAGE_TABLE . " g  
-		LEFT JOIN " . USERS_TABLE ." user ON (g.member_id = user.user_id)
-                LEFT JOIN " . GARAGE_MODS_TABLE . " mods ON (g.id = mods.garage_id)
-                LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON (g.make_id = makes.id)
-                LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON (g.model_id = models.id)
-		LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON (images.attach_id = g.image_id)
-        WHERE g.member_id = " . $profiledata['user_id'] . " AND g.main_vehicle = 1
-        GROUP BY g.id";
-
-if ( !($result = $db->sql_query($sql)) )
-{
-       	message_die(GENERAL_ERROR, 'Could Not Select Vehicle Data', '', __LINE__, __FILE__, $sql);
-}
-
-$vehicle_row = $db->sql_fetchrow($result);
-
-if ( $db->sql_numrows($result) > 0 )
-{
-	$template->assign_block_vars('garage_vehicle', array());
-	$total_spent = $vehicle_row['total_spent'] ? $vehicle_row['total_spent'] : 0;
-
-	//Display Just Thumbnails Of All Images Or Just One Main Image
-	if ( $garage_config['profile_thumbs'] == 1 )
-	{
-
-		$gallery_data = $garage_image->select_gallery_data($vehicle_row['id']);
-        	for ( $i=0; $i < count($gallery_data); $i++ )
-	       	{
-            		if ( $gallery_data[$i]['attach_is_image'] )
-           		{
-                		// Do we have a thumbnail?  If so, our job is simple here :)
-				if ( (empty($gallery_data[$i]['attach_thumb_location']) == FALSE) AND ($gallery_data[$i]['attach_thumb_location'] != $gallery_data[$i]['attach_location']) AND ( $vehicle_images_found <= 12) )
-                		{
-                    			// Form the image link
-					$thumb_image = GARAGE_UPLOAD_PATH . $gallery_data[$i]['attach_thumb_location'];
-					$id = $gallery_data[$i]['attach_id'];
-					$title = $gallery_data[$i]['attach_file'];
-					$hilite_image .= '<a href=garage.php?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
-               			} 
-			}
-	        }
-
-		$mod_query = "SELECT m.*,images.attach_id, images.attach_hits, images.attach_ext, 
-                        images.attach_file, images.attach_thumb_location, images.attach_is_image,
-                        images.attach_location
-         		FROM " . GARAGE_MODS_TABLE . " m
-                        LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON (images.attach_id = m.image_id)
-	       		WHERE m.garage_id = " . $vehicle_row['id'] .";";
-		if ( !($result = $db->sql_query($mod_query)) )
-      		{
-         		message_die(GENERAL_ERROR, 'Could Not Select Image Data For Vehicle', '', __LINE__, __FILE__, $sql);
-	      	}
-
-        	while ( $mod_gallery = $db->sql_fetchrow($result) )
-	       	{
-            		if ( $mod_gallery['attach_is_image'] )
-           		{
-                		// Do we have a thumbnail?  If so, our job is simple here :)
-				if ( (empty($mod_gallery['attach_thumb_location']) == FALSE) AND ($mod_gallery['attach_thumb_location'] != $gallery_data['attach_location']) AND ( $vehicle_images_found <= 12) )
-                		{
-                    			// Form the image link
-					$thumb_image = GARAGE_UPLOAD_PATH . $mod_gallery['attach_thumb_location'];
-					$id = $mod_gallery['attach_id'];
-					$title = $mod_gallerya['attach_file'];
-					$hilite_image .= '<a href=garage.php?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
-               			} 
-			}
-	        }
-	}
-	//Looks Like We Only Need To Draw One Main Image
-	else
-	{
-		if ( ($vehicle_row['image_id']) AND ($vehicle_row['attach_is_image']) AND (!empty($vehicle_row['attach_thumb_location'])) AND (!empty($vehicle_row['attach_location'])) )
-		{
-			// Check to see if this is a remote image
-			if ( preg_match( "/^http:\/\//i", $vehicle_row['attach_location']) )
-			{
-				$image = $vehicle_row['attach_location'];
-				$id = $vehicle_row['attach_id'];
-				$title = $vehicle_row['attach_file'];
-				$total_image_views = $vehicle_row['attach_hits'];
-				$hilite_image = '<a href=garage.php?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
-			}
-			else
-			{
-				$image = GARAGE_UPLOAD_PATH . $vehicle_row['attach_location'];
-				$id = $vehicle_row['attach_id'];
-				$title = $vehicle_row['attach_file'];
-				$total_image_views = $vehicle_row['attach_hits'];
-				$hilite_image = '<a href=garage.php?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
-			}
-		}
-	}
-
-	$garage_img ='<a href="' . append_sid("garage.$phpEx?mode=browse&search=yes&user=".urlencode($profiledata['username'])."") . '"><img src="' . $images['icon_garage'] . '" alt="'.$lang['Garage'].'" title="'.$lang['Garage'].'" border="0" /></a>';
-
-	$template->assign_vars(array(
-		'L_VEHICLE' => $lang['Vehicle'],
-		'L_GARAGE' => $lang['Garage'],
-		'L_COLOUR' => $lang['Colour'],
-		'L_MILEAGE' => $lang['Mileage'],
-		'L_PRICE' => $lang['Purchased_Price'],
-		'L_TOTAL_MODS' => $lang['Total_Mods'],
-		'L_TOTAL_SPENT' => $lang['Total_Spent'],
-		'L_DESCRIPTION' => $lang['Description'],
-		'L_SEARCH_USER_GARAGE' => $lang['Search_User_Garage'],
-		'YEAR' => $vehicle_row['year'],
-		'MAKE' => $vehicle_row['make'],
-		'MODEL' => $vehicle_row['model'],
-       		'COLOUR' => $vehicle_row['color'],
-	       	'HILITE_IMAGE' => $hilite_image,
-        	'MILEAGE' => $vehicle_row['mileage'],
-	        'MILEAGE_UNITS' => $vehicle_row['mileage_unit'],
-        	'PRICE' => $vehicle_row['price'],
-	        'CURRENCY' => $vehicle_row['currency'],
-        	'TOTAL_MODS' => $vehicle_row['total_mods'],
-	        'TOTAL_SPENT' => $total_spent,
-        	'TOTAL_VIEWS' => $vehicle_row['views'],
-	        'DESCRIPTION' => $vehicle_row['comments'],
-	        'GARAGE_IMG' => $garage_img,
-		'U_SEARCH_USER_GARAGE' => append_sid("garage.$phpEx?mode=browse"))
-	);
-}
+require($phpbb_root_path . 'includes/class_garage_vehicle.' . $phpEx);
+$garage_vehicle->profile_integration();
 //-- mod finish: Garage ----------------------------------------------------------------------------------------------------
+
 # 
 #-----[ OPEN ]------------------------------------------
 # 
@@ -641,9 +613,40 @@ language/lang_english/lang_main.php
 //-- add
 $lang['Garage'] = 'Garage';
 $lang['Viewing_Garage'] = 'Viewing Garage';
+$lang['View_Users_Garage'] = 'View user\'s Garage';
 $lang['Quartermile_Table'] = '1/4 Mile Table';
 $lang['Pending_Items'] = 'View Pending Garage Items';
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+# 
+#-----[ OPEN ]----- 
+# 
+templates/subSilver/memberlist_body.tpl
+
+#
+#-----[ FIND ]------------------------------------------
+#
+	  <th class="thTop" nowrap="nowrap">{L_POSTS}</th>
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+	  <th class="thTop" nowrap="nowrap">{L_GARAGE}</th>
+#
+#-----[ FIND ]------------------------------------------
+#
+	  <td class="{memberrow.ROW_CLASS}" align="center">&nbsp;{memberrow.WWW_IMG}&nbsp;</td>
+#
+#-----[ BEFORE, ADD ]------------------------------------------
+#
+	  <td class="{memberrow.ROW_CLASS}" align="center">&nbsp;{memberrow.GARAGE_IMG}&nbsp;</td>
+#
+#-----[ FIND ]------------------------------------------
+#
+	  <td class="catBottom" colspan="8" height="28">&nbsp;</td>
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+	  <td class="catBottom" colspan="9" height="28">&nbsp;</td>
 
 # 
 #-----[ OPEN ]----- 
@@ -665,6 +668,19 @@ templates/subSilver/viewtopic_body.tpl
 
 <br /><br /><a href="{postrow.VIEW_POSTER_CARPROFILE}" >{postrow.POSTER_CAR_YEAR} {postrow.POSTER_CAR_MAKE} {postrow.POSTER_CAR_MODEL}</a>
 
+#
+#-----[ FIND ]------------------------------------------
+#
+# this is a partial search : the full line is longer
+				<td valign="middle" nowrap="nowrap">{postrow.PROFILE_IMG}
+#
+#-----[ IN-LINE FIND ]------------------------------------------
+#
+{postrow.PROFILE_IMG}
+#
+#-----[ IN-LINE AFTER, ADD ]------------------------------------------
+#
+ {postrow.GARAGE_IMG}
 # 
 #-----[ OPEN ]----- 
 # 

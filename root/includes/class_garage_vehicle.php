@@ -1555,6 +1555,148 @@ class garage_vehicle
 
 		return $row;
 	}
+
+	/*========================================================================*/
+	// Select A Users Main Vehicle Data From Db
+	// Usage: select_user_main_vehicle_data('user id');
+	/*========================================================================*/
+	function select_user_main_vehicle_data($user_id)
+	{
+		global $db;
+
+	   	$sql = "SELECT g.*, images.*, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_allowavatar, user.user_avatar, user.user_id
+                      	FROM " . GARAGE_TABLE . " AS g  
+				LEFT JOIN " . USERS_TABLE ." AS user ON g.member_id = user.user_id
+	                       	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
+        	                LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
+				LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON g.id = mods.garage_id
+				LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = g.image_id
+                    	WHERE g.member_id = $cid and g.main_vehicle =1
+	                GROUP BY g.id";
+
+      		if ( !($result = $db->sql_query($sql)) )
+      		{
+         		message_die(GENERAL_ERROR, 'Could Not Get Vehicle Data', '', __LINE__, __FILE__, $sql);
+      		}
+
+		$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $row;
+	}
+
+	/*========================================================================*/
+	// Integrates phpBB Garage & phpBB User Profiles
+	// Usage: profile_integration();
+	/*========================================================================*/
+	function profile_integration()
+	{
+		global $userdata, $images, $template, $profiledata, $lang;
+
+		//Get Vehicle Data
+		$vehicle_data = $this->select_user_main_vehicle_data($userdata['user_id']);
+
+		if ( count($vehicle_data) > 0 )
+		{
+			$template->assign_block_vars('garage_vehicle', array());
+			$total_spent = $vehicle_data['total_spent'] ? $vehicle_data['total_spent'] : 0;
+
+			//Display Just Thumbnails Of All Images Or Just One Main Image
+			if ( $garage_config['profile_thumbs'] == 1 )
+			{
+
+				//Build List Of Gallery Images For Vehicle
+				$gallery_data = $garage_image->select_gallery_data($vehicle_data['id']);
+        			for ( $i=0; $i < count($gallery_data); $i++ )
+	       			{
+		            		if ( $gallery_data[$i]['attach_is_image'] )
+           				{
+                				// Do we have a thumbnail?  If so, our job is simple here :)
+						if ( (empty($gallery_data[$i]['attach_thumb_location']) == FALSE) AND ($gallery_data[$i]['attach_thumb_location'] != $gallery_data[$i]['attach_location']) AND ( $vehicle_images_found <= 12) )
+                				{
+                    					// Form the image link
+							$thumb_image = GARAGE_UPLOAD_PATH . $gallery_data[$i]['attach_thumb_location'];
+							$id = $gallery_data[$i]['attach_id'];
+							$title = $gallery_data[$i]['attach_file'];
+							$hilite_image .= '<a href=garage.php?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
+               					} 
+					}
+				}
+
+				//Build List Of Modification Images For Vehicle
+				$mod_data = $garage_modification->select_modifications_by_vehicle_data($vehicle_data['id'])
+        			for ( $i=0; $i < count($mod_data); $i++ )
+			       	{
+            				if ( $mod_data[$i]['attach_is_image'] )
+		           		{
+                				// Do we have a thumbnail?  If so, our job is simple here :)
+						if ( (empty($mod_data[$i]['attach_thumb_location']) == FALSE) AND ($mod_data[$i]['attach_thumb_location'] != $mod_data[$i]['attach_location']) AND ( $vehicle_images_found <= 12) )
+		                		{
+                		    			// Form the image link
+							$thumb_image = GARAGE_UPLOAD_PATH . $mod_data[$i]['attach_thumb_location'];
+							$id = $mod_data[$i]['attach_id'];
+							$title = $mod_data[$i]['attach_file'];
+							$hilite_image .= '<a href=garage.php?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
+		               			} 
+					}
+			        }
+			}
+			//Looks Like We Only Need To Draw One Main Image
+			else
+			{
+				if ( ($vehicle_data['image_id']) AND ($vehicle_data['attach_is_image']) AND (!empty($vehicle_data['attach_thumb_location'])) AND (!empty($vehicle_data['attach_location'])) )
+				{
+					// Check to see if this is a remote image
+					if ( preg_match( "/^http:\/\//i", $vehicle_data['attach_location']) )
+					{
+						$image = $vehicle_data['attach_location'];
+						$id = $vehicle_data['attach_id'];
+						$title = $vehicle_data['attach_file'];
+						$total_image_views = $vehicle_data['attach_hits'];
+						$hilite_image = '<a href=garage.php?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
+					}
+					else
+					{
+						$image = GARAGE_UPLOAD_PATH . $vehicle_data['attach_location'];
+						$id = $vehicle_data['attach_id'];
+						$title = $vehicle_data['attach_file'];
+						$total_image_views = $vehicle_data['attach_hits'];
+						$hilite_image = '<a href=garage.php?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
+					}
+				}
+			}
+
+			$garage_img ='<a href="' . append_sid("garage.$phpEx?mode=browse&search=yes&user=".urlencode($profiledata['username'])."") . '"><img src="' . $images['icon_garage'] . '" alt="'.$lang['Garage'].'" title="'.$lang['Garage'].'" border="0" /></a>';
+
+			$template->assign_vars(array(
+				'L_VEHICLE' => $lang['Vehicle'],
+				'L_GARAGE' => $lang['Garage'],
+				'L_COLOUR' => $lang['Colour'],
+				'L_MILEAGE' => $lang['Mileage'],
+				'L_PRICE' => $lang['Purchased_Price'],
+				'L_TOTAL_MODS' => $lang['Total_Mods'],
+				'L_TOTAL_SPENT' => $lang['Total_Spent'],
+				'L_DESCRIPTION' => $lang['Description'],
+				'L_SEARCH_USER_GARAGE' => $lang['Search_User_Garage'],
+				'YEAR' => $vehicle_data['year'],
+				'MAKE' => $vehicle_data['make'],
+				'MODEL' => $vehicle_data['model'],
+		       		'COLOUR' => $vehicle_data['color'],
+			       	'HILITE_IMAGE' => $hilite_image,
+		        	'MILEAGE' => $vehicle_data['mileage'],
+			        'MILEAGE_UNITS' => $vehicle_data['mileage_unit'],
+		        	'PRICE' => $vehicle_data['price'],
+			        'CURRENCY' => $vehicle_data['currency'],
+		        	'TOTAL_MODS' => $vehicle_data['total_mods'],
+			        'TOTAL_SPENT' => $total_spent,
+		        	'TOTAL_VIEWS' => $vehicle_data['views'],
+			        'DESCRIPTION' => $vehicle_data['comments'],
+			        'GARAGE_IMG' => $garage_img,
+				'U_SEARCH_USER_GARAGE' => append_sid("garage.$phpEx?mode=browse"))
+			);
+
+		}
+	}
 }
 
 $garage_vehicle = new garage_vehicle();

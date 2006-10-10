@@ -6,9 +6,10 @@
 
 Each upgrade must be completed in the sequence.
 
-If you are running 1.0.0 you need to complete the following 1.0.0 -> 1.0.2 -> 1.0.3 -> 1.2.0
-If you are running 1.0.2 you need to complete the following 1.0.2 -> 1.0.3 -> 1.2.0
-If you are running 1.0.3 you need to complete the following 1.0.3 -> 1.2.0
+If you are running 1.0.0 you need to complete the following 1.0.0 -> 1.0.2 -> 1.0.3 -> 1.0.4 -> 1.2.0
+If you are running 1.0.2 you need to complete the following 1.0.2 -> 1.0.3 -> 1.0.4 -> 1.2.0
+If you are running 1.0.3 you need to complete the following 1.0.3 -> 1.0.4 -> 1.2.0
+If you are running 1.0.4 you need to complete the following 1.0.3 -> 1.2.0
 
 To complete a version upgrade you need to process the actions from upgrade_garage.txt file & run the upgrade_garage.php file for that upgrade. Each upgrade file will have a version number showing which version it is the upgrade for.
 
