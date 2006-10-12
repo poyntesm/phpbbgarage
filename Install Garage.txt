@@ -204,30 +204,6 @@ memberlist.php
 #
 #-----[ FIND ]------------------------------------------
 #
-		$search = '<a href="' . $temp_url . '">' . sprintf($lang['Search_user_posts'], $username) . '</a>';
-#
-#-----[ AFTER, ADD ]------------------------------------------
-#
-//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-		$garage_img = ( $row['garage_id'] ) ?'<a href="' . append_sid("garage.$phpEx?mode=browse&search=yes&user=" . $row['username'] . "") . '"><img src="' . $images['icon_garage'] . '" alt="'.$lang['View_Users_Garage'].'" title="'.$lang['View_Users_Garage'].'" border="0" /></a>' : '';
-//-- mod finsh : Garage ----------------------------------------------------------------------------------------------------
-
-#
-#-----[ FIND ]------------------------------------------
-#
-			'WWW_IMG' => $www_img,
-#
-#-----[ AFTER, ADD ]------------------------------------------
-#
-//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-			'GARAGE_IMG' => $garage_img,
-//-- mod finsh : Garage ----------------------------------------------------------------------------------------------------
-
-#
-#-----[ FIND ]------------------------------------------
-#
 	default:
 		$order_by = "user_regdate $sort_order LIMIT $start, " . $board_config['topics_per_page'];
 		break;
@@ -268,6 +244,30 @@ user_allowavatar
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
+//-- mod finsh : Garage ----------------------------------------------------------------------------------------------------
+
+#
+#-----[ FIND ]------------------------------------------
+#
+		$search = '<a href="' . $temp_url . '">' . sprintf($lang['Search_user_posts'], $username) . '</a>';
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+		$garage_img = ( $row['garage_id'] ) ?'<a href="' . append_sid("garage.$phpEx?mode=browse&search=yes&user=" . $row['username'] . "") . '"><img src="' . $images['icon_garage'] . '" alt="'.$lang['View_Users_Garage'].'" title="'.$lang['View_Users_Garage'].'" border="0" /></a>' : '';
+//-- mod finsh : Garage ----------------------------------------------------------------------------------------------------
+
+#
+#-----[ FIND ]------------------------------------------
+#
+			'WWW_IMG' => $www_img,
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+			'GARAGE_IMG' => $garage_img,
 //-- mod finsh : Garage ----------------------------------------------------------------------------------------------------
 
 # 
@@ -547,6 +547,12 @@ make_jumpbox('viewforum.'.$phpEx);
 
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
+if(empty($board_config['default_lang']))
+{
+	$board_config['default_lang'] = 'english';
+}
+require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage.' . $phpEx);
+require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage_error.' . $phpEx);
 require($phpbb_root_path . 'includes/class_garage_vehicle.' . $phpEx);
 $garage_vehicle->profile_integration();
 //-- mod finish: Garage ----------------------------------------------------------------------------------------------------

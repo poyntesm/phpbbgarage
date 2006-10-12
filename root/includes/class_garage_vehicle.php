@@ -1571,7 +1571,7 @@ class garage_vehicle
         	                LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
 				LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON g.id = mods.garage_id
 				LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = g.image_id
-                    	WHERE g.member_id = $cid and g.main_vehicle =1
+                    	WHERE g.member_id = $user_id and g.main_vehicle =1
 	                GROUP BY g.id";
 
       		if ( !($result = $db->sql_query($sql)) )
@@ -1624,7 +1624,7 @@ class garage_vehicle
 				}
 
 				//Build List Of Modification Images For Vehicle
-				$mod_data = $garage_modification->select_modifications_by_vehicle_data($vehicle_data['id'])
+				$mod_data = $garage_modification->select_modifications_by_vehicle_data($vehicle_data['id']);
         			for ( $i=0; $i < count($mod_data); $i++ )
 			       	{
             				if ( $mod_data[$i]['attach_is_image'] )
