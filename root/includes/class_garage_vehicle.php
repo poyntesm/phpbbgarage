@@ -317,10 +317,11 @@ class garage_vehicle
 	}
 	
 	/*========================================================================*/
-	// Build Featured Vehicle HTML If Required 
-	// Usage: show_featuredvehicle();
+	// Build Featured Vehicle HTML If Required..A Absolute URL Can Be Passed To
+	// Allow Calls From A Different Domain..I.E Fourm Resides In A Subdomain 
+	// Usage: show_featuredvehicle( 'URL');
 	/*========================================================================*/
-	function show_featuredvehicle()
+	function show_featuredvehicle( $absolute_url = NULL )
 	{
 		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
@@ -448,9 +449,14 @@ class garage_vehicle
 	                		// Do we have a thumbnail?  If so, our job is simple here :)
 			                if ( (empty($vehicle_data['attach_thumb_location']) == FALSE) AND ($vehicle_data['attach_thumb_location'] != $vehicle_data['attach_location']) AND (@file_exists($phpbb_root_path . GARAGE_UPLOAD_PATH."/".$vehicle_data['attach_thumb_location'])) )
 	                		{
-			                   	// Yippie, our thumbnail is already made for us :)
+						// Yippie, our thumbnail is already made for us :)
 					   	$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $vehicle_data['attach_thumb_location'];
-						$featured_image = '<a href="garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $vehicle_data['attach_id'] .'" title="' . $vehicle_data['attach_file'] .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a>';
+						if (!empty($absolute_url))
+						{
+							$thumb_image = $absolute_url . GARAGE_UPLOAD_PATH . $vehicle_data['attach_thumb_location'];
+
+						}
+						$featured_image = '<a href="'.$absolute_url.'garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $vehicle_data['attach_id'] .'" title="' . $vehicle_data['attach_file'] .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a>';
 	                		} 
 	        		}
 				$template->assign_vars(array(
@@ -458,8 +464,8 @@ class garage_vehicle
 					'FEATURED_IMAGE' => $featured_image,
 					'VEHICLE' => $vehicle_data['vehicle'],
 					'USERNAME' => $vehicle_data['username'],
-					'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-					'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id']))
+					'U_VIEW_VEHICLE' => append_sid($absolute_url."garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
+					'U_VIEW_PROFILE' => append_sid($absolute_url."profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id']))
 				);
 			}
 		}

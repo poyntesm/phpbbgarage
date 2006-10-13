@@ -57,9 +57,9 @@ $sql[] = "UPDATE " . $table_prefix . "garage_config SET config_value = '1.2.0' W
 
 //Alter Exsiting Fields
 $sql[] = "ALTER TABLE " . $table_prefix . "garage_categories ADD `field_order` TINYINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'";
-$sql[] = "ALTER TABLE " . $table_prefix . "garage_images` ADD `attach_thumb_filesize` INT( 10 ) NOT NULL DEFAULT '0'";
+$sql[] = "ALTER TABLE " . $table_prefix . "garage_images ADD `attach_thumb_filesize` INT( 10 ) NOT NULL DEFAULT '0'";
 $sql[] = "ALTER TABLE " . $table_prefix . "garage_images ADD `garage_id` int(10) unsigned NOT NULL default '0'";
-$sql[] = "ALTER TABLE " . $table_prefix . "garage_mods` ADD `purchase_rating` TINYINT( 2 ) NULL AFTER `install_comments`";
+$sql[] = "ALTER TABLE " . $table_prefix . "garage_mods ADD `purchase_rating` TINYINT( 2 ) NULL AFTER `install_comments`";
 
 //Create New Entries
 $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('max_upload_images', '5')";
@@ -76,18 +76,108 @@ $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('items_pending'
 $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('private_deny_perms', '')";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('garage_images', '1')";
 
-//We Need To Setup Field Order Since It Will Be Blank
-$sql2 = "SELECT * FROM " . $table_prefix ."garage_categories";
+//We Need To Setup Field Order Since It Will Be Blank On Upgrade....
+$sql2 = "SELECT * FROM " . $table_prefix . "garage_categories";
 if ( !($result2 = $db->sql_query($sql2)) )
 {
-	message_die(GENERAL_ERROR, 'Could Select Business Data', '', __LINE__, __FILE__, $sql);
+	message_die(GENERAL_ERROR, 'Could Select Business Data', '', __LINE__, __FILE__, $sql2);
 }
 
 $i = 1;
-while( $row = $db->sql_fetchrow($result2) )
+while( $row2 = $db->sql_fetchrow($result2) )
 {
-	$sql[] = "UPDATE " . $table_prefix . "garage_categories SET field_order = '$i' WHERE id = ".$row['id'];
+	$sql[] = "UPDATE " . $table_prefix . "garage_categories SET field_order = '$i' WHERE id = ".$row2['id'];
 	$i++;
+}
+
+//We Need To Fill In 'attach_thumb_filesize', 'attach_thumb_width', 'attach_thumb_width', 'garage_id' for GARAGE_IMAGES_TABLE As Again It Will Be Blank On Upgrade And Needs Data...
+//This Might Take A While As We Have To Process Each Image & Work Out Lots Of Info
+$sql3 = "SELECT attach_id, attach_thumb_location FROM " . $table_prefix . "garage_images";
+if ( !($result3 = $db->sql_query($sql3)) )
+{
+	message_die(GENERAL_ERROR, 'Could Select Image Data', '', __LINE__, __FILE__, $sql3);
+}
+
+while( $row3 = $db->sql_fetchrow($result3) )
+{
+	//Workout Thumb Image Details & Update DB
+	if (file_exists($phpbb_root_path . GARAGE_UPLOAD_PATH . $row3['attach_thumb_location']))
+	{
+		$attach_thumb_filesize = filesize($phpbb_root_path . GARAGE_UPLOAD_PATH . $row3['attach_thumb_location']);
+		$attach_thumb_imagesize = getimagesize($phpbb_root_path . GARAGE_UPLOAD_PATH . $row3['attach_thumb_location']);
+		$sql[] = "UPDATE " . $table_prefix . "garage_images SET attach_thumb_width = '" . $attach_thumb_imagesize[0] . "' WHERE attach_id = " . $row3['attach_id'];
+		$sql[] = "UPDATE " . $table_prefix . "garage_images SET attach_thumb_height = '" . $attach_thumb_imagesize[1] . "' WHERE attach_id = " . $row3['attach_id'];
+		$sql[] = "UPDATE " . $table_prefix . "garage_images SET attach_thumb_filesize = '$attach_thumb_filesize' WHERE attach_id = " . $row3['attach_id'];
+	}
+
+	//Workout If Image Is Attached To Vehicle Gallery
+	$sql4 = "SELECT gallery.garage_id
+		FROM " . GARAGE_GALLERY_TABLE . " gallery
+        		LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON images.attach_id = gallery.image_id 
+		WHERE images.attach_id = " . $row3['attach_id'];
+	if ( !($result4 = $db->sql_query($sql4)) )
+	{
+		message_die(GENERAL_ERROR, 'Could Select Image Data', '', __LINE__, __FILE__, $sql4);
+	}
+	$row4 = $db->sql_fetchrow($result4);
+	if (!empty($row4['garage_id']))
+	{
+		$sql[] = "UPDATE " . $table_prefix . "garage_images SET garage_id = '".$row4['garage_id']."' WHERE attach_id = " . $row3['attach_id'];
+		//Since We Found The Garage Entry We Need To Skip To Next Image
+		continue;
+	}
+
+	//Workout If Image Is Attached To Vehicle Modification
+	$sql5 = "SELECT mods.garage_id
+		FROM " . GARAGE_MODS_TABLE . " mods
+        		LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON images.attach_id = mods.image_id 
+        	WHERE images.attach_id = " . $row3['attach_id'];
+	if ( !($result5 = $db->sql_query($sql5)) )
+	{
+		message_die(GENERAL_ERROR, 'Could Select Image Data', '', __LINE__, __FILE__, $sql5);
+	}
+	$row5 = $db->sql_fetchrow($result5);
+	if (!empty($row5['garage_id']))
+	{
+		$sql[] = "UPDATE " . $table_prefix . "garage_images SET garage_id = '".$row5['garage_id']."' WHERE attach_id = " . $row3['attach_id'];
+		//Since We Found The Garage Entry We Need To Skip To Next Image
+		continue;
+	}
+
+	//Workout If Image Is Attached To Vehicle Quartermile
+	$sql6 = "SELECT qm.garage_id
+		FROM " . GARAGE_QUARTERMILE_TABLE . " qm
+        		LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON images.attach_id = qm.image_id 
+		WHERE images.attach_id = " . $row3['attach_id'];
+	if ( !($result6 = $db->sql_query($sql6)) )
+	{
+		message_die(GENERAL_ERROR, 'Could Select Image Data', '', __LINE__, __FILE__, $sql6);
+	}
+	$row6 = $db->sql_fetchrow($result6);
+	if (!empty($row6['garage_id']))
+	{
+		$sql[] = "UPDATE " . $table_prefix . "garage_images SET garage_id = '".$row6['garage_id']."' WHERE attach_id = " . $row3['attach_id'];
+		//Since We Found The Garage Entry We Need To Skip To Next Image
+		continue;
+	}
+
+	//Workout If Image Is Attached To Vehicle Dynorun
+	$sql7 = "SELECT rr.garage_id
+		FROM " . GARAGE_ROLLINGROAD_TABLE . " rr
+        		LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON images.attach_id = rr.image_id 
+        	WHERE images.attach_id = " . $row3['attach_id'];
+	if ( !($result7 = $db->sql_query($sql7)) )
+	{
+		message_die(GENERAL_ERROR, 'Could Select Image Data', '', __LINE__, __FILE__, $sql7);
+	}
+	$row7 = $db->sql_fetchrow($result7);
+	if (!empty($row7['garage_id']))
+	{
+		$sql[] = "UPDATE " . $table_prefix . "garage_images SET garage_id = '".$row7['garage_id']."' WHERE attach_id = " . $row3['attach_id'];
+		//Since We Found The Garage Entry We Need To Skip To Next Image
+		continue;
+	}
+
 }
 
 for( $i = 0; $i < count($sql); $i++ )
