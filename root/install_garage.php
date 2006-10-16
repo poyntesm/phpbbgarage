@@ -242,86 +242,13 @@ $sql[] = "CREATE TABLE " . $table_prefix . "garage_rating (
 		`user_id` int(10) NOT NULL default '0',
 		`rate_date` int(10) default NULL,
 		PRIMARY KEY  (`id`)
-		)";
+	)";
 
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('max_user_cars', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('year_start', '1980')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('year_end', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('allow_bbcode_car', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('allow_bbcode_mod', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('cars_per_page', '30')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('allow_image_upload', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('max_image_kbytes', '1024')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('max_image_resolution', '1024')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('max_upload_images', '5')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('max_remote_images', '5')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('thumbnail_resolution', '150')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('enable_guestbooks', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('enable_featured_vehicle', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('featured_vehicle_id', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('featured_vehicle_description', '')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('featured_vehicle_random', '0')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('allow_image_url', '0')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('allow_mod_image', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('show_mod_gallery', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('limit_mod_gallery', '12')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('newestvehicles_on', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('newestvehicles_limit', '5')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('newestmods_on', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('newestmods_limit', '5')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('mostmodded_on', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('mostmodded_limit', '5')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('mostmoneyspent_on', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('mostmoneyspent_limit', '5')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('mostviewed_on', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('mostviewed_limit', '5')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('lastupdatedvehicles_on', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('lastupdatedvehicles_limit', '5')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('lastupdatedvehiclesmain_on', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('lastupdatedvehiclesmain_limit', '5')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('lastupdatedmods_on', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('lastupdatedmods_limit', '5')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('lastcommented_on', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('lastcommented_limit', '5')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('remote_timeout', '60')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('browse_perms', '*')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('interact_perms', '*')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('add_perms', '*')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('upload_perms', '*')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('private_browse_perms', '')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('private_interact_perms', '')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('private_add_perms', '')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('private_upload_perms', '')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('private_add_quota', '')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('private_upload_quota', '')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('private_remote_quota', '')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('menu_selection', 'MAIN,BROWSE,SEARCH,INSURANCEREVIEW,GARAGEREVIEW,SHOPREVIEW,QUARTERMILE,ROLLINGROAD')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('featured_vehicle_from_block', '')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('toprated_on', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('toprated_limit', '5')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('topquartermile_on', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('topquartermile_limit', '5')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('topdynorun_on', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('topdynorun_limit', '5')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('enable_quartermile', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('enable_quartermile_approval', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('enable_business_approval', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('rating_permanent', '0')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('rating_always_updateable', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('enable_rollingroad', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('enable_rollingroad_approval', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('enable_insurance', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('profile_thumbs', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('enable_user_submit_make', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('enable_user_submit_model', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('version', '1.2.0')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('garage_images', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('quartermile_image_required', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('quartermile_image_required_limit', '13')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('dynorun_image_required', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('dynorun_image_required_limit', '300')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('items_pending', '0')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('private_deny_perms', '')";
+$params = array('max_user_cars' => '1', 'year_start' => '1980', 'year_end' => '1', 'cars_per_page' => '30', 'allow_image_upload' => '1', 'max_image_kbytes' => '1024', 'max_image_resolution' => '1024', 'max_upload_images' => '5', 'max_remote_images' => '5', 'thumbnail_resolution' => '150', 'enable_guestbooks' => '1', 'enable_featured_vehicle' => '1', 'featured_vehicle_id' => '1', 'featured_vehicle_description' => '', 'featured_vehicle_random' => '0', 'allow_image_url' => '1', 'allow_mod_image' => '1', 'show_mod_gallery' => '1', 'limit_mod_gallery' => '12', 'newestvehicles_on' => '1', 'newestvehicles_limit' => '5', 'newestmods_on' => '1', 'newestmods_limit' => '5', 'mostmodded_on' => '1', 'mostmodded_limit' => '5', 'mostmoneyspent_on' => '1', 'mostmoneyspent_limit' => '5', 'mostviewed_on' => '1', 'mostviewed_linit' => '5', 'lastupdatedvehicles_on' => '1', 'lastupdatedvehicles_limit' => '5', 'lastupdatedvehiclesmain_on' => '1', 'lastupdatedvehiclesmain_limit' => '5', 'lastupdatedmods_on' => '1', 'lastupdatedmods_limit' => '5', 'lastcommented_on' => '1', 'lastcommented_limit' => '5', 'remote_timeout' => '60', 'browse_perms' => '*', 'interact_perms' => '*', 'add_perms' => '*', 'upload_perms' => '*', 'private_browse_perms' => '', 'private_interact_perms' => '', 'private_add_perms' => '', 'private_upload_perms' => '', 'private_add_quota' => '', 'private_upload_quota' => '', 'private_remote_quota' => '', 'menu_selection' => 'MAIN,BROWSE,SEARCH,INSURANCEREVIEW,GARAGEREVIEW,SHOPREVIEW,QUARTERMILE,ROLLINGROAD', 'featured_vehicle_from_block' => '', 'toprated_on' => '1', 'toprated_limit' => '5', 'topquartermile_on' => '1', 'topquartermile_limit' => '5', 'topdynorun_on' => '1', 'topdynorun_limit' => '5', 'enable_quartermile' => '1', 'enable_quartermile_approval' => '1', 'enable_business_approval' => '1', 'rating_permanent' => '0', 'rating_always_updateable' => '1', 'enable_rollingroad' => '1', 'enable_rollingroad_approval' => '1', 'enable_insurance' => '1', 'profile_thumbs' => '1', 'enable_user_submit_make' => '1', 'enable_user_submit_model' => '1', 'version' => '1.2.0', 'garage_images' => '1', 'quartermile_image_required' => '1', 'quartermile_image_required_limit' => '13', 'dynorun_image_required' => '1', 'dynorun_image_required_limit' => '300', 'items_pending' => '0', 'private_deny_perms' => '');
+while( list($config_name, $config_value) = @each($params) )
+{
+	$sql[] = "INSERT INTO " . $table_prefix . "garage_config (config_name, config_value) VALUES ('" . $config_name . "', '" . $config_value . "')";
+}
 
 $sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (1, 'Engine', NULL, 1)";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (2, 'Transmission', NULL, 2)";

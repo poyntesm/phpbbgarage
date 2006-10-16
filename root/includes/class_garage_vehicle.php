@@ -1597,7 +1597,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function profile_integration()
 	{
-		global $userdata, $images, $template, $profiledata, $lang;
+		global $userdata, $images, $template, $profiledata, $lang, $phpEx;
 
 		//Get Vehicle Data
 		$vehicle_data = $this->select_user_main_vehicle_data($userdata['user_id']);
@@ -1624,7 +1624,7 @@ class garage_vehicle
 							$thumb_image = GARAGE_UPLOAD_PATH . $gallery_data[$i]['attach_thumb_location'];
 							$id = $gallery_data[$i]['attach_id'];
 							$title = $gallery_data[$i]['attach_file'];
-							$hilite_image .= '<a href=garage.php?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
+							$hilite_image .= '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
                					} 
 					}
 				}
@@ -1642,7 +1642,7 @@ class garage_vehicle
 							$thumb_image = GARAGE_UPLOAD_PATH . $mod_data[$i]['attach_thumb_location'];
 							$id = $mod_data[$i]['attach_id'];
 							$title = $mod_data[$i]['attach_file'];
-							$hilite_image .= '<a href=garage.php?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
+							$hilite_image .= '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
 		               			} 
 					}
 			        }
@@ -1659,7 +1659,7 @@ class garage_vehicle
 						$id = $vehicle_data['attach_id'];
 						$title = $vehicle_data['attach_file'];
 						$total_image_views = $vehicle_data['attach_hits'];
-						$hilite_image = '<a href=garage.php?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
+						$hilite_image = '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
 					}
 					else
 					{
@@ -1667,7 +1667,7 @@ class garage_vehicle
 						$id = $vehicle_data['attach_id'];
 						$title = $vehicle_data['attach_file'];
 						$total_image_views = $vehicle_data['attach_hits'];
-						$hilite_image = '<a href=garage.php?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
+						$hilite_image = '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
 					}
 				}
 			}

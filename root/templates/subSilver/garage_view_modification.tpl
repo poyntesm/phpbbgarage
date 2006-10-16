@@ -64,6 +64,10 @@
                         					<td class="row1" nowrap="nowrap"><span class="gen"><b>{L_COMMENTS}</b></span></td>
                         					<td><span class="gen">{COMMENTS}</span></td>
                     					</tr>
+                    					<tr>
+                        					<td class="row1" nowrap="nowrap"><span class="gen"><b>{L_INSTALL_COMMENTS}</b></span></td>
+                        					<td><span class="gen">{INSTALL_COMMENTS}</span></td>
+                    					</tr>
                 				</table>
             				</td>
         			</tr>

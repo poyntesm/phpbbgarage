@@ -9,7 +9,7 @@
 
 <table width="100%" cellspacing="2" cellpadding="2" border="0" align="center"> 
 	<tr>
-		<td align="left" nowrap="nowrap"><span class="genmed">{L_MAKE}:&nbsp;<select name="make_id" onchange="updateModelSelect(this.form.model_id, this.options[this.selectedIndex].text, '');" class="forminput"><option value="">{L_SELECT_MODEL}</option></select>&nbsp;{L_MODEL}:&nbsp;<select name="model_id" class="forminput"><option value="">{L_ANY_MODEL}</option></select>&nbsp;{L_SELECT_SORT_METHOD}:&nbsp;{S_MODE_SELECT}&nbsp;&nbsp;{L_ORDER}&nbsp;{S_ORDER_SELECT}&nbsp;&nbsp;<input type="submit" name="submit" value="{L_SUBMIT}" class="liteoption" /></span></td>
+		<td align="left" nowrap="nowrap"><span class="genmed">{L_MAKE}:&nbsp;<select name="make_id" onchange="updateModelSelect(this.form.model_id, this.options[this.selectedIndex].text, '');" class="forminput"><option value="">{L_SELECT_MODEL}</option></select>&nbsp;{L_MODEL}:&nbsp;<select name="model_id" class="forminput"><option value="">{L_ANY_MODEL}</option></select>&nbsp;{L_SELECT_SORT_METHOD}:&nbsp;{S_MODE_SELECT}&nbsp;&nbsp;{L_ORDER}:&nbsp;{S_ORDER_SELECT}&nbsp;&nbsp;<input type="submit" name="submit" value="{L_SUBMIT}" class="liteoption" /></span></td>
 	</tr>
 </table>
 

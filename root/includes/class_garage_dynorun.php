@@ -267,25 +267,11 @@ class garage_dynorun
 	/*========================================================================*/
 	function build_dynorun_table($pending)
 	{
-		global $db, $template, $images, $start, $sort, $sort_order,$phpEx, $garage_config, $lang, $theme, $mode, $HTTP_POST_VARS, $HTTP_GET_VARS, $garage_model;
+		global $db, $template, $images, $start, $sort, $order,$phpEx, $garage_config, $lang, $theme, $mode, $HTTP_POST_VARS, $HTTP_GET_VARS, $garage_model, $phpEx;
 
 		$pending = ($pending == 'YES') ? 1 : 0;
-
 		$start = (isset($HTTP_GET_VARS['start'])) ? intval($HTTP_GET_VARS['start']) : 0;
-		$order_by = (empty($sort)) ? 'bhp' : $sort;
-
-		if(isset($HTTP_POST_VARS['order']))
-		{
-			$sort_order = ($HTTP_POST_VARS['order'] == 'ASC') ? 'ASC' : 'DESC';
-		}
-		else if(isset($HTTP_GET_VARS['order']))
-		{
-			$sort_order = ($HTTP_GET_VARS['order'] == 'ASC') ? 'ASC' : 'DESC';
-		}
-		else
-		{
-			$sort_order = 'DESC';
-		}
+		$sort = (empty($sort)) ? 'bhp' : $sort;
 
 		$sort_types_text = array($lang['Dynocenter'], $lang['Bhp'], $lang['Bhp_Unit'], $lang['Torque'], $lang['Torque_Unit'], $lang['Boost'],  $lang['Boost_Unit'], $lang['Nitrous'], $lang['Peakpoint']);
 		$sort_types = array('rr.dynocenter', 'bhp', 'rr.bhp_unit, bhp', 'rr.torque', 'rr.torque_unit, rr.torque', 'rr.boost', 'rr.boost_unit, rr.boost', 'rr.nitrous', 'peakpoint');
@@ -307,6 +293,9 @@ class garage_dynorun
 				//Pull Required Data From DB
 				$data = $garage_model->select_make_data($make_id);
 				$addtional_where .= "AND g.make_id = '$make_id'";
+				$template->assign_vars(array(
+					'MAKE'	=> $data['make'])
+				);
 			}
 		}
 
@@ -317,8 +306,11 @@ class garage_dynorun
 			if (!empty($model_id))
 			{
 				//Pull Required Data From DB
-				$data .= $garage->select_model_data($model_id);
+				$data = $garage_model->select_model_data($model_id);
 				$addtional_where .= "AND g.model_id = '$model_id'";
+				$template->assign_vars(array(
+					'MODEL'	=> $data['model'])
+				);
 			}
 		}
 
@@ -333,7 +325,7 @@ class garage_dynorun
 				AND makes.pending = 0 AND models.pending = 0 
 				$addtional_where 
 			GROUP BY rr.garage_id
-			ORDER BY $order_by $sort_order
+			ORDER BY $sort $order
 		       	LIMIT $start, " . $garage_config['cars_per_page'];
 
 		if( !($first_result = $db->sql_query($sql)) )
@@ -438,7 +430,7 @@ class garage_dynorun
 		$count = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		$pagination = generate_pagination("garage.$phpEx?mode=$mode&amp;order=$sort_order", $count['total'], $garage_config['cars_per_page'], $start);
+		$pagination = generate_pagination("garage.$phpEx?mode=$mode&amp;order=$order", $count['total'], $garage_config['cars_per_page'], $start);
 		
 		$template->assign_vars(array(
 			'S_MODE_SELECT' => $select_sort_mode,

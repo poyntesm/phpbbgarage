@@ -61,9 +61,31 @@ $sql[] = "ALTER TABLE " . $table_prefix . "garage_images ADD `attach_thumb_files
 $sql[] = "ALTER TABLE " . $table_prefix . "garage_images ADD `garage_id` int(10) unsigned NOT NULL default '0'";
 $sql[] = "ALTER TABLE " . $table_prefix . "garage_mods ADD `purchase_rating` TINYINT( 2 ) NULL AFTER `install_comments`";
 
-//Create New Entries
+//Make Sure All Config Entries Exist
+$params = array('max_user_cars' => '1', 'year_start' => '1980', 'year_end' => '1', 'cars_per_page' => '30', 'allow_image_upload' => '1', 'max_image_kbytes' => '1024', 'max_image_resolution' => '1024', 'max_upload_images' => '5', 'max_remote_images' => '5', 'thumbnail_resolution' => '150', 'enable_guestbooks' => '1', 'enable_featured_vehicle' => '1', 'featured_vehicle_id' => '1', 'featured_vehicle_description' => '', 'featured_vehicle_random' => '0', 'allow_image_url' => '1', 'allow_mod_image' => '1', 'show_mod_gallery' => '1', 'limit_mod_gallery' => '12', 'newestvehicles_on' => '1', 'newestvehicles_limit' => '5', 'newestmods_on' => '1', 'newestmods_limit' => '5', 'mostmodded_on' => '1', 'mostmodded_limit' => '5', 'mostmoneyspent_on' => '1', 'mostmoneyspent_limit' => '5', 'mostviewed_on' => '1', 'mostviewed_linit' => '5', 'lastupdatedvehicles_on' => '1', 'lastupdatedvehicles_limit' => '5', 'lastupdatedvehiclesmain_on' => '1', 'lastupdatedvehiclesmain_limit' => '5', 'lastupdatedmods_on' => '1', 'lastupdatedmods_limit' => '5', 'lastcommented_on' => '1', 'lastcommented_limit' => '5', 'remote_timeout' => '60', 'browse_perms' => '*', 'interact_perms' => '*', 'add_perms' => '*', 'upload_perms' => '*', 'private_browse_perms' => '', 'private_interact_perms' => '', 'private_add_perms' => '', 'private_upload_perms' => '', 'private_add_quota' => '', 'private_upload_quota' => '', 'private_remote_quota' => '', 'menu_selection' => 'MAIN,BROWSE,SEARCH,INSURANCEREVIEW,GARAGEREVIEW,SHOPREVIEW,QUARTERMILE,ROLLINGROAD', 'featured_vehicle_from_block' => '', 'toprated_on' => '1', 'toprated_limit' => '5', 'topquartermile_on' => '1', 'topquartermile_limit' => '5', 'topdynorun_on' => '1', 'topdynorun_limit' => '5', 'enable_quartermile' => '1', 'enable_quartermile_approval' => '1', 'enable_business_approval' => '1', 'rating_permanent' => '0', 'rating_always_updateable' => '1', 'enable_rollingroad' => '1', 'enable_rollingroad_approval' => '1', 'enable_insurance' => '1', 'profile_thumbs' => '1', 'enable_user_submit_make' => '1', 'enable_user_submit_model' => '1', 'version' => '1.2.0', 'garage_images' => '1', 'quartermile_image_required' => '1', 'quartermile_image_required_limit' => '13', 'dynorun_image_required' => '1', 'dynorun_image_required_limit' => '300', 'items_pending' => '0', 'private_deny_perms' => '');
+while( list($config_name, $config_value) = @each($params) )
+{
+	$config_sql = "SELECT count(config_name) as total
+			FROM " . $table_prefix . "garage_config
+			WHERE config_name ='".$config_name."'";
+
+	if ( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'Error Counting Config Values', '', __LINE__, __FILE__, $sql);
+	}
+
+	$row = $db->sql_fetchrow($result);
+	$db->sql_freeresult($result);
+
+	if ( $row['total'] != 1 )
+	{
+		$sql[] = "INSERT INTO " . $table_prefix . "garage_config (config_name, config_value) VALUES ('" . $config_name . "', '" . $config_value . "')";
+	}
+}
+
 $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('max_upload_images', '5')";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('max_remote_images', '5')";
+$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('private_add_quota', '')";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('private_upload_quota', '')";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('private_remote_quota', '')";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('topdynorun_on', '1')";
@@ -193,9 +215,6 @@ for( $i = 0; $i < count($sql); $i++ )
 		echo '<li>' . $sql[$i] . '<br /> +++ <font color="#00AA00"><b>Successfull</b></font></li><br />';
 	}
 }
-
-
-
 
 echo '</ul></span></td></tr><tr><td class="catBottom" height="28">&nbsp;</td></tr>';
 

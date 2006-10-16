@@ -37,6 +37,7 @@ require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/
 
 //Build All Garage Classes e.g $garage_images->
 require($phpbb_root_path . 'includes/class_garage.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_admin.' . $phpEx);
 require($phpbb_root_path . 'includes/class_garage_modification.' . $phpEx);
 
 if( isset( $HTTP_POST_VARS['mode'] ) || isset( $HTTP_GET_VARS['mode'] ) )

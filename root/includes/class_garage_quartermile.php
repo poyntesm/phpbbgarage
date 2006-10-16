@@ -253,26 +253,11 @@ class garage_quartermile
 	/*========================================================================*/
 	function build_quartermile_table($pending)
 	{
-		global $db, $template, $images, $sort, $phpEx, $sort_order, $garage_config, $lang, $theme, $mode, $HTTP_POST_VARS, $HTTP_GET_VARS;
+		global $db, $template, $images, $sort, $phpEx, $order, $garage_config, $lang, $theme, $mode, $HTTP_POST_VARS, $HTTP_GET_VARS, $garage_model;
 
 		$pending = ($pending == 'YES') ? 1 : 0;
-
 		$start = (isset($HTTP_GET_VARS['start'])) ? intval($HTTP_GET_VARS['start']) : 0;
-
-		$order_by = (empty($sort)) ? 'quart' : $sort;
-
-		if(isset($HTTP_POST_VARS['order']))
-		{
-			$sort_order = ($HTTP_POST_VARS['order'] == 'ASC') ? 'ASC' : 'DESC';
-		}
-		else if(isset($HTTP_GET_VARS['order']))
-		{
-			$sort_order = ($HTTP_GET_VARS['order'] == 'ASC') ? 'ASC' : 'DESC';
-		}
-		else
-		{
-			$sort_order = 'ASC';
-		}
+		$sort = (empty($sort)) ? 'quart' : $sort;
 
 		// Sorting Via QuarterMile
 		$sort_types_text = array($lang['Car_Rt'], $lang['Car_Sixty'], $lang['Car_Three'], $lang['Car_Eigth'], $lang['Car_Eigthm'], $lang['Car_Thou'],  $lang['Car_Quart'], $lang['Car_Quartm']);
@@ -293,8 +278,11 @@ class garage_quartermile
 			if (!empty($make_id))
 			{
 				//Pull Required Data From DB
-				$data = $this->select_make_data($make_id);
+				$data = $garage_model->select_make_data($make_id);
 				$addtional_where .= "AND g.make_id = '$make_id'";
+				$template->assign_vars(array(
+					'MAKE'	=> $data['make'])
+				);
 			}
 		}
 
@@ -305,8 +293,11 @@ class garage_quartermile
 			if (!empty($model_id))
 			{
 				//Pull Required Data From DB
-				$data .= $this->select_model_data($model_id);
+				$data = $garage_model->select_model_data($model_id);
 				$addtional_where .= "AND g.model_id = '$model_id'";
+				$template->assign_vars(array(
+					'MODEL'	=> $data['model'])
+				);
 			}
 		}
 
@@ -327,7 +318,7 @@ class garage_quartermile
 				AND ( makes.pending = 0 AND models.pending = 0 )
 				$addtional_where 
 			GROUP BY qm.garage_id
-			ORDER BY $order_by $sort_order
+			ORDER BY $sort $order
 			LIMIT $start, " . $garage_config['cars_per_page'];
 
 		if( !($first_result = $db->sql_query($sql)) )
@@ -384,14 +375,7 @@ class garage_quartermile
 				$data['image_link'] ='';
 			}
 
-			if ($pending == 1)
-			{
-				$assign_block = 'quartermile_pending.row';
-			}
-			else
-			{
-				$assign_block = 'memberrow';
-			}
+			$assign_block = ($pending == 1) ? 'quartermile_pending.row' : 'memberrow';
 			$template->assign_block_vars($assign_block, array(
 				'ROW_NUMBER' => $i + ( $start + 1 ),
 				'ROW_COLOR' => '#' . $row_color,
@@ -447,7 +431,7 @@ class garage_quartermile
 		$count = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		$pagination = generate_pagination("garage.$phpEx?mode=$mode&amp;order=$sort_order", $count['total'], $garage_config['cars_per_page'], $start). '&nbsp;';
+		$pagination = generate_pagination("garage.$phpEx?mode=$mode&amp;order=$order", $count['total'], $garage_config['cars_per_page'], $start). '&nbsp;';
 		
 		$template->assign_vars(array(
 			'S_MODE_SELECT' => $select_sort_mode,

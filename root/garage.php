@@ -1654,7 +1654,7 @@ switch( $mode )
 		        'L_INSTALLATION_RATING' => $lang['Installation_Rating'],
 		        'L_INSTALLED_BY' => $lang['Installed_By'],
             		'L_CREATED' => $lang['Created'],
-            		'L_UPDATED' => create_date($board_config['default_dateformat'], $data['date_updated'], $board_config['board_timezone']), 
+            		'L_UPDATED' => $lang['Updated'], 
             		'L_VEHICLE' => $lang['Vehicle'],
             		'L_PURCHASED_FROM' => $lang['Purchased_From'],
             		'L_PURCHASED_PRICE' => $lang['Purchased_Price'],
@@ -1664,6 +1664,7 @@ switch( $mode )
 			'L_CATEGORY' => $lang['Category'],
 			'L_RATING' => $lang['Rating'],
 			'L_COMMENTS' => $lang['Comments'],
+			'L_INSTALL_COMMENTS' => $lang['Install_Comments'],
 			'L_LEVEL1' => $data['vehicle'],
 			'YEAR' => $data['made_year'],
 			'MAKE' => $data['make'],
@@ -1679,10 +1680,11 @@ switch( $mode )
 			'USERNAME' => $data['username'],
             		'AVATAR_IMG' => $data['avatar_img'],
             		'MODIFICATION_IMAGE' => $data['modification_image'],
-            		'DATE_UPDATED' => $data['updated'],
+            		'DATE_UPDATED' => create_date($board_config['default_dateformat'], $data['date_updated'], $board_config['board_timezone']),
             		'TITLE' => $data['title'],
             		'PRICE' => $data['price'],
             		'INSTALL_PRICE' => $data['install_price'],
+            		'INSTALL_COMMENTS' => $data['install_comments'],
             		'CURRENCY' => $data['currency'],
             		'CATEGORY' => $data['category_title'],
             		'COMMENTS' => $data['comments'])
@@ -2727,7 +2729,7 @@ switch( $mode )
 		);
 
 		//Build Required HTML, Javascript And Arrays
-		$garage_template->sort_order($sort_order);
+		$garage_template->sort_order($order);
 		$template->assign_vars(array(
 			'VEHICLE_ARRAY' => $garage_template->vehicle_array())
 		);
@@ -2760,10 +2762,8 @@ switch( $mode )
 			'L_QUARTERMILE' 	=> $lang['Quartermile'], 
 			'L_APPROVE_TIME' 	=> $lang['Approve_QM'],
 			'L_REMOVE_TIME' 	=> $lang['Remove_QM'],
-			'S_USER_VARIABLE' 	=> 'qm_id',
 			'U_QUARTERMILE' 	=> append_sid("garage.$phpEx?mode=quartermile"),
-			'MAKE' 			=> $data['make'],
-			'MODEL' 		=> $data['model'],
+			'S_USER_VARIABLE' 	=> 'qm_id',
 			'S_MODE_ACTION' 	=> append_sid("garage.$phpEx?mode=quartermile"))
 		);
 
@@ -3051,7 +3051,7 @@ switch( $mode )
 		);
 
 		//Build All Required HTML, Javascript And Arrays
-		$garage_template->sort_order($sort_order);
+		$garage_template->sort_order($order);
 		$template->assign_vars(array(
 			'VEHICLE_ARRAY' => $garage_template->vehicle_array())
 		);
@@ -3080,8 +3080,6 @@ switch( $mode )
 	  		'L_PEAKPOINT' 		=> $lang['Peakpoint'],
 	  		'L_ROLLINGROAD' 	=> $lang['Rollingroad'],
 			'U_ROLLINGROAD' 	=> append_sid("garage.$phpEx?mode=rollingroad"),
-			'MAKE' 			=> $data['make'],
-			'MODEL' 		=> $data['model'],
 			'S_MODE_ACTION' 	=> append_sid("garage.$phpEx?mode=rollingroad"))
 		);
 
