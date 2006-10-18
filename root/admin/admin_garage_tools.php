@@ -61,8 +61,22 @@ define("VERBOSE", 0);
 // Increase maximum execution time, but don't complain about it if it isn't allowed.
 @set_time_limit(1200);
 
+//Lets Setup Messages We Might Need...Just Easier On The Eye Doing This Seperatly
+$reset_ratings_message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_tools.$phpEx") . '">'. $lang['Ratings_Reset_Successfull']. "<br /><br />" . sprintf($lang['Click_Return_Garage_Tools'], "<a href=\"" . append_sid("admin_garage_tools.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
+
+
 switch($mode)
 {
+
+	case 'reset_ratings':
+
+		$garage_vehicle->reset_all_vehicles_rating();
+
+		//Return a message...
+		message_die(GENERAL_MESSAGE, $reset_ratings_message);
+
+		break;
+
 	case 'rebuild_thumbs':
 		
 		$params = array('start', 'cycle', 'file', 'done');
@@ -463,7 +477,9 @@ switch($mode)
 			'L_GARAGE_TOOLS_ORPHANED_TITLE' => $lang['Garage_Tools_Orphaned_Title'],
 			'L_GARAGE_TOOLS_ORPHANED' => $lang['Garage_Tools_Orphaned'],
 			'L_GARAGE_TOOLS_ORPHANED_BUTTON' => $lang['Garage_Tools_Orphaned_Button'],
-			'L_GARAGE_TOOLS_ORPHANED_BUTTON' => $lang['Garage_Tools_Orphaned_Button'],
+			'L_GARAGE_TOOLS_RESET_RATINGS_TITLE' => $lang['Garage_Tools_Reset_Ratings_Title'],
+			'L_GARAGE_TOOLS_RESET_RATINGS' => $lang['Garage_Tools_Reset_Ratings'],
+			'L_GARAGE_TOOLS_RESET_RATINGS_BUTTON' => $lang['Garage_Tools_Reset_Ratings_Button'],
 			'L_GARAGE_DB_BACKUP' => $lang['Garage_DB_Backup'],
 			'L_GARAGE_DB_RESTORE' => $lang['Garage_DB_Restore'],
 			'L_START_BACKUP' => $lang['Start_Backup'],

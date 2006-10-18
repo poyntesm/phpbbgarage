@@ -283,6 +283,7 @@ $template->assign_vars(array(
 	'RATING_PERMANENT_DISABLED' => ($new['rating_permanent'] == 0) ? 'checked="checked"' : '',
 	'RATING_ALWAYS_UPDATEABLE_ENABLED' => ($new['rating_always_updateable'] == 1) ? 'checked="checked"' : '',
 	'RATING_ALWAYS_UPDATEABLE_DISABLED' => ($new['rating_always_updateable'] == 0) ? 'checked="checked"' : '',
+	'MINIMUM_RATINGS_REQUIRED' => $new['minimum_ratings_required'],
 
 	// GARAGE BUSINESS CONFIGURATION VAR
 	'BUSINESS_APPROVAL_ENABLED' => ($new['enable_business_approval'] == 1) ? 'checked="checked"' : '',
@@ -372,6 +373,7 @@ $template->assign_vars(array(
 	'L_GARAGE_RATING_FEATURES' => $lang['Garage_Rating_Features'],
 	'L_RATING_PERMANENT' => $lang['Rating_Permanent'],
 	'L_RATING_ALWAYS_UPDATEABLE' => $lang['Rating_Always_Updateable'],
+	'L_MINIMUM_RATINGS_REQUIRED' => $lang['Minimum_Ratings_Required'],
 	'L_ENABLE_QUARTERMILE_IMAGE_REQUIRED' => $lang['Enable_Quartermile_Image_Required'],
 	'L_ENABLE_DYNORUN_IMAGE_REQUIRED' => $lang['Enable_Dynorun_Image_Required'],
 	'L_QUARTEMILE_IMAGE_REQUIRED_LIMIT' => $lang['Quartermile_Image_Required_Limit'],

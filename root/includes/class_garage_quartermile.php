@@ -431,14 +431,24 @@ class garage_quartermile
 		$count = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		$pagination = generate_pagination("garage.$phpEx?mode=$mode&amp;order=$order", $count['total'], $garage_config['cars_per_page'], $start). '&nbsp;';
+		//Only Display Pagination If Data Exists
+		if ($count['total'] >= 1)
+		{
+			$pagination = generate_pagination("garage.$phpEx?mode=$mode&amp;order=$order", $count['total'], $garage_config['cars_per_page'], $start);
+			$template->assign_vars(array(
+				'L_GOTO_PAGE' => $lang['Goto_page'],
+				'PAGINATION' => $pagination,
+				'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count['total'] / $garage_config['cars_per_page'] )))
+			);
+		}
+
 		
 		$template->assign_vars(array(
-			'S_MODE_SELECT' => $select_sort_mode,
-			'PAGINATION' => $pagination,
-			'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count['total'] / $garage_config['cars_per_page'] )), 
-			'L_GOTO_PAGE' => $lang['Goto_page'])
+			'S_MODE_SELECT' => $select_sort_mode)
 		);
+
+		//Reset Sort Order For Pending Page
+		$sort='';
 
 		return $count['total'];
 	}

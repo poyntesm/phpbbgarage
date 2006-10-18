@@ -58,6 +58,30 @@ function confirm_delete_rollingroad (car_id, rr_id)
 }
 // -->
 </script>
+
+<script type="text/javascript">
+<!--
+function confirm_delete_rating (car_id, rt_id)
+{
+	if ( confirm("{L_CONFIRM_DELETE_RATING}") )
+	{
+		window.location.href = "{U_DELETE_RATING}&RTID=" + rt_id + "&CID=" + car_id;
+	}
+}
+// -->
+</script>
+
+<script type="text/javascript">
+<!--
+function confirm_reset_rating (car_id)
+{
+	if ( confirm("{L_CONFIRM_RESET_RATING}") )
+	{
+		window.location.href = "{U_RESET_RATING}&CID=" + car_id;
+	}
+}
+// -->
+</script>
 		<td width="72%" valign="top">
 			<!-- BEGIN switch_top_block -->
     			<table cellpadding="4" cellspacing="1" border="0" width="100%" class="forumline">
@@ -359,4 +383,29 @@ function confirm_delete_rollingroad (car_id, rr_id)
  			</table>
  			<br /> 
  			<!-- END cat_row -->
+ 			<!-- BEGIN moderate -->
+ 			<table width="100%" cellpadding="1" cellspacing="1" border="0" class="forumline">
+   				<tr>
+      					<th height="25" colspan="8" class="thHead">{L_RATING_MODERATION}</th>
+   				</tr>
+   				<tr>
+				      	<td class="catBottom" ><span class="gen">{L_RATER}</span></td>
+					<td class="catBottom" ><span class="gen">{L_RATING}</span></td>
+					<td class="catBottom" ><span class="gen">{L_DATE}</span></td>
+					<td class="catBottom" ></td>
+				</tr>
+				<!-- BEGIN rating_row -->
+   				<tr>
+					<td class="row1"><span class="gensmall"><a href="{moderate.rating_row.U_PROFILE}">{moderate.rating_row.USERNAME}</a></span></td>
+					<td class="row1"><span class="gensmall">{moderate.rating_row.RATING}</span></td>
+					<td class="row1"><span class="gensmall">{moderate.rating_row.DATE}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{moderate.rating_row.DELETE_RATING_LINK}</span></td>
+				</tr>
+  				<!-- END rating_row -->
+				<tr>
+				      	<td class="catBottom" align="center" colspan="4" valign="center"><span class="gen">{L_RESET_VEHICLE_RATING}&nbsp;{RESET_RATING_LINK}</span></td>
+				</tr>
+ 			</table>
+ 			<br /> 
+ 			<!-- END moderate -->
 		</td>

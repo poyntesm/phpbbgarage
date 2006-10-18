@@ -197,6 +197,10 @@
 		<td class="row2"><span class="genmed"><input type="radio" {RATING_ALWAYS_UPDATEABLE_ENABLED} name="rating_always_updateable" value="1" />{L_YES}&nbsp;&nbsp;<input type="radio" {RATING_ALWAYS_UPDATEABLE_DISABLED} name="rating_always_updateable" value="0" />{L_NO}</span></td>
 	</tr>
 	<tr>
+		<td class="row1"><span class="genmed">{L_MINIMUM_RATINGS_REQUIRED}</span></td>
+		<td class="row2"><span class="genmed"><input class="post" type="text" maxlength="12" size="12" name="minimum_ratings_required" value="{MINIMUM_RATINGS_REQUIRED}" /></span></td>
+	</tr>
+	<tr>
 		<td class="catBottom" colspan="2" align="center">{S_HIDDEN_FIELDS}<input type="submit" name="submit" value="{L_SUBMIT}" class="mainoption" />&nbsp;&nbsp;<input type="reset" value="{L_RESET}" class="liteoption" /></td>
 	</tr>
 </table>

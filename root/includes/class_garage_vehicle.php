@@ -215,6 +215,98 @@ class garage_vehicle
 	}
 
 	/*========================================================================*/
+	// Resets All Vehicles Rating To 0
+	// Usage: reset_all_vehicles_rating();
+	/*========================================================================*/
+	function reset_all_vehicles_rating()
+	{
+		global $db;
+
+		//Just Remove All Rows
+		$sql = "DELETE FROM " . GARAGE_RATING_TABLE;
+	
+		if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'Could Not Remove All Vehicle Ratings', '', __LINE__, __FILE__, $sql);
+		}
+
+		//Reset Weighted Values For All Vehicles
+		$sql = "UPDATE " . GARAGE_TABLE ."
+			SET weighted_rating = '0'";
+	
+		if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'Could Not Update Vehicle Weighted Rating', '', __LINE__, __FILE__, $sql);
+		}
+
+		return;
+	}
+
+	/*========================================================================*/
+	// Calculates A Vehicles Weighted Rating
+	// Usage: update_vehicle_rating('vehicle id');
+	/*========================================================================*/
+	function calculate_weighted_rating($cid)
+	{
+		global $db, $garage_config;
+
+		//Count Votes This Vehicle Has Recived & Average Rating So Far
+		$sql = "SELECT count(id) AS votes_recieved, AVG(rating) as average_rating
+			FROM " . GARAGE_RATING_TABLE . "
+			WHERE id = '$cid'";
+
+		if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'Error Counting Vehicles', '', __LINE__, __FILE__, $sql);
+		}
+
+	        $row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		//Get Average Rating For All Vehicles
+		$sql = "SELECT AVG(rating) as site_average
+			FROM " . GARAGE_RATING_TABLE;
+
+		if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'Error Counting Vehicles', '', __LINE__, __FILE__, $sql);
+		}
+
+	        $row1 = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		//Weighted Rating Formula We Use 'WR=(V/(V+M)) * R + (M/(V+M)) * C'
+		// WR=Weighted Rating (The new rating)
+		// R=Average Rating (arithmetic mean) so far
+		// V=Number of ratings given
+		// M=Minimum number of ratings needed
+		// C=Arithmetic mean rating across the whole site
+		$weighted_rating = ( $row['votes_recieved'] / ($row['votes_recieved'] + $garage_config['minimum_ratings_required']) ) * $row['average_rating'] + ($garage_config['minimum_ratings_required']/($row['votes_recieved']+$garage_config['minimum_ratings_required'])) * $row1['site_average'];
+
+		return $weighted_rating;
+	}
+
+	/*========================================================================*/
+	// Updates Weighted Rating Of Vehicle In DB
+	// Usage: update_vehicle_rating('vehicle id', 'weighted rating');
+	/*========================================================================*/
+	function update_weighted_rating($cid, $weighted_rating)
+	{
+		global $db;
+
+		$sql = "UPDATE ". GARAGE_TABLE ." 
+			SET weighted_rating = '$weighted_rating'
+	       		WHERE id = '$cid';";
+
+		if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'Could Not Update Vehicle Rating', '', __LINE__, __FILE__, $sql);
+		}
+
+		return;
+	}
+
+	/*========================================================================*/
 	// Count The Total Vehicles Within The Garage
 	// Usage: count_total_vehciles();
 	/*========================================================================*/
@@ -666,29 +758,27 @@ class garage_vehicle
 	        // What's the count? Default to 10
 	        $limit = $garage_config['toprated_limit'] ? $garage_config['toprated_limit'] : 10;
 	
-		$sql =  "SELECT g.id, g.member_id, u.username, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, sum( r.rating ) AS rating, count( * ) *10 AS total_rating
-			 FROM " . GARAGE_RATING_TABLE . " r
-				LEFT JOIN " . GARAGE_TABLE . " g ON r.garage_id = g.id
+		$sql =  "SELECT g.id, g.member_id, ROUND(g.weighted_rating, 2) as weighted_rating, u.username, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
+			 FROM " . GARAGE_TABLE . " g
 	                        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
 	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
 	                        LEFT JOIN " . USERS_TABLE . " u ON g.member_id = u.user_id
 			 WHERE makes.pending = 0 AND models.pending = 0
-			 GROUP BY garage_id
-			 ORDER BY rating DESC LIMIT $limit";
+			 ORDER BY weighted_rating DESC LIMIT $limit";
 	 		 		
 	 	if(!$result = $db->sql_query($sql))
 		{
 			message_die(GENERAL_ERROR, "Could not query vehicle information", "", __LINE__, __FILE__, $sql);
 		}
-	 		            
+
 	 	while ( $vehicle_data = $db->sql_fetchrow($result) )
-	 	{
+		{
 			$template->assign_block_vars($template_block_row, array(
 				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
 				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id']),
 				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
 				'COLUMN_2_TITLE' => $vehicle_data['username'],
-				'COLUMN_3' => $vehicle_data['rating'] . '/' . $vehicle_data['total_rating'])
+				'COLUMN_3' => $vehicle_data['weighted_rating'] . '/' . '10')
 			);
 	 	}
 	
@@ -877,7 +967,7 @@ class garage_vehicle
 	
 	/*========================================================================*/
 	// Display Vehicle Page - With Or Without Management Links & Galleries
-	// Usage:  display_vehicle('wn vehicle YES|NO');
+	// Usage:  display_vehicle('wn vehicle YES|NO|MODERATE');
 	/*========================================================================*/
 	function display_vehicle($owned)
 	{
@@ -886,7 +976,7 @@ class garage_vehicle
 		//Since We Called This Fuction Display Top Block With All Vehicle Info
 		$template->assign_block_vars('switch_top_block', array());
 	
-		if ( $owned == 'YES')
+		if ( ( $owned == 'YES') OR ( $owned == 'MODERATE') )
 		{
 			$this->check_ownership($cid);
 			$template->assign_block_vars('switch_top_block.owned_yes', array());
@@ -939,7 +1029,7 @@ class garage_vehicle
 		$temp_url = append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=$user_id");
 		$owner = '<a href="' . $temp_url . '">' . $vehicle_row['username'] . '</a>';
 	
-		if ( $owned == 'YES' )
+		if ( ( $owned == 'YES' ) OR ( $owned == 'MODERATE') )
 		{
 			$template->assign_block_vars('level2', array());
 			$template->assign_vars(array(
@@ -1015,19 +1105,9 @@ class garage_vehicle
 		$total_spent = $vehicle_row['total_spent'] ? $vehicle_row['total_spent'] : 0;
 	        $total_views = $vehicle_row['views'];
 	        $description = $vehicle_row['comments'];
+	        $weighted_rating = $vehicle_row['weighted_rating'];
 	
-		$sql = "SELECT SUM(rating)AS rating, count(*)*10 AS total_rating
-			FROM " . GARAGE_RATING_TABLE . "
-			WHERE garage_id = $cid";
-	
-		if ( !($result = $db->sql_query($sql)) )
-	     	{
-	       		message_die(GENERAL_ERROR, 'Could Not Select Vehicle Data', '', __LINE__, __FILE__, $sql);
-	      	}
-	
-		$rating_row = $db->sql_fetchrow($result);
-	
-		if (empty($rating_row['rating']))
+		if ( $weighted_rating == '0' )
 		{
 			$template->assign_vars(array(
 				'RATING' => $lang['Not_Rated_Yet'])
@@ -1036,8 +1116,40 @@ class garage_vehicle
 		else
 		{
 			$template->assign_vars(array(
-				'RATING' => $rating_row['rating'] . '/' . $rating_row['total_rating'])
+				'RATING' => $weighted_rating . ' / 10')
 			);
+		}
+
+		//We Are Moderating...So Show Options Required
+		if ( $owned == 'MODERATE' )
+		{
+			$reset_rating_link = '<a href="javascript:confirm_reset_rating(' . $cid . ')"><img src="' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" /></a>';
+			$template->assign_block_vars('moderate', array());
+			$template->assign_vars(array(
+				'L_RATING_MODERATION' 	=> $lang['Rating Moderation'],
+				'L_RATER' 		=> $lang['Rater'],
+				'L_RATING' 		=> $lang['Rating'],
+				'L_DATE'	 	=> $lang['Date'],
+				'L_RESET_VEHICLE_RATING'=> $lang['Reset_Vehicle_Rating'],
+				'RESET_RATING_LINK' 	=> $reset_rating_link)
+			);
+
+			//Let Get Vehicle Rating Details
+			$rating_data = $this->select_vehicle_rating_data($cid);
+			for ($i = 0; $i < count($rating_data); $i++)
+			{
+				$delete_rating_link = '<a href="javascript:confirm_delete_rating(' . $cid . ',' . $rating_data[$i]['id'] . ')"><img src="' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" /></a>';
+				$rating_data[$i]['user_id'] =  ($rating_data[$i]['user_id'] < 0 ) ? ANONYMOUS : $rating_data[$i]['user_id'];
+				$rating_data[$i]['username'] =  ($rating_data[$i]['user_id'] < 0 ) ? $lang['Guest'] : $rating_data[$i]['username'];
+
+				$template->assign_block_vars('moderate.rating_row', array(
+					'U_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$rating_data[$i]['user_id']) ,
+					'USERNAME' => $rating_data[$i]['username'] ,
+					'RATING' => $rating_data[$i]['rating'],
+					'DATE' => create_date('D M d, Y G:i', $rating_data[$i]['rate_date'], $board_config['board_timezone']),
+					'DELETE_RATING_LINK' => $delete_rating_link)
+				);
+			}	
 		}
 	
 		if ( $owned == 'NO' )
@@ -1153,8 +1265,6 @@ class garage_vehicle
 			}
 		}
 	
-	       	$db->sql_freeresult($result);
-	
 		//Set Counter To Zero
 	      	$mod_images_found = 0;
 	     
@@ -1202,7 +1312,7 @@ class garage_vehicle
 		                        $mod_images_found++;
 				}
 	
-				if ( $owned == 'YES' )
+				if ( ( $owned == 'YES' ) OR ( $owned == 'MODERATE') )
 				{
 	            			$temp_url = append_sid("garage.$phpEx?mode=edit_modification&amp;MID=$mid&amp;CID=$cid");
 	            			$edit_mod_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="'.$lang['Edit'].'" title="'.$lang['Edit'].'" border="0" /></a>';
@@ -1285,7 +1395,7 @@ class garage_vehicle
 				{
 					$slip_image = '<a href="garage.'. $phpEx .'?mode=view_gallery_item&amp;image_id='. $image_id .'" target="_blank"><img src="' . $images['slip_image_attached'] . '" alt="'.$lang['Slip_Image_Attached'].'" title="'.$lang['Slip_Image_Attached'].'" border="0" /></a>';
 				}
-				if ( $owned == 'YES' )
+				if ( ( $owned == 'YES' ) OR ( $owned == 'MODERATE') )
 				{
 					$temp_url = append_sid("garage.$phpEx?mode=edit_quartermile&amp;QMID=$qmid&amp;CID=$cid");
 	            			$edit_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="'.$lang['Edit'].'" title="'.$lang['Edit'].'" border="0" /></a>';
@@ -1324,7 +1434,7 @@ class garage_vehicle
 				{
 					$slip_image = '<a href="garage.'. $phpEx .'?mode=view_gallery_item&amp;image_id='. $image_id .'" target="_blank"><img src="' . $images['slip_image_attached'] . '" alt="'.$lang['Slip_Image_Attached'].'" title="'.$lang['Slip_Image_Attached'].'" border="0" /></a>';
 				}
-				if ( $owned == 'YES' )
+				if ( ( $owned == 'YES' ) OR ( $owned == 'MODERATE') )
 				{
 					$temp_url = append_sid("garage.$phpEx?mode=edit_rollingroad&amp;RRID=$rrid&amp;CID=$cid");
             				$edit_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="'.$lang['Edit'].'" title="'.$lang['Edit'].'" border="0" /></a>';
@@ -1459,11 +1569,15 @@ class garage_vehicle
 			'L_CONFIRM_DELETE_PREMIUM' => $lang['Confirm_Delete_Premium'],
 			'L_CONFIRM_DELETE_QUARTERMILE' => $lang['Confirm_Delete_Quartermile'],
 			'L_CONFIRM_DELETE_ROLLINGROAD' => $lang['Confirm_Delete_Rollingroad'],
+			'L_CONFIRM_DELETE_RATING' => $lang['Confirm_Delete_Rating'],
+			'L_CONFIRM_RESET_RATING' => $lang['Confirm_Reset_Rating'],
 			'U_DELETE_VEHICLE' => append_sid("garage.$phpEx?mode=delete_vehicle"),
 			'U_DELETE_MODIFICATION' => append_sid("garage.$phpEx?mode=delete_modification"),
 			'U_DELETE_QUARTERMILE' => append_sid("garage.$phpEx?mode=delete_quartermile"),
 			'U_DELETE_PREMIUM' => append_sid("garage.$phpEx?mode=delete_insurance"),
 			'U_DELETE_ROLLINGROAD' => append_sid("garage.$phpEx?mode=delete_rollingroad"),
+			'U_DELETE_RATING' => append_sid("garage.$phpEx?mode=delete_rating"),
+			'U_RESET_RATING' => append_sid("garage.$phpEx?mode=reset_vehicle_rating"),
             		'VIEW_VEHICLE_LINK' => $view_vehicle_link,
             		'EDIT_VEHICLE_LINK' => $edit_vehicle_link,
             		'ADD_MODIFICATION_LINK' => $add_modification_link,
@@ -1541,7 +1655,7 @@ class garage_vehicle
 	{
 		global $db;
 		//Select All Vehicle Information
-	   	$sql = "SELECT g.*, images.*, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_allowavatar, user.user_avatar, user.user_id
+	   	$sql = "SELECT g.*, ROUND(g.weighted_rating, 2) as weighted_rating, images.*, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_allowavatar, user.user_avatar, user.user_id
                       	FROM " . GARAGE_TABLE . " AS g  
 				LEFT JOIN " . USERS_TABLE ." AS user ON g.member_id = user.user_id
 	                       	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
@@ -1560,6 +1674,34 @@ class garage_vehicle
 		$db->sql_freeresult($result);
 
 		return $row;
+	}
+
+	/*========================================================================*/
+	// Selects Rating Information For Vehicle
+	// Usage: select_vehicle_rating_data('vehicle id');
+	/*========================================================================*/
+	function select_vehicle_rating_data($cid)
+	{
+		global $db;
+
+		$sql = "SELECT r.*, u.username
+        		FROM " . GARAGE_RATING_TABLE . " r
+                    		LEFT JOIN " . GARAGE_TABLE . " g ON r.garage_id = g.id
+				LEFT JOIN " . USERS_TABLE . " u ON r.user_id = u.user_id
+			WHERE r.garage_id ='$cid'";
+
+      		if ( !($result = $db->sql_query($sql)) )
+      		{
+         		message_die(GENERAL_ERROR, 'Could Not Get Vehicle Rating Data', '', __LINE__, __FILE__, $sql);
+      		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		return $rows;
 	}
 
 	/*========================================================================*/
@@ -1593,14 +1735,14 @@ class garage_vehicle
 
 	/*========================================================================*/
 	// Integrates phpBB Garage & phpBB User Profiles
-	// Usage: profile_integration();
+	// Usage: profile_integration('user_id');
 	/*========================================================================*/
-	function profile_integration()
+	function profile_integration($user_id)
 	{
-		global $userdata, $images, $template, $profiledata, $lang, $phpEx;
+		global $images, $template, $profiledata, $lang, $phpEx;
 
 		//Get Vehicle Data
-		$vehicle_data = $this->select_user_main_vehicle_data($userdata['user_id']);
+		$vehicle_data = $this->select_user_main_vehicle_data($user_id);
 
 		if ( count($vehicle_data) > 0 )
 		{

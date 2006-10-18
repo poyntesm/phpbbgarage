@@ -69,7 +69,7 @@ while( list($var, $param) = @each($params) )
 }
 
 //Get Common Non-String Parameters
-$params = array('cid' => 'CID', 'mid' => 'MID', 'rrid' => 'RRID', 'qmid' => 'QMID', 'ins_id' => 'INS_ID', 'eid' => 'EID', 'image_id' => 'image_id', 'comment_id' => 'comment_id', 'bus_id' => 'BUS_ID');
+$params = array('cid' => 'CID', 'mid' => 'MID', 'rrid' => 'RRID', 'qmid' => 'QMID', 'ins_id' => 'INS_ID', 'eid' => 'EID', 'image_id' => 'image_id', 'comment_id' => 'comment_id', 'bus_id' => 'BUS_ID', 'rtid' => 'RTID');
 while( list($var, $param) = @each($params) )
 {
 	$$var = '';
@@ -1343,13 +1343,10 @@ switch( $mode )
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 
 		//Check If This Is A Search....If So We Have A Bit More Work To Do.....
-		if ((isset($HTTP_GET_VARS['search'])) OR (isset($HTTP_POST_VARS['search'])))
+		if ((!empty($HTTP_GET_VARS['search'])) OR (!empty($HTTP_POST_VARS['search'])))
 		{
-			$search = (isset($HTTP_POST_VARS['search'])) ? htmlspecialchars($HTTP_POST_VARS['search']) : htmlspecialchars($HTTP_GET_VARS['search']);
-
 			$search_data = $garage_model->build_search_for_user_make_model();
 			$search_data['pagination'] = ';search=yes&amp';
-
 			$template->assign_block_vars('level3_nolink', array());
 	      		$template->assign_block_vars('switch_search', array());
 			$template->assign_vars(array(
@@ -1396,13 +1393,21 @@ switch( $mode )
 		}
 
 		//Count Total Returned For Pagination...Notice No $start or $end to get complete count
-		$count = $garage_vehicle->select_all_vehicle_data($search_data['where'], $order_by, $sort_order);
+		$count = count($garage_vehicle->select_all_vehicle_data($search_data['where'], $order_by, $sort_order));
 
-		$pagination = generate_pagination("garage.$phpEx?mode=browse&amp" . $search_data['make_pagination'] . $search_data['model_pagination'] . $search_data['pagination'] . ";sort=$sort&amp;order=$sort_order", $count[0]['total'], $garage_config['cars_per_page'], $start);
+		//Only Display Pagination If Data Exists
+		if ($count >= 1)
+		{
+			$pagination = generate_pagination("garage.$phpEx?mode=browse&amp" . $search_data['make_pagination'] . $search_data['model_pagination'] . $search_data['pagination'] . ";sort=$sort&amp;order=$sort_order", $count, $garage_config['cars_per_page'], $start);
+			$template->assign_vars(array(
+				'L_GOTO_PAGE' => $lang['Goto_page'],
+				'PAGINATION' => $pagination,
+				'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count / $garage_config['cars_per_page'] )))
+			);
+		}
 
 		$template->assign_block_vars('level2', array());
 		$template->assign_vars(array(
-			'L_GOTO_PAGE' => $lang['Goto_page'],
 			'L_LEVEL2' => $lang['Browse'],
 			'L_SORTED_BY' => $lang['Sorted_By'],
 			'L_IN' => $lang['In'],
@@ -1419,8 +1424,6 @@ switch( $mode )
 			'MAKE_ID' => $search_data['make_id'],
 			'MODEL_ID' => $search_data['model_id'],
 			'SEARCH' => $search,
-			'PAGINATION' => $pagination,
-			'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count[0]['total'] / $garage_config['cars_per_page'] )), 
 			'S_SORT_SELECT' => $garage_template->dropdown('sort', $sort_types_text, $sort_types, $sort),
 			'S_MODE_ACTION' => append_sid("garage.$phpEx?mode=browse"))
 		);
@@ -1484,7 +1487,7 @@ switch( $mode )
 		$garage_template->sort_order($sort_order);
 
 		//Get All Insurance Data....
-		$data = $garage_insurance->select_all_insurance_data($search_data['where'], $order_by, $sort_order, $start, $garage_config['cars_per_page']);
+		$data = $garage_insurance->select_all_premiums_data($search_data['where'], $order_by, $sort_order, $start, $garage_config['cars_per_page']);
 		for ($i = 0; $i < count($data); $i++)
       		{
 			$row_color = ( !($i % 2) ) ? $theme['td_color1'] : $theme['td_color2'];
@@ -1507,13 +1510,20 @@ switch( $mode )
 		}
 
 		//Count Total Returned For Pagination...Notice No $start or $end to get complete count
-		$count = count($garage_insurance->select_all_insurance_data($search_data['where'], $order_by, $sort_order, '', ''));
-		$pagination = generate_pagination("garage.$phpEx?mode=search_insurance&amp;make_id=" . $search_data['make_id'] . "&amp;model_id=" . $search_data['model_id'] . "&amp;sort=$sort&amp;order=$sort_order", $count, $garage_config['cars_per_page'], $start);
+		$count = count($garage_insurance->select_all_premiums_data($search_data['where'], $order_by, $sort_order));
+
+		//Only Display Pagination If Data Exists
+		if ($count >= 1)
+		{
+			$pagination = generate_pagination("garage.$phpEx?mode=search_insurance&amp;make_id=" . $search_data['make_id'] . "&amp;model_id=" . $search_data['model_id'] . "&amp;sort=$sort&amp;order=$sort_order", $count, $garage_config['cars_per_page'], $start);
+			$template->assign_vars(array(
+				'L_GOTO_PAGE' => $lang['Goto_page'],
+				'PAGINATION' => $pagination,
+				'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count / $garage_config['cars_per_page'] )))
+			);
+		}
 
 		$template->assign_vars(array(
-			'PAGINATION' 	=> $pagination,
-			'PAGE_NUMBER' 	=> sprintf($lang['Page_of'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count / $garage_config['cars_per_page'] )), 
-			'L_GOTO_PAGE' 	=> $lang['Goto_page'],
 			'L_SORTED_BY' 	=> $lang['Insurance_Sorted_By'],
 			'L_IN' 		=> $lang['In'],
 			'L_GO' 		=> $lang['Go'],
@@ -1736,7 +1746,7 @@ switch( $mode )
 		);
 
 		//Display Vehicle With Owner Set to 'YES'..Since You Are Moderating You Need To See All Owner Options
-		$garage_vehicle->display_vehicle('YES');
+		$garage_vehicle->display_vehicle('MODERATE');
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$template->pparse('header');
@@ -2051,14 +2061,22 @@ switch( $mode )
       		}
 
 		// Get Insurance Business Data For Pagination
-		$count = $garage_business->select_insurance_business_data($where);
-		$pagination = generate_pagination("garage.$phpEx?mode=view_insurance_business", $count[0]['total'], 25, $start);
+		$count = count($garage_business->select_insurance_business_data($where));
+
+		//Only Display Pagination If Data Exists
+		if ($count >= 1)
+		{
+			$pagination = generate_pagination("garage.$phpEx?mode=view_insurance_business", $count['total'], 25, $start);
+			$template->assign_vars(array(
+				'L_GOTO_PAGE' => $lang['Goto_page'],
+				'PAGINATION' => $pagination,
+				'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count / $garage_config['cars_per_page'] )))
+			);
+		}
+
 
 		$template->assign_block_vars('level1', array());
 		$template->assign_vars(array(
-			'PAGINATION' => $pagination,
-			'PAGE_NUMBER' => sprintf($lang['Page_of'], (floor( $start / 25) + 1), ceil($count[0]['total'] / 25 )), 
-			'L_GOTO_PAGE' => $lang['Goto_page'],
                		'L_LEVEL1' => $lang['Insurance_Summary'],
                		'U_LEVEL1' => append_sid("garage.$phpEx?mode=view_insurance_business"),
                		'L_BUSINESS_NAME' => $lang['Business_Name'],
@@ -2192,14 +2210,22 @@ switch( $mode )
 		}
 
 		//Get Count & Perform Pagination...
-		$count = $garage_business->count_garage_business_data($where);
-		$pagination = generate_pagination("garage.$phpEx?mode=view_garage_business", $count, 25, $start);
+		$count = count($garage_business->count_garage_business_data($where));
+
+		//Only Display Pagination If Data Exists
+		if ($count >= 1)
+		{
+			$pagination = generate_pagination("garage.$phpEx?mode=view_garage_business", $count, 25, $start);
+			$template->assign_vars(array(
+				'L_GOTO_PAGE' => $lang['Goto_page'],
+				'PAGINATION' => $pagination,
+				'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count / $garage_config['cars_per_page'] )))
+			);
+		}
+
 
 		$template->assign_block_vars('level1', array());
 		$template->assign_vars(array(
-			'PAGINATION' => $pagination,
-			'PAGE_NUMBER' => sprintf($lang['Page_of'], (floor($start / 25) + 1), ceil($count / 25)), 
-			'L_GOTO_PAGE' => $lang['Goto_page'],
 	 		'L_LEVEL1' => $lang['Garage_Review'],
                		'U_LEVEL1' => append_sid("garage.$phpEx?mode=view_garage_business"),
                		'L_BUSINESS_NAME' => $lang['Business_Name'],
@@ -2334,14 +2360,22 @@ switch( $mode )
 		}
 
 		//Get Count & Perform Pagination...
-		$count = $garage_business->count_shop_business_data($where);
-		$pagination = generate_pagination("garage.$phpEx?mode=view_shop_business", $count, 25, $start);
+		$count = count($garage_business->count_shop_business_data($where));
+
+		//Only Display Pagination If Data Exists
+		if ($count >= 1)
+		{
+			$pagination = generate_pagination("garage.$phpEx?mode=view_shop_business", $count, 25, $start);
+			$template->assign_vars(array(
+				'L_GOTO_PAGE' => $lang['Goto_page'],
+				'PAGINATION' => $pagination,
+				'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count / $garage_config['cars_per_page'] )))
+			);
+		}
+
 
 		$template->assign_block_vars('level1', array());
 		$template->assign_vars(array(
-			'PAGINATION' => $pagination,
-			'PAGE_NUMBER' => sprintf($lang['Page_of'], (floor($start / 25) + 1), ceil($count / 25)), 
-			'L_GOTO_PAGE' => $lang['Goto_page'],
 	 		'L_LEVEL1' => $lang['Shop_Review'],
                		'U_LEVEL1' => append_sid("garage.$phpEx?mode=view_shop_business"),
                		'L_BUSINESS_NAME' => $lang['Business_Name'],
@@ -3452,7 +3486,7 @@ switch( $mode )
 
 		$count = $garage_vehicle->count_vehicle_ratings($data);
 
-		//If You Have Not Rated This Vehicle..Create A Rating	
+		//If You Have Not Rated This Vehicle..Record The Rating	
 		if ( $count['total'] < 1 )
 		{
 			$garage_vehicle->insert_vehicle_rating($data);
@@ -3463,7 +3497,61 @@ switch( $mode )
 			$garage_vehicle->update_vehicle_rating($data);
 		}
 
+		//Update The Weighted Rating Of This Vehicle
+		$weighted_rating = $garage_vehicle->calculate_weighted_rating($cid);
+		$garage_vehicle->update_weighted_rating($cid, $weighted_rating);
+
 		redirect(append_sid("garage.$phpEx?mode=view_vehicle&CID=$cid", true));
+
+		break;
+
+	case 'delete_rating':
+
+		//Only Allow Moderators Or Administrators Perform This Action
+		if ( !in_array($userdata['user_level'], array(ADMIN, MOD)) )
+		{
+			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true));
+		}
+
+		//Get All Data Posted And Make It Safe To Use
+		$params = array('RTID');
+		$data = $garage->process_post_vars($params);
+
+		//Checks All Required Data Is Present
+		$params = array('RTID');
+		$garage->check_required_vars($params);
+
+		//Delete The Rating
+		$garage->delete_rows(GARAGE_RATING_TABLE, 'id', $data['RTID']);
+
+		//Update The Weighted Rating Of This Vehicle
+		$weighted_rating = $garage_vehicle->calculate_weighted_rating($cid);
+		$garage_vehicle->update_weighted_rating($cid, $weighted_rating);
+
+		redirect(append_sid("garage.$phpEx?mode=moderate_vehicle&CID=$cid", true));
+
+		break;
+
+	case 'reset_vehicle_rating':
+
+		//Only Allow Moderators Or Administrators Perform This Action
+		if ( !in_array($userdata['user_level'], array(ADMIN, MOD)) )
+		{
+			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true));
+		}
+
+		//Let Get Vehicle Rating & Delete Them
+		$data = $garage_vehicle->select_vehicle_rating_data($cid);
+		for ($i = 0; $i < count($data); $i++)
+		{
+			$garage->delete_rows(GARAGE_RATING_TABLE, 'id', $data['id']);
+		}
+
+		//Update The Weighted Rating Of This Vehicle
+		$weighted_rating = $garage_vehicle->calculate_weighted_rating($cid);
+		$garage_vehicle->update_weighted_rating($cid, $weighted_rating);
+
+		redirect(append_sid("garage.$phpEx?mode=moderate_vehicle&CID=$cid", true));
 
 		break;
 
@@ -3518,6 +3606,7 @@ $template->set_filenames(array(
 );
 $template->pparse('garage_footer');
 
+//Display The Forums Bottom...Which Will Include the Pending Link If Needed
 include($phpbb_root_path . 'includes/page_tail.' . $phpEx);
 
 ?>

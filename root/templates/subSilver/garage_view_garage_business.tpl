@@ -2,7 +2,7 @@
  			<!-- BEGIN business_row -->
  			<table width="100%" cellpadding="2" cellspacing="0" border="0" class="forumline">
    				<tr>
-      					<th height="25" colspan="8" class="thHead"><a href="{business_row.U_VIEW_BUSINESS}">{business_row.NAME}</a></th>
+      					<th height="25" colspan="8" class="thHead">{business_row.NAME}</th>
 				</tr>
 				<tr>
       					<td class="row1" height="25" colspan="8" ><span class="gen"><b>{L_BUSINESS_NAME} : </b><a href="{business_row.U_VIEW_BUSINESS}">{business_row.NAME}</a></span>
