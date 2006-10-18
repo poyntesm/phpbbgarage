@@ -73,4 +73,3 @@ updateModelSelect(document.filter_quartermile_table.model_id, '{MAKE}', '{MODEL}
 
 <table width="100%" cellspacing="2" border="0" align="center">
 	<tr> 
-		<td valign="top" align="right">{JUMPBOX}</td>
