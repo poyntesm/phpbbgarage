@@ -476,11 +476,12 @@ class garage_image
 		//Uploaded Image Not Remote Image
 		else if ( $this->image_is_local() )
 		{
-			$data['filetype'] = $HTTP_POST_FILES['FILE_UPLOAD']['type'];
 			$data['filesize'] = $HTTP_POST_FILES['FILE_UPLOAD']['size'];
 			$data['tmp_name'] = $HTTP_POST_FILES['FILE_UPLOAD']['tmp_name'];
 			$data['file'] = $HTTP_POST_FILES['FILE_UPLOAD']['name'];
 			$data['date'] = time();
+			$imagesize = getimagesize($HTTP_POST_FILES['FILE_UPLOAD']['tmp_name']);
+			$data['filetype'] = $imagesize['mime'];
 	
 			if ($data['filesize'] == 0) 
 			{
