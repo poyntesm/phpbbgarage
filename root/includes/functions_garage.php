@@ -683,11 +683,11 @@ class garage_lib
 			while ( $vehicle_updated = $db->sql_fetchrow($result) )
 			{
        				$template->assign_block_vars('lastupdatedvehiclesmain_on.updated_vehicles', array(
-       					'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_updated['id']),
+       					'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_updated['id'].""),
        					'VEHICLE' => $vehicle_updated['vehicle'],
        					'UPDATED_TIME' => create_date($board_config['default_dateformat'], $vehicle_updated['date_updated'], $board_config['board_timezone']),
 		       			'USERNAME' => $vehicle_updated['username'],
-		       			'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_updated['member_id']))
+		       			'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_updated['member_id'].""))
       				);
 			}
 			$db->sql_freeresult($result);
@@ -1954,8 +1954,8 @@ class garage_lib
 					'FEATURED_IMAGE' => $featured_image,
 					'VEHICLE' => $vehicle_data['vehicle'],
 					'USERNAME' => $vehicle_data['username'],
-					'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-					'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id']))
+					'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id'].""),
+					'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id'].""))
 				);
 			}
 		}
@@ -2010,8 +2010,8 @@ class garage_lib
 	 	while ( $vehicle_data = $db->sql_fetchrow($result) )
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id']),
+				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id'].""),
+				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id'].""),
 				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
 				'COLUMN_2_TITLE' => $vehicle_data['username'],
 				'COLUMN_3' => create_date('D M d, Y G:i', $vehicle_data['POI'], $board_config['board_timezone']))
@@ -2096,8 +2096,8 @@ class garage_lib
 	            	$quartermile = $vehicle_data['quart'] .' @ ' . $mph . ' '. $lang['Quartermile_Speed_Unit'];
 	
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id']),
+				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id'].""),
+				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id'].""),
 				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
 				'COLUMN_2_TITLE' => $vehicle_data['username'],
 				'COLUMN_3' => $quartermile)
@@ -2135,11 +2135,7 @@ class garage_lib
 	
 	 	$sql = "SELECT mods.id, mods.garage_id, mods.member_id, mods.title AS mod_title, mods.date_updated AS POI, m.username, mods.garage_id 
 	                FROM " . GARAGE_MODS_TABLE . " AS mods 
-				LEFT JOIN " . GARAGE_TABLE . " AS g ON mods.garage_id = g.id
-			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
 	                	LEFT JOIN " . USERS_TABLE . " AS m ON mods.member_id = m.user_id
-			WHERE makes.pending = 0 AND models.pending = 0
 	                ORDER BY POI DESC LIMIT $limit";
 	 		            
 	 	if(!$result = $db->sql_query($sql))
@@ -2150,8 +2146,8 @@ class garage_lib
 	 	while ( $row = $db->sql_fetchrow($result) )
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_modification&amp;MID=".$row['id']."&amp;CID=".$row['garage_id']),
-				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$row['member_id']),
+				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_modification&amp;MID=".$row['id']."&amp;CID=".$row['garage_id'].""),
+				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$row['member_id'].""),
 				'COLUMN_1_TITLE' => $row['mod_title'],
 				'COLUMN_2_TITLE' => $row['username'],
 				'COLUMN_3' => create_date('D M d, Y G:i', $row['POI'], $board_config['board_timezone']))
@@ -2204,8 +2200,8 @@ class garage_lib
 	 	while ( $vehicle_data = $db->sql_fetchrow($result) )
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id']),
+				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id'].""),
+				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id'].""),
 				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
 				'COLUMN_2_TITLE' => $vehicle_data['username'],
 				'COLUMN_3' => create_date('D M d, Y G:i', $vehicle_data['POI'], $board_config['board_timezone']))
@@ -2260,8 +2256,8 @@ class garage_lib
 	 	while ( $vehicle_data = $db->sql_fetchrow($result) )
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id']),
+				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id'].""),
+				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id'].""),
 				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
 				'COLUMN_2_TITLE' => $vehicle_data['username'],
 				'COLUMN_3' => $vehicle_data['POI'])
@@ -2316,8 +2312,8 @@ class garage_lib
 	 	while ( $vehicle_data = $db->sql_fetchrow($result) )
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id']),
+				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id'].""),
+				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id'].""),
 				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
 				'COLUMN_2_TITLE' => $vehicle_data['username'],
 				'COLUMN_3' => $vehicle_data['POI'])
@@ -2370,8 +2366,8 @@ class garage_lib
 	 	while ( $vehicle_data = $db->sql_fetchrow($result) )
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id']),
+				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id'].""),
+				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id'].""),
 				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
 				'COLUMN_2_TITLE' => $vehicle_data['username'],
 				'COLUMN_3' => $vehicle_data['POI'])
@@ -2425,8 +2421,8 @@ class garage_lib
 	 	while ( $vehicle_data = $db->sql_fetchrow($result) )
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id']),
+				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id'].""),
+				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id'].""),
 				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
 				'COLUMN_2_TITLE' => $vehicle_data['username'],
 				'COLUMN_3' => $vehicle_data['rating'] . '/' . $vehicle_data['total_rating'])
@@ -2465,11 +2461,7 @@ class garage_lib
 	 	$sql = "SELECT mods.id, mods.garage_id, mods.member_id, mods.title AS mod_title, mods.date_created AS POI,
 	       			m.username, mods.garage_id 
 	                FROM " . GARAGE_MODS_TABLE . " AS mods 
-				LEFT JOIN " . GARAGE_TABLE . " AS g ON mods.garage_id = g.id
-			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
 	                	LEFT JOIN " . USERS_TABLE . " AS m ON mods.member_id = m.user_id
-			WHERE makes.pending = 0 AND models.pending = 0
 	                ORDER BY POI DESC LIMIT $limit";
 	 		            
 	 	if(!$result = $db->sql_query($sql))
@@ -2480,8 +2472,8 @@ class garage_lib
 	 	while ( $vehicle_data = $db->sql_fetchrow($result) )
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_modification&amp;MID=".$vehicle_data['id']."&amp;CID=".$vehicle_data['garage_id']),
-				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id']),
+				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_modification&amp;MID=".$vehicle_data['id']."&amp;CID=".$vehicle_data['garage_id'].""),
+				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id'].""),
 				'COLUMN_1_TITLE' => $vehicle_data['mod_title'],
 				'COLUMN_2_TITLE' => $vehicle_data['username'],
 				'COLUMN_3' => create_date('D M d, Y G:i', $vehicle_data['POI'], $board_config['board_timezone']))
@@ -2534,8 +2526,8 @@ class garage_lib
 	 	while ( $vehicle_data = $db->sql_fetchrow($result) )
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id']),
+				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id'].""),
+				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id'].""),
 				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
 				'COLUMN_2_TITLE' => $vehicle_data['username'],
 				'COLUMN_3' => create_date('D M d, Y G:i', $vehicle_data['POI'], $board_config['board_timezone']))
@@ -2888,7 +2880,7 @@ class garage_lib
 		{
 			$template->assign_block_vars('level2', array());
 			$template->assign_vars(array(
-				'U_LEVEL2' => append_sid("garage.$phpEx?mode=view_own_vehicle&amp;CID=".$cid),
+				'U_LEVEL2' => append_sid("garage.$phpEx?mode=view_own_vehicle&amp;CID=".$cid.""),
 				'L_LEVEL2' => $vehicle_row['made_year'] . ' ' . $vehicle_row['make'] . ' '. $vehicle_row['model'])
 			);
 			
@@ -2940,7 +2932,7 @@ class garage_lib
 			}
 			else if ( ( $vehicle_row['main_vehicle'] == 0 ) AND ( $mode = 'moderate_vehicle') )
 			{
-				$temp_url = append_sid("garage.$phpEx?mode=set_main&amp;CID=$cid&amp;user_id=".$vehicle_row['member_id']);
+				$temp_url = append_sid("garage.$phpEx?mode=set_main&amp;CID=$cid&amp;user_id=".$vehicle_row['member_id']."");
 				$set_main_vehicle_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_main_vehicle'] . '" alt="'.$lang['Set_Main_Vehicle'].'" title="'.$lang['Set_Main_Vehicle'].'" border="0" /></a>';
 	         		$template->assign_block_vars('switch_top_block.owned_yes.set_main_vehicle', array());
 			}
@@ -2989,7 +2981,7 @@ class garage_lib
 		{
 			$template->assign_block_vars('level2', array());
 			$template->assign_vars(array(
-				'U_LEVEL2' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$cid),
+				'U_LEVEL2' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$cid.""),
 				'L_LEVEL2' => $vehicle_row['made_year'] . ' ' . $vehicle_row['make'] . ' '. $vehicle_row['model'])
 			);
 	
@@ -3665,86 +3657,6 @@ class garage_lib
 			return (FALSE);
 		}
 	}
-
-	/*========================================================================*/
-	// Select All Vehicles Data From Db
-	// Usage: select_all_vehicle_data();
-	/*========================================================================*/
-	function select_all_vehicle_data($additional_where, $order_by, $sort_order, $start, $end)
-	{
-		global $db;
-		//Select All Vehicles Information
-		$sql = "SELECT g.*, makes.make, models.model, user.username, count(mods.id) AS total_mods, count(*) as total
-        		FROM " . GARAGE_TABLE . " AS g 
-                    		LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON mods.garage_id = g.id
-			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-			        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id 
-			        LEFT JOIN " . USERS_TABLE . " AS user ON g.member_id = user.user_id 
-			WHERE makes.pending = 0 AND models.pending = 0
-				".$search_data['where']."
-		        GROUP BY g.id
-			ORDER BY $order_by $sort_order";
-		if ( (!empty($start)) AND (!empty($end)) )
-		{
-			$sql .= "LIMIT $start, $end";
-		}
-
-      		if ( !($result = $db->sql_query($sql)) )
-      		{
-         		message_die(GENERAL_ERROR, 'Could Not Get Vehicle Data', '', __LINE__, __FILE__, $sql);
-      		}
-
-		while ($row = $db->sql_fetchrow($result) )
-		{
-			$rows[] = $row;
-		}
-		$db->sql_freeresult($result);
-
-		return $rows;
-	}
-
-	/*========================================================================*/
-	// Select All Insurance Data From Db
-	// Usage: select_all_vehicle_data();
-	/*========================================================================*/
-	function select_all_insurance_data($additional_where, $order_by, $sort_order, $start, $end)
-	{
-		global $db;
-		//Select All Vehicles Information
-		$sql = "SELECT i.*, g.*, b.title, b.id as business_id, makes.make, models.model, user.username, user.user_id,
-                        ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent,
-			CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
-        		FROM " . GARAGE_INSURANCE_TABLE . " AS i 
-                    		LEFT JOIN " . GARAGE_TABLE . " AS g ON i.garage_id = g.id
-	                    	LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON i.garage_id = mods.garage_id
-        	            	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " AS b ON i.business_id = b.id
-			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-		        	LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id 
-			        LEFT JOIN " . USERS_TABLE . " AS user ON g.member_id = user.user_id 
-			WHERE makes.pending = 0 AND models.pending = 0
-				".$search_data['where']."
-		        GROUP BY i.id
-			ORDER BY $order_by $sort_order";
-		if ( (!empty($start)) AND (!empty($end)) )
-		{
-			$sql .= "LIMIT $start, $end";
-		}
-
-      		if ( !($result = $db->sql_query($sql)) )
-      		{
-         		message_die(GENERAL_ERROR, 'Could Not Get Insurance Data', '', __LINE__, __FILE__, $sql);
-      		}
-
-		while ($row = $db->sql_fetchrow($result) )
-		{
-			$rows[] = $row;
-		}
-		$db->sql_freeresult($result);
-
-		return $rows;
-	}
-
-
 	
 	/*========================================================================*/
 	// Select All Vehicle Data From Db
@@ -3784,7 +3696,7 @@ class garage_lib
 		global $db;
 	
 		$sql = "SELECT mods.*, g.made_year, g.id, images.*, user.username, user.user_avatar_type, user.user_allowavatar, user.user_avatar, images.attach_ext, images.attach_id, images.attach_file, cats.title as category_title, makes.make, models.model, bus.title as business_name, ins.title as install_business_name, ins.id as install_business_id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
-     			FROM (" . GARAGE_MODS_TABLE . " AS mods, " . GARAGE_TABLE . " AS g)
+     			FROM ( " . GARAGE_MODS_TABLE . " AS mods, " . GARAGE_TABLE . " AS g )
 				LEFT JOIN " . USERS_TABLE ." AS user ON g.member_id = user.user_id
 				LEFT JOIN " . GARAGE_CATEGORIES_TABLE . " AS cats ON cats.id = mods.category_id
         			LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = mods.image_id 
@@ -4010,41 +3922,6 @@ class garage_lib
 	}
 
 	/*========================================================================*/
-	// Select Model Data From DB
-	// Usage: select_model_data('model id');
-	/*========================================================================*/
-	function select_insurance_business_data($start, $where)
-	{
-		global $db, $where;
-
-		// Select Each Business
-      		$sql = "SELECT b.*, COUNT(DISTINCT b.id) as total
-       	 		FROM  " . GARAGE_BUSINESS_TABLE . " b 
-       			WHERE b.insurance = 1 
-				AND b.pending = 0
-				$where
-			GROUP BY b.id";
-		if (!empty($start))
-		{
-			$sql .=	"LIMIT $start, 25";
-		}
-
-      		if ( !($result = $db->sql_query($sql)) )
-      		{
-         		message_die(GENERAL_ERROR, 'Could Select Business Data', '', __LINE__, __FILE__, $sql);
-      		}
-
-		while( $row = $db->sql_fetchrow($result) )
-		{
-			$rows[] = $row;
-		}
-      		$db->sql_freeresult($result);
-
-		return $rows;
-
-	}
-
-	/*========================================================================*/
 	// Select Business Data From DB
 	// Usage: select_business_data('business id');
 	/*========================================================================*/
@@ -4258,8 +4135,8 @@ class garage_lib
 				'BOOST_UNIT' => $data['boost_unit'],
 				'NITROUS' => $data['nitrous'],
 				'EDIT_LINK' => $edit_link,
-				'U_VIEWVEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$data['id']),
-				'U_VIEWPROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . "=".$data['member_id']))
+				'U_VIEWVEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$data['id'].""),
+				'U_VIEWPROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . "=".$data['member_id'].""))
 			);
 			$i++;
 		}
@@ -4509,7 +4386,7 @@ class garage_lib
 		$i = 1;
 		while ( $row = $db->sql_fetchrow($result) )
 		{
-            		$temp_url = append_sid("garage.$phpEx?mode=edit_business&amp;BUS_ID=".$row['id']);
+            		$temp_url = append_sid("garage.$phpEx?mode=edit_business&amp;BUS_ID=".$row['id']."");
 	            	$edit_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="'.$lang['Edit'].'" title="'.$lang['Edit'].'" border="0" /></a>';
 
 			//Work Out Type Of Business
@@ -4634,7 +4511,7 @@ class garage_lib
 		if (!empty($data['user']))
 		{
 			$data['where'] = "AND username = '".$data['user']."'" ;
-			$data['search_message'] = $lang['Search_Results_For_Member'] . $data['user'];
+			$data['search_message'] = $lang['Search_Results_For_Member'] . "".$data['user']."";
 			$template->assign_vars(array(
 				'L_LEVEL3' => $lang['Username_Results'])
 			);
@@ -4830,12 +4707,6 @@ class garage_lib
 			case '22':
 				$template->assign_vars(array(
 					'ERROR_MESSAGE' => $lang['Garage_Error_22'])
-				);
-				break;
-			//No Make Selected When User Adding Model
-			case '23':
-				$template->assign_vars(array(
-					'ERROR_MESSAGE' => $lang['Garage_Error_23'])
 				);
 				break;
 

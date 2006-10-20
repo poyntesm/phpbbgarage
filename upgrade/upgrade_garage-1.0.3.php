@@ -53,22 +53,6 @@ echo '<tr><th>Upgrading To phpBB Garage Version 1.0.4</th></tr><tr><td class="ro
 $sql = array();
 
 $sql[] = "UPDATE " . $table_prefix . "garage_config SET config_value = '1.0.4' WHERE config_name = 'version'";
-$sql[] = "ALTER TABLE " . $table_prefix . "garage_categories ADD `field_order` TINYINT( 4 ) UNSIGNED NOT NULL DEFAULT '0'";
-ALTER TABLE `phpbb_garage_images` ADD `attach_thumb_filesize` INT( 10 ) NOT NULL DEFAULT '0';
-
-//We Need To Setup Field Order Since It Will Be Blank
-$sql2 = "SELECT * FROM " . $table_prefix ."garage_categories";
-if ( !($result2 = $db->sql_query($sql2)) )
-{
-	message_die(GENERAL_ERROR, 'Could Select Business Data', '', __LINE__, __FILE__, $sql);
-}
-
-$i = 1;
-while( $row = $db->sql_fetchrow($result2) )
-{
-	$sql[] = "UPDATE " . $table_prefix . "garage_categories SET field_order = '$i' WHERE id = ".$row['id'];
-	$i++;
-}
 
 for( $i = 0; $i < count($sql); $i++ )
 {

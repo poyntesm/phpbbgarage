@@ -21,7 +21,7 @@
 				</tr>
 				<tr>
 					<td class="row1" width="30%"><span class="gen"><b>{L_COMMENTS}</b></span></td>
-					<td class="row2"><textarea name="comments" cols="60" rows="5" wrap="soft"   class="post">{COMMENTS}</textarea></td>
+					<td class="row2"><textarea name="comments" cols="60" rows="5" wrap="soft"   class="multitext">{COMMENTS}</textarea></td>
 				</tr>
 				<tr>
 					<td class="catBottom" align="center" height="28" colspan="2"><input type="hidden" value="{CID}" name="CID" /><input type="hidden" value="{INS_ID}" name="INS_ID" /><input name="submit" type="submit" value="{L_BUTTON}" class="liteoption" /></td>

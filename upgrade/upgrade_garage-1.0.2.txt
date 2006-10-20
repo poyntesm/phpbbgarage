@@ -1,20 +1,19 @@
 #############################################################################################################
-## MOD Title:		Update phpBB Garage 1.0.2 -> phpBB Garage 1.0.4
+## MOD Title:		Update phpBB Garage 1.0.2 -> phpBB Garage 1.0.3
 ## MOD Author: poyntesm < esmond.poynton[at]gmail[dot]com > (Esmond Poynton) http://forums.phpbbgarage.com
 ## MOD Description:
-##			Updates phpBB Garage From 1.0.2 To 1.0.4
+##			Updates phpBB Garage From 1.0.2 To 1.0.3
 ##
-## MOD Version:		1.0.4
+## MOD Version:		1.0.3
 ## 
 ## Installation Level:	Easy
 ## Installation Time:	10 Minutes
-## Files To Edit: (4)
-## 			root/garage.php
-##			root/admin/admin_garage_permissions.php
-##			root/includes/functions_garage.php
-##			root/templates/subSilver/garage_vehicle.tpl
+## Files To Edit: (3)
+## 			garage.php
+## 			viewtopic.php
+## 			includes/functions_garage.php
 ##
-## Included Files: (84)
+## Included Files: (86)
 ##			Install Garage.txt
 ##			Upgrade.txt
 ##			contrib/Install Garage PCP.txt
@@ -116,6 +115,9 @@
 ##
 ######################################################################################
 ## MOD History: 
+##   18-04-2006 - Version 1.0.3
+##	- 0000001: (DB Version Support) Add support for MySQL5 (poyntesm)
+##
 ##   27-02-2006 - Version 1.0.2
 ##	- Fix javascript error on adding a new model
 ##	- Fix setting private permissions
@@ -242,43 +244,69 @@ Delete upgrade_garage-1.0.2.php if it ran succesfull
 # 
 #-----[ OPEN ]----- 
 # 
-includes/usercp_viewprofile.php
+garage.php
 
 #
 #-----[ FIND ]------------------------------------------
 #
-	$garage_img ='<a href="' . append_sid("garage.$phpEx?mode=browse&search=yes&user=".$profiledata['username']."") . '"><img src="' . $images['icon_garage'] . '" alt="'.$lang['Garage'].'" title="'.$lang['Garage'].'" border="0" /></a>';
+	               		FROM " . GARAGE_MODS_TABLE . " AS mods, " . GARAGE_BUSINESS_TABLE . " AS b
 
 #
-#-----[ IN-LINE FIND ]------------------------------------------
+#-----[ REPLACE WITH ]------------------------------------------
 #
-$profiledata['username']
+	               		FROM ( " . GARAGE_MODS_TABLE . " AS mods, " . GARAGE_BUSINESS_TABLE . " AS b )
 
 #
-#-----[ IN-LINE REPLACE WITH ]------------------------------------------
+#-----[ FIND ]------------------------------------------
 #
-urlencode($profiledata['username'])
+	               		FROM " . GARAGE_MODS_TABLE . " AS mods, " . GARAGE_BUSINESS_TABLE . " AS b
 
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+	               		FROM ( " . GARAGE_MODS_TABLE . " AS mods, " . GARAGE_BUSINESS_TABLE . " AS b )
 
 # 
 #-----[ OPEN ]----- 
 # 
-templates/subSilver/subSilver.cfg
+viewtopic.php
 
 #
 #-----[ FIND ]------------------------------------------
 #
-$images['garage_no_thumb']		= "$current_template_images/{LANG}/garage_no_thumb.gif";
+	FROM " . POSTS_TABLE . " p, " . USERS_TABLE . " u, " . POSTS_TEXT_TABLE . " pt
+#
+#-----[ IN-LINE FIND ]------------------------------------------
+#
+FROM
 
 #
-#-----[ AFTER, ADD ]------------------------------------------
+#-----[ IN-LINE AFTER,ADD ]------------------------------------------
 #
-$images['garage_show_details']		= "$current_template_images/{LANG}/garage_show_details.gif";
-$images['garage_hide_details']		= "$current_template_images/{LANG}/garage_hide_details.gif";
-$images['garage_move_up']		= "$current_template_images/{LANG}/garage_move_up.gif";
-$images['garage_move_down']		= "$current_template_images/{LANG}/garage_move_down.gif";
-$images['garage_set_approved']		= "$current_template_images/{LANG}/garage_set_approved.gif";
-$images['garage_set_pending']		= "$current_template_images/{LANG}/garage_set_pending.gif";
+ (
+#
+#-----[ IN-LINE FIND ]------------------------------------------
+#
+pt
+
+#
+#-----[ IN-LINE AFTER,ADD ]------------------------------------------
+#
+ )
+
+# 
+#-----[ OPEN ]----- 
+# 
+includes/functions_garage.php
+
+#
+#-----[ FIND ]------------------------------------------
+#
+     			FROM " . GARAGE_MODS_TABLE . " AS mods, " . GARAGE_TABLE . " AS g 
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+     			FROM ( " . GARAGE_MODS_TABLE . " AS mods, " . GARAGE_TABLE . " AS g )
 
 #
 #-----[ SAVE/CLOSE ALL FILES ]------------------------------------------

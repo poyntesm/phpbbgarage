@@ -28,7 +28,7 @@
 				</tr>
 				<tr>
 					<td class="row1" width="20%"><span class="gen">{L_ADD_COMMENT}</span></td>
-					<td class="row2" colspan="4"><textarea name="comments" cols="70" rows="7" wrap="soft" class="post">{COMMENTS}</textarea></td>
+					<td class="row2" colspan="4"><textarea name="comments" cols="70" rows="7" wrap="soft" class="multitext">{COMMENTS}</textarea></td>
 				</tr>
 				<tr>
 					<td class="catBottom" align="center" height="28" colspan="5"><input type="hidden" value="insert_comment" name="mode" /><input type="hidden" value="{CID}" name="CID" /><input name="submit" type="submit" value="{L_POST_COMMENT}" class="liteoption" /></td>
