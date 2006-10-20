@@ -100,6 +100,8 @@
 ##			upgrade/upgrade_garage-1.0.2.txt
 ##			upgrade/upgrade_garage-1.0.3.php
 ##			upgrade/upgrade_garage-1.0.3.txt
+##			upgrade/upgrade_garage-1.0.4.php
+##			upgrade/upgrade_garage-1.0.4.txt
 ## License: http://opensource.org/licenses/gpl-license.php GNU General Public License v2 or any later version
 ######################################################################################
 ## For security purposes, please check: http://www.phpbb.com/mods/
@@ -260,7 +262,7 @@ includes/functions_garage.php
 #-----[ REPLACE WITH ]------------------------------------------
 #
 			$imagesize = getimagesize($HTTP_POST_FILES['FILE_UPLOAD']['tmp_name']);
-			$attach_filetype = $imagesize['mime'];
+			$attach_filetype = $imagesize[2];
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -269,6 +271,39 @@ includes/functions_garage.php
 #-----[ REPLACE WITH ]------------------------------------------
 #
 			$attach_file = trim(stripslashes($HTTP_POST_FILES['FILE_UPLOAD']['name']));
+#
+#-----[ FIND ]------------------------------------------
+#
+				case 'image/jpeg':
+				case 'image/jpg':
+				case 'image/pjpeg':
+					$attach_ext = '.jpg';
+					$attach_is_image = '1';
+					break;
+				case 'image/png':
+				case 'image/x-png':
+					$attach_ext = '.png';
+					$attach_is_image = '1';
+					break;
+				case 'image/gif':
+					$attach_ext = '.gif';
+					$attach_is_image = '1';
+					break;
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+				case '1':
+					$attach_ext = '.gif';
+					$attach_is_image = '1';
+					break;
+				case '2':
+					$attach_ext = '.jpg';
+					$attach_is_image = '1';
+					break;
+				case '3':
+					$attach_ext = '.png';
+					$attach_is_image = '1';
+					break;
 #
 #-----[ SAVE/CLOSE ALL FILES ]------------------------------------------
 #

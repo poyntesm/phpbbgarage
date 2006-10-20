@@ -1442,7 +1442,7 @@ class garage_lib
 		else if( (isset($HTTP_POST_FILES['FILE_UPLOAD'])) AND (!empty($HTTP_POST_FILES['FILE_UPLOAD']['name'])) )
 		{
 			$imagesize = getimagesize($HTTP_POST_FILES['FILE_UPLOAD']['tmp_name']);
-			$attach_filetype = $imagesize['mime'];
+			$attach_filetype = $imagesize[2];
 			$attach_filesize = $HTTP_POST_FILES['FILE_UPLOAD']['size'];
 			$attach_tmp = $HTTP_POST_FILES['FILE_UPLOAD']['tmp_name'];
 			$attach_file = trim(stripslashes($HTTP_POST_FILES['FILE_UPLOAD']['name']));
@@ -1461,19 +1461,16 @@ class garage_lib
 			// Check File Type 
 			switch ($attach_filetype)
 			{
-				case 'image/jpeg':
-				case 'image/jpg':
-				case 'image/pjpeg':
+				case '1':
+					$attach_ext = '.gif';
+					$attach_is_image = '1';
+					break;
+				case '2':
 					$attach_ext = '.jpg';
 					$attach_is_image = '1';
 					break;
-				case 'image/png':
-				case 'image/x-png':
+				case '3':
 					$attach_ext = '.png';
-					$attach_is_image = '1';
-					break;
-				case 'image/gif':
-					$attach_ext = '.gif';
 					$attach_is_image = '1';
 					break;
 				default:
