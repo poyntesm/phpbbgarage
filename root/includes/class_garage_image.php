@@ -481,7 +481,7 @@ class garage_image
 			$data['file'] = $HTTP_POST_FILES['FILE_UPLOAD']['name'];
 			$data['date'] = time();
 			$imagesize = getimagesize($HTTP_POST_FILES['FILE_UPLOAD']['tmp_name']);
-			$data['filetype'] = $imagesize['mime'];
+			$data['filetype'] = $imagesize[2];
 	
 			if ($data['filesize'] == 0) 
 			{
@@ -496,19 +496,16 @@ class garage_image
 			//Check File Type 
 			switch ($data['filetype'])
 			{
-				case 'image/jpeg':
-				case 'image/jpg':
-				case 'image/pjpeg':
+				case '1':
+					$data['ext'] = '.gif';
+					$data['is_image'] = '1';
+					break;
+				case '2':
 					$data['ext'] = '.jpg';
 					$data['is_image'] = '1';
 					break;
-				case 'image/png':
-				case 'image/x-png':
+				case '3':
 					$data['ext'] = '.png';
-					$data['is_image'] = '1';
-					break;
-				case 'image/gif':
-					$data['ext'] = '.gif';
 					$data['is_image'] = '1';
 					break;
 				default:
