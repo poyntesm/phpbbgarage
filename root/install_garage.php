@@ -51,6 +51,7 @@ $sql[] = "CREATE TABLE " . $table_prefix . "garage (
 		`id` int(10) unsigned NOT NULL auto_increment,
 		`member_id` int(10) NOT NULL default '0',
 		`made_year` varchar(4) NOT NULL default '2003',
+		`engine_type` varchar(128) default NULL,
 		`color` varchar(128) default NULL,
 		`mileage` int(10) unsigned NOT NULL default '0',
 		`mileage_units` varchar(32) NOT NULL default 'Miles',

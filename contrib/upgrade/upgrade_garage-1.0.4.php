@@ -61,6 +61,7 @@ $sql[] = "ALTER TABLE " . $table_prefix . "garage_images ADD `attach_thumb_files
 $sql[] = "ALTER TABLE " . $table_prefix . "garage_images ADD `garage_id` int(10) unsigned NOT NULL default '0'";
 $sql[] = "ALTER TABLE " . $table_prefix . "garage_mods ADD `purchase_rating` TINYINT( 2 ) NULL AFTER `install_comments`";
 $sql[] = "ALTER TABLE " . $table_prefix . "garage ADD `weighted_rating` DOUBLE NOT NULL default '0' AFTER `main_vehicle`";
+$sql[] = "ALTER TABLE " . $table_prefix . "garage ADD `engine_type` varchar(128) default NULL AFTER `made_year`";
 
 //Make Sure All Config Entries Exist
 $params = array('max_user_cars' => '1', 'year_start' => '1980', 'year_end' => '1', 'cars_per_page' => '30', 'allow_image_upload' => '1', 'max_image_kbytes' => '1024', 'max_image_resolution' => '1024', 'max_upload_images' => '5', 'max_remote_images' => '5', 'thumbnail_resolution' => '150', 'enable_guestbooks' => '1', 'enable_featured_vehicle' => '1', 'featured_vehicle_id' => '1', 'featured_vehicle_description' => '', 'featured_vehicle_random' => '0', 'allow_image_url' => '1', 'allow_mod_image' => '1', 'show_mod_gallery' => '1', 'limit_mod_gallery' => '12', 'newestvehicles_on' => '1', 'newestvehicles_limit' => '5', 'newestmods_on' => '1', 'newestmods_limit' => '5', 'mostmodded_on' => '1', 'mostmodded_limit' => '5', 'mostmoneyspent_on' => '1', 'mostmoneyspent_limit' => '5', 'mostviewed_on' => '1', 'mostviewed_limit' => '5', 'lastupdatedvehicles_on' => '1', 'lastupdatedvehicles_limit' => '5', 'lastupdatedvehiclesmain_on' => '1', 'lastupdatedvehiclesmain_limit' => '5', 'lastupdatedmods_on' => '1', 'lastupdatedmods_limit' => '5', 'lastcommented_on' => '1', 'lastcommented_limit' => '5', 'remote_timeout' => '60', 'browse_perms' => '*', 'interact_perms' => '*', 'add_perms' => '*', 'upload_perms' => '*', 'private_browse_perms' => '', 'private_interact_perms' => '', 'private_add_perms' => '', 'private_upload_perms' => '', 'private_add_quota' => '', 'private_upload_quota' => '', 'private_remote_quota' => '', 'menu_selection' => 'MAIN,BROWSE,SEARCH,INSURANCEREVIEW,GARAGEREVIEW,SHOPREVIEW,QUARTERMILE,ROLLINGROAD', 'featured_vehicle_from_block' => '', 'toprated_on' => '1', 'toprated_limit' => '5', 'topquartermile_on' => '1', 'topquartermile_limit' => '5', 'topdynorun_on' => '1', 'topdynorun_limit' => '5', 'enable_quartermile' => '1', 'enable_quartermile_approval' => '1', 'enable_business_approval' => '1', 'rating_permanent' => '0', 'rating_always_updateable' => '1', 'enable_rollingroad' => '1', 'enable_rollingroad_approval' => '1', 'enable_insurance' => '1', 'profile_thumbs' => '1', 'enable_user_submit_make' => '1', 'enable_user_submit_model' => '1', 'version' => '1.2.0', 'garage_images' => '1', 'quartermile_image_required' => '1', 'quartermile_image_required_limit' => '13', 'dynorun_image_required' => '1', 'dynorun_image_required_limit' => '300', 'items_pending' => '0', 'private_deny_perms' => '', 'minimum_ratings_required' => '5');
@@ -189,7 +190,7 @@ while( $row3 = $db->sql_fetchrow($result3) )
 }
 
 //Next Up We Need To Work Out The Weighted Rating Value Per Vehicle...Man This Upgrade Is Doing Lots Of Work!!!
-$sql8 = "SELECT * FROM " . $table_prefix . "garage_categories";
+$sql8 = "SELECT * FROM " . $table_prefix . "garage";
 if ( !($result8 = $db->sql_query($sql8)) )
 {
 	message_die(GENERAL_ERROR, 'Could Select Business Data', '', __LINE__, __FILE__, $sql2);
@@ -225,7 +226,6 @@ while( $row8 = $db->sql_fetchrow($result8) )
 
 	//Weighted Rating Formula We Use 'WR=(V/(V+M)) * R + (M/(V+M)) * C'
 	$garage_config['minimum_rating'] = '5';
-	echo "Site Average Is " . $row10['site_average'];
 	$weighted_rating= ( $row9['votes_recieved'] / ( $row9['votes_recieved'] + $garage_config['minimum_rating'] ) ) * $row9['average_rating'] + ( $garage_config['minimum_rating'] / ( $row9['votes_recieved'] + $garage_config['minimum_rating'] ) ) * $row10['site_average'];
 
 	$sql[] = "UPDATE ". $table_prefix ."garage SET weighted_rating = '$weighted_rating' WHERE id = '".$row8['id']."';";

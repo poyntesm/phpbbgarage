@@ -115,9 +115,9 @@ class garage_vehicle
 		global $userdata, $db;
 
 		$sql = "INSERT INTO ". GARAGE_TABLE ."
-			(made_year, make_id, model_id, color, mileage, mileage_units, price, currency, comments, member_id, date_created, date_updated, main_vehicle, guestbook_pm_notify)
+			(made_year, engine_type, make_id, model_id, color, mileage, mileage_units, price, currency, comments, member_id, date_created, date_updated, main_vehicle, guestbook_pm_notify)
 			VALUES
-			('".$data['year']."', '".$data['make_id']."', '".$data['model_id']."', '".$data['colour']."', '".$data['mileage']."', '".$data['mileage_units']."', '".$data['price']."', '".$data['currency']."', '".$data['comments']."', '".$userdata['user_id']."', '".$data['time']."', '".$data['time']."', '".$data['main_vehicle']."', '".$data['guestbook_pm_notify']."')";
+			('".$data['year']."', '".$data['engine_type']."', '".$data['make_id']."', '".$data['model_id']."', '".$data['colour']."', '".$data['mileage']."', '".$data['mileage_units']."', '".$data['price']."', '".$data['currency']."', '".$data['comments']."', '".$userdata['user_id']."', '".$data['time']."', '".$data['time']."', '".$data['main_vehicle']."', '".$data['guestbook_pm_notify']."')";
 	
 		if(!$result = $db->sql_query($sql))
 		{
@@ -183,7 +183,7 @@ class garage_vehicle
 		global $cid, $db;
 
 		$sql = "UPDATE ". GARAGE_TABLE ."
-			SET made_year = '".$data['year']."', make_id = '".$data['make_id']."', model_id = '".$data['model_id']."', color = '".$data['colour']."', mileage = '".$data['mileage']."', mileage_units = '".$data['mileage_units']."', price = '".$data['price']."', currency = '".$data['currency']."', comments = '".$data['comments']."', guestbook_pm_notify = '".$data['guestbook_pm_notify']."'
+			SET made_year = '".$data['year']."', engine_type = '".$data['engine_type']."', make_id = '".$data['make_id']."', model_id = '".$data['model_id']."', color = '".$data['colour']."', mileage = '".$data['mileage']."', mileage_units = '".$data['mileage_units']."', price = '".$data['price']."', currency = '".$data['currency']."', comments = '".$data['comments']."', guestbook_pm_notify = '".$data['guestbook_pm_notify']."'
 			WHERE id = '$cid'";
 	
 		if(!$result = $db->sql_query($sql))
@@ -1106,6 +1106,7 @@ class garage_vehicle
 	        $total_views = $vehicle_row['views'];
 	        $description = $vehicle_row['comments'];
 	        $weighted_rating = $vehicle_row['weighted_rating'];
+	        $engine_type = $vehicle_row['engine_type'];
 	
 		if ( $weighted_rating == '0' )
 		{
@@ -1571,6 +1572,7 @@ class garage_vehicle
 			'L_CONFIRM_DELETE_ROLLINGROAD' => $lang['Confirm_Delete_Rollingroad'],
 			'L_CONFIRM_DELETE_RATING' => $lang['Confirm_Delete_Rating'],
 			'L_CONFIRM_RESET_RATING' => $lang['Confirm_Reset_Rating'],
+			'L_ENGINE_TYPE' => $lang['Engine_Type'],
 			'U_DELETE_VEHICLE' => append_sid("garage.$phpEx?mode=delete_vehicle"),
 			'U_DELETE_MODIFICATION' => append_sid("garage.$phpEx?mode=delete_modification"),
 			'U_DELETE_QUARTERMILE' => append_sid("garage.$phpEx?mode=delete_quartermile"),
@@ -1592,6 +1594,7 @@ class garage_vehicle
             		'SHOWING_MOD_IMAGES' => $mod_images_displayed,
 			'CID' => $cid,
 			'YEAR' => $year,
+			'ENGINE_TYPE' => $engine_type,
 			'MAKE' => $make,
 			'MODEL' => $model,
             		'COLOUR' => $colour,

@@ -28,6 +28,10 @@
 					</td>
 				</tr>
 				<tr>
+					<td class="row1" width="30%"><span class="gen"><b>{L_ENGINE_TYPE}</b></span></td>
+					<td class="row2">{ENGINE_TYPE_LIST}</td>
+				</tr>
+				<tr>
 					<td class="row1" width="30%"><span class="gen"><b>{L_COLOUR}</b></span></td>
 					<td class="row2"><input name="colour" type="text" class="post" size="35" value="{COLOUR}" /></td>
 				</tr>

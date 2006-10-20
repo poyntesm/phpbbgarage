@@ -150,11 +150,13 @@ switch( $mode )
 			'L_DESCRIPTION' => $lang['Description'],
 			'L_NOT_LISTED_YET' => $lang['Not_Listed_Yet'],
 			'L_HERE' => $lang['Here'],
+			'L_ENGINE_TYPE' => $lang['Engine_Type'],
 			'S_MODE_ACTION' => append_sid("garage.$phpEx"),
 			'MODE' 	=> 'insert_vehicle',
 			'MAKE' 	=> $data['MAKE'],
 			'MODEL'	=> $data['MODEL'],
 			'ADDING_MODEL' => 'NO',
+			'ENGINE_TYPE_LIST'	=> $garage_template->dropdown('engine_type', $engine_types, $engine_types),
 			'CURRENCY_LIST'	=> $garage_template->dropdown('currency', $currency_types, $currency_types),
 			'MILEAGE_UNIT_LIST' => $garage_template->dropdown('mileage_units', $mileage_unit_types, $mileage_unit_types))
 		);
@@ -190,7 +192,7 @@ switch( $mode )
 		}
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('year', 'make_id', 'model_id', 'colour', 'mileage', 'mileage_units', 'price', 'currency', 'comments', 'guestbook_pm_notify', 'adding_model');
+		$params = array('year', 'make_id', 'model_id', 'colour', 'mileage', 'mileage_units', 'price', 'currency', 'comments', 'guestbook_pm_notify', 'adding_model', 'engine_type');
 		$data = $garage->process_post_vars($params);
 		$data['guestbook_pm_notify'] = ($data['guestbook_pm_notify'] == 'on') ? 1 : 0;
 		$data['time'] = time();
@@ -277,6 +279,7 @@ switch( $mode )
 			'L_DESCRIPTION' => $lang['Description'],
        			'L_TITLE' => $lang['Edit_Vehicle'],
        			'L_BUTTON' => $lang['Edit_Vehicle'],
+       			'L_ENGINE_TYPE' => $lang['Engine_Type'],
 			'MODE' 	=> 'update_vehicle',
 			'CID' => $cid,
 			'MAKE' => $data['make'],
@@ -287,6 +290,7 @@ switch( $mode )
 			'MILEAGE' => $data['mileage'],
 			'MILEAGE_UNITS' => $data['mileage_units'],
 			'PRICE' => $data['price'],
+			'ENGINE_TYPE_LIST'	=> $garage_template->dropdown('engine_type', $engine_types, $engine_types, $data['engine_type']),
 			'CURRENCY_LIST' => $garage_template->dropdown('currency', $currency_types, $currency_types, $data['currency']),
 			'MILEAGE_UNIT_LIST' => $garage_template->dropdown('mileage_units', $mileage_unit_types, $mileage_unit_types, $data['mileage_units']),
 			'COMMENTS' => $data['comments'])
@@ -314,7 +318,7 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('year', 'make_id', 'model_id', 'colour', 'mileage', 'mileage_units', 'price', 'currency', 'comments', 'guestbook_pm_notify');
+		$params = array('year', 'make_id', 'model_id', 'colour', 'mileage', 'mileage_units', 'price', 'currency', 'comments', 'guestbook_pm_notify', 'engine_type');
 		$data = $garage->process_post_vars($params);
 		$data['guestbook_pm_notify'] = ($data['guestbook_pm_notify'] == 'on') ? 1 : 0;
 
@@ -1424,7 +1428,7 @@ switch( $mode )
 			'MAKE_ID' => $search_data['make_id'],
 			'MODEL_ID' => $search_data['model_id'],
 			'SEARCH' => $search,
-			'S_SORT_SELECT' => $garage_template->dropdown('sort', $sort_types_text, $sort_types, $sort),
+			'S_SORT_SELECT' => $garage_template->dropdown('sort', $sort_types_text, $sort_types, $order_by),
 			'S_MODE_ACTION' => append_sid("garage.$phpEx?mode=browse"))
 		);
 	

@@ -155,6 +155,10 @@ function confirm_reset_rating (car_id)
                         					<td><span class="gen">{YEAR} {MAKE} {MODEL}</span></td>
                     					</tr>
                     					<tr>
+                        					<td class="row1" nowrap="nowrap"><span class="gen"><b>{L_ENGINE_TYPE}</b></span></td>
+                        					<td><span class="gen">{ENGINE_TYPE}</span></td>
+                    					</tr>
+                    					<tr>
                         					<td class="row1" ><span class="gen"><b>{L_COLOUR}</b></span></td>
                         					<td><span class="gen">{COLOUR}</span></td>
                     					</tr>

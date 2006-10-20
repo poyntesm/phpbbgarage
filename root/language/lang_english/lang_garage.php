@@ -620,8 +620,12 @@ $lang['Garage_Tools_Reset_Ratings_Title'] = 'Reset Ratings';
 $lang['Garage_Tools_Reset_Ratings'] = '<b>Reset All Vehicle Ratings</b><br />This tool will reset ratings on all vehicles to 0.';
 $lang['Garage_Tools_Reset_Ratings_Button'] = 'Reset Ratings';
 $lang['Ratings_Reset_Successfull'] = 'Ratings Reset Successfull';
-
-
-
+$lang['Engine_Type'] = 'Engine Type';
+$lang['8_Cylinder_NA'] = '8 Cylinder Naturally Aspirated';
+$lang['8_Cylinder_FI'] = '8 Cylinder Forced Induction';
+$lang['6_Cylinder_NA'] = '6 Cylinder Naturally Aspirated';
+$lang['6_Cylinder_FI'] = '6 Cylinder Forced Induction';
+$lang['4_Cylinder_NA'] = '4 Cylinder Naturally Aspirated';
+$lang['4_Cylinder_FI'] = '4 Cylinder Forced Induction';
 
 ?>

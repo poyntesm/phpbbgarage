@@ -48,6 +48,7 @@ $rating_types = array( '10', '9', '8', '7', '6', '5', '4', '3', '2', '1');
 $rating_text = array( '10', '9', '8', '7', '6', '5', '4', '3', '2', '1');
 $nitrous_types = array('0', '25', '50', '75', '100');
 $nitrous_types_text = array($lang['No_Nitrous'], $lang['25_BHP_Shot'], $lang['50_BHP_Shot'], $lang['75_BHP_Shot'], $lang['100_BHP_Shot']);
+$engine_types= array($lang['8_Cylinder_NA'], $lang['8_Cylinder_FI'], $lang['6_Cylinder_NA'], $lang['6_Cylinder_FI'], $lang['4_Cylinder_NA'], $lang['4_Cylinder_FI']);
 
 class garage 
 {
@@ -100,6 +101,7 @@ class garage
 		return $data;
 	}
 
+	/*========================================================================*/
 	/*========================================================================*/
 	// Makes Safe Any Posted String Variables
 	// Usage: process_str_vars(array());
@@ -460,7 +462,6 @@ class garage
 		return (float) $sec + ((float) $usec * 100000);
 	}
 
-	/*========================================================================*/
 	// Check If Any Pending Items Exists
 	// Usage: check_pending_items();
 	/*========================================================================*/
