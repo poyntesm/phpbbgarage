@@ -1441,10 +1441,11 @@ class garage_lib
 		// Uploaded Image Not Remote Image
 		else if( (isset($HTTP_POST_FILES['FILE_UPLOAD'])) AND (!empty($HTTP_POST_FILES['FILE_UPLOAD']['name'])) )
 		{
-			$attach_filetype = $HTTP_POST_FILES['FILE_UPLOAD']['type'];
+			$imagesize = getimagesize($HTTP_POST_FILES['FILE_UPLOAD']['tmp_name']);
+			$attach_filetype = $imagesize['mime'];
 			$attach_filesize = $HTTP_POST_FILES['FILE_UPLOAD']['size'];
 			$attach_tmp = $HTTP_POST_FILES['FILE_UPLOAD']['tmp_name'];
-			$attach_file = $HTTP_POST_FILES['FILE_UPLOAD']['name'];
+			$attach_file = trim(stripslashes($HTTP_POST_FILES['FILE_UPLOAD']['name']));
 			$attach_date = time();
 	
 			if ($attach_filesize == 0) 

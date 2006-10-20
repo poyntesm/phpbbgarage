@@ -1,16 +1,15 @@
 #############################################################################################################
-## MOD Title:		Update phpBB Garage 1.0.3 -> phpBB Garage 1.0.4
+## MOD Title:		Update phpBB Garage 1.0.4 -> phpBB Garage 1.0.5
 ## MOD Author: poyntesm < esmond.poynton[at]gmail[dot]com > (Esmond Poynton) http://forums.phpbbgarage.com
 ## MOD Description:
-##			Updates phpBB Garage From 1.0.3 To 1.0.4
+##			Updates phpBB Garage From 1.0.4 To 1.0.5
 ##
-## MOD Version:		1.0.4
+## MOD Version:		1.0.5
 ## 
 ## Installation Level:	Easy
-## Installation Time:	10 Minutes
-## Files To Edit: (2)
+## Installation Time:	5 Minutes
+## Files To Edit: (1)
 ##			/includes/functions_garage.php
-##			/includes/usercp_viewprofile.php
 ##
 ## Included Files: (84)
 ##			Install Garage.txt
@@ -116,6 +115,9 @@
 ##
 ######################################################################################
 ## MOD History: 
+##   20-10-2006 - Version 1.0.5
+##	- Fix security issue
+##
 ##   07-10-2006 - Version 1.0.4
 ##	- Fix performance issue
 ##
@@ -237,13 +239,13 @@
 #
 #-----[ COPY ]------------------------------------------
 #
-copy upgrade/upgrade_garage-1.0.3.php TO upgrade_garage-1.0.3.php
+copy upgrade/upgrade_garage-1.0.4.php TO upgrade_garage-1.0.4.php
 
 #
 #-----[ DIY INSTRUCTIONS ]------------------------------------------
 #
-Open in your web browser and run upgrade_garage-1.0.3.php
-Delete upgrade_garage-1.0.3.php if it ran succesfull
+Open in your web browser and run upgrade_garage-1.0.4.php
+Delete upgrade_garage-1.0.4.php if it ran succesfull
 
 # 
 #-----[ OPEN ]----- 
@@ -253,27 +255,20 @@ includes/functions_garage.php
 #
 #-----[ FIND ]------------------------------------------
 #
-	                                     WHERE garage.id = $cid";
+			$attach_filetype = $HTTP_POST_FILES['FILE_UPLOAD']['type'];
 #
 #-----[ REPLACE WITH ]------------------------------------------
 #
-	                                     WHERE garage.id = $cid and gallery.garage_id = $cid";
-
-# 
-#-----[ OPEN ]----- 
-# 
-includes/usercp_viewprofile.php
-
+			$imagesize = getimagesize($HTTP_POST_FILES['FILE_UPLOAD']['tmp_name']);
+			$attach_filetype = $imagesize['mime'];
 #
 #-----[ FIND ]------------------------------------------
 #
-                                     WHERE garage.id = " . $vehicle_row['id'] .";";
-
+			$attach_file = $HTTP_POST_FILES['FILE_UPLOAD']['name'];
 #
 #-----[ REPLACE WITH ]------------------------------------------
 #
-                                     WHERE garage.id = " . $vehicle_row['id'] ." AND gallery.garage_id = " . $vehicle_row['id'] . ";";
-
+			$attach_file = trim(stripslashes($HTTP_POST_FILES['FILE_UPLOAD']['name']));
 #
 #-----[ SAVE/CLOSE ALL FILES ]------------------------------------------
 #

@@ -1,5 +1,5 @@
 #############################################################################################################
-## MOD Title:		phpBB Garage 1.0.4
+## MOD Title:		phpBB Garage 1.0.5
 ## MOD Author: poyntesm < esmond.poynton[at]gmail[dot]com > (Esmond Poynton) http://forums.phpbbgarage.com/
 ## MOD Description:
 ##			This mod allows users of your forum to add details about their vehicles.
@@ -33,7 +33,7 @@
 ##			This mod also provides an insurance,garage,shop review page. Users Can Add Business's Themselves.
 ##			Although for the business to appear in a review page the moderator must approve it.
 ##
-## MOD Version:		1.0.4 
+## MOD Version:		1.0.5 
 ## 
 ## Installation Level:	Easy
 ## Installation Time:	10 Minutes
@@ -52,7 +52,7 @@
 ##			templates/subSilver/overall_header.tpl
 ##			templates/subSilver/profile_view_body.tpl
 ##
-## Included Files: (88)
+## Included Files: (90)
 ##			Install Garage.txt
 ##			Upgrade.txt
 ##			contrib/Install Garage.txt
@@ -141,6 +141,8 @@
 ##			upgrade/upgrade_garage-1.0.2.txt
 ##			upgrade/upgrade_garage-1.0.3.php
 ##			upgrade/upgrade_garage-1.0.3.txt
+##			upgrade/upgrade_garage-1.0.4.php
+##			upgrade/upgrade_garage-1.0.4.txt
 ## License: http://opensource.org/licenses/gpl-license.php GNU General Public License v2 or any later version
 ######################################################################################
 ## For security purposes, please check: http://www.phpbb.com/mods/
@@ -156,7 +158,10 @@
 ##
 ######################################################################################
 ## MOD History: 
-###   07-10-2006 - Version 1.0.4
+##   20-10-2006 - Version 1.0.5
+##	- Fix security issue
+##
+##   07-10-2006 - Version 1.0.4
 ##	- Fix performance issue
 ##
 ##   18-04-2006 - Version 1.0.3
