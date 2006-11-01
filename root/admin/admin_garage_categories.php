@@ -101,7 +101,7 @@ if( !isset($HTTP_POST_VARS['mode']) )
 			}
 			if( $db->sql_numrows($result) == 0 )
 			{
-				message_die(GENERAL_ERROR, 'The requested category did not existed');
+				message_die(GENERAL_ERROR, $lang['Category_Not_Found']);
 			}
 			$catrow = $db->sql_fetchrow($result);
 
@@ -153,7 +153,7 @@ if( !isset($HTTP_POST_VARS['mode']) )
 			}
 			if( $cat_found == FALSE )
 			{
-				message_die(GENERAL_ERROR, 'The requested category is not existed');
+				message_die(GENERAL_ERROR, $lang['Category_Not_Found']);
 			}
 
 			$select_to = '<select name="target">';

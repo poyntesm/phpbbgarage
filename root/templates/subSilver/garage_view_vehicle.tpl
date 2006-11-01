@@ -176,7 +176,7 @@ function confirm_delete_rollingroad (car_id, rr_id)
 							<!-- BEGIN guestbook -->
         					 	<tr>
                         					<td class="row1"  valign="top"><span class="gen"><b>{L_GUESTBOOK}</b></span></td>
-                        					<td width="95%"><span class="gensmall" align="center"><i>{COMMENT_COUNT}</i></span><span class="gensmall"><br /><font color="666666">{COMMENTS}</font>{GUESTBOOK_LINK}</span></td>
+                        					<td width="95%"><span class="gensmall" align="center"><i>{COMMENT_COUNT}</i></span><br /><span class="gensmall" style="color:666666">{COMMENTS}</span><span class="gensmall">{GUESTBOOK_LINK}</span></td>
                     					</tr>
 							<!-- END guestbook -->
 							<!-- END owned_no -->

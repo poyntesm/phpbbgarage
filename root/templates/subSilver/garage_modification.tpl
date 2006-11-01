@@ -9,11 +9,11 @@
 				</tr>
 				<tr>
 					<td class="row1" width="35%"><span class="gen"><b>{L_CATEGORY}</b></span></td>
-					<td class="row2">{CATEGORY_LIST} <span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</span></td></td>
+					<td class="row2">{CATEGORY_LIST} <span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td></td>
 				</tr>
 				<tr>
 					<td class="row1" width="35%"><span class="gen"><b>{L_TITLE}</b></span></td>
-					<td class="row2"><input name="title" type="text" class="post" size="35" value="{TITLE}" /> <span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</span></td>
+					<td class="row2"><input name="title" type="text" class="post" size="35" value="{TITLE}" /> <span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td>
 				</tr>
 				<tr>
 					<td class="row1" width="35%"><span class="gen"><b>{L_PURCHASED_FROM}</b></span></td>

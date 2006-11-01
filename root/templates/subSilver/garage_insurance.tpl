@@ -9,15 +9,16 @@
 				</tr>
 				<tr>
 					<td class="row1" width="35%"><span class="gen"><b>{L_INSURANCE_COMPANY}</b></span></td>
-	  				<td class="row2">{INSURANCE_LIST}&nbsp;<span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font> {L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS}">{L_HERE}</a></span></td>
+	  				<td class="row2">{INSURANCE_LIST}&nbsp;<span class="gensmall" style="color=:#FF0000">[{L_REQUIRED}]</span><span class="gensmall"> {L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS}">{L_HERE}</a></span></td>
 				</tr>
 				<tr>
 					<td class="row1" width="30%"><span class="gen"><b>{L_PREMIUM_PRICE}</b></span></td>
-					<td class="row2"><input name="premium" type="text" class="post" size="15" value="{PREMIUM}" /> <span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font></span></td>
+					<td class="row2"><input name="premium" type="text" class="post" size="15" value="{PREMIUM}" /> <span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td>
+
 				</tr>
 				<tr>
 					<td class="row1" width="35%"><span class="gen"><b>{L_COVER_TYPE}</b></span></td>
-				  	<td class="row2">{COVER_TYPE_LIST} <span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font></span></td>
+				  	<td class="row2">{COVER_TYPE_LIST} <span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td>
 				</tr>
 				<tr>
 					<td class="row1" width="30%"><span class="gen"><b>{L_COMMENTS}</b></span></td>

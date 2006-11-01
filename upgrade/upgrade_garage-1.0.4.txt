@@ -7,9 +7,20 @@
 ## MOD Version:		1.0.5
 ## 
 ## Installation Level:	Easy
-## Installation Time:	5 Minutes
-## Files To Edit: (1)
+## Installation Time:	15 Minutes
+## Files To Edit: (12)
 ##			/includes/functions_garage.php
+##			/includes/usercp_viewprofile.php
+##			/admin/admin_garage_tools.php
+##			/language/lang_english/lang_garage.php
+##			/language/lang_english/lang_garage_error.php
+##			/templates/subSilver/garage_insurance.tpl
+##			/templates/subSilver/garage_modification.tpl
+##			/templates/subSilver/garage_quartermile.tpl
+##			/templates/subSilver/garage_rollingroad.tpl
+##			/templates/subSilver/garage_user_submit.tpl
+##			/templates/subSilver/garage_vehicle.tpl
+##			/templates/subSilver/garage_view_vehicle.tpl
 ##
 ## Included Files: (84)
 ##			Install Garage.txt
@@ -304,6 +315,392 @@ includes/functions_garage.php
 					$attach_ext = '.png';
 					$attach_is_image = '1';
 					break;
+
+#
+#-----[ FIND ]------------------------------------------
+#
+		if ( (empty($type)) OR (empty($id)) )
+		{
+			message_die(GENERAL_ERROR, 'Missing Type Or ID Data For Image Upload');
+		}
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+# (Delete Line...I.E Replace With A Blank Link)
+
+
+#
+#-----[ FIND ]------------------------------------------
+#
+					message_die(GENERAL_ERROR, $lang['Not_Allowed_File_Type_Vehicle_Created_No_Image'] . "<br />Your File Type Was $attach_filetype");
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+					message_die(GENERAL_ERROR, $lang['Not_Allowed_File_Type_Vehicle_Created_No_Image'] . "<br />". $lang['Your_File_Type_Was'] ." $attach_filetype");
+#
+#-----[ FIND ]------------------------------------------
+#
+					message_die(GENERAL_ERROR, 'open_basedir is set and your PHP version does not allow move_uploaded_file<br /><br />Please contact your server admin', '', __LINE__, __FILE__);
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+					message_die(GENERAL_ERROR, $lang['Move_Uploaded_File_Disallowed'], '', __LINE__, __FILE__);
+
+#
+#-----[ FIND ]------------------------------------------
+#
+				message_die(GENERAL_ERROR, 'The requested category did not existed');
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+				message_die(GENERAL_ERROR, $lang['Category_Not_Found']);
+
+#
+#-----[ FIND ]------------------------------------------
+#
+				message_die(GENERAL_ERROR, 'The requested category is not existed');
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+				message_die(GENERAL_ERROR, $lang['Category_Not_Found']);
+
+#
+#-----[ FIND ]------------------------------------------
+#
+		$year_list = "<select name='year' class='forminput'>";
+	
+		for ( $year = $end_year; $year >= $garage_config['year_start']; $year-- ) {
+			if ( $year == $selected ) 
+			{
+				$year_list .= "<option value='$year' selected='selected'>$year</option>";
+			} 
+			else 
+			{
+				$year_list .= "<option value='$year'>$year</option>";
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$year_list ='<select name="year" class="forminput">';
+
+		for ( $year = $end_year; $year >= $garage_config['year_start']; $year-- ) {
+			if ( $year == $selected ) 
+			{
+				$year_list .= '<option value="'.$year.'" selected="selected">'.$year.'</option>';
+			} 
+			else 
+			{
+				$year_list .= '<option value="'.$year.'">'.$year.'</option>';
+
+#
+#-----[ FIND ]------------------------------------------
+#
+		$insurance_list = "<select name='business_id' class='forminput'>";
+	
+		if (!empty($selected) )
+		{
+			$insurance_list .= "<option value='$selected' selected='selected'>$selected_name</option>";
+			$insurance_list .= "<option value=''>------</option>";
+		}
+		else
+		{
+			$insurance_list .= "<option value=''>".$lang['Select_A_Business']."</option>";
+			$insurance_list .= "<option value=''>------</option>";
+		}
+	
+		$sql = "SELECT id, title FROM " . GARAGE_BUSINESS_TABLE . " WHERE insurance = 1 ORDER BY title ASC";
+	
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could not query businesses', '', __LINE__, __FILE__, $sql);
+		}
+	
+		while ( $insurance = $db->sql_fetchrow($result) )
+		{
+			$insurance_list .= "<option value='".$insurance['id']."'>".$insurance['title']."</option>";
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$insurance_list = '<select name="business_id" class="forminput">';
+	
+		if (!empty($selected) )
+		{
+			$insurance_list .= '<option value="'.$selected.'" selected="selected">'.$selected_name.'</option>';
+			$insurance_list .= '<option value="">------</option>';
+		}
+		else
+		{
+			$insurance_list .= '<option value="">'.$lang['Select_A_Business'].'</option>';
+			$insurance_list .= '<option value="">------</option>';
+		}
+	
+		$sql = "SELECT id, title FROM " . GARAGE_BUSINESS_TABLE . " WHERE insurance = 1 ORDER BY title ASC";
+	
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could not query businesses', '', __LINE__, __FILE__, $sql);
+		}
+	
+		while ( $insurance = $db->sql_fetchrow($result) )
+		{
+			$insurance_list .= '<option value="'.$insurance['id'].'">'.$insurance['title'].'</option>'
+
+# 
+#-----[ OPEN ]----- 
+# 
+includes/usercp_viewprofile.php
+
+#
+#-----[ FIND ]------------------------------------------
+#
+					$hilite_image .= '<a href=garage.php?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+					$hilite_image .= '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
+
+#
+#-----[ FIND ]------------------------------------------
+#
+					$hilite_image .= '<a href=garage.php?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+					$hilite_image .= '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
+
+#
+#-----[ FIND ]------------------------------------------
+#
+				$hilite_image = '<a href=garage.php?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+				$hilite_image = '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
+
+#
+#-----[ FIND ]------------------------------------------
+#
+				$hilite_image = '<a href=garage.php?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+				$hilite_image = '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
+
+# 
+#-----[ OPEN ]----- 
+# 
+admin/admin_garage_tools.php
+
+#
+#-----[ FIND ]------------------------------------------
+#
+                        	$output[] = "<b><font color='red'>ERROR</font></b>".$lang['File_Does_Not_Exist']."(".$image_row['attach_file'].")";
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+                        	$output[] = '<b><span style="color:#FF000">'.$lang['ERROR']."</span></b>".$lang['File_Does_Not_Exist']."(".$image_row['attach_file'].")";
+
+# 
+#-----[ OPEN ]----- 
+# 
+language/lang_english/lang_garage_error.php
+
+#
+#-----[ FIND ]------------------------------------------
+#
+$lang['Garage_Error_3'] = '<b>Required Field Missing</b><br /><br />A Field Marked As <font color="#FF0000">[Required]</font> Was Not Filled In<br /> Please Use Your Browsers Back Button And Fill It In';
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+$lang['Garage_Error_3'] = '<b>Required Field Missing</b><br /><br />A Field Marked As <span style="color:#FF0000">[Required]</span> Was Not Filled In<br /> Please Use Your Browsers Back Button And Fill It In';
+
+# 
+#-----[ OPEN ]----- 
+# 
+templates/subSilver/garage_insurance.tpl
+
+#
+#-----[ FIND ]------------------------------------------
+#
+	  				<td class="row2">{INSURANCE_LIST}&nbsp;<span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font> {L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS}">{L_HERE}</a></span></td>
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+	  				<td class="row2">{INSURANCE_LIST}&nbsp;<span class="gensmall" style="color=:#FF0000">[{L_REQUIRED}]</span><span class="gensmall"> {L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS}">{L_HERE}</a></span></td>
+
+#
+#-----[ FIND ]------------------------------------------
+#
+					<td class="row2"><input name="premium" type="text" class="post" size="15" value="{PREMIUM}" /> <span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font></span></td>
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+					<td class="row2"><input name="premium" type="text" class="post" size="15" value="{PREMIUM}" /> <span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td>
+
+#
+#-----[ FIND ]------------------------------------------
+#
+				  	<td class="row2">{COVER_TYPE_LIST} <span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font></span></td>
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+				  	<td class="row2">{COVER_TYPE_LIST} <span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td>
+
+# 
+#-----[ OPEN ]----- 
+# 
+templates/subSilver/garage_modification.tpl
+
+#
+#-----[ FIND ]------------------------------------------
+#
+					<td class="row2">{CATEGORY_LIST} <span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</span></td></td>
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+					<td class="row2">{CATEGORY_LIST} <span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td></td>
+
+#
+#-----[ FIND ]------------------------------------------
+#
+					<td class="row2"><input name="title" type="text" class="post" size="35" value="{TITLE}" /> <span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</span></td>
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+					<td class="row2"><input name="title" type="text" class="post" size="35" value="{TITLE}" /> <span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td>
+
+# 
+#-----[ OPEN ]----- 
+# 
+templates/subSilver/garage_quartermile.tpl
+
+#
+#-----[ FIND ]------------------------------------------
+#
+					<td class="row2"><input name="quart" type="text" class="post" size="15" value="{QUART}" /> <span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font></span></td>
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+					<td class="row2"><input name="quart" type="text" class="post" size="15" value="{QUART}" /> <span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td>
+
+# 
+#-----[ OPEN ]----- 
+# 
+templates/subSilver/garage_rollingroad.tpl
+
+#
+#-----[ FIND ]------------------------------------------
+#
+					<td class="row2"><input name="bhp" type="text" class="post" size="15" value ="{BHP}" />&nbsp;{BHP_UNIT_LIST} <span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font></span</td>
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+					<td class="row2"><input name="bhp" type="text" class="post" size="15" value ="{BHP}" />&nbsp;{BHP_UNIT_LIST} <span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span</td>
+
+
+# 
+#-----[ OPEN ]----- 
+# 
+templates/subSilver/garage_user_submit.tpl
+
+#
+#-----[ FIND ]------------------------------------------
+#
+					<td class="row2"><input name="name" type="text" class="post" size="35" value="{NAME}" /> <span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</span></td>
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+					<td class="row2"><input name="name" type="text" class="post" size="35" value="{NAME}" /> <span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td>
+
+# 
+#-----[ OPEN ]----- 
+# 
+templates/subSilver/garage_vehicle.tpl
+
+#
+#-----[ FIND ]------------------------------------------
+#
+					<td class="row2">{YEAR_LIST} <span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font></span></td>
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+					<td class="row2">{YEAR_LIST} <span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td>
+
+#
+#-----[ FIND ]------------------------------------------
+#
+
+					<td class="row2"><select name="make_id" onchange="updateModelSelect(this.form.model_id, this.options[this.selectedIndex].text, '');" class="forminput"><option value="{MAKE_ID}">{L_SELECT_MODEL}</option></select> <span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font></span>
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+					<td class="row2"><select name="make_id" onchange="updateModelSelect(this.form.model_id, this.options[this.selectedIndex].text, '');" class="forminput"><option value="{MAKE_ID}">{L_SELECT_MODEL}</option></select> <span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span>
+
+#
+#-----[ FIND ]------------------------------------------
+#
+					<td class="row2"><select name="model_id" class="forminput"><option value="">{L_ANY_MODEL}</option></select> <span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font></span>
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+					<td class="row2"><select name="model_id" class="forminput"><option value="">{L_ANY_MODEL}</option></select> <span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span>
+
+# 
+#-----[ OPEN ]----- 
+# 
+templates/subSilver/garage_view_vehicle.tpl
+
+#
+#-----[ FIND ]------------------------------------------
+#
+                        					<td width="95%"><span class="gensmall" align="center"><i>{COMMENT_COUNT}</i></span><span class="gensmall"><br /><font color="666666">{COMMENTS}</font>{GUESTBOOK_LINK}</span></td>
+
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+                        					<td width="95%"><span class="gensmall" align="center"><i>{COMMENT_COUNT}</i></span><br /><span class="gensmall" style="color:666666">{COMMENTS}</span><span class="gensmall">{GUESTBOOK_LINK}</span></td>
+
+# 
+#-----[ OPEN ]----- 
+# 
+language/lang_english/lang_garage.php
+
+#
+#-----[ FIND ]------------------------------------------
+#
+$lang['Kbytes'] = 'kbytes';
+
+#
+#-----[ AFTER ADD ]------------------------------------------
+#
+$lang['ERROR'] = 'ERROR';
+$lang['Your_File_Type_Was'] = 'Your File Type Was';
+$lang['Move_Uploaded_File_Disallowed'] = 'open_basedir is set and your PHP version does not allow move_uploaded_file<br /><br />Please contact your server admin';
+
 #
 #-----[ SAVE/CLOSE ALL FILES ]------------------------------------------
 #

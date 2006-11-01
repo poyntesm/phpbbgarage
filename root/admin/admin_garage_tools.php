@@ -557,7 +557,7 @@ function rebuild_thumbs($start, $cycle, $done, $file)
 			else
 			{
                         	// Tell them that the remote file doesn't exists
-                        	$output[] = "<b><font color='red'>ERROR</font></b>".$lang['File_Does_Not_Exist']."(".$image_row['attach_file'].")";
+                        	$output[] = '<b><span style="color:#FF000">'.$lang['ERROR']."</span></b>".$lang['File_Does_Not_Exist']."(".$image_row['attach_file'].")";
                         	_log($log_handle,$lang['File_Does_Not_Exist'],1);
                     	}
                 }

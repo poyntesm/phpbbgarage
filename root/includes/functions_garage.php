@@ -718,16 +718,16 @@ class garage_lib
 			return;
 		}	
 	
-		$year_list = "<select name='year' class='forminput'>";
+		$year_list ='<select name="year" class="forminput">';
 	
 		for ( $year = $end_year; $year >= $garage_config['year_start']; $year-- ) {
 			if ( $year == $selected ) 
 			{
-				$year_list .= "<option value='$year' selected='selected'>$year</option>";
+				$year_list .= '<option value="'.$year.'" selected="selected">'.$year.'</option>';
 			} 
 			else 
 			{
-				$year_list .= "<option value='$year'>$year</option>";
+				$year_list .= '<option value="'.$year.'">'.$year.'</option>';
 			}
 		}
 	
@@ -909,17 +909,17 @@ class garage_lib
 	{
 		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
-		$insurance_list = "<select name='business_id' class='forminput'>";
+		$insurance_list = '<select name="business_id" class="forminput">';
 	
 		if (!empty($selected) )
 		{
-			$insurance_list .= "<option value='$selected' selected='selected'>$selected_name</option>";
-			$insurance_list .= "<option value=''>------</option>";
+			$insurance_list .= '<option value="'.$selected.'" selected="selected">'.$selected_name.'</option>';
+			$insurance_list .= '<option value="">------</option>';
 		}
 		else
 		{
-			$insurance_list .= "<option value=''>".$lang['Select_A_Business']."</option>";
-			$insurance_list .= "<option value=''>------</option>";
+			$insurance_list .= '<option value="">'.$lang['Select_A_Business'].'</option>';
+			$insurance_list .= '<option value="">------</option>';
 		}
 	
 		$sql = "SELECT id, title FROM " . GARAGE_BUSINESS_TABLE . " WHERE insurance = 1 ORDER BY title ASC";
@@ -931,7 +931,7 @@ class garage_lib
 	
 		while ( $insurance = $db->sql_fetchrow($result) )
 		{
-			$insurance_list .= "<option value='".$insurance['id']."'>".$insurance['title']."</option>";
+			$insurance_list .= '<option value="'.$insurance['id'].'">'.$insurance['title'].'</option>';
 		}
 		$db->sql_freeresult($result);
 		
@@ -1294,11 +1294,6 @@ class garage_lib
 			return ;
 		}
 
-		if ( (empty($type)) OR (empty($id)) )
-		{
-			message_die(GENERAL_ERROR, 'Missing Type Or ID Data For Image Upload');
-		}
-	
 		if ($gd_version = $this->gd_version_check())
 	       	{
 	   		if ($gd_version = 2) 
@@ -1474,7 +1469,7 @@ class garage_lib
 					$attach_is_image = '1';
 					break;
 				default:
-					message_die(GENERAL_ERROR, $lang['Not_Allowed_File_Type_Vehicle_Created_No_Image'] . "<br />Your File Type Was $attach_filetype");
+					message_die(GENERAL_ERROR, $lang['Not_Allowed_File_Type_Vehicle_Created_No_Image'] . "<br />". $lang['Your_File_Type_Was'] ." $attach_filetype");
 			}
 	
 			// Generate filename
@@ -1510,7 +1505,7 @@ class garage_lib
 			{
 				if ( @phpversion() < '4.0.3' )
 				{
-					message_die(GENERAL_ERROR, 'open_basedir is set and your PHP version does not allow move_uploaded_file<br /><br />Please contact your server admin', '', __LINE__, __FILE__);
+					message_die(GENERAL_ERROR, $lang['Move_Uploaded_File_Disallowed'], '', __LINE__, __FILE__);
 				}
 	
 				$move_file = 'move_uploaded_file';

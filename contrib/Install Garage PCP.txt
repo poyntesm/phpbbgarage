@@ -548,10 +548,12 @@ if ( $userdata['user_level'] == ADMIN )
 
 	$count = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);
+
+	$temp_url = append_sid("garage.$phpEx?mode=garage_pending");
 	//We Have At Least One Pending Image So Display Link
 	if ( $count['total'] > 0 )
 	{
-		$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="garage.php?mode=garage_pending">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
+		$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
 	}
 	//Not Found A Pending Item So Lets Keep Checking Other Types
 	else
@@ -569,7 +571,7 @@ if ( $userdata['user_level'] == ADMIN )
 		//We Have At Least One Pending Image So Display Link
 		if ( $count['total'] > 0 )
 		{
-			$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="garage.php?mode=garage_pending">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
+			$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
 		}
 		//Still Not Found A Pending Item So Lets Keep Checking Other Types
 		else
@@ -586,7 +588,7 @@ if ( $userdata['user_level'] == ADMIN )
 			$db->sql_freeresult($result);
 			if ( $count['total'] > 0 )
 			{
-				$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="garage.php?mode=garage_pending">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
+				$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
 			}
 			//Still Not Found A Pending Item So Lets Keep Checking Other Types
 			else
@@ -603,7 +605,7 @@ if ( $userdata['user_level'] == ADMIN )
 				$db->sql_freeresult($result);
 				if ( $count['total'] > 0 )
 				{
-					$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="garage.php?mode=garage_pending">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
+					$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
 				}
 				else
 				{
@@ -619,7 +621,7 @@ if ( $userdata['user_level'] == ADMIN )
 					$db->sql_freeresult($result);
 					if ( $count['total'] > 0 )
 					{
-						$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="garage.php?mode=garage_pending">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
+						$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
 					}
 					//Out Of Luck No More Tables To Check
 					else
@@ -802,7 +804,7 @@ templates/subSilver/overall_header.tpl
 #-----[ IN-LINE AFTER, ADD ]------------------------------------------
 #
 
-<img src="templates/subSilver/images/icon_mini_members.gif" width="12" height="13" border="0" alt="Garage" hspace="3" /><a href="garage.php" class="mainmenu">Garage</a>&nbsp;<img src="templates/subSilver/images/icon_mini_members.gif" width="12" height="13" border="0" alt="1/4 Mile Table" hspace="3" /><a href="garage.php?mode=quartermile" class="mainmenu">1/4 Mile Table</a>&nbsp;
+<img src="templates/subSilver/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_GARAGE}" hspace="3" /><a href="garage.php" class="mainmenu">{L_GARAGE}</a>&nbsp;<img src="templates/subSilver/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_QUARTERMILE_TABLE}" hspace="3" /><a href="garage.php?mode=quartermile" class="mainmenu">{L_QUARTERMILE_TABLE}</a>&nbsp;
 
 # 
 #-----[ OPEN ]----- 

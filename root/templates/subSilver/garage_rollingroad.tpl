@@ -13,7 +13,7 @@
 				</tr>
 				<tr>
 					<td class="row1" width="35%"><span class="gen">{L_BHP}</span></td>
-					<td class="row2"><input name="bhp" type="text" class="post" size="15" value ="{BHP}" />&nbsp;{BHP_UNIT_LIST} <span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font></span</td>
+					<td class="row2"><input name="bhp" type="text" class="post" size="15" value ="{BHP}" />&nbsp;{BHP_UNIT_LIST} <span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span</td>
 				</tr>
 				<tr>
 					<td class="row1" width="35%"><span class="gen">{L_TORQUE}</span></td>

@@ -553,4 +553,7 @@ $lang['Need_To_Process'] = 'We need to process in total : ';
 $lang['Log_To'] = 'We will log to : ';
 $lang['Out_Of'] = 'Out Of';
 $lang['Kbytes'] = 'kbytes';
+$lang['Your_File_Type_Was'] = 'Your File Type Was';
+$lang['Move_Uploaded_File_Disallowed'] = 'open_basedir is set and your PHP version does not allow move_uploaded_file<br /><br />Please contact your server admin';
+
 ?>
