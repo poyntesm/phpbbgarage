@@ -10,7 +10,7 @@
 				</tr>
 				<!-- BEGIN upload_images -->
 				<tr>
-					<td class="row1" width="32%"><span class="gen"><b>{L_IMAGE_ATTACH}<br />{L_MAXIMUM_IMAGE_FILE_SIZE} : {MAXIMUM_IMAGE_FILE_SIZE} {L_Kbytes}<br />{L_MAXIMUM_IMAGE_RESOLUTION} : {MAXIMUM_IMAGE_RESOLUTION}</b></span></td>
+					<td class="row1" width="32%"><span class="gen"><b>{L_IMAGE_ATTACH}<br />{L_MAXIMUM_IMAGE_FILE_SIZE} : {MAXIMUM_IMAGE_FILE_SIZE} {L_KBYTES}<br />{L_MAXIMUM_IMAGE_RESOLUTION} : {MAXIMUM_IMAGE_RESOLUTION}</b></span></td>
 					<td class="row2" colspan="2"><input class="post" size="30"  type="file" size="30" name="FILE_UPLOAD" /></td>
 				</tr>
 				<!-- END upload_images -->
@@ -21,7 +21,7 @@
 				</tr>
 				<!-- END remote_images -->
 				<tr>
-					<td class="catBottom" align="center" height="28" colspan="3"><span class="gen"><input type="hidden" value="insert_gallery_image" name="mode" /><input type="hidden" value="{CID}" name="CID" /><input name="submit" type="submit" value="Add New Image" class="liteoption" /></span></td>
+					<td class="catBottom" align="center" height="28" colspan="3"><span class="gen"><input type="hidden" value="insert_gallery_image" name="mode" /><input type="hidden" value="{CID}" name="CID" /><input name="submit" type="submit" value="{L_ADD_NEW_IMAGE}" class="liteoption" /></span></td>
 				</tr>
 				<!-- END allow_images -->
 				<tr>

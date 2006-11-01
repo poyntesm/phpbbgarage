@@ -2689,20 +2689,22 @@ switch( $mode )
 		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD',"garage.$phpEx?mode=error&EID=14");
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
-		$template->set_filenames(array(
-			'header' => 'garage_header.tpl',
-			'body'   => 'garage_user_submit_model.tpl')
-		);
-
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('make_id', 'year');
 		$data = $garage->process_post_vars($params);
 		$year = $data['year'];
 
-		//Checks All Required Data Is Present
-		$params = array('make_id');
-		$garage->check_required_vars($params);
+		//Check If User Owns Vehicle
+		if ( empty($data['make_id']))
+		{
+			redirect(append_sid("garage.$phpEx?mode=error&EID=23", true));
+		}
+
+		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		$template->set_filenames(array(
+			'header' => 'garage_header.tpl',
+			'body'   => 'garage_user_submit_model.tpl')
+		);
 
 		//Pull Required Make Data From DB
 		$data = $garage_model->select_make_data($data['make_id']);

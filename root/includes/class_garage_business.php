@@ -120,7 +120,7 @@ class garage_business
 
 	/*========================================================================*/
 	// Select All Garage Business Data From DB
-	// Usage: select_all_garage_business_data('additional where', 'row start point', 'limit');
+	// Usage: select_garage_business_data('additional where', 'row start point', 'limit');
 	/*========================================================================*/
 	function select_garage_business_data($where, $start = 0, $limit = 20)
 	{

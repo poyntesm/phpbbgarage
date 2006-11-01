@@ -80,7 +80,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function get_group_add_quota($gid)
 	{
-		global $db, $userdata, $garage_config;
+		global $db, $garage_config;
 
 		if (empty($garage_config['private_add_quota']))
 		{
