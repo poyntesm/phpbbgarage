@@ -950,7 +950,7 @@ class garage_image
 	// Select All Image Data From DB
 	// Usage: select_all_image_data();
 	/*========================================================================*/
-	function select_all_image_data()
+	function select_all_image_data($start = 0, $end = 10000000)
 	{
 		global $db;
 
@@ -960,7 +960,8 @@ class garage_image
        		                LEFT JOIN " . USERS_TABLE . " u ON g.member_id = u.user_id
 			        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
 	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
-			ORDER BY i.attach_id ASC";
+			ORDER BY i.attach_id ASC
+			LIMIT $start, $end";
 
 		if( !($result = $db->sql_query($sql)) )
 		{

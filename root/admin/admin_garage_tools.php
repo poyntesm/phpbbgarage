@@ -185,10 +185,10 @@ switch($mode)
 			for( $i = 0; $i < count($files); $i++ )
 			{
 				// Just to make sure, if the file exists...
-		                if ( @file_exists( $phpbb_root_path . GARAGE_UPLOAD_PATH . $files[$i] ) )
+		                if ( file_exists( $phpbb_root_path . GARAGE_UPLOAD_PATH . $files[$i] ) )
         		        {
                 			// Remove it
-		        	        @unlink( $phpbb_root_path . GARAGE_UPLOAD_PATH . $files[$i] );
+		        	        unlink( $phpbb_root_path . GARAGE_UPLOAD_PATH . $files[$i] );
 	                 		// And report what we just did
         	            		$output[] = $files[$i];
                 		}

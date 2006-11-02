@@ -1878,41 +1878,62 @@ switch( $mode )
 		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
+		//Set Required Values To Defaults If They Are Empty
+		$start = (empty($start)) ? '0' : $start;
+
 		$template->set_filenames(array(
 			'header' => 'garage_header.tpl',
 			'body'   => 'garage_view_images.tpl')
 		);
 
 		//Pull Required Image Data From DB
-		$data = $garage_image->select_all_image_data();
+		$data = $garage_image->select_all_image_data($start, '100');
 
 		//Process Each Image
 		for ($i = 0; $i < count($data); $i++)
 		{
 			//Produce Actual Image Thumbnail And Link It To Full Size Version..
-			if ( ($data[$i]['image_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location'])) )
+			if ( ($data[$i]['attach_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location'])) )
 			{
 				// Form the image link
 				$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'];
-				$image = '<a href="garage.' . $phpEx . '?mode=view_gallery_item&amp;type=garage_mod&amp;image_id=' . $data[$i]['image_id'] . '" title="' . $data[$i]['attach_file'] . '" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image . '" class="attach"  /></a>';
+				$image = '<a href="garage.' . $phpEx . '?mode=view_gallery_item&amp;type=garage_mod&amp;image_id=' . $data[$i]['attach_id'] . '" title="' . $data[$i]['attach_file'] . '" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image . '" class="attach"  /></a>';
+	
+				$template->assign_block_vars('pic_row', array(
+					'THUMB_IMAGE' => $image,
+					'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . "=" .$data[$i]['user_id']),
+					'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle;CID=" .$data[$i]['garage_id']),
+					'VEHICLE' => $data[$i]['vehicle'],
+					'USERNAME' => $data[$i]['username'])
+				);
 			}
-
-			$template->assign_block_vars('pic_row', array(
-				'THUMB_IMAGE' => $image,
-				'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . "=" .$data[$i]['user_id']),
-				'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle;CID=" .$data[$i]['garage_id']),
-				'VEHICLE' => $data[$i]['vehicle'],
-				'USERNAME' => $data[$i]['username'])
-			);
+			//Cleanup For Next Image
+			$thumb_image = '';
+			$image = '';
 		}
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 
+		//Count Total Returned For Pagination...Notice No $start or $end to get complete count
+		$count = count($garage_image->select_all_image_data());
+
+		//Only Display Pagination If Data Exists
+		if ($count >= 1)
+		{
+			$pagination = generate_pagination("garage.$phpEx?mode=view_all_images", $count, 100, $start);
+			$template->assign_vars(array(
+				'L_GOTO_PAGE' => $lang['Goto_page'],
+				'PAGINATION' => $pagination,
+				'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / 100 ) + 1 ), ceil( $count / 100 )))
+			);
+		}
+
 		$template->assign_vars(array(
         	    	'L_IMAGE' => $lang['Image'],
         	    	'L_OWNER' => $lang['Owner'],
-        	    	'L_VEHICLE' => $lang['Vehicle'])
-         	);
+			'L_VEHICLE' => $lang['Vehicle'],
+			'S_MODE_ACTION' => append_sid("garage.$phpEx?mode=browse"))
+		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$template->pparse('header');

@@ -1,5 +1,5 @@
 		<td width="72%" valign="top">
-			<form enctype="multipart/form-data" method="post" name="manage_gallery" action="{S_MODE_ACTION}">
+			<form enctype="multipart/form-data" method="post" name="view_all_images" action="{S_MODE_ACTION}">
 			<table width="100%" cellpadding="3" cellspacing="1" border="0" class="forumline">
 				<tr>
 					<th class="thHead" height="25" nowrap="nowrap" colspan="3"></th>
@@ -18,4 +18,11 @@
 			  	<!-- END pic_row -->
 			</form>
 			</table>
+			<table width="100%" cellspacing="0" cellpadding="0" border="0">
+				<tr> 
+					<td><span class="nav">{PAGE_NUMBER}</span></td>
+					<td align="right"><span class="gensmall">{S_TIMEZONE}</span><br /><span class="nav">{PAGINATION}</span></td>
+  				</tr>
+			</table>
+			</form>
 		</td>
