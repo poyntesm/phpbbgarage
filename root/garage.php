@@ -1596,7 +1596,7 @@ switch( $mode )
 		{
 			// Form the image link
 			$thumb_image = GARAGE_UPLOAD_PATH . $data['attach_thumb_location'];
-			$data['modification_image'] = '<a href="garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $data['attach_id'] .'" title="' . $data['attach_file'] .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a>';
+			$data['modification_image'] = '<a href="garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $data['attach_id'] .'" title="' . $data['attach_file'] .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" /></a>';
 		}
 
 		$template->assign_block_vars('level1', array());
@@ -1841,7 +1841,7 @@ switch( $mode )
 			{
 				// Form the image link
 				$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'];
-				$image = '<a href="garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $data[$i]['image_id'] .'" title="' . $data[$i]['attach_file'] .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a>';
+				$image = '<a href="garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $data[$i]['image_id'] .'" title="' . $data[$i]['attach_file'] .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" /></a>';
 			}
 
 			$template->assign_block_vars('pic_row', array(

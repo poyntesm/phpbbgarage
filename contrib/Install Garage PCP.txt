@@ -383,6 +383,35 @@ pt
 		'POSTER_CAR_YEAR' => $poster_car_year,
 		'VIEW_POSTER_CARPROFILE' => ($userdata['user_level'] != ADMIN)? append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" . $garage_id) : append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" . $garage_id) ,
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+# 
+#-----[ OPEN ]----- 
+# 
+includes/page_header.php
+
+#
+#-----[ FIND ]------------------------------------------
+#
+<?php
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+#
+#-----[ FIND ]------------------------------------------
+#
+	'L_FAQ' => $lang['FAQ'],
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+	'L_GARAGE' => $lang['Garage'],
+	'L_QUARTERMILE_TABLE' => $lang['Quartermile_Table'],
+	'U_GARAGE' => append_sid("garage.$phpEx"),
+	'U_QUARTERMILE' => append_sid("garage.$phpEx?mode=quartermile"),
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 # 
 #-----[ OPEN ]----- 
 # 
@@ -804,7 +833,7 @@ templates/subSilver/overall_header.tpl
 #-----[ IN-LINE AFTER, ADD ]------------------------------------------
 #
 
-<img src="templates/subSilver/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_GARAGE}" hspace="3" /><a href="garage.php" class="mainmenu">{L_GARAGE}</a>&nbsp;<img src="templates/subSilver/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_QUARTERMILE_TABLE}" hspace="3" /><a href="garage.php?mode=quartermile" class="mainmenu">{L_QUARTERMILE_TABLE}</a>&nbsp;
+<img src="templates/subSilver/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_GARAGE}" hspace="3" /><a href="{U_GARAGE}" class="mainmenu">{L_GARAGE}</a>&nbsp;<img src="templates/subSilver/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_QUARTERMILE_TABLE}" hspace="3" /><a href="{U_QUARTERMILE}" class="mainmenu">{L_QUARTERMILE_TABLE}</a>&nbsp;
 
 # 
 #-----[ OPEN ]----- 

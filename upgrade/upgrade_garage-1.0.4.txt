@@ -8,7 +8,8 @@
 ## 
 ## Installation Level:	Easy
 ## Installation Time:	15 Minutes
-## Files To Edit: (12)
+## Files To Edit: (13)
+##			garage.php
 ##			/includes/functions_garage.php
 ##			/includes/usercp_viewprofile.php
 ##			/admin/admin_garage_tools.php
@@ -259,6 +260,31 @@ copy upgrade/upgrade_garage-1.0.4.php TO upgrade_garage-1.0.4.php
 #
 Open in your web browser and run upgrade_garage-1.0.4.php
 Delete upgrade_garage-1.0.4.php if it ran succesfull
+
+# 
+#-----[ OPEN ]----- 
+# 
+garage.php
+
+#
+#-----[ FIND ]------------------------------------------
+#
+			$data['modification_image'] = '<a href="garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $data['attach_id'] .'" title="' . $data['attach_file'] .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a>';
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+			$data['modification_image'] = '<a href="garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $data['attach_id'] .'" title="' . $data['attach_file'] .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" /></a>';
+
+#
+#-----[ FIND ]------------------------------------------
+#
+				$image = '<a href="garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $data[$i]['image_id'] .'" title="' . $data[$i]['attach_file'] .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a>';
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+				$image = '<a href="garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $data[$i]['image_id'] .'" title="' . $data[$i]['attach_file'] .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" /></a>';
 
 # 
 #-----[ OPEN ]----- 
