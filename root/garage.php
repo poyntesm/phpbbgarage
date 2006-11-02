@@ -1873,6 +1873,54 @@ switch( $mode )
 
 		break;
 
+	case 'view_all_images':
+
+		//Check The User Is Allowed Perform This Action
+		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
+
+		$template->set_filenames(array(
+			'header' => 'garage_header.tpl',
+			'body'   => 'garage_view_images.tpl')
+		);
+
+		//Pull Required Image Data From DB
+		$data = $garage_image->select_all_image_data();
+
+		//Process Each Image
+		for ($i = 0; $i < count($data); $i++)
+		{
+			//Produce Actual Image Thumbnail And Link It To Full Size Version..
+			if ( ($data[$i]['image_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location'])) )
+			{
+				// Form the image link
+				$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'];
+				$image = '<a href="garage.' . $phpEx . '?mode=view_gallery_item&amp;type=garage_mod&amp;image_id=' . $data[$i]['image_id'] . '" title="' . $data[$i]['attach_file'] . '" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image . '" class="attach"  /></a>';
+			}
+
+			$template->assign_block_vars('pic_row', array(
+				'THUMB_IMAGE' => $image,
+				'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . "=" .$data[$i]['user_id']),
+				'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle;CID=" .$data[$i]['garage_id']),
+				'VEHICLE' => $data[$i]['vehicle'],
+				'USERNAME' => $data[$i]['username'])
+			);
+		}
+
+		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+
+		$template->assign_vars(array(
+        	    	'L_IMAGE' => $lang['Image'],
+        	    	'L_OWNER' => $lang['Owner'],
+        	    	'L_VEHICLE' => $lang['Vehicle'])
+         	);
+
+		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
+		$template->pparse('header');
+		$garage_template->sidemenu();		
+		$template->pparse('body');
+
+		break;
+
 	case 'manage_vehicle_gallery':
 
 		//Check The User Is Allowed Perform This Action

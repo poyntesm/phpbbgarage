@@ -954,9 +954,13 @@ class garage_image
 	{
 		global $db;
 
-		$sql = "SELECT  * 
-			FROM " . GARAGE_IMAGES_TABLE . " 
-			ORDER BY attach_id ASC";
+		$sql = "SELECT  i.*, g.*, u.user_id, u.username, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
+			FROM " . GARAGE_IMAGES_TABLE . " i
+				LEFT JOIN " . GARAGE_TABLE . " g ON g.id = i.garage_id 
+       		                LEFT JOIN " . USERS_TABLE . " u ON g.member_id = u.user_id
+			        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
+	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
+			ORDER BY i.attach_id ASC";
 
 		if( !($result = $db->sql_query($sql)) )
 		{
