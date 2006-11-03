@@ -75,7 +75,7 @@ class garage_insurance
 	/*========================================================================*/
 	function delete_premium($ins_id)
 	{
-		global $db;
+		global $garage;
 	
 		//Right They Want To Delete A Insurance
 		if (empty($ins_id))
@@ -84,7 +84,7 @@ class garage_insurance
 		}
 
 		//Time To Delete The Actual Insurance Premium
-		$this->delete_rows(GARAGE_INSURANCE_TABLE, 'id', $ins_id);	
+		$garage->delete_rows(GARAGE_INSURANCE_TABLE, 'id', $ins_id);	
 	
 		return ;
 	}
@@ -133,9 +133,9 @@ class garage_insurance
         	            	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " AS b ON i.business_id = b.id
 			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
 		        	LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id 
-			        LEFT JOIN " . USERS_TABLE . " AS user ON g.member_id = user.user_id 
+			        LEFT JOIN " . USERS_TABLE . " AS user ON g.user_id = user.user_id 
 			WHERE makes.pending = 0 AND models.pending = 0
-				".$search_data['where']."
+				".$additional_where."
 		        GROUP BY i.id
 			ORDER BY $order_by $sort_order
 			LIMIT $start, $end";
@@ -150,6 +150,11 @@ class garage_insurance
 			$rows[] = $row;
 		}
 		$db->sql_freeresult($result);
+
+		if (empty($rows))
+		{
+			return;
+		}
 
 		return $rows;
 	}
@@ -168,7 +173,7 @@ class garage_insurance
        	        	    	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " b ON ( i.business_id = b.id )
 		        	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
 		        	LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
-			        LEFT JOIN " . USERS_TABLE . " user ON ( g.member_id = user.user_id )
+			        LEFT JOIN " . USERS_TABLE . " user ON ( g.user_id = user.user_id )
 			WHERE i.business_id = b.id
 				AND b.insurance =1
 				AND b.pending = 0
@@ -234,13 +239,17 @@ class garage_insurance
 	       	{
 	        	message_die(GENERAL_ERROR, 'Could Not Select Insurance Data', '', __LINE__, __FILE__, $sql);
 		}
-
+		
 		while( $row = $db->sql_fetchrow($result) )
 		{
 			$rows[] = $row;
 		}
       		$db->sql_freeresult($result);
 
+		if (empty($rows))
+		{
+			return;
+		}
 		return $rows;
 	}
 }

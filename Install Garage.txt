@@ -13,7 +13,6 @@
 ## 			viewonline.php
 ## 			includes/constants.php
 ## 			includes/page_header.php
-## 			includes/page_tail.php
 ## 			includes/usercp_viewprofile.php
 ##			language/lang_english/lang_admin.php
 ##			language/lang_english/lang_main.php
@@ -302,66 +301,6 @@ img_garage_set_pending		= {LANG}/garage_set_pending.gif*21*34
 # 
 #-----[ OPEN ]----- 
 # 
-language/en/acp/permission_phpbb.php
-
-#
-#-----[ FIND ]------------------------------------------
-#
-		'misc'			=> 'Misc',
-
-#
-#-----[ AFTER, ADD ]------------------------------------------
-#
-		'garage'		=> 'Garage',
-
-#
-#-----[ FIND ]------------------------------------------
-#
-	'acl_u_search'		=> array('lang' => 'Can search board', 'cat' => 'misc'),
-
-#
-#-----[ AFTER, ADD ]------------------------------------------
-#
-
-	'acl_u_garage_browse'		=> array('lang' => 'Can browse garage', 'cat' => 'garage'),
-	'acl_u_garage_search'		=> array('lang' => 'Can search garage', 'cat' => 'garage'),
-	'acl_u_garage_add_vehicle'	=> array('lang' => 'Can add vehicle to garage', 'cat' => 'garage'),
-	'acl_u_garage_add_modification'	=> array('lang' => 'Can add modification to garage', 'cat' => 'garage'),
-	'acl_u_garage_add_quartermile'	=> array('lang' => 'Can add quartermile time to garage', 'cat' => 'garage'),
-	'acl_u_garage_add_dynorun'	=> array('lang' => 'Can add dynorun to garage', 'cat' => 'garage'),
-	'acl_u_garage_add_insurance'	=> array('lang' => 'Can add insurance to garage', 'cat' => 'garage'),
-	'acl_u_garage_add_business'	=> array('lang' => 'Can add business to garage', 'cat' => 'garage'),
-	'acl_u_garage_add_make_model'	=> array('lang' => 'Can add makes & models to garage', 'cat' => 'garage'),
-	'acl_u_garage_rate'		=> array('lang' => 'Can rate items in garage', 'cat' => 'garage'),
-	'acl_u_garage_comment'		=> array('lang' => 'Can comment in garage', 'cat' => 'garage'),
-	'acl_u_garage_upload_image'	=> array('lang' => 'Can upload image to garage', 'cat' => 'garage'),
-	'acl_u_garage_remote_image'	=> array('lang' => 'Can use remote image in garage', 'cat' => 'garage'),
-
-#
-#-----[ FIND ]------------------------------------------
-#
-	'acl_m_info'	=> array('lang' => 'Can view post details', 'cat' => 'misc'),
-
-#
-#-----[ BEFORE, ADD ]------------------------------------------
-#
-
-	'acl_m_garage'	=> array('lang' => 'Can moderate garage', 'cat' => 'garage'),
-
-#
-#-----[ FIND ]------------------------------------------
-#
- 	'acl_a_search'		=> array('lang' => 'Can manage search backends and settings', 'cat' => 'misc'),
-
-#
-#-----[ AFTER, ADD ]------------------------------------------
-#
-
- 	'acl_a_garage'		=> array('lang' => 'Can alter garage settings', 'cat' => 'garage'),
-
-# 
-#-----[ OPEN ]----- 
-# 
 styles/subSilver/templates/overall_header.html
 
 #
@@ -377,7 +316,7 @@ styles/subSilver/templates/overall_header.html
 #
 #-----[ IN-LINE AFTER, ADD ]------------------------------------------
 #
-<a href="{U_GARAGE}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_GARAGE}" hspace="3" /> {L_GARAGE}</a>&nbsp; &nbsp;
+<!-- IF S_DISPLAY_GARAGE --><a href="{U_GARAGE}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_GARAGE}" hspace="3" /> {L_GARAGE}</a>&nbsp; &nbsp;<!-- ENDIF --><!-- IF S_DISPLAY_QUARTERMILE --><a href="{U_QUARTERMILE}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_QUARTERMILE}" hspace="3" /> {L_QUARTERMILE}</a>&nbsp; &nbsp;<!-- ENDIF --><!-- IF S_DISPLAY_DYNORUN --><a href="{U_DYNORUN}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_DYNORUN}" hspace="3" /> {L_DYNORUN}</a>&nbsp; &nbsp;<!-- ENDIF -->
 
 # 
 #-----[ OPEN ]----- 
@@ -419,7 +358,12 @@ includes/functions.php
 #
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
-		'U_GARAGE' => append_sid("{$phpbb_root_path}garage.$phpEx"),
+		'U_GARAGE' 			=> append_sid("{$phpbb_root_path}garage.$phpEx"),
+		'U_QUARTERMILE' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=quartermile'),
+		'U_DYNORUN' 			=> append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=dynorun'),
+		'S_DISPLAY_GARAGE'		=> (isset($auth)) ? $auth->acl_get('u_garage_browse') : 0,
+		'S_DISPLAY_QUARTERMILE'		=> (isset($auth)) ? $auth->acl_get('u_garage_browse') : 0,
+		'S_DISPLAY_DYNORUN'		=> (isset($auth)) ? $auth->acl_get('u_garage_browse') : 0,
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
 #
@@ -459,6 +403,8 @@ language/en/common.php
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 	'GARAGE'				=> 'Garage',
+	'QUARTERMILE'				=> '1/4 Mile',
+	'DYNORUN'				=> 'Dynorun',
 	'PENDING_GARAGE_ITEMS'			=> 'Pending Garage Items',
 	'VIEWING_GARAGE'			=> 'View Garage',
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------

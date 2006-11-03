@@ -40,14 +40,15 @@ while( $row = $db->sql_fetchrow($result) )
 
 //Setup Arrays Used To Build Drop Down Selection Boxes
 $currency_types = array('GBP', 'USD', 'EUR', 'CAD', 'YEN');
-$mileage_unit_types = array($lang['Miles'], $lang['Kilometers']);
+$mileage_unit_types = array($user->lang['MILES'], $user->lang['KILOMETERS']);
 $boost_types = array('PSI', 'BAR');
-$power_types = array($lang['Wheel'], $lang['Hub'], $lang['Flywheel']);
-$cover_types = array($lang['Third_Party'], $lang['Third_Party_Fire_Theft'], $lang['Comprehensive'], $lang['Comprehensive_Classic'], $lang['Comprehensive_Reduced']);
+$power_types = array($user->lang['WHEEL'], $user->lang['HUB'], $user->lang['FLYWHEEL']);
+$cover_types = array($user->lang['THIRD_PARTY'], $user->lang['THIRD_PARTY_FIRE_THEFT'], $user->lang['COMPREHENSIVE'], $user->lang['COMPREHENSIVE_CLASSIC'], $user->lang['COMPREHENSIVE_REDUCED']);
 $rating_types = array( '10', '9', '8', '7', '6', '5', '4', '3', '2', '1');
 $rating_text = array( '10', '9', '8', '7', '6', '5', '4', '3', '2', '1');
 $nitrous_types = array('0', '25', '50', '75', '100');
-$nitrous_types_text = array($lang['No_Nitrous'], $lang['25_BHP_Shot'], $lang['50_BHP_Shot'], $lang['75_BHP_Shot'], $lang['100_BHP_Shot']);
+$nitrous_types_text = array($user->lang['NO_NITROUS'], $user->lang['25_BHP_SHOT'], $user->lang['50_BHP_SHOT'], $user->lang['75_BHP_SHOT'], $user->lang['100_BHP_SHOT']);
+$engine_types= array($user->lang['8_CYLINDER_NA'], $user->lang['8_CYLINDER_FI'], $user->lang['6_CYLINDER_NA'], $user->lang['6_CYLINDER_FI'], $user->lang['4_CYLINDER_NA'], $user->lang['4_CYLINDER_FI']);
 
 class garage 
 {
@@ -127,6 +128,8 @@ class garage
 	        $row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
+		$row['total_views'] = (empty($row['total_views'])) ? 0 : $row['total_views'];
+
 		return $row['total_views'];
 	}
 
@@ -196,13 +199,13 @@ class garage
 	/*========================================================================*/
 	function get_group_membership($u_id)
 	{
-		global $db;
+		global $db ;
 
-
-		$sql = 'SELECT ug.*, u.username, u.user_email
-			FROM ' . USER_GROUP_TABLE . ' ug, ' . USERS_TABLE . ' u
-			WHERE ug.user_id = u.user_id 
-				AND ug.user_id = ' . $u_id;
+		$sql = "SELECT ug.group_id, g.group_name
+	             	FROM " . USER_GROUP_TABLE . " ug, " . GROUPS_TABLE ." g
+                	WHERE ug.user_id = $u_id
+				AND ug.group_id = g.group_id AND g.group_single_user <> " . TRUE ."
+			ORDER BY g.group_name ASC";
 
        		if( !($result = $db->sql_query($sql)) )
        		{
@@ -216,121 +219,6 @@ class garage
 		$db->sql_freeresult($result);
 	
 		return $groupdata;
-	}
-
-	/*========================================================================*/
-	// Checks A User Is Allowed Perform An Action
-	// Usage: check_permissions('required permission', 'redirect url on failure');
-	/*========================================================================*/
-	function check_permissions($required_permission, $redirect_url)
-	{
-		global $auth, $user, $template, $db, $garage_config;
-	
-		$required_permission = strtolower($required_permission);
-	
-		//Right Lets Start And Work Out Your User Level
-		if ( $user->data['user_id'] == ANONYMOUS )
-		{
-			$your_level = 'GUEST';
-		}
-		else if ($auth->acl_get('a_') && $user->data['is_registered'])
-		{
-			$your_level = 'ADMIN';
-		}
-	//	else if ( $user->data['user_level'] == MOD )
-	//	{
-	//		$your_level = 'MOD';
-	//	}
-		else
-		{
-			$your_level = 'USER';
-		}		
-
-		//Get All Group Memberships
-		$groupdata = $this->get_group_membership($user->data['user_id']);
-
-		//Since We Now Allow A DENY We Need To Check That First
-		if ( !empty($garage_config['private_deny_perms']) AND $user->data['user_level'] == ADMIN )
-		{
-			//Lets Find Out Which Groups Are Denied Access
-			$sql = "SELECT config_value AS private_groups
-				FROM ". GARAGE_CONFIG_TABLE ."
-				WHERE config_name = 'private_deny_perms'";
-
-			if( !$result = $db->sql_query($sql) )
-			{
-				message_die(GENERAL_ERROR, 'Could not get permissions', '', __LINE__, __FILE__, $sql);
-			}
-
-			$private_perms = $db->sql_fetchrow($result);
-			$private_groups = @explode(',', $private_perms['private_groups']);
-			$db->sql_freeresult($result);
-	
-			for ( $i = 0; $i < count($groupdata); $i++ )
-			{
-				if ( in_array($groupdata[$i]['group_id'], $private_groups) )
-				{
-					//You Were Found To Be A Member Of A Denied Group And We Know Where To Send You
-					if (!empty($redirect_url))
-					{
-						redirect(append_sid($redirect_url, true));
-					}
-					//You Were Found To Be A Member Of A Denied Group But No URL So Return False
-					else
-					{
-						return (FALSE);
-					}
-				}
-			}
-		}
-
-		//Right You Were Not Denied So Lets Check First For Global Permissions
-		if ($garage_config[$required_permission . "_perms"] == '*')
-		{
-			//Looks Like Everyone Is Allowed Do This...So On Your Way
-			return (TRUE);
-		}	
-		//Since Not Globally Allowed Lets See If Your Level Is Allowed For The Permission You Are Requesting
-		else if (preg_match( "/$your_level/", $garage_config[$required_permission . "_perms"]))
-		{
-			//Good News Your User Level Is Allowed
-			return (TRUE);
-		}
-		//Right We Need To Resort And See If Private Is Set For This Required Permission And See If You Qualify
-		else if (preg_match( "/PRIVATE/", $garage_config[$required_permission . "_perms"]))
-		{
-			//Lets Get All Private Groups Granted This Permission
-			$sql = "SELECT config_value AS private_groups
-				FROM ". GARAGE_CONFIG_TABLE ."
-				WHERE config_name = 'private_" . $required_permission . "_perms'";
-
-			if( !$result = $db->sql_query($sql) )
-			{
-				message_die(GENERAL_ERROR, 'Could not get permissions', '', __LINE__, __FILE__, $sql);
-			}
-
-			$private_perms = $db->sql_fetchrow($result);
-			$private_groups = @explode(',', $private_perms['private_groups']);
-			$db->sql_freeresult($result);
-	
-			for ($i = 0; $i < count($groupdata); $i++)
-			{
-				if (in_array($groupdata[$i]['group_id'], $private_groups))
-				{
-					return (TRUE);
-				}
-			}
-		}
-		//Looks Like You Are Out Of Look...You Are Not Allowed Perform The Action You Requested...
-		if (!empty($redirect_url))
-		{
-			redirect(append_sid("$redirect_url", true));
-		}
-		//No URL To Redirect So We Will Just Return FALSE
-		else
-		{
-			return (FALSE);
-		}
 	}
 
 	/*========================================================================*/
@@ -431,8 +319,8 @@ class garage
 	{
 		global $lang, $garage_guestbook, $userdata, $db, $phpEx;
 
-		/*$sql = "SELECT user_id
-			FROM " . PHPBB_USERS ."
+		$sql = "SELECT user_id
+			FROM " . USERS_TABLE ."
 			WHERE user_level = " . ADMIN . " OR user_level = " . MOD;
 
 		if(!$result = $db->sql_query($sql))
@@ -457,7 +345,7 @@ class garage
 
 		$db->sql_freeresult($result);
 
-		return;*/
+		return;
 	}
 
 	/*========================================================================*/

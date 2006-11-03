@@ -174,7 +174,7 @@ class garage_guestbook
 	/*========================================================================*/
 	function show_lastcommented()
 	{
-		global $required_position, $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
+		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
 		if ( $garage_config['lastcommented_on'] != TRUE )
 		{
@@ -184,10 +184,10 @@ class garage_guestbook
 		$template_block = 'block_' . $required_position;
 		$template_block_row = 'block_' . $required_position . '.row';
 		$template->assign_block_vars($template_block, array(
-			'BLOCK_TITLE' => $lang['Latest_Vehicle_Comments'],
-			'COLUMN_1_TITLE' => $lang['Vehicle'],
-			'COLUMN_2_TITLE' => $lang['Author'],
-			'COLUMN_3_TITLE' => $lang['Posted_Date'])
+			'BLOCK_TITLE' => $user->lang['LATEST_VEHICLE_COMMENTS'],
+			'COLUMN_1_TITLE' => $user->lang['VEHICLE'],
+			'COLUMN_2_TITLE' => $user->lang['AUTHOR'],
+			'COLUMN_3_TITLE' => $user->lang['POSTED_DATE'])
 		);
 	
 	        // What's the count? Default to 10
@@ -214,7 +214,7 @@ class garage_guestbook
 				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . "=" . $vehicle_data['member_id']),
 				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
 				'COLUMN_2_TITLE' => $vehicle_data['username'],
-				'COLUMN_3' => create_date('D M d, Y G:i', $vehicle_data['POI'], $board_config['board_timezone']))
+				'COLUMN_3' => $user->format_date($vehicle_data['POI']))
 			);
 	 	}
 	

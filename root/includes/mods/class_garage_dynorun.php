@@ -118,7 +118,7 @@ class garage_dynorun
 			if ( (!empty($data['attach_location'])) OR (!empty($data['attach_thumb_location'])) )
 			{
 				//Seems To Be An Image To Delete, Let Call The Function
-				$garage_images->delete_image($data['image_id']);
+				$garage_image->delete_image($data['image_id']);
 			}
 		}
 	
@@ -137,7 +137,7 @@ class garage_dynorun
 	/*========================================================================*/
 	function show_topdynorun()
 	{
-		global $required_position, $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
+		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
 		if ( $garage_config['topdynorun_on'] != TRUE )
 		{
@@ -147,10 +147,10 @@ class garage_dynorun
 		$template_block = 'block_'.$required_position;
 		$template_block_row = 'block_'.$required_position.'.row';
 		$template->assign_block_vars($template_block, array(
-			'BLOCK_TITLE' => $lang['Top_Dyno_Runs'],
-			'COLUMN_1_TITLE' => $lang['Vehicle'],
-			'COLUMN_2_TITLE' => $lang['Owner'],
-			'COLUMN_3_TITLE' => $lang['Bhp-Torque-Nitrous'])
+			'BLOCK_TITLE' => $user->lang['TOP_DYNO_RUNS'],
+			'COLUMN_1_TITLE' => $user->lang['VEHICLE'],
+			'COLUMN_2_TITLE' => $user->lang['OWNER'],
+			'COLUMN_3_TITLE' => $user->lang['BHP-TORQUE-NITROUS'])
 		);
 	
 	        // What's the count? Default to 10
@@ -159,7 +159,7 @@ class garage_dynorun
 		$sql = "SELECT  rr.garage_id, MAX(rr.bhp) as bhp
 			FROM " . GARAGE_ROLLINGROAD_TABLE . " rr
 				LEFT JOIN " . GARAGE_TABLE . " g ON rr.garage_id = g.id
-				LEFT JOIN " . USERS_TABLE . " user ON g.member_id = user.user_id
+				LEFT JOIN " . USERS_TABLE . " user ON g.user_id = user.user_id
 			        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id
         			LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
 			WHERE rr.pending = 0
@@ -176,10 +176,10 @@ class garage_dynorun
 		$i = 0;
 		while ($row = $db->sql_fetchrow($first_result) )
 		{
-				$sql = "SELECT g.id, g.made_year, g.member_id, makes.make, models.model, user.username, rr.dynocenter, round(rr.bhp,0) as bhp, rr.bhp_unit, round(rr.torque,0) as torque, rr.torque_unit, rr.boost, rr.boost_unit, rr.nitrous, round(rr.peakpoint,0) as peakpoint, rr.id as rr_id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, rr.nitrous
+				$sql = "SELECT g.id, g.made_year, g.user_id, makes.make, models.model, user.username, rr.dynocenter, round(rr.bhp,0) as bhp, rr.bhp_unit, round(rr.torque,0) as torque, rr.torque_unit, rr.boost, rr.boost_unit, rr.nitrous, round(rr.peakpoint,0) as peakpoint, rr.id as rr_id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, rr.nitrous
 				FROM " . GARAGE_ROLLINGROAD_TABLE . " rr
 					LEFT JOIN " . GARAGE_TABLE . " g ON rr.garage_id = g.id
-					LEFT JOIN " . USERS_TABLE . " user ON g.member_id = user.user_id
+					LEFT JOIN " . USERS_TABLE . " user ON g.user_id = user.user_id
 				        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id
         				LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
 				WHERE rr.garage_id = " . $row['garage_id'] . " AND rr.bhp = " . $row['bhp'];	
@@ -194,7 +194,7 @@ class garage_dynorun
 	
 			$template->assign_block_vars($template_block_row, array(
 				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id']),
+				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']),
 				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
 				'COLUMN_2_TITLE' => $vehicle_data['username'],
 				'COLUMN_3' => $dynorun)
@@ -258,6 +258,10 @@ class garage_dynorun
 
 		$db->sql_freeresult($result);
 
+		if (empty($data))
+		{
+			return;
+		}
 		return $data;
 	}
 
@@ -267,25 +271,13 @@ class garage_dynorun
 	/*========================================================================*/
 	function build_dynorun_table($pending)
 	{
-		global $db, $template, $images, $start, $sort, $sort_order,$phpEx, $garage_config, $lang, $theme, $mode, $HTTP_POST_VARS, $HTTP_GET_VARS, $garage_model;
+		global $db, $template, $images, $start, $sort, $order,$phpEx, $garage_config, $lang, $theme, $mode, $HTTP_POST_VARS, $HTTP_GET_VARS, $garage_model, $phpEx;
 
 		$pending = ($pending == 'YES') ? 1 : 0;
 
 		$start = (isset($HTTP_GET_VARS['start'])) ? intval($HTTP_GET_VARS['start']) : 0;
-		$order_by = (empty($sort)) ? 'bhp' : $sort;
+		$sort = (empty($sort)) ? 'bhp' : $sort;
 
-		if(isset($HTTP_POST_VARS['order']))
-		{
-			$sort_order = ($HTTP_POST_VARS['order'] == 'ASC') ? 'ASC' : 'DESC';
-		}
-		else if(isset($HTTP_GET_VARS['order']))
-		{
-			$sort_order = ($HTTP_GET_VARS['order'] == 'ASC') ? 'ASC' : 'DESC';
-		}
-		else
-		{
-			$sort_order = 'DESC';
-		}
 
 		$sort_types_text = array($lang['Dynocenter'], $lang['Bhp'], $lang['Bhp_Unit'], $lang['Torque'], $lang['Torque_Unit'], $lang['Boost'],  $lang['Boost_Unit'], $lang['Nitrous'], $lang['Peakpoint']);
 		$sort_types = array('rr.dynocenter', 'bhp', 'rr.bhp_unit, bhp', 'rr.torque', 'rr.torque_unit, rr.torque', 'rr.boost', 'rr.boost_unit, rr.boost', 'rr.nitrous', 'peakpoint');
@@ -298,6 +290,7 @@ class garage_dynorun
 		}
 		$select_sort_mode .= '</select>';
 
+		$addtional_where = '';
 		if ( isset($HTTP_GET_VARS['make_id']) || isset($HTTP_POST_VARS['make_id']) )
 		{
 			$make_id = ( isset($HTTP_POST_VARS['make_id']) ) ? htmlspecialchars($HTTP_POST_VARS['make_id']) : htmlspecialchars($HTTP_GET_VARS['make_id']);
@@ -307,6 +300,9 @@ class garage_dynorun
 				//Pull Required Data From DB
 				$data = $garage_model->select_make_data($make_id);
 				$addtional_where .= "AND g.make_id = '$make_id'";
+				$template->assign_vars(array(
+					'MAKE'	=> $data['make'])
+				);
 			}
 		}
 
@@ -317,8 +313,11 @@ class garage_dynorun
 			if (!empty($model_id))
 			{
 				//Pull Required Data From DB
-				$data .= $garage->select_model_data($model_id);
+				$data = $garage_model->select_model_data($model_id);
 				$addtional_where .= "AND g.model_id = '$model_id'";
+				$template->assign_vars(array(
+					'MODEL'	=> $data['model'])
+				);
 			}
 		}
 
@@ -326,14 +325,14 @@ class garage_dynorun
 		$sql = "SELECT  rr.garage_id, MAX(rr.bhp) as bhp
 			FROM " . GARAGE_ROLLINGROAD_TABLE ." rr
 				LEFT JOIN " . GARAGE_TABLE ." g ON rr.garage_id = g.id
-				LEFT JOIN " . USERS_TABLE ." user ON g.member_id = user.user_id
+				LEFT JOIN " . USERS_TABLE ." user ON g.user_id = user.user_id
 			        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id
         			LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
 			WHERE rr.pending = $pending 
 				AND makes.pending = 0 AND models.pending = 0 
 				$addtional_where 
 			GROUP BY rr.garage_id
-			ORDER BY $order_by $sort_order
+			ORDER BY $sort $order
 		       	LIMIT $start, " . $garage_config['cars_per_page'];
 
 		if( !($first_result = $db->sql_query($sql)) )
@@ -341,9 +340,7 @@ class garage_dynorun
 			message_die(GENERAL_ERROR, 'Error Selecting Top Rollingroad', '', __LINE__, __FILE__, $sql);
 		}
 
-		$count = $db->sql_numrows($first_result);
-
-		if ($count >= 1 AND $pending == 1)
+		if ($pending == 1)
 		{
 			$template->assign_block_vars('rollingroad_pending', array());
 		}
@@ -353,10 +350,10 @@ class garage_dynorun
 		while ($row = $db->sql_fetchrow($first_result) )
 		{
 			//Second Query To Return All Other Data For Top Quartermile Run
-			$sql = "SELECT g.id, g.made_year, g.member_id, makes.make, models.model, user.username,	rr.dynocenter, rr.bhp, rr.bhp_unit, rr.torque, rr.torque_unit, rr.boost, rr.boost_unit, rr.nitrous, round(rr.peakpoint,0) as peakpoint, images.attach_id as image_id, rr.id as rr_id
+			$sql = "SELECT g.id, g.made_year, g.user_id, makes.make, models.model, user.username,	rr.dynocenter, rr.bhp, rr.bhp_unit, rr.torque, rr.torque_unit, rr.boost, rr.boost_unit, rr.nitrous, round(rr.peakpoint,0) as peakpoint, images.attach_id as image_id, rr.id as rr_id
 				FROM " . GARAGE_ROLLINGROAD_TABLE ." rr
 					LEFT JOIN " . GARAGE_TABLE ." g ON rr.garage_id = g.id
-					LEFT JOIN " . USERS_TABLE ." user ON g.member_id = user.user_id
+					LEFT JOIN " . USERS_TABLE ." user ON g.user_id = user.user_id
 				        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id
         				LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
 		                	LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON images.attach_id = rr.image_id
@@ -369,7 +366,7 @@ class garage_dynorun
 		
 			$full_row = $db->sql_fetchrow($result);
 			$username = $full_row['username'];
-			$user_id = $full_row['member_id'];
+			$user_id = $full_row['user_id'];
 			$garage_id = $full_row['id'];
 			$temp_url = append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=$cid");
 			$profile = '<a href="' . $temp_url . '">' . $lang['Read_profile'] . '</a>';
@@ -418,12 +415,12 @@ class garage_dynorun
 			);
 			$i++;
 		}
-		$db->sql_freeresult($result);
+		$db->sql_freeresult($first_result);
 
 		$sql = "SELECT count(DISTINCT rr.garage_id) AS total
 				FROM " . GARAGE_ROLLINGROAD_TABLE . " rr
 				LEFT JOIN " . GARAGE_TABLE ." g ON rr.garage_id = g.id
-				LEFT JOIN " . USERS_TABLE ." user ON g.member_id = user.user_id
+				LEFT JOIN " . USERS_TABLE ." user ON g.user_id = user.user_id
 			        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id
         			LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
 			WHERE rr.pending = $pending 
@@ -438,7 +435,7 @@ class garage_dynorun
 		$count = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		$pagination = generate_pagination("garage.$phpEx?mode=$mode&amp;order=$sort_order", $count['total'], $garage_config['cars_per_page'], $start);
+		$pagination = generate_pagination("garage.$phpEx?mode=$mode&amp;order=$order", $count['total'], $garage_config['cars_per_page'], $start);
 		
 		$template->assign_vars(array(
 			'S_MODE_SELECT' => $select_sort_mode,

@@ -326,12 +326,13 @@ class garage_image
 	function process_image_attached($type, $id)
 	{
 		global $userdata, $template, $db, $SID, $lang, $images, $phpEx, $phpbb_root_path, $garage_config, $board_config, $HTTP_POST_FILES, $HTTP_POST_VARS, $garage, $cid;
-	
-		if (!$garage->check_permissions('UPLOAD',''))
+
+		if ( (!$auth->acl_get('u_garage_upload_image')) OR (!$auth->acl_get('u_garage_remote_image')) )
 		{
 			return;
 		}
 
+		//Data Required To Attach Image Missing
 		if ( (empty($type)) OR (empty($id)) )
 		{
 			message_die(GENERAL_ERROR, 'Missing Type Or ID Data For Image Upload');
@@ -472,11 +473,12 @@ class garage_image
 		//Uploaded Image Not Remote Image
 		else if ( $this->image_is_local() )
 		{
-			$data['filetype'] = $HTTP_POST_FILES['FILE_UPLOAD']['type'];
 			$data['filesize'] = $HTTP_POST_FILES['FILE_UPLOAD']['size'];
 			$data['tmp_name'] = $HTTP_POST_FILES['FILE_UPLOAD']['tmp_name'];
 			$data['file'] = $HTTP_POST_FILES['FILE_UPLOAD']['name'];
 			$data['date'] = time();
+			$imagesize = getimagesize($HTTP_POST_FILES['FILE_UPLOAD']['tmp_name']);
+			$data['filetype'] = $imagesize[2];
 	
 			if ($data['filesize'] == 0) 
 			{
@@ -491,19 +493,16 @@ class garage_image
 			//Check File Type 
 			switch ($data['filetype'])
 			{
-				case 'image/jpeg':
-				case 'image/jpg':
-				case 'image/pjpeg':
+				case '1':
+					$data['ext'] = '.gif';
+					$data['is_image'] = '1';
+					break;
+				case '2':
 					$data['ext'] = '.jpg';
 					$data['is_image'] = '1';
 					break;
-				case 'image/png':
-				case 'image/x-png':
+				case '3':
 					$data['ext'] = '.png';
-					$data['is_image'] = '1';
-					break;
-				case 'image/gif':
-					$data['ext'] = '.gif';
 					$data['is_image'] = '1';
 					break;
 				default:
@@ -746,15 +745,17 @@ class garage_image
 
 		//Get All Space Used By Uploaded & Remote Images
 		$uploaded_image_data = $this->select_user_upload_images($user_id);
-		$remote_image_data = $this->select_user_upload_images($user_id);
+		$remote_image_data = $this->select_user_remote_images($user_id);
 
+		//For Uploaded Images We Need The Image + Thumbnail Size
 		for ( $i=0 ; count($uploaded_image_data); $i++ )
 		{
 			$space =  $space + ( $data['attach_filesize'] + $data['attach_thumb_filesize'] );
 		}
+		//For Remote Images We Only Have Thumbnails To Factor In
 		for ( $i=0 ; count($remote_image_data); $i++ )
 		{
-			$space =  $space + ( $data['attach_filesize'] + $data['attach_thumb_filesize'] );
+			$space =  $space + $data['attach_thumb_filesize'] ;
 		}
 	
 		return $space;
@@ -774,7 +775,7 @@ class garage_image
 	 		message_die(GENERAL_ERROR, 'Image ID Not Entered', '', __LINE__, __FILE__);
 		}
 		
-		//Right User Want To Delete An Image Lets Get All Info
+		//Right User Wants To Delete An Image Lets Get All Info
 		$data = $this->select_image_data($image_id);
 	
 		if ( (!empty($data['attach_location'])) OR (!empty($data['attach_thumb_location'])) )
@@ -783,12 +784,18 @@ class garage_image
 			$garage->delete_rows(GARAGE_IMAGES_TABLE, 'attach_id', $image_id);
 
 			//Delete Thumbnail	
-			@unlink($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['attach_thumb_location']);
+			if (file_exists($phpbb_root_path . GARAGE_UPLOAD_PATH . $image_row['attach_thumb_location']))
+			{
+				@unlink($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['attach_thumb_location']);
+			}
 
-			//If Its A Local Image Delete The Main File As Well
+			//If Its A Local Image Delete The Source File As Well
 			if ( !preg_match( "/^http:\/\//i", $data['attach_location']) )
 			{
-				@unlink($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['attach_location']);
+				if (file_exists($phpbb_root_path . GARAGE_UPLOAD_PATH . $image_row['attach_location']))
+				{
+					@unlink($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['attach_location']);
+				}
 			}
 		}
 	
@@ -803,10 +810,11 @@ class garage_image
 	{
 		global $db, $cid, $garage_vehicle, $garage;
 
+		//Delete DB Entry & Files
 		$this->delete_image($image_id);
-	
+
+		//If Hilite Image Reset DB Field For Vehicle
 		$data = $garage_vehicle->select_vehicle_data($cid);
-	
 		if ( $data['image_id']  == $image_id)
 		{
 			$garage->update_single_field(GARAGE_TABLE,'image_id','NULL','image_id',$image_id);
@@ -824,74 +832,66 @@ class garage_image
 	/*========================================================================*/
 	function remote_file_exists($url)
 	{
-	        // Make sure php will allow us to do this...
-	        if ( ini_get('allow_url_fopen') )
-	        {
-	        	$head = '';
-	        	$url_p = parse_url ($url);
+		$head = '';
+		$url_p = parse_url ($url);
 	
-	        	if (isset ($url_p['host']))
-	            	{
-				$host = $url_p['host']; 
-			}
-	            	else
-	            	{
-	                	return false;
-	            	}
+	       	if (isset ($url_p['host']))
+		{
+			$host = $url_p['host']; 
+		}
+	        else
+		{
+	             	return false;
+	        }
 	
-	            	$path = (isset ($url_p['path'])) ? $url_p['path'] : '';
-	
-	            	$fp = @fsockopen ($host, 80, $errno, $errstr, 20);
-	            	if (!$fp)
-	            	{
-	               		return false;
-	            	}
-	            	else
-	            	{
-	               		$parse = parse_url($url);
-	               		$host = $parse['host'];
-	
-				@fputs($fp, 'HEAD '.$url." HTTP/1.1\r\n");
-	               		@fputs($fp, 'HOST: '.$host."\r\n");
-	               		@fputs($fp, "Connection: close\r\n\r\n");
-	               		$headers = '';
-	               		while (!@feof ($fp))
-	               		{ 
-					$headers .= @fgets ($fp, 128); 
-				}
-	            	}
-	            	@fclose ($fp);
-	
-	            	$arr_headers = explode("\n", $headers);
-	            	if (isset ($arr_headers[0]))    
-			{
-	               		if(strpos ($arr_headers[0], '200') !== false)
-	               		{ 
-					return true; 
-				}
-	               		if( (strpos ($arr_headers[0], '404') !== false) || (strpos ($arr_headers[0], '509') !== false) || (strpos ($arr_headers[0], '410') !== false))
-	               		{ 
-					return false; 
-				}
-	               		if( (strpos ($arr_headers[0], '301') !== false) || (strpos ($arr_headers[0], '302') !== false))
-				{
-	                   		preg_match("/Location:\s*(.+)\r/i", $headers, $matches);
-	                   		if(!isset($matches[1]))
-					{
-	                       			return false;
-					}
-	                   		$nextloc = $matches[1];
-					return $this->remote_file_exists($nextloc);
-	               		}
-	            	}
-	            	// If we are still here then we got an unexpected header
-	            	return false;
+		$path = (isset ($url_p['path'])) ? $url_p['path'] : '';
+
+	        $fp = @fsockopen ($host, 80, $errno, $errstr, 20);
+	        if (!$fp)
+		{
+	        	return false;
 	        }
 	        else
 	        {
-	        	// Since we aren't allowed to use URL's bomb out
-	        	return false;
-	        }
+	        	$parse = parse_url($url);
+	               	$host = $parse['host'];
+	
+			@fputs($fp, 'HEAD '.$url." HTTP/1.1\r\n");
+	               	@fputs($fp, 'HOST: '.$host."\r\n");
+	               	@fputs($fp, "Connection: close\r\n\r\n");
+	               	$headers = '';
+	               	while (!@feof ($fp))
+	               	{ 
+				$headers .= @fgets ($fp, 128); 
+			}
+	       	}
+		@fclose ($fp);
+
+	       	$arr_headers = explode("\n", $headers);
+	       	if (isset ($arr_headers[0]))    
+		{
+	       		if(strpos ($arr_headers[0], '200') !== false)
+	       		{ 
+				return true; 
+			}
+	       		if( (strpos ($arr_headers[0], '404') !== false) || (strpos ($arr_headers[0], '509') !== false) || (strpos ($arr_headers[0], '410') !== false))
+			{ 
+				return false; 
+			}
+	       		if( (strpos ($arr_headers[0], '301') !== false) || (strpos ($arr_headers[0], '302') !== false))
+			{
+	               		preg_match("/Location:\s*(.+)\r/i", $headers, $matches);
+	               		if(!isset($matches[1]))
+				{
+	               			return false;
+				}
+	               		$nextloc = $matches[1];
+				return $this->remote_file_exists($nextloc);
+	       		}
+		}
+
+	        // If we are still here then we got an unexpected header
+	        return false;
 	}
 	
 	/*========================================================================*/
@@ -904,7 +904,7 @@ class garage_image
 
 		$sql = "SELECT  * 
 			FROM " . GARAGE_IMAGES_TABLE . " 
-			WHERE attach_id =$image_id";
+			WHERE attach_id = $image_id";
 
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -942,7 +942,6 @@ class garage_image
 	
 		return $rows;
 	}
-
 
 	/*========================================================================*/
 	// Select All Image Data From DB
@@ -994,7 +993,11 @@ class garage_image
 			$rows[] = $row;
 		}
 		$db->sql_freeresult($result);
-	
+
+		if (empty($rows))
+		{
+			return;
+		}
 		return $rows;
 	}
 
@@ -1006,10 +1009,11 @@ class garage_image
 	{
 		global $db;
 
+
 		$sql = "SELECT img.*
      			FROM " . GARAGE_IMAGES_TABLE . " AS img
         			LEFT JOIN " . GARAGE_TABLE . " AS g ON g.id = img.garage_id 
-        		WHERE g.member_id = $user_id";
+        		WHERE g.member_id = $user_id AND img.attach_location NOT LIKE 'http://'";
 
       		if ( !($result = $db->sql_query($sql)) )
       		{
@@ -1036,11 +1040,11 @@ class garage_image
 		$sql = "SELECT img.*
      			FROM " . GARAGE_IMAGES_TABLE . " AS img
         			LEFT JOIN " . GARAGE_TABLE . " AS g ON g.id = img.garage_id 
-        		WHERE g.member_id = $user_id";
+        		WHERE g.member_id = $user_id AND img.attach_location LIKE 'http://'";
 
       		if ( !($result = $db->sql_query($sql)) )
       		{
-         		message_die(GENERAL_ERROR, 'Could Not Select Vehicle Gallery Images Data', '', __LINE__, __FILE__, $sql);
+         		message_die(GENERAL_ERROR, 'Could Not Select User Remote Images Data', '', __LINE__, __FILE__, $sql);
       		}
 
 		while ($row = $db->sql_fetchrow($result) )
@@ -1050,6 +1054,30 @@ class garage_image
 		$db->sql_freeresult($result);
 	
 		return $rows;
+	}
+
+	/*========================================================================*/
+	// Below Image Quotas
+	// Usage: below_image_quotas();
+	/*========================================================================*/
+	function below_image_quotas()
+	{
+		global $user;
+
+		//Get All Users Images So We Can Workout Current Quota Usage
+		$user_upload_image_data = $this->select_user_upload_images($user->data['user_id']);
+		$user_remote_image_data = $this->select_user_remote_images($user->data['user_id']);
+
+		//Check For Remote & Local Image Quotas
+		if ( (($this->image_is_remote() ) AND (count($user_remote_image_data) < $this->get_user_remote_image_quota($user->data['user_id']))) OR (($this->image_is_local() ) AND (count($user_image_data) < $this->get_user_upload_image_quota($user->data['user_id']))) )
+		{
+			return true;
+		}
+		//You Have Reached Your Image Quota
+		else if ( (($this->image_is_remote() ) AND (count($user_remote_image_data) >= $this->get_user_remote_image_quota($user->data['user_id']))) OR (($this->image_is_local() ) AND (count($user_image_data) >= $this->get_user_upload_image_quota($user->data['user_id']))) )
+		{
+			return false;
+		}
 	}
 
 	/*========================================================================*/
@@ -1069,16 +1097,30 @@ class garage_image
 	{
 		global $garage_config, $phpbb_root_path;
 
-		//Download The Remote Image To Our Temporary file
-                $infile = @fopen ($remote_url, "rb");
-                $outfile = @fopen ( $phpbb_root_path . GARAGE_UPLOAD_PATH . $destination_file, "wb");
-
-                //Set Our Custom Timeout
-                socket_set_timeout($infile, $garage_config['remote_timeout']);
-
-               	while (!@feof ($infile)) 
+		//If Allowed By Host Use fopen....
+	        if ( ini_get('allow_url_fopen') )
 		{
-	               	@fwrite($outfile, @fread ($infile, 4096));
+			$infile = @fopen ($remote_url, "rb");
+                	$outfile = @fopen ( $phpbb_root_path . GARAGE_UPLOAD_PATH . $destination_file, "wb");
+
+	                //Set Our Custom Timeout
+       		         socket_set_timeout($infile, $garage_config['remote_timeout']);
+
+               		while (!@feof ($infile)) 
+			{
+	               		@fwrite($outfile, @fread ($infile, 4096));
+			}
+	                @fclose($outfile);
+		        @fclose($infile);
+		}
+		//Not Allowed Use fopen So Use fsockopen...So Everyone Is Happy
+		else
+		{
+			$infile = $this->fsockopen_url($remote_url);
+			$outfile = @fopen($phpbb_root_path . GARAGE_UPLOAD_PATH . $destination_file,"w+");
+			@fwrite($outfile,$infile);
+			@fclose($outfile);
+			@fclose($infile);
 		}
                 @fclose($outfile);
 	        @fclose($infile);
@@ -1099,6 +1141,7 @@ class garage_image
 	
 		$output = array();
 		$end = $start + $cycle;
+		//Setup Log File Location
 		if (!empty($file))
 		{
 	        	$log_file   = $phpbb_root_path . GARAGE_UPLOAD_PATH . $file;
@@ -1126,7 +1169,7 @@ class garage_image
 			message_die(GENERAL_MESSAGE, $message);
 		}
 	
-		//Logging
+		//Work Out If Logging Is Appending Or Creating A File
 	        if ( (empty($log_file) == FALSE) AND ( $done == 0 ) )
 		{
 			//Just Starting So Write From Start..Produce A Message..Then Set To Appebd
@@ -1142,7 +1185,7 @@ class garage_image
 	
 	        while ( $image_row = $db->sql_fetchrow($result) )
 	      	{
-			//Logging
+			//Write Log Message
 			$garage->write_logfile($log_file, $log_type, $lang['Processing_Attach_ID'] . $image_row['attach_id'], 0);
 	
 	       	        //The Process Is Different For Local v Remote Files
@@ -1155,16 +1198,15 @@ class garage_image
 	                    	//Generate Temp File Name
 	       	            	$tmp_file_name = $file_name . '-' . time() . $image_row['attach_ext'];
 	
-	               	    	// Generate our thumb file name
+	               	    	//Generate Thumbnail Filename
 	                    	if ( (empty($image_row['attach_thumb_location'])) OR ($image_row['attach_thumb_location'] == "remote") )
 	       	            	{
-	       		    		// We are going to use the attach_file name to create our _thumb
-					//   file name since this image did not have a thumb before.
+	       		    		//Use The 'attach_file' field To Create Thumbnail Filename 
 	                       		$thumb_file_name = $file_name . time() . '_thumb' . $image_row['attach_ext'];
 				} 
 				else
 			       	{
-	                       		// We already know the thumbnail filename :)
+	                       		//We already Know The Thumbnail Filename :)
 		                        $thumb_file_name = $image_row['attach_thumb_location'];
 	               		}
 	
@@ -1173,7 +1215,7 @@ class garage_image
 	               		$garage->write_logfile($log_file, $log_type, $lang['Temp_File_Name'] . $tmp_file_name, 2);
 	
 	                    	// Make sure it exists, or we'll get nasty errors!
-	               		if ( $this->remote_file_exist($image_row['attach_location']) )
+	               		if ( $this->remote_file_exists($image_row['attach_location']) )
 				{
 					// Download the remote image to our temporary file
 					$this->download_remote_image($image_row['attach_location'], $tmp_file_name);
@@ -1211,7 +1253,7 @@ class garage_image
 			{
 				$source_file = $phpbb_root_path . GARAGE_UPLOAD_PATH . $image_row['attach_location'];
 	
-	                    	// Generate our thumb file name
+	               	    	//Generate Thumbnail Filename
 	                    	if ( empty($image_row['attach_thumb_location']) )
 	                    	{
 	                       		// We are going to use the attach_id to create our _thumb
@@ -1221,7 +1263,7 @@ class garage_image
 	                    	}
 				else
 				{
-	                        	// We already know the thumbnail filename :)
+	                        	//We Already Know The Thumbnail Filename :)
 	                        	$thumb_file_name = $image_row['attach_thumb_location'];
 	                    	}
 	
@@ -1242,7 +1284,7 @@ class garage_image
 					$garage->update_single_field(GARAGE_IMAGES_TABLE, 'attach_thumb_height', $image_height, 'attach_id', $image_row['attach_id']);
 					$garage->update_single_field(GARAGE_IMAGES_TABLE, 'attach_thumb_filesize', $image_filesize, 'attach_id', $image_row['attach_id']);
 	
-		                    	// Add the status message
+		                    	//Add The Status Message
 	        	            	$output[] = $lang['Rebuilt'] . $image_row['attach_location'].' -> '.$thumb_file_name;
 	
 	                	    	$garage->write_logfile($log_file, $log_type, $lang['Thumb_File'] . $thumb_file_name, 1);

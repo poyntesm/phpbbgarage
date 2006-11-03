@@ -115,9 +115,9 @@ class garage_vehicle
 		global $user, $db;
 
 		$sql = "INSERT INTO ". GARAGE_TABLE ."
-			(made_year, make_id, model_id, color, mileage, mileage_units, price, currency, comments, member_id, date_created, date_updated, main_vehicle, guestbook_pm_notify)
+			(made_year, engine_type, make_id, model_id, colour, mileage, mileage_units, price, currency, comments, user_id, date_created, date_updated, main_vehicle, guestbook_pm_notify)
 			VALUES
-			('".$data['year']."', '".$data['make_id']."', '".$data['model_id']."', '".$data['colour']."', '".$data['mileage']."', '".$data['mileage_units']."', '".$data['price']."', '".$data['currency']."', '".$data['comments']."', '".$user->data['user_id']."', '".$data['time']."', '".$data['time']."', '".$data['main_vehicle']."', '".$data['guestbook_pm_notify']."')";
+			('".$data['year']."', '".$data['engine_type']."', '".$data['make_id']."', '".$data['model_id']."', '".$data['colour']."', '".$data['mileage']."', '".$data['mileage_units']."', '".$data['price']."', '".$data['currency']."', '".$data['comments']."', '".$user->data['user_id']."', '".$data['time']."', '".$data['time']."', '".$data['main_vehicle']."', '".$data['guestbook_pm_notify']."')";
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -160,7 +160,7 @@ class garage_vehicle
 
 		$sql = "SELECT count(id) AS total 
 			FROM " . GARAGE_TABLE . " 
-			WHERE member_id = " . $user->data['user_id'];
+			WHERE user_id = " . $user->data['user_id'];
 
 		if ( !($result = $db->sql_query($sql)) )
 		{
@@ -183,7 +183,7 @@ class garage_vehicle
 		global $cid, $db;
 
 		$sql = "UPDATE ". GARAGE_TABLE ."
-			SET made_year = '".$data['year']."', make_id = '".$data['make_id']."', model_id = '".$data['model_id']."', color = '".$data['colour']."', mileage = '".$data['mileage']."', mileage_units = '".$data['mileage_units']."', price = '".$data['price']."', currency = '".$data['currency']."', comments = '".$data['comments']."', guestbook_pm_notify = '".$data['guestbook_pm_notify']."'
+			SET made_year = '".$data['year']."', engine_type = '".$data['engine_type']."', make_id = '".$data['make_id']."', model_id = '".$data['model_id']."', colour = '".$data['colour']."', mileage = '".$data['mileage']."', mileage_units = '".$data['mileage_units']."', price = '".$data['price']."', currency = '".$data['currency']."', comments = '".$data['comments']."', guestbook_pm_notify = '".$data['guestbook_pm_notify']."'
 			WHERE id = '$cid'";
 	
 		if(!$result = $db->sql_query($sql))
@@ -205,6 +205,98 @@ class garage_vehicle
 		$sql = "UPDATE ". GARAGE_RATING_TABLE ." 
 			SET rating = '".$data['vehicle_rating']."', rate_date = '".$data['rate_date']."'
 	       		WHERE user_id = '".$data['user_id']."' AND garage_id = '$cid';";
+
+		if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'Could Not Update Vehicle Rating', '', __LINE__, __FILE__, $sql);
+		}
+
+		return;
+	}
+
+	/*========================================================================*/
+	// Resets All Vehicles Rating To 0
+	// Usage: reset_all_vehicles_rating();
+	/*========================================================================*/
+	function reset_all_vehicles_rating()
+	{
+		global $db;
+
+		//Just Remove All Rows
+		$sql = "DELETE FROM " . GARAGE_RATING_TABLE;
+	
+		if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'Could Not Remove All Vehicle Ratings', '', __LINE__, __FILE__, $sql);
+		}
+
+		//Reset Weighted Values For All Vehicles
+		$sql = "UPDATE " . GARAGE_TABLE ."
+			SET weighted_rating = '0'";
+	
+		if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'Could Not Update Vehicle Weighted Rating', '', __LINE__, __FILE__, $sql);
+		}
+
+		return;
+	}
+
+	/*========================================================================*/
+	// Calculates A Vehicles Weighted Rating
+	// Usage: update_vehicle_rating('vehicle id');
+	/*========================================================================*/
+	function calculate_weighted_rating($cid)
+	{
+		global $db, $garage_config;
+
+		//Count Votes This Vehicle Has Recived & Average Rating So Far
+		$sql = "SELECT count(id) AS votes_recieved, AVG(rating) as average_rating
+			FROM " . GARAGE_RATING_TABLE . "
+			WHERE id = '$cid'";
+
+		if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'Error Counting Vehicles', '', __LINE__, __FILE__, $sql);
+		}
+
+	        $row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		//Get Average Rating For All Vehicles
+		$sql = "SELECT AVG(rating) as site_average
+			FROM " . GARAGE_RATING_TABLE;
+
+		if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'Error Counting Vehicles', '', __LINE__, __FILE__, $sql);
+		}
+
+	        $row1 = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		//Weighted Rating Formula We Use 'WR=(V/(V+M)) * R + (M/(V+M)) * C'
+		// WR=Weighted Rating (The new rating)
+		// R=Average Rating (arithmetic mean) so far
+		// V=Number of ratings given
+		// M=Minimum number of ratings needed
+		// C=Arithmetic mean rating across the whole site
+		$weighted_rating = ( $row['votes_recieved'] / ($row['votes_recieved'] + $garage_config['minimum_ratings_required']) ) * $row['average_rating'] + ($garage_config['minimum_ratings_required']/($row['votes_recieved']+$garage_config['minimum_ratings_required'])) * $row1['site_average'];
+
+		return $weighted_rating;
+	}
+
+	/*========================================================================*/
+	// Updates Weighted Rating Of Vehicle In DB
+	// Usage: update_vehicle_rating('vehicle id', 'weighted rating');
+	/*========================================================================*/
+	function update_weighted_rating($cid, $weighted_rating)
+	{
+		global $db;
+
+		$sql = "UPDATE ". GARAGE_TABLE ." 
+			SET weighted_rating = '$weighted_rating'
+	       		WHERE id = '$cid';";
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -267,14 +359,14 @@ class garage_vehicle
 	/*========================================================================*/
 	function check_ownership($cid)
 	{
-		global $user, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
+		global $user, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $auth;
 	
 		if (empty($cid))
 		{
 	 		message_die(GENERAL_ERROR, 'Vehicle ID Not Entered..', '', __LINE__, __FILE__);
 		}
 	
-		$sql = "SELECT g.member_id 
+		$sql = "SELECT g.user_id 
 			FROM " . GARAGE_TABLE . " g 
 			WHERE g.id = $cid ";
 	
@@ -285,13 +377,13 @@ class garage_vehicle
 	
 		$vehicle = $db->sql_fetchrow($result); 
 		$db->sql_freeresult($result);
-	
-		if ( $userdata['user_level'] == ADMIN || $userdata['user_level'] == MOD )
+
+	 	if ( $auth->acl_get('m_garage') )
 		{
 			//Allow A Moderator Or Administrator Do What They Want....
 			return;
 		}
-		else if ( $vehicle['member_id'] != $user->data['user_id'] )
+		else if ( $vehicle['user_id'] != $user->data['user_id'] )
 		{
 			$message = $lang['Not_Vehicle_Owner'] . "<br /><br />" . sprintf($lang['Click_return_garage'], "<a href=\"" . append_sid("garage.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_index'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");
 	
@@ -317,10 +409,11 @@ class garage_vehicle
 	}
 	
 	/*========================================================================*/
-	// Build Featured Vehicle HTML If Required 
-	// Usage: show_featuredvehicle();
+	// Build Featured Vehicle HTML If Required..A Absolute URL Can Be Passed To
+	// Allow Calls From A Different Domain..I.E Fourm Resides In A Subdomain 
+	// Usage: show_featuredvehicle( 'URL');
 	/*========================================================================*/
-	function show_featuredvehicle()
+	function show_featuredvehicle( $absolute_url = NULL )
 	{
 		global $user, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
@@ -329,6 +422,7 @@ class garage_vehicle
 			$template->assign_block_vars('show_featured_vehicle', array());
 
 			// If we are using random, go fetch!
+			$featured_vehicle_id = '';
 	       		if ( $garage_config['featured_vehicle_random'] == 'on' )
        			{
 				$sql = "SELECT g.id 
@@ -412,16 +506,15 @@ class garage_vehicle
 			}
 
 		        // Make sure the vehicle exists
-		        $sql = "SELECT id FROM " . GARAGE_TABLE . " WHERE id='". $featured_vehicle_id ."'";
-			if(!$result = $db->sql_query($sql))
-			{
-				message_die(GENERAL_ERROR, "Could Not Query Vehicle", "", __LINE__, __FILE__, $sql);
-			}
+			$sql = "SELECT COUNT(id) as num_vehicle FROM " . GARAGE_TABLE . " WHERE id='". $featured_vehicle_id ."'";
+			$result = $db->sql_query($sql);
+			$total_vehicles = (int) $db->sql_fetchfield('num_vehicle');
+			$db->sql_freeresult($result);
 	
-		        if ( ($db->sql_numrows($result)) > 0 OR (!empty($garage_config['featured_vehicle_from_block'])) )
+		        if ( $total_vehicles > 0 OR (!empty($garage_config['featured_vehicle_from_block'])) )
 	        	{
 		            	// Grab the vehicle info and prep the HTML
-				$sql = "SELECT g.id, g.made_year, g.image_id, g.member_id, makes.make, models.model, 
+				$sql = "SELECT g.id, g.made_year, g.image_id, g.user_id, makes.make, models.model, 
 	                           	images.attach_id, images.attach_hits, images.attach_thumb_location, m.username, 
 			                images.attach_is_image, images.attach_location, COUNT(mods.id) AS mod_count,
 					CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle,
@@ -432,7 +525,7 @@ class garage_vehicle
 			                        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id 
 			                        LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON g.id = mods.garage_id 
 			                        LEFT JOIN " . GARAGE_RATING_TABLE . " AS r ON g.id = r.garage_id 
-	        		                LEFT JOIN " . USERS_TABLE . " AS m ON g.member_id = m.user_id
+	        		                LEFT JOIN " . USERS_TABLE . " AS m ON g.user_id = m.user_id
 				    	$where";
 	
 				if(!$result = $db->sql_query($sql))
@@ -442,15 +535,21 @@ class garage_vehicle
 		
 	        	    	$vehicle_data = $db->sql_fetchrow($result);
 	
-		        	// Do we have a hilite image?  If so, prep the HTML
+				// Do we have a hilite image?  If so, prep the HTML
+				$featured_image = '';
 				if ( (empty($vehicle_data['image_id']) == FALSE) AND ($vehicle_data['attach_is_image'] == 1) ) 
 	        	    	{
 	                		// Do we have a thumbnail?  If so, our job is simple here :)
 			                if ( (empty($vehicle_data['attach_thumb_location']) == FALSE) AND ($vehicle_data['attach_thumb_location'] != $vehicle_data['attach_location']) AND (@file_exists($phpbb_root_path . GARAGE_UPLOAD_PATH."/".$vehicle_data['attach_thumb_location'])) )
 	                		{
-			                   	// Yippie, our thumbnail is already made for us :)
+						// Yippie, our thumbnail is already made for us :)
 					   	$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $vehicle_data['attach_thumb_location'];
-						$featured_image = '<a href="garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $vehicle_data['attach_id'] .'" title="' . $vehicle_data['attach_file'] .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a>';
+						if (!empty($absolute_url))
+						{
+							$thumb_image = $absolute_url . GARAGE_UPLOAD_PATH . $vehicle_data['attach_thumb_location'];
+
+						}
+						$featured_image = '<a href="'.$absolute_url.'garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $vehicle_data['attach_id'] .'" title="' . $vehicle_data['attach_file'] .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a>';
 	                		} 
 	        		}
 				$template->assign_vars(array(
@@ -458,8 +557,8 @@ class garage_vehicle
 					'FEATURED_IMAGE' => $featured_image,
 					'VEHICLE' => $vehicle_data['vehicle'],
 					'USERNAME' => $vehicle_data['username'],
-					'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-					'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id']))
+					'U_VIEW_VEHICLE' => append_sid($absolute_url."garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
+					'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']))
 				);
 			}
 		}
@@ -477,7 +576,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function show_updated_vehicles()
 	{
-		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config;
+		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $garage_config, $garage_vehicle, $board_config;
 	
 		if ( $garage_config['lastupdatedvehicles_on'] != TRUE )
 		{
@@ -487,37 +586,26 @@ class garage_vehicle
 		$template_block = 'block_'.$required_position;
 		$template_block_row = 'block_'.$required_position.'.row';
 		$template->assign_block_vars($template_block, array(
-			'BLOCK_TITLE' => $lang['Last_Updated_Vehicles'],
-			'COLUMN_1_TITLE' => $lang['Vehicle'],
-			'COLUMN_2_TITLE' => $lang['Owner'],
-			'COLUMN_3_TITLE' => $lang['Updated'])
+			'BLOCK_TITLE' => $user->lang['LAST_UPDATED_VEHICLES'],
+			'COLUMN_1_TITLE' => $user->lang['VEHICLE'],
+			'COLUMN_2_TITLE' => $user->lang['OWNER'],
+			'COLUMN_3_TITLE' => $user->lang['UPDATED'])
 		);
 	 		
 	        // What's the count? Default to 10
-	        $limit = $garage_config['lastupdatedvehicles_limit'] ? $garage_config['lastupdatedvehicles_limit'] : 10;
+		$limit = $garage_config['lastupdatedvehicles_limit'] ? $garage_config['lastupdatedvehicles_limit'] : 10;
+
+		//Get Latest Updated Vehicles....
+		$vehicle_data = $garage_vehicle->select_latest_updated_vehicles($limit);
 	
-	 	$sql = "SELECT g.id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, 
-	                       g.member_id, g.date_updated AS POI, u.username 
-	               	FROM " . GARAGE_TABLE . " g 
-	                       	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
-	       	                LEFT JOIN " . USERS_TABLE . " u ON g.member_id = u.user_id
-			WHERE makes.pending = 0 AND models.pending = 0
-	                ORDER BY POI DESC LIMIT $limit";
-	 		            
-	 	if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, "Could not query vehicle information", "", __LINE__, __FILE__, $sql);
-		}
-	 		            
-	 	while ( $vehicle_data = $db->sql_fetchrow($result) )
+		for ($i = 0; $i < count($vehicle_data); $i++)
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id']),
-				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
-				'COLUMN_2_TITLE' => $vehicle_data['username'],
-				'COLUMN_3' => $user->format_date($vehicle_data['POI']))
+				'U_COLUMN_1' => append_sid("garage.$phpEx", "mode=view_vehicle&CID=" . $vehicle_data[$i]['id'], true),
+				'U_COLUMN_2' => append_sid("profile.$phpEx", "mode=viewprofile&u=" . $vehicle_data[$i]['user_id'], true),
+				'COLUMN_1_TITLE' => $vehicle_data[$i]['vehicle'],
+				'COLUMN_2_TITLE' => $vehicle_data[$i]['username'],
+				'COLUMN_3' => $user->format_date($vehicle_data[$i]['date_updated']))
 			);
 	 	}
 	
@@ -541,22 +629,22 @@ class garage_vehicle
 		$template_block = 'block_'.$required_position;
 		$template_block_row = 'block_'.$required_position.'.row';
 		$template->assign_block_vars($template_block, array(
-			'BLOCK_TITLE' => $lang['Most_Money_Spent'],
-			'COLUMN_1_TITLE' => $lang['Vehicle'],
-			'COLUMN_2_TITLE' => $lang['Owner'],
-			'COLUMN_3_TITLE' => $lang['Total_Spent'])
+			'BLOCK_TITLE' => $user->lang['MOST_MONEY_SPENT'],
+			'COLUMN_1_TITLE' => $user->lang['VEHICLE'],
+			'COLUMN_2_TITLE' => $user->lang['OWNER'],
+			'COLUMN_3_TITLE' => $user->lang['TOTAL_SPENT'])
 		);
 	 		
 	        // What's the count? Default to 10
 	        $limit = $garage_config['mostmoneyspent_limit'] ? $garage_config['mostmoneyspent_limit'] : 10;
 	 		
 	 	$sql = "SELECT g.id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, 
-	                        g.member_id, (SUM(mods.install_price) + SUM(mods.price)) AS POI, u.username, g.currency 
+	                        g.user_id, (SUM(mods.install_price) + SUM(mods.price)) AS POI, u.username, g.currency 
 	                FROM " . GARAGE_TABLE . " g 
 	                	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
 	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
 	                        LEFT JOIN " . GARAGE_MODS_TABLE . " mods ON mods.garage_id = g.id 
-	                        LEFT JOIN " . USERS_TABLE . " u ON g.member_id = u.user_id
+	                        LEFT JOIN " . USERS_TABLE . " u ON g.user_id = u.user_id
 			WHERE makes.pending = 0 AND models.pending = 0
 	                GROUP BY g.id 
 	                ORDER BY POI DESC LIMIT $limit";
@@ -570,7 +658,7 @@ class garage_vehicle
 	 	{
 			$template->assign_block_vars($template_block_row, array(
 				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id']),
+				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']),
 				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
 				'COLUMN_2_TITLE' => $vehicle_data['username'],
 				'COLUMN_3' => $vehicle_data['POI'])
@@ -597,21 +685,21 @@ class garage_vehicle
 		$template_block = 'block_'.$required_position;
 		$template_block_row = 'block_'.$required_position.'.row';
 		$template->assign_block_vars($template_block, array(
-			'BLOCK_TITLE' => $lang['Most_Viewed_Vehicle'],
-			'COLUMN_1_TITLE' => $lang['Vehicle'],
-			'COLUMN_2_TITLE' => $lang['Owner'],
-			'COLUMN_3_TITLE' => $lang['Views'])
+			'BLOCK_TITLE' => $user->lang['MOST_VIEWED_VEHICLE'],
+			'COLUMN_1_TITLE' => $user->lang['VEHICLE'],
+			'COLUMN_2_TITLE' => $user->lang['OWNER'],
+			'COLUMN_3_TITLE' => $user->lang['VIEWS'])
 		);
 	
 	        // What's the count? Default to 10
 	        $limit = $garage_config['mostviewed_limit'] ? $garage_config['mostviewed_limit'] : 10;
 	 		 		
 	 	$sql = "SELECT g.id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, 
-	                        g.member_id, g.views AS POI, u.username 
+	                        g.user_id, g.views AS POI, u.username 
 	                FROM " . GARAGE_TABLE . " g 
 	                        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
 	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
-	                        LEFT JOIN " . USERS_TABLE . " u ON g.member_id = u.user_id
+	                        LEFT JOIN " . USERS_TABLE . " u ON g.user_id = u.user_id
 			WHERE makes.pending = 0 AND models.pending = 0
 	                ORDER BY POI DESC LIMIT $limit";
 	 		            
@@ -624,7 +712,7 @@ class garage_vehicle
 	 	{
 			$template->assign_block_vars($template_block_row, array(
 				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id']),
+				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']),
 				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
 				'COLUMN_2_TITLE' => $vehicle_data['username'],
 				'COLUMN_3' => $vehicle_data['POI'])
@@ -651,24 +739,22 @@ class garage_vehicle
 		$template_block = 'block_'.$required_position;
 		$template_block_row = 'block_'.$required_position.'.row';
 		$template->assign_block_vars($template_block, array(
-			'BLOCK_TITLE' => $lang['Top_Rated_Vehicles'],
-			'COLUMN_1_TITLE' => $lang['Vehicle'],
-			'COLUMN_2_TITLE' => $lang['Owner'],
-			'COLUMN_3_TITLE' => $lang['Rating'])
+			'BLOCK_TITLE' => $user->lang['TOP_RATED_VEHICLES'],
+			'COLUMN_1_TITLE' => $user->lang['VEHICLE'],
+			'COLUMN_2_TITLE' => $user->lang['OWNER'],
+			'COLUMN_3_TITLE' => $user->lang['RATING'])
 		);
 	
 	        // What's the count? Default to 10
 	        $limit = $garage_config['toprated_limit'] ? $garage_config['toprated_limit'] : 10;
 	
-		$sql =  "SELECT g.id, g.member_id, u.username, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, sum( r.rating ) AS rating, count( * ) *10 AS total_rating
-			 FROM " . GARAGE_RATING_TABLE . " r
-				LEFT JOIN " . GARAGE_TABLE . " g ON r.garage_id = g.id
+		$sql =  "SELECT g.id, g.user_id, ROUND(g.weighted_rating, 2) as weighted_rating, u.username, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
+			 FROM " . GARAGE_TABLE . " g
 	                        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
 	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
-	                        LEFT JOIN " . USERS_TABLE . " u ON g.member_id = u.user_id
+	                        LEFT JOIN " . USERS_TABLE . " u ON g.user_id = u.user_id
 			 WHERE makes.pending = 0 AND models.pending = 0
-			 GROUP BY garage_id
-			 ORDER BY rating DESC LIMIT $limit";
+			 ORDER BY weighted_rating DESC LIMIT $limit";
 	 		 		
 	 	if(!$result = $db->sql_query($sql))
 		{
@@ -679,10 +765,10 @@ class garage_vehicle
 	 	{
 			$template->assign_block_vars($template_block_row, array(
 				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id']),
+				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']),
 				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
 				'COLUMN_2_TITLE' => $vehicle_data['username'],
-				'COLUMN_3' => $vehicle_data['rating'] . '/' . $vehicle_data['total_rating'])
+				'COLUMN_3' => $vehicle_data['weighted_rating'] . '/' . '10')
 			);
 	 	}
 	
@@ -706,21 +792,21 @@ class garage_vehicle
 		$template_block = 'block_'.$required_position;
 		$template_block_row = 'block_'.$required_position.'.row';
 		$template->assign_block_vars($template_block, array(
-			'BLOCK_TITLE' => $lang['Newest_Vehicles'],
-			'COLUMN_1_TITLE' => $lang['Vehicle'],
-			'COLUMN_2_TITLE' => $lang['Owner'],
-			'COLUMN_3_TITLE' => $lang['Created'])
+			'BLOCK_TITLE' => $user->lang['NEWEST_VEHICLES'],
+			'COLUMN_1_TITLE' => $user->lang['VEHICLE'],
+			'COLUMN_2_TITLE' => $user->lang['OWNER'],
+			'COLUMN_3_TITLE' => $user->lang['CREATED'])
 		);
 	 		
 	        // What's the count? Default to 10
 	        $limit = $garage_config['newestvehicles_limit'] ? $garage_config['newestvehicles_limit'] : 10;
 	 		 		
 	 	$sql = "SELECT g.id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, 
-	                        g.member_id, g.date_created AS POI, u.username 
+	                        g.user_id, g.date_created AS POI, u.username 
 	                FROM " . GARAGE_TABLE . " g 
 	                	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
 	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
-	                        LEFT JOIN " . USERS_TABLE . " u ON g.member_id = u.user_id
+	                        LEFT JOIN " . USERS_TABLE . " u ON g.user_id = u.user_id
 			WHERE makes.pending = 0 AND models.pending = 0
 	                ORDER BY POI DESC LIMIT $limit";
 	 		            
@@ -733,7 +819,7 @@ class garage_vehicle
 	 	{
 			$template->assign_block_vars($template_block_row, array(
 				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$vehicle_data['member_id']),
+				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']),
 				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
 				'COLUMN_2_TITLE' => $vehicle_data['username'],
 				'COLUMN_3' => $user->format_date($vehicle_data['POI']))
@@ -762,7 +848,7 @@ class garage_vehicle
 	
 		while ($mods_row = $db->sql_fetchrow($mods_result) )
 		{
-			$this->delete_modification($mods_row['id']);
+			$garage_modification->delete_modification($mods_row['id']);
 		}
 	
 		//Right User Want To Delete Vehicle Let Get All Quartermile Times Associated With It 
@@ -778,7 +864,7 @@ class garage_vehicle
 		while ($quartermile_row = $db->sql_fetchrow($quartermile_result) )
 		{
 			$qmid = $quartermile_row['id'];
-			$this->delete_quartermile_time($qmid);
+			$garage_quartermile->delete_quartermile($qmid);
 		}
 		$db->sql_freeresult($quartermile_result);
 	
@@ -795,7 +881,7 @@ class garage_vehicle
 		while ($rollingroad_row = $db->sql_fetchrow($rollingroad_result) )
 		{
 			$rrid = $rollingroad_row['id'];
-			$this->delete_rollingroad_run($rrid);
+			$garage_dynorun->delete_dynorun($rrid);
 		}
 		$db->sql_freeresult($rollingroad_result);
 	
@@ -812,7 +898,7 @@ class garage_vehicle
 		while ($insurance_row = $db->sql_fetchrow($insurance_result) )
 		{
 			$ins_id = $insurance_row['id'];
-			$this->delete_insurance($ins_id);
+			$garage_insurance->delete_premium($ins_id);
 		}
 		$db->sql_freeresult($insurance_result);
 
@@ -828,7 +914,7 @@ class garage_vehicle
 
 		while ($gb_row = $db->sql_fetchrow($mods_result) )
 		{
-			$this->delete_rows(GARAGE_GUESTBOOKS, 'id', $gb_row['id']);
+			$garage->delete_rows(GARAGE_GUESTBOOKS, 'id', $gb_row['id']);
 		}
 
 		//Right User Want To Delete Vehicle Let Get All Ratings Associated With It
@@ -843,7 +929,7 @@ class garage_vehicle
 
 		while ($rating_row = $db->sql_fetchrow($mods_result) )
 		{
-   			$this->delete_rows(GARAGE_RATING_TABLE, 'id', $rating_row['id']);
+   			$garage->delete_rows(GARAGE_RATING_TABLE, 'id', $rating_row['id']);
 		} 
 	
 		// Right Lets Delete All Images For This Vehicle
@@ -859,28 +945,29 @@ class garage_vehicle
 		while ($gallery_row = $db->sql_fetchrow($result) )
 		{
 			$image_id = $gallery_row['image_id'];
-			$this->delete_image($image_id);
+			$garage_image->delete_image($image_id);
 		}
 		$db->sql_freeresult($result);
 	
 		// Right We Have Deleted Modifications & Images Next The Actual Vehicle
-		$this->delete_rows(GARAGE_TABLE, 'id', $cid);
+		$garage->delete_rows(GARAGE_TABLE, 'id', $cid);
 	
 		return;
 	}
-	
+
+
 	/*========================================================================*/
 	// Display Vehicle Page - With Or Without Management Links & Galleries
-	// Usage:  display_vehicle('wn vehicle YES|NO');
+	// Usage:  display_vehicle('wn vehicle YES|NO|MODERATE');
 	/*========================================================================*/
 	function display_vehicle($owned)
 	{
-		global $user, $template, $images, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $HTTP_POST_FILES, $HTTP_POST_VARS, $HTTP_GET_VARS, $rating_text, $rating_types, $cid, $mode, $garage, $garage_template, $garage_modification, $garage_insurance, $garage_quartermile, $garage_dynorun, $garage_image;
+		global $user, $template, $images, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $HTTP_POST_FILES, $HTTP_POST_VARS, $HTTP_GET_VARS, $rating_text, $rating_types, $cid, $mode, $garage, $garage_template, $garage_modification, $garage_insurance, $garage_quartermile, $garage_dynorun, $garage_image, $auth;
 
 		//Since We Called This Fuction Display Top Block With All Vehicle Info
 		$template->assign_block_vars('switch_top_block', array());
 	
-		if ( $owned == 'YES')
+		if ( ( $owned == 'YES') OR ( $owned == 'MODERATE') )
 		{
 			$this->check_ownership($cid);
 			$template->assign_block_vars('switch_top_block.owned_yes', array());
@@ -892,9 +979,10 @@ class garage_vehicle
 	
 		$vehicle_row = $this->select_vehicle_data($cid);
 	
+		$avatar_img = '';
 		if ( $owned == 'NO')
 		{
-			if ( $userdata['user_level'] == ADMIN )
+			if ( $auth->acl_get('m_garage') )
 			{
 				$temp_url = append_sid("garage.$phpEx?mode=moderate_vehicle&amp;CID=$cid");
 				$template->assign_vars(array(
@@ -902,8 +990,7 @@ class garage_vehicle
 				);
 			}
 
-			$avatar_img = '';
-			if ( $vehicle_row['user_avatar_type'] && $vehicle_row['user_allowavatar'] )
+			if ( $vehicle_row['user_avatar_type'] )
 			{
 				switch( $vehicle_row['user_avatar_type'] )
 				{
@@ -919,7 +1006,9 @@ class garage_vehicle
 				}
 			}
 		}
-	
+		
+		$hilite_image = '';
+		$total_image_views = '';
 		if ( ($vehicle_row['image_id']) AND ($vehicle_row['attach_is_image']) AND (!empty($vehicle_row['attach_thumb_location'])) AND (!empty($vehicle_row['attach_location'])) )
 		{
 			$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $vehicle_row['attach_thumb_location'];
@@ -929,58 +1018,19 @@ class garage_vehicle
 			$hilite_image = '<a href="garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .'" title="' . $title .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a>';
 		}
 	
-		$user_id = $vehicle_row['member_id'];
-		$temp_url = append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=$user_id");
+		$user_id = $vehicle_row['user_id'];
+		$temp_url = append_sid("profile.$phpEx?mode=viewprofile&amp;u=$user_id");
 		$owner = '<a href="' . $temp_url . '">' . $vehicle_row['username'] . '</a>';
 	
-		if ( $owned == 'YES' )
+		if ( ( $owned == 'YES' ) OR ( $owned == 'MODERATE') )
 		{
 			$template->assign_block_vars('level2', array());
 			$template->assign_vars(array(
 				'U_LEVEL2' => append_sid("garage.$phpEx?mode=view_own_vehicle&amp;CID=".$cid),
 				'L_LEVEL2' => $vehicle_row['made_year'] . ' ' . $vehicle_row['make'] . ' '. $vehicle_row['model'])
 			);
-			
-			$temp_url = append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=$cid");
-			$view_vehicle_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_view_vehicle'] . '" alt="'.$lang['View_Vehicle'].'" title="'.$lang['View_Vehicle'].'" border="0" /></a>';
-	
-			$temp_url = append_sid("garage.$phpEx?mode=edit_vehicle&amp;CID=$cid");
-			$edit_vehicle_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit_vehicle'] . '" alt="'.$lang['Edit_Vehicle'].'" title="'.$lang['Edit_Vehicle'].'" border="0" /></a>';
-	
-			$temp_url = append_sid("garage.$phpEx?mode=add_modification&amp;CID=$cid");
-			$add_modification_link = ' <a href="' . $temp_url . '"><img src="' . $images['garage_add_modification'] . '" alt="'.$lang['Add_New_Modification'].'" title="'.$lang['Add_New_Modification'].'" border="0" /></a>';
-	
-			if ( $garage_config['enable_insurance'] )
-			{	
-				$template->assign_block_vars('switch_top_block.owned_yes.enable_insurance', array());
-				$temp_url = append_sid("garage.$phpEx?mode=add_insurance&amp;CID=$cid");
-				$add_insurance_link = ' <a href="' . $temp_url . '"><img src="' . $images['garage_add_insurance'] . '" alt="'.$lang['Add_New_Insurance_Premium'].'" title="'.$lang['Add_New_Insurance_Premium'].'" border="0" /></a>';
-			}
-		
-			if ( $garage_config['enable_quartermile'] )
-			{	
-				$template->assign_block_vars('switch_top_block.owned_yes.enable_quartermile', array());
-				$temp_url = append_sid("garage.$phpEx?mode=add_quartermile&amp;CID=$cid");
-				$add_quartermile_link = ' <a href="' . $temp_url . '"><img src="' . $images['garage_add_quartermile'] . '" alt="'.$lang['Add_New_Quartermile_Time'].'" title="'.$lang['Add_New_Quartermile_Time'].'" border="0" /></a>';
-			}
-	
-			if ( $garage_config['enable_rollingroad'] )
-			{	
-				$template->assign_block_vars('switch_top_block.owned_yes.enable_rollingroad', array());
-				$temp_url = append_sid("garage.$phpEx?mode=add_rollingroad&amp;CID=$cid");
-				$add_rollingroad_link = ' <a href="' . $temp_url . '"><img src="' . $images['garage_add_rollingroad'] . '" alt="'.$lang['Add_New_Rollingroad_Run'].'" title="'.$lang['Add_New_Rollingroad_Run'].'" border="0" /></a>';
-			}
-			
-			if ($garage->check_permissions('UPLOAD',''))
-			{
-				$template->assign_block_vars('switch_top_block.owned_yes.manage_vehicle_gallery', array());
-				$temp_url = append_sid("garage.$phpEx?mode=manage_vehicle_gallery&amp;CID=$cid");
-				$manage_vehicle_gallery_link = ' <a href="' . $temp_url . '"><img src="' . $images['garage_manage_gallery'] . '" alt="'.$lang['Manage_Vehicle_Gallery'].'" title="'.$lang['Manage_Vehicle_Gallery'].'" border="0" /></a>';
-			}
-	
-			$temp_url = append_sid("garage.$phpEx?mode=delete_gallery&amp;CID=$cid");
-			$delete_vehicle_link = ' <a href="javascript:confirm_delete_car(' . $cid . ')"><img src="' . $images['garage_delete_vehicle'] . '" alt="'.$lang['Delete_Vehicle'].'" title="'.$lang['Delete_Vehicle'].'" border="0" /></a>';
-		
+
+			$set_main_vehicle_link = '';	
 			if ( ( $vehicle_row['main_vehicle'] == 0 ) AND ( $mode != 'moderate_vehicle') )
 			{
 				$temp_url = append_sid("garage.$phpEx?mode=set_main&amp;CID=$cid");
@@ -989,7 +1039,7 @@ class garage_vehicle
 			}
 			else if ( ( $vehicle_row['main_vehicle'] == 0 ) AND ( $mode = 'moderate_vehicle') )
 			{
-				$temp_url = append_sid("garage.$phpEx?mode=set_main&amp;CID=$cid&amp;user_id=".$vehicle_row['member_id']);
+				$temp_url = append_sid("garage.$phpEx?mode=set_main&amp;CID=$cid&amp;user_id=".$vehicle_row['user_id']);
 				$set_main_vehicle_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_main_vehicle'] . '" alt="'.$lang['Set_Main_Vehicle'].'" title="'.$lang['Set_Main_Vehicle'].'" border="0" /></a>';
 	         		$template->assign_block_vars('switch_top_block.owned_yes.set_main_vehicle', array());
 			}
@@ -998,7 +1048,7 @@ class garage_vehicle
 		$year = $vehicle_row['made_year'];
 		$make = $vehicle_row['make'];
 		$model = $vehicle_row['model'];
-	        $colour = $vehicle_row['color'];
+	        $colour = $vehicle_row['colour'];
 	        $date_updated = $vehicle_row['date_updated'];
 	        $updated = $user->format_date($vehicle_row['date_updated']);
 	        $mileage = $vehicle_row['mileage'];
@@ -1009,19 +1059,10 @@ class garage_vehicle
 		$total_spent = $vehicle_row['total_spent'] ? $vehicle_row['total_spent'] : 0;
 	        $total_views = $vehicle_row['views'];
 	        $description = $vehicle_row['comments'];
+	        $weighted_rating = $vehicle_row['weighted_rating'];
+	        $engine_type = $vehicle_row['engine_type'];
 	
-		$sql = "SELECT SUM(rating)AS rating, count(*)*10 AS total_rating
-			FROM " . GARAGE_RATING_TABLE . "
-			WHERE garage_id = $cid";
-	
-		if ( !($result = $db->sql_query($sql)) )
-	     	{
-	       		message_die(GENERAL_ERROR, 'Could Not Select Vehicle Data', '', __LINE__, __FILE__, $sql);
-	      	}
-	
-		$rating_row = $db->sql_fetchrow($result);
-	
-		if (empty($rating_row['rating']))
+		if ( $weighted_rating == '0' )
 		{
 			$template->assign_vars(array(
 				'RATING' => $lang['Not_Rated_Yet'])
@@ -1030,8 +1071,39 @@ class garage_vehicle
 		else
 		{
 			$template->assign_vars(array(
-				'RATING' => $rating_row['rating'] . '/' . $rating_row['total_rating'])
+				'RATING' => $weighted_rating . ' / 10')
 			);
+		}
+		//We Are Moderating...So Show Options Required
+		if ( $owned == 'MODERATE' )
+		{
+			$reset_rating_link = '<a href="javascript:confirm_reset_rating(' . $cid . ')"><img src="' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" /></a>';
+			$template->assign_block_vars('moderate', array());
+			$template->assign_vars(array(
+				'L_RATING_MODERATION' 	=> $lang['Rating Moderation'],
+				'L_RATER' 		=> $lang['Rater'],
+				'L_RATING' 		=> $lang['Rating'],
+				'L_DATE'	 	=> $lang['Date'],
+				'L_RESET_VEHICLE_RATING'=> $lang['Reset_Vehicle_Rating'],
+				'RESET_RATING_LINK' 	=> $reset_rating_link)
+			);
+
+			//Let Get Vehicle Rating Details
+			$rating_data = $this->select_vehicle_rating_data($cid);
+			for ($i = 0; $i < count($rating_data); $i++)
+			{
+				$delete_rating_link = '<a href="javascript:confirm_delete_rating(' . $cid . ',' . $rating_data[$i]['id'] . ')"><img src="' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" /></a>';
+				$rating_data[$i]['user_id'] =  ($rating_data[$i]['user_id'] < 0 ) ? ANONYMOUS : $rating_data[$i]['user_id'];
+				$rating_data[$i]['username'] =  ($rating_data[$i]['user_id'] < 0 ) ? $lang['Guest'] : $rating_data[$i]['username'];
+
+				$template->assign_block_vars('moderate.rating_row', array(
+					'U_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$rating_data[$i]['user_id']) ,
+					'USERNAME' => $rating_data[$i]['username'] ,
+					'RATING' => $rating_data[$i]['rating'],
+					'DATE' => create_date('D M d, Y G:i', $rating_data[$i]['rate_date'], $board_config['board_timezone']),
+					'DELETE_RATING_LINK' => $delete_rating_link)
+				);
+			}	
 		}
 	
 		if ( $owned == 'NO' )
@@ -1061,7 +1133,7 @@ class garage_vehicle
 			{
 				$template->assign_block_vars('switch_top_block.owned_no.rating.rate', array());
 				$template->assign_vars(array(
-					'RATE_VEHICLE' => $garage_template->selection_dropdown('vehicle_rating',$rating_text,$rating_types,''))
+					'RATE_VEHICLE' => $garage_template->dropdown('vehicle_rating',$rating_text,$rating_types,''))
 				);
 			}
 			//Rated Already But Permanent So Do Not Show Button
@@ -1076,7 +1148,7 @@ class garage_vehicle
 			{
 				$template->assign_block_vars('switch_top_block.owned_no.rating.rate', array());
 				$template->assign_vars(array(
-					'RATE_VEHICLE' => $garage_template->selection_dropdown('vehicle_rating',$rating_text,$rating_types,''),
+					'RATE_VEHICLE' => $garage_template->dropdown('vehicle_rating',$rating_text,$rating_types,''),
 					'L_RATING_NOTICE' => $lang['Update_Rating'])
 				);
 			}
@@ -1092,7 +1164,7 @@ class garage_vehicle
 			{
 				$template->assign_block_vars('switch_top_block.owned_no.rating.rate', array());
 				$template->assign_vars(array(
-					'RATE_VEHICLE' =>$garage_template->selection_dropdown('vehicle_rating',$rating_text,$rating_types,''),
+					'RATE_VEHICLE' =>$garage_template->dropdown('vehicle_rating',$rating_text,$rating_types,''),
 					'L_RATING_NOTICE' => $lang['Update_Rating'])
 				);
 			}
@@ -1124,6 +1196,7 @@ class garage_vehicle
 	      			}
 	
 				$guestbook = array();
+				$guestbook['messages'] = '';
 	            		while ( $guestbook_msg = $db->sql_fetchrow($result) )
 	            		{
 	                		if ( strlen($guestbook_msg['post']) >= 75 )
@@ -1147,12 +1220,12 @@ class garage_vehicle
 			}
 		}
 	
-	       	$db->sql_freeresult($result);
 	
 		//Set Counter To Zero
-	      	$mod_images_found = 0;
+		$mod_images_found = 0;
+		$mod_images_displayed = '';
 	     
-	      	//Select Categories For Which A User Has Mods
+		//Select Categories For Which A User Has Mods
 	      	$sql = "SELECT DISTINCT c.title, c.id
 	       		FROM  " . GARAGE_MODS_TABLE . " m, " . GARAGE_CATEGORIES_TABLE . " c
 	       		WHERE m.garage_id = $cid
@@ -1164,16 +1237,17 @@ class garage_vehicle
 	       		message_die(GENERAL_ERROR, 'Could Not Select Mofication Category Data', '', __LINE__, __FILE__, $sql);
 		}
 
+		$category_data = NULL;
 		while ($row = $db->sql_fetchrow($result) )
 		{
 			$category_data[] = $row;
 		}
 
 		$db->sql_freeresult($result);
-	
+
 	      	//Loop Processing All Categoires Returned....
-	      	for ( $i=0; $i < count($category_data); $i++ )
-	      	{
+	      	for ( $i = 0; $i < count($category_data); $i++ )
+		{
 	       		//Setup cat_row Template Varibles
 	       		$template->assign_block_vars('cat_row', array(
 	           		'CATEGORY_TITLE' => $category_data[$i]['title'])
@@ -1195,18 +1269,14 @@ class garage_vehicle
 					$image_attached ='<a href="garage.'. $phpEx .'?mode=view_gallery_item&amp;image_id='. $image_id .'" target="_blank"><img src="' . $images['vehicle_image_attached'] . '" alt="'.$lang['Modification_Image_Attached'].'" title="'.$lang['Modification_Image_Attached'].'" border="0" /></a>';
 		                        $mod_images_found++;
 				}
-	
-				if ( $owned == 'YES' )
-				{
-	            			$temp_url = append_sid("garage.$phpEx?mode=edit_modification&amp;MID=$mid&amp;CID=$cid");
-	            			$edit_mod_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="'.$lang['Edit'].'" title="'.$lang['Edit'].'" border="0" /></a>';
-					$delete_mod_link = '<a href="javascript:confirm_delete_mod(' . $cid . ',' . $mid . ')"><img src="' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" /></a>';
-				}
+
+				$edit_mod_link = '';	
+				$delete_mod_link = '';
 	
 	            		$template->assign_block_vars('cat_row.user_row', array(
 	               			'IMAGE_ATTACHED' => $image_attached,
-	               			'EDIT_MOD_LINK' => $edit_mod_link,
-	               			'DELETE_MOD_LINK' => $delete_mod_link,
+	               			'EDIT_MOD_LINK' => ( $owned == 'YES' ) ? '<a href="' . append_sid("garage.$phpEx?mode=edit_modification&amp;MID=$mid&amp;CID=$cid") . '"><img src="' . $images['garage_edit'] . '" alt="'.$lang['Edit'].'" title="'.$lang['Edit'].'" border="0" /></a>' : '',
+	               			'DELETE_MOD_LINK' =>  ( $owned == 'YES' ) ? '<a href="javascript:confirm_delete_mod(' . $cid . ',' . $mid . ')"><img src="' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" /></a>' : '',
 	               			'COST' => $modification_data[$j]['price'],
 	               			'INSTALL' => $modification_data[$j]['install_price'],
 	               			'RATING' => $modification_data[$j]['product_rating'],
@@ -1279,7 +1349,7 @@ class garage_vehicle
 				{
 					$slip_image = '<a href="garage.'. $phpEx .'?mode=view_gallery_item&amp;image_id='. $image_id .'" target="_blank"><img src="' . $images['slip_image_attached'] . '" alt="'.$lang['Slip_Image_Attached'].'" title="'.$lang['Slip_Image_Attached'].'" border="0" /></a>';
 				}
-				if ( $owned == 'YES' )
+				if ( ( $owned == 'YES' ) OR ( $owned == 'MODERATE') )
 				{
 					$temp_url = append_sid("garage.$phpEx?mode=edit_quartermile&amp;QMID=$qmid&amp;CID=$cid");
 	            			$edit_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="'.$lang['Edit'].'" title="'.$lang['Edit'].'" border="0" /></a>';
@@ -1318,7 +1388,7 @@ class garage_vehicle
 				{
 					$slip_image = '<a href="garage.'. $phpEx .'?mode=view_gallery_item&amp;image_id='. $image_id .'" target="_blank"><img src="' . $images['slip_image_attached'] . '" alt="'.$lang['Slip_Image_Attached'].'" title="'.$lang['Slip_Image_Attached'].'" border="0" /></a>';
 				}
-				if ( $owned == 'YES' )
+				if ( ( $owned == 'YES' ) OR ( $owned == 'MODERATE') )
 				{
 					$temp_url = append_sid("garage.$phpEx?mode=edit_rollingroad&amp;RRID=$rrid&amp;CID=$cid");
             				$edit_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="'.$lang['Edit'].'" title="'.$lang['Edit'].'" border="0" /></a>';
@@ -1395,30 +1465,11 @@ class garage_vehicle
 		}
 	
 		$template->assign_vars(array(
-			'L_GALLERY' => $lang['Gallery'],
-			'L_HILITE_IMAGE' => $lang['Hilite_Image'],
 			'L_TOTAL_VIEWS' => $lang['Total_Views'],
 			'L_MANAGE_VEHICLE_LINKS' => $lang['Manage_Vehicle_Links'],
-			'L_SHOWING' => $lang['Showing'],
-			'L_OF' => $lang['Of'],
-			'L_IMAGES' => $lang['Images'],
-			'L_MODIFICATION_PICTURES' => $lang['Modification_Pictures'],
-			'L_VEHICLE_PICTURES' => $lang['Vehicle_Pictures'],
 			'L_ROLLING_ROAD_RUNS' => $lang['Rolling_Road_Runs'],
-			'L_QUARTER_MILE_TIMES' => $lang['Quarter_Mile_Times'],
-			'L_INSURANCE_PREMIUMS' => $lang['Insurance_Premiums'],
 			'L_COMPANY' => $lang['Insurance_Company'],
 			'L_PREMIUM' => $lang['Premium_Price'],
-			'L_COVER_TYPE' => $lang['Cover_Type'],
-			'L_DYNOCENTER' => $lang['Dynocenter'],
-			'L_BHP' => $lang['Bhp'],
-			'L_BHP_UNIT' => $lang['Bhp_Unit'],
-			'L_TORQUE' => $lang['Torque'],
-			'L_TORQUE_UNIT' => $lang['Torque_Unit'],
-			'L_BOOST' => $lang['Boost'],
-			'L_BOOST_UNIT' => $lang['Boost_Unit'],
-			'L_NITROUS' => $lang['Nitrous'],
-	  		'L_PEAKPOINT' => $lang['Peakpoint'],
 			'L_RT' => $lang['Car_Rt'],
 	  		'L_SIXTY' => $lang['Car_Sixty'],
 			'L_THREE' => $lang['Car_Three'],
@@ -1427,51 +1478,41 @@ class garage_vehicle
 			'L_THOU' => $lang['Car_Thou'],
 			'L_QUART' => $lang['Car_Quart'],
 			'L_QUARTMPH' => $lang['Car_Quartm'],
-        	    	'L_MODIFICATION' => $lang['Modification'],
-		        'L_RATING' => $lang['Rating'],
-		        'L_RATE' => $lang['Rate'],
-	            	'L_COST' => $lang['Cost'],
-            		'L_INSTALL' => $lang['Install'],
-            		'L_CREATED' => $lang['Created'],
-            		'L_UPDATED' => $lang['Updated'],
-            		'L_VEHICLE' => $lang['Vehicle'],
-            		'L_COLOUR' => $lang['Colour'],
-            		'L_UPDATED' => $lang['Updated'],
-            		'L_MILEAGE' => $lang['Mileage'],
-            		'L_PRICE' => $lang['Purchased_Price'],
-            		'L_TOTAL_MODS' => $lang['Total_Mods'],
-            		'L_TOTAL_SPENT' => $lang['Total_Spent'],
-            		'L_TOTAL_VIEWS' => $lang['Total_Views'],
-            		'L_DESCRIPTION' => $lang['Description'],
-            		'L_OWNER' => $lang['Owner'],
-            		'L_GUESTBOOK' => $lang['Guestbook'],
-			'L_VEHICLE_RATING' => $lang['Rating'],
-			'L_PLEASE_RATE' => $lang['Please_Rate'],
-			'L_GO' => $lang['Rate'],
 			'L_CONFIRM_DELETE_VEHICLE' => $lang['Confirm_Delete_Vehicle'],
 			'L_CONFIRM_DELETE_MODIFICATION' => $lang['Confirm_Delete_Modification'],
 			'L_CONFIRM_DELETE_PREMIUM' => $lang['Confirm_Delete_Premium'],
 			'L_CONFIRM_DELETE_QUARTERMILE' => $lang['Confirm_Delete_Quartermile'],
 			'L_CONFIRM_DELETE_ROLLINGROAD' => $lang['Confirm_Delete_Rollingroad'],
-			'U_DELETE_VEHICLE' => append_sid("garage.$phpEx?mode=delete_vehicle"),
+
 			'U_DELETE_MODIFICATION' => append_sid("garage.$phpEx?mode=delete_modification"),
 			'U_DELETE_QUARTERMILE' => append_sid("garage.$phpEx?mode=delete_quartermile"),
 			'U_DELETE_PREMIUM' => append_sid("garage.$phpEx?mode=delete_insurance"),
 			'U_DELETE_ROLLINGROAD' => append_sid("garage.$phpEx?mode=delete_rollingroad"),
-            		'VIEW_VEHICLE_LINK' => $view_vehicle_link,
-            		'EDIT_VEHICLE_LINK' => $edit_vehicle_link,
-            		'ADD_MODIFICATION_LINK' => $add_modification_link,
-            		'ADD_INSURANCE_LINK' => $add_insurance_link,
-            		'ADD_QUARTERMILE_LINK' => $add_quartermile_link,
-            		'ADD_ROLLINGROAD_LINK' => $add_rollingroad_link,
-            		'ADD_TANK_LINK' => $add_tank_link,
-            		'MANAGE_VEHICLE_GALLERY_LINK' => $manage_vehicle_gallery_link,
-            		'DELETE_VEHICLE_LINK' => $delete_vehicle_link,
-            		'SET_MAIN_VEHICLE_LINK' => $set_main_vehicle_link,
-	       		'TOTAL_MOD_IMAGES' => $mod_images_found,
-            		'SHOWING_MOD_IMAGES' => $mod_images_displayed,
+            		'U_VIEW_VEHICLE' => ( $owned == 'YES' ) ? append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=$cid") : '',
+            		'U_EDIT_VEHICLE' => ( $owned == 'YES' ) ? append_sid("garage.$phpEx?mode=edit_vehicle&amp;CID=$cid") : '',
+            		'U_DELETE_VEHICLE' => ( $owned == 'YES' ) ? 'javascript:confirm_delete_car(' . $cid . ')' : '',
+            		'U_ADD_MODIFICATION' => ( $owned == 'YES' ) ? append_sid("garage.$phpEx?mode=add_modification&amp;CID=$cid") : '',
+            		'U_ADD_INSURANCE' => ( $owned == 'YES' AND $garage_config['enable_insurance'] ) ? append_sid("garage.$phpEx?mode=add_insurance&amp;CID=$cid") : '',
+            		'U_ADD_QUARTERMILE' => ( $owned == 'YES' AND $garage_config['enable_quartermile'] ) ? append_sid("garage.$phpEx?mode=add_quartermile&amp;CID=$cid") : '',
+            		'U_ADD_DYNORUN' => ( $owned == 'YES' AND $garage_config['enable_rollingroad'] ) ? append_sid("garage.$phpEx?mode=add_dynorun&amp;CID=$cid") : '',
+            		'U_MANAGE_VEHICLE_GALLERY' => ( $owned == 'YES' ) ? append_sid("garage.$phpEx?mode=manage_vehicle_gallery&amp;CID=$cid") : '',
+			'U_SET_MAIN_VEHICLE' => ( $owned == 'YES' ) ? $set_main_vehicle_link : '' ,
+
+            		'VIEW_VEHICLE' 		=> ($garage_config['garage_images']) ? $user->img('garage_view_vehicle', 'VIEW_VEHICLE') : $user->lang['VIEW_VEHICLE'],
+            		'EDIT_VEHICLE' 		=> ($garage_config['garage_images']) ? $user->img('garage_edit_vehicle', 'EDIT_VEHICLE') : $user->lang['EDIT_VEHICLE'],
+            		'ADD_MODIFICATION' 	=> ($garage_config['garage_images']) ? $user->img('garage_add_modification', 'ADD_NEW_MODIFICATION') : $user->lang['ADD_NEW_MODIFICATION'],
+            		'ADD_INSURANCE' 	=> ($garage_config['garage_images']) ? $user->img('garage_add_insurance', 'ADD_NEW_INSURANCE_PREMIUM') : $user->lang['ADD_NEW_INSURANCE_PREMIUM'],
+            		'ADD_QUARTERMILE' 	=> ($garage_config['garage_images']) ? $user->img('garage_add_quartermile', 'ADD_NEW_QUARTERMILE_TIME') : $user->lang['ADD_NEW_QUARTERMILE_TIME'],
+            		'ADD_DYNORUN'	 	=> ($garage_config['garage_images']) ? $user->img('garage_add_rollingroad',  'ADD_NEW_ROLLINGROAD_RUN') : $user->lang['ADD_NEW_ROLLINGROAD_RUN'],
+            		'MANAGE_VEHICLE_GALLERY'=> ($garage_config['garage_images']) ? $user->img('garage_manage_gallery', 'MANAGE_VEHICLE_GALLERY') : $user->lang['MANAGE_VEHICLE_GALLERY'],
+            		'DELETE_VEHICLE' 	=> ($garage_config['garage_images']) ? $user->img('garage_delete_vehicle', 'DELETE_VEHICLE') : $user->lang['DELETE_VEHICLE'],
+			'SET_MAIN_VEHICLE' 	=> ($garage_config['garage_images']) ? $user->img('garage_main_vehicle', 'SET_MAIN_VEHICLE') : $user->lang['SET_MAIN_VEHICLE'],
+
+	       		'TOTAL_MOD_IMAGES' 	=> $mod_images_found,
+            		'SHOWING_MOD_IMAGES' 	=> $mod_images_displayed,
 			'CID' => $cid,
 			'YEAR' => $year,
+			'ENGINE_TYPE' => $engine_type,
 			'MAKE' => $make,
 			'MODEL' => $model,
             		'COLOUR' => $colour,
@@ -1506,9 +1547,9 @@ class garage_vehicle
                     		LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON mods.garage_id = g.id
 			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
 			        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id 
-			        LEFT JOIN " . USERS_TABLE . " AS user ON g.member_id = user.user_id 
+			        LEFT JOIN " . USERS_TABLE . " AS user ON g.user_id = user.user_id 
 			WHERE makes.pending = 0 AND models.pending = 0
-				".$search_data['where']."
+				" . $additional_where . "
 		        GROUP BY g.id
 			ORDER BY $order_by $sort_order
 			LIMIT $start, $end";
@@ -1524,6 +1565,11 @@ class garage_vehicle
 		}
 		$db->sql_freeresult($result);
 
+		if (empty($rows))
+		{
+			return;
+		}
+
 		return $rows;
 	}
 
@@ -1535,9 +1581,9 @@ class garage_vehicle
 	{
 		global $db;
 		//Select All Vehicle Information
-	   	$sql = "SELECT g.*, images.*, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.*
+	   	$sql = "SELECT g.*, ROUND(g.weighted_rating, 2) as weighted_rating, images.*, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id
                       	FROM " . GARAGE_TABLE . " AS g  
-				LEFT JOIN " . USERS_TABLE ." AS user ON g.member_id = user.user_id
+				LEFT JOIN " . USERS_TABLE ." AS user ON g.user_id = user.user_id
 	                       	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
         	                LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
 				LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON g.id = mods.garage_id
@@ -1555,8 +1601,276 @@ class garage_vehicle
 
 		return $row;
 	}
+
+	/*========================================================================*/
+	// Select Vehicle Owner From Db
+	// Usage: get_vehicle_owner('vehicle id');
+	/*========================================================================*/
+	function get_vehicle_owner($cid)
+	{
+		global $db;
+		//Select All Vehicle Information
+	   	$sql = "SELECT u.username
+                      	FROM " . GARAGE_TABLE . " g  ,  " . USERS_TABLE ." u
+                    	WHERE g.id = $cid and g.user_id = u.user_id
+	                GROUP BY g.id";
+
+      		if ( !($result = $db->sql_query($sql)) )
+      		{
+         		message_die(GENERAL_ERROR, 'Could Not Get Vehicle Data', '', __LINE__, __FILE__, $sql);
+      		}
+
+		$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $row['username'];
+	}
+
+	/*========================================================================*/
+	// Select All Vehicles From User Data From Db
+	// Usage: select_vehicles_by_user_data('user id');
+	/*========================================================================*/
+	function select_vehicles_by_user($user_id)
+	{
+		global $db;
+		//Select All Vehicle Information
+	   	$sql = "SELECT g.*, ROUND(g.weighted_rating, 2) as weighted_rating, images.*, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id
+                      	FROM " . GARAGE_TABLE . " AS g  
+				LEFT JOIN " . USERS_TABLE ." AS user ON g.user_id = user.user_id
+	                       	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
+        	                LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
+				LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON g.id = mods.garage_id
+				LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = g.image_id
+                    	WHERE g.user_id = $user_id
+			GROUP BY g.id";
+
+      		if ( !($result = $db->sql_query($sql)) )
+      		{
+         		message_die(GENERAL_ERROR, 'Could Not Get Vehicle Data', '', __LINE__, __FILE__, $sql);
+      		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		if (empty($rows))
+		{
+			return;
+		}
+
+		return $rows;
+	}
+
+	/*========================================================================*/
+	// Selects Rating Information For Vehicle
+	// Usage: select_vehicle_rating_data('vehicle id');
+	/*========================================================================*/
+	function select_vehicle_rating_data($cid)
+	{
+		global $db;
+
+		$sql = "SELECT r.*, u.username
+        		FROM " . GARAGE_RATING_TABLE . " r
+                    		LEFT JOIN " . GARAGE_TABLE . " g ON r.garage_id = g.id
+				LEFT JOIN " . USERS_TABLE . " u ON r.user_id = u.user_id
+			WHERE r.garage_id ='$cid'";
+
+      		if ( !($result = $db->sql_query($sql)) )
+      		{
+         		message_die(GENERAL_ERROR, 'Could Not Get Vehicle Rating Data', '', __LINE__, __FILE__, $sql);
+      		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		return $rows;
+	}
+
+	/*========================================================================*/
+	// Selects Lastest Updated Vehicle
+	// Usage: select_latest_updatest_vehicles('No. To Return');
+	/*========================================================================*/
+	function select_latest_updated_vehicles($vehicles_required)
+	{
+		global $db;
+
+		$sql = "SELECT g.id, g.made_year, g.user_id, g.date_updated, user.username, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
+  			FROM " . GARAGE_TABLE . " AS g 
+        			LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
+        			LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id 
+				LEFT JOIN " . USERS_TABLE . " AS user ON g.user_id = user.user_id 
+			WHERE makes.pending = 0 AND models.pending = 0 
+	        	ORDER BY g.date_updated DESC
+			LIMIT 0, " . $vehicles_required;
+
+      		if ( !($result = $db->sql_query($sql)) )
+      		{
+         		message_die(GENERAL_ERROR, 'Could Not Get Vehicle Rating Data', '', __LINE__, __FILE__, $sql);
+      		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		if (empty($rows))
+		{
+			return;
+		}
+
+		return $rows;
+	}
+
+	/*========================================================================*/
+	// Select A Users Main Vehicle Data From Db
+	// Usage: select_user_main_vehicle_data('user id');
+	/*========================================================================*/
+	function select_user_main_vehicle_data($user_id)
+	{
+		global $db;
+
+	   	$sql = "SELECT g.*, images.*, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id
+                      	FROM " . GARAGE_TABLE . " AS g  
+				LEFT JOIN " . USERS_TABLE ." AS user ON g.user_id = user.user_id
+	                       	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
+        	                LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
+				LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON g.id = mods.garage_id
+				LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = g.image_id
+                    	WHERE g.user_id = $user_id and g.main_vehicle =1
+	                GROUP BY g.id";
+
+      		if ( !($result = $db->sql_query($sql)) )
+      		{
+         		message_die(GENERAL_ERROR, 'Could Not Get Vehicle Data', '', __LINE__, __FILE__, $sql);
+      		}
+
+		$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $row;
+	}
+
+	/*========================================================================*/
+	// Integrates phpBB Garage & phpBB User Profiles
+	// Usage: profile_integration('user_id');
+	/*========================================================================*/
+	function profile_integration($user_id)
+	{
+		global $images, $template, $profiledata, $lang, $phpEx;
+
+		//Get Vehicle Data
+		$vehicle_data = $this->select_user_main_vehicle_data($user_id);
+
+		if ( count($vehicle_data) > 0 )
+		{
+			$template->assign_block_vars('garage_vehicle', array());
+			$total_spent = $vehicle_data['total_spent'] ? $vehicle_data['total_spent'] : 0;
+
+			//Display Just Thumbnails Of All Images Or Just One Main Image
+			if ( $garage_config['profile_thumbs'] == 1 )
+			{
+
+				//Build List Of Gallery Images For Vehicle
+				$gallery_data = $garage_image->select_gallery_data($vehicle_data['id']);
+        			for ( $i=0; $i < count($gallery_data); $i++ )
+	       			{
+		            		if ( $gallery_data[$i]['attach_is_image'] )
+           				{
+                				// Do we have a thumbnail?  If so, our job is simple here :)
+						if ( (empty($gallery_data[$i]['attach_thumb_location']) == FALSE) AND ($gallery_data[$i]['attach_thumb_location'] != $gallery_data[$i]['attach_location']) AND ( $vehicle_images_found <= 12) )
+                				{
+                    					// Form the image link
+							$thumb_image = GARAGE_UPLOAD_PATH . $gallery_data[$i]['attach_thumb_location'];
+							$id = $gallery_data[$i]['attach_id'];
+							$title = $gallery_data[$i]['attach_file'];
+							$hilite_image .= '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
+               					} 
+					}
+				}
+
+				//Build List Of Modification Images For Vehicle
+				$mod_data = $garage_modification->select_modifications_by_vehicle_data($vehicle_data['id']);
+        			for ( $i=0; $i < count($mod_data); $i++ )
+			       	{
+            				if ( $mod_data[$i]['attach_is_image'] )
+		           		{
+                				// Do we have a thumbnail?  If so, our job is simple here :)
+						if ( (empty($mod_data[$i]['attach_thumb_location']) == FALSE) AND ($mod_data[$i]['attach_thumb_location'] != $mod_data[$i]['attach_location']) AND ( $vehicle_images_found <= 12) )
+		                		{
+                		    			// Form the image link
+							$thumb_image = GARAGE_UPLOAD_PATH . $mod_data[$i]['attach_thumb_location'];
+							$id = $mod_data[$i]['attach_id'];
+							$title = $mod_data[$i]['attach_file'];
+							$hilite_image .= '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
+		               			} 
+					}
+			        }
+			}
+			//Looks Like We Only Need To Draw One Main Image
+			else
+			{
+				if ( ($vehicle_data['image_id']) AND ($vehicle_data['attach_is_image']) AND (!empty($vehicle_data['attach_thumb_location'])) AND (!empty($vehicle_data['attach_location'])) )
+				{
+					// Check to see if this is a remote image
+					if ( preg_match( "/^http:\/\//i", $vehicle_data['attach_location']) )
+					{
+						$image = $vehicle_data['attach_location'];
+						$id = $vehicle_data['attach_id'];
+						$title = $vehicle_data['attach_file'];
+						$total_image_views = $vehicle_data['attach_hits'];
+						$hilite_image = '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
+					}
+					else
+					{
+						$image = GARAGE_UPLOAD_PATH . $vehicle_data['attach_location'];
+						$id = $vehicle_data['attach_id'];
+						$title = $vehicle_data['attach_file'];
+						$total_image_views = $vehicle_data['attach_hits'];
+						$hilite_image = '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
+					}
+				}
+			}
+
+			$garage_img ='<a href="' . append_sid("garage.$phpEx?mode=browse&search=yes&user=".urlencode($profiledata['username'])."") . '"><img src="' . $images['icon_garage'] . '" alt="'.$lang['Garage'].'" title="'.$lang['Garage'].'" border="0" /></a>';
+
+			$template->assign_vars(array(
+				'L_VEHICLE' => $lang['Vehicle'],
+				'L_GARAGE' => $lang['Garage'],
+				'L_COLOUR' => $lang['Colour'],
+				'L_MILEAGE' => $lang['Mileage'],
+				'L_PRICE' => $lang['Purchased_Price'],
+				'L_TOTAL_MODS' => $lang['Total_Mods'],
+				'L_TOTAL_SPENT' => $lang['Total_Spent'],
+				'L_DESCRIPTION' => $lang['Description'],
+				'L_SEARCH_USER_GARAGE' => $lang['Search_User_Garage'],
+				'YEAR' => $vehicle_data['year'],
+				'MAKE' => $vehicle_data['make'],
+				'MODEL' => $vehicle_data['model'],
+		       		'COLOUR' => $vehicle_data['colour'],
+			       	'HILITE_IMAGE' => $hilite_image,
+		        	'MILEAGE' => $vehicle_data['mileage'],
+			        'MILEAGE_UNITS' => $vehicle_data['mileage_unit'],
+		        	'PRICE' => $vehicle_data['price'],
+			        'CURRENCY' => $vehicle_data['currency'],
+		        	'TOTAL_MODS' => $vehicle_data['total_mods'],
+			        'TOTAL_SPENT' => $total_spent,
+		        	'TOTAL_VIEWS' => $vehicle_data['views'],
+			        'DESCRIPTION' => $vehicle_data['comments'],
+			        'GARAGE_IMG' => $garage_img,
+				'U_SEARCH_USER_GARAGE' => append_sid("garage.$phpEx?mode=browse"))
+			);
+
+		}
+	}
 }
 
 $garage_vehicle = new garage_vehicle();
+
 
 ?>

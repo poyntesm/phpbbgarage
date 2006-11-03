@@ -350,18 +350,20 @@ class garage_model
 	/*========================================================================*/
 	function build_search_for_user_make_model()
 	{
-		global $template, $lang, $garage;
+		global $template, $user, $garage, $phpEx, $phpbb_root_path;
 
-		$params = array('make_id', 'model_id', 'user');
+		$params = array('make_id', 'model_id', 'username');
 		$data = $garage->process_post_vars($params);
 
 		//Check If This Is A Search Including User
-		if (!empty($data['user']))
+		if (!empty($data['username']))
 		{
-			$data['where'] = "AND username = '".$data['user']."'" ;
-			$data['search_message'] = $lang['Search_Results_For_Member'] . $data['user'];
-			$template->assign_vars(array(
-				'L_LEVEL3' => $lang['Username_Results'])
+			$data['where'] = "AND username = '".$data['username']."'" ;
+			$data['search_message'] = $user->lang['SEARCH_RESULTS_FOR_MEMBER'] . $data['username'];
+
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'	=> $user->lang['USERNAME_RESULTS'],
+				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=search_username&username=" . $data['username'], true))
 			);
 		}
 
@@ -374,14 +376,22 @@ class garage_model
 			
 			$make_data = $this->select_make_data($data['make_id']);
 
+			//If No Model Then Results Are Make Only...So Set Navlinks Now.
+			if (empty($data['model_id']))
+			{
+				$template->assign_block_vars('navlinks', array(
+					'FORUM_NAME'	=> $user->lang['MAKE_RESULTS'],
+					'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=search_vehicle&make_id=" . $data['make_id'], true))
+				);
+				$data['model_pagination'] = '';
+			}
+
+
 			if ( (empty($data['where'])) AND (!empty($data['make_id'])) )
 			{
 				$data['where'] = "AND make = '".$make_data['make']."'" ;
-				$data['search_message'] = $lang['Search_Results_For_Make'] . $make_data['make'];
+				$data['search_message'] = $user->lang['SEARCH_RESULTS_FOR_MAKE'] . $make_data['make'];
 				$data['make_pagination'] =';make_id='.$data['make_id'].'&amp';
-				$template->assign_vars(array(
-					'L_LEVEL3' => $lang['Make_Results'])
-				);
 			}
 		}
 
@@ -397,19 +407,94 @@ class garage_model
 			if ( (empty($data['where'])) AND (!empty($data['model_id'])) )
 			{
 				$data['where'] = "AND model = '".$model_data['model']."'" ;
-				$data['search_message'] = $lang['Search_Results_For_Model'] . $model_data['model'];
+				$data['search_message'] = $user->lang['SEARCH_RESULTS_FOR_MODEL'] . $model_data['model'];
 				$data['model_pagination'] =';model_id='.$data['model_id'].'&amp';
-				$template->assign_vars(array(
-					'L_LEVEL3' => $lang['Model_Results'])
+				$template->assign_block_vars('navlinks', array(
+					'FORUM_NAME'	=> $user->lang['MODEL_RESULTS'],
+					'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=search_vehicle&model_id=" . $data['model_id'], true))
 				);
 			}
 			else if ( (!empty($model_data['model'])) AND (!empty($data['model_id'])) )
 			{
 				$data['where'] .= "AND model = '".$model_data['model']."'";
-				$data['search_message'] .= ", " . $lang['Model'] . " " .$model_data['model'];
+				$data['search_message'] .= ", " . $user->lang['MODEL'] . " " .$model_data['model'];
 				$data['model_pagination'] =';model_id='.$data['model_id'].'&amp';
-				$template->assign_vars(array(
-					'L_LEVEL3' => $lang['Make_Model_Results'])
+				$template->assign_block_vars('navlinks', array(
+					'FORUM_NAME'	=> $user->lang['MODEL_RESULTS'],
+					'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=search_vehicle&make_id=" . $data['make_id']. "&model_id=" . $data['model_id'], true))
+				);
+			}
+		}
+	
+		return $data;
+	}
+
+	/*========================================================================*/
+	// Build Search Data
+	// Usage: build_insurance_search_for_make_model();
+	/*========================================================================*/
+	function build_insurance_search_for_make_model()
+	{
+		global $template, $user, $garage, $phpEx, $phpbb_root_path;
+
+		$params = array('make_id', 'model_id');
+		$data = $garage->process_post_vars($params);
+
+		//Check If This Is A Search Including Make
+		if (!empty($data['make_id']))
+		{
+			$template->assign_vars(array(
+				'MAKE_ID' => $data['make_id'])
+			);
+			
+			$make_data = $this->select_make_data($data['make_id']);
+
+			//If No Model Then Results Are Make Only...So Set Navlinks Now.
+			if (empty($data['model_id']))
+			{
+				$template->assign_block_vars('navlinks', array(
+					'FORUM_NAME'	=> $user->lang['INSURANCE_RESULTS'],
+					'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=search_insurance&make_id=" . $data['make_id'], true))
+				);
+				$data['model_pagination'] = '';
+			}
+
+
+			if ( (empty($data['where'])) AND (!empty($data['make_id'])) )
+			{
+				$data['where'] = "AND make = '".$make_data['make']."'" ;
+				$data['search_message'] = $user->lang['SEARCH_RESULTS_FOR_MAKE'] . $make_data['make'];
+				$data['make_pagination'] =';make_id='.$data['make_id'].'&amp';
+			}
+		}
+
+		//Check If This Is A Search Including Model
+		if (!empty($data['model_id']))
+		{
+			$template->assign_vars(array(
+				'MODEL_ID' => $data['model_id'])
+			);
+
+			$model_data = $this->select_model_data($data['model_id']);
+
+			if ( (empty($data['where'])) AND (!empty($data['model_id'])) )
+			{
+				$data['where'] = "AND model = '".$model_data['model']."'" ;
+				$data['search_message'] = $user->lang['SEARCH_RESULTS_FOR_MODEL'] . $model_data['model'];
+				$data['model_pagination'] =';model_id='.$data['model_id'].'&amp';
+				$template->assign_block_vars('navlinks', array(
+					'FORUM_NAME'	=> $user->lang['MODEL_RESULTS'],
+					'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=search_insurance&model_id=" . $data['model_id'], true))
+				);
+			}
+			else if ( (!empty($model_data['model'])) AND (!empty($data['model_id'])) )
+			{
+				$data['where'] .= "AND model = '".$model_data['model']."'";
+				$data['search_message'] .= ", " . $user->lang['MODEL'] . " " .$model_data['model'];
+				$data['model_pagination'] =';model_id='.$data['model_id'].'&amp';
+				$template->assign_block_vars('navlinks', array(
+					'FORUM_NAME'	=> $user->lang['INSURANCE_RESULTS'],
+					'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=search_insurance&make_id=" . $data['make_id']. "&model_id=" . $data['model_id'], true))
 				);
 			}
 		}

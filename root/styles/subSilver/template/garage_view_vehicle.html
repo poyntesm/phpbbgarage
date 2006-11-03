@@ -14,11 +14,7 @@ function confirm_delete_car(car_id)
 		window.location.href = "{U_DELETE_VEHICLE}&CID=" + car_id;
 	}
 }
-// -->
-</script>
 
-<script type="text/javascript">
-<!--
 function confirm_delete_mod (car_id, mod_id)
 {
 	if ( confirm("{L_CONFIRM_DELETE_MODIFICATION}") )
@@ -26,11 +22,7 @@ function confirm_delete_mod (car_id, mod_id)
 		window.location.href = "{U_DELETE_MODIFICATION}&MID=" + mod_id + "&CID=" + car_id;
 	}
 }
-// -->
-</script>
 
-<script type="text/javascript">
-<!--
 function confirm_delete_insurance (car_id, ins_id)
 {
 	if ( confirm("{L_CONFIRM_DELETE_PREMIUM}") )
@@ -38,11 +30,7 @@ function confirm_delete_insurance (car_id, ins_id)
 		window.location.href = "{U_DELETE_PREMIUM}&INS_ID=" + ins_id + "&CID=" + car_id;
 	}
 }
-// -->
-</script>
 
-<script type="text/javascript">
-<!--
 function confirm_delete_quartermile (car_id, qm_id)
 {
 	if ( confirm("{L_CONFIRM_DELETE_QUARTERMILE}") )
@@ -50,11 +38,7 @@ function confirm_delete_quartermile (car_id, qm_id)
 		window.location.href = "{U_DELETE_QUARTERMILE}&QMID=" + qm_id + "&CID=" + car_id;
 	}
 }
-// -->
-</script>
 
-<script type="text/javascript">
-<!--
 function confirm_delete_rollingroad (car_id, rr_id)
 {
 	if ( confirm("{L_CONFIRM_DELETE_ROLLINGROAD}") )
@@ -90,10 +74,10 @@ function confirm_delete_rollingroad (car_id, rr_id)
                         					<td align="center">{HILITE_IMAGE}<br /><span class="gensmall">{L_TOTAL_VIEWS}: {TOTAL_IMAGE_VIEWS}</span></td>
                     					</tr>
 			                                <tr>
-				                        	<td class="row1"><span class='gen'><b>{L_DESCRIPTION}</b></span></td>
+				                        	<td class="row1"><span class="gen"><b>{L_DESCRIPTION}</b></span></td>
                                    			</tr> 
 			                                <tr>
-				                        	<td align="center"><span class='gen'>{DESCRIPTION}</span></td>
+				                        	<td align="center"><span class="gen">{DESCRIPTION}</span></td>
                                    			</tr> 
 							<tr>
                         					<td align="center"><span class="gen">{MODERATE_VEHICLE}</span></td>
@@ -105,22 +89,16 @@ function confirm_delete_rollingroad (car_id, rr_id)
   		    					</tr>
                     					<tr>
                         					<td align="center" >
-                        						<span class="gen">{VIEW_VEHICLE_LINK} {EDIT_VEHICLE_LINK} {DELETE_VEHICLE_LINK} {ADD_MODIFICATION_LINK}
-									<!-- BEGIN enable_insurance -->
-                        						{ADD_INSURANCE_LINK}
-									<!-- END enable_insurance -->
-									<!-- BEGIN enable_quartermile -->
-                        						{ADD_QUARTERMILE_LINK}
-									<!-- END enable_quartermile -->
-									<!-- BEGIN enable_rollingroad -->
-                        						{ADD_ROLLINGROAD_LINK}
-									<!-- END enable_rollingroad -->
-									<!-- BEGIN manage_vehicle_gallery -->
-                        						{MANAGE_VEHICLE_GALLERY_LINK}
-									<!-- END manage_vehicle_gallery -->
-									<!-- BEGIN set_main_vehicle -->
-                       							{SET_MAIN_VEHICLE_LINK}
-									<!-- END set_main_vehicle -->
+									<span class="gen">
+									<!-- IF U_VIEW_VEHICLE --><a href="{U_VIEW_VEHICLE}">{VIEW_VEHICLE}</a>&nbsp;<!-- ENDIF -->
+									<!-- IF U_EDIT_VEHICLE --><a href="{U_EDIT_VEHICLE}">{EDIT_VEHICLE}</a>&nbsp;<!-- ENDIF -->
+									<!-- IF U_DELETE_VEHICLE --><a href="{U_DELETE_VEHICLE}">{DELETE_VEHICLE}</a>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_MODIFICATION --><a href="{U_ADD_MODIFICATION}">{ADD_MODIFICATION}</a>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_INSURANCE --><a href="{U_ADD_INSURANCE}">{ADD_INSURANCE}</a>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_QUARTERMILE --><a href="{U_ADD_QUARTERMILE}">{ADD_QUARTERMILE}</a>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_DYNORUN --><a href="{U_ADD_DYNORUN}">{ADD_DYNORUN}</a>&nbsp;<!-- ENDIF -->
+									<!-- IF U_MANAGE_VEHICLE_GALLERY --><a href="{U_MANAGE_VEHICLE_GALLERY}">{MANAGE_VEHICLE_GALLERY}</a>&nbsp;<!-- ENDIF -->
+									<!-- IF U_SET_MAIN_VEHICLE --><a href="{U_SET_MAIN_VEHICLE}">{SET_MAIN_VEHICLE}</a>&nbsp;<!-- ENDIF -->
 									<br />
                     							{HILITE_IMAGE}
 									<br /></span><span class="gensmall">{L_TOTAL_VIEWS}: {TOTAL_IMAGE_VIEWS}</span>

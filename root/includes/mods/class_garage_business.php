@@ -147,6 +147,11 @@ class garage_business
 		}
 		$db->sql_freeresult($result);
 
+		if (empty($rows))
+		{
+			return;
+		}
+
 		return $rows;
 	}
 
@@ -179,6 +184,11 @@ class garage_business
 		}
 		$db->sql_freeresult($result);
 
+		if (empty($rows))
+		{
+			return;
+		}
+
 		return $rows;
 	}
 
@@ -208,6 +218,11 @@ class garage_business
 			$rows[] = $row;
 		}
       		$db->sql_freeresult($result);
+
+		if (empty($rows))
+		{
+			return;
+		}
 
 		return $rows;
 	}
