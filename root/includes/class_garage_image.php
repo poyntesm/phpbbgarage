@@ -478,7 +478,7 @@ class garage_image
 		{
 			$data['filesize'] = $HTTP_POST_FILES['FILE_UPLOAD']['size'];
 			$data['tmp_name'] = $HTTP_POST_FILES['FILE_UPLOAD']['tmp_name'];
-			$data['file'] = $HTTP_POST_FILES['FILE_UPLOAD']['name'];
+			$data['file'] = trim(stripslashes($HTTP_POST_FILES['FILE_UPLOAD']['name']));
 			$data['date'] = time();
 			$imagesize = getimagesize($HTTP_POST_FILES['FILE_UPLOAD']['tmp_name']);
 			$data['filetype'] = $imagesize[2];
