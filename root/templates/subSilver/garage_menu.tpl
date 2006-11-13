@@ -33,7 +33,7 @@
 				</tr>
 				<!-- BEGIN updated_vehicles -->
 				<tr>
-					<td class="row1" align="left" nowrap><span class="genmed"><a href="{lastupdatedvehiclesmain_on.updated_vehicles.U_VIEW_VEHICLE}">{lastupdatedvehiclesmain_on.updated_vehicles.VEHICLE}</a><br>{lastupdatedvehiclesmain_on.updated_vehicles.UPDATED_TIME}<br>{L_OWNER}: <a href="{lastupdatedvehiclesmain_on.updated_vehicles.U_VIEW_PROFILE}">{lastupdatedvehiclesmain_on.updated_vehicles.USERNAME}</a></span></td>
+					<td class="row1" align="left" nowrap><span class="genmed"><a href="{lastupdatedvehiclesmain_on.updated_vehicles.U_VIEW_VEHICLE}">{lastupdatedvehiclesmain_on.updated_vehicles.VEHICLE}</a><br />{lastupdatedvehiclesmain_on.updated_vehicles.UPDATED_TIME}<br />{L_OWNER}: <a href="{lastupdatedvehiclesmain_on.updated_vehicles.U_VIEW_PROFILE}">{lastupdatedvehiclesmain_on.updated_vehicles.USERNAME}</a></span></td>
 				</tr>
 				<!-- END updated_vehicles -->
 			</table>
