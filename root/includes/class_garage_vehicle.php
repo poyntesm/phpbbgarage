@@ -1340,7 +1340,7 @@ class garage_vehicle
 			                {
 						$mod_images_displayed = $mod_images_found;
 	                			//Do we have a thumbnail?  If so, our job is simple here :)
-						if ( (empty($modification_data[$i]['attach_thumb_location']) == FALSE) AND ($modification_data[$j]['attach_thumb_location'] != $modification_data[$j]['attach_location']) )
+						if ( (empty($modification_data[$j]['attach_thumb_location']) == FALSE) AND ($modification_data[$j]['attach_thumb_location'] != $modification_data[$j]['attach_location']) )
 	                			{
 			               			//Form the image link
 							$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $modification_data[$j]['attach_thumb_location'];
@@ -1488,7 +1488,6 @@ class garage_vehicle
 		//Display Both Vehicle Gallery & Modification Gallery	
 		if ( (empty($gallery_modification_images) == FALSE) AND (empty($gallery_vehicle_images) == FALSE) )
 		{
-
 			$template->assign_block_vars('switch_top_block.owned_no.gallery_all', array(
 				'VEHICLE_IMAGES' => $gallery_vehicle_images,
 				'MODIFICATION_IMAGES' => $gallery_modification_images)
