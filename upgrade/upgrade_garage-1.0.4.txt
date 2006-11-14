@@ -8,11 +8,12 @@
 ## 
 ## Installation Level:	Easy
 ## Installation Time:	15 Minutes
-## Files To Edit: (13)
+## Files To Edit: (14)
 ##			garage.php
 ##			/includes/functions_garage.php
 ##			/includes/usercp_viewprofile.php
 ##			/admin/admin_garage_tools.php
+##			/admin/admin_garage_categories.php
 ##			/language/lang_english/lang_garage.php
 ##			/language/lang_english/lang_garage_error.php
 ##			/templates/subSilver/garage_insurance.tpl
@@ -378,26 +379,6 @@ includes/functions_garage.php
 #
 #-----[ FIND ]------------------------------------------
 #
-				message_die(GENERAL_ERROR, 'The requested category did not existed');
-
-#
-#-----[ REPLACE WITH ]------------------------------------------
-#
-				message_die(GENERAL_ERROR, $lang['Category_Not_Found']);
-
-#
-#-----[ FIND ]------------------------------------------
-#
-				message_die(GENERAL_ERROR, 'The requested category is not existed');
-
-#
-#-----[ REPLACE WITH ]------------------------------------------
-#
-				message_die(GENERAL_ERROR, $lang['Category_Not_Found']);
-
-#
-#-----[ FIND ]------------------------------------------
-#
 		$year_list = "<select name='year' class='forminput'>";
 	
 		for ( $year = $end_year; $year >= $garage_config['year_start']; $year-- ) {
@@ -536,6 +517,33 @@ admin/admin_garage_tools.php
 #-----[ REPLACE WITH ]------------------------------------------
 #
                         	$output[] = '<b><span style="color:#FF000">'.$lang['ERROR']."</span></b>".$lang['File_Does_Not_Exist']."(".$image_row['attach_file'].")";
+
+# 
+#-----[ OPEN ]----- 
+# 
+admin/admin_garage_categories.php
+
+#
+#-----[ FIND ]------------------------------------------
+#
+				message_die(GENERAL_ERROR, 'The requested category did not existed');
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+				message_die(GENERAL_ERROR, $lang['Category_Not_Found']);
+
+#
+#-----[ FIND ]------------------------------------------
+#
+				message_die(GENERAL_ERROR, 'The requested category is not existed');
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+				message_die(GENERAL_ERROR, $lang['Category_Not_Found']);
+
+
 
 # 
 #-----[ OPEN ]----- 
