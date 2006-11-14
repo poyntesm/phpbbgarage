@@ -456,7 +456,7 @@ includes/functions_garage.php
 	
 		while ( $insurance = $db->sql_fetchrow($result) )
 		{
-			$insurance_list .= '<option value="'.$insurance['id'].'">'.$insurance['title'].'</option>'
+			$insurance_list .= '<option value="'.$insurance['id'].'">'.$insurance['title'].'</option>';
 
 # 
 #-----[ OPEN ]----- 
