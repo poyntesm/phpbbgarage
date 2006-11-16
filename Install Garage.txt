@@ -450,10 +450,6 @@ define('GARAGE_ROLLINGROAD_TABLE', $table_prefix.'garage_rollingroad');
 define('GARAGE_BUSINESS_TABLE', $table_prefix.'garage_business');
 define('GARAGE_INSURANCE_TABLE', $table_prefix.'garage_insurance');
 define('GARAGE_RATING_TABLE', $table_prefix.'garage_rating');
-define('GARAGE_VEHICLE_FIELDS_TABLE', $table_prefix.'garage_vehicle_fields');
-define('GARAGE_VEHICLE_FIELDS_DATA_TABLE', $table_prefix.'garage_vehicle_fields_data');
-define('GARAGE_VEHICLE_FIELDS_LANG_TABLE', $table_prefix.'garage_vehicle_fields_lang');
-define('GARAGE_VEHICLE_LANG_TABLE', $table_prefix.'garage_vehicle_lang');
 define('GARAGE_UPLOAD_PATH', 'garage/upload/');
 define('PAGE_GARAGE', -2120);
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
