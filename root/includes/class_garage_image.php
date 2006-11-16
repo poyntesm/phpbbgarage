@@ -1014,9 +1014,9 @@ class garage_image
 		global $db;
 
 		$sql = "SELECT img.*
-     			FROM " . GARAGE_IMAGES_TABLE . " AS img
-        			LEFT JOIN " . GARAGE_TABLE . " AS g ON g.id = img.garage_id 
-        		WHERE g.member_id = $user_id AND img.attach_location NOT LIKE 'http://'";
+     			FROM " . GARAGE_IMAGES_TABLE . " img
+        			LEFT JOIN " . GARAGE_TABLE . " g ON g.id = img.garage_id 
+        		WHERE g.member_id = $user_id AND img.attach_location NOT LIKE 'http://%'";
 
       		if ( !($result = $db->sql_query($sql)) )
       		{
@@ -1041,9 +1041,9 @@ class garage_image
 		global $db;
 
 		$sql = "SELECT img.*
-     			FROM " . GARAGE_IMAGES_TABLE . " AS img
-        			LEFT JOIN " . GARAGE_TABLE . " AS g ON g.id = img.garage_id 
-        		WHERE g.member_id = $user_id AND img.attach_location LIKE 'http://'";
+     			FROM " . GARAGE_IMAGES_TABLE . " img
+        			LEFT JOIN " . GARAGE_TABLE . " g ON g.id = img.garage_id 
+        		WHERE g.member_id = $user_id AND img.attach_location LIKE 'http://%'";
 
       		if ( !($result = $db->sql_query($sql)) )
       		{

@@ -1996,7 +1996,8 @@ switch( $mode )
 		$template->assign_vars(array(
         	    	'L_NOTE' => $lang['Manage_Vehicle_Gallery_Note'],
         	    	'L_IMAGE' => $lang['Image'],
-        	    	'L_REMOVE_IMAGE' => $lang['Remove_Image'],
+			'L_REMOVE_IMAGE' => $lang['Remove_Image'],
+			'L_ADD_NEW_IMAGE' => $lang['Add_New_Image'],
         	    	'L_REMOVE' => $lang['Remove'],
         	    	'L_HILITE_IMAGE' => $lang['Hilite_Image'],
 			'L_MANAGE_VEHICLE_GALLERY' => $lang['Manage_Vehicle_Gallery'],
