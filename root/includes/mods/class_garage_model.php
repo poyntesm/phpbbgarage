@@ -90,6 +90,7 @@ class garage_model
 		$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
+		$row['total'] = (empty($row['total'])) ? 0 : $row['total'];
 		return $row['total'];
 	}
 
@@ -136,9 +137,9 @@ class garage_model
 
 	/*========================================================================*/
 	// Select Make Data From DB
-	// Usage: select_make_data('make id');
+	// Usage: get_make('make id');
 	/*========================================================================*/
-	function select_make_data($make_id)
+	function get_make($make_id)
 	{
 		global $db;
 
@@ -159,9 +160,9 @@ class garage_model
 
 	/*========================================================================*/
 	// Select All Make Data From DB
-	// Usage: select_all_makes_data();
+	// Usage: get_all_makes();
 	/*========================================================================*/
-	function select_all_makes_data()
+	function get_all_makes()
 	{
 		global $db;
 
@@ -185,9 +186,9 @@ class garage_model
 
 	/*========================================================================*/
 	// Select All Model From One Make Data From DB
-	// Usage: select_all_models_from_make__data();
+	// Usage: get_all_models_from_make();
 	/*========================================================================*/
-	function select_all_models_from_make_data($make_id)
+	function get_all_models_from_make($make_id)
 	{
 		global $db;
 
@@ -212,9 +213,9 @@ class garage_model
 
 	/*========================================================================*/
 	// Select All Model Data From DB
-	// Usage: select_all_models_data();
+	// Usage: get_all_models();
 	/*========================================================================*/
-	function select_all_models_data()
+	function get_all_models()
 	{
 		global $db;
 
@@ -240,9 +241,9 @@ class garage_model
 
 	/*========================================================================*/
 	// Select Model Data From DB
-	// Usage: select_model_data('model id');
+	// Usage: get_model('model id');
 	/*========================================================================*/
-	function select_model_data($model_id)
+	function get_model($model_id)
 	{
 		global $db;
 
@@ -289,9 +290,8 @@ class garage_model
 		while ( $row = $db->sql_fetchrow($result) )
 		{
 			$template->assign_block_vars('make_pending.row', array(
-				'ROW_CLASS' => ( !($i % 2) ) ? $theme['td_class1'] : $theme['td_class2'],
-				'MAKE_ID' => $row['id'],
-				'MAKE' => $row['make'])
+				'MAKE_ID' 	=> $row['id'],
+				'MAKE' 		=> $row['make'])
 			);
 			$i++;
 		}
@@ -330,10 +330,9 @@ class garage_model
 		while ( $row = $db->sql_fetchrow($result) )
 		{
 			$template->assign_block_vars('model_pending.row', array(
-				'ROW_CLASS' => ( !($i % 2) ) ? $theme['td_class1'] : $theme['td_class2'],
-				'MODEL_ID' => $row['id'],
-				'MAKE' => $row['make'],
-				'MODEL' => $row['model'])
+				'MODEL_ID'	=> $row['id'],
+				'MAKE' 		=> $row['make'],
+				'MODEL' 	=> $row['model'])
 			);
 			$i++;
 		}
@@ -374,7 +373,7 @@ class garage_model
 				'MAKE_ID' => $data['make_id'])
 			);
 			
-			$make_data = $this->select_make_data($data['make_id']);
+			$make_data = $this->get_make($data['make_id']);
 
 			//If No Model Then Results Are Make Only...So Set Navlinks Now.
 			if (empty($data['model_id']))
@@ -402,7 +401,7 @@ class garage_model
 				'MODEL_ID' => $data['model_id'])
 			);
 
-			$model_data = $this->select_model_data($data['model_id']);
+			$model_data = $this->get_model($data['model_id']);
 
 			if ( (empty($data['where'])) AND (!empty($data['model_id'])) )
 			{
@@ -447,7 +446,7 @@ class garage_model
 				'MAKE_ID' => $data['make_id'])
 			);
 			
-			$make_data = $this->select_make_data($data['make_id']);
+			$make_data = $this->get_make($data['make_id']);
 
 			//If No Model Then Results Are Make Only...So Set Navlinks Now.
 			if (empty($data['model_id']))
@@ -475,7 +474,7 @@ class garage_model
 				'MODEL_ID' => $data['model_id'])
 			);
 
-			$model_data = $this->select_model_data($data['model_id']);
+			$model_data = $this->get_model($data['model_id']);
 
 			if ( (empty($data['where'])) AND (!empty($data['model_id'])) )
 			{

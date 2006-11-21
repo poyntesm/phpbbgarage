@@ -443,7 +443,7 @@ define('GARAGE_MAKES_TABLE', $table_prefix.'garage_makes');
 define('GARAGE_MODELS_TABLE', $table_prefix.'garage_models');
 define('GARAGE_MODS_TABLE', $table_prefix.'garage_mods');
 define('GARAGE_QUARTERMILE_TABLE', $table_prefix.'garage_quartermile');
-define('GARAGE_ROLLINGROAD_TABLE', $table_prefix.'garage_rollingroad');
+define('GARAGE_DYNORUN_TABLE', $table_prefix.'garage_dynorun');
 define('GARAGE_BUSINESS_TABLE', $table_prefix.'garage_business');
 define('GARAGE_INSURANCE_TABLE', $table_prefix.'garage_insurance');
 define('GARAGE_RATING_TABLE', $table_prefix.'garage_rating');

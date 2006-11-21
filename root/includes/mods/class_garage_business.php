@@ -71,9 +71,9 @@ class garage_business
 
 	/*========================================================================*/
 	// Select Single Business Data From DB
-	// Usage: select_business_data('business id');
+	// Usage: get_business('business id');
 	/*========================================================================*/
-	function select_business_data($bus_id)
+	function get_business($bus_id)
 	{
 		global $db;
 
@@ -94,9 +94,9 @@ class garage_business
 
 	/*========================================================================*/
 	// Select All Business Data From DB
-	// Usage: select_all_business_data();
+	// Usage: get_all_business();
 	/*========================================================================*/
-	function select_all_business_data()
+	function get_all_business()
 	{
 		global $db;
 
@@ -120,9 +120,9 @@ class garage_business
 
 	/*========================================================================*/
 	// Select All Garage Business Data From DB
-	// Usage: select_all_garage_business_data('additional where', 'row start point', 'limit');
+	// Usage: get_all_garage_business('additional where', 'row start point', 'limit');
 	/*========================================================================*/
-	function select_garage_business_data($where, $start = 0, $limit = 20)
+	function get_garage_business($where, $start = 0, $limit = 20)
 	{
 		global $db;
 
@@ -157,9 +157,9 @@ class garage_business
 
 	/*========================================================================*/
 	// Select All Shop Business Data From DB
-	// Usage: select_all_shop_business_data('additional where', 'row start point', 'limit');
+	// Usage: get_shop_business('additional where', 'row start point', 'limit');
 	/*========================================================================*/
-	function select_shop_business_data($where, $start = 0, $limit = 20)
+	function get_shop_business($where, $start = 0, $limit = 20)
 	{
 		global $db;
 
@@ -194,9 +194,9 @@ class garage_business
 
 	/*========================================================================*/
 	// Select All Insurance Business Data From DB
-	// Usage: select_insurance_business_data('additional where', 'row start point', 'limit')
+	// Usage: get_insurance_business('additional where', 'row start point', 'limit')
 	/*========================================================================*/
-	function select_insurance_business_data($where, $start = 0,  $limit = 20)
+	function get_insurance_business($where, $start = 0,  $limit = 20)
 	{
 		global $db, $where;
 
@@ -331,18 +331,16 @@ class garage_business
 			}
 			
 			$template->assign_block_vars('business_pending.row', array(
-				'ROW_NUMBER' => $i + ( $HTTP_GET_VARS['start'] + 1 ),
-				'ROW_CLASS' => ( !($i % 2) ) ? $theme['td_class1'] : $theme['td_class2'],
-				'BUSID' => $row['id'],
-				'NAME' => $row['title'],
-				'ADDRESS' => $row['address'], 
-				'TELEPHONE' => $row['telephone'],
-				'FAX' => $row['fax'],
-				'WEBSITE' => $row['website'],
-				'EMAIL' => $row['email'],
+				'BUSID' 	=> $row['id'],
+				'NAME' 		=> $row['title'],
+				'ADDRESS' 	=> $row['address'], 
+				'TELEPHONE' 	=> $row['telephone'],
+				'FAX' 		=> $row['fax'],
+				'WEBSITE' 	=> $row['website'],
+				'EMAIL' 	=> $row['email'],
 				'OPENING_HOURS' => $row['opening_hours'],
-				'TYPE' => $type,
-				'EDIT_LINK' => $edit_link)
+				'TYPE' 		=> $type,
+				'EDIT_LINK' 	=> $edit_link)
 			);
 			$i++;
 			unset($type);

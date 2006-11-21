@@ -490,7 +490,7 @@ class garage_vehicle
 			}
 			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Top_Dyno_Runs'] )
 			{
-				$where = "LEFT JOIN " . GARAGE_ROLLINGROAD_TABLE . " AS rr on g.id = rr.garage_id
+				$where = "LEFT JOIN " . GARAGE_DYNORUN_TABLE . " AS rr on g.id = rr.garage_id
 	  				  WHERE makes.pending = 0 and models.pending = 0
 					  GROUP BY g.id ORDER BY rr.bhp DESC LIMIT 1";
 			}
@@ -596,7 +596,7 @@ class garage_vehicle
 		$limit = $garage_config['lastupdatedvehicles_limit'] ? $garage_config['lastupdatedvehicles_limit'] : 10;
 
 		//Get Latest Updated Vehicles....
-		$vehicle_data = $garage_vehicle->select_latest_updated_vehicles($limit);
+		$vehicle_data = $garage_vehicle->get_latest_updated_vehicles($limit);
 	
 		for ($i = 0; $i < count($vehicle_data); $i++)
 	 	{
@@ -818,11 +818,11 @@ class garage_vehicle
 	 	while ( $vehicle_data = $db->sql_fetchrow($result) )
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']),
-				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
-				'COLUMN_2_TITLE' => $vehicle_data['username'],
-				'COLUMN_3' => $user->format_date($vehicle_data['POI']))
+				'U_COLUMN_1' 	=> append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
+				'U_COLUMN_2' 	=> append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']),
+				'COLUMN_1_TITLE'=> $vehicle_data['vehicle'],
+				'COLUMN_2_TITLE'=> $vehicle_data['username'],
+				'COLUMN_3' 	=> $user->format_date($vehicle_data['POI']))
 			);
 	 	}
 	
@@ -870,7 +870,7 @@ class garage_vehicle
 	
 		//Right User Want To Delete Vehicle Let Get All Rolling Road Times Associated With It 
 		$rollingroad_sql = "SELECT id 
-			FROM " . GARAGE_ROLLINGROAD_TABLE . " 
+			FROM " . GARAGE_DYNORUN_TABLE . " 
 			WHERE garage_id = $cid";
 	
 	     	if ( !($rollingroad_result = $db->sql_query($rollingroad_sql)) )
@@ -977,7 +977,7 @@ class garage_vehicle
 			$template->assign_block_vars('switch_top_block.owned_no', array());
 		}
 	
-		$vehicle_row = $this->select_vehicle_data($cid);
+		$vehicle_row = $this->get_vehicle($cid);
 	
 		$avatar_img = '';
 		if ( $owned == 'NO')
@@ -1062,18 +1062,10 @@ class garage_vehicle
 	        $weighted_rating = $vehicle_row['weighted_rating'];
 	        $engine_type = $vehicle_row['engine_type'];
 	
-		if ( $weighted_rating == '0' )
-		{
-			$template->assign_vars(array(
-				'RATING' => $lang['Not_Rated_Yet'])
-			);
-		}
-		else
-		{
-			$template->assign_vars(array(
-				'RATING' => $weighted_rating . ' / 10')
-			);
-		}
+		$template->assign_vars(array(
+			'RATING' => ( $weighted_rating == '0' ) ? $user->lang['NOT_RATED_YET'] : $weighted_rating . ' / 10' )
+		);
+
 		//We Are Moderating...So Show Options Required
 		if ( $owned == 'MODERATE' )
 		{
@@ -1089,7 +1081,7 @@ class garage_vehicle
 			);
 
 			//Let Get Vehicle Rating Details
-			$rating_data = $this->select_vehicle_rating_data($cid);
+			$rating_data = $this->get_vehicle_rating($cid);
 			for ($i = 0; $i < count($rating_data); $i++)
 			{
 				$delete_rating_link = '<a href="javascript:confirm_delete_rating(' . $cid . ',' . $rating_data[$i]['id'] . ')"><img src="' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" /></a>';
@@ -1254,7 +1246,7 @@ class garage_vehicle
 	       		);
 	
 			// Select All Mods From This Car For Category We Are Currently Processing
-			$modification_data = $garage_modification->select_modifications_by_category_data($cid, $category_data[$i]['id']);
+			$modification_data = $garage_modification->get_modifications_by_category($cid, $category_data[$i]['id']);
 
 	       		//Process Modifications From This Category..
         		for ( $j = 0; $j < count($modification_data); $j++ )
@@ -1307,7 +1299,7 @@ class garage_vehicle
 	      	}
 	
 		// Next Lets See If We Have Any Insurance Premiums
-		$insurance_data = $garage_insurance->select_premiums_by_vehicle_data($cid);
+		$insurance_data = $garage_insurance->get_premiums_by_vehicle($cid);
 	
          	//If Any Premiums Exist Process Them...
 		if ( count($insurance_data) > 0 )
@@ -1318,23 +1310,23 @@ class garage_vehicle
 				$ins_id = $insurance_data[$i]['id'];
 				if ( $owned == 'YES' )
 				{
-					$temp_url = append_sid("garage.$phpEx?mode=edit_insurance&amp;INS_ID=$ins_id&amp;CID=$cid");
+					$temp_url = append_sid("garage.$phpEx?mode=edit_insurance&amp;INS_ID=".$insurance_data[$i]['id']."&amp;CID=$cid");
 	            			$edit_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="'.$lang['Edit'].'" title="'.$lang['Edit'].'" border="0" /></a>';
-					$delete_link = '<a href="javascript:confirm_delete_insurance(' . $cid . ',' . $ins_id . ')"><img src="' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" /></a>';
+					$delete_link = '<a href="javascript:confirm_delete_insurance(' . $cid . ',' . $insurance_data[$i]['id'] . ')"><img src="' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" /></a>';
 				}
 
 				$template->assign_block_vars('insurance.premium', array(
-					'COMPANY' => $insurance_data[$i]['title'],
-					'PREMIUM' => $insurance_data[$i]['premium'],
-					'COVER_TYPE' => $insurance_data[$i]['cover_type'],
-					'EDIT_LINK' => $edit_link,
-					'DELETE_LINK' => $delete_link)
+					'COMPANY' 	=> $insurance_data[$i]['title'],
+					'PREMIUM' 	=> $insurance_data[$i]['premium'],
+					'COVER_TYPE' 	=> $insurance_data[$i]['cover_type'],
+					'EDIT_LINK' 	=> $edit_link,
+					'DELETE_LINK' 	=> $delete_link)
 				);
 			}
 		}
 	
 		//Next Lets See If We Have Any QuarterMile Runs
-		$quartermile_data = $garage_quartermile->select_quartermile_by_vehicle_data($cid);
+		$quartermile_data = $garage_quartermile->get_quartermile_by_vehicle($cid);
 	
          	//If Any Quartermiles Exist Process Them...
 		if ( count($quartermile_data) > 0 )
@@ -1373,7 +1365,7 @@ class garage_vehicle
 		}
 
 		//Get All Dynoruns For Vehicle
-		$rollingroad_data = $garage_dynorun->select_dynorun_by_vehicle_data($cid);
+		$rollingroad_data = $garage_dynorun->get_dynoruns_by_vehicle($cid);
 	
          	//If Any Dynoruns Exist Process Them...
 		if ( count($rollingroad_data) > 0 )
@@ -1418,7 +1410,7 @@ class garage_vehicle
 			$vehicle_images_found = 0;	
 
 			//Get All Gallery Data Required
-			$gallery_data = $garage_image->select_gallery_data($cid);
+			$gallery_data = $garage_image->get_gallery($cid);
 
 			//Process Each Image From Vehicle Gallery	
         		for ( $i = 0; $i < count($gallery_data); $i++ )
@@ -1536,9 +1528,9 @@ class garage_vehicle
 	
 	/*========================================================================*/
 	// Select All Vehicles Data From Db
-	// Usage: select_all_vehicle_data();
+	// Usage: get_all_vehicles();
 	/*========================================================================*/
-	function select_all_vehicle_data($additional_where = NULL, $order_by, $sort_order, $start = 0, $end = 10000)
+	function get_all_vehicles($additional_where = NULL, $order_by, $sort_order, $start = 0, $end = 10000)
 	{
 		global $db;
 
@@ -1575,9 +1567,9 @@ class garage_vehicle
 
 	/*========================================================================*/
 	// Select All Vehicle Data From Db
-	// Usage: select_vehicle_data('vehicle id');
+	// Usage: get_vehicle('vehicle id');
 	/*========================================================================*/
-	function select_vehicle_data($cid)
+	function get_vehicle($cid)
 	{
 		global $db;
 		//Select All Vehicle Information
@@ -1628,9 +1620,9 @@ class garage_vehicle
 
 	/*========================================================================*/
 	// Select All Vehicles From User Data From Db
-	// Usage: select_vehicles_by_user_data('user id');
+	// Usage: get_vehicles_by_user('user id');
 	/*========================================================================*/
-	function select_vehicles_by_user($user_id)
+	function get_vehicles_by_user($user_id)
 	{
 		global $db;
 		//Select All Vehicle Information
@@ -1665,9 +1657,9 @@ class garage_vehicle
 
 	/*========================================================================*/
 	// Selects Rating Information For Vehicle
-	// Usage: select_vehicle_rating_data('vehicle id');
+	// Usage: get_vehicle_rating('vehicle id');
 	/*========================================================================*/
-	function select_vehicle_rating_data($cid)
+	function get_vehicle_rating($cid)
 	{
 		global $db;
 
@@ -1693,9 +1685,9 @@ class garage_vehicle
 
 	/*========================================================================*/
 	// Selects Lastest Updated Vehicle
-	// Usage: select_latest_updatest_vehicles('No. To Return');
+	// Usage: get_latest_updatest_vehicles('No. To Return');
 	/*========================================================================*/
-	function select_latest_updated_vehicles($vehicles_required)
+	function get_latest_updated_vehicles($vehicles_required)
 	{
 		global $db;
 
@@ -1729,9 +1721,9 @@ class garage_vehicle
 
 	/*========================================================================*/
 	// Select A Users Main Vehicle Data From Db
-	// Usage: select_user_main_vehicle_data('user id');
+	// Usage: get_user_main_vehicle('user id');
 	/*========================================================================*/
-	function select_user_main_vehicle_data($user_id)
+	function get_user_main_vehicle($user_id)
 	{
 		global $db;
 
@@ -1765,7 +1757,7 @@ class garage_vehicle
 		global $images, $template, $profiledata, $lang, $phpEx;
 
 		//Get Vehicle Data
-		$vehicle_data = $this->select_user_main_vehicle_data($user_id);
+		$vehicle_data = $this->get_user_main_vehicle($user_id);
 
 		if ( count($vehicle_data) > 0 )
 		{
@@ -1777,7 +1769,7 @@ class garage_vehicle
 			{
 
 				//Build List Of Gallery Images For Vehicle
-				$gallery_data = $garage_image->select_gallery_data($vehicle_data['id']);
+				$gallery_data = $garage_image->get_gallery($vehicle_data['id']);
         			for ( $i=0; $i < count($gallery_data); $i++ )
 	       			{
 		            		if ( $gallery_data[$i]['attach_is_image'] )
@@ -1795,7 +1787,7 @@ class garage_vehicle
 				}
 
 				//Build List Of Modification Images For Vehicle
-				$mod_data = $garage_modification->select_modifications_by_vehicle_data($vehicle_data['id']);
+				$mod_data = $garage_modification->get_modifications_by_vehicle($vehicle_data['id']);
         			for ( $i=0; $i < count($mod_data); $i++ )
 			       	{
             				if ( $mod_data[$i]['attach_is_image'] )

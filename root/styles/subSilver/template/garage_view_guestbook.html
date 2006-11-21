@@ -10,11 +10,6 @@
 				<tr>
 					<th class="thHead" height="25" nowrap="nowrap" colspan="5">{L_GUESTBOOK_TITLE}</th>
 				</tr>
-				<!-- BEGIN first_comment -->
-				<tr>
-					<td class="row1" align="center" height="28" colspan="5"><span class="gen">{LEAVE_FIRST_COMMENT}</span></td>
-				</tr>
-				<!-- END first_comment -->
 				<!-- BEGIN comments -->
 				<tr>
 					<td class="row2" align="center" height="28" ><span class="name"><a name="{comments.U_POST_ID}"></a><b>{comments.POSTER_NAME}</b></span><br /><span class="postdetails">{comments.POSTER_RANK}<br />{comments.RANK_IMAGE}<br />{comments.POSTER_AVATAR}<br /> {comments.POSTER_JOINED}<br />{comments.POSTER_FROM}<br /><br /><a href="{comments.VIEW_POSTER_CARPROFILE}" >{comments.POSTER_CAR_YEAR} {comments.POSTER_CAR_MARK} {comments.POSTER_CAR_MODEL}</a><br /></span></td>
@@ -32,8 +27,12 @@
 				<tr>
 					<td class="row1" align="center" height="3" colspan="5"></td>
 				</tr>
+				<!-- BEGINELSE -->
+				<tr>
+					<td class="row1" align="center" height="28" colspan="5"><span class="gen">{L_ADD_FIRST_COMMENT}</span></td>
+				</tr>
 				<!-- END comments -->
-				<!-- BEGIN leave_comment -->
+				<!-- IF S_DISPLAY_LEAVE_COMMENT -->
 				<tr>
 					<td class="catBottom" align="center" height="28" colspan="5"><span class="gen">{L_ADD_COMMENT}</span></td>
 				</tr>
@@ -44,7 +43,7 @@
 				<tr>
 					<td class="catBottom" align="center" height="28" colspan="5"><input type="hidden" value="insert_comment" name="mode" /><input type="hidden" value="{CID}" name="CID" /><input name="submit" type="submit" value="{L_POST_COMMENT}" class="liteoption" /></td>
 				</tr>
-				<!-- END leave_comment -->
+				<!-- ENDIF -->
         		</table>
 			</form>
 		</td>

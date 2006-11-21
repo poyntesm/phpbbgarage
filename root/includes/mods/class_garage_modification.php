@@ -35,7 +35,7 @@ class garage_modification
 	/*========================================================================*/
 	function insert_modification($data)
 	{
-		global $cid, $userdata, $db;
+		global $cid, $db;
 
 		$sql = "INSERT INTO ". GARAGE_MODS_TABLE ."
 			(garage_id, user_id, category_id, title, price, install_price, install_rating, product_rating, comments, date_created, date_updated, business_id, install_business_id, install_comments, purchase_rating)
@@ -62,7 +62,7 @@ class garage_modification
 
 		$sql = "UPDATE ". GARAGE_MODS_TABLE ."
 			SET category_id = '".$data['category_id']."', title = '".$data['title']."', price = '".$data['price']."', install_price = '".$data['install_price']."', install_rating = '".$data['install_rating']."', product_rating = '".$data['product_rating']."', comments = '".$data['comments']."', install_comments = '".$data['install_comments']."' , business_id = '".$data['business_id']."', install_business_id = '".$data['install_business_id']."', date_updated = '".$data['time']."', purchase_rating = '".$data['purchase_rating']."'
-			WHERE id = '$mid' and garage_id = '$cid'";
+			WHERE id = $mid and garage_id = $cid";
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -92,6 +92,7 @@ class garage_modification
         	$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
+		$row['total_mods'] = (empty($row['total_mods'])) ? 0 : $row['total_mods'];
 		return $row['total_mods'];
 	}
 
@@ -103,14 +104,8 @@ class garage_modification
 	{
 		global $garage, $garage_image;
 	
-		//Right They Want To Delete A Modification Time
-		if (empty($mid))
-		{
-	 		message_die(GENERAL_ERROR, 'Modification ID Not Entered', '', __LINE__, __FILE__);
-		}
-	
 		//Let Assign Variables To All Collected Info
-		$data = $this->select_modification_data($mid);
+		$data = $this->get_modification($mid);
 	
 		//Lets See If There Is An Image Associated With This Modification
 		if (!empty($data['image_id']))
@@ -144,10 +139,10 @@ class garage_modification
 		$template_block = 'block_'.$required_position;
 		$template_block_row = 'block_'.$required_position.'.row';
 		$template->assign_block_vars($template_block, array(
-			'BLOCK_TITLE' => $user->lang['LAST_UPDATED_MODIFICATIONS'],
-			'COLUMN_1_TITLE' => $user->lang['MODIFICATION'],
-			'COLUMN_2_TITLE' => $user->lang['OWNER'],
-			'COLUMN_3_TITLE' => $user->lang['UPDATED'])
+			'BLOCK_TITLE' 	=> $user->lang['LAST_UPDATED_MODIFICATIONS'],
+			'COLUMN_1_TITLE'=> $user->lang['MODIFICATION'],
+			'COLUMN_2_TITLE'=> $user->lang['OWNER'],
+			'COLUMN_3_TITLE'=> $user->lang['UPDATED'])
 		);
 	 		
 	        // What's the count? Default to 10
@@ -164,17 +159,17 @@ class garage_modification
 	 		            
 	 	if(!$result = $db->sql_query($sql))
 		{
-			message_die(GENERAL_ERROR, "Could not query vehicle information", "", __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, "Could Not Select Latest Modifications", "", __LINE__, __FILE__, $sql);
 		}
 	 		            
 	 	while ( $row = $db->sql_fetchrow($result) )
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_modification&amp;MID=".$row['id']."&amp;CID=".$row['garage_id']),
-				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$row['user_id']),
-				'COLUMN_1_TITLE' => $row['mod_title'],
-				'COLUMN_2_TITLE' => $row['username'],
-				'COLUMN_3' => $user->format_date($row['POI']))
+				'U_COLUMN_1'	=> append_sid("garage.$phpEx", "mode=view_modification&amp;MID=" . $row['id'] . "&amp;CID=" . $row['garage_id']),
+				'U_COLUMN_2' 	=> append_sid("profile.$phpEx", "mode=viewprofile&amp;u=" . $row['user_id']),
+				'COLUMN_1_TITLE'=> $row['mod_title'],
+				'COLUMN_2_TITLE'=> $row['username'],
+				'COLUMN_3' 	=> $user->format_date($row['POI']))
 			);
 	 	}
 	
@@ -198,10 +193,10 @@ class garage_modification
 		$template_block = 'block_'.$required_position;
 		$template_block_row = 'block_'.$required_position.'.row';
 		$template->assign_block_vars($template_block, array(
-			'BLOCK_TITLE' => $user->lang['MOST_MODIFIED_VEHICLE'],
-			'COLUMN_1_TITLE' => $user->lang['VEHICLE'],
-			'COLUMN_2_TITLE' => $user->lang['OWNER'],
-			'COLUMN_3_TITLE' => $user->lang['MODS'])
+			'BLOCK_TITLE' 	=> $user->lang['MOST_MODIFIED_VEHICLE'],
+			'COLUMN_1_TITLE'=> $user->lang['VEHICLE'],
+			'COLUMN_2_TITLE'=> $user->lang['OWNER'],
+			'COLUMN_3_TITLE'=> $user->lang['MODS'])
 		);
 	
 	        // What's the count? Default to 10
@@ -220,17 +215,17 @@ class garage_modification
 	 		            
 	 	if(!$result = $db->sql_query($sql))
 		{
-			message_die(GENERAL_ERROR, "Could not query vehicle information", "", __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, "Could Select Most Modified", "", __LINE__, __FILE__, $sql);
 		}
 	 		            
 	 	while ( $vehicle_data = $db->sql_fetchrow($result) )
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']),
-				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
-				'COLUMN_2_TITLE' => $vehicle_data['username'],
-				'COLUMN_3' => $vehicle_data['POI'])
+				'U_COLUMN_1' 	=> append_sid("garage.$phpEx", "mode=view_vehicle&amp;CID=" . $vehicle_data['id']),
+				'U_COLUMN_2' 	=> append_sid("profile.$phpEx", "mode=viewprofile&amp;u=" . $vehicle_data['user_id']),
+				'COLUMN_1_TITLE'=> $vehicle_data['vehicle'],
+				'COLUMN_2_TITLE'=> $vehicle_data['username'],
+				'COLUMN_3' 	=> $vehicle_data['POI'])
 			);
 	 	}
 	
@@ -254,10 +249,10 @@ class garage_modification
 		$template_block = 'block_'.$required_position;
 		$template_block_row = 'block_'.$required_position.'.row';
 		$template->assign_block_vars($template_block, array(
-			'BLOCK_TITLE' => $user->lang['NEWEST_MODIFICATIONS'],
-			'COLUMN_1_TITLE' => $user->lang['MODIFICATION'],
-			'COLUMN_2_TITLE' => $user->lang['OWNER'],
-			'COLUMN_3_TITLE' => $user->lang['CREATED'])
+			'BLOCK_TITLE' 	=> $user->lang['NEWEST_MODIFICATIONS'],
+			'COLUMN_1_TITLE'=> $user->lang['MODIFICATION'],
+			'COLUMN_2_TITLE'=> $user->lang['OWNER'],
+			'COLUMN_3_TITLE'=> $user->lang['CREATED'])
 		);
 	
 	        // What's the count? Default to 10
@@ -281,11 +276,11 @@ class garage_modification
 	 	while ( $vehicle_data = $db->sql_fetchrow($result) )
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_modification&amp;MID=".$vehicle_data['id']."&amp;CID=".$vehicle_data['garage_id']),
-				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']),
-				'COLUMN_1_TITLE' => $vehicle_data['mod_title'],
-				'COLUMN_2_TITLE' => $vehicle_data['username'],
-				'COLUMN_3' => $user->format_date($vehicle_data['POI']))
+				'U_COLUMN_1' 	=> append_sid("garage.$phpEx", "mode=view_modification&amp;MID=" . $vehicle_data['id'] . "&amp;CID=" . $vehicle_data['garage_id']),
+				'U_COLUMN_2' 	=> append_sid("profile.$phpEx", "mode=viewprofile&amp;u=" . $vehicle_data['user_id']),
+				'COLUMN_1_TITLE'=> $vehicle_data['mod_title'],
+				'COLUMN_2_TITLE'=> $vehicle_data['username'],
+				'COLUMN_3' 	=> $user->format_date($vehicle_data['POI']))
 			);
 	 	}
 	
@@ -295,9 +290,9 @@ class garage_modification
 	
 	/*========================================================================*/
 	// Select All Modification Data From DB
-	// Usage: select_modification_data('modification id');
+	// Usage: get_modification('modification id');
 	/*========================================================================*/
-	function select_modification_data($mid)
+	function get_modification($mid)
 	{
 		global $db;
 	
@@ -325,9 +320,9 @@ class garage_modification
 
 	/*========================================================================*/
 	// Select All Modification Data From DB
-	// Usage: select_modification_data('modification id');
+	// Usage: get_modification_by_category('modification id');
 	/*========================================================================*/
-	function select_modifications_by_category_data($cid, $category_id)
+	function get_modifications_by_category($cid, $category_id)
 	{
 		global $db;
 
@@ -356,9 +351,9 @@ class garage_modification
 
 	/*========================================================================*/
 	// Select Modifications By Install Buisness Data From DB
-	// Usage: select_modifications_by_install_business_data('business id', 'start row', 'end row');
+	// Usage: get_modifications_by_install_business('business id', 'start row', 'end row');
 	/*========================================================================*/
-	function select_modifications_by_install_business_data($business_id, $start = 0 , $limit = 20)
+	function get_modifications_by_install_business($business_id, $start = 0 , $limit = 20)
 	{
 		global $db;
 	
@@ -393,9 +388,9 @@ class garage_modification
 
 	/*========================================================================*/
 	// Select Modifications By Business Data From DB
-	// Usage: select_modifications_by_business_data('business id', 'start row', 'end row');
+	// Usage: get_modifications_by_business('business id', 'start row', 'end row');
 	/*========================================================================*/
-	function select_modifications_by_business_data($business_id, $start = 0, $limit = 20)
+	function get_modifications_by_business($business_id, $start = 0, $limit = 20)
 	{
 		global $db;
 	
@@ -429,9 +424,9 @@ class garage_modification
 	}
 	/*========================================================================*/
 	// Select Modifications By Business Data From DB
-	// Usage: select_modifications_by_business_data('garage id');
+	// Usage: get_modifications_by_vehicle('garage id');
 	/*========================================================================*/
-	function select_modifications_by_vehicle_data($cid)
+	function get_modifications_by_vehicle($cid)
 	{
 
 		global $db;

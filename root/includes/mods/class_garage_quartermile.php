@@ -87,7 +87,7 @@ class garage_quartermile
 		}
 	
 		//Let Get All Info For Run, Including Image Info
-		$data = $this->select_quartermile_data($qmid);
+		$data = $this->get_quartermile($qmid);
 	
 		//Lets See If There Is An Image Associated With This Run
 		if (!empty($data['image_id']))
@@ -193,9 +193,9 @@ class garage_quartermile
 
 	/*========================================================================*/
 	// Select Quartermile Data
-	// Usage: select_quartermile_data('quartermile id');
+	// Usage: get_quartermile('quartermile id');
 	/*========================================================================*/
-	function select_quartermile_data($qmid)
+	function get_quartermile($qmid)
 	{
 		global $db;
 	
@@ -221,9 +221,9 @@ class garage_quartermile
 
 	/*========================================================================*/
 	// Select Quartermile Data By Vehicle
-	// Usage: select_quartermile_by_vehicle_data('garage id');
+	// Usage: get_quartermile_by_vehicle('garage id');
 	/*========================================================================*/
-	function select_quartermile_by_vehicle_data($cid)
+	function get_quartermile_by_vehicle($cid)
 	{
 		global $db;
 	
@@ -257,56 +257,39 @@ class garage_quartermile
 	/*========================================================================*/
 	function build_quartermile_table($pending)
 	{
-		global $db, $template, $images, $sort, $phpEx, $order, $garage_config, $lang, $theme, $mode, $HTTP_POST_VARS, $HTTP_GET_VARS;
+		global $db, $template, $images, $sort, $phpEx, $order, $garage_config, $garage_template, $user, $garage;
 
-		$pending = ($pending == 'YES') ? 1 : 0;
-
-		$start = (isset($HTTP_GET_VARS['start'])) ? intval($HTTP_GET_VARS['start']) : 0;
-
-		$sort = (empty($sort)) ? 'quart' : $sort;
-
+		$pending= ($pending == 'YES') ? 1 : 0;
+		$start 	= (empty($start)) ? 0 : $start;
+		$sort 	= (empty($sort)) ? 'quart' : $sort;
 
 		// Sorting Via QuarterMile
-		$sort_types_text = array($lang['Car_Rt'], $lang['Car_Sixty'], $lang['Car_Three'], $lang['Car_Eigth'], $lang['Car_Eigthm'], $lang['Car_Thou'],  $lang['Car_Quart'], $lang['Car_Quartm']);
-		$sort_types = array('qm.rt', 'qm.sixty', 'qm.three', 'qm.eight', 'qm.eightmph', 'qm.thou', 'quart', 'qm.quartmph');
+		$sort_text = array($user->lang['RT'], $user->lang['SIXTY'], $user->lang['THREE'], $user->lang['EIGHTH'], $user->lang['EIGHTHMPH'], $user->lang['THOU'],  $user->lang['QUART'], $user->lang['QUARTMPH']);
+		$sort_values = array('qm.rt', 'qm.sixty', 'qm.three', 'qm.eight', 'qm.eightmph', 'qm.thou', 'quart', 'qm.quartmph');
 
-		$select_sort_mode = '<select name="sort">';
-		for($i = 0; $i < count($sort_types_text); $i++)
-		{
-			$selected = ( $sort == $sort_types[$i] ) ? ' selected="selected"' : '';
-			$select_sort_mode .= '<option value="' . $sort_types[$i] . '"' . $selected . '>' . $sort_types_text[$i] . '</option>';
-		}
-		$select_sort_mode .= '</select>';
-
+		//Get All Data Posted And Make It Safe To Use
 		$addtional_where = '';
-		if ( isset($HTTP_GET_VARS['make_id']) || isset($HTTP_POST_VARS['make_id']) )
-		{
-			$make_id = ( isset($HTTP_POST_VARS['make_id']) ) ? htmlspecialchars($HTTP_POST_VARS['make_id']) : htmlspecialchars($HTTP_GET_VARS['make_id']);
+		$params = array('make_id', 'model_id');
+		$data = $garage->process_post_vars($params);
 
-			if (!empty($make_id))
-			{
-				//Pull Required Data From DB
-				$data = $garage_model->select_make_data($make_id);
-				$addtional_where .= "AND g.make_id = '$make_id'";
-				$template->assign_vars(array(
-					'MAKE'	=> $data['make'])
-				);
-			}
+		if (!empty($data['make_id']))
+		{
+			//Pull Required Data From DB
+			$data = $garage_model->get_make($data['make_id']);
+			$addtional_where .= "AND g.make_id = '$make_id'";
+			$template->assign_vars(array(
+				'MAKE'	=> $data['make'])
+			);
 		}
 
-		if ( isset($HTTP_GET_VARS['model_id']) || isset($HTTP_POST_VARS['model_id']) )
+		if (!empty($model_id))
 		{
-			$model_id = ( isset($HTTP_POST_VARS['model_id']) ) ? htmlspecialchars($HTTP_POST_VARS['model_id']) : htmlspecialchars($HTTP_GET_VARS['model_id']);
-
-			if (!empty($model_id))
-			{
-				//Pull Required Data From DB
-				$data = $garage_model->select_model_data($model_id);
-				$addtional_where .= "AND g.model_id = '$model_id'";
-				$template->assign_vars(array(
-					'MODEL'	=> $data['model'])
-				);
-			}
+			//Pull Required Data From DB
+			$data = $garage_model->get_model($data['model_id']);
+			$addtional_where .= "AND g.model_id = '$model_id'";
+			$template->assign_vars(array(
+				'MODEL'	=> $data['model'])
+			);
 		}
 
 		//First Query To Return Top Time For All Or For Selected Filter...
@@ -370,39 +353,36 @@ class garage_quartermile
             		$temp_url = append_sid("garage.$phpEx?mode=edit_quartermile&amp;QMID=".$data['qmid']."&amp;CID=".$data['id']."&amp;PENDING=YES");
 	            	$edit_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="'.$lang['Edit'].'" title="'.$lang['Edit'].'" border="0" /></a>';
 
+			$data['image_link'] ='';
 			if ($data['image_id'])
 			{
 				$data['image_link'] ='<a href="garage.'. $phpEx .'?mode=view_gallery_item&amp;image_id='. $data['image_id'] .'" target="_blank"><img src="' . $images['slip_image_attached'] . '" alt="'.$lang['Slip_Image_Attached'].'" title="'.$lang['Slip_Image_Attached'].'" border="0" /></a>';
 			}
-			else
-			{
-				$data['image_link'] ='';
-			}
 
 			$assign_block = ($pending == 1) ? 'quartermile_pending.row' : 'memberrow';
 			$template->assign_block_vars($assign_block, array(
-				'ROW_NUMBER' => $i + ( $start + 1 ),
-				'QMID' => $data['qmid'],
-				'IMAGE_LINK' => $data['image_link'],
-				'USERNAME' => $data['username'],
-				'PROFILE' => $profile, 
-				'VEHICLE' => $data['vehicle'],
-				'RT' => $data['rt'],
-				'SIXTY' => $data['sixty'],
-				'THREE' => $data['three'],
-				'EIGTH' => $data['eight'],
-				'EIGHTM' => $data['eightmph'],
-				'THOU' => $data['thou'],
-				'QUART' => $data['quart'],
-				'QUARTM' => $data['quartmph'],
-				'BHP' => $data['bhp'],
-				'BHP_UNIT' => $data['bhp_unit'],
-				'TORQUE' => $data['torque'],
-				'TORQUE_UNIT' => $data['torque_unit'],
-				'BOOST' => $data['boost'],
-				'BOOST_UNIT' => $data['boost_unit'],
-				'NITROUS' => $data['nitrous'],
-				'EDIT_LINK' => $edit_link,
+				'ROW_NUMBER' 	=> $i + ( $start + 1 ),
+				'QMID' 		=> $data['qmid'],
+				'IMAGE_LINK' 	=> $data['image_link'],
+				'USERNAME' 	=> $data['username'],
+				'PROFILE' 	=> $profile, 
+				'VEHICLE' 	=> $data['vehicle'],
+				'RT' 		=> $data['rt'],
+				'SIXTY' 	=> $data['sixty'],
+				'THREE' 	=> $data['three'],
+				'EIGTH' 	=> $data['eight'],
+				'EIGHTM' 	=> $data['eightmph'],
+				'THOU' 		=> $data['thou'],
+				'QUART' 	=> $data['quart'],
+				'QUARTM' 	=> $data['quartmph'],
+				'BHP' 		=> $data['bhp'],
+				'BHP_UNIT' 	=> $data['bhp_unit'],
+				'TORQUE' 	=> $data['torque'],
+				'TORQUE_UNIT' 	=> $data['torque_unit'],
+				'BOOST' 	=> $data['boost'],
+				'BOOST_UNIT' 	=> $data['boost_unit'],
+				'NITROUS' 	=> $data['nitrous'],
+				'EDIT_LINK' 	=> $edit_link,
 				'U_VIEWVEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$data['id']),
 				'U_VIEWPROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . "=".$data['user_id']))
 			);
@@ -433,13 +413,12 @@ class garage_quartermile
 		$count = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		$pagination = generate_pagination("garage.$phpEx?mode=$mode&amp;order=$sort", $count['total'], $garage_config['cars_per_page'], $start). '&nbsp;';
+		$pagination = generate_pagination("garage.$phpEx?mode=quartermile&amp;order=$sort", $count['total'], $garage_config['cars_per_page'], $start). '&nbsp;';
 		
 		$template->assign_vars(array(
-			'S_MODE_SELECT' => $select_sort_mode,
+			'S_MODE_SELECT' => $garage_template->dropdown('sort', $sort_text, $sort_values),
 			'PAGINATION' => $pagination,
-			'PAGE_NUMBER' => sprintf($lang['Page_of'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count['total'] / $garage_config['cars_per_page'] )), 
-			'L_GOTO_PAGE' => $lang['Goto_page'])
+			'PAGE_NUMBER' => sprintf($user->lang['PAGE_OF'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count['total'] / $garage_config['cars_per_page'] )))
 		);
 
 		//Reset Sort Order For Pending Page

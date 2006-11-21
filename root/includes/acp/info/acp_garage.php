@@ -34,7 +34,7 @@ class acp_garage_info
 				'categories'	=> array('title' => 'ACP_GARAGE_CATEGORIES', 	'auth' => 'acl_a_garage', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
 				'settings'	=> array('title' => 'ACP_GARAGE_SETTINGS', 	'auth' => 'acl_a_garage', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
 				'models'	=> array('title' => 'ACP_GARAGE_MODELS', 	'auth' => 'acl_a_garage', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
-				'permissions'	=> array('title' => 'ACP_GARAGE_PERMISSIONS', 	'auth' => 'acl_a_garage', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
+				'quotas'	=> array('title' => 'ACP_GARAGE_QUOTAS', 	'auth' => 'acl_a_garage', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
 				'tools'		=> array('title' => 'ACP_GARAGE_TOOLS', 	'auth' => 'acl_a_garage', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
 			),
 		);

@@ -91,9 +91,9 @@ class garage_insurance
 
 	/*========================================================================*/
 	// Select Specific Insurance Premium Data From DB
-	// Usage: select_premium_data('insurance id');
+	// Usage: get_premium('insurance id');
 	/*========================================================================*/
-	function select_premium_data($ins_id)
+	function get_premium($ins_id)
 	{
 		global $db;
 
@@ -118,15 +118,13 @@ class garage_insurance
 
 	/*========================================================================*/
 	// Select All Insurance Premiums Data From DB
-	// Usage: select_all_premiums_data('additional where', 'order', 'ASC|DESC', 'start', 'end');
+	// Usage: get_all_premiums('additional where', 'order', 'ASC|DESC', 'start', 'end');
 	/*========================================================================*/
-	function select_all_premiums_data($additional_where = NULL, $order_by, $sort_order, $start = 0, $end = 10000)
+	function get_all_premiums($additional_where = NULL, $order_by, $sort_order, $start = 0, $end = 10000)
 	{
 		global $db;
 
-		$sql = "SELECT i.*, g.*, b.title, b.id as business_id, makes.make, models.model, user.username, user.user_id,
-                        ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent,
-			CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
+		$sql = "SELECT i.*, g.*, b.title, b.id as business_id, makes.make, models.model, user.username, user.user_id, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
         		FROM " . GARAGE_INSURANCE_TABLE . " AS i 
                     		LEFT JOIN " . GARAGE_TABLE . " AS g ON i.garage_id = g.id
 	                    	LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON i.garage_id = mods.garage_id
@@ -161,9 +159,9 @@ class garage_insurance
 
 	/*========================================================================*/
 	// Select All Insurance Premiums Data From Specific Insurance Company From DB
-	// Usage: select_all_premium_by_business_data('business id');
+	// Usage: get_all_premium_by_business_data('business id');
 	/*========================================================================*/
-	function select_all_premiums_by_business_data($business_id)
+	function get_all_premiums_by_business($business_id)
 	{
 		global $db;
 
@@ -179,7 +177,7 @@ class garage_insurance
 				AND b.pending = 0
 				AND b.id = $business_id
 				AND makes.pending = 0 AND models.pending = 0 
-				GROUP BY i.id";
+			GROUP BY i.id";
 
 	   	if ( !($result = $db->sql_query($sql)) )
       		{
@@ -197,9 +195,9 @@ class garage_insurance
 
 	/*========================================================================*/
 	// Select Premiums Statistics By Business And Covertype From DB
-	// Usage: select_premiums_stats_by_business_and_covertype_data('business id', 'cover type');
+	// Usage: get_premiums_stats_by_business_and_covertype('business id', 'cover type');
 	/*========================================================================*/
-	function select_premiums_stats_by_business_and_covertype_data($business_id, $cover_type)
+	function get_premiums_stats_by_business_and_covertype($business_id, $cover_type)
 	{
 		global $db;
 
@@ -224,9 +222,9 @@ class garage_insurance
 
 	/*========================================================================*/
 	// Select Insurance Premiums By Vehicle From DB
-	// Usage: select_premiums_by_vehicle_data('vehicle id');
+	// Usage: get_premiums_by_vehicle('vehicle id');
 	/*========================================================================*/
-	function select_premiums_by_vehicle_data($cid)
+	function get_premiums_by_vehicle($cid)
 	{
 		global $db;
 

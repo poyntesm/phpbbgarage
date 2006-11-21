@@ -49,6 +49,8 @@ class garage_guestbook
         	$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
+		$row['total_comments'] = (empty($row['total_comments'])) ? 0 : $row['total_comments'];
+
 		return $row['total_comments'];
 	}
 
@@ -75,14 +77,14 @@ class garage_guestbook
 
 	/*========================================================================*/
 	// Select Specific Vehicle Comments Data From DB
-	// Usage: select_vehicle_comments('garage id');
+	// Usage: get_vehicle_comments('garage id');
 	/*========================================================================*/
-	function select_vehicle_comments($cid)
+	function get_vehicle_comments($cid)
 	{
 		global $db;
 
 		// Get Guestbook Entries
-        	$sql = "SELECT gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address,	u.username, u.user_id, u.user_posts, u.user_from, u.user_website, u.user_email, u.user_icq, u.user_aim, u.user_yim, u.user_regdate, u.user_msnm, u.user_viewemail, u.user_rank,	u.user_sig, u.user_sig_bbcode_uid, u.user_avatar, u.user_avatar_type, u.user_allowavatar, u.user_allowsmile, u.user_allow_viewonline, u.user_session_time, g.made_year, g.id as garage_id, makes.make, models.model
+        	$sql = "SELECT gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address,	u.username, u.user_id, u.user_posts, u.user_from, u.user_website, u.user_email, u.user_icq, u.user_aim, u.user_yim, u.user_regdate, u.user_msnm, u.user_viewemail, u.user_rank,	u.user_sig, u.user_sig_bbcode_uid, u.user_avatar, u.user_avatar_type, u.user_allowsmile, u.user_allow_viewonline, u.user_session_time, g.made_year, g.id as garage_id, makes.make, models.model
                         FROM " . GARAGE_GUESTBOOKS_TABLE . " gb 
                         	LEFT JOIN " . USERS_TABLE . " u ON gb.author_id = u.user_id 
 				LEFT JOIN " . GARAGE_TABLE ." g ON g.member_id = gb.author_id and g.main_vehicle = 1 
@@ -102,14 +104,55 @@ class garage_guestbook
 		}
 		$db->sql_freeresult($result);
 
+		if (empty($rows))
+		{
+			return;
+		}
+
+		return $rows;
+	}
+
+	/*========================================================================*/
+	// Select Specific Vehicle Comments Data From DB
+	// Usage: get_vehicle_comments('garage id');
+	/*========================================================================*/
+	function get_comments($limit)
+	{
+		global $db;
+
+	 	$sql = "SELECT gb.garage_id AS id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, gb.author_id AS member_id, gb.post_date, m.username 
+	                FROM " . GARAGE_GUESTBOOKS_TABLE . " gb 
+	                	LEFT JOIN " . GARAGE_TABLE . " g ON gb.garage_id = g.id
+	                        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
+	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
+	                        LEFT JOIN " . USERS_TABLE . " m ON gb.author_id = m.user_id
+			WHERE makes.pending = 0 AND models.pending = 0
+	                ORDER BY post_date DESC LIMIT $limit";
+	
+	 	if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, "Could not query vehicle information", "", __LINE__, __FILE__, $sql);
+		}
+		
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		if (empty($rows))
+		{
+			return;
+		}
+
 		return $rows;
 	}
 
 	/*========================================================================*/
 	// Select Guestbook Comment Data From DB
-	// Usage: select_comment_data('comment id');
+	// Usage: get_comment('comment id');
 	/*========================================================================*/
-	function select_comment_data($comment_id)
+	function get_comment($comment_id)
 	{
 		global $db;
 
@@ -129,6 +172,11 @@ class garage_guestbook
 
 		$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
+
+		if (empty($row))
+		{
+			return $row;
+		}
 
 		return $row;
 	}
@@ -184,37 +232,26 @@ class garage_guestbook
 		$template_block = 'block_' . $required_position;
 		$template_block_row = 'block_' . $required_position . '.row';
 		$template->assign_block_vars($template_block, array(
-			'BLOCK_TITLE' => $user->lang['LATEST_VEHICLE_COMMENTS'],
-			'COLUMN_1_TITLE' => $user->lang['VEHICLE'],
-			'COLUMN_2_TITLE' => $user->lang['AUTHOR'],
-			'COLUMN_3_TITLE' => $user->lang['POSTED_DATE'])
+			'BLOCK_TITLE' 	=> $user->lang['LATEST_VEHICLE_COMMENTS'],
+			'COLUMN_1_TITLE'=> $user->lang['VEHICLE'],
+			'COLUMN_2_TITLE'=> $user->lang['AUTHOR'],
+			'COLUMN_3_TITLE'=> $user->lang['POSTED_DATE'])
 		);
-	
+
 	        // What's the count? Default to 10
-	        $limit = $garage_config['lastcommented_limit'] ? $garage_config['lastcommented_limit'] : 10;
-	 		 		
-	 	$sql = "SELECT gb.garage_id AS id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, gb.author_id AS member_id, gb.post_date AS POI, m.username 
-	                FROM " . GARAGE_GUESTBOOKS_TABLE . " gb 
-	                	LEFT JOIN " . GARAGE_TABLE . " g ON gb.garage_id = g.id
-	                        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
-	                        LEFT JOIN " . USERS_TABLE . " m ON gb.author_id = m.user_id
-			WHERE makes.pending = 0 AND models.pending = 0
-	                ORDER BY POI DESC LIMIT $limit";
-	
-	 	if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, "Could not query vehicle information", "", __LINE__, __FILE__, $sql);
-		}
-	 		            
-	 	while ( $vehicle_data = $db->sql_fetchrow($result) )
+		$limit = $garage_config['lastcommented_limit'] ? $garage_config['lastcommented_limit'] : 10;
+
+		//Get Latest Comments
+		$comment_data = $this->get_comments($limit);
+
+		for($i = 0; $i < count($comment_data); $i++)
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" . $vehicle_data['id']),
-				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . "=" . $vehicle_data['member_id']),
-				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
-				'COLUMN_2_TITLE' => $vehicle_data['username'],
-				'COLUMN_3' => $user->format_date($vehicle_data['POI']))
+				'U_COLUMN_1' 	=> append_sid("garage.$phpEx", "mode=view_vehicle&amp;CID=" . $comment_data[$i]['id']),
+				'U_COLUMN_2' 	=> append_sid("profile.$phpEx", "mode=viewprofile&amp;" . POST_USERS_URL . "=" . $comment_data[$i]['member_id']),
+				'COLUMN_1_TITLE'=> $comment_data[$i]['vehicle'],
+				'COLUMN_2_TITLE'=> $comment_data[$i]['username'],
+				'COLUMN_3' 	=> $user->format_date($comment_data[$i]['post_date']))
 			);
 	 	}
 	

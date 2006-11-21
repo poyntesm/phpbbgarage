@@ -38,22 +38,30 @@ while( $row = $db->sql_fetchrow($result) )
 	$garage_config[$row['config_name']] = $row['config_value'];
 }
 
-//Setup Arrays Used To Build Drop Down Selection Boxes
-$currency_types = array('GBP', 'USD', 'EUR', 'CAD', 'YEN');
-$mileage_unit_types = array($user->lang['MILES'], $user->lang['KILOMETERS']);
-$boost_types = array('PSI', 'BAR');
-$power_types = array($user->lang['WHEEL'], $user->lang['HUB'], $user->lang['FLYWHEEL']);
-$cover_types = array($user->lang['THIRD_PARTY'], $user->lang['THIRD_PARTY_FIRE_THEFT'], $user->lang['COMPREHENSIVE'], $user->lang['COMPREHENSIVE_CLASSIC'], $user->lang['COMPREHENSIVE_REDUCED']);
-$rating_types = array( '10', '9', '8', '7', '6', '5', '4', '3', '2', '1');
-$rating_text = array( '10', '9', '8', '7', '6', '5', '4', '3', '2', '1');
-$nitrous_types = array('0', '25', '50', '75', '100');
-$nitrous_types_text = array($user->lang['NO_NITROUS'], $user->lang['25_BHP_SHOT'], $user->lang['50_BHP_SHOT'], $user->lang['75_BHP_SHOT'], $user->lang['100_BHP_SHOT']);
-$engine_types= array($user->lang['8_CYLINDER_NA'], $user->lang['8_CYLINDER_FI'], $user->lang['6_CYLINDER_NA'], $user->lang['6_CYLINDER_FI'], $user->lang['4_CYLINDER_NA'], $user->lang['4_CYLINDER_FI']);
-
 class garage 
 {
 
 	var $classname = "garage";
+
+	/*========================================================================*/
+	// Build Some Requried Data Arrays
+	// Usage: setup_arrays();
+	/*========================================================================*/
+	function setup_arrays()
+	{
+		global $user;
+
+		$currency_types 	= array('GBP', 'USD', 'EUR', 'CAD', 'YEN');
+		$mileage_unit_types 	= array($user->lang['MILES'], $user->lang['KILOMETERS']);
+		$boost_types 		= array('PSI', 'BAR');
+		$power_types 		= array($user->lang['WHEEL'], $user->lang['HUB'], $user->lang['FLYWHEEL']);
+		$cover_types 		= array($user->lang['THIRD_PARTY'], $user->lang['THIRD_PARTY_FIRE_THEFT'], $user->lang['COMPREHENSIVE'], $user->lang['COMPREHENSIVE_CLASSIC'], $user->lang['COMPREHENSIVE_REDUCED']);
+		$rating_types 		= array( '10', '9', '8', '7', '6', '5', '4', '3', '2', '1');
+		$rating_text 		= array( '10', '9', '8', '7', '6', '5', '4', '3', '2', '1');
+		$nitrous_types 		= array('0', '25', '50', '75', '100');
+		$nitrous_types_text 	= array($user->lang['NO_NITROUS'], $user->lang['25_BHP_SHOT'], $user->lang['50_BHP_SHOT'], $user->lang['75_BHP_SHOT'], $user->lang['100_BHP_SHOT']);
+		$engine_types		= array($user->lang['8_CYLINDER_NA'], $user->lang['8_CYLINDER_FI'], $user->lang['6_CYLINDER_NA'], $user->lang['6_CYLINDER_FI'], $user->lang['4_CYLINDER_NA'], $user->lang['4_CYLINDER_FI']);
+	}
 
 	/*========================================================================*/
 	// Makes Safe Any Posted Variables
@@ -61,8 +69,6 @@ class garage
 	/*========================================================================*/
 	function process_post_vars($params = array())
 	{
-		global $HTTP_POST_VARS, $HTTP_GET_VARS;
-
 		while( list($var, $param) = @each($params) )
 		{
 			$data[$param] = request_var($param, '');
@@ -83,7 +89,7 @@ class garage
 		{
 			if (empty($data[$param]))
 			{
-				redirect(append_sid("garage.$phpEx?mode=error&EID=3", true));
+				redirect(append_sid("garage.$phpEx", "mode=error&amp;EID=3"));
 			}
 		}
 
@@ -197,13 +203,13 @@ class garage
 	// Get All Groups User Is Member Of
 	// Usage: get_group_membership('user id');
 	/*========================================================================*/
-	function get_group_membership($u_id)
+	function get_group_membership($user_id)
 	{
 		global $db ;
 
 		$sql = "SELECT ug.group_id, g.group_name
 	             	FROM " . USER_GROUP_TABLE . " ug, " . GROUPS_TABLE ." g
-                	WHERE ug.user_id = $u_id
+                	WHERE ug.user_id = $user_id
 				AND ug.group_id = g.group_id AND g.group_single_user <> " . TRUE ."
 			ORDER BY g.group_name ASC";
 
@@ -212,20 +218,25 @@ class garage
          		message_die(GENERAL_ERROR, 'Could Not Select Groups', '', __LINE__, __FILE__, $sql);
        		}
 
-		while( $grouprow = $db->sql_fetchrow($result) )
+		while( $row = $db->sql_fetchrow($result) )
 		{
-			$groupdata[] = $grouprow;
+			$groupdata[] = $row;
 		}
 		$db->sql_freeresult($result);
+
+		if (empty($groupdata))
+		{
+			return;
+		}
 	
 		return $groupdata;
 	}
 
 	/*========================================================================*/
 	// Select All Category Data
-	// Usage: select_all_category_data();
+	// Usage: get_categorys();
 	/*========================================================================*/
-	function select_all_category_data()
+	function get_categorys()
 	{
 		global $db;
 
@@ -244,18 +255,23 @@ class garage
 		}
 		$db->sql_freeresult($result);
 	
+		if (empty($data))
+		{
+			return;
+		}
+	
 		return $data;
 	}
 
 	/*========================================================================*/
 	// Select Specific Category Data
-	// Usage: select_category_data('category id');
+	// Usage: get_category('category id');
 	/*========================================================================*/
-	function select_category_data($category_id)
+	function get_category($category_id)
 	{
 		global $db;
 
-		$sql = "SELECT *
+		$sql = "SELECT id, title, field_order
 			FROM " . GARAGE_CATEGORIES_TABLE . "
 			WHERE id = $category_id
 			ORDER BY field_order";
@@ -267,6 +283,11 @@ class garage
 
 		$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
+
+		if (empty($row))
+		{
+			return;
+		}
 	
 		return $row;
 	}
@@ -282,6 +303,7 @@ class garage
 		$unique = array_unique($cmp);
 		foreach ($unique as $k => $rien)
 		$new[] = $array[$k];
+
 		return $new;
 	}
 
@@ -317,33 +339,25 @@ class garage
 	/*========================================================================*/
 	function pending_notification()
 	{
-		global $lang, $garage_guestbook, $userdata, $db, $phpEx;
+		global $garage_guestbook, $user, $phpEx, $auth;
 
-		$sql = "SELECT user_id
-			FROM " . USERS_TABLE ."
-			WHERE user_level = " . ADMIN . " OR user_level = " . MOD;
-
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Could Not Select Admin Or Moderator Users', '', __LINE__, __FILE__, $sql);
-		}
+		//Get All Users With The Rights To Approve Items
+		$user_ary = $auth->acl_get_list(false, array('m_garage'), false);
 
 		//Process All Selected Users And Send Them A PM...
-		while ($row = $db->sql_fetchrow($result))
+		while ($i = 567)
 		{
 			//Build Required PM Data
-			$data['date'] = date("U");
-			$data['pm_subject'] = $lang['Pending_Items'];
-			$data['link'] = '<a href="garage.' . $phpEx . '?mode=garage_pending">' . $lang['Here'] . '</a>';
-			$data['pm_text'] = (sprintf($lang['Pending_Notify_Text'],$data['link']));
-			$data['author_id'] = $userdata['user_id'];
-			$data['user_id'] = $row['user_id'];
+			$data['date'] 		= date("U");
+			$data['pm_subject'] 	= $user->lang['PENDING_ITEMS'];
+			$data['link'] 		= '<a href="garage.' . $phpEx . '?mode=garage_pending">' . $user->lang['HERE'] . '</a>';
+			$data['pm_text'] 	= (sprintf($user->lang['PENDING_NOTIFY_TEXT'], $data['link']));
+			$data['author_id'] 	= $user->data['user_id'];
+			$data['user_id'] 	= $row['user_id'];
 	
 			//Now We Have All Data Lets Send The PM!!
 			$garage_guestbook->send_user_pm($data);
 		}
-
-		$db->sql_freeresult($result);
 
 		return;
 	}
@@ -358,7 +372,7 @@ class garage
 	        $log_handle = @fopen( $log_file, $log_type );
 
 		//Make Sure We Have A File Handle
-		if ( empty($log_handle) == FALSE )
+		if ( empty($log_handle) == false )
 		{
 			// Make sure we end with a new line
 			if ( !preg_match('/^.+?\n$/', $message) )

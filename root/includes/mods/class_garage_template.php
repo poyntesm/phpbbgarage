@@ -99,7 +99,7 @@ class garage_template
 		if ( $user->data['user_id'] != ANONYMOUS )
 		{
 			$template->assign_block_vars('show_vehicles', array());
-			$user_vehicles = $garage_vehicle->select_vehicles_by_user($user->data['user_id']);
+			$user_vehicles = $garage_vehicle->get_vehicles_by_user($user->data['user_id']);
 			for ($i = 0; $i < count($user_vehicles); $i++)
 			{
 		       		$template->assign_block_vars('show_vehicles.user_vehicles', array(
@@ -112,7 +112,7 @@ class garage_template
 		if ( $garage_config['lastupdatedvehiclesmain_on'] == TRUE )
 		{
 			$template->assign_block_vars('lastupdatedvehiclesmain_on', array());
-			$vehicles = $garage_vehicle->select_latest_updated_vehicles($garage_config['lastupdatedvehiclesmain_limit']);	
+			$vehicles = $garage_vehicle->get_latest_updated_vehicles($garage_config['lastupdatedvehiclesmain_limit']);	
 			for ($i = 0; $i < count($vehicles); $i++)
 			{
        				$template->assign_block_vars('lastupdatedvehiclesmain_on.updated_vehicles', array(
@@ -623,26 +623,26 @@ class garage_template
 	}
 	
 	/*========================================================================*/
-	// Build sort order HTML
-	// Usage: sort_order('selected');
+	// Build Order HTML
+	// Usage: order('selected');
 	/*========================================================================*/
-	function sort_order($sort_order)
+	function order($order)
 	{
 		global $template, $user;
 	
-		$select_sort_order = '<select name="order">';
-		if($sort_order == 'ASC')
+		$order_html = '<select name="order">';
+		if($order == 'ASC')
 		{
-			$select_sort_order .= '<option value="ASC" selected="selected">' . $user->lang['ASCENDING_ORDER'] . '</option><option value="DESC">' . $user->lang['DESCENDING_ORDER'] . '</option>';
+			$order_html .= '<option value="ASC" selected="selected">' . $user->lang['ASCENDING_ORDER'] . '</option><option value="DESC">' . $user->lang['DESCENDING_ORDER'] . '</option>';
 		}
 		else
 		{
-			$select_sort_order .= '<option value="ASC">' . $user->lang['ASCENDING_ORDER'] . '</option><option value="DESC" selected="selected">' . $user->lang['DESCENDING_ORDER'] . '</option>';
+			$order_html .= '<option value="ASC">' . $user->lang['ASCENDING_ORDER'] . '</option><option value="DESC" selected="selected">' . $user->lang['DESCENDING_ORDER'] . '</option>';
 		}
-		$select_sort_order .= '</select>';
+		$order_html .= '</select>';
 
 		$template->assign_vars(array(
-			'S_ORDER_SELECT' => $select_sort_order)
+			'S_ORDER_SELECT' => $order_html)
 		);
 		return;
 	}

@@ -34,7 +34,7 @@ class garage_image
 	/*========================================================================*/
 	function get_user_upload_image_quota()
 	{
-		global $userdata, $garage_config, $garage;
+		global $user, $garage_config, $garage;
 	
 		//If No Specific Group Value Exists Use Default Value
 		if (empty($garage_config['private_upload_quota']))
@@ -45,14 +45,14 @@ class garage_image
 		else
 		{
 			//Get All Group Memberships
-			$groupdata = $garage->get_group_membership($userdata['user_id']);
+			$groupdata = $garage->get_group_membership($user->data['user_id']);
 			
 			//Lets Get The Private Upload Groups & Quotas
 			$private_upload_groups = @explode(',', $garage_config['private_upload_perms']);
 			$private_upload_quotas = @explode(',', $garage_config['private_upload_quota']);
 
 			//Process All Groups You Are Member Of To See If Any Are Granted Permission & Quota
-			for ($i = 0; $i < count($groupdata); $i++)
+			for ($i = 0; $i < sizeof($groupdata); $i++)
 			{
 				if (in_array($groupdata[$i]['group_id'], $private_upload_groups))
 				{
@@ -79,7 +79,7 @@ class garage_image
 	/*========================================================================*/
 	function get_user_remote_image_quota()
 	{
-		global $userdata, $garage_config, $garage;
+		global $user, $garage_config, $garage;
 	
 		//If No Specific Group Value Exists Use Default Value
 		if (empty($garage_config['private_remote_quota']))
@@ -90,14 +90,14 @@ class garage_image
 		else
 		{
 			//Get All Group Memberships
-			$groupdata = $garage->get_group_membership($userdata['user_id']);
+			$groupdata = $garage->get_group_membership($user->data['user_id']);
 			
 			//Lets Get The Private Upload Groups & Remote Quotas
 			$private_upload_groups = @explode(',', $garage_config['private_upload_perms']);
 			$private_remote_quotas = @explode(',', $garage_config['private_remote_quota']);
 
 			//Process All Groups You Are Member Of To See If Any Are Granted Permission & Quota
-			for ($i = 0; $i < count($groupdata); $i++)
+			for ($i = 0; $i < sizeof($groupdata); $i++)
 			{
 				if (in_array($groupdata[$i]['group_id'], $private_upload_groups))
 				{
@@ -136,13 +136,13 @@ class garage_image
 		else
 		{
 			//Lets Get The Private Upload Groups & Quotas
-			$private_upload_groups = @explode(',', $garage_config['private_upload_perms']);
-			$private_upload_quota = @explode(',', $garage_config['private_upload_quota']);
+			$private_upload_groups	= @explode(',', $garage_config['private_upload_perms']);
+			$private_upload_quota 	= @explode(',', $garage_config['private_upload_quota']);
 
 			//Find The Matching Index In Second Array For The Group ID
 			if (($index = array_search($gid, $private_upload_groups)) === FALSE)
 			{
-				//Hmmm..Group Has Currently No Private Upload Permissions...So Give It The Default Incase They Turn It On
+				//Group Has No Private Upload Permissions...So Give It The Default Incase They Turn It On
 				return $garage_config['max_upload_images'];
 			} 
 
@@ -168,13 +168,13 @@ class garage_image
 		else
 		{
 			//Lets Get The Private Upload Groups & Quotas
-			$private_upload_groups = @explode(',', $garage_config['private_upload_perms']);
-			$private_remote_quota = @explode(',', $garage_config['private_remote_quota']);
+			$private_upload_groups	= @explode(',', $garage_config['private_upload_perms']);
+			$private_remote_quota 	= @explode(',', $garage_config['private_remote_quota']);
 
 			//Find The Matching Index In Second Array For The Group ID
 			if (($index = array_search($gid, $private_upload_groups)) === FALSE)
 			{
-				//Hmmm..Group Has Currently No Private Upload Permissions...So Give It The Default Incase They Turn It On
+				//Group Has No Private Upload Permissions...So Give It The Default Incase They Turn It On
 				return $garage_config['max_remote_images'];
 			} 
 
@@ -183,6 +183,38 @@ class garage_image
 		}
 	}
 
+	/*========================================================================*/
+	// Return True/False Depending On If User Is Below Required Remote Quota
+	// Usage: remote_image_below_quota();
+	/*========================================================================*/
+	function remote_image_below_quota()
+	{
+		global $userdata;
+
+		if ( ($this->image_is_remote() ) AND (count($this->select_user_remote_images($userdata['user_id'])) < $this->get_user_remote_image_quota($userdata['user_id'])) )
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/*========================================================================*/
+	// Return True/False Depending On If User Is Below Required Upload Quota
+	// Usage: upload_image_below_quota();
+	/*========================================================================*/
+	function upload_image_below_quota()
+	{
+		global $userdata;
+
+		if ( ($this->image_is_local() ) AND (count($this->select_user_upload_images($userdata['user_id'])) < $this->get_user_upload_image_quota($userdata['user_id'])) )
+		{
+			return true;
+		}
+
+		return false;
+	}
+	
 	/*========================================================================*/
 	// Inserts Existing Image Into Vehicle Gallery
 	// Usage: insert_gallery_image('image id');
@@ -196,7 +228,7 @@ class garage_image
 
 		if( !$result = $db->sql_query($sql) )
 		{
-			message_die(GENERAL_ERROR, 'Could Not Insert Image Into Vehicle Gallery', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'Could Not Insert Image Into Gallery', '', __LINE__, __FILE__, $sql);
 		}
 
 		return;
@@ -266,7 +298,7 @@ class garage_image
 	{
 		global $HTTP_POST_FILES, $HTTP_POST_VARS;
 
-		//Look For Image To Handle
+		//Look For Image To Handle From Either Upload Or Remotely Linked
 		if ( ((isset($HTTP_POST_FILES['FILE_UPLOAD'])) AND ($HTTP_POST_FILES['FILE_UPLOAD']['name'])) OR ((!preg_match("/^http:\/\/$/i", $HTTP_POST_VARS['url_image'])) AND (!empty($HTTP_POST_VARS['url_image']))) )
 		{
 			return true;
@@ -318,29 +350,56 @@ class garage_image
 		//Image Is Not Local So Return False	
 		return false;
 	}
-	
+
+	/*========================================================================*/
+	// Return True/False Depending On If User Is Below Required Remote Quota
+	// Usage: remote_image_below_quota();
+	/*========================================================================*/
+	function remote_image_below_quota()
+	{
+		global $userdata;
+
+		if ( ($this->image_is_remote() ) AND (count($this->select_user_remote_images($userdata['user_id'])) < $this->get_user_remote_image_quota($userdata['user_id'])) )
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/*========================================================================*/
+	// Return True/False Depending On If User Is Below Required Upload Quota
+	// Usage: upload_image_below_quota();
+	/*========================================================================*/
+	function upload_image_below_quota()
+	{
+		global $userdata;
+
+		if ( ($this->image_is_local() ) AND (count($this->select_user_upload_images($userdata['user_id'])) < $this->get_user_upload_image_quota($userdata['user_id'])) )
+		{
+			return true;
+		}
+
+		return false;
+	}
+
 	/*========================================================================*/
 	// Handle Image Upload And Thumbnail Creation For Remote/Local Images
 	// Usage: process_image_attached('type', 'id');
 	/*========================================================================*/
 	function process_image_attached($type, $id)
 	{
-		global $userdata, $template, $db, $SID, $lang, $images, $phpEx, $phpbb_root_path, $garage_config, $board_config, $HTTP_POST_FILES, $HTTP_POST_VARS, $garage, $cid;
+		global $user, $db, $images, $phpEx, $phpbb_root_path, $garage_config, $board_config, $HTTP_POST_FILES, $HTTP_POST_VARS, $garage, $cid;
 
 		if ( (!$auth->acl_get('u_garage_upload_image')) OR (!$auth->acl_get('u_garage_remote_image')) )
 		{
 			return;
 		}
 
-		//Data Required To Attach Image Missing
-		if ( (empty($type)) OR (empty($id)) )
-		{
-			message_die(GENERAL_ERROR, 'Missing Type Or ID Data For Image Upload');
-		}
-
 		//Setup $garage_config['gd_version']
 		if ($gd_version = $this->gd_version_check())
 	       	{
+			$garage_config['gd_version'] = 0;
 	   		if ($gd_version == 2) 
 			{
 				$garage_config['gd_version'] = 2;
@@ -349,43 +408,44 @@ class garage_image
 			{
 				$garage_config['gd_version'] = 1;
 			}
-	   		else
-			{
-				$garage_config['gd_version'] = 0;
-			}
 		}
 
-		//Lets Check Directory Exists...And If Not Let User Know To Contact Administrator With Helpful Pointer
+		//Check Directory Exists...And If Not Let User Know To Contact Administrator With Helpful Pointer
 		if (!file_exists($phpbb_root_path. GARAGE_UPLOAD_PATH))
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=24", true));
+			redirect(append_sid("garage.$phpEx", "mode=error&amp;EID=24"));
 		}
-		//Lets Check Its Writeable '16895' Is Octal For drwxrwxrwx Thats What We Need.....And If Not Let User Know To Contact Administrator With Helpful Pointer
-		if ( !fileperms($phpbb_root_path. GARAGE_UPLOAD_PATH) == '16895')
+		//Check Its Writeable '16895' Is Octal For drwxrwxrwx.... Let User Know To Contact Admin With Helpful Pointer
+		if (!fileperms($phpbb_root_path. GARAGE_UPLOAD_PATH) == '16895')
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=25", true));
+			redirect(append_sid("garage.$phpEx", "mode=error&amp;EID=25"));
 		}
 
 		//Check For Both A Remote Image & Image Upload..Not Allowed
 		if ( ($this->image_is_remote()) AND ($this->image_is_local()) )
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=11", true));
+			redirect(append_sid("garage.$phpEx", "mode=error&amp;EID=11"));
 		}
 		//Process The Remote Image
 		else if ( $this->image_is_remote() )
 		{
-			$url_image = str_replace("\'", "''", trim($HTTP_POST_VARS['url_image']));
-			$data['location'] = $url_image;
+			$data['location'] = str_replace("\'", "''", trim($HTTP_POST_VARS['url_image']));
+
 			//Stop dynamic images and display correct error message
 			if ( preg_match( "/[?&;]/", $data['location'] ) )
 			{
-				redirect(append_sid("garage.$phpEx?mode=error&EID=9", true));
+				redirect(append_sid("garage.$phpEx", "mode=error&amp;EID=9"));
+			}
+			//Does Remote File Exist?
+			if ( !$this->remote_file_exists($data['location']) ) 
+			{
+				redirect(append_sid("garage.$phpEx", "mode=error&amp;EID=10"));
 			}
 	
-			$data['date'] = time();
-			$data['ext'] = strtolower( preg_replace( "/^.*\.(\S+)$/", "\\1", $data['location'] ) );
-			$data['file'] =  preg_replace( "/^.*\/(.*\.\S+)$/", "\\1", $data['location'] );
-			
+			$data['date']	= time();
+			$data['ext'] 	= strtolower( preg_replace( "/^.*\.(\S+)$/", "\\1", $data['location'] ) );
+			$data['file'] 	= preg_replace( "/^.*\/(.*\.\S+)$/", "\\1", $data['location'] );
+
 			switch ($data['ext'])
 			{
 				case 'jpeg':
@@ -402,42 +462,13 @@ class garage_image
 					$data['is_image'] = '1';
 					break;
 				default:
-					redirect(append_sid("garage.$phpEx?mode=error&EID=12", true));
+					redirect(append_sid("garage.$phpEx", "mode=error&amp;EID=12"));
 			}
 	
-			//Does Remote File Exist?
-			if ( !$this->remote_file_exists($data['location']) ) 
-			{
-				redirect(append_sid("garage.$phpEx?mode=error&EID=10", true));
-			}
-
-			//Build File Name	
-			if ( $type == 'vehicle')
-			{
-				$data['tmp_name'] = 'garage_gallery-' . $id . '-' . $data['date'];
-				$data['garage_id'] = $id;
-			}
-			if ( $type == 'modification')
-			{
-				$data['tmp_name'] = 'garage_mod-' . $id . '-' . $data['date'];
-				$data['garage_id'] = $cid;
-			}
-			if ( $type == 'quartermile')
-			{
-				$data['tmp_name'] = 'garage_quartermile-' . $id . '-' . $data['date'];
-				$data['garage_id'] = $cid;
-			}
-			if ( $type == 'rollingroad')
-			{
-				$data['tmp_name'] = 'garage_rollingroad-' . $id . '-' . $data['date'];
-				$data['garage_id'] = $cid;
-			}
-	
-			$data['thumb_location'] = $data['tmp_name'] . '_thumb';
-
-			//Append File Extension To Both
-			$data['tmp_name'] .= $data['ext'];
-			$data['thumb_location'] .= $data['ext'];
+			//Build File Names	
+			$data['tmp_name'] 	= 'garage_' . $type . '-' . $id . '-' . $data['date'] . $data['ext'];
+			$data['thumb_location'] = 'garage_' . $type . '-' . $id . '-' . $data['date'] . '_thumb' . $data['ext'];
+			$data['garage_id'] 	= ($type == 'vehicle') ? $id : $cid;
 	
 			//Download Remote Image To Our Temporary File
 			$this->download_remote_image($data['location'], $data['tmp_name']);
@@ -449,17 +480,16 @@ class garage_image
 				$this->create_thumbnail($data['tmp_name'], $data['thumb_location'], $data['ext']);
 
 				//Get Thumbnail Width & Height
-				$data['thumb_width'] = $this->get_image_width($data['thumb_location']);
-				$data['thumb_height'] = $this->get_image_height($data['thumb_location']);
+				$data['thumb_width']	= $this->get_image_width($data['thumb_location']);
+				$data['thumb_height'] 	= $this->get_image_height($data['thumb_location']);
 				$data['thumb_filesize'] = $this->get_image_filesize($data['thumb_location']);
-
 			}
 			//No GD So Use Default Image
 			else
 			{
-				$data['thumb_location'] = $phpbb_root_path . $images['garage_no_thumb'];
-				$data['thumb_width'] = '145';
-				$data['thumb_height'] = '35';
+				$data['thumb_location']	= $phpbb_root_path . $images['garage_no_thumb'];
+				$data['thumb_width'] 	= '145';
+				$data['thumb_height'] 	= '35';
 			}
 
 			//Remove Our Temporary File As We No Longer Need It..
@@ -473,12 +503,12 @@ class garage_image
 		//Uploaded Image Not Remote Image
 		else if ( $this->image_is_local() )
 		{
-			$data['filesize'] = $HTTP_POST_FILES['FILE_UPLOAD']['size'];
-			$data['tmp_name'] = $HTTP_POST_FILES['FILE_UPLOAD']['tmp_name'];
-			$data['file'] = $HTTP_POST_FILES['FILE_UPLOAD']['name'];
-			$data['date'] = time();
-			$imagesize = getimagesize($HTTP_POST_FILES['FILE_UPLOAD']['tmp_name']);
-			$data['filetype'] = $imagesize[2];
+			$data['filesize']	= $HTTP_POST_FILES['FILE_UPLOAD']['size'];
+			$data['tmp_name'] 	= $HTTP_POST_FILES['FILE_UPLOAD']['tmp_name'];
+			$data['file']		= trim(stripslashes($HTTP_POST_FILES['FILE_UPLOAD']['name']));
+			$data['date'] 		= time();
+			$imagesize 		= getimagesize($HTTP_POST_FILES['FILE_UPLOAD']['tmp_name']);
+			$data['filetype'] 	= $imagesize[2];
 	
 			if ($data['filesize'] == 0) 
 			{
@@ -510,51 +540,27 @@ class garage_image
 			}
 	
 			//Generate Required Filename & Thumbname
-			if ( $type == 'vehicle')
-			{
-				$prefix = 'garage_gallery-' . $id . '-' . $data['date'];
-				$data['garage_id'] = $id;
-			}
-			else if ( $type == 'modification')
-			{
-				$prefix = 'garage_mod-' . $id . '-' . $data['date'];
-				$data['garage_id'] = $cid;
-			}
-			else if ( $type == 'quartermile')
-			{
-				$prefix = 'garage_quartermile-' . $id . '-' . $data['date'];
-				$data['garage_id'] = $cid;
-			}
-			else if ( $type == 'rollingroad')
-			{
-				$prefix = 'garage_rollingroad-' . $id . '-' . $data['date'];
-				$data['garage_id'] = $cid;
-			}
-			$data['location'] = $prefix . $data['ext'];
-			$data['thumb_location'] = $prefix . '_thumb' . $data['ext'];
+			$data['garage_id'] 	= ($type == 'vehicle') ? $id : $cid;
+			$data['location'] 	= 'garage_' . $type . '-' . $id . '-' . $data['date'] . $data['ext'];
+			$data['thumb_location'] = 'garage_' . $type . '-' . $id . '-' . $data['date'] . '_thumb' . $data['ext'];
 	
 			//Move File To Upload Directory...We Know Directory Exists From Earlier Checks...
+			$move_file = 'copy';
 			$ini_val = ( @phpversion() >= '4.0.0' ) ? 'ini_get' : 'get_cfg_var';
-	
 			if ( @$ini_val('open_basedir') != '' )
 			{
 				if ( @phpversion() < '4.0.3' )
 				{
 					message_die(GENERAL_ERROR, 'open_basedir is set and your PHP version does not allow move_uploaded_file<br /><br />Please contact your server admin', '', __LINE__, __FILE__);
 				}
-	
 				$move_file = 'move_uploaded_file';
-			}
-			else
-			{
-				$move_file = 'copy';
 			}
 	
 			$move_file($data['tmp_name'], $phpbb_root_path . GARAGE_UPLOAD_PATH . $data['location']);
 			@chmod($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['location'], 0777);
 	
 			//Lets Get Image Width & Height
-			$data['width'] = $this->get_image_width($data['location']);
+			$data['width'] 	= $this->get_image_width($data['location']);
 			$data['height'] = $this->get_image_width($data['location']);
 
 			//Check If Image Breaches Site Rules...If So Delete And Let User Know...	
@@ -570,8 +576,8 @@ class garage_image
 				$this->create_thumbnail($data['location'], $data['thumb_location'], $data['ext']);
 
 				//Get Thumbnail Width & Height
-				$data['thumb_width'] = $this->get_image_width($data['thumb_location']);
-				$data['thumb_height'] = $this->get_image_height($data['thumb_location']);
+				$data['thumb_width'] 	= $this->get_image_width($data['thumb_location']);
+				$data['thumb_height'] 	= $this->get_image_height($data['thumb_location']);
 				$data['thumb_filesize'] = $this->get_image_filesize($data['thumb_location']);
 			}
 			else
@@ -617,7 +623,7 @@ class garage_image
 	/*========================================================================*/
 	function create_thumbnail($source_file_name, $thumb_file_name, $file_ext)
 	{
-		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
+		global $user, $db, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
 		$gd_errored = FALSE;
 
@@ -634,7 +640,7 @@ class garage_image
 				break;
 		}
 
-		$width = $this->get_image_width($source_file_name);
+		$width 	= $this->get_image_width($source_file_name);
 		$height = $this->get_image_height($source_file_name);
 	
 		$src = @$read_function( $phpbb_root_path . GARAGE_UPLOAD_PATH  . $source_file_name );
@@ -649,13 +655,13 @@ class garage_image
 			//Resize it
 			if ($width > $height)
 			{
-				$thumb_width = $garage_config['thumbnail_resolution'];
-				$thumb_height = $garage_config['thumbnail_resolution'] * ($height/$width);
+				$thumb_width	= $garage_config['thumbnail_resolution'];
+				$thumb_height 	= $garage_config['thumbnail_resolution'] * ($height/$width);
 			}
 			else
 			{
-				$thumb_height = $garage_config['thumbnail_resolution'];
-				$thumb_width = $garage_config['thumbnail_resolution'] * ($width/$height);
+				$thumb_height 	= $garage_config['thumbnail_resolution'];
+				$thumb_width 	= $garage_config['thumbnail_resolution'] * ($width/$height);
 			}
 
 			$thumb = ($garage_config['gd_version'] == 1) ? @imagecreate($thumb_width, $thumb_height) : @imagecreatetruecolor($thumb_width, $thumb_height);
@@ -738,24 +744,22 @@ class garage_image
 	/*========================================================================*/
 	function get_image_space_used($user_id)
 	{
-		global $db;
-
 		//Set Inital Counter To Zero
 		$space = 0;
 
 		//Get All Space Used By Uploaded & Remote Images
-		$uploaded_image_data = $this->select_user_upload_images($user_id);
-		$remote_image_data = $this->select_user_remote_images($user_id);
+		$uploaded_image_data 	= $this->get_user_upload_images($user_id);
+		$remote_image_data 	= $this->get_user_remote_images($user_id);
 
 		//For Uploaded Images We Need The Image + Thumbnail Size
-		for ( $i=0 ; count($uploaded_image_data); $i++ )
+		for ($i = 0, $count = sizeof($uploaded_image_data); $i < $count; $i++)
 		{
-			$space =  $space + ( $data['attach_filesize'] + $data['attach_thumb_filesize'] );
+			$space =  $space + ( $uploaded_image_data[$i]['attach_filesize'] + $uploaded_image_data[$i]['attach_thumb_filesize'] );
 		}
 		//For Remote Images We Only Have Thumbnails To Factor In
-		for ( $i=0 ; count($remote_image_data); $i++ )
+		for ($i = 0, $count = sizeof($remote_image_data); $i < $count; $i++)
 		{
-			$space =  $space + $data['attach_thumb_filesize'] ;
+			$space =  $space + $remote_image_data[$i]['attach_thumb_filesize'] ;
 		}
 	
 		return $space;
@@ -769,14 +773,8 @@ class garage_image
 	{
 		global $phpbb_root_path, $garage;
 	
-		//Right They Want To Delete A Image
-		if (empty($image_id))
-		{
-	 		message_die(GENERAL_ERROR, 'Image ID Not Entered', '', __LINE__, __FILE__);
-		}
-		
 		//Right User Wants To Delete An Image Lets Get All Info
-		$data = $this->select_image_data($image_id);
+		$data = $this->get_image($image_id);
 	
 		if ( (!empty($data['attach_location'])) OR (!empty($data['attach_thumb_location'])) )
 		{
@@ -784,7 +782,7 @@ class garage_image
 			$garage->delete_rows(GARAGE_IMAGES_TABLE, 'attach_id', $image_id);
 
 			//Delete Thumbnail	
-			if (file_exists($phpbb_root_path . GARAGE_UPLOAD_PATH . $image_row['attach_thumb_location']))
+			if (file_exists($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['attach_thumb_location']))
 			{
 				@unlink($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['attach_thumb_location']);
 			}
@@ -792,7 +790,7 @@ class garage_image
 			//If Its A Local Image Delete The Source File As Well
 			if ( !preg_match( "/^http:\/\//i", $data['attach_location']) )
 			{
-				if (file_exists($phpbb_root_path . GARAGE_UPLOAD_PATH . $image_row['attach_location']))
+				if (file_exists($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['attach_location']))
 				{
 					@unlink($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['attach_location']);
 				}
@@ -808,13 +806,13 @@ class garage_image
 	/*========================================================================*/
 	function delete_gallery_image($image_id)
 	{
-		global $db, $cid, $garage_vehicle, $garage;
+		global $cid, $garage_vehicle, $garage;
 
 		//Delete DB Entry & Files
 		$this->delete_image($image_id);
 
 		//If Hilite Image Reset DB Field For Vehicle
-		$data = $garage_vehicle->select_vehicle_data($cid);
+		$data = $garage_vehicle->get_vehicle($cid);
 		if ( $data['image_id']  == $image_id)
 		{
 			$garage->update_single_field(GARAGE_TABLE,'image_id','NULL','image_id',$image_id);
@@ -896,9 +894,9 @@ class garage_image
 	
 	/*========================================================================*/
 	// Select Single Image Data From DB
-	// Usage: select_image_data('image id');
+	// Usage: get_image('image id');
 	/*========================================================================*/
-	function select_image_data($image_id)
+	function get_image($image_id)
 	{
 		global $db;
 
@@ -913,15 +911,20 @@ class garage_image
 		
 		$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
+
+		if (empty($row))
+		{
+			return;
+		}
 	
 		return $row;
 	}
 
 	/*========================================================================*/
 	// Select Random Image(s) Data From DB
-	// Usage: select_random_image_data('image numbers');
+	// Usage: get_random_image('image numbers');
 	/*========================================================================*/
-	function select_random_image_data($required=5)
+	function get_random_image($required=5)
 	{
 		global $db;
 
@@ -940,14 +943,18 @@ class garage_image
 		}
 		$db->sql_freeresult($result);
 	
+		if (empty($rows))
+		{
+			return;
+		}
 		return $rows;
 	}
 
 	/*========================================================================*/
 	// Select All Image Data From DB
-	// Usage: select_all_image_data();
+	// Usage: get_all_images();
 	/*========================================================================*/
-	function select_all_image_data()
+	function get_all_images()
 	{
 		global $db;
 
@@ -966,14 +973,18 @@ class garage_image
 		}
 		$db->sql_freeresult($result);
 	
+		if (empty($rows))
+		{
+			return;
+		}
 		return $rows;
 	}
 
 	/*========================================================================*/
 	// Select Gallery Data From Single Vehicle From DB
-	// Usage: select_gallery_data('vehicle id');
+	// Usage: get_gallery('vehicle id');
 	/*========================================================================*/
-	function select_gallery_data($cid)
+	function get_gallery($cid)
 	{
 		global $db;
 
@@ -1003,9 +1014,9 @@ class garage_image
 
 	/*========================================================================*/
 	// Select All Uploaded Images From User
-	// Usage: select_user_upload_images('user id');
+	// Usage: get_user_upload_images('user id');
 	/*========================================================================*/
-	function select_user_upload_images($user_id)
+	function get_user_upload_images($user_id)
 	{
 		global $db;
 
@@ -1026,14 +1037,18 @@ class garage_image
 		}
 		$db->sql_freeresult($result);
 	
+		if (empty($rows))
+		{
+			return;
+		}
 		return $rows;
 	}
 
 	/*========================================================================*/
 	// Select All Remote Images From User
-	// Usage: select_user_remote_images('user id');
+	// Usage: get_user_remote_images('user id');
 	/*========================================================================*/
-	function select_user_remote_images($user_id)
+	function get_user_remote_images($user_id)
 	{
 		global $db;
 
@@ -1053,6 +1068,10 @@ class garage_image
 		}
 		$db->sql_freeresult($result);
 	
+		if (empty($rows))
+		{
+			return;
+		}
 		return $rows;
 	}
 
@@ -1065,16 +1084,16 @@ class garage_image
 		global $user;
 
 		//Get All Users Images So We Can Workout Current Quota Usage
-		$user_upload_image_data = $this->select_user_upload_images($user->data['user_id']);
-		$user_remote_image_data = $this->select_user_remote_images($user->data['user_id']);
+		$user_upload_image_data = $this->get_user_upload_images($user->data['user_id']);
+		$user_remote_image_data = $this->get_user_remote_images($user->data['user_id']);
 
 		//Check For Remote & Local Image Quotas
-		if ( (($this->image_is_remote() ) AND (count($user_remote_image_data) < $this->get_user_remote_image_quota($user->data['user_id']))) OR (($this->image_is_local() ) AND (count($user_image_data) < $this->get_user_upload_image_quota($user->data['user_id']))) )
+		if ( (($this->image_is_remote() ) AND (sizeof($user_remote_image_data) < $this->get_user_remote_image_quota($user->data['user_id']))) OR (($this->image_is_local() ) AND (sizeof($user_image_data) < $this->get_user_upload_image_quota($user->data['user_id']))) )
 		{
 			return true;
 		}
 		//You Have Reached Your Image Quota
-		else if ( (($this->image_is_remote() ) AND (count($user_remote_image_data) >= $this->get_user_remote_image_quota($user->data['user_id']))) OR (($this->image_is_local() ) AND (count($user_image_data) >= $this->get_user_upload_image_quota($user->data['user_id']))) )
+		else if ( (($this->image_is_remote() ) AND (sizeof($user_remote_image_data) >= $this->get_user_remote_image_quota($user->data['user_id']))) OR (($this->image_is_local() ) AND (sizeof($user_image_data) >= $this->get_user_upload_image_quota($user->data['user_id']))) )
 		{
 			return false;
 		}
@@ -1086,7 +1105,7 @@ class garage_image
 	/*========================================================================*/
 	function count_total_images()
 	{
-		return count($this->select_all_image_data());
+		return sizeof($this->get_all_images());
 	}
 
 	/*========================================================================*/
@@ -1100,8 +1119,8 @@ class garage_image
 		//If Allowed By Host Use fopen....
 	        if ( ini_get('allow_url_fopen') )
 		{
-			$infile = @fopen ($remote_url, "rb");
-                	$outfile = @fopen ( $phpbb_root_path . GARAGE_UPLOAD_PATH . $destination_file, "wb");
+			$infile	= @fopen ($remote_url, "rb");
+                	$outfile= @fopen ( $phpbb_root_path . GARAGE_UPLOAD_PATH . $destination_file, "wb");
 
 	                //Set Our Custom Timeout
        		         socket_set_timeout($infile, $garage_config['remote_timeout']);
@@ -1117,7 +1136,7 @@ class garage_image
 		else
 		{
 			$infile = $this->fsockopen_url($remote_url);
-			$outfile = @fopen($phpbb_root_path . GARAGE_UPLOAD_PATH . $destination_file,"w+");
+			$outfile= @fopen($phpbb_root_path . GARAGE_UPLOAD_PATH . $destination_file,"w+");
 			@fwrite($outfile,$infile);
 			@fclose($outfile);
 			@fclose($infile);
@@ -1137,7 +1156,7 @@ class garage_image
 	function rebuild_thumbs($start, $cycle, $done, $file) 
 	{
 	
-		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $garage;
+		global $userdata, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $garage;
 	
 		$output = array();
 		$end = $start + $cycle;

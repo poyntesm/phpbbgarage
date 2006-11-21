@@ -99,11 +99,8 @@ switch( $mode )
 			'body'   	=> 'garage_vehicle.html')
 		);
 
-		//Count Vehicles User Already Has
-		$count = $garage_vehicle->count_user_vehicles();
-
 		//Check To See If User Has Too Many Vehicles Already...If So Display Notice
-		if ( $count >= $garage_vehicle->get_user_add_quota() ) 
+		if ( sizeof($garage_vehicle->count_user_vehicles() >= $garage_vehicle->get_user_add_quota() ) 
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=5"));
 		}
@@ -111,8 +108,8 @@ switch( $mode )
 		//Set Make & Model If User Added Them...Else Use Default Values
 		$params = array('MAKE', 'MODEL', 'YEAR');
 		$data = $garage->process_post_vars($params);
-		$data['MAKE'] = (empty($data['MAKE'])) ? $garage_config['default_make'] : $data['MAKE'];
-		$data['MODEL'] = (empty($data['MODEL'])) ? $garage_config['default_model'] : $data['MODEL'];
+		$data['MAKE']	= (empty($data['MAKE'])) ? $garage_config['default_make'] : $data['MAKE'];
+		$data['MODEL']	= (empty($data['MODEL'])) ? $garage_config['default_model'] : $data['MODEL'];
 
 		//Build All Required Javascript, Arrays & HTML
 		$template->assign_block_vars('javascript', array());
@@ -123,7 +120,6 @@ switch( $mode )
 			'L_BUTTON' 		=> $user->lang['CREATE_NEW_VEHICLE'],
 			'U_USER_SUBMIT_MAKE' 	=> "javascript:add_make()",
 			'U_USER_SUBMIT_MODEL' 	=> "javascript:add_model()",
-			'MODE' 			=> 'insert_vehicle',
 			'MAKE' 			=> $data['MAKE'],
 			'MODEL'			=> $data['MODEL'],
 			'ENGINE_TYPES'		=> $garage_template->dropdown('engine_type', $engine_types, $engine_types),
@@ -183,12 +179,8 @@ switch( $mode )
 		//If Any Image Variables Set Enter The Image Handling
 		if( $garage_image->image_attached() )
 		{
-			//Get All Users Images So We Can Workout Current Quota Usage
-			$user_upload_image_data = $garage_image->select_user_upload_images($user->data['user_id']);
-			$user_remote_image_data = $garage_image->select_user_remote_images($user->data['user_id']);
-
 			//Check For Remote & Local Image Quotas
-			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
+			if ( ($garage_image->remote_image_below_quota()) OR ($garage_image->upload_image_below_quota()) )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('vehicle', $cid);
@@ -198,7 +190,7 @@ switch( $mode )
 				$garage->update_single_field(GARAGE_TABLE, 'image_id', $image_id, 'id', $cid);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
-			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
+			else if ( !($garage_image->remote_image_below_quota()) OR !($garage_image->upload_image_below_quota()) )
 			{
 				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=4"));
 			}
@@ -231,7 +223,7 @@ switch( $mode )
 		);
 
 		//Pull Required Vehicle Data From DB
-		$data = $garage_vehicle->select_vehicle_data($cid);
+		$data = $garage_vehicle->get_vehicle($cid);
 
 		//Build All Required Javascript And Arrays
 		$garage_template->year_dropdown($data['made_year']);
@@ -243,7 +235,7 @@ switch( $mode )
 			'MAKE' 		=> $data['make'],
 			'MODEL' 	=> $data['model'],
 			'YEAR' 		=> $data['made_year'],
-			'CHECKED' 	=> ($data['guestbook_pm_notify'] == TRUE) ? 'checked="checked"': '',
+			'CHECKED' 	=> ($data['guestbook_pm_notify'] == true) ? 'checked="checked"': '',
 			'COLOUR' 	=> $data['colour'],
 			'MILEAGE' 	=> $data['mileage'],
 			'PRICE' 	=> $data['price'],
@@ -389,12 +381,8 @@ switch( $mode )
 		//If Any Image Variables Set Enter The Image Handling
 		if ( $garage_image->image_attached() )
 		{
-			//Get All Users Images So We Can Workout Current Quota Usage
-			$user_upload_image_data = $garage_image->select_user_upload_images($user->data['user_id']);
-			$user_remote_image_data = $garage_image->select_user_remote_images($user->data['user_id']);
-
 			//Check For Remote & Local Image Quotas
-			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
+			if ( ($garage_image->remote_image_below_quota()) OR ($garage_image->upload_image_below_quota()) )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('modification', $mid);
@@ -402,7 +390,7 @@ switch( $mode )
 				$garage->update_single_field(GARAGE_MODS_TABLE, 'image_id', $image_id, 'id', $mid);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
-			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
+			else if ( !($garage_image->remote_image_below_quota()) OR !($garage_image->upload_image_below_quota()) )
 			{
 				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=4"));
 			}
@@ -433,7 +421,7 @@ switch( $mode )
 		);
 		
 		//Pull Required Modification Data From DB
-		$data = $garage_modification->select_modification_data($mid);
+		$data = $garage_modification->get_modification($mid);
 
 		//Build All Required HTML parts
 		$garage_template->category_dropdown($data['category_id']);
@@ -495,12 +483,8 @@ switch( $mode )
 		//If Any Image Variables Set Enter The Image Handling
 		if( $garage_image->image_attached() )
 		{
-			//Get All Users Images So We Can Workout Current Quota Usage
-			$user_upload_image_data = $garage_image->select_user_upload_images($user->data['user_id']);
-			$user_remote_image_data = $garage_image->select_user_remote_images($user->data['user_id']);
-
 			//Check For Remote & Local Image Quotas
-			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
+			if ( ($garage_image->remote_image_below_quota()) OR ($garage_image->upload_image_below_quota()) )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('modification', $mid);
@@ -508,7 +492,7 @@ switch( $mode )
 				$garage->update_single_field(GARAGE_MODS_TABLE, 'image_id', $image_id, 'id', $mid);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
-			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
+			else if ( !($garage_image->remote_image_below_quota()) OR !($garage_image->upload_image_below_quota()) )
 			{
 				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=4"));
 			}
@@ -615,19 +599,15 @@ switch( $mode )
 		//If Any Image Variables Set Enter The Image Handling
 		if( $garage_image->image_attached() )
 		{
-			//Get All Users Images So We Can Workout Current Quota Usage
-			$user_upload_image_data = $garage_image->select_user_upload_images($user->data['user_id']);
-			$user_remote_image_data = $garage_image->select_user_remote_images($user->data['user_id']);
-
 			//Check For Remote & Local Image Quotas
-			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
+			if ( ($garage_image->remote_image_below_quota()) OR ($garage_image->upload_image_below_quota()) )
 			{
 				//Create Thumbnail & DB Entry For Image + Link To Item
 				$image_id = $garage_image->process_image_attached('quartermile', $qmid);
 				$garage->update_single_field(GARAGE_QUARTERMILE_TABLE, 'image_id', $image_id, 'id', $qmid);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
-			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
+			else if ( !($garage_image->remote_image_below_quota()) OR !($garage_image->upload_image_below_quota()) )
 			{
 				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=4"));
 			}
@@ -679,7 +659,7 @@ switch( $mode )
 		$redirect = $garage->process_post_vars($params);
 
 		//Pull Required Quartermile Data From DB
-		$data = $garage_quartermile->select_quartermile_data($qmid);
+		$data = $garage_quartermile->get_quartermile($qmid);
 
 		//If Dynorun Is Already Linked Display Dropdown Correctly
 		if ( (!empty($data['rr_id'])) AND ($count > 0) )
@@ -750,19 +730,15 @@ switch( $mode )
 		//If Any Image Variables Set Enter The Image Handling
 		if( $garage_image->image_attached() )
 		{
-			//Get All Users Images So We Can Workout Current Quota Usage
-			$user_upload_image_data = $garage_image->select_user_upload_images($user->data['user_id']);
-			$user_remote_image_data = $garage_image->select_user_remote_images($user->data['user_id']);
-
 			//Check For Remote & Local Image Quotas
-			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
+			if ( ($garage_image->remote_image_below_quota()) OR ($garage_image->upload_image_below_quota()) )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('quartermile', $qmid);
 				$garage->update_single_field(GARAGE_QUARTERMILE_TABLE, 'image_id', $image_id, 'id', $qmid);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
-			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
+			else if ( !($garage_image->remote_image_below_quota()) OR !($garage_image->upload_image_below_quota()) )
 			{
 				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=4"));
 			}
@@ -881,19 +857,15 @@ switch( $mode )
 		//If Any Image Variables Set Enter The Image Handling
 		if( $garage_image->image_attached() )
 		{
-			//Get All Users Images So We Can Workout Current Quota Usage
-			$user_upload_image_data = $garage_image->select_user_upload_images($user->data['user_id']);
-			$user_remote_image_data = $garage_image->select_user_remote_images($user->data['user_id']);
-
 			//Check For Remote & Local Image Quotas
-			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
+			if ( ($garage_image->remote_image_below_quota()) OR ($garage_image->upload_image_below_quota()) )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('rollingroad', $rrid);
 				$garage->update_single_field(GARAGE_ROLLINGROAD_TABLE,'image_id', $image_id, 'id', $rrid);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
-			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
+			else if ( !($garage_image->remote_image_below_quota()) OR !($garage_image->upload_image_below_quota()) )
 			{
 				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=4"));
 			}
@@ -938,7 +910,7 @@ switch( $mode )
 		);
 
 		//Pull Required Dynorun Data From DB
-		$data = $garage_dynorun->select_dynorun_data($rrid);
+		$data = $garage_dynorun->get_dynorun($rrid);
 
 		//See If We Got Sent Here By Pending Page...If So We Need To Tell Update To Redirect Correctly
 		$params = array('PENDING');
@@ -1002,19 +974,15 @@ switch( $mode )
 		//If Any Image Variables Set Enter The Image Handling
 		if( $garage_image->image_attached() )
 		{
-			//Get All Users Images So We Can Workout Current Quota Usage
-			$user_upload_image_data = $garage_image->select_user_upload_images($user->data['user_id']);
-			$user_remote_image_data = $garage_image->select_user_remote_images($user->data['user_id']);
-
 			//Check For Remote & Local Image Quotas
-			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
+			if ( ($garage_image->remote_image_below_quota()) OR ($garage_image->upload_image_below_quota()) )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('rollingroad', $rrid);
 				$garage->update_single_field(GARAGE_ROLLINGROAD_TABLE, 'image_id', $image_id, 'id', $rrid);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
-			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
+			else if ( !($garage_image->remote_image_below_quota()) OR !($garage_image->upload_image_below_quota()) )
 			{
 				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=4"));
 			}
@@ -1150,7 +1118,7 @@ switch( $mode )
 		);
 
 		//Pull Required Insurance Premium Data From DB
-		$data = $garage_insurance->select_insurance_data($ins_id);
+		$data = $garage_insurance->get_insurance($ins_id);
 
 		//Build Required HTML Components
 		$garage_template->insurance_dropdown($data['business_id'], $data['title']);
@@ -1237,17 +1205,17 @@ switch( $mode )
 		$sort_types = array('date_created', 'date_updated', 'username', 'made_year', 'make', 'model', 'colour', 'views', 'total_mods');
 
 		//Build All Required HTML
-		$garage_template->sort_order($sort_order);
+		$garage_template->order($sort_order);
 
 		//Get All Vehicle Data....
-		$data = $garage_vehicle->select_all_vehicle_data('', $order_by, $sort_order, $start, $garage_config['cars_per_page']);
-		for ($i = 0; $i < count($data); $i++)
+		$data = $garage_vehicle->get_all_vehicles('', $order_by, $sort_order, $start, $garage_config['cars_per_page']);
+		for ($i = 0; $count = sizeof($data); $i < $count; $i++)
       		{
 			$template->assign_block_vars('vehiclerow', array(
-				'U_VIEW_VEHICLE' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=" . $data[$i]['id']),
-				'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $data[$i]['user_id']),
+				'U_VIEW_VEHICLE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=" . $data[$i]['id']),
+				'U_VIEW_PROFILE'	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $data[$i]['user_id']),
 				'ROW_NUMBER' 		=> $i + ( $start + 1 ),
-				'IMAGE_ATTACHED' 	=> ($data[$i]['image_id']) ? $user->img('vehicle_image_attached', 'VEHICLE_IMAGE_ATTAHCED') : '',
+				'IMAGE_ATTACHED'	=> ($data[$i]['image_id']) ? $user->img('vehicle_image_attached', 'VEHICLE_IMAGE_ATTAHCED') : '',
 				'YEAR' 			=> $data[$i]['made_year'],
 				'MAKE' 			=> $data[$i]['make'],
 				'COLOUR' 		=> $data[$i]['colour'],
@@ -1260,7 +1228,7 @@ switch( $mode )
 		}
 
 		//Count Total Returned For Pagination...Notice No $start or $end to get complete count
-		$count = $garage_vehicle->select_all_vehicle_data('', $order_by, $sort_order);
+		$count = $garage_vehicle->get_all_vehicles('', $order_by, $sort_order);
 
 		$pagination = generate_pagination("garage.$phpEx?mode=browse&amp;sort=$sort&amp;order=$sort_order", $count[0]['total'], $garage_config['cars_per_page'], $start);
 
@@ -1310,7 +1278,7 @@ switch( $mode )
 		$template->assign_block_vars('javascript', array());
 		$template->assign_vars(array(
 			'VEHICLE_ARRAY' 			=> $garage_template->vehicle_array(),
-			'S_DISPLAY_SEARCH_INSURNACE'		=> $garage_config['enable_insurance'],
+			'S_DISPLAY_SEARCH_INSURANCE'		=> $garage_config['enable_insurance'],
 			'S_MODE_ACTION_SEARCH_USERNAME' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=search_username"),
 			'S_MODE_ACTION_SEARCH_INSURANCE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=search_insurance"),
 			'S_MODE_ACTION_SEARCH_VEHICLE' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=search_vehicle"))
@@ -1361,11 +1329,11 @@ switch( $mode )
 		$sort_types = array('date_created', 'date_updated', 'username', 'made_year', 'make', 'model', 'colour', 'views', 'total_mods');
 
 		//Build All Required HTML
-		$garage_template->sort_order($sort_order);
+		$garage_template->order($sort_order);
 
 		//Get All Vehicle Data....
-		$data = $garage_vehicle->select_all_vehicle_data($search_data['where'], $order_by, $sort_order, $start, $garage_config['cars_per_page']);
-		for ($i = 0; $i < count($data); $i++)
+		$data = $garage_vehicle->get_all_vehicles($search_data['where'], $order_by, $sort_order, $start, $garage_config['cars_per_page']);
+		for ($i = 0; $count = sizeof($data); $i < $count; $i++)
       		{
 			$template->assign_block_vars('vehiclerow', array(
 				'U_VIEW_VEHICLE'=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=" . $data[$i]['id']),
@@ -1384,7 +1352,7 @@ switch( $mode )
 		}
 
 		//Count Total Returned For Pagination...Notice No $start or $end to get complete count
-		$count = $garage_vehicle->select_all_vehicle_data($search_data['where'], $order_by, $sort_order);
+		$count = $garage_vehicle->get_all_vehicles($search_data['where'], $order_by, $sort_order);
 
 		$pagination = generate_pagination("garage.$phpEx?mode=browse&amp" . $search_data['make_pagination'] . $search_data['model_pagination'] . ";sort=$sort&amp;order=$sort_order", $count[0]['total'], $garage_config['cars_per_page'], $start);
 
@@ -1442,11 +1410,11 @@ switch( $mode )
 		$sort_types = array('date_created', 'date_updated', 'username', 'made_year', 'make', 'model', 'colour', 'views', 'total_mods');
 
 		//Build All Required HTML
-		$garage_template->sort_order($sort_order);
+		$garage_template->order($sort_order);
 
 		//Get All Vehicle Data....
-		$data = $garage_vehicle->select_all_vehicle_data($search_data['where'], $order_by, $sort_order, $start, $garage_config['cars_per_page']);
-		for ($i = 0; $i < count($data); $i++)
+		$data = $garage_vehicle->get_all_vehicles($search_data['where'], $order_by, $sort_order, $start, $garage_config['cars_per_page']);
+		for ($i = 0; $count = sizeof($data); $i < $count; $i++)
       		{
 			$template->assign_block_vars('vehiclerow', array(
 				'U_VIEW_VEHICLE'=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=" . $data[$i]['id']),
@@ -1465,7 +1433,7 @@ switch( $mode )
 		}
 
 		//Count Total Returned For Pagination...Notice No $start or $end to get complete count
-		$count = $garage_vehicle->select_all_vehicle_data($search_data['where'], $order_by, $sort_order);
+		$count = $garage_vehicle->get_all_vehicles($search_data['where'], $order_by, $sort_order);
 
 		$pagination = generate_pagination("garage.$phpEx?mode=search_username&amp;sort=$sort&amp;order=$sort_order", $count[0]['total'], $garage_config['cars_per_page'], $start);
 
@@ -1520,11 +1488,11 @@ switch( $mode )
 		);
 
 		//Pre Build All Side Menus
-		$garage_template->sort_order($sort_order);
+		$garage_template->order($sort_order);
 
 		//Get All Insurance Data....
-		$data = $garage_insurance->select_all_premiums_data($search_data['where'], $order_by, $sort_order, $start, $garage_config['cars_per_page']);
-		for ($i = 0; $i < count($data); $i++)
+		$data = $garage_insurance->get_all_premiums($search_data['where'], $order_by, $sort_order, $start, $garage_config['cars_per_page']);
+		for ($i = 0; $count = sizeof($data);$i < $count; $i++)
       		{
 			$template->assign_block_vars('vehiclerow', array(
 				'U_VIEW_VEHICLE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=" . $data[$i]['id']),
@@ -1541,7 +1509,7 @@ switch( $mode )
 		}
 
 		//Count Total Returned For Pagination...Notice No $start or $end to get complete count
-		$count = count($garage_insurance->select_all_premiums_data($search_data['where'], $order_by, $sort_order));
+		$count = sizeof($garage_insurance->get_all_premiums($search_data['where'], $order_by, $sort_order));
 
 		$pagination = generate_pagination("garage.$phpEx?mode=search_insurance&amp;make_id=" . $search_data['make_id'] . "&amp;model_id=" . $search_data['model_id'] . "&amp;sort=$sort&amp;order=$sort_order", $count, $garage_config['cars_per_page'], $start);
 
@@ -1603,7 +1571,7 @@ switch( $mode )
 		);
 
 		//Pull Required Modification Data From DB
-		$data = $garage_modification->select_modification_data($mid);
+		$data = $garage_modification->get_modification($mid);
 
 		//Build The Owners Avatar Image If Any...
 		$data['avatar'] = '';
@@ -1739,17 +1707,13 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Pull Vehicle Data So We Can Check For Hilite Image
-		$data = $garage_vehicle->select_vehicle_data($cid);
+		$data = $garage_vehicle->get_vehicle($cid);
 
 		//If Any Image Variables Set Enter The Image Handling
 		if( $garage_image->image_attached() )
 		{
-			//Get All Users Images So We Can Workout Current Quota Usage
-			$user_upload_image_data = $garage_image->select_user_upload_images($user->data['user_id']);
-			$user_remote_image_data = $garage_image->select_user_remote_images($user->data['user_id']);
-
 			//Check For Remote & Local Image Quotas
-			if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) < $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) < $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
+			if ( ($garage_image->remote_image_below_quota()) OR ($garage_image->upload_image_below_quota()) )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('vehicle', $cid);
@@ -1761,7 +1725,7 @@ switch( $mode )
 				}
 			}
 			//You Have Reached Your Image Quota..Error Nicely
-			else if ( (($garage_image->image_is_remote() ) AND (count($user_remote_image_data) >= $garage_image->get_user_remote_image_quota($user->data['user_id']))) OR (($garage_image->image_is_local() ) AND (count($user_image_data) >= $garage_image->get_user_upload_image_quota($user->data['user_id']))) )
+			else if ( !($garage_image->remote_image_below_quota()) OR !($garage_image->upload_image_below_quota()) )
 			{
 				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=4"));
 			}
@@ -1786,7 +1750,7 @@ switch( $mode )
 		$garage->update_view_count(GARAGE_IMAGES_TABLE, 'attach_hits', 'attach_id', $image_id);
 
 		//Pull Required Image Data From DB
-		$data = $garage_image->select_image_data($image_id);
+		$data = $garage_image->get_image($image_id);
 
 		//Check To See If This Is A Remote Image
 		if ( preg_match( "/^http:\/\//i", $data['attach_location']) )
@@ -1818,6 +1782,75 @@ switch( $mode )
 
 		break;
 
+	case 'view_all_images':
+
+		//Let Check The User Is Allowed Perform This Action
+		if (!$auth->acl_get('u_garage_browse'))
+		{
+			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=15"));
+		}
+
+		//Set Required Values To Defaults If They Are Empty
+		$start = (empty($start)) ? '0' : $start;
+
+		//Build Page Header ;)
+		page_header($page_title);
+
+		//Set Template Files In Use For This Mode
+		$template->set_filenames(array(
+			'header' => 'garage_header.tpl',
+			'body'   => 'garage_view_images.tpl')
+		);
+
+		//Pull Required Image Data From DB
+		$data = $garage_image->get_all_images($start, '100');
+
+		//Process Each Image
+		for ($i = 0; $count = sizeof($data); $i < $count; $i++)
+		{
+			//Produce Actual Image Thumbnail And Link It To Full Size Version..
+			if ( ($data[$i]['attach_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location'])) )
+			{
+				// Form the image link
+				$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'];
+				$image = '<a href="garage.' . $phpEx . '?mode=view_gallery_item&amp;type=garage_mod&amp;image_id=' . $data[$i]['attach_id'] . '" title="' . $data[$i]['attach_file'] . '" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image . '" class="attach"  /></a>';
+	
+				$template->assign_block_vars('pic_row', array(
+					'U_VIEW_PROFILE'=> append_sid("profile.$phpEx", "mode=viewprofile&amp;" . POST_USERS_URL . "=" .$data[$i]['user_id']),
+					'U_VIEW_VEHICLE'=> append_sid("garage.$phpEx", "mode=view_vehicle&amp;CID=" .$data[$i]['garage_id']),
+					'THUMB_IMAGE'	=> $image,
+					'VEHICLE' 	=> $data[$i]['vehicle'],
+					'USERNAME' 	=> $data[$i]['username'])
+				);
+			}
+			//Cleanup For Next Image
+			$thumb_image = '';
+			$image = '';
+		}
+
+		//Count Total Returned For Pagination...Notice No $start or $end to get complete count
+		$count = sizeof($garage_image->get_all_images());
+
+		//Only Display Pagination If Data Exists
+		if ($count >= 1)
+		{
+			$pagination = generate_pagination("garage.$phpEx?mode=view_all_images", $count, 100, $start);
+			$template->assign_vars(array(
+				'L_GOTO_PAGE'	=> $lang['Goto_page'],
+				'PAGINATION' 	=> $pagination,
+				'PAGE_NUMBER' 	=> sprintf($lang['Page_of'], ( floor( $start / 100 ) + 1 ), ceil( $count / 100 )))
+			);
+		}
+
+		$template->assign_vars(array(
+			'S_MODE_ACTION' => append_sid("garage.$phpEx?mode=view_all_images"))
+		);
+
+		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
+		$garage_template->sidemenu();		
+
+		break;
+
 	case 'manage_vehicle_gallery':
 
 		//Let Check The User Is Allowed Perform This Action
@@ -1842,13 +1875,13 @@ switch( $mode )
 		$garage_template->attach_image('vehicle');
 
 		//Pull Vehicle Data From DB So We Can Check For Hilite Image
-		$vehicle_data = $garage_vehicle->select_vehicle_data($cid);
+		$vehicle_data = $garage_vehicle->get_vehicle($cid);
 
 		//Pull Vehicle Gallery Data From DB
-		$data = $garage_image->select_gallery_data($cid);
+		$data = $garage_image->get_gallery($cid);
 
 		//Process Each Image From Vehicle Gallery
-		for ($i = 0; $i < count($data); $i++)
+		for ($i = 0; $count = sizeof($data);$i < $count; $i++)
 		{
 			//Work Out If Image Is Current Hilite Else Produce Link To Make It So..
 			if ( $data[$i]['image_id'] == $vehicle_data['image_id'] )
@@ -1936,10 +1969,10 @@ switch( $mode )
 		$data['where'] = (!empty($data['business_id'])) ? "AND b.id = " . $data['business_id'] : '';
 
 		//Get All Insurance Business Data
-		$business = $garage_business->select_insurance_business_data($data['where'], $data['start']);
+		$business = $garage_business->get_insurance_business($data['where'], $data['start']);
 
 		//If No Business Error Nicely Rather Than Display Nothing To The User
-		if ( count($business) < 1 )
+		if ( sizeof($business) < 1 )
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=1"));
 		}
@@ -1963,7 +1996,7 @@ switch( $mode )
 		}
 
       		//Loop Processing All Insurance Business's Returned From First Select
-		for ($i = 0; $i < count($business); $i++)
+		for ($i = 0; $count = sizeof($business);$i < $count; $i++)
       		{
          		$template->assign_block_vars('business_row', array(
             			'U_VIEW_BUSINESS'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_insurance_business&amp;business_id=" . $business[$i]['id']),
@@ -1981,10 +2014,10 @@ switch( $mode )
         	 	$template->assign_block_vars($detail, array());
 
 			//Now Loop Through All Insurance Cover Types...
-			for($j = 0; $j < count($cover_types); $j++)
+			for($j = 0; $count2 = sizeof($cover_types);$j < $count2; $j++)
 			{
 				//Pull MIN/MAX/AVG Of Specific Cover Type By Business ID
-				$premium_data = $garage_insurance->select_premiums_stats_by_business_and_covertype_data($business[$i]['id'], $cover_types[$j]);
+				$premium_data = $garage_insurance->get_premiums_stats_by_business_and_covertype($business[$i]['id'], $cover_types[$j]);
         	    		$template->assign_block_vars('business_row.cover_row', array(
                				'COVER_TYPE'	=> $cover_types[$j],
                				'MINIMUM' 	=> $premium_data['min'],
@@ -1997,8 +2030,8 @@ switch( $mode )
 			if  (!empty($data['business_id']))
 			{
 				//Pull All Insurance Premiums Data For Specific Insurance Company
-				$insurance_data = $garage_insurance->select_all_premiums_by_business_data($business[$i]['id']);
-				for($k = 0; $k < count($insurance_data); $k++)
+				$insurance_data = $garage_insurance->get_all_premiums_by_business($business[$i]['id']);
+				for($k = 0; $count3 = sizeof($insurance_data);$k < $count3; $k++)
 				{
 					$template->assign_block_vars('business_row.insurance_detail.premiums', array(
 						'U_VIEW_PROFILE'=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $insurance_data[$k]['user_id']),
@@ -2013,7 +2046,7 @@ switch( $mode )
       		}
 
 		// Get Insurance Business Data For Pagination
-		$count = $garage_business->select_insurance_business_data($where);
+		$count = $garage_business->get_insurance_business($where);
 		$pagination = generate_pagination("garage.$phpEx?mode=view_insurance_business", $count[0]['total'], 25, $start);
 
 		$template->assign_block_vars('level1', array());
@@ -2048,10 +2081,10 @@ switch( $mode )
 		$data['where'] = (!empty($data['business_id'])) ? "AND b.id = " . $data['business_id'] : '';
 
 		//Get Required Garage Business Data
-		$business = $garage_business->select_garage_business_data($data['where'], $data['start']);
+		$business = $garage_business->get_garage_business($data['where'], $data['start']);
 
 		//If No Business Let The User Know..
-		if ( count($business) < 1 )
+		if ( sizeof($business) < 1 )
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=1"));
 		}
@@ -2075,7 +2108,7 @@ switch( $mode )
 		}
 
       		//Process All Garages......
-      		for ($i = 0; $i < count($business); $i++)
+      		for ($i = 0; $count = sizeof($business);$i < $count; $i++)
       		{
          		$template->assign_block_vars('business_row', array(
 				'U_VIEW_BUSINESS'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_garage_business&amp;business_id=" . $business[$i]['id']),
@@ -2097,9 +2130,9 @@ switch( $mode )
 			}
 
 			//Now Lets Go Get Mods Business Has Installed
-			$bus_mod_data = $garage_modification->select_modifications_by_install_business_data($business[$i]['id']);
+			$bus_mod_data = $garage_modification->get_modifications_by_install_business($business[$i]['id']);
 
-			for($j = 0 ; $j < count($bus_mod_data); $j++)
+			for($j = 0 ; $count2 = sizeof($bus_mod_data);$j < $count2; $j++)
 			{
 				$template->assign_block_vars('business_row.mod_row', array(
 					'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $bus_mod_data[$j]['user_id']),
@@ -2166,10 +2199,10 @@ switch( $mode )
 		$data['where'] = (!empty($data['business_id'])) ? "AND b.id = " . $data['business_id'] : '';
 
 		//Get Required Shop Business Data
-		$business = $garage_business->select_shop_business_data($data['where'], $data['start']);
+		$business = $garage_business->get_shop_business($data['where'], $data['start']);
 
 		//If No Business Let The User Know..
-		if ( count($business) < 1 )
+		if ( sizeof($business) < 1 )
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=1"));
 		}
@@ -2194,7 +2227,7 @@ switch( $mode )
 		}
 
       		//Process All Shops......
-      		for ($i = 0; $i < count($business); $i++)
+      		for ($i = 0; $count = sizeof($business);$i < $count; $i++)
       		{
          		$template->assign_block_vars('business_row', array(
 				'U_VIEW_BUSINESS'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_shop_business&amp;business_id=" . $business[$i]['id']),
@@ -2216,9 +2249,9 @@ switch( $mode )
 			}
 
 			//Now Lets Go Get All Mods All Business's Have Sold
-			$bus_mod_data = $garage_modification->select_modifications_by_business_data($business[$i]['id']);
+			$bus_mod_data = $garage_modification->get_modifications_by_business($business[$i]['id']);
 
-			for ($j = 0; $j < count($bus_mod_data); $j++)
+			for ($j = 0; $count2 = sizeof($bus_mod_data);$j < $count2; $j++)
 			{
 				$template->assign_block_vars('business_row.mod_row', array(
 					'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $bus_mod_data[$j]['user_id']),
@@ -2371,7 +2404,7 @@ switch( $mode )
 		);
 
 		//Pull Required Business Data From DB
-		$data = $garage_business->select_business_data($bus_id);
+		$data = $garage_business->get_business($bus_id);
 		$data['insurance'] 	= ($data['insurance'] == '1') ? 'checked="checked"' : '' ;
 		$data['garage'] 	= ($data['garage'] == '1') ? 'checked="checked"' : '' ;
 		$data['retail_shop']	= ($data['retail_shop'] == '1') ? 'checked="checked"' : '' ;
@@ -2565,7 +2598,7 @@ switch( $mode )
 		$garage->check_required_vars($params);
 
 		//Pull Required Make Data From DB
-		$data = $garage_model->select_make_data($data['make_id']);
+		$data = $garage_model->get_make($data['make_id']);
 
 		$template->assign_vars(array(
 			'YEAR' 		=> $year,
@@ -2623,7 +2656,7 @@ switch( $mode )
 		}
 
 		//Build Page Header ;)
-		$page_title = $user->lang['CAR_QUART'];
+		$page_title = $user->lang['QUART'];
 		page_header($page_title);
 
 		//Build Navlinks
@@ -2642,7 +2675,7 @@ switch( $mode )
 		$garage_quartermile->build_quartermile_table('NO');
 
 		//Build Required HTML, Javascript And Arrays
-		$garage_template->sort_order($order);
+		$garage_template->order($order);
 		$template->assign_block_vars('javascript', array());
 		$template->assign_vars(array(
 			'VEHICLE_ARRAY' => $garage_template->vehicle_array(),
@@ -2725,7 +2758,7 @@ switch( $mode )
 		if ( $data['action'] == 'REASSIGN' )
 		{
 			//We Need To Check Only One Business Was Selected
-			$total = count($HTTP_POST_VARS['bus_id']);
+			$total = sizeof($HTTP_POST_VARS['bus_id']);
 			if ( $total > 1 )
 			{
 				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=22"));
@@ -2734,7 +2767,7 @@ switch( $mode )
 			//Get Business ID We Are Going To Delete
 			$bus_id = intval($HTTP_POST_VARS['bus_id'][0]);
 
-			$data = $garage_business->select_business_data($bus_id);
+			$data = $garage_business->get_business($bus_id);
 
 			//Generate Page Header
 			page_header($page_title);
@@ -2775,7 +2808,7 @@ switch( $mode )
 				//Process For Removing
 				if ( $data['action'] == 'REMOVE' )
 				{
-					for ($i = 0 ; $i < count($pending_ids); $i++)
+					for ($i = 0 ; $count = sizeof($pending_ids);$i < $count; $i++)
 					{
 						$id = intval($pending_ids[$i]);
 
@@ -2798,11 +2831,9 @@ switch( $mode )
 				//Process For Approval...
 				else if ( $data['action'] == 'APPROVE' )
 				{
-					while( $i < count($pending_ids) )
+					for ($i = 0 ; $count = sizeof($pending_ids);$i < $count; $i++)
 					{
-						$id = intval($pending_ids[$i]);
-						$garage->update_single_field($table, 'pending', 0, 'id', $id);
-						$i++;
+						$garage->update_single_field($table, 'pending', 0, 'id', intval($pending_ids[$i]);
 					}
 				}
 			}
@@ -2871,7 +2902,7 @@ switch( $mode )
 		);
 
 		//Build All Required HTML, Javascript And Arrays
-		$garage_template->sort_order($order);
+		$garage_template->order($order);
 		$template->assign_block_vars('javascript', array());
 		$template->assign_vars(array(
 			'VEHICLE_ARRAY'	=> $garage_template->vehicle_array(),
@@ -2901,191 +2932,169 @@ switch( $mode )
 		);
 
 		//Get Vehicle Data
-		$vehicle_data = $garage_vehicle->select_vehicle_data($cid);
+		$vehicle_data = $garage_vehicle->get_vehicle($cid);
 
 		//Get All Comments Data
-		$comment_data = $garage_guestbook->select_vehicle_comments($cid);
+		$comment_data = $garage_guestbook->get_vehicle_comments($cid);
 
-		//If Allowed Show Leave Comment Block
-		if (!$auth->acl_get('u_garage_comment'))
-		{
-			$template->assign_block_vars('leave_comment', array());
-		}
-		
-         	//Check If This Is Firs Comment
-		if ( count($comment_data) < 1 )
-		{
-			$template->assign_block_vars('first_comment', array());
-			$template->assign_vars(array(
-				'LEAVE_FIRST_COMMENT'  => $lang['Add_First_Comment'])
+		for ($i = 0; $count = sizeof($comment_data);$i < $count; $i++)
+		{	
+			$username = $comment_data[$i]['username'];
+			$temp_url = append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $comment_data[$i]['user_id']);
+			$poster = '<a href="' . $temp_url . '">' . $comment_data[$i]['username'] . '</a>';
+			$poster_posts = ( $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang['Posts'] . ': ' . $comment_data[$i]['user_posts'] : '';
+			$poster_from = ( $comment_data[$i]['user_from'] && $comment_data['user_id'] != ANONYMOUS ) ? $lang['Location'] . ': ' . $comment_data[$i]['user_from'] : '';
+			$garage_id = $comment_data['garage_id'];
+			$poster_car_year = ( $comment_data[$i]['made_year'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $comment_data[$i]['made_year'] : '';
+			$poster_car_mark = ( $comment_data[$i]['make'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $comment_data[$i]['make'] : '';
+			$poster_car_model = ( $comment_data[$i]['model'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $comment_data[$i]['model'] : '';
+			$poster_joined = ( $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang['Joined'] . ': ' . $user->format_date($comment_data[$i]['user_regdate']) : '';
+
+			$data['avatar'] = '';
+			if ( $data['user_avatar'] AND $user->optionget('viewavatars') )
+			{
+				$avatar_img = '';
+				switch( $data['user_avatar_type'] )
+				{
+					case AVATAR_UPLOAD:
+						$avatar_img = $config['avatar_path'] . '/' . $data['user_avatar'];
+					break;
+
+					case AVATAR_GALLERY:
+						$avatar_img = $config['avatar_gallery_path'] . '/' . $data['user_avatar'];
+					break;
+				}
+				$data['avatar'] = '<img src="' . $avatar_img . '" width="' . $data['user_avatar_width'] . '" height="' . $data['user_avatar_height'] . '" alt="" />';
+			}
+
+			$poster_avatar = '';
+
+			if ( $data['user_avatar_type'] && $comment_data[$i]['user_id'] != ANONYMOUS && $comment_data[$i]['user_allowavatar'] )
+			{
+				switch( $row['user_avatar_type'] )
+				{
+					case USER_AVATAR_UPLOAD:
+						$poster_avatar = ( $board_config['allow_avatar_upload'] ) ? '<img src="' . $board_config['avatar_path'] . '/' . $comment_data[$i]['user_avatar'] . '" alt="" border="0" />' : '';
+						break;
+					case USER_AVATAR_REMOTE:
+						$poster_avatar = ( $board_config['allow_avatar_remote'] ) ? '<img src="' . $comment_data[$i]['user_avatar'] . '" alt="" border="0" />' : '';
+						break;
+					case USER_AVATAR_GALLERY:
+						$poster_avatar = ( $board_config['allow_avatar_local'] ) ? '<img src="' . $board_config['avatar_gallery_path'] . '/' . $comment_data[$i]['user_avatar'] . '" alt="" border="0" />' : '';
+						break;
+				}
+			}
+
+			// Handle anon users posting with usernames
+			if ( $comment_data[$i]['user_id'] == ANONYMOUS && $comment_data[$i]['post_username'] != '' )
+			{
+				$poster = $comment_data[$i]['post_username'];
+			}
+
+			$profile_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_profile'] . '" alt="' . $lang['Read_profile'] . '" title="' . $lang['Read_profile'] . '" border="0" /></a>';
+			$profile = '<a href="' . $temp_url . '">' . $lang['Read_profile'] . '</a>';
+
+			$temp_url = append_sid("{$phpbb_root_path}privmsg.$phpEx", "mode=post&amp;u=".$comment_data[$i]['user_id']);
+			$pm_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_pm'] . '" alt="' . $lang['Send_private_message'] . '" title="' . $lang['Send_private_message'] . '" border="0" /></a>';
+			$pm = '<a href="' . $temp_url . '">' . $lang['Send_private_message'] . '</a>';
+
+			if ( !empty($comment_data[$i]['user_viewemail']) || $is_auth['auth_mod'] )
+			{
+				$email_uri = ( $board_config['board_email_form'] ) ? append_sid("{$phpbb_root_path}profile.$phpEx", "mode=email&amp;u=" . $comment_data[$i]['user_id']) : 'mailto:' . $comment_data['user_email'];
+
+				$email_img = '<a href="' . $email_uri . '"><img src="' . $images['icon_email'] . '" alt="' . $lang['Send_email'] . '" title="' . $lang['Send_email'] . '" border="0" /></a>';
+				$email = '<a href="' . $email_uri . '">' . $lang['Send_email'] . '</a>';
+			}
+			else
+			{
+				$email_img = '';
+				$email = '';
+			}
+
+			$www_img = ( $comment_data[$i]['user_website'] ) ? '<a href="' . $comment_data[$i]['user_website'] . '" target="_userwww"><img src="' . $images['icon_www'] . '" alt="' . $lang['Visit_website'] . '" title="' . $lang['Visit_website'] . '" border="0" /></a>' : '';
+			$www = ( $comment_data[$i]['user_website'] ) ? '<a href="' . $comment_data[$i]['user_website'] . '" target="_userwww">' . $lang['Visit_website'] . '</a>' : '';
+
+			$temp_url = append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=".$comment_data[$i]['user_id']);
+			$posted = '<a href="' . $temp_url . '">' . $comment_data[$i]['username'] . '</a>';
+			$posted = $user->format_date($comment_data[$i]['post_date']);
+
+			$post = $comment_data[$i]['post'];
+
+			if ( !$board_config['allow_html'] )
+			{
+				$post = preg_replace('#(<)([\/]?.*?)(>)#is', "&lt;\\2&gt;", $post);
+			}
+
+			// Parse message and/or sig for BBCode if reqd
+			if ( $board_config['allow_bbcode'] )
+			{
+				if ( $bbcode_uid != '' )
+				{
+					$post = ( $board_config['allow_bbcode'] ) ? bbencode_second_pass($post, $bbcode_uid) : preg_replace('/\:[0-9a-z\:]+\]/si', ']', $post);
+				}
+			}
+
+			$post = make_clickable($post);
+
+			// Parse smilies
+			if ( $board_config['allow_smilies'] )
+			{
+				$post = smilies_pass($post);
+			}
+
+			// Replace newlines (we use this rather than nl2br because
+			// till recently it wasn't XHTML compliant)
+			$post = str_replace("\n", "\n<br />\n", $post);
+
+			$edit_img = '';
+			$edit = '';
+			$delpost_img = '';
+			$delpost = '';
+
+		 	if ( $auth->acl_get('m_garage') )
+			{
+				$temp_url = append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']);
+				$edit_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_edit'] . '" alt="' . $lang['Edit_delete_post'] . '" title="' . $lang['Edit_delete_post'] . '" border="0" /></a>';
+				$edit = '<a href="' . $temp_url . '">' . $lang['Edit_delete_post'] . '</a>';
+				$temp_url = append_sid("{$phpbb_root_path}garage.$phpEx", "mode=delete_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']);
+				$delpost_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_delpost'] . '" alt="' . $lang['Delete_post'] . '" title="' . $lang['Delete_post'] . '" border="0" /></a>';
+				$delpost = '<a href="' . $temp_url . '">' . $lang['Delete_post'] . '</a>';
+
+			}
+
+			$template->assign_block_vars('comments', array(
+				'POSTER_NAME' 		=> $poster,
+				'POSTER_JOINED' 	=> $poster_joined,
+				'POSTER_POSTS' 		=> $poster_posts,
+				'POSTER_FROM' 		=> $poster_from,
+				'POSTER_CAR_MARK' 	=> $poster_car_mark,
+				'POSTER_CAR_MODEL' 	=> $poster_car_model,
+				'POSTER_CAR_YEAR' 	=> $poster_car_year,
+				'VIEW_POSTER_CARPROFILE'=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=$garage_id"),
+				'POSTER_AVATAR' 	=> $poster_avatar,
+				'PROFILE_IMG' 		=> $profile_img,
+				'PROFILE' 		=> $profile,
+				'PM_IMG' 		=> $pm_img,
+				'PM'			=> $pm,
+				'EMAIL_IMG'		=> $email_img,
+				'EMAIL'			=> $email,
+				'WWW_IMG'		=> $www_img,
+				'WWW'			=> $www,
+				'EDIT_IMG'		=> $edit_img,
+				'EDIT' 			=> $edit,
+				'DELETE_IMG' 		=> $delpost_img,
+				'DELETE' 		=> $delpost,
+				'POSTER' 		=> $poster,
+				'POSTED' 		=> $posted,
+				'POST' 			=> $post)
 			);
 		}
-		//If Not First Comment Display All Existing Comments
-		else
-		{
-			for ($i = 0; $i < count($comment_data); $i++)
-			{	
-				$username = $comment_data[$i]['username'];
-				$temp_url = append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $comment_data[$i]['user_id']);
-				$poster = '<a href="' . $temp_url . '">' . $comment_data[$i]['username'] . '</a>';
-				$poster_posts = ( $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang['Posts'] . ': ' . $comment_data[$i]['user_posts'] : '';
-				$poster_from = ( $comment_data[$i]['user_from'] && $comment_data['user_id'] != ANONYMOUS ) ? $lang['Location'] . ': ' . $comment_data[$i]['user_from'] : '';
-				$garage_id = $comment_data['garage_id'];
-				$poster_car_year = ( $comment_data[$i]['made_year'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $comment_data[$i]['made_year'] : '';
-				$poster_car_mark = ( $comment_data[$i]['make'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $comment_data[$i]['make'] : '';
-				$poster_car_model = ( $comment_data[$i]['model'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $comment_data[$i]['model'] : '';
-				$poster_joined = ( $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang['Joined'] . ': ' . $user->format_date($comment_data[$i]['user_regdate']) : '';
 
-				$data['avatar'] = '';
-				if ( $data['user_avatar'] AND $user->optionget('viewavatars') )
-				{
-					$avatar_img = '';
-					switch( $data['user_avatar_type'] )
-					{
-						case AVATAR_UPLOAD:
-							$avatar_img = $config['avatar_path'] . '/' . $data['user_avatar'];
-						break;
-
-						case AVATAR_GALLERY:
-							$avatar_img = $config['avatar_gallery_path'] . '/' . $data['user_avatar'];
-						break;
-					}
-					$data['avatar'] = '<img src="' . $avatar_img . '" width="' . $data['user_avatar_width'] . '" height="' . $data['user_avatar_height'] . '" alt="" />';
-				}
-
-				$poster_avatar = '';
-
-				if ( $data['user_avatar_type'] && $comment_data[$i]['user_id'] != ANONYMOUS && $comment_data[$i]['user_allowavatar'] )
-				{
-					switch( $row['user_avatar_type'] )
-					{
-						case USER_AVATAR_UPLOAD:
-							$poster_avatar = ( $board_config['allow_avatar_upload'] ) ? '<img src="' . $board_config['avatar_path'] . '/' . $comment_data[$i]['user_avatar'] . '" alt="" border="0" />' : '';
-							break;
-						case USER_AVATAR_REMOTE:
-							$poster_avatar = ( $board_config['allow_avatar_remote'] ) ? '<img src="' . $comment_data[$i]['user_avatar'] . '" alt="" border="0" />' : '';
-							break;
-						case USER_AVATAR_GALLERY:
-							$poster_avatar = ( $board_config['allow_avatar_local'] ) ? '<img src="' . $board_config['avatar_gallery_path'] . '/' . $comment_data[$i]['user_avatar'] . '" alt="" border="0" />' : '';
-							break;
-					}
-				}
-
-				// Handle anon users posting with usernames
-				if ( $comment_data[$i]['user_id'] == ANONYMOUS && $comment_data[$i]['post_username'] != '' )
-				{
-					$poster = $comment_data[$i]['post_username'];
-				}
-
-				$profile_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_profile'] . '" alt="' . $lang['Read_profile'] . '" title="' . $lang['Read_profile'] . '" border="0" /></a>';
-				$profile = '<a href="' . $temp_url . '">' . $lang['Read_profile'] . '</a>';
-
-				$temp_url = append_sid("{$phpbb_root_path}privmsg.$phpEx", "mode=post&amp;u=".$comment_data[$i]['user_id']);
-				$pm_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_pm'] . '" alt="' . $lang['Send_private_message'] . '" title="' . $lang['Send_private_message'] . '" border="0" /></a>';
-				$pm = '<a href="' . $temp_url . '">' . $lang['Send_private_message'] . '</a>';
-
-				if ( !empty($comment_data[$i]['user_viewemail']) || $is_auth['auth_mod'] )
-				{
-					$email_uri = ( $board_config['board_email_form'] ) ? append_sid("{$phpbb_root_path}profile.$phpEx", "mode=email&amp;u=" . $comment_data[$i]['user_id']) : 'mailto:' . $comment_data['user_email'];
-
-					$email_img = '<a href="' . $email_uri . '"><img src="' . $images['icon_email'] . '" alt="' . $lang['Send_email'] . '" title="' . $lang['Send_email'] . '" border="0" /></a>';
-					$email = '<a href="' . $email_uri . '">' . $lang['Send_email'] . '</a>';
-				}
-				else
-				{
-					$email_img = '';
-					$email = '';
-				}
-
-				$www_img = ( $comment_data[$i]['user_website'] ) ? '<a href="' . $comment_data[$i]['user_website'] . '" target="_userwww"><img src="' . $images['icon_www'] . '" alt="' . $lang['Visit_website'] . '" title="' . $lang['Visit_website'] . '" border="0" /></a>' : '';
-				$www = ( $comment_data[$i]['user_website'] ) ? '<a href="' . $comment_data[$i]['user_website'] . '" target="_userwww">' . $lang['Visit_website'] . '</a>' : '';
-
-				$temp_url = append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=".$comment_data[$i]['user_id']);
-				$posted = '<a href="' . $temp_url . '">' . $comment_data[$i]['username'] . '</a>';
-				$posted = $user->format_date($comment_data[$i]['post_date']);
-
-				$post = $comment_data[$i]['post'];
-
-				if ( !$board_config['allow_html'] )
-				{
-					$post = preg_replace('#(<)([\/]?.*?)(>)#is', "&lt;\\2&gt;", $post);
-				}
-
-				// Parse message and/or sig for BBCode if reqd
-				if ( $board_config['allow_bbcode'] )
-				{
-					if ( $bbcode_uid != '' )
-					{
-						$post = ( $board_config['allow_bbcode'] ) ? bbencode_second_pass($post, $bbcode_uid) : preg_replace('/\:[0-9a-z\:]+\]/si', ']', $post);
-					}
-				}
-
-				$post = make_clickable($post);
-
-				// Parse smilies
-				if ( $board_config['allow_smilies'] )
-				{
-					$post = smilies_pass($post);
-				}
-
-				// Replace newlines (we use this rather than nl2br because
-				// till recently it wasn't XHTML compliant)
-				$post = str_replace("\n", "\n<br />\n", $post);
-
-				$edit_img = '';
-				$edit = '';
-				$delpost_img = '';
-				$delpost = '';
-
-			 	if ( $auth->acl_get('m_garage') )
-				{
-					$temp_url = append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']);
-					$edit_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_edit'] . '" alt="' . $lang['Edit_delete_post'] . '" title="' . $lang['Edit_delete_post'] . '" border="0" /></a>';
-					$edit = '<a href="' . $temp_url . '">' . $lang['Edit_delete_post'] . '</a>';
-					$temp_url = append_sid("{$phpbb_root_path}garage.$phpEx", "mode=delete_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']);
-					$delpost_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_delpost'] . '" alt="' . $lang['Delete_post'] . '" title="' . $lang['Delete_post'] . '" border="0" /></a>';
-					$delpost = '<a href="' . $temp_url . '">' . $lang['Delete_post'] . '</a>';
-
-				}
-
-				$template->assign_block_vars('comments', array(
-					'POSTER_NAME' 		=> $poster,
-					'POSTER_JOINED' 	=> $poster_joined,
-					'POSTER_POSTS' 		=> $poster_posts,
-					'POSTER_FROM' 		=> $poster_from,
-					'POSTER_CAR_MARK' 	=> $poster_car_mark,
-					'POSTER_CAR_MODEL' 	=> $poster_car_model,
-					'POSTER_CAR_YEAR' 	=> $poster_car_year,
-					'VIEW_POSTER_CARPROFILE' => append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=$garage_id"),
-					'POSTER_AVATAR' 	=> $poster_avatar,
-					'PROFILE_IMG' 		=> $profile_img,
-					'PROFILE' 		=> $profile,
-					'PM_IMG' 		=> $pm_img,
-					'PM'			=> $pm,
-					'EMAIL_IMG'		=> $email_img,
-					'EMAIL'			=> $email,
-					'WWW_IMG'		=> $www_img,
-					'WWW'			=> $www,
-					'EDIT_IMG'		=> $edit_img,
-					'EDIT' 			=> $edit,
-					'DELETE_IMG' 		=> $delpost_img,
-					'DELETE' 		=> $delpost,
-					'POSTER' 		=> $poster,
-					'POSTED' 		=> $posted,
-					'POST' 			=> $post)
-				);
-			}
-		}
-
-		$template->assign_block_vars('level1', array());
-		$template->assign_block_vars('level3_nolink', array());
 		$template->assign_vars(array(
-			'CID' => $cid,
-			'U_LEVEL1' => append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=$cid"),
-			'L_LEVEL1' => $vehicle_data['vehicle'],
-			'L_LEVEL3' => $lang['Guestbook'],
-			'L_GUESTBOOK_TITLE' => $vehicle_data['username'] . " - " . $vehicle_data['vehicle'] . " " . $lang['Guestbook'],
-			'S_MODE_ACTION' => append_sid("{$phpbb_root_path}garage.$phpEx", "mode=insert_comment&CID=$cid"))
+			'L_GUESTBOOK_TITLE' 	=> $vehicle_data['username'] . " - " . $vehicle_data['vehicle'] . " " . $lang['Guestbook'],
+			'CID' 			=> $cid,
+			'S_DISPLAY_LEAVE_COMMENT'=> $auth->acl_get('u_garage_comment'),
+			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=insert_comment&CID=$cid"))
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
@@ -3115,12 +3124,12 @@ switch( $mode )
 		$garage_guestbook->insert_vehicle_comment($data);
 
 		//Get Vehicle Data So We Can Check If We Need To PM User
-		$data = $garage_vehicle->select_vehicle_data($cid);		
+		$data = $garage_vehicle->get_vehicle($cid);		
 		$data['author_id'] = $user->data['user_id'];
 		$data['time'] = time();
 
 		//If User Has Requested Notification On Comments Sent Them A PM
-		if ( $data['guestbook_pm_notify'] == TRUE )
+		if ( $data['guestbook_pm_notify'] == true )
 		{
 			//Build Rest Of Required Data
 			$data['date'] 		= date("U");
@@ -3149,7 +3158,7 @@ switch( $mode )
 		}
 
 		//Pull Required Comment Data From DB
-		$data = $garage_guestbook->select_comment_data($comment_id);	
+		$data = $garage_guestbook->get_comment($comment_id);	
 		
 		$template->assign_vars(array(
 			'L_LEVEL1' 	 => $data['vehicle'],
@@ -3254,7 +3263,7 @@ switch( $mode )
 		$garage->check_required_vars($params);
 
 		//Pull Required Data From DB
-	        $vehicle_data = $garage_vehicle->select_vehicle_data($cid);
+	        $vehicle_data = $garage_vehicle->get_vehicle($cid);
 
 		//If User Is Guest Generate Unique Number For User ID....
 		srand($garage->make_seed());
@@ -3323,8 +3332,8 @@ switch( $mode )
 		}
 
 		//Let Get Vehicle Rating & Delete Them
-		$data = $garage_vehicle->select_vehicle_rating_data($cid);
-		for ($i = 0; $i < count($data); $i++)
+		$data = $garage_vehicle->get_vehicle_rating($cid);
+		for ($i = 0; $count = sizeof($data);$i < $count; $i++)
 		{
 			$garage->delete_rows(GARAGE_RATING_TABLE, 'id', $data['id']);
 		}

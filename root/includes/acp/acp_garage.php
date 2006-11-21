@@ -6,7 +6,6 @@
 * @copyright (c) 2005 phpBB Group 
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
 *
-* @todo add cron intervals to server settings? (database_gc, queue_interval, session_gc, search_gc, cache_gc, warnings_gc)
 */
 
 /**
@@ -22,6 +21,12 @@ class acp_garage
 		global $db, $user, $auth, $template;
 		global $config, $phpbb_root_path, $phpbb_admin_path, $phpEx;
 
+		//Build All Garage Classes e.g $garage_images->
+		require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
+		require($phpbb_root_path . 'includes/mods/class_garage_admin.' . $phpEx);
+
+
+		$user->add_lang('acp/board');
 		$user->add_lang('acp/garage');
 
 		$action	= request_var('action', '');
@@ -33,291 +38,187 @@ class acp_garage
 				$display_vars = array(
 					'title'	=> 'ACP_GARAGE_SETTINGS',
 					'vars'	=> array(
-						'legend1'		=> 'ACP_GARAGE_SETTINGS',
-						'sitename'		=> array('lang' => 'SITE_NAME',			'type' => 'text:40:255', 'explain' => false),
-						'site_desc'		=> array('lang' => 'SITE_DESC',			'type' => 'text:40:255', 'explain' => false),
-						'board_disable'		=> array('lang' => 'DISABLE_BOARD',		'type' => 'custom', 'method' => 'board_disable', 'explain' => true),
-						'board_disable_msg'	=> false,
-						'default_lang'		=> array('lang' => 'DEFAULT_LANGUAGE',		'type' => 'select', 'function' => 'language_select', 'params' => array('{CONFIG_VALUE}'), 'explain' => false),
-						'default_dateformat'	=> array('lang' => 'DEFAULT_DATE_FORMAT',	'type' => 'custom', 'method' => 'dateformat_select', 'explain' => true),
-						'board_timezone'	=> array('lang' => 'SYSTEM_TIMEZONE',		'type' => 'select', 'function' => 'tz_select', 'params' => array('{CONFIG_VALUE}'), 'explain' => false),
-						'board_dst'		=> array('lang' => 'SYSTEM_DST',		'type' => 'radio:yes_no', 'explain' => false),
-						'default_style'		=> array('lang' => 'DEFAULT_STYLE',		'type' => 'select', 'function' => 'style_select', 'params' => array('{CONFIG_VALUE}', true), 'explain' => false),
-						'override_user_style'	=> array('lang' => 'OVERRIDE_STYLE',		'type' => 'radio:yes_no', 'explain' => true),
+						'legend1'			=> 'ACP_GARAGE_GENERAL_CONFIG',
+						'cars_per_page'			=> array('lang' => 'VEHICLES_PER_PAGE', 'type' => 'text:3:4', 'explain' => true),
+						'year_start'			=> array('lang' => 'YEAR_RANGE_BEGINNING', 'type' => 'text:3:4', 'explain' => true),
+						'year_end'			=> array('lang' => 'YEAR_RANGE_END', 'type' => 'text:3:4', 'explain' => true),
+						'enable_user_submit_make'	=> array('lang' => 'USER_SUBMIT_MAKE', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_user_submit_model'	=> array('lang' => 'USER_SUBMIT_MODEL', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_latestmain_vehicle' 	=> array('lang' => 'ENABLE_LATESTMAIN_VEHICLE', 'type' => 'radio:yes_no', 'explain' => true),
+						'latestmain_vehicle_limit' 	=> array('lang' => 'LATESTMAIN_VEHCILE_LIMIT', 'type' => 'text:3:4', 'explain' => true),
+						'garage_dateformat'		=> array('lang' => 'GARAGE_DATE_FORMAT', 'type' => 'custom', 'method' => 'dateformat_select', 'explain' => true),
+						'profile_integration'		=> array('lang' => 'PROFILE_INTEGRATION', 'type' => 'radio:yes_no', 'explain' => true),
 
-						'legend2'		=> 'WARNINGS',
-						'warnings_expire_days'	=> array('lang' => 'WARNINGS_EXPIRE',		'type' => 'text:3:4', 'explain' => true),
+						'legend2'			=> 'ACP_GARAGE_MENU_CONFIG',
+						'enable_browse_menu' 		=> array('lang' => 'ENABLE_BROWSE_MENU', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_search_menu' 		=> array('lang' => 'ENABLE_SEARCH_MENU', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_insurance_review_menu' 	=> array('lang' => 'ENABLE_INSURANCE_REVIEW_MENU', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_garage_review_menu' 	=> array('lang' => 'ENABLE_GARAGE_REVIEW_MENU', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_shop_review_menu' 	=> array('lang' => 'ENABLE_SHOP_REVIEW_MENU', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_quartermile_menu' 	=> array('lang' => 'ENABLE_QUARTERMILE_MENU', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_dynorun_menu' 		=> array('lang' => 'ENABLE_DYNORUN_MENU', 'type' => 'radio:yes_no', 'explain' => true),
+
+						'legend3'			=> 'ACP_GARAGE_INDEX_CONFIG',
+						'enable_featured_vehicle' 	=> array('lang' => 'ENABLE_FEATURED_VEHICLE', 'type' => 'radio:yes_no', 'explain' => true),
+						'default_style'			=> array('lang' => 'DEFAULT_STYLE', 'type' => 'select', 'function' => 'style_select', 'params' => array('{CONFIG_VALUE}', true), 'explain' => false),
+						'enable_newest_vehicle' 	=> array('lang' => 'ENABLE_NEWEST_VEHCILE', 'type' => 'radio:yes_no', 'explain' => true),
+						'newest_vehicle_limit'		=> array('lang' => 'NEWEST_VEHICLE_LIMIT', 'type' => 'text:3:4', 'explain' => true),
+						'enable_updated_vehicle'	=> array('lang' => 'ENABLE_UPDATED_VEHICLE', 'type' => 'radio:yes_no', 'explain' => true),
+						'updated_vehicle_limit'		=> array('lang' => 'UPDATED_VEHICLE_LIMIT', 'type' => 'text:3:4', 'explain' => true),
+						'enable_newest_modification'	=> array('lang' => 'ENABLE_NEWEST_MODIFICATION', 'type' => 'radio:yes_no', 'explain' => true),
+						'newest_modification_limit'	=> array('lang' => 'NEWEST_MODIFICATION_LIMIT', 'type' => 'text:3:4', 'explain' => true),
+						'enable_updated_modification'	=> array('lang' => 'ENABLE_UPDATED_MODIFICATION', 'type' => 'radio:yes_no', 'explain' => true),
+						'updated_modification_limit'	=> array('lang' => 'UPDATED_MODIFICATION_LIMIT', 'type' => 'text:3:4', 'explain' => true),
+						'enable_most_modified'		=> array('lang' => 'ENABLE_MOST_MODIFIED', 'type' => 'radio:yes_no', 'explain' => true),
+						'most_modified_limit'		=> array('lang' => 'MOST_MODIFIED_LIMIT', 'type' => 'text:3:4', 'explain' => true),
+						'enable_most_spent'		=> array('lang' => 'ENABLE_MOST_SPENT', 'type' => 'radio:yes_no', 'explain' => true),
+						'most_spent_limit'		=> array('lang' => 'MOST_SPENT_LIMIT', 'type' => 'text:3:4', 'explain' => true),
+						'enable_most_viewed'		=> array('lang' => 'ENABLE_MOST_VIEWED', 'type' => 'radio:yes_no', 'explain' => true),
+						'most_viewed_limit'		=> array('lang' => 'MOST_VIEWED_LIMIT', 'type' => 'text:3:4', 'explain' => true),
+						'enable_last_commented'		=> array('lang' => 'ENABLE_LAST_COMMENTED', 'type' => 'radio:yes_no', 'explain' => true),
+						'last_commented_limit'		=> array('lang' => 'LAST_COMMENTED_LIMIT', 'type' => 'text:3:4', 'explain' => true),
+						'enable_top_dynorun'		=> array('lang' => 'ENABLE_TOP_DYNORUN', 'type' => 'radio:yes_no', 'explain' => true),
+						'top_dynorun_limit'		=> array('lang' => 'TOP_DYNORUN_LIMIT', 'type' => 'text:3:4', 'explain' => true),
+						'enable_top_quartermile'	=> array('lang' => 'ENABLE_TOP_QUARTERMILE', 'type' => 'radio:yes_no', 'explain' => true),
+						'top_quartermile_limit'		=> array('lang' => 'TOP_QUARTERMILE_LIMIT', 'type' => 'text:3:4', 'explain' => true),
+						'enable_top_rating'		=> array('lang' => 'ENABLE_TOP_RATING', 'type' => 'radio:yes_no', 'explain' => true),
+						'top_rating_limit'		=> array('lang' => 'TOP_RATING_LIMIT', 'type' => 'text:3:4', 'explain' => true),
+
+						'legend4'			=> 'ACP_GARAGE_IMAGE_CONFIG',
+						'enable_images'			=> array('lang' => 'ENABLE_IMAGES', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_vehicle_images'		=> array('lang' => 'ENABLE_VEHICLE_IMAGES', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_modification_images'	=> array('lang' => 'ENABLE_MODIFICATION_IMAGES', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_quartermile_images'	=> array('lang' => 'ENABLE_QUARTERMILE_IMAGES', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_dynorun_images'		=> array('lang' => 'ENABLE_DYNORUN_IMAGES', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_uploaded_images'	=> array('lang' => 'ENABLE_UPLOADED_IMAGES', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_remote_images'		=> array('lang' => 'ENABLE_REMOTE_IMAGES', 'type' => 'radio:yes_no', 'explain' => true),
+						'remote_timeout'		=> array('lang' => 'REMOTE_TIMEOUT', 'type' => 'text:3:4', 'explain' => true),
+						'enable_mod_gallery'		=> array('lang' => 'ENABLE_MODIFICATION_GALLERY', 'type' => 'radio:yes_no', 'explain' => true),
+						'mod_gallery_limit'		=> array('lang' => 'MODIFICATION_GALLERY_LIMIT', 'type' => 'text:3:4', 'explain' => true),
+						'max_kbytes'			=> array('lang' => 'IMAGE_MAX_SIZE', 'type' => 'text:3:4', 'explain' => true),
+						'max_resolution'		=> array('lang' => 'IMAGE_MAX_RESOLUTION', 'type' => 'text:3:4', 'explain' => true),
+						'thumbnail_resolution'		=> array('lang' => 'THUMBNAIL_RESOLUTION', 'type' => 'text:3:4', 'explain' => true),
+
+						'legend5'			=> 'ACP_GARAGE_QUARTERMILE_CONFIG',
+						'enable_quartermile'		=> array('lang' => 'ENABLE_QUARTERMILE', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_quartermile_approval'	=> array('lang' => 'ENABLE_QUARTERMILE_APPROVAL', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_quartermile_image_required'=> array('lang' => 'ENABLE_QUARTERMILE_IMAGE_REQUIRED', 'type' => 'radio:yes_no', 'explain' => true),
+						'quartermile_image_required_limit'=> array('lang' => 'QUARTERMILE_IMAGE_REQUIRED_LIMIT', 'type' => 'text:3:4', 'explain' => true),
+
+						'legend6'			=> 'ACP_GARAGE_DYNORUN_CONFIG',
+						'enable_dynorun'		=> array('lang' => 'ENABLE_DYNORUN', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_dynorun_approval'	=> array('lang' => 'ENABLE_DYNORUN_APPROVAL', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_dynorun_image_required'	=> array('lang' => 'ENABLE_DYNORUN_IMAGE_REQUIRED', 'type' => 'radio:yes_no', 'explain' => true),
+						'dynorun_image_required_limit'	=> array('lang' => 'DYNORUN_IMAGE_REQUIRED_LIMIT', 'type' => 'text:3:4', 'explain' => true),
+
+						'legend7'			=> 'ACP_GARAGE_INSURANCE_CONFIG',
+						'enable_insurance'		=> array('lang' => 'ENABLE_INSURANCE', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_insurance_search'	=> array('lang' => 'ENABLE_INSURANCE_SEARCH', 'type' => 'radio:yes_no', 'explain' => true),
+
+						'legend8'			=> 'ACP_GARAGE_BUSINESS_CONFIG',
+						'enable_business_approval'	=> array('lang' => 'BUSINESS_APPROVAL', 'type' => 'radio:yes_no', 'explain' => true),
+
+						'legend9'			=> 'ACP_GARAGE_VEHICLE_RATING_CONFIG',
+						'ratings_permanent'		=> array('lang' => 'RATING_PERMANENT', 'type' => 'radio:yes_no', 'explain' => true),
+						'ratings_always_updateable'	=> array('lang' => 'RATING_ALWAYS_UPDATEABLE', 'type' => 'radio:yes_no', 'explain' => true),
+						'magic_number'			=> array('lang' => 'RATING_MINIMUM_REQUIRED', 'type' => 'text:3:4', 'explain' => true),
+
+						'legend10'			=> 'ACP_GARAGE_GUESTBOOK_CONFIG',
+						'enable_guestbook'		=> array('lang' => 'ENABLE_GUESTBOOK', 'type' => 'radio:yes_no', 'explain' => true),
+
 					)
 				);
+
+				if (isset($display_vars['lang']))
+				{
+					$user->add_lang($display_vars['lang']);
+				}
+
+				$this->new_config = $garage_config;
+				$cfg_array = (isset($_REQUEST['config'])) ? request_var('config', array('' => '')) : $this->new_config;
+
+				// We go through the display_vars to make sure no one is trying to set variables he/she is not allowed to...
+				foreach ($display_vars['vars'] as $config_name => $null)
+				{
+					if (!isset($cfg_array[$config_name]) || strpos($config_name, 'legend') !== false)
+					{
+						continue;
+					}
+
+					$this->new_config[$config_name] = $config_value = $cfg_array[$config_name];
+	
+					if ($submit)
+					{
+						$garage_admin->set_config($config_name, $config_value, $garage_config);
+					}
+				}
+
+				if ($submit)
+				{
+					add_log('admin', 'LOG_CONFIG_' . strtoupper($mode));
+
+					trigger_error($user->lang['CONFIG_UPDATED'] . adm_back_link($this->u_action));
+				}
+
+				$this->tpl_name = 'acp_board';
+				$this->page_title = $display_vars['title'];
+
+				$template->assign_vars(array(
+					'L_TITLE'			=> $user->lang[$display_vars['title']],
+					'L_TITLE_EXPLAIN'	=> $user->lang[$display_vars['title'] . '_EXPLAIN'],
+					'U_ACTION'			=> $this->u_action)
+				);
+
+				// Output relevant page
+				foreach ($display_vars['vars'] as $config_key => $vars)
+				{
+					if (!is_array($vars) && strpos($config_key, 'legend') === false)
+					{
+						continue;
+					}
+	
+					if (strpos($config_key, 'legend') !== false)
+					{
+						$template->assign_block_vars('options', array(
+							'S_LEGEND'	=> true,
+							'LEGEND'	=> (isset($user->lang[$vars])) ? $user->lang[$vars] : $vars)
+						);
+		
+						continue;
+					}
+	
+					$type = explode(':', $vars['type']);
+	
+					$l_explain = '';
+					if ($vars['explain'] && isset($vars['lang_explain']))
+					{
+						$l_explain = (isset($user->lang[$vars['lang_explain']])) ? $user->lang[$vars['lang_explain']] : $vars['lang_explain'];
+					}
+					else if ($vars['explain'])
+					{
+						$l_explain = (isset($user->lang[$vars['lang'] . '_EXPLAIN'])) ? $user->lang[$vars['lang'] . '_EXPLAIN'] : '';
+					}
+
+					$template->assign_block_vars('options', array(
+						'KEY'			=> $config_key,
+						'TITLE'			=> (isset($user->lang[$vars['lang']])) ? $user->lang[$vars['lang']] : $vars['lang'],
+						'S_EXPLAIN'		=> $vars['explain'],
+						'TITLE_EXPLAIN'		=> $l_explain,
+						'CONTENT'		=> build_cfg_template($type, $config_key, $this->new_config, $config_key, $vars),
+						)
+					);
+		
+					unset($display_vars['vars'][$config_key]);
+				}
 			break;
 
 			default:
 				trigger_error('NO_MODE');
 		}
 
-		if (isset($display_vars['lang']))
-		{
-			$user->add_lang($display_vars['lang']);
-		}
 
-		$this->new_config = $config;
-		$cfg_array = (isset($_REQUEST['config'])) ? request_var('config', array('' => '')) : $this->new_config;
-
-		// We go through the display_vars to make sure no one is trying to set variables he/she is not allowed to...
-		foreach ($display_vars['vars'] as $config_name => $null)
-		{
-			if (!isset($cfg_array[$config_name]) || strpos($config_name, 'legend') !== false)
-			{
-				continue;
-			}
-
-			if ($config_name == 'auth_method')
-			{
-				continue;
-			}
-
-			$this->new_config[$config_name] = $config_value = $cfg_array[$config_name];
-
-			if ($config_name == 'email_function_name')
-			{
-				$this->new_config['email_function_name'] = trim(str_replace(array('(', ')'), array('', ''), $this->new_config['email_function_name']));
-				$this->new_config['email_function_name'] = (empty($this->new_config['email_function_name']) || !function_exists($this->new_config['email_function_name'])) ? 'mail' : $this->new_config['email_function_name'];
-				$config_value = $this->new_config['email_function_name'];
-			}
-
-			if ($submit)
-			{
-				set_config($config_name, $config_value);
-			}
-		}
-
-		if ($mode == 'auth')
-		{
-			// Retrieve a list of auth plugins and check their config values
-			$auth_plugins = array();
-
-			$dp = opendir($phpbb_root_path . 'includes/auth');
-			while (($file = readdir($dp)) !== false)
-			{
-				if (preg_match('#^auth_(.*?)\.' . $phpEx . '$#', $file))
-				{
-					$auth_plugins[] = preg_replace('#^auth_(.*?)\.' . $phpEx . '$#', '\1', $file);
-				}
-			}
-
-			sort($auth_plugins);
-
-			$updated_auth_settings = false;
-			$old_auth_config = array();
-			foreach ($auth_plugins as $method)
-			{
-				if ($method && file_exists($phpbb_root_path . 'includes/auth/auth_' . $method . '.' . $phpEx))
-				{
-					include_once($phpbb_root_path . 'includes/auth/auth_' . $method . '.' . $phpEx);
-
-					$method = 'admin_' . $method;
-					if (function_exists($method))
-					{
-						if ($fields = $method($this->new_config))
-						{
-							// Check if we need to create config fields for this plugin and save config when submit was pressed
-							foreach ($fields['config'] as $field)
-							{
-								if (!isset($config[$field]))
-								{
-									set_config($field, '');
-								}
-
-								if (!isset($cfg_array[$field]) || strpos($field, 'legend') !== false)
-								{
-									continue;
-								}
-
-								$old_auth_config[$field] = $this->new_config[$field];
-								$config_value = $cfg_array[$field];
-								$this->new_config[$field] = $config_value;
-
-								if ($submit)
-								{
-									$updated_auth_settings = true;
-									set_config($field, $config_value);
-								}
-							}
-						}
-						unset($fields);
-					}
-				}
-			}
-
-			if ($submit && (($cfg_array['auth_method'] != $this->new_config['auth_method']) || $updated_auth_settings))
-			{
-				$method = $cfg_array['auth_method'];
-				if ($method && in_array($method, $auth_plugins))
-				{
-					include_once($phpbb_root_path . 'includes/auth/auth_' . $method . '.' . $phpEx);
-
-					$method = 'init_' . $method;
-					if (function_exists($method))
-					{
-						if ($error = $method())
-						{
-							foreach ($old_auth_config as $config_name => $config_value)
-							{
-								set_config($config_name, $config_value);
-							}
-							trigger_error($error . adm_back_link($this->u_action));
-						}
-					}
-					set_config('auth_method', $cfg_array['auth_method']);
-				}
-				else
-				{
-					trigger_error('NO_AUTH_PLUGIN');
-				}
-			}
-		}
-
-		if ($submit)
-		{
-			add_log('admin', 'LOG_CONFIG_' . strtoupper($mode));
-
-			trigger_error($user->lang['CONFIG_UPDATED'] . adm_back_link($this->u_action));
-		}
-
-		$this->tpl_name = 'acp_board';
-		$this->page_title = $display_vars['title'];
-
-		$template->assign_vars(array(
-			'L_TITLE'			=> $user->lang[$display_vars['title']],
-			'L_TITLE_EXPLAIN'	=> $user->lang[$display_vars['title'] . '_EXPLAIN'],
-			'U_ACTION'			=> $this->u_action)
-		);
-
-		// Output relevant page
-		foreach ($display_vars['vars'] as $config_key => $vars)
-		{
-			if (!is_array($vars) && strpos($config_key, 'legend') === false)
-			{
-				continue;
-			}
-
-			if (strpos($config_key, 'legend') !== false)
-			{
-				$template->assign_block_vars('options', array(
-					'S_LEGEND'		=> true,
-					'LEGEND'		=> (isset($user->lang[$vars])) ? $user->lang[$vars] : $vars)
-				);
-
-				continue;
-			}
-
-			$type = explode(':', $vars['type']);
-
-			$l_explain = '';
-			if ($vars['explain'] && isset($vars['lang_explain']))
-			{
-				$l_explain = (isset($user->lang[$vars['lang_explain']])) ? $user->lang[$vars['lang_explain']] : $vars['lang_explain'];
-			}
-			else if ($vars['explain'])
-			{
-				$l_explain = (isset($user->lang[$vars['lang'] . '_EXPLAIN'])) ? $user->lang[$vars['lang'] . '_EXPLAIN'] : '';
-			}
-
-			$template->assign_block_vars('options', array(
-				'KEY'			=> $config_key,
-				'TITLE'			=> (isset($user->lang[$vars['lang']])) ? $user->lang[$vars['lang']] : $vars['lang'],
-				'S_EXPLAIN'		=> $vars['explain'],
-				'TITLE_EXPLAIN'	=> $l_explain,
-				'CONTENT'		=> build_cfg_template($type, $config_key, $this->new_config, $config_key, $vars),
-				)
-			);
-		
-			unset($display_vars['vars'][$config_key]);
-		}
-
-		if ($mode == 'auth')
-		{
-			$template->assign_var('S_AUTH', true);
-
-			foreach ($auth_plugins as $method)
-			{
-				if ($method && file_exists($phpbb_root_path . 'includes/auth/auth_' . $method . '.' . $phpEx))
-				{
-					$method = 'admin_' . $method;
-					if (function_exists($method))
-					{
-						$fields = $method($this->new_config);
-
-						if ($fields['tpl'])
-						{
-							$template->assign_block_vars('auth_tpl', array(
-								'TPL'	=> $fields['tpl'])
-							);
-						}
-						unset($fields);
-					}
-				}
-			}
-		}
 	}
 
-	/**
-	* Select auth method
-	*/
-	function select_auth_method($selected_method, $key = '')
-	{
-		global $phpbb_root_path, $phpEx;
-
-		$auth_plugins = array();
-
-		$dp = opendir($phpbb_root_path . 'includes/auth');
-		while (($file = readdir($dp)) !== false)
-		{
-			if (preg_match('#^auth_(.*?)\.' . $phpEx . '$#', $file))
-			{
-				$auth_plugins[] = preg_replace('#^auth_(.*?)\.' . $phpEx . '$#', '\1', $file);
-			}
-		}
-
-		sort($auth_plugins);
-
-		$auth_select = '';
-		foreach ($auth_plugins as $method)
-		{
-			$selected = ($selected_method == $method) ? ' selected="selected"' : '';
-			$auth_select .= '<option value="' . $method . '"' . $selected . '>' . ucfirst($method) . '</option>';
-		}
-
-		return $auth_select;
-	}
-
-	/**
-	* Select mail authentication method
-	*/
-	function mail_auth_select($selected_method, $key = '')
-	{
-		global $user;
-
-		$auth_methods = array('PLAIN', 'LOGIN', 'CRAM-MD5', 'DIGEST-MD5', 'POP-BEFORE-SMTP');
-		$s_smtp_auth_options = '';
-
-		foreach ($auth_methods as $method)
-		{
-			$s_smtp_auth_options .= '<option value="' . $method . '"' . (($selected_method == $method) ? ' selected="selected"' : '') . '>' . $user->lang['SMTP_' . str_replace('-', '_', $method)] . '</option>';
-		}
-
-		return $s_smtp_auth_options;
-	}
-
-	/**
-	* Select full folder action
-	*/
-	function full_folder_select($value, $key = '')
-	{
-		global $user;
-
-		return '<option value="1"' . (($value == 1) ? ' selected="selected"' : '') . '>' . $user->lang['DELETE_OLDEST_MESSAGES'] . '</option><option value="2"' . (($value == 2) ? ' selected="selected"' : '') . '>' . $user->lang['HOLD_NEW_MESSAGES_SHORT'] . '</option>';
-	}
 
 	/**
 	* Select captcha pixel noise
@@ -365,69 +266,6 @@ class acp_garage
 		return '<input id="' . $key . '" type="text" size="3" maxlength="3" name="config[min_name_chars]" value="' . $value . '" /> ' . $user->lang['MIN_CHARS'] . '&nbsp;&nbsp;<input type="text" size="3" maxlength="3" name="config[max_name_chars]" value="' . $this->new_config['max_name_chars'] . '" /> ' . $user->lang['MAX_CHARS'];
 	}
 
-	/**
-	* Allowed chars in usernames
-	*/
-	function select_username_chars($selected_value, $key)
-	{
-		global $user;
-
-		$user_char_ary = array('USERNAME_CHARS_ANY' => '.*', 'USERNAME_ALPHA_ONLY' => '[\w]+', 'USERNAME_ALPHA_SPACERS' => '[\w_\+\. \-\[\]]+');
-		$user_char_options = '';
-		foreach ($user_char_ary as $lang => $value)
-		{
-			$selected = ($selected_value == $value) ? ' selected="selected"' : '';
-			$user_char_options .= '<option value="' . $value . '"' . $selected . '>' . $user->lang[$lang] . '</option>';
-		}
-
-		return $user_char_options;
-	}
-
-	/**
-	* Maximum/Minimum password length
-	*/
-	function password_length($value, $key)
-	{
-		global $user;
-
-		return '<input id="' . $key . '" type="text" size="3" maxlength="3" name="config[min_pass_chars]" value="' . $value . '" /> ' . $user->lang['MIN_CHARS'] . '&nbsp;&nbsp;<input type="text" size="3" maxlength="3" name="config[max_pass_chars]" value="' . $this->new_config['max_pass_chars'] . '" /> ' . $user->lang['MAX_CHARS'];
-	}
-
-	/**
-	* Required chars in passwords
-	*/
-	function select_password_chars($selected_value, $key)
-	{
-		global $user;
-
-		$pass_type_ary = array('PASS_TYPE_ANY' => '.*', 'PASS_TYPE_CASE' => '[a-zA-Z]', 'PASS_TYPE_ALPHA' => '[a-zA-Z0-9]', 'PASS_TYPE_SYMBOL' => '[a-zA-Z\W]');
-		$pass_char_options = '';
-		foreach ($pass_type_ary as $lang => $value)
-		{
-			$selected = ($selected_value == $value) ? ' selected="selected"' : '';
-			$pass_char_options .= '<option value="' . $value . '"' . $selected . '>' . $user->lang[$lang] . '</option>';
-		}
-
-		return $pass_char_options;
-	}
-
-	/**
-	* Select bump interval
-	*/
-	function bump_interval($value, $key)
-	{
-		global $user;
-
-		$s_bump_type = '';
-		$types = array('m' => 'MINUTES', 'h' => 'HOURS', 'd' => 'DAYS');
-		foreach ($types as $type => $lang)
-		{
-			$selected = ($this->new_config['bump_type'] == $type) ? ' selected="selected"' : '';
-			$s_bump_type .= '<option value="' . $type . '"' . $selected . '>' . $user->lang[$lang] . '</option>';
-		}
-
-		return '<input id="' . $key . '" type="text" size="3" maxlength="4" name="config[bump_interval]" value="' . $value . '" />&nbsp;<select name="config[bump_type]">' . $s_bump_type . '</select>';
-	}
 
 	/**
 	* Board disable option and message
