@@ -9,11 +9,12 @@
 				</tr>
 				<tr>
 					<td class="row1" width="30%"><span class="gen"><b>{L_YEAR}</b></span></td>
-					<td class="row2">{YEAR_LIST}&nbsp;<span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font></span></td>
+					<td class="row2">{YEAR_LIST} <span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td>
 				</tr>
 				<tr>
 					<td class="row1" width="30%"><span class="gen"><b>{L_MAKE}</b></span></td>
-					<td class="row2"><select name="make_id" onchange="updateModelSelect(this.form.model_id, this.options[this.selectedIndex].text, '');" class="forminput"><option value="{MAKE_ID}">{L_SELECT_MODEL}</option></select>&nbsp;<span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font></span>
+					<td class="row2"><select name="make_id" onchange="updateModelSelect(this.form.model_id, this.options[this.selectedIndex].text, '');" class="forminput"><option value="{MAKE_ID}">{L_SELECT_MODEL}</option></select> <span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span>
+
 					<!-- BEGIN enable_user_submit_make -->
 						&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="javascript:add_make()">{L_HERE}</a></span>
 					<!-- END enable_user_submit_make -->
@@ -21,7 +22,7 @@
 				</tr>
 				<tr>
 					<td class="row1" width="30%"><span class="gen"><b>{L_MODEL}</b></span></td>
-					<td class="row2"><select name="model_id" class="forminput"><option value="">{L_ANY_MODEL}</option></select>&nbsp;<span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font></span>
+					<td class="row2"><select name="model_id" class="forminput"><option value="">{L_ANY_MODEL}</option></select> <span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span>
 					<!-- BEGIN enable_user_submit_model -->
 						&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="javascript:add_model()">{L_HERE}</a></span>
 					<!-- END enable_user_submit_model -->

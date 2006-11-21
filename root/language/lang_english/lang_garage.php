@@ -559,7 +559,9 @@ $lang['Log_To'] = 'We will log to : ';
 $lang['Out_Of'] = 'Out Of';
 $lang['Kbytes'] = 'kbytes';
 
+$lang['Your_File_Type_Was'] = 'Your File Type Was';
 //Added For New Category & Business Admin Pages
+$lang['Move_Uploaded_File_Disallowed'] = 'open_basedir is set and your PHP version does not allow move_uploaded_file<br /><br />Please contact your server admin';
 $lang['Deny'] = 'Deny';
 $lang['Rename'] = 'Rename';
 $lang['Empty_Title'] = 'You Have Not Entered A Category Title';

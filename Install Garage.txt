@@ -117,6 +117,8 @@
 ##			upgrade/upgrade_garage-1.0.3.php
 ##			upgrade/upgrade_garage-1.0.4.txt
 ##			upgrade/upgrade_garage-1.0.4.php
+##			upgrade/upgrade_garage-1.0.5.txt
+##			upgrade/upgrade_garage-1.0.5.php
 ## License: http://opensource.org/licenses/gpl-license.php GNU General Public License v2 or any later version
 ######################################################################################
 ## For security purposes, please check: http://www.phpbb.com/mods/
@@ -139,6 +141,9 @@
 ## 	- Add remote image quotas by group
 ## 	- Add disk space limits
 ##	- Support sites with allow_url_fopen disabled
+##
+##   07-10-2006 - Version 1.0.5
+##	- Fix security issue
 ##
 ##   07-10-2006 - Version 1.0.4
 ##	- Fix performance issue
@@ -718,7 +723,7 @@ templates/subSilver/overall_header.tpl
 #
 #-----[ IN-LINE AFTER, ADD ]------------------------------------------
 #
-<a href="{U_GARAGE}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_GARAGE}" hspace="3" />{L_GARAGE}</a>&nbsp; &nbsp;<a href="{U_QUARTERMILE}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_QUARTERMILE_TABLE}" hspace="3" />{L_QUARTERMILE_TABLE}</a>&nbsp; &nbsp;
+<a href="{U_GARAGE}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_GARAGE}" hspace="3" />{L_GARAGE}</a>&nbsp;&nbsp;<a href="{U_QUARTERMILE}" class="mainmenu"><img src="templates/subSilver/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_QUARTERMILE_TABLE}" hspace="3" />{L_QUARTERMILE_TABLE}</a>&nbsp;&nbsp;
 # 
 #-----[ OPEN ]----- 
 # 
@@ -752,25 +757,25 @@ templates/subSilver/profile_view_body.tpl
 	<td class="catLeft" align="center" height="28" colspan="2"><b><span class="gen">{USERNAME}'s {L_VEHICLE}</span></b></td>
   </tr>
   <tr>
-	<td class='row1' colspan="2"><span class="gen"><b>{L_VEHICLE}</b> : {YEAR} {MAKE} {MODEL}</span></td>
+	<td class="row1" colspan="2"><span class="gen"><b>{L_VEHICLE}</b> : {YEAR} {MAKE} {MODEL}</span></td>
   </tr>
   <tr>
-	<td class='row1' colspan="2"><span class="gen"><b>{L_COLOUR} </b> : {COLOUR} </span></td>
+	<td class="row1" colspan="2"><span class="gen"><b>{L_COLOUR} </b> : {COLOUR} </span></td>
   </tr>
   <tr>
-	<td class='row1' colspan="2"><span class="gen"><b>{L_MILEAGE}</b> : {MILEAGE} {MILEAGE_UNITS}</span></td>
+	<td class="row1" colspan="2"><span class="gen"><b>{L_MILEAGE}</b> : {MILEAGE} {MILEAGE_UNITS}</span></td>
   </tr>
   <tr>
-        <td class='row1' colspan="2"><span class="gen"><b>{L_PRICE}</b> : {PRICE} {CURRENCY}</span></td>
+        <td class="row1" colspan="2"><span class="gen"><b>{L_PRICE}</b> : {PRICE} {CURRENCY}</span></td>
   </tr>
   <tr>
-        <td class='row1' colspan="2"><span class="gen"><b>{L_TOTAL_MODS}</b> : {TOTAL_MODS}</span></td>
+        <td class="row1" colspan="2"><span class="gen"><b>{L_TOTAL_MODS}</b> : {TOTAL_MODS}</span></td>
   </tr>
   <tr>
-        <td class='row1' colspan="2"><span class="gen"><b>{L_TOTAL_SPENT}</b> : {TOTAL_SPENT} {CURRENCY}</span></td>
+        <td class="row1" colspan="2"><span class="gen"><b>{L_TOTAL_SPENT}</b> : {TOTAL_SPENT} {CURRENCY}</span></td>
   </tr>
   <tr>
-        <td class='row1' colspan="2"><span class="gen"><b>{L_DESCRIPTION}</b> : {DESCRIPTION}</span></td>
+        <td class="row1" colspan="2"><span class="gen"><b>{L_DESCRIPTION}</b> : {DESCRIPTION}</span></td>
   </tr>
   <tr> 
 	<td class="row1" valign="middle" align="left" colspan="2"><span class="gen">{HILITE_IMAGE}</span></td>
