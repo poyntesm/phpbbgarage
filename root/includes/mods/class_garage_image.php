@@ -140,7 +140,7 @@ class garage_image
 			$private_upload_quota 	= @explode(',', $garage_config['private_upload_quota']);
 
 			//Find The Matching Index In Second Array For The Group ID
-			if (($index = array_search($gid, $private_upload_groups)) === FALSE)
+			if (($index = array_search($gid, $private_upload_groups)) === false)
 			{
 				//Group Has No Private Upload Permissions...So Give It The Default Incase They Turn It On
 				return $garage_config['max_upload_images'];
@@ -172,7 +172,7 @@ class garage_image
 			$private_remote_quota 	= @explode(',', $garage_config['private_remote_quota']);
 
 			//Find The Matching Index In Second Array For The Group ID
-			if (($index = array_search($gid, $private_upload_groups)) === FALSE)
+			if (($index = array_search($gid, $private_upload_groups)) === false)
 			{
 				//Group Has No Private Upload Permissions...So Give It The Default Incase They Turn It On
 				return $garage_config['max_remote_images'];
@@ -625,7 +625,7 @@ class garage_image
 	{
 		global $user, $db, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
-		$gd_errored = FALSE;
+		$gd_errored = false;
 
 		switch ($file_ext)
 		{
@@ -647,7 +647,7 @@ class garage_image
 	
 		if (!$src)
 		{
-			$gd_errored = TRUE;
+			$gd_errored = true;
 			$thumb_file_name = '';
 		}
 		else if( ($width > $garage_config['thumbnail_resolution']) or ($height > $garage_config['thumbnail_resolution']) )
@@ -1189,14 +1189,14 @@ class garage_image
 		}
 	
 		//Work Out If Logging Is Appending Or Creating A File
-	        if ( (empty($log_file) == FALSE) AND ( $done == 0 ) )
+	        if ( (empty($log_file) == false) AND ( $done == 0 ) )
 		{
 			//Just Starting So Write From Start..Produce A Message..Then Set To Appebd
 			$log_type = 'wb';
 			$garage->write_logfile($log_file, $log_type, '', 0);
 			$log_type = 'ab';
 		}
-		else if ( (empty($log_file) == FALSE) AND ( $done > 0 ) )
+		else if ( (empty($log_file) == false) AND ( $done > 0 ) )
 		{
 			//We Will Append Since This Is Not The Start
 			$log_type = 'ab';

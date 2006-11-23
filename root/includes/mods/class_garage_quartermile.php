@@ -35,12 +35,12 @@ class garage_quartermile
 	/*========================================================================*/
 	function insert_quartermile($data)
 	{
-		global $cid, $db;
+		global $cid, $db, $garage_config;
 
 		$sql = "INSERT INTO ". GARAGE_QUARTERMILE_TABLE ."
 			(garage_id, rt, sixty, three, eight, eightmph, thou, quart, quartmph, date_created, rr_id, date_updated, pending)
 			VALUES
-			($cid, '".$data['rt']."', '".$data['sixty']."', '".$data['three']."', '".$data['eight']."', '".$data['eightmph']."', '".$data['thou']."', '".$data['quart']."', '".$data['quartmph']."', '".$data['time']."', '".$data['rr_id']."', '".$data[time]."', '".$data['pending']."')";
+			($cid, '".$data['rt']."', '".$data['sixty']."', '".$data['three']."', '".$data['eight']."', '".$data['eightmph']."', '".$data['thou']."', '".$data['quart']."', '".$data['quartmph']."', '".time()."', '".$data['rr_id']."', '".time()."', '".($garage_config['enable_quartermile_approval'] == '1') ? 1 : 0."')";
 		
 		if(!$result = $db->sql_query($sql))
 		{
@@ -61,7 +61,7 @@ class garage_quartermile
 		global $db, $cid, $qmid;
 
 		$sql = "UPDATE ". GARAGE_QUARTERMILE_TABLE ."
-			SET rt = '".$data['rt']."', sixty = '".$data['sixty']."', three = '".$data['three']."', eight = '".$data['eight']."', eightmph = '".$data['eightmph']."', thou = '".$data['thou']."', quart = '".$data['quart']."', quartmph = '".$data['quartmph']."', rr_id = '".$data['rr_id']."', pending = '".$data['pending']."'
+			SET rt = '".$data['rt']."', sixty = '".$data['sixty']."', three = '".$data['three']."', eight = '".$data['eight']."', eightmph = '".$data['eightmph']."', thou = '".$data['thou']."', quart = '".$data['quart']."', quartmph = '".$data['quartmph']."', rr_id = '".$data['rr_id']."', pending = '".($garage_config['enable_quartermile_approval'] == '1') ? 1 : 0."', date_updated ='".time()."'
 			WHERE id = '$qmid' and garage_id = '$cid'";
 
 		if(!$result = $db->sql_query($sql))
@@ -113,7 +113,7 @@ class garage_quartermile
 	{
 		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
-		if ( $garage_config['topquartermile_on'] != TRUE )
+		if ( $garage_config['topquartermile_on'] != true )
 		{
 			return;
 		}

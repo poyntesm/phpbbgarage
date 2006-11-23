@@ -256,7 +256,7 @@ case 'update_permissions':
 				if ( preg_match( "/PRIVATE/i", $garage_config[$permission_mode[$i]."_perms"] ) )
 				{
 	       				$private_checked = 'checked="checked"';
-	       				$private_found = 'TRUE';
+	       				$private_found = 'true';
 				}
 			}
 
@@ -309,7 +309,7 @@ case 'update_permissions':
 		// Get the list of phpBB usergroups
 		$sql = "SELECT group_id, group_name
 			FROM " . GROUPS_TABLE . "
-			WHERE group_single_user <> " . TRUE ."
+			WHERE group_single_user <> " . true ."
 			ORDER BY group_name ASC";
 		if ( !($result = $db->sql_query($sql)) )
 		{

@@ -109,7 +109,7 @@ class garage_template
 			}
 		}
 
-		if ( $garage_config['lastupdatedvehiclesmain_on'] == TRUE )
+		if ( $garage_config['lastupdatedvehiclesmain_on'] == true )
 		{
 			$template->assign_block_vars('lastupdatedvehiclesmain_on', array());
 			$vehicles = $garage_vehicle->get_latest_updated_vehicles($garage_config['lastupdatedvehiclesmain_limit']);	
@@ -602,7 +602,7 @@ class garage_template
 				{
 	      				$template->assign_block_vars('allow_images.replace_image_upload', array());
 				}
-				if ( ($garage_config['allow_image_url'] ) AND (empty($image_id) == FALSE))
+				if ( ($garage_config['allow_image_url'] ) AND (empty($image_id) == false))
 				{
 	      				$template->assign_block_vars('allow_images.replace_remote_image', array());
 				}
@@ -613,7 +613,7 @@ class garage_template
 				{
 	      				$template->assign_block_vars('allow_images.upload_images', array());
 				}
-				if ( ($garage_config['allow_image_url'] ) AND (empty($image_id) == TRUE))
+				if ( ($garage_config['allow_image_url'] ) AND (empty($image_id) == true))
 				{
 	      				$template->assign_block_vars('allow_images.remote_images', array());
 				}

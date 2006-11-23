@@ -389,7 +389,7 @@ switch($mode)
 		//Process Array For Each Make
 		for( $i = 0; $i < count($makes); $i++ )
 		{
-			$status_mode =  ( $makes[$i]['make_pending'] == TRUE ) ? 'set_approved' : 'set_pending' ;
+			$status_mode =  ( $makes[$i]['make_pending'] == true ) ? 'set_approved' : 'set_pending' ;
 			$delete_url = append_sid("admin_garage_models.$phpEx?mode=confirm_delete_make&amp;id=" . $makes[$i]['make_id']);
 			$status_url = append_sid("admin_garage_models.$phpEx?mode=make_$status_mode&amp;id=" . $makes[$i]['make_id']);
 			$rename_url = 'javascript:rename('.$makes[$i]['make_id'].',1)';
@@ -424,7 +424,7 @@ switch($mode)
 					continue;
 				}
 
-				$status_mode =  ( $data[$j]['model_pending'] == TRUE ) ? 'set_approved' : 'set_pending' ;
+				$status_mode =  ( $data[$j]['model_pending'] == true ) ? 'set_approved' : 'set_pending' ;
 				$delete_url = append_sid("admin_garage_models.$phpEx?mode=confirm_delete_model&amp;id=" . $data[$j]['model_id']);
 				$status_url = append_sid("admin_garage_models.$phpEx?mode=model_$status_mode&amp;id=" . $data[$j]['model_id']);
 				$rename_url = 'javascript:rename('.$data[$j]['model_id'].',2)';

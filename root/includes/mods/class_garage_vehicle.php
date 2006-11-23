@@ -95,7 +95,7 @@ class garage_vehicle
 			$private_add_quota = @explode(',', $garage_config['private_add_quota']);
 
 			//Find The Matching Index In Second Array For The Group ID
-			if (($index = array_search($gid, $private_add_groups)) === FALSE)
+			if (($index = array_search($gid, $private_add_groups)) === false)
 			{
 				//Hmmm..Group Has Currently No Private Add Permissions...So Give It The Default Incase They Turn It On
 				return $garage_config['max_user_cars'];
@@ -117,7 +117,7 @@ class garage_vehicle
 		$sql = "INSERT INTO ". GARAGE_TABLE ."
 			(made_year, engine_type, make_id, model_id, colour, mileage, mileage_units, price, currency, comments, user_id, date_created, date_updated, main_vehicle, guestbook_pm_notify)
 			VALUES
-			('".$data['year']."', '".$data['engine_type']."', '".$data['make_id']."', '".$data['model_id']."', '".$data['colour']."', '".$data['mileage']."', '".$data['mileage_units']."', '".$data['price']."', '".$data['currency']."', '".$data['comments']."', '".$user->data['user_id']."', '".$data['time']."', '".$data['time']."', '".$data['main_vehicle']."', '".$data['guestbook_pm_notify']."')";
+			('".$data['year']."', '".$data['engine_type']."', '".$data['make_id']."', '".$data['model_id']."', '".$data['colour']."', '".$data['mileage']."', '".$data['mileage_units']."', '".$data['price']."', '".$data['currency']."', '".$data['comments']."', '".$user->data['user_id']."', '".$time()."', '".time()."', '".$data['main_vehicle']."', '". ($data['guestbook_pm_notify'] == 'on') ? 1 : 0."')";
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -183,7 +183,7 @@ class garage_vehicle
 		global $cid, $db;
 
 		$sql = "UPDATE ". GARAGE_TABLE ."
-			SET made_year = '".$data['year']."', engine_type = '".$data['engine_type']."', make_id = '".$data['make_id']."', model_id = '".$data['model_id']."', colour = '".$data['colour']."', mileage = '".$data['mileage']."', mileage_units = '".$data['mileage_units']."', price = '".$data['price']."', currency = '".$data['currency']."', comments = '".$data['comments']."', guestbook_pm_notify = '".$data['guestbook_pm_notify']."'
+			SET made_year = '".$data['year']."', engine_type = '".$data['engine_type']."', make_id = '".$data['make_id']."', model_id = '".$data['model_id']."', colour = '".$data['colour']."', mileage = '".$data['mileage']."', mileage_units = '".$data['mileage_units']."', price = '".$data['price']."', currency = '".$data['currency']."', comments = '".$data['comments']."', guestbook_pm_notify = '".($data['guestbook_pm_notify'] == 'on') ? 1 : 0."'
 			WHERE id = '$cid'";
 	
 		if(!$result = $db->sql_query($sql))
@@ -537,10 +537,10 @@ class garage_vehicle
 	
 				// Do we have a hilite image?  If so, prep the HTML
 				$featured_image = '';
-				if ( (empty($vehicle_data['image_id']) == FALSE) AND ($vehicle_data['attach_is_image'] == 1) ) 
+				if ( (empty($vehicle_data['image_id']) == false) AND ($vehicle_data['attach_is_image'] == 1) ) 
 	        	    	{
 	                		// Do we have a thumbnail?  If so, our job is simple here :)
-			                if ( (empty($vehicle_data['attach_thumb_location']) == FALSE) AND ($vehicle_data['attach_thumb_location'] != $vehicle_data['attach_location']) AND (@file_exists($phpbb_root_path . GARAGE_UPLOAD_PATH."/".$vehicle_data['attach_thumb_location'])) )
+			                if ( (empty($vehicle_data['attach_thumb_location']) == false) AND ($vehicle_data['attach_thumb_location'] != $vehicle_data['attach_location']) AND (@file_exists($phpbb_root_path . GARAGE_UPLOAD_PATH."/".$vehicle_data['attach_thumb_location'])) )
 	                		{
 						// Yippie, our thumbnail is already made for us :)
 					   	$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $vehicle_data['attach_thumb_location'];
@@ -578,7 +578,7 @@ class garage_vehicle
 	{
 		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $garage_config, $garage_vehicle, $board_config;
 	
-		if ( $garage_config['lastupdatedvehicles_on'] != TRUE )
+		if ( $garage_config['lastupdatedvehicles_on'] != true )
 		{
 			return;
 		}
@@ -621,7 +621,7 @@ class garage_vehicle
 	{
 		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config;
 	
-		if ( $garage_config['mostmoneyspent_on'] != TRUE )
+		if ( $garage_config['mostmoneyspent_on'] != true )
 		{
 			return;
 		}
@@ -677,7 +677,7 @@ class garage_vehicle
 	{
 		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config;
 	
-		if ( $garage_config['mostviewed_on'] != TRUE )
+		if ( $garage_config['mostviewed_on'] != true )
 		{
 			return;
 		}
@@ -731,7 +731,7 @@ class garage_vehicle
 	{
 		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config;
 	
-		if ( $garage_config['toprated_on'] != TRUE )
+		if ( $garage_config['toprated_on'] != true )
 		{
 			return;
 		}
@@ -784,7 +784,7 @@ class garage_vehicle
 	{
 		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config;
 	
-		if ( $garage_config['newestvehicles_on'] != TRUE )
+		if ( $garage_config['newestvehicles_on'] != true )
 		{
 			return;
 		}
@@ -1285,7 +1285,7 @@ class garage_vehicle
 			                {
 						$mod_images_displayed = $mod_images_found;
 	                			//Do we have a thumbnail?  If so, our job is simple here :)
-						if ( (empty($modification_data[$i]['attach_thumb_location']) == FALSE) AND ($modification_data[$j]['attach_thumb_location'] != $modification_data[$j]['attach_location']) )
+						if ( (empty($modification_data[$i]['attach_thumb_location']) == false) AND ($modification_data[$j]['attach_thumb_location'] != $modification_data[$j]['attach_location']) )
 	                			{
 			               			//Form the image link
 							$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $modification_data[$j]['attach_thumb_location'];
@@ -1420,7 +1420,7 @@ class garage_vehicle
 				        $vehicle_images_found++;
 		
         	        		// Do we have a thumbnail?  If so, our job is simple here :)
-					if ( (empty($gallery_data[$i]['attach_thumb_location']) == FALSE) AND ($gallery_data[$i]['attach_thumb_location'] != $gallery_data[$i]['attach_location']) )
+					if ( (empty($gallery_data[$i]['attach_thumb_location']) == false) AND ($gallery_data[$i]['attach_thumb_location'] != $gallery_data[$i]['attach_location']) )
                 			{
                     				// Form the image link
 						$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $gallery_data[$i]['attach_thumb_location'];
@@ -1431,7 +1431,7 @@ class garage_vehicle
 		}
 
 		//Display Both Vehicle Gallery & Modification Gallery	
-		if ( (empty($gallery_modification_images) == FALSE) AND (empty($gallery_vehicle_images) == FALSE) )
+		if ( (empty($gallery_modification_images) == false) AND (empty($gallery_vehicle_images) == false) )
 		{
 
 			$template->assign_block_vars('switch_top_block.owned_no.gallery_all', array(
@@ -1441,7 +1441,7 @@ class garage_vehicle
 		}
 
 		//Display Just Vehicle Gallery	
-		if ( (empty($gallery_modification_images) == TRUE) AND (empty($gallery_vehicle_images) == FALSE) )
+		if ( (empty($gallery_modification_images) == true) AND (empty($gallery_vehicle_images) == false) )
 		{
 			$template->assign_block_vars('switch_top_block.owned_no.gallery_vehicle', array(
 				'VEHICLE_IMAGES' => $gallery_vehicle_images)
@@ -1449,7 +1449,7 @@ class garage_vehicle
 		}
 
 		//Display Just Modification Gallery	
-		if ( (empty($gallery_modification_images) == FALSE) AND (empty($gallery_vehicle_images) == TRUE) )
+		if ( (empty($gallery_modification_images) == false) AND (empty($gallery_vehicle_images) == true) )
 		{
 			$template->assign_block_vars('switch_top_block.owned_no.gallery_modification', array(
 				'MODIFICATION_IMAGES' => $gallery_modification_images)
@@ -1775,7 +1775,7 @@ class garage_vehicle
 		            		if ( $gallery_data[$i]['attach_is_image'] )
            				{
                 				// Do we have a thumbnail?  If so, our job is simple here :)
-						if ( (empty($gallery_data[$i]['attach_thumb_location']) == FALSE) AND ($gallery_data[$i]['attach_thumb_location'] != $gallery_data[$i]['attach_location']) AND ( $vehicle_images_found <= 12) )
+						if ( (empty($gallery_data[$i]['attach_thumb_location']) == false) AND ($gallery_data[$i]['attach_thumb_location'] != $gallery_data[$i]['attach_location']) AND ( $vehicle_images_found <= 12) )
                 				{
                     					// Form the image link
 							$thumb_image = GARAGE_UPLOAD_PATH . $gallery_data[$i]['attach_thumb_location'];
@@ -1793,7 +1793,7 @@ class garage_vehicle
             				if ( $mod_data[$i]['attach_is_image'] )
 		           		{
                 				// Do we have a thumbnail?  If so, our job is simple here :)
-						if ( (empty($mod_data[$i]['attach_thumb_location']) == FALSE) AND ($mod_data[$i]['attach_thumb_location'] != $mod_data[$i]['attach_location']) AND ( $vehicle_images_found <= 12) )
+						if ( (empty($mod_data[$i]['attach_thumb_location']) == false) AND ($mod_data[$i]['attach_thumb_location'] != $mod_data[$i]['attach_location']) AND ( $vehicle_images_found <= 12) )
 		                		{
                 		    			// Form the image link
 							$thumb_image = GARAGE_UPLOAD_PATH . $mod_data[$i]['attach_thumb_location'];

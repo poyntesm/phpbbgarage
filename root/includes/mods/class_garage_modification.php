@@ -35,12 +35,12 @@ class garage_modification
 	/*========================================================================*/
 	function insert_modification($data)
 	{
-		global $cid, $db;
+		global $cid, $db, $garage_vehicle;
 
 		$sql = "INSERT INTO ". GARAGE_MODS_TABLE ."
 			(garage_id, user_id, category_id, title, price, install_price, install_rating, product_rating, comments, date_created, date_updated, business_id, install_business_id, install_comments, purchase_rating)
 			VALUES
-			($cid, ".$data['user_id'].", ".$data['category_id'].", '".$data['title']."', '".$data['price']."', '".$data['install_price']."', '".$data['install_rating']."', '".$data['product_rating']."', '".$data['comments']."', '".$data['time']."', '".$data['time']."', '".$data['business_id']."', '".$data['install_business_id']."', '".$data['install_comments']."', '".$data['purchase_rating']."')";
+			($cid, ".$garage_vehicle->get_vehicle_owner($cid).", ".$data['category_id'].", '".$data['title']."', '".$data['price']."', '".$data['install_price']."', '".$data['install_rating']."', '".$data['product_rating']."', '".$data['comments']."', '".$time()."', '".time()."', '".$data['business_id']."', '".$data['install_business_id']."', '".$data['install_comments']."', '".$data['purchase_rating']."')";
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -61,7 +61,7 @@ class garage_modification
 		global $db, $cid, $mid;
 
 		$sql = "UPDATE ". GARAGE_MODS_TABLE ."
-			SET category_id = '".$data['category_id']."', title = '".$data['title']."', price = '".$data['price']."', install_price = '".$data['install_price']."', install_rating = '".$data['install_rating']."', product_rating = '".$data['product_rating']."', comments = '".$data['comments']."', install_comments = '".$data['install_comments']."' , business_id = '".$data['business_id']."', install_business_id = '".$data['install_business_id']."', date_updated = '".$data['time']."', purchase_rating = '".$data['purchase_rating']."'
+			SET category_id = '".$data['category_id']."', title = '".$data['title']."', price = '".$data['price']."', install_price = '".$data['install_price']."', install_rating = '".$data['install_rating']."', product_rating = '".$data['product_rating']."', comments = '".$data['comments']."', install_comments = '".$data['install_comments']."' , business_id = '".$data['business_id']."', install_business_id = '".$data['install_business_id']."', date_updated = '".time()."', purchase_rating = '".$data['purchase_rating']."'
 			WHERE id = $mid and garage_id = $cid";
 
 		if(!$result = $db->sql_query($sql))
@@ -131,7 +131,7 @@ class garage_modification
 	{
 		global $required_position, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config, $user;
 	
-		if ( $garage_config['lastupdatedmods_on'] != TRUE )
+		if ( $garage_config['lastupdatedmods_on'] != true )
 		{
 			return;
 		}
@@ -185,7 +185,7 @@ class garage_modification
 	{
 		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config;
 	
-		if ( $garage_config['mostmodded_on'] != TRUE )
+		if ( $garage_config['mostmodded_on'] != true )
 		{
 			return;
 		}
@@ -241,7 +241,7 @@ class garage_modification
 	{
 		global $required_position, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config, $user;
 	
-		if ( $garage_config['newestmods_on'] != TRUE )
+		if ( $garage_config['newestmods_on'] != true )
 		{
 			return;
 		}

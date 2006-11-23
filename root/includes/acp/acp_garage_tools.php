@@ -32,7 +32,7 @@ if( !empty($setmodules) )
 //
 // Let's set the root dir for phpBB
 //
-$no_page_header = TRUE;
+$no_page_header = true;
 $phpbb_root_path = './../';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 require('./pagestart.' . $phpEx);
@@ -259,7 +259,7 @@ switch($mode)
 		}
 
 		header("Pragma: no-cache");
-		$do_gzip_compress = FALSE;
+		$do_gzip_compress = false;
 		if( $gzipcompress )
 		{
 			$phpver = phpversion();
@@ -268,7 +268,7 @@ switch($mode)
 			{
 				if(extension_loaded("zlib"))
 				{
-					$do_gzip_compress = TRUE;
+					$do_gzip_compress = true;
 				}
 			}
 		}
@@ -355,13 +355,13 @@ switch($mode)
 			{
 				if( preg_match("/\.gz$/is",$backup_file_name) )
 				{
-					$do_gzip_compress = FALSE;
+					$do_gzip_compress = false;
 					$phpver = phpversion();
 					if($phpver >= "4.0")
 					{
 						if(extension_loaded("zlib"))
 						{
-							$do_gzip_compress = TRUE;
+							$do_gzip_compress = true;
 						}
 					}
 

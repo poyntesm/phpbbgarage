@@ -256,7 +256,7 @@ switch($mode)
 		for( $i = 0; $i < count($data); $i++ )
 		{
 			//Get Business Approval Status
-			$status_mode =  ( $data[$i]['pending'] == TRUE ) ? 'set_approved' : 'set_pending' ;
+			$status_mode =  ( $data[$i]['pending'] == true ) ? 'set_approved' : 'set_pending' ;
 
 			$delete_url = append_sid("admin_garage_business.$phpEx?mode=confirm_delete&amp;id=".$data[$i]['id']);
 			$status_url = append_sid("admin_garage_business.$phpEx?mode=$status_mode&amp;id=".$data[$i]['id']);
@@ -288,10 +288,10 @@ switch($mode)
 				'WEBSITE' => $data[$i]['website'],
 				'EMAIL' => $data[$i]['email'],
 				'OPENING_HOURS' => $data[$i]['opening_hours'],
-				'INSURANCE_CHECKED' => ( $data[$i]['insurance'] == TRUE ) ? 'CHECKED' : '' ,
-				'GARAGE_CHECKED' => ( $data[$i]['garage'] == TRUE ) ? 'CHECKED' : '' ,
-				'RETAIL_CHECKED' => ( $data[$i]['retail_shop'] == TRUE ) ? 'CHECKED' : '' ,
-				'WEB_CHECKED' => ( $data[$i]['web_shop'] == TRUE ) ? 'CHECKED' : '' ,
+				'INSURANCE_CHECKED' => ( $data[$i]['insurance'] == true ) ? 'CHECKED' : '' ,
+				'GARAGE_CHECKED' => ( $data[$i]['garage'] == true ) ? 'CHECKED' : '' ,
+				'RETAIL_CHECKED' => ( $data[$i]['retail_shop'] == true ) ? 'CHECKED' : '' ,
+				'WEB_CHECKED' => ( $data[$i]['web_shop'] == true ) ? 'CHECKED' : '' ,
 				'DELETE' => $delete,
 				'STATUS' => $status,
 				'TYPE' => $type,

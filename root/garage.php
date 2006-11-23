@@ -106,8 +106,8 @@ switch( $mode )
 		}
 
 		//Set Make & Model If User Added Them...Else Use Default Values
-		$params = array('MAKE', 'MODEL', 'YEAR');
-		$data = $garage->process_post_vars($params);
+		$params 	= array('MAKE', 'MODEL', 'YEAR');
+		$data 		= $garage->process_post_vars($params);
 		$data['MAKE']	= (empty($data['MAKE'])) ? $garage_config['default_make'] : $data['MAKE'];
 		$data['MODEL']	= (empty($data['MODEL'])) ? $garage_config['default_model'] : $data['MODEL'];
 
@@ -161,10 +161,8 @@ switch( $mode )
 		}
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('year', 'make_id', 'model_id', 'colour', 'mileage', 'mileage_units', 'price', 'currency', 'comments', 'guestbook_pm_notify', 'engine_type');
-		$data = $garage->process_post_vars($params);
-		$data['guestbook_pm_notify'] 	= ($data['guestbook_pm_notify'] == 'on') ? 1 : 0;
-		$data['time'] 			= time();
+		$params	= array('year', 'make_id', 'model_id', 'colour', 'mileage', 'mileage_units', 'price', 'currency', 'comments', 'guestbook_pm_notify', 'engine_type');
+		$data	= $garage->process_post_vars($params);
 
 		//Set As Main User Vehicle If No Other Vehicle Exists For User
 		$data['main_vehicle'] = ( $count == 0 ) ? 1 : 0;
@@ -229,22 +227,26 @@ switch( $mode )
 		$garage_template->year_dropdown($data['made_year']);
 		$template->assign_block_vars('javascript', array());
 		$template->assign_vars(array(
-       			'L_TITLE' 	=> $user->lang['EDIT_VEHICLE'],
-       			'L_BUTTON' 	=> $user->lang['EDIT_VEHICLE'],
-			'CID' 		=> $cid,
-			'MAKE' 		=> $data['make'],
-			'MODEL' 	=> $data['model'],
-			'YEAR' 		=> $data['made_year'],
-			'CHECKED' 	=> ($data['guestbook_pm_notify'] == true) ? 'checked="checked"': '',
-			'COLOUR' 	=> $data['colour'],
-			'MILEAGE' 	=> $data['mileage'],
-			'PRICE' 	=> $data['price'],
-			'COMMENTS' 	=> $data['comments'],
-			'ENGINE_TYPE'	=> $garage_template->dropdown('engine_type', $engine_types, $engine_types, $data['engine_type']),
-			'CURRENCY_UNITS'=> $garage_template->dropdown('currency', $currency_types, $currency_types, $data['currency']),
-			'MILEAGE_UNITS'	=> $garage_template->dropdown('mileage_units', $mileage_unit_types, $mileage_unit_types, $data['mileage_units']),
-			'VEHICLE_ARRAY' => $garage_template->vehicle_array(),
-			'S_MODE_ACTION'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=update_vehicle"))
+       			'L_TITLE' 		=> $user->lang['EDIT_VEHICLE'],
+			'L_BUTTON' 		=> $user->lang['EDIT_VEHICLE'],
+			'U_USER_SUBMIT_MAKE' 	=> "javascript:add_make()",
+			'U_USER_SUBMIT_MODEL' 	=> "javascript:add_model()",
+			'CID' 			=> $cid,
+			'MAKE' 			=> $data['make'],
+			'MODEL' 		=> $data['model'],
+			'YEAR' 			=> $data['made_year'],
+			'CHECKED' 		=> ($data['guestbook_pm_notify'] == true) ? 'checked="checked"': '',
+			'COLOUR' 		=> $data['colour'],
+			'MILEAGE' 		=> $data['mileage'],
+			'PRICE' 		=> $data['price'],
+			'COMMENTS' 		=> $data['comments'],
+			'ENGINE_TYPE'		=> $garage_template->dropdown('engine_type', $engine_types, $engine_types, $data['engine_type']),
+			'CURRENCY_UNITS'	=> $garage_template->dropdown('currency', $currency_types, $currency_types, $data['currency']),
+			'MILEAGE_UNITS'		=> $garage_template->dropdown('mileage_units', $mileage_unit_types, $mileage_unit_types, $data['mileage_units']),
+			'VEHICLE_ARRAY' 	=> $garage_template->vehicle_array(),
+			'S_DISPLAY_SUBMIT_MAKE'	=> $garage_config['enable_user_submit_make'],
+			'S_DISPLAY_SUBMIT_MODEL'=> $garage_config['enable_user_submit_make'],
+			'S_MODE_ACTION'		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=update_vehicle"))
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
@@ -267,7 +269,6 @@ switch( $mode )
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('year', 'make_id', 'model_id', 'colour', 'mileage', 'mileage_units', 'price', 'currency', 'comments', 'guestbook_pm_notify', 'engine_type');
 		$data = $garage->process_post_vars($params);
-		$data['guestbook_pm_notify'] = ($data['guestbook_pm_notify'] == 'on') ? 1 : 0;
 
 		//Checks All Required Data Is Present
 		$params = array('year', 'make_id', 'model_id');
@@ -337,6 +338,7 @@ switch( $mode )
 			'PURCHASE_RATINGS' 	=> $garage_template->dropdown('purchase_rating', $rating_text, $rating_types),
 			'INSTALL_RATINGS' 	=> $garage_template->dropdown('install_rating', $rating_text, $rating_types),
 			'CID' 			=> $cid,
+			'S_DISPLAY_SUBMIT_BUS'	=> $garage_config['enable_user_submit_business'],
 			'S_MODE_ACTION'		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=insert_modification&amp;CID=$cid"))
 		);
 
@@ -364,9 +366,7 @@ switch( $mode )
 
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('category_id', 'title', 'price', 'business_id', 'install_business_id', 'install_price', 'install_rating', 'product_rating', 'comments', 'install_comments', 'purchase_rating');
-		$data = $garage->process_post_vars($params);
-		$data['time'] 	= time();
-		$data['user_id']= $garage_vehicle->get_vehicle_owner($cid);
+		$data	= $garage->process_post_vars($params);
 
 		//Checks All Required Data Is Present
 		$params = array('category_id', 'title');
@@ -432,7 +432,8 @@ switch( $mode )
 			'L_LEVEL2' 		=> $data['vehicle'],
        			'L_TITLE' 		=> $user->lang['MODIFY_MOD'],
        			'L_BUTTON' 		=> $user->lang['MODIFY_MOD'],
-			'U_LEVEL2' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_own_vehicle&amp;CID=" . $cid),
+			'U_SUBMIT_SHOP'		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;CID=$cid&amp;redirect=add_modification&amp;BUSINESS=shop"),
+			'U_SUBMIT_GARAGE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;CID=$cid&amp;redirect=add_modification&amp;BUSINESS=garage"),
 			'MID' 			=> $mid,
 			'CID' 			=> $cid,
 			'TITLE' 		=> $data['title'],
@@ -445,6 +446,7 @@ switch( $mode )
 			'INSTALL_RATINGS' 	=> $garage_template->dropdown('install_rating', $rating_text, $rating_types, $data['install_rating']),
 			'COMMENTS' 		=> $data['comments'],
 			'INSTALL_COMMENTS' 	=> $data['install_comments'],
+			'S_DISPLAY_SUBMIT_BUS'	=> $garage_config['enable_user_submit_business'],
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=update_modification"))
 		);
 
@@ -460,8 +462,7 @@ switch( $mode )
 
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('category_id', 'title', 'price', 'business_id', 'install_business_id', 'install_price', 'install_rating', 'product_rating', 'comments', 'install_comments', 'editupload', 'image_id', 'purchase_rating');
-		$data = $garage->process_post_vars($params);
-		$data['time'] = time();
+		$data	= $garage->process_post_vars($params);
 
 		//Checks All Required Data Is Present
 		$params = array('category_id', 'title');
@@ -581,10 +582,8 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('rt', 'sixty', 'three', 'eight', 'eightmph', 'thou', 'quart', 'quartmph', 'rr_id', 'install_comments');
-		$data = $garage->process_post_vars($params);
-		$data['pending']= ($garage_config['enable_quartermile_approval'] == '1') ? 1 : 0 ;
-		$data['time'] 	= time();
+		$params	= array('rt', 'sixty', 'three', 'eight', 'eightmph', 'thou', 'quart', 'quartmph', 'rr_id', 'install_comments');
+		$data 	= $garage->process_post_vars($params);
 
 		//Checks All Required Data Is Present
 		$params = array('quart');
@@ -621,10 +620,10 @@ switch( $mode )
 		}
 
 		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
-		if ( $data['pending'] == 1 )
+		if ( $garage_config['enable_quartermile_approval'] )
 		{
 			$garage->pending_notification();
-			$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', $data['pending'], 'config_name', 'items_pending');
+			$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', '1', 'config_name', 'items_pending');
 		}
 
 		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
@@ -707,8 +706,6 @@ switch( $mode )
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('rt', 'sixty', 'three', 'eight', 'eightmph', 'thou', 'quart', 'quartmph', 'rr_id', 'install_comments', 'editupload', 'image_id', 'pending_redirect');
 		$data = $garage->process_post_vars($params);
-		$data['pending'] = ($garage_config['enable_quartermile_approval'] == '1') ? 1 : 0 ;
-		$data['time'] = time();
 
 		//Checks All Required Data Is Present
 		$params = array('quart');
@@ -749,6 +746,13 @@ switch( $mode )
 			//That Time Requires An Image...Delete Entered Time And Notify User
 			$garage_quartermile->delete_quartermile_time($qmid);
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=26"));
+		}
+
+		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
+		if ( $garage_config['enable_quartermile_approval'] )
+		{
+			$garage->pending_notification();
+			$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', '1', 'config_name', 'items_pending');
 		}
 
 		//If Editting From Pending Page Redirect Back To There Instead
@@ -840,9 +844,7 @@ switch( $mode )
 
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('dynocenter', 'bhp', 'bhp_unit', 'torque', 'torque_unit', 'boost', 'boost_unit', 'nitrous', 'peakpoint');
-		$data = $garage->process_post_vars($params);
-		$data['pending'] = ($garage_config['enable_rollingroad_approval'] == '1') ? 1 : 0 ;
-		$data['time'] = time();
+		$data 	= $garage->process_post_vars($params);
 
 		//Checks All Required Data Is Present
 		$params = array('bhp', 'bhp_unit');
@@ -879,7 +881,7 @@ switch( $mode )
 		}
 
 		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
-		if ( $data['pending'] == 1 )
+		if ( $garage_config['enable_rollingroad_approval'] )
 		{
 			$garage->pending_notification();
 			$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', $data['pending'], 'config_name', 'items_pending');
@@ -950,9 +952,7 @@ switch( $mode )
 
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('dynocenter', 'bhp', 'bhp_unit', 'torque', 'torque_unit', 'boost', 'boost_unit', 'nitrous', 'peakpoint', 'editupload', 'image_id', 'pending_redirect');
-		$data = $garage->process_post_vars($params);
-		$data['pending'] = ($garage_config['enable_rollingroad_approval'] == '1') ? 1 : 0 ;
-		$data['time'] = time();
+		$data 	= $garage->process_post_vars($params);
 
 		//Checks All Required Data Is Present
 		$params = array('bhp', 'bhp_unit');
@@ -993,6 +993,13 @@ switch( $mode )
 			//That Time Requires An Image...Delete Entered Time And Notify User
 			$garage_dynorun->delete_dynorun($rrid);
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=26"));
+		}
+
+		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
+		if ( $garage_config['enable_rollingroad_approval'] )
+		{
+			$garage->pending_notification();
+			$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', $data['pending'], 'config_name', 'items_pending');
 		}
 
 		//If Editting From Pending Page Redirect Back To There Instead
@@ -1082,8 +1089,7 @@ switch( $mode )
 
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('business_id', 'premium', 'cover_type', 'comments');
-		$data = $garage->process_post_vars($params);
-		$data['time'] = time();
+		$data 	= $garage->process_post_vars($params);
 
 		//Checks All Required Data Is Present
 		$params = array('business_id', 'premium', 'cover_type');
@@ -1122,7 +1128,6 @@ switch( $mode )
 
 		//Build Required HTML Components
 		$garage_template->insurance_dropdown($data['business_id'], $data['title']);
-
 		$template->assign_vars(array(
 			'L_TITLE' 		=> $user->lang['EDIT_PREMIUM'],
 			'L_BUTTON' 		=> $user->lang['EDIT_PREMIUM'],
@@ -1594,12 +1599,11 @@ switch( $mode )
 		//If Images Exists For Modification..Display Thumbnail
 		if ( ($data['attach_id']) AND ($data['attach_is_image']) AND (!empty($data['attach_thumb_location'])) AND (!empty($data['attach_location'])) )
 		{
-			$data['modification_image'] = '<a href="garage.' . $phpEx . '?mode=view_gallery_item&amp;type=garage_mod&amp;image_id=' . $data['attach_id'] . '" title="' . $data['attach_file'] . '" target="_blank"><img hspace="5" vspace="5" src="' . GARAGE_UPLOAD_PATH . $data['attach_thumb_location'] . '" /></a>';
+			$data['modification_image'] = '<a href="' . append_sid("{$phpbb_root_path}garage.$phpEx?mode=view_gallery_item&amp;type=garage_mod&amp;image_id=" . $data['attach_id']).'" title="' . $data['attach_file'] . '" target="_blank"><img hspace="5" vspace="5" src="' . GARAGE_UPLOAD_PATH . $data['attach_thumb_location'] . '" /></a>';
 		}
 
 		$template->assign_vars(array(
 			'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $data['user_id']),
-			'U_LEVEL1' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=$cid"),
 			'U_VIEW_GARAGE_BUSINESS'=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_garage_business&amp;business_id=" . $data['install_business_id']),
 			'U_VIEW_SHOP_BUSINESS' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_shop_business&amp;business_id=" . $data['business_id']),
 			'YEAR' 			=> $data['made_year'],
@@ -1669,8 +1673,8 @@ switch( $mode )
 			'body'   => 'garage_view_vehicle.html')
 		);
 
-		//Display Vehicle With Owner Set to 'YES'..Since You Are Moderating You Need To See All Owner Options
-		$garage_vehicle->display_vehicle('YES');
+		//Display Vehicle With Submode Set To 'MODERATE'
+		$garage_vehicle->display_vehicle('MODERATE');
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$garage_template->sidemenu();
@@ -1813,7 +1817,7 @@ switch( $mode )
 			{
 				// Form the image link
 				$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'];
-				$image = '<a href="garage.' . $phpEx . '?mode=view_gallery_item&amp;type=garage_mod&amp;image_id=' . $data[$i]['attach_id'] . '" title="' . $data[$i]['attach_file'] . '" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image . '" class="attach"  /></a>';
+				$image = '<a href="'.append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_gallery_item&amp;type=garage_mod&amp;image_id=" . $data[$i]['attach_id']) . '" title="' . $data[$i]['attach_file'] . '" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image . '" /></a>';
 	
 				$template->assign_block_vars('pic_row', array(
 					'U_VIEW_PROFILE'=> append_sid("profile.$phpEx", "mode=viewprofile&amp;" . POST_USERS_URL . "=" .$data[$i]['user_id']),
@@ -1890,8 +1894,7 @@ switch( $mode )
 			}
 			else
 			{
-				$temp_url = append_sid("{$phpbb_root_path}garage.$phpEx", "mode=set_hilite&amp;image_id=" . $data[$i]['image_id'] . "&amp;CID=$cid");
-				$hilite= '<a href="' . $temp_url . '">' . $user->lang['SET_HILITE_IMAGE'] . '</a>';
+				$hilite= '<a href="' . append_sid("{$phpbb_root_path}garage.$phpEx", "mode=set_hilite&amp;image_id=" . $data[$i]['image_id'] . "&amp;CID=$cid") . '">' . $user->lang['SET_HILITE_IMAGE'] . '</a>';
 			}
 
 			//Produce Actual Image Thumbnail And Link It To Full Size Version..
@@ -1899,7 +1902,7 @@ switch( $mode )
 			{
 				// Form the image link
 				$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'];
-				$image = '<a href="garage.' . $phpEx . '?mode=view_gallery_item&amp;type=garage_mod&amp;image_id=' . $data[$i]['image_id'] . '" title="' . $data[$i]['attach_file'] . '" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image . '" /></a>';
+				$image = '<a href='.append_sid("{$phpbb_root_path}garage. $phpEx", "?mode=view_gallery_item&amp;type=garage_mod&amp;image_id=" . $data[$i]['image_id']) . '" title="' . $data[$i]['attach_file'] . '" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image . '" /></a>';
 			}
 
 			$template->assign_block_vars('pic_row', array(
@@ -3014,8 +3017,7 @@ switch( $mode )
 			$www_img = ( $comment_data[$i]['user_website'] ) ? '<a href="' . $comment_data[$i]['user_website'] . '" target="_userwww"><img src="' . $images['icon_www'] . '" alt="' . $lang['Visit_website'] . '" title="' . $lang['Visit_website'] . '" border="0" /></a>' : '';
 			$www = ( $comment_data[$i]['user_website'] ) ? '<a href="' . $comment_data[$i]['user_website'] . '" target="_userwww">' . $lang['Visit_website'] . '</a>' : '';
 
-			$temp_url = append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=".$comment_data[$i]['user_id']);
-			$posted = '<a href="' . $temp_url . '">' . $comment_data[$i]['username'] . '</a>';
+			$posted = '<a href="' . append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=".$comment_data[$i]['user_id']) . '">' . $comment_data[$i]['username'] . '</a>';
 			$posted = $user->format_date($comment_data[$i]['post_date']);
 
 			$post = $comment_data[$i]['post'];
@@ -3053,12 +3055,10 @@ switch( $mode )
 
 		 	if ( $auth->acl_get('m_garage') )
 			{
-				$temp_url = append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']);
-				$edit_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_edit'] . '" alt="' . $lang['Edit_delete_post'] . '" title="' . $lang['Edit_delete_post'] . '" border="0" /></a>';
-				$edit = '<a href="' . $temp_url . '">' . $lang['Edit_delete_post'] . '</a>';
-				$temp_url = append_sid("{$phpbb_root_path}garage.$phpEx", "mode=delete_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']);
-				$delpost_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_delpost'] . '" alt="' . $lang['Delete_post'] . '" title="' . $lang['Delete_post'] . '" border="0" /></a>';
-				$delpost = '<a href="' . $temp_url . '">' . $lang['Delete_post'] . '</a>';
+				$edit_img = '<a href="'. append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']) . '"><img src="' . $images['icon_edit'] . '" alt="' . $lang['Edit_delete_post'] . '" title="' . $lang['Edit_delete_post'] . '" border="0" /></a>';
+				$edit = '<a href="'. append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']) . '">' . $lang['Edit_delete_post'] . '</a>';
+				$delpost_img = '<a href="'. append_sid("{$phpbb_root_path}garage.$phpEx", "mode=delete_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']) . '"><img src="' . $images['icon_delpost'] . '" alt="' . $lang['Delete_post'] . '" title="' . $lang['Delete_post'] . '" border="0" /></a>';
+				$delpost = '<a href="'. append_sid("{$phpbb_root_path}garage.$phpEx", "mode=delete_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']) . '">' . $lang['Delete_post'] . '</a>';
 
 			}
 
@@ -3113,8 +3113,6 @@ switch( $mode )
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('comments');
 		$data = $garage->process_post_vars($params);
-		$data['author_id'] = $user->data['user_id'];
-		$data['post_date'] = time();
 
 		//Checks All Required Data Is Present
 		$params = array('comments');
@@ -3125,22 +3123,15 @@ switch( $mode )
 
 		//Get Vehicle Data So We Can Check If We Need To PM User
 		$data = $garage_vehicle->get_vehicle($cid);		
-		$data['author_id'] = $user->data['user_id'];
-		$data['time'] = time();
 
 		//If User Has Requested Notification On Comments Sent Them A PM
-		if ( $data['guestbook_pm_notify'] == true )
+		if ( $data['guestbook_pm_notify'] )
 		{
 			//Build Rest Of Required Data
-			$data['date'] 		= date("U");
 			$data['pm_subject'] 	= $user->lang['GUESTBOOK_NOTIFY_SUBJECT'];
 			$data['vehicle_link'] 	= '<a href="garage.'.$phpEx.'?mode=view_guestbook&CID=$cid">' . $user->lang['HERE'] . '</a>';
              		$data['pm_text'] 	= (sprintf($user->lang['GUESTBOOK_NOTIFY_TEXT'], $data['vehicle_link']));
 
-			//Checks All Required Data Is Present
-			$params = array('user_id', 'pm_subject', 'author_id', 'date');
-			$garage->check_required_vars($params);
-			
 			//Now We Have All Data Lets Send The PM!!
 			$garage_guestbook->send_user_pm($data);
 		}
@@ -3161,8 +3152,6 @@ switch( $mode )
 		$data = $garage_guestbook->get_comment($comment_id);	
 		
 		$template->assign_vars(array(
-			'L_LEVEL1' 	 => $data['vehicle'],
-			'U_LEVEL1' 	 => append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=$cid"),
 			'CID' 		 => $cid,
 			'COMMENT_ID' 	 => $data['comment_id'],
 			'COMMENTS' 	 => $data['post'])

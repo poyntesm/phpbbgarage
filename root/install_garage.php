@@ -33,7 +33,7 @@ $page_title = 'Installing Vehicle Garage Version 2.0.0';
 // Output the page
 page_header($page_title);
 
-echo '<table width="100%" cellspacing="1" cellpadding="2" border="0" class="forumline">';
+/*echo '<table width="100%" cellspacing="1" cellpadding="2" border="0" class="forumline">';
 echo '<tr><th>Installing Vehicle Garage Version 1.0.0</th></tr><tr><td class="row1" ><span class="genmed"><ul type="circle">';
 
 $sql = array();
@@ -1196,7 +1196,7 @@ $sql[] = "INSERT INTO " . $table_prefix . "garage_models VALUES (822, 44, 'GS 43
 $sql[] = "INSERT INTO " . $table_prefix . "garage_models VALUES (823, 44, 'GX 470', 0)";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_models VALUES (824, 44, 'LX 470', 0)";
 
-/*$sql[] = "CREATE TABLE `phpbb_garage_vehicle_fields` (
+$sql[] = "CREATE TABLE `phpbb_garage_vehicle_fields` (
   `field_id` mediumint(8) unsigned NOT NULL auto_increment,
   `field_name` varchar(50) NOT NULL default '',
   `field_desc` varchar(255) NOT NULL default '',
@@ -1268,7 +1268,7 @@ $sql[] = "INSERT INTO `phpbb_garage_vehicle_lang` VALUES (1, 1, 'dropdown', 'dro
 $sql[] = "INSERT INTO `phpbb_garage_vehicle_lang` VALUES (2, 1, 'textfield', 'This is just a simple textfield2', 'text')";
 $sql[] = "INSERT INTO `phpbb_garage_vehicle_lang` VALUES (3, 1, 'numbers', 'numbers', '')";
 $sql[] = "INSERT INTO `phpbb_garage_vehicle_lang` VALUES (4, 1, 'textarea', 'textarea', 'textarea')";
-$sql[] = "INSERT INTO `phpbb_garage_vehicle_lang` VALUES (5, 1, 'date', 'date', '')";*/
+$sql[] = "INSERT INTO `phpbb_garage_vehicle_lang` VALUES (5, 1, 'date', 'date', '')";
 
 for( $i = 0; $i < count($sql); $i++ )
 {
@@ -1291,7 +1291,7 @@ $cache->destroy('acl_options');
 $auth->acl_clear_prefetch();
 
 echo '<tr><th>End</th></tr><tr><td><span class="genmed">Installation is now finished. Please be sure to delete this file now.<br />If you have run into any errors, please visit the <a href="http://www.phpbb.com/phpBB/viewtopic.php?t=290641" target="_phpbbsupport">Garage Support Thread</a> and ask someone for help.</span></td></tr>';
-echo '<tr><td class="catBottom" height="28" align="center"><span class="genmed"><a href="' . append_sid("index.$phpEx") . '">Have a nice day</a></span></td></table>';
+echo '<tr><td class="catBottom" height="28" align="center"><span class="genmed"><a href="' . append_sid("index.$phpEx") . '">Have a nice day</a></span></td></table>';*/
 
 page_footer();
 

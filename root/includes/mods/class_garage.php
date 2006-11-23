@@ -299,10 +299,14 @@ class garage
 	function remove_duplicate($array, $field)
 	{
 		foreach ($array as $sub)
-		$cmp[] = $sub[$field];
+		{
+			$cmp[] = $sub[$field];
+		}
 		$unique = array_unique($cmp);
 		foreach ($unique as $k => $rien)
-		$new[] = $array[$k];
+		{
+			$new[] = $array[$k];
+		}
 
 		return $new;
 	}

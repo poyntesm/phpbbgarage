@@ -34,12 +34,12 @@ class garage_dynorun
 	/*========================================================================*/
 	function insert_dynorun($data)
 	{
-		global $cid, $db;
+		global $cid, $db, $garage_config;
 
 		$sql = "INSERT INTO ". GARAGE_DYNORUN_TABLE ."
 			(garage_id, dynocenter, bhp, bhp_unit, torque, torque_unit, boost, boost_unit, nitrous, peakpoint, date_created, date_updated, pending)
 			VALUES
-			('$cid', '".$data['dynocenter']."', '".$data['bhp']."', '".$data['bhp_unit']."', '".$data['torque']."', '".$data['torque_unit']."', '".$data['boost']."', '".$data['boost_unit']."', '".$data['nitrous']."', '".$data['peakpoint']."', '".$data['time']."', '".$data['time']."', '".$data['pending']."')";
+			('$cid', '".$data['dynocenter']."', '".$data['bhp']."', '".$data['bhp_unit']."', '".$data['torque']."', '".$data['torque_unit']."', '".$data['boost']."', '".$data['boost_unit']."', '".$data['nitrous']."', '".$data['peakpoint']."', '".time()."', '".time()."', '".($garage_config['enable_rollingroad_approval'] == '1') ? 1 : 0."')";
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -57,10 +57,10 @@ class garage_dynorun
 	/*========================================================================*/
 	function update_dynorun($data)
 	{
-		global $db, $rrid, $cid;
+		global $db, $rrid, $cid, $garage_config;
 
 		$sql = "UPDATE " . GARAGE_DYNORUN_TABLE . "
-			SET dynocenter = '" . $data['dynocenter'] . "', bhp = '" . $data['bhp'] . "', bhp_unit = '" . $data['bhp_unit'] . "', torque = '" . $data['torque'] . "', torque_unit = '" . $data['torque_unit'] . "', boost = '" . $data['boost'] . "', boost_unit = '" . $data['boost_unit'] . "', nitrous = '" . $data['nitrous'] . "', peakpoint = '" . $data['peakpoint'] . "', pending = '" . $data['pending'] . "'
+			SET dynocenter = '" . $data['dynocenter'] . "', bhp = '" . $data['bhp'] . "', bhp_unit = '" . $data['bhp_unit'] . "', torque = '" . $data['torque'] . "', torque_unit = '" . $data['torque_unit'] . "', boost = '" . $data['boost'] . "', boost_unit = '" . $data['boost_unit'] . "', nitrous = '" . $data['nitrous'] . "', peakpoint = '" . $data['peakpoint'] . "', pending = '" . ($garage_config['enable_rollingroad_approval'] == '1') ? 1 : 0 . "', date_updated = '".time()."'
 			WHERE id = '$rrid' and garage_id = '$cid'";
 
 		if(!$result = $db->sql_query($sql))
@@ -140,7 +140,7 @@ class garage_dynorun
 	{
 		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
-		if ( $garage_config['topdynorun_on'] != TRUE )
+		if ( $garage_config['topdynorun_on'] != true )
 		{
 			return;
 		}
