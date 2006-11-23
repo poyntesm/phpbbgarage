@@ -36,10 +36,12 @@ class garage_dynorun
 	{
 		global $cid, $db, $garage_config;
 
+		$pending = ($garage_config['enable_rollingroad_approval'] == '1') ? 1 : 0;
+
 		$sql = "INSERT INTO ". GARAGE_DYNORUN_TABLE ."
 			(garage_id, dynocenter, bhp, bhp_unit, torque, torque_unit, boost, boost_unit, nitrous, peakpoint, date_created, date_updated, pending)
 			VALUES
-			('$cid', '".$data['dynocenter']."', '".$data['bhp']."', '".$data['bhp_unit']."', '".$data['torque']."', '".$data['torque_unit']."', '".$data['boost']."', '".$data['boost_unit']."', '".$data['nitrous']."', '".$data['peakpoint']."', '".time()."', '".time()."', '".($garage_config['enable_rollingroad_approval'] == '1') ? 1 : 0."')";
+			('$cid', '".$data['dynocenter']."', '".$data['bhp']."', '".$data['bhp_unit']."', '".$data['torque']."', '".$data['torque_unit']."', '".$data['boost']."', '".$data['boost_unit']."', '".$data['nitrous']."', '".$data['peakpoint']."', '".time()."', '".time()."', '".$pending."')";
 
 		if(!$result = $db->sql_query($sql))
 		{

@@ -36,11 +36,12 @@ class garage_quartermile
 	function insert_quartermile($data)
 	{
 		global $cid, $db, $garage_config;
+		$pending = ($garage_config['enable_quartermile_approval'] == '1') ? 1 : 0;
 
 		$sql = "INSERT INTO ". GARAGE_QUARTERMILE_TABLE ."
 			(garage_id, rt, sixty, three, eight, eightmph, thou, quart, quartmph, date_created, rr_id, date_updated, pending)
 			VALUES
-			($cid, '".$data['rt']."', '".$data['sixty']."', '".$data['three']."', '".$data['eight']."', '".$data['eightmph']."', '".$data['thou']."', '".$data['quart']."', '".$data['quartmph']."', '".time()."', '".$data['rr_id']."', '".time()."', '".($garage_config['enable_quartermile_approval'] == '1') ? 1 : 0."')";
+			($cid, '".$data['rt']."', '".$data['sixty']."', '".$data['three']."', '".$data['eight']."', '".$data['eightmph']."', '".$data['thou']."', '".$data['quart']."', '".$data['quartmph']."', '".time()."', '".$data['rr_id']."', '".time()."', '".$pending."')";
 		
 		if(!$result = $db->sql_query($sql))
 		{
@@ -58,10 +59,12 @@ class garage_quartermile
 	/*========================================================================*/
 	function update_quartermile($data)
 	{
-		global $db, $cid, $qmid;
+		global $db, $cid, $qmid, $garage_config;
+
+		$pending = ($garage_config['enable_quartermile_approval'] == '1') ? 1 : 0;
 
 		$sql = "UPDATE ". GARAGE_QUARTERMILE_TABLE ."
-			SET rt = '".$data['rt']."', sixty = '".$data['sixty']."', three = '".$data['three']."', eight = '".$data['eight']."', eightmph = '".$data['eightmph']."', thou = '".$data['thou']."', quart = '".$data['quart']."', quartmph = '".$data['quartmph']."', rr_id = '".$data['rr_id']."', pending = '".($garage_config['enable_quartermile_approval'] == '1') ? 1 : 0."', date_updated ='".time()."'
+			SET rt = '".$data['rt']."', sixty = '".$data['sixty']."', three = '".$data['three']."', eight = '".$data['eight']."', eightmph = '".$data['eightmph']."', thou = '".$data['thou']."', quart = '".$data['quart']."', quartmph = '".$data['quartmph']."', rr_id = '".$data['rr_id']."', pending = '".$pending."', date_updated ='".time()."'
 			WHERE id = '$qmid' and garage_id = '$cid'";
 
 		if(!$result = $db->sql_query($sql))

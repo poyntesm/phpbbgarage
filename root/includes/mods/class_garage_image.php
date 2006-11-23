@@ -184,38 +184,6 @@ class garage_image
 	}
 
 	/*========================================================================*/
-	// Return True/False Depending On If User Is Below Required Remote Quota
-	// Usage: remote_image_below_quota();
-	/*========================================================================*/
-	function remote_image_below_quota()
-	{
-		global $userdata;
-
-		if ( ($this->image_is_remote() ) AND (count($this->select_user_remote_images($userdata['user_id'])) < $this->get_user_remote_image_quota($userdata['user_id'])) )
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-	/*========================================================================*/
-	// Return True/False Depending On If User Is Below Required Upload Quota
-	// Usage: upload_image_below_quota();
-	/*========================================================================*/
-	function upload_image_below_quota()
-	{
-		global $userdata;
-
-		if ( ($this->image_is_local() ) AND (count($this->select_user_upload_images($userdata['user_id'])) < $this->get_user_upload_image_quota($userdata['user_id'])) )
-		{
-			return true;
-		}
-
-		return false;
-	}
-	
-	/*========================================================================*/
 	// Inserts Existing Image Into Vehicle Gallery
 	// Usage: insert_gallery_image('image id');
 	/*========================================================================*/

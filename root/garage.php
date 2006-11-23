@@ -100,7 +100,7 @@ switch( $mode )
 		);
 
 		//Check To See If User Has Too Many Vehicles Already...If So Display Notice
-		if ( sizeof($garage_vehicle->count_user_vehicles() >= $garage_vehicle->get_user_add_quota() ) 
+		if ( sizeof($garage_vehicle->count_user_vehicles()) >= $garage_vehicle->get_user_add_quota() )
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=5"));
 		}
@@ -1214,7 +1214,7 @@ switch( $mode )
 
 		//Get All Vehicle Data....
 		$data = $garage_vehicle->get_all_vehicles('', $order_by, $sort_order, $start, $garage_config['cars_per_page']);
-		for ($i = 0; $count = sizeof($data); $i < $count; $i++)
+		for ($i = 0, $count = sizeof($data); $i < $count; $i++)
       		{
 			$template->assign_block_vars('vehiclerow', array(
 				'U_VIEW_VEHICLE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=" . $data[$i]['id']),
@@ -1338,7 +1338,7 @@ switch( $mode )
 
 		//Get All Vehicle Data....
 		$data = $garage_vehicle->get_all_vehicles($search_data['where'], $order_by, $sort_order, $start, $garage_config['cars_per_page']);
-		for ($i = 0; $count = sizeof($data); $i < $count; $i++)
+		for ($i = 0, $count = sizeof($data); $i < $count; $i++)
       		{
 			$template->assign_block_vars('vehiclerow', array(
 				'U_VIEW_VEHICLE'=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=" . $data[$i]['id']),
@@ -1419,7 +1419,7 @@ switch( $mode )
 
 		//Get All Vehicle Data....
 		$data = $garage_vehicle->get_all_vehicles($search_data['where'], $order_by, $sort_order, $start, $garage_config['cars_per_page']);
-		for ($i = 0; $count = sizeof($data); $i < $count; $i++)
+		for ($i = 0, $count = sizeof($data); $i < $count; $i++)
       		{
 			$template->assign_block_vars('vehiclerow', array(
 				'U_VIEW_VEHICLE'=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=" . $data[$i]['id']),
@@ -1497,7 +1497,7 @@ switch( $mode )
 
 		//Get All Insurance Data....
 		$data = $garage_insurance->get_all_premiums($search_data['where'], $order_by, $sort_order, $start, $garage_config['cars_per_page']);
-		for ($i = 0; $count = sizeof($data);$i < $count; $i++)
+		for ($i = 0, $count = sizeof($data);$i < $count; $i++)
       		{
 			$template->assign_block_vars('vehiclerow', array(
 				'U_VIEW_VEHICLE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=" . $data[$i]['id']),
@@ -1810,7 +1810,7 @@ switch( $mode )
 		$data = $garage_image->get_all_images($start, '100');
 
 		//Process Each Image
-		for ($i = 0; $count = sizeof($data); $i < $count; $i++)
+		for ($i = 0, $count = sizeof($data); $i < $count; $i++)
 		{
 			//Produce Actual Image Thumbnail And Link It To Full Size Version..
 			if ( ($data[$i]['attach_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location'])) )
@@ -1885,7 +1885,7 @@ switch( $mode )
 		$data = $garage_image->get_gallery($cid);
 
 		//Process Each Image From Vehicle Gallery
-		for ($i = 0; $count = sizeof($data);$i < $count; $i++)
+		for ($i = 0, $count = sizeof($data);$i < $count; $i++)
 		{
 			//Work Out If Image Is Current Hilite Else Produce Link To Make It So..
 			if ( $data[$i]['image_id'] == $vehicle_data['image_id'] )
@@ -1999,7 +1999,7 @@ switch( $mode )
 		}
 
       		//Loop Processing All Insurance Business's Returned From First Select
-		for ($i = 0; $count = sizeof($business);$i < $count; $i++)
+		for ($i = 0, $count = sizeof($business);$i < $count; $i++)
       		{
          		$template->assign_block_vars('business_row', array(
             			'U_VIEW_BUSINESS'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_insurance_business&amp;business_id=" . $business[$i]['id']),
@@ -2017,7 +2017,7 @@ switch( $mode )
         	 	$template->assign_block_vars($detail, array());
 
 			//Now Loop Through All Insurance Cover Types...
-			for($j = 0; $count2 = sizeof($cover_types);$j < $count2; $j++)
+			for($j = 0, $count2 = sizeof($cover_types);$j < $count2; $j++)
 			{
 				//Pull MIN/MAX/AVG Of Specific Cover Type By Business ID
 				$premium_data = $garage_insurance->get_premiums_stats_by_business_and_covertype($business[$i]['id'], $cover_types[$j]);
@@ -2034,7 +2034,7 @@ switch( $mode )
 			{
 				//Pull All Insurance Premiums Data For Specific Insurance Company
 				$insurance_data = $garage_insurance->get_all_premiums_by_business($business[$i]['id']);
-				for($k = 0; $count3 = sizeof($insurance_data);$k < $count3; $k++)
+				for($k = 0, $count3 = sizeof($insurance_data);$k < $count3; $k++)
 				{
 					$template->assign_block_vars('business_row.insurance_detail.premiums', array(
 						'U_VIEW_PROFILE'=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $insurance_data[$k]['user_id']),
@@ -2111,7 +2111,7 @@ switch( $mode )
 		}
 
       		//Process All Garages......
-      		for ($i = 0; $count = sizeof($business);$i < $count; $i++)
+      		for ($i = 0, $count = sizeof($business);$i < $count; $i++)
       		{
          		$template->assign_block_vars('business_row', array(
 				'U_VIEW_BUSINESS'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_garage_business&amp;business_id=" . $business[$i]['id']),
@@ -2135,7 +2135,7 @@ switch( $mode )
 			//Now Lets Go Get Mods Business Has Installed
 			$bus_mod_data = $garage_modification->get_modifications_by_install_business($business[$i]['id']);
 
-			for($j = 0 ; $count2 = sizeof($bus_mod_data);$j < $count2; $j++)
+			for($j = 0, $count2 = sizeof($bus_mod_data);$j < $count2; $j++)
 			{
 				$template->assign_block_vars('business_row.mod_row', array(
 					'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $bus_mod_data[$j]['user_id']),
@@ -2230,7 +2230,7 @@ switch( $mode )
 		}
 
       		//Process All Shops......
-      		for ($i = 0; $count = sizeof($business);$i < $count; $i++)
+      		for ($i = 0, $count = sizeof($business);$i < $count; $i++)
       		{
          		$template->assign_block_vars('business_row', array(
 				'U_VIEW_BUSINESS'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_shop_business&amp;business_id=" . $business[$i]['id']),
@@ -2254,7 +2254,7 @@ switch( $mode )
 			//Now Lets Go Get All Mods All Business's Have Sold
 			$bus_mod_data = $garage_modification->get_modifications_by_business($business[$i]['id']);
 
-			for ($j = 0; $count2 = sizeof($bus_mod_data);$j < $count2; $j++)
+			for ($j = 0, $count2 = sizeof($bus_mod_data);$j < $count2; $j++)
 			{
 				$template->assign_block_vars('business_row.mod_row', array(
 					'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $bus_mod_data[$j]['user_id']),
@@ -2811,7 +2811,7 @@ switch( $mode )
 				//Process For Removing
 				if ( $data['action'] == 'REMOVE' )
 				{
-					for ($i = 0 ; $count = sizeof($pending_ids);$i < $count; $i++)
+					for ($i = 0, $count = sizeof($pending_ids);$i < $count; $i++)
 					{
 						$id = intval($pending_ids[$i]);
 
@@ -2834,9 +2834,9 @@ switch( $mode )
 				//Process For Approval...
 				else if ( $data['action'] == 'APPROVE' )
 				{
-					for ($i = 0 ; $count = sizeof($pending_ids);$i < $count; $i++)
+					for ($i = 0, $count = sizeof($pending_ids);$i < $count; $i++)
 					{
-						$garage->update_single_field($table, 'pending', 0, 'id', intval($pending_ids[$i]);
+						$garage->update_single_field($table, 'pending', 0, 'id', intval($pending_ids[$i]));
 					}
 				}
 			}
@@ -2940,7 +2940,7 @@ switch( $mode )
 		//Get All Comments Data
 		$comment_data = $garage_guestbook->get_vehicle_comments($cid);
 
-		for ($i = 0; $count = sizeof($comment_data);$i < $count; $i++)
+		for ($i = 0, $count = sizeof($comment_data);$i < $count; $i++)
 		{	
 			$username = $comment_data[$i]['username'];
 			$temp_url = append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $comment_data[$i]['user_id']);
@@ -3322,7 +3322,7 @@ switch( $mode )
 
 		//Let Get Vehicle Rating & Delete Them
 		$data = $garage_vehicle->get_vehicle_rating($cid);
-		for ($i = 0; $count = sizeof($data);$i < $count; $i++)
+		for ($i = 0, $count = sizeof($data);$i < $count; $i++)
 		{
 			$garage->delete_rows(GARAGE_RATING_TABLE, 'id', $data['id']);
 		}

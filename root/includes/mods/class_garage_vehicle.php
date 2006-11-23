@@ -114,10 +114,12 @@ class garage_vehicle
 	{
 		global $user, $db;
 
+		$pending = ($data['guestbook_pm_notify'] == 'on') ? 1 : 0;
+
 		$sql = "INSERT INTO ". GARAGE_TABLE ."
 			(made_year, engine_type, make_id, model_id, colour, mileage, mileage_units, price, currency, comments, user_id, date_created, date_updated, main_vehicle, guestbook_pm_notify)
 			VALUES
-			('".$data['year']."', '".$data['engine_type']."', '".$data['make_id']."', '".$data['model_id']."', '".$data['colour']."', '".$data['mileage']."', '".$data['mileage_units']."', '".$data['price']."', '".$data['currency']."', '".$data['comments']."', '".$user->data['user_id']."', '".$time()."', '".time()."', '".$data['main_vehicle']."', '". ($data['guestbook_pm_notify'] == 'on') ? 1 : 0."')";
+			('".$data['year']."', '".$data['engine_type']."', '".$data['make_id']."', '".$data['model_id']."', '".$data['colour']."', '".$data['mileage']."', '".$data['mileage_units']."', '".$data['price']."', '".$data['currency']."', '".$data['comments']."', '".$user->data['user_id']."', '".$time()."', '".time()."', '".$data['main_vehicle']."', '". $pending."')";
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -182,8 +184,10 @@ class garage_vehicle
 	{
 		global $cid, $db;
 
+		$pending = ($data['guestbook_pm_notify'] == 'on') ? 1 : 0;
+
 		$sql = "UPDATE ". GARAGE_TABLE ."
-			SET made_year = '".$data['year']."', engine_type = '".$data['engine_type']."', make_id = '".$data['make_id']."', model_id = '".$data['model_id']."', colour = '".$data['colour']."', mileage = '".$data['mileage']."', mileage_units = '".$data['mileage_units']."', price = '".$data['price']."', currency = '".$data['currency']."', comments = '".$data['comments']."', guestbook_pm_notify = '".($data['guestbook_pm_notify'] == 'on') ? 1 : 0."'
+			SET made_year = '".$data['year']."', engine_type = '".$data['engine_type']."', make_id = '".$data['make_id']."', model_id = '".$data['model_id']."', colour = '".$data['colour']."', mileage = '".$data['mileage']."', mileage_units = '".$data['mileage_units']."', price = '".$data['price']."', currency = '".$data['currency']."', comments = '".$data['comments']."', guestbook_pm_notify = '".$pending."'
 			WHERE id = '$cid'";
 	
 		if(!$result = $db->sql_query($sql))
