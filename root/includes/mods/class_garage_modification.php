@@ -131,7 +131,7 @@ class garage_modification
 	{
 		global $required_position, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config, $user;
 	
-		if ( $garage_config['lastupdatedmods_on'] != true )
+		if ( $garage_config['enable_updated_modification'] != true )
 		{
 			return;
 		}
@@ -146,7 +146,7 @@ class garage_modification
 		);
 	 		
 	        // What's the count? Default to 10
-	        $limit = $garage_config['lastupdatedmods_limit'] ? $garage_config['lastupdatedmods_limit'] : 10;
+	        $limit = $garage_config['updated_modification_limit'] ? $garage_config['updated_modification_limit'] : 10;
 	
 	 	$sql = "SELECT mods.id, mods.garage_id, mods.user_id, mods.title AS mod_title, mods.date_updated AS POI, m.username, mods.garage_id 
 	                FROM " . GARAGE_MODS_TABLE . " AS mods 
@@ -185,7 +185,7 @@ class garage_modification
 	{
 		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config;
 	
-		if ( $garage_config['mostmodded_on'] != true )
+		if ( $garage_config['enable_most_modified'] != true )
 		{
 			return;
 		}
@@ -200,7 +200,7 @@ class garage_modification
 		);
 	
 	        // What's the count? Default to 10
-	        $limit = $garage_config['mostmodded_limit'] ? $garage_config['mostmodded_limit'] : 10;
+	        $limit = $garage_config['most_modified_limit'] ? $garage_config['most_modified_limit'] : 10;
 	
 	 	$sql = "SELECT g.id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, 
 	                        g.user_id, COUNT(mods.id) AS POI, m.username 
@@ -241,7 +241,7 @@ class garage_modification
 	{
 		global $required_position, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config, $user;
 	
-		if ( $garage_config['newestmods_on'] != true )
+		if ( $garage_config['enable_newest_modification'] != true )
 		{
 			return;
 		}
@@ -256,7 +256,7 @@ class garage_modification
 		);
 	
 	        // What's the count? Default to 10
-	        $limit = $garage_config['newestmods_limit'] ? $garage_config['newestmods_limit'] : 10;
+	        $limit = $garage_config['newest_modification_limit'] ? $garage_config['newest_modification_limit'] : 10;
 	 		 		
 	 	$sql = "SELECT mods.id, mods.garage_id, mods.user_id, mods.title AS mod_title, mods.date_created AS POI,
 	       			m.username, mods.garage_id 

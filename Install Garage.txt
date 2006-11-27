@@ -6,17 +6,19 @@
 ##
 ## MOD Version:		2.0.0 
 ## 
-## Installation Level:	Easy
-## Installation Time:	10 Minutes
-## Files To Edit: (14)
+## Installation Level:	Medium
+## Installation Time:	20 Minutes
+## Files To Edit: (16)
 ## 			common.php
 ## 			memberlist.php
 ## 			viewtopic.php
 ## 			viewonline.php
 ## 			includes/constants.php
 ## 			includes/functions.php
+##			includes/acp/acp_styles.php
 ##			language/en/common.php
 ##			language/en/acp/common.php
+##			language/en/acp/styles.php
 ##			styles/subSilver/imageset/imageset.cfg
 ##			styles/subSilver/templates/memberlist_body.html
 ##			styles/subSilver/templates/memberlist_view.html
@@ -27,9 +29,6 @@
 ## Included Files: (84)
 ##			Install Garage.txt
 ##			Upgrade.txt
-##			contrib/Install Garage.txt
-##			contrib/profilcp/
-##			contrib/templates/
 ## 			root/garage.php
 ## 			root/install_garage.php
 ##			root/admin/admin_garage_business.php
@@ -122,14 +121,8 @@
 ##
 ######################################################################################
 ## MOD History: 
-##   27-02-2006 - Version 1.0.2
-##	- Fix javascript error on adding a new model
-##	- Fix setting private permissions
-##	- Fix offset year
-##	- Fix userlink in viewing insurance business
-##
-##   01-02-2006 - Version 1.0.0
-##	- Version Submitted To phpBB.com's MOD DB. (Resubmitted with changes 01-02-2006)
+##   27-02-2006 - Version 2.0.0
+##	- First phpBB3 version of phpBB Garage
 ##	- Version Submitted To phpBB.com's MOD DB. (Resubmitted with one change 08-01-2006)
 ##
 ###################################################################################### 
@@ -170,6 +163,7 @@ common.php
 #-----[ FIND ]------------------------------------------
 #
 $config = $cache->obtain_config();
+
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
@@ -187,6 +181,36 @@ memberlist.php
 #-----[ FIND ]------------------------------------------
 #
 <?php
+
+#
+#-----[ FIND ]------------------------------------------
+#
+'k' => $user->lang['JABBER']
+
+#
+#-----[ IN-LINE FIND ]------------------------------------------
+#
+'k' => $user->lang['JABBER']
+
+#
+#-----[ IN-LINE AFTER, ADD ]------------------------------------------
+#
+,'o' => $user->lang['GARAGE']
+
+#
+#-----[ FIND ]------------------------------------------
+#
+'k' => 'u.user_jabber'
+
+#
+#-----[ IN-LINE FIND ]------------------------------------------
+#
+'k' => 'u.user_jabber'
+
+#
+#-----[ IN-LINE AFTER, ADD ]------------------------------------------
+#
+, 'o' => 'u.garage_id'
 
 #
 #-----[ AFTER, ADD ]------------------------------------------
@@ -222,6 +246,20 @@ ug.user_id as ug_user_id
 					'ON'	=> 'g.user_id = u.user_id AND g.main_vehicle = 1'
 				)
 			),
+
+
+#
+#-----[ FIND ]------------------------------------------
+#
+			'SEARCH_IMG'		=> $user->img('icon_user_search', $user->lang['SEARCH']),
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+			'GARAGE_IMG'		=> $user->img('icon_garage', $user->lang['GARAGE']),
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -251,8 +289,8 @@ ug.user_id as ug_user_id
 #
 #-----[ FIND ]------------------------------------------
 #
-
 			'S_SHOW_GROUP'		=> ($mode == 'group') ? true : false,
+
 #
 #-----[ BEFORE, ADD ]------------------------------------------
 #
@@ -533,6 +571,25 @@ $phpbb_root_path
 # 
 #-----[ OPEN ]----- 
 # 
+includes/acp/acp_styles.php
+
+#
+#-----[ FIND ]------------------------------------------
+#
+			'polls'		=> array(
+				'poll_left', 'poll_center', 'poll_right',
+			),
+
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+			'garage'	=> array(
+				'garage_vehicle_img_attached', 'garage_slip_img_attached', 'garage_icon_garage', 'garage_main_menu', 'garage_browse', 'garage_search', 'garage_quartermile_table', 'garage_dynorun_table', 'garage_garage_review', 'garage_shop_review', 'garage_insurance_review', 'garage_create_vehicle', 'garage_edit_vehicle', 'garage_delete_vehicle', 'garage_view_vehicle', 'garage_add_modification', 'garage_add_insurance', 'garage_add_rollingroad', 'garage_add_quartermile', 'garage_manage_gallery', 'garage_edit', 'garage_delete', 'garage_main_vehicle', 'garage_no_thumb', 'garage_show_details', 'garage_hide_details', 'garage_move_up', 'garage_move_down', 'garage_set_approved', 'garage_set_pending',
+			),
+# 
+#-----[ OPEN ]----- 
+# 
 language/en/common.php
 #
 #-----[ FIND ]------------------------------------------
@@ -560,7 +617,6 @@ language/en/common.php
 	'VIEWING_GARAGE'			=> 'Viewing Garage',
 	'VIEW_USERS_GARAGE'			=> 'View user\'s Garage',
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-
 
 # 
 #-----[ OPEN ]----- 
@@ -597,6 +653,65 @@ language/en/acp/common.php
 	'ACP_GARAGE_TOOLS'		=> 'Tools',
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
+# 
+#-----[ OPEN ]----- 
+# 
+language/en/acp/styles.php
+
+#
+#-----[ FIND ]------------------------------------------
+#
+<?php
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+
+#
+#-----[ FIND ]------------------------------------------
+#
+	'IMG_CAT_USER'			=> 'Additional images',
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+	'IMG_CAT_GARAGE'		=> 'phpBB Garage images',
+	'IMG_GARAGE_VEHICLE_IMG_ATTACHED'=> 'Vehicle with image',
+	'IMG_GARAGE_SLIP_IMG_ATTACHED'	=> 'Slip with image',
+	'IMG_GARAGE_ICON_GARAGE'	=> 'Garage icon',
+	'IMG_GARAGE_MAIN_MENU'		=> 'Index menu',
+	'IMG_GARAGE_BROWSE'		=> 'Browse menu',
+	'IMG_GARAGE_SEARCH'		=> 'Search menu',
+	'IMG_GARAGE_QUARTERMILE_TABLE'	=> 'Quartermile table',
+	'IMG_GARAGE_DYNORUN_TABLE'	=> 'Dynorun table',
+	'IMG_GARAGE_GARAGE_REVIEW'	=> 'Garage review',
+	'IMG_GARAGE_SHOP_REVIEW'	=> 'Shop review',
+	'IMG_GARAGE_INSURANCE_REVIEW'	=> 'Insurance review',
+	'IMG_GARAGE_CREATE_VEHICLE'	=> 'Create vehicle',
+	'IMG_GARAGE_EDIT_VEHICLE'	=> 'Edit vehicle',
+	'IMG_GARAGE_DELETE_VEHICLE'	=> 'Delete vehicle',
+	'IMG_GARAGE_VIEW_VEHICLE'	=> 'View vehicle',
+	'IMG_GARAGE_ADD_MODIFICATION'	=> 'Add modification',
+	'IMG_GARAGE_ADD_INSURANCE'	=> 'Add insurance',
+	'IMG_GARAGE_ADD_DYNORUN'	=> 'Add dynorun',
+	'IMG_GARAGE_ADD_QUARTERMILE'	=> 'Add quartermile',
+	'IMG_GARAGE_MANAGE_GALLERY'	=> 'Manage vehicle gallery',
+	'IMG_GARAGE_EDIT'		=> 'Edit',
+	'IMG_GARAGE_DELETE'		=> 'Delete',
+	'IMG_GARAGE_MAIN_VEHICLE'	=> 'Main vehicle',
+	'IMG_GARAGE_NO_THUMB'		=> 'No thumb',
+	'IMG_GARAGE_SHOW_DETAILS'	=> 'Show details',
+	'IMG_GARAGE_HIDE_DETAILS'	=> 'Hide details',
+	'IMG_GARAGE_MOVE_UP'		=> 'Move up',
+	'IMG_GARAGE_MOVE_DOWN'		=> 'Move down',
+	'IMG_GARAGE_SET_APPROVED'	=> 'Approve',
+	'IMG_GARAGE_SET_PENDING'	=> 'Pending',
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
 #
 #-----[ OPEN ]----- 
 # 
@@ -613,9 +728,9 @@ img_button_topic_reply = {LANG}/button_topic_reply.gif*27*97
 
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
-img_vehicle_img_attached	= garage_camera.gif*13*18
-img_slip_img_attached		= garage_slip.gif*13*12
-img_icon_garage			= {LANG}/icon_garage.gif*18*59
+img_garage_vehicle_img_attached	= garage_camera.gif*13*18
+img_garage_slip_img_attached	= garage_slip.gif*13*12
+img_garage_icon_garage		= {LANG}/icon_garage.gif*18*59
 img_garage_main_menu		= {LANG}/garage_main_menu.gif*33*130
 img_garage_browse		= {LANG}/garage_browse.gif*33*130
 img_garage_search		= {LANG}/garage_search.gif*33*130
@@ -670,13 +785,34 @@ styles/subSilver/templates/memberlist_body.html
 #
 		<td class="gen" align="center">&nbsp;<!-- IF memberrow.U_GARAGE and S_DISPLAY_GARAGE_MEMBERLIST --><a href="{memberrow.U_GARAGE}">{GARAGE_IMG}</a><!-- ENDIF -->&nbsp;</td>
 
+
 #
 #-----[ FIND ]------------------------------------------
+#
+		<td class="row1" colspan="<!-- IF S_SEARCH_USER and S_FORM_NAME -->9<!-- ELSE -->8<!-- ENDIF -->" align="center">
+
+#
+#-----[ IN-LINE FIND ]------------------------------------------
 #
 <!-- IF S_SEARCH_USER and S_FORM_NAME -->9<!-- ELSE -->8<!-- ENDIF -->
 
 #
-#-----[ REPLACE WITH ]------------------------------------------
+#-----[ IN-LINE REPLACE WITH ]------------------------------------------
+#
+<!-- IF S_SEARCH_USER and S_FORM_NAME and !S_DISPLAY_GARAGE_MEMBERLIST-->9<!-- ELSEIF S_SEARCH_USER and S_FORM_NAME and S_DISPLAY_GARAGE_MEMBERLIST-->10<!-- ELSEIF S_DISPLAY_GARAGE_MEMBERLIST -->9<!-- ELSE -->8<!-- ENDIF -->
+
+#
+#-----[ FIND ]------------------------------------------
+#
+	<td class="cat" colspan="<!-- IF S_SEARCH_USER and S_FORM_NAME -->9<!-- ELSE -->8<!-- ENDIF -->
+
+#
+#-----[ IN-LINE FIND ]------------------------------------------
+#
+<!-- IF S_SEARCH_USER and S_FORM_NAME -->9<!-- ELSE -->8<!-- ENDIF -->
+
+#
+#-----[ IN-LINE REPLACE WITH ]------------------------------------------
 #
 <!-- IF S_SEARCH_USER and S_FORM_NAME and !S_DISPLAY_GARAGE_MEMBERLIST-->9<!-- ELSEIF S_SEARCH_USER and S_FORM_NAME and S_DISPLAY_GARAGE_MEMBERLIST-->10<!-- ELSEIF S_DISPLAY_GARAGE_MEMBERLIST -->9<!-- ELSE -->8<!-- ENDIF -->
 
@@ -805,6 +941,5 @@ styles/subSilver/template/overall_footer.html
 # EoM
 
 TODO: Map new permissions to roles in phpbb_acl_roles_data so on install admins & global moderators get permissions required & regiestered users too!!
-TODO: Make viewtopic page display vehicle - template side done
 TODO: Make profilepage display vehicle - template side done
 TODO: Make memberlist display garage button - template side done

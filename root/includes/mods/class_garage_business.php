@@ -37,9 +37,35 @@ class garage_business
 		global $db;
 
 		$sql = "INSERT INTO " . GARAGE_BUSINESS_TABLE . " 
-			(title, address, telephone, fax, website, email, opening_hours, insurance, garage, retail_shop, web_shop, pending)
+			(
+				title,
+				address,
+				telephone,
+				fax,
+				website,
+				email,
+				opening_hours,
+				insurance,
+				garage,
+				retail_shop,
+				web_shop,
+				pending
+			)
 			VALUES 
-			('" . $data['title'] . "', '" . $data['address'] . "', '" . $data['telephone'] . "', '" . $data['fax'] . "', '" . $data['website'] . "', '" . $data['email'] . "', '" . $data['opening_hours'] . "', '" . $data['insurance'] . "', '" . $data['garage'] . "', '" . $data['retail_shop'] . "', '" . $data['web_shop'] . "', '" . $data['pending'] . "')";
+			(
+				'" . $data['title'] . "',
+				'" . $data['address'] . "',
+				'" . $data['telephone'] . "',
+				'" . $data['fax'] . "',
+				'" . $data['website'] . "',
+				'" . $data['email'] . "',
+				'" . $data['opening_hours'] . "',
+				'" . $data['insurance'] . "',
+				'" . $data['garage'] . "',
+				'" . $data['retail_shop'] . "',
+				'" . $data['web_shop'] . "',
+				'" . $data['pending'] . "'
+			)";
 	
 		if(!$result = $db->sql_query($sql))
 		{
@@ -58,7 +84,19 @@ class garage_business
 		global $db;
 
 		$sql = "UPDATE " . GARAGE_BUSINESS_TABLE . " 
-			SET title = '" . $data['title'] . "', address = '" . $data['address'] . "', telephone = '" . $data['telephone'] . "', fax = '" . $data['fax'] . "', website = '" . $data['website'] . "', email = '" . $data['email'] . "', opening_hours = '" . $data['opening_hours'] . "', insurance = '" . $data['insurance'] . "', garage = '" . $data['garage'] . "', retail_shop = '" . $data['retail_shop'] . "', web_shop = '" . $data['web_shop'] . "', pending = '" . $data['pending'] . "'
+			SET 
+				title = '" . $data['title'] . "',
+				address = '" . $data['address'] . "',
+				telephone = '" . $data['telephone'] . "',
+				fax = '" . $data['fax'] . "',
+				website = '" . $data['website'] . "',
+				email = '" . $data['email'] . "',
+				opening_hours = '" . $data['opening_hours'] . "',
+				insurance = '" . $data['insurance'] . "',
+				garage = '" . $data['garage'] . "',
+				retail_shop = '" . $data['retail_shop'] . "',
+				web_shop = '" . $data['web_shop'] . "',
+			       	pending = '" . $data['pending'] . "'
 			WHERE id = '" . $data['id'] . "'";
 	
 		if(!$result = $db->sql_query($sql))
@@ -126,7 +164,9 @@ class garage_business
 	{
 		global $db;
 
-		$sql = "SELECT b.*, sum( install_rating ) AS rating, count( * ) *10 AS total_rating
+		$sql = "SELECT 	b.*,
+			       	sum( install_rating ) AS rating,
+		       		count( * ) *10 AS total_rating
 			FROM " . GARAGE_BUSINESS_TABLE . " b, " . GARAGE_MODS_TABLE . " m
 			WHERE m.install_business_id = b.id
 				AND b.garage =1
@@ -163,7 +203,9 @@ class garage_business
 	{
 		global $db;
 
-		$sql = "SELECT b.*, sum( purchase_rating ) AS rating, count( * ) *10 AS total_rating
+		$sql = "SELECT  b.*,
+				sum( purchase_rating ) AS rating,
+			       	count( * ) *10 AS total_rating
 			FROM " . GARAGE_BUSINESS_TABLE . " b, " . GARAGE_MODS_TABLE . " m
 			WHERE m.business_id = b.id
 				AND ( b.web_shop =1 OR b.retail_shop = 1 )
@@ -200,7 +242,8 @@ class garage_business
 	{
 		global $db, $where;
 
-      		$sql = "SELECT b.*, COUNT(DISTINCT b.id) as total
+		$sql = "SELECT  b.*,
+		       		COUNT(DISTINCT b.id) as total
        	 		FROM  " . GARAGE_BUSINESS_TABLE . " b 
        			WHERE b.insurance = 1 
 				AND b.pending = 0
@@ -309,8 +352,7 @@ class garage_business
 		$i = 1;
 		while ( $row = $db->sql_fetchrow($result) )
 		{
-            		$temp_url = append_sid("garage.$phpEx?mode=edit_business&amp;BUS_ID=" . $row['id']);
-	            	$edit_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="' . $lang['Edit'] . '" title="' . $lang['Edit'] . '" border="0" /></a>';
+	            	$edit_link = '<a href="' . append_sid("garage.$phpEx?mode=edit_business&amp;BUS_ID=" . $row['id']) . '"><img src="' . $images['garage_edit'] . '" alt="' . $lang['Edit'] . '" title="' . $lang['Edit'] . '" border="0" /></a>';
 
 			//Work Out Type Of Business
 			if ( $row['insurance'] == '1' )

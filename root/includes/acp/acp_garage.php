@@ -18,11 +18,10 @@ class acp_garage
 
 	function main($id, $mode)
 	{
-		global $db, $user, $auth, $template;
+		global $db, $user, $auth, $template, $garage_config;
 		global $config, $phpbb_root_path, $phpbb_admin_path, $phpEx;
 
 		//Build All Garage Classes e.g $garage_images->
-		require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 		require($phpbb_root_path . 'includes/mods/class_garage_admin.' . $phpEx);
 
 
@@ -44,10 +43,8 @@ class acp_garage
 						'year_end'			=> array('lang' => 'YEAR_RANGE_END', 'type' => 'text:3:4', 'explain' => true),
 						'enable_user_submit_make'	=> array('lang' => 'USER_SUBMIT_MAKE', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_user_submit_model'	=> array('lang' => 'USER_SUBMIT_MODEL', 'type' => 'radio:yes_no', 'explain' => true),
-						'enable_latestmain_vehicle' 	=> array('lang' => 'ENABLE_LATESTMAIN_VEHICLE', 'type' => 'radio:yes_no', 'explain' => true),
-						'latestmain_vehicle_limit' 	=> array('lang' => 'LATESTMAIN_VEHCILE_LIMIT', 'type' => 'text:3:4', 'explain' => true),
-						'garage_dateformat'		=> array('lang' => 'GARAGE_DATE_FORMAT', 'type' => 'custom', 'method' => 'dateformat_select', 'explain' => true),
-						'profile_integration'		=> array('lang' => 'PROFILE_INTEGRATION', 'type' => 'radio:yes_no', 'explain' => true),
+						'dateformat'			=> array('lang' => 'GARAGE_DATE_FORMAT', 'type' => 'custom', 'method' => 'dateformat_select', 'explain' => true),
+						'profile_thumbs'		=> array('lang' => 'PROFILE_INTEGRATION', 'type' => 'radio:yes_no', 'explain' => true),
 
 						'legend2'			=> 'ACP_GARAGE_MENU_CONFIG',
 						'enable_browse_menu' 		=> array('lang' => 'ENABLE_BROWSE_MENU', 'type' => 'radio:yes_no', 'explain' => true),
@@ -57,10 +54,18 @@ class acp_garage
 						'enable_shop_review_menu' 	=> array('lang' => 'ENABLE_SHOP_REVIEW_MENU', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_quartermile_menu' 	=> array('lang' => 'ENABLE_QUARTERMILE_MENU', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_dynorun_menu' 		=> array('lang' => 'ENABLE_DYNORUN_MENU', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_garage_header' 		=> array('lang' => 'ENABLE_GARAGE_HEADER', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_quartermile_header' 	=> array('lang' => 'ENABLE_QUARTERMILE_HEADER', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_dynorun_header'		=> array('lang' => 'ENABLE_DYNORUN_HEADER', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_latest_vehicle_index' 	=> array('lang' => 'ENABLE_LATESTMAIN_VEHICLE', 'type' => 'radio:yes_no', 'explain' => true),
+						'latest_vehicle_index_limit' 	=> array('lang' => 'LATESTMAIN_VEHCILE_LIMIT', 'type' => 'text:3:4', 'explain' => true),
 
 						'legend3'			=> 'ACP_GARAGE_INDEX_CONFIG',
 						'enable_featured_vehicle' 	=> array('lang' => 'ENABLE_FEATURED_VEHICLE', 'type' => 'radio:yes_no', 'explain' => true),
-						'default_style'			=> array('lang' => 'DEFAULT_STYLE', 'type' => 'select', 'function' => 'style_select', 'params' => array('{CONFIG_VALUE}', true), 'explain' => false),
+						'featured_vehicle_id'		=> array('lang' => 'FEATURED_VEHICLE_ID', 'type' => 'text:3:4', 'explain' => true),
+						'featured_vehicle_random' 	=> array('lang' => 'FEATURED_VEHICLE_RANDOM', 'type' => 'radio:yes_no', 'explain' => true),
+						'featured_vehicle_from_block'	=> array('lang' => 'FEATURED_FROM_BLOCK', 'type' => 'select', 'function' => 'style_select', 'params' => array('{CONFIG_VALUE}', true), 'explain' => true),
+						'featured_vehicle_description'	=> array('lang' => 'FEATURED_VEHICLE_DESCRIPTION', 'type' => 'text:39:40', 'explain' => true),
 						'enable_newest_vehicle' 	=> array('lang' => 'ENABLE_NEWEST_VEHCILE', 'type' => 'radio:yes_no', 'explain' => true),
 						'newest_vehicle_limit'		=> array('lang' => 'NEWEST_VEHICLE_LIMIT', 'type' => 'text:3:4', 'explain' => true),
 						'enable_updated_vehicle'	=> array('lang' => 'ENABLE_UPDATED_VEHICLE', 'type' => 'radio:yes_no', 'explain' => true),
@@ -95,8 +100,8 @@ class acp_garage
 						'remote_timeout'		=> array('lang' => 'REMOTE_TIMEOUT', 'type' => 'text:3:4', 'explain' => true),
 						'enable_mod_gallery'		=> array('lang' => 'ENABLE_MODIFICATION_GALLERY', 'type' => 'radio:yes_no', 'explain' => true),
 						'mod_gallery_limit'		=> array('lang' => 'MODIFICATION_GALLERY_LIMIT', 'type' => 'text:3:4', 'explain' => true),
-						'max_kbytes'			=> array('lang' => 'IMAGE_MAX_SIZE', 'type' => 'text:3:4', 'explain' => true),
-						'max_resolution'		=> array('lang' => 'IMAGE_MAX_RESOLUTION', 'type' => 'text:3:4', 'explain' => true),
+						'max_image_kbytes'		=> array('lang' => 'IMAGE_MAX_SIZE', 'type' => 'text:3:4', 'explain' => true),
+						'max_image_resolution'		=> array('lang' => 'IMAGE_MAX_RESOLUTION', 'type' => 'text:3:4', 'explain' => true),
 						'thumbnail_resolution'		=> array('lang' => 'THUMBNAIL_RESOLUTION', 'type' => 'text:3:4', 'explain' => true),
 
 						'legend5'			=> 'ACP_GARAGE_QUARTERMILE_CONFIG',
@@ -119,12 +124,12 @@ class acp_garage
 						'enable_business_approval'	=> array('lang' => 'BUSINESS_APPROVAL', 'type' => 'radio:yes_no', 'explain' => true),
 
 						'legend9'			=> 'ACP_GARAGE_VEHICLE_RATING_CONFIG',
-						'ratings_permanent'		=> array('lang' => 'RATING_PERMANENT', 'type' => 'radio:yes_no', 'explain' => true),
-						'ratings_always_updateable'	=> array('lang' => 'RATING_ALWAYS_UPDATEABLE', 'type' => 'radio:yes_no', 'explain' => true),
-						'magic_number'			=> array('lang' => 'RATING_MINIMUM_REQUIRED', 'type' => 'text:3:4', 'explain' => true),
+						'rating_permanent'		=> array('lang' => 'RATING_PERMANENT', 'type' => 'radio:yes_no', 'explain' => true),
+						'rating_always_updateable'	=> array('lang' => 'RATING_ALWAYS_UPDATEABLE', 'type' => 'radio:yes_no', 'explain' => true),
+						'minimum_ratings_required'	=> array('lang' => 'RATING_MINIMUM_REQUIRED', 'type' => 'text:3:4', 'explain' => true),
 
 						'legend10'			=> 'ACP_GARAGE_GUESTBOOK_CONFIG',
-						'enable_guestbook'		=> array('lang' => 'ENABLE_GUESTBOOK', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_guestbooks'		=> array('lang' => 'ENABLE_GUESTBOOK', 'type' => 'radio:yes_no', 'explain' => true),
 
 					)
 				);

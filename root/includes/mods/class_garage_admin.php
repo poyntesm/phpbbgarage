@@ -38,9 +38,15 @@ class garage_admin
 		global $db;
 
 		$sql = "INSERT INTO ". GARAGE_CATEGORIES_TABLE ." 
-			(title, field_order)
+			(
+				title,
+				field_order
+			)
 			VALUES 
-			('" . $data['title'] . "', " . $data['field_order'] . " )";
+			(
+				'" . $data['title'] . "',
+				" . $data['field_order'] . " 
+			)";
 	
 		if(!$result = $db->sql_query($sql))
 		{

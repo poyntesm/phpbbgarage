@@ -38,11 +38,11 @@ class garage_template
 
 		// Set Garage Version Messages.....DO NOT REMOVE....No Support For Any Garage Without It
 		$template->assign_vars(array(
-			'GARAGE_LINK' => 'http://www.phpbbgarage.com/',
-			'GARAGE_VERSION' => $garage_config['version'],
-			'U_GARAGE' => append_sid("garage.$phpEx"),
-			'L_GARAGE' => $user->lang['GARAGE'],
-			'L_POWERED_BY_GARAGE' => 'Powered By phpBB Garage' . $user->lang['Translation_Link'])
+			'GARAGE_LINK' 		=> 'http://www.phpbbgarage.com/',
+			'GARAGE_VERSION'	=> $garage_config['version'],
+			'U_GARAGE' 		=> append_sid("garage.$phpEx"),
+			'L_GARAGE' 		=> $user->lang['GARAGE'],
+			'L_POWERED_BY_GARAGE'	=> 'Powered By phpBB Garage' . $user->lang['Translation_Link'])
 		);
 
 		return;
@@ -61,33 +61,33 @@ class garage_template
 		);
 
 		$template->assign_vars(array(
-			'U_GARAGE_MAIN' => append_sid("garage.$phpEx"),
-			'U_GARAGE_BROWSE' => append_sid("garage.$phpEx", "mode=browse"),
-			'U_GARAGE_SEARCH' => append_sid("garage.$phpEx", "mode=search"),
-			'U_GARAGE_INSURANCE_REVIEW' => append_sid("garage.$phpEx", "mode=view_insurance_business"),
-			'U_GARAGE_SHOP_REVIEW' => append_sid("garage.$phpEx", "mode=view_shop_business"),
-			'U_GARAGE_GARAGE_REVIEW' => append_sid("garage.$phpEx", "mode=view_garage_business"),
-			'U_GARAGE_QUARTERMILE_TABLE' => append_sid("garage.$phpEx", "mode=quartermile"),
-			'U_GARAGE_DYNORUN_TABLE' => append_sid("garage.$phpEx", "mode=dynorun"),
-			'U_GARAGE_CREATE_VEHICLE' => append_sid("garage.$phpEx", "mode=create_vehicle"),
-			'MAIN' => ($garage_config['garage_images']) ? $user->img('garage_main_menu', 'MAIN_MENU') : $user->lang['MAIN_MENU'],
-			'BROWSE' => ($garage_config['garage_images']) ? $user->img('garage_browse', 'BROWSE_GARAGE') : $user->lang['BROWSE_GARAGE'],
-			'SEARCH' => ($garage_config['garage_images']) ? $user->img('garage_search', 'SEARCH_GARAGE') : $user->lang['SEARCH_GARAGE'],
-			'INSURANCE_REVIEW' => ($garage_config['garage_images']) ? $user->img('garage_insurance_review', 'INSURANCE_SUMMARY') : $user->lang['INSURANCE_SUMMARY'],
-			'SHOP_REVIEW' => ($garage_config['garage_images']) ? $user->img('garage_shop_review', 'SHOP_REVIEW') : $user->lang['SHOP_REVIEW'],
-			'GARAGE_REVIEW' => ($garage_config['garage_images']) ? $user->img('garage_garage_review', 'GARAGE_REVIEW') : $user->lang['GARAGE_REVIEW'],
-			'QUARTERMILE_TABLE' => ($garage_config['garage_images']) ? $user->img('garage_quartermile_table', 'QUARTERMILE_TABLE') : $user->lang['QUARTERMILE_TABLE'],
-			'DYNORUN_TABLE' => ($garage_config['garage_images']) ? $user->img('garage_rollingroad_table', 'ROLLINGROAD_TABLE') : $user->lang['ROLLINGROAD_TABLE'],
-			'CREATE_VEHICLE' => ($garage_config['garage_images']) ? $user->img('garage_create_vehicle', 'CREATE_VEHICLE') : $user->lang['CREATE_VEHICLE'],
-			'S_GARAGE_DISPLAY_MAIN' => (preg_match("/MAIN/", $garage_config['menu_selection'])) ? true : false,
-			'S_GARAGE_DISPLAY_BROWSE' => (preg_match("/BROWSE/", $garage_config['menu_selection'])) ? true : false,
-			'S_GARAGE_DISPLAY_SEARCH' => (preg_match("/SEARCH/", $garage_config['menu_selection'])) ? true : false,
-			'S_GARAGE_DISPLAY_INSURANCE_REVIEW' => (preg_match("/INSURANCEREVIEW/", $garage_config['menu_selection'])) ? true : false,
-			'S_GARAGE_DISPLAY_SHOP_REVIEW' => (preg_match("/SHOPREVIEW/", $garage_config['menu_selection'])) ? true : false,
-			'S_GARAGE_DISPLAY_GARAGE_REVIEW' => (preg_match("/GARAGEREVIEW/", $garage_config['menu_selection'])) ? true : false,
-			'S_GARAGE_DISPLAY_QUARTERMILE_TABLE' => (preg_match("/QUARTERMILE/", $garage_config['menu_selection'])) ? true : false,
-			'S_GARAGE_DISPLAY_DYNORUN_TABLE' => (preg_match("/DYNORUN/", $garage_config['menu_selection'])) ? true : false,
-			'S_GARAGE_DISPLAY_CREATE_VEHICLE' => ($auth->acl_get('u_garage_add_vehicle')) ? true : false)
+			'U_GARAGE_MAIN' 		=> append_sid("{$phpbb_root_path}garage.$phpEx"),
+			'U_GARAGE_BROWSE' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=browse"),
+			'U_GARAGE_SEARCH' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=search"),
+			'U_GARAGE_INSURANCE_REVIEW' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_insurance_business"),
+			'U_GARAGE_SHOP_REVIEW' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_shop_business"),
+			'U_GARAGE_GARAGE_REVIEW' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_garage_business"),
+			'U_GARAGE_QUARTERMILE_TABLE' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=quartermile"),
+			'U_GARAGE_DYNORUN_TABLE' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=dynorun"),
+			'U_GARAGE_CREATE_VEHICLE' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=create_vehicle"),
+			'MAIN' 				=> ($garage_config['enable_images']) ? $user->img('garage_main_menu', 'MAIN_MENU') : $user->lang['MAIN_MENU'],
+			'BROWSE' 			=> ($garage_config['enable_images']) ? $user->img('garage_browse', 'BROWSE_GARAGE') : $user->lang['BROWSE_GARAGE'],
+			'SEARCH' 			=> ($garage_config['enable_images']) ? $user->img('garage_search', 'SEARCH_GARAGE') : $user->lang['SEARCH_GARAGE'],
+			'INSURANCE_REVIEW' 		=> ($garage_config['enable_images']) ? $user->img('garage_insurance_review', 'INSURANCE_SUMMARY') : $user->lang['INSURANCE_SUMMARY'],
+			'SHOP_REVIEW' 			=> ($garage_config['enable_images']) ? $user->img('garage_shop_review', 'SHOP_REVIEW') : $user->lang['SHOP_REVIEW'],
+			'GARAGE_REVIEW' 		=> ($garage_config['enable_images']) ? $user->img('garage_garage_review', 'GARAGE_REVIEW') : $user->lang['GARAGE_REVIEW'],
+			'QUARTERMILE_TABLE' 		=> ($garage_config['enable_images']) ? $user->img('garage_quartermile_table', 'QUARTERMILE_TABLE') : $user->lang['QUARTERMILE_TABLE'],
+			'DYNORUN_TABLE' 		=> ($garage_config['enable_images']) ? $user->img('garage_rollingroad_table', 'ROLLINGROAD_TABLE') : $user->lang['ROLLINGROAD_TABLE'],
+			'CREATE_VEHICLE' 		=> ($garage_config['enable_images']) ? $user->img('garage_create_vehicle', 'CREATE_VEHICLE') : $user->lang['CREATE_VEHICLE'],
+			'S_GARAGE_DISPLAY_MAIN' 	=> ($garage_config['enable_index_menu']) ? true : false,
+			'S_GARAGE_DISPLAY_BROWSE' 	=> ($garage_config['enable_browse_menu']) ? true : false,
+			'S_GARAGE_DISPLAY_SEARCH' 	=> ($garage_config['enable_search_menu']) ? true : false,
+			'S_GARAGE_DISPLAY_INSURANCE_REVIEW' => ($garage_config['enable_insurance_review_menu']) ? true : false,
+			'S_GARAGE_DISPLAY_SHOP_REVIEW' 	=> ($garage_config['enable_shop_review_menu']) ? true : false,
+			'S_GARAGE_DISPLAY_GARAGE_REVIEW'=> ($garage_config['enable_garage_review_menu']) ? true : false,
+			'S_GARAGE_DISPLAY_QUARTERMILE_TABLE' => ($garage_config['enable_quartermile_menu']) ? true : false,
+			'S_GARAGE_DISPLAY_DYNORUN_TABLE' => ($garage_config['enable_dynorun_menu']) ? true : false,
+			'S_GARAGE_DISPLAY_CREATE_VEHICLE'=> ($auth->acl_get('u_garage_add_vehicle')) ? true : false)
 		);
 
 		//If Not Allowed Browse Stop Here..We Want The Error To Have The Menu..But No More
@@ -109,18 +109,18 @@ class garage_template
 			}
 		}
 
-		if ( $garage_config['lastupdatedvehiclesmain_on'] == true )
+		if ( $garage_config['enable_latest_vehicle_index'] == true )
 		{
 			$template->assign_block_vars('lastupdatedvehiclesmain_on', array());
-			$vehicles = $garage_vehicle->get_latest_updated_vehicles($garage_config['lastupdatedvehiclesmain_limit']);	
+			$vehicles = $garage_vehicle->get_latest_updated_vehicles($garage_config['latest_vehicle_index_limit']);	
 			for ($i = 0; $i < count($vehicles); $i++)
 			{
        				$template->assign_block_vars('lastupdatedvehiclesmain_on.updated_vehicles', array(
-       					'U_VIEW_VEHICLE' => append_sid("garage.$phpEx", "mode=view_vehicle&amp;CID=" . $vehicles[$i]['id'], true),
-       					'VEHICLE' => $vehicles[$i]['vehicle'],
-       					'UPDATED_TIME' => $user->format_date($vehicles[$i]['date_updated']),
-		       			'USERNAME' => $vehicles[$i]['username'],
-		       			'U_VIEW_PROFILE' => append_sid("profile.$phpEx", "mode=viewprofile&amp;u=".$vehicles_updated[$i]['user_id'], true))
+       					'U_VIEW_VEHICLE'=> append_sid("garage.$phpEx", "mode=view_vehicle&amp;CID=" . $vehicles[$i]['id'], true),
+		       			'U_VIEW_PROFILE'=> append_sid("profile.$phpEx", "mode=viewprofile&amp;u=".$vehicles_updated[$i]['user_id'], true),
+       					'VEHICLE' 	=> $vehicles[$i]['vehicle'],
+       					'UPDATED_TIME' 	=> $user->format_date($vehicles[$i]['date_updated']),
+		       			'USERNAME' 	=> $vehicles[$i]['username'])
       				);
 			}
 		}
@@ -501,7 +501,7 @@ class garage_template
 	/*========================================================================*/
 	function attach_image($type)
 	{
-		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $garage, $auth;
+		global $template, $garage_config, $auth;
 
 		if ( (!$auth->acl_get('u_garage_upload_image')) OR (!$auth->acl_get('u_garage_remote_image')) )
 		{
@@ -509,46 +509,21 @@ class garage_template
 		}
 	
 		$template->assign_vars(array(
-			'L_IMAGE_ATTACH' => $lang['Image_Attach'],
-			'L_MAXIMUM_IMAGE_FILE_SIZE' => $lang['Maximum_Image_File_Size'],
-			'L_MAXIMUM_IMAGE_RESOLUTION' => $lang['Maximum_Image_Resolution'],
-			'L_IMAGE_ATTACHMENTS' => $lang['Image_Attachments'],
-			'L_ENTER_IMAGE_URL' => $lang['Enter_Image_Url'],
-			'L_ADD_NEW_IMAGE' => $lang['Add_New_Image'],
-			'L_KBYTES' => $lang['kbytes'],
 			'MAXIMUM_IMAGE_FILE_SIZE' => $garage_config['max_image_kbytes'],
 			'MAXIMUM_IMAGE_RESOLUTION' => $garage_config['max_image_resolution'])
 		);
 	
-		if ( $type == 'modification' )
+		if ( $garage_config['enable_'.$type.'_images'] ) 
 		{
-			if ( $garage_config['allow_mod_image'] ) 
+	      		$template->assign_block_vars('allow_images', array());
+			if ( $garage_config['enable_uploaded_images'] )
 			{
-		      		$template->assign_block_vars('allow_images', array());
-				if ( $garage_config['allow_image_upload'] )
-				{
-		      			$template->assign_block_vars('allow_images.upload_images', array());
-			
-				}
-				if ( $garage_config['allow_image_url'] )
-				{
-		      			$template->assign_block_vars('allow_images.remote_images', array());
-				}
+	      			$template->assign_block_vars('allow_images.upload_images', array());
+		
 			}
-		}
-		else if ( $type == 'vehicle' )
-		{
-			if ( $garage_config['allow_image_upload'] || $garage_config['allow_image_url'])
+			if ( $garage_config['enable_remote_images'] )
 			{
-		      		$template->assign_block_vars('allow_images', array());
-				if ( $garage_config['allow_image_upload'] )
-				{
-		      			$template->assign_block_vars('allow_images.upload_images', array());
-				}
-				if ( $garage_config['allow_image_url'] )
-				{
-		      			$template->assign_block_vars('allow_images.remote_images', array());
-				}
+	      			$template->assign_block_vars('allow_images.remote_images', array());
 			}
 		}
 	

@@ -39,9 +39,37 @@ class garage_dynorun
 		$pending = ($garage_config['enable_rollingroad_approval'] == '1') ? 1 : 0;
 
 		$sql = "INSERT INTO ". GARAGE_DYNORUN_TABLE ."
-			(garage_id, dynocenter, bhp, bhp_unit, torque, torque_unit, boost, boost_unit, nitrous, peakpoint, date_created, date_updated, pending)
+			(
+				garage_id,
+				dynocenter,
+				bhp,
+				bhp_unit,
+				torque,
+				torque_unit,
+				boost,
+				boost_unit,
+				nitrous,
+				peakpoint,
+				date_created,
+				date_updated,
+				pending
+			)
 			VALUES
-			('$cid', '".$data['dynocenter']."', '".$data['bhp']."', '".$data['bhp_unit']."', '".$data['torque']."', '".$data['torque_unit']."', '".$data['boost']."', '".$data['boost_unit']."', '".$data['nitrous']."', '".$data['peakpoint']."', '".time()."', '".time()."', '".$pending."')";
+			(
+				'$cid',
+				'".$data['dynocenter']."',
+				'".$data['bhp']."',
+				'".$data['bhp_unit']."',
+				'".$data['torque']."',
+				'".$data['torque_unit']."',
+				'".$data['boost']."',
+				'".$data['boost_unit']."',
+				'".$data['nitrous']."',
+				'".$data['peakpoint']."',
+				'".time()."',
+				'".time()."',
+				'".$pending."'
+			)";
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -62,8 +90,20 @@ class garage_dynorun
 		global $db, $rrid, $cid, $garage_config;
 
 		$sql = "UPDATE " . GARAGE_DYNORUN_TABLE . "
-			SET dynocenter = '" . $data['dynocenter'] . "', bhp = '" . $data['bhp'] . "', bhp_unit = '" . $data['bhp_unit'] . "', torque = '" . $data['torque'] . "', torque_unit = '" . $data['torque_unit'] . "', boost = '" . $data['boost'] . "', boost_unit = '" . $data['boost_unit'] . "', nitrous = '" . $data['nitrous'] . "', peakpoint = '" . $data['peakpoint'] . "', pending = '" . ($garage_config['enable_rollingroad_approval'] == '1') ? 1 : 0 . "', date_updated = '".time()."'
-			WHERE id = '$rrid' and garage_id = '$cid'";
+			SET 
+				dynocenter = '" . $data['dynocenter'] . "',
+		       		bhp = '" . $data['bhp'] . "',
+				bhp_unit = '" . $data['bhp_unit'] . "',
+				torque = '" . $data['torque'] . "',
+				torque_unit = '" . $data['torque_unit'] . "',
+				boost = '" . $data['boost'] . "',
+				boost_unit = '" . $data['boost_unit'] . "',
+				nitrous = '" . $data['nitrous'] . "',
+				peakpoint = '" . $data['peakpoint'] . "',
+				pending = '" . ($garage_config['enable_rollingroad_approval'] == '1') ? 1 : 0 . "',
+			       	date_updated = '".time()."'
+			WHERE id = '$rrid' 
+				AND garage_id = '$cid'";
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -142,7 +182,7 @@ class garage_dynorun
 	{
 		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
-		if ( $garage_config['topdynorun_on'] != true )
+		if ( $garage_config['enable_top_dynorun'] != true )
 		{
 			return;
 		}
@@ -157,7 +197,7 @@ class garage_dynorun
 		);
 	
 	        // What's the count? Default to 10
-		$limit = $garage_config['topdynorun_limit'] ? $garage_config['topdynorun_limit'] : 10;
+		$limit = $garage_config['top_dynorun_limit'] ? $garage_config['top_dynorun_limit'] : 10;
 
 		//Get Top Dynoruns
 		$runs = $this->get_top_dynoruns(0, 'bhp', 'DESC', 0, $limit);
@@ -189,7 +229,12 @@ class garage_dynorun
 	{
 		global $db;
 
-	   	$sql = "SELECT rr.*, images.* , g.made_year, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
+		$sql = "SELECT rr.*, 
+				images.* ,
+				g.made_year,
+				makes.make,
+				models.model,
+			       	CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
                     	FROM " . GARAGE_DYNORUN_TABLE . " rr
 		          	LEFT JOIN " . GARAGE_TABLE . " g ON rr.garage_id = g.id
 		          	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id
@@ -221,14 +266,32 @@ class garage_dynorun
 	{
 		global $db;
 
-		$sql = "SELECT g.id, g.made_year, g.user_id, makes.make, models.model, user.username,	rr.dynocenter, rr.bhp, rr.bhp_unit, rr.torque, rr.torque_unit, rr.boost, rr.boost_unit, rr.nitrous, round(rr.peakpoint,0) as peakpoint, images.attach_id as image_id, rr.id as rr_id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
+		$sql = "SELECT g.id,
+		       		g.made_year,
+				g.user_id,
+				makes.make,
+				models.model,
+				user.username,	
+				rr.dynocenter, 
+				rr.bhp, 
+				rr.bhp_unit, 
+				rr.torque, 
+				rr.torque_unit, 
+				rr.boost, 
+				rr.boost_unit, 
+				rr.nitrous, 
+				round(rr.peakpoint,0) as peakpoint, 
+				images.attach_id as image_id, 
+				rr.id as rr_id, 
+				CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
 			FROM " . GARAGE_DYNORUN_TABLE ." rr
 				LEFT JOIN " . GARAGE_TABLE ." g ON rr.garage_id = g.id
 				LEFT JOIN " . USERS_TABLE ." user ON g.user_id = user.user_id
 			        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id
         			LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
 	                	LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON images.attach_id = rr.image_id
-			WHERE rr.garage_id = $garage_id AND rr.bhp = $bhp";
+			WHERE rr.garage_id = $garage_id 
+				AND rr.bhp = $bhp";
 
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -254,7 +317,8 @@ class garage_dynorun
 	{
 		global $db, $garage;
 
-		$sql = "SELECT  rr.garage_id, MAX(rr.bhp) as bhp
+		$sql = "SELECT  rr.garage_id, 
+				MAX(rr.bhp) as bhp
 			FROM " . GARAGE_DYNORUN_TABLE ." rr
 				LEFT JOIN " . GARAGE_TABLE ." g ON rr.garage_id = g.id
 				LEFT JOIN " . USERS_TABLE ." user ON g.user_id = user.user_id
@@ -294,7 +358,8 @@ class garage_dynorun
 	{
 		global $db;
 
-	       	$sql = "SELECT d.*, i.*
+		$sql = "SELECT  d.*, 
+				i.*
          		FROM " . GARAGE_DYNORUN_TABLE . " d, " . GARAGE_IMAGES_TABLE . " i
 			WHERE d.garage_id = $cid
 				AND i.attach_id = d.image_id

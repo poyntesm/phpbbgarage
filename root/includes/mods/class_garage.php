@@ -38,30 +38,11 @@ while( $row = $db->sql_fetchrow($result) )
 	$garage_config[$row['config_name']] = $row['config_value'];
 }
 
+
 class garage 
 {
 
 	var $classname = "garage";
-
-	/*========================================================================*/
-	// Build Some Requried Data Arrays
-	// Usage: setup_arrays();
-	/*========================================================================*/
-	function setup_arrays()
-	{
-		global $user;
-
-		$currency_types 	= array('GBP', 'USD', 'EUR', 'CAD', 'YEN');
-		$mileage_unit_types 	= array($user->lang['MILES'], $user->lang['KILOMETERS']);
-		$boost_types 		= array('PSI', 'BAR');
-		$power_types 		= array($user->lang['WHEEL'], $user->lang['HUB'], $user->lang['FLYWHEEL']);
-		$cover_types 		= array($user->lang['THIRD_PARTY'], $user->lang['THIRD_PARTY_FIRE_THEFT'], $user->lang['COMPREHENSIVE'], $user->lang['COMPREHENSIVE_CLASSIC'], $user->lang['COMPREHENSIVE_REDUCED']);
-		$rating_types 		= array( '10', '9', '8', '7', '6', '5', '4', '3', '2', '1');
-		$rating_text 		= array( '10', '9', '8', '7', '6', '5', '4', '3', '2', '1');
-		$nitrous_types 		= array('0', '25', '50', '75', '100');
-		$nitrous_types_text 	= array($user->lang['NO_NITROUS'], $user->lang['25_BHP_SHOT'], $user->lang['50_BHP_SHOT'], $user->lang['75_BHP_SHOT'], $user->lang['100_BHP_SHOT']);
-		$engine_types		= array($user->lang['8_CYLINDER_NA'], $user->lang['8_CYLINDER_FI'], $user->lang['6_CYLINDER_NA'], $user->lang['6_CYLINDER_FI'], $user->lang['4_CYLINDER_NA'], $user->lang['4_CYLINDER_FI']);
-	}
 
 	/*========================================================================*/
 	// Makes Safe Any Posted Variables

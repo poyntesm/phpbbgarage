@@ -116,7 +116,7 @@ class garage_quartermile
 	{
 		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
-		if ( $garage_config['topquartermile_on'] != true )
+		if ( $garage_config['enable_top_quartermile'] != true )
 		{
 			return;
 		}
@@ -131,7 +131,7 @@ class garage_quartermile
 		);
 	
 	        // What's the count? Default to 10
-	        $limit = $garage_config['topquartermile_limit'] ? $garage_config['topquartermile_limit'] : 10;
+	        $limit = $garage_config['top_quartermile_limit'] ? $garage_config['top_quartermile_limit'] : 10;
 	
 		//First Query To Return Top Time For All Or For Selected Filter...
 		$sql = "SELECT  qm.garage_id, MIN(qm.quart) as quart

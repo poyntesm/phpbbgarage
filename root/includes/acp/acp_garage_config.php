@@ -234,8 +234,8 @@ $template->assign_vars(array(
 	'TOP_RATED_OFF' => ($new['toprated_on'] == 0) ? 'checked="checked"' : '',
 
 	// GARAGE IMAGE CONFIGURATION VAR
-	'GARAGE_IMAGES_ENABLED' => ($new['garage_images'] == 1) ? 'checked="checked"' : '',
-	'GARAGE_IMAGES_DISABLED' => ($new['garage_images'] == 0) ? 'checked="checked"' : '',
+	'GARAGE_IMAGES_ENABLED' => ($new['enable_images'] == 1) ? 'checked="checked"' : '',
+	'GARAGE_IMAGES_DISABLED' => ($new['enable_images'] == 0) ? 'checked="checked"' : '',
 	'ALLOW_IMAGE_UPLOAD_ENABLED' => ($new['allow_image_upload'] == 1) ? 'checked="checked"' : '',
 	'ALLOW_IMAGE_UPLOAD_DISABLED' => ($new['allow_image_upload'] == 0) ? 'checked="checked"' : '',
 	'ALLOW_MOD_IMAGES_ENABLED' => ($new['allow_mod_image'] == 1) ? 'checked="checked"' : '',

@@ -50,6 +50,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage (
 		`id` int(10) unsigned NOT NULL auto_increment,
 		`user_id` int(10) NOT NULL default '0',
 		`made_year` varchar(4) NOT NULL default '2003',
+		`engine_type` varchar(32) NOT NULL default '',
 		`colour` varchar(128) default NULL,
 		`mileage` int(10) unsigned NOT NULL default '0',
 		`mileage_units` varchar(32) NOT NULL default 'Miles',
@@ -231,11 +232,172 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_rating (
 		PRIMARY KEY  (`id`)
 	)";
 //Required Configuration Options
-$params = array('max_user_cars' => '1', 'year_start' => '1980', 'year_end' => '1', 'cars_per_page' => '30', 'allow_image_upload' => '1', 'max_image_kbytes' => '1024', 'max_image_resolution' => '1024', 'max_upload_images' => '5', 'max_remote_images' => '5', 'thumbnail_resolution' => '150', 'enable_guestbooks' => '1', 'enable_featured_vehicle' => '1', 'featured_vehicle_id' => '1', 'featured_vehicle_description' => '', 'featured_vehicle_random' => '0', 'allow_image_url' => '1', 'allow_mod_image' => '1', 'show_mod_gallery' => '1', 'limit_mod_gallery' => '12', 'newestvehicles_on' => '1', 'newestvehicles_limit' => '5', 'newestmods_on' => '1', 'newestmods_limit' => '5', 'mostmodded_on' => '1', 'mostmodded_limit' => '5', 'mostmoneyspent_on' => '1', 'mostmoneyspent_limit' => '5', 'mostviewed_on' => '1', 'mostviewed_limit' => '5', 'lastupdatedvehicles_on' => '1', 'lastupdatedvehicles_limit' => '5', 'lastupdatedvehiclesmain_on' => '1', 'lastupdatedvehiclesmain_limit' => '5', 'lastupdatedmods_on' => '1', 'lastupdatedmods_limit' => '5', 'lastcommented_on' => '1', 'lastcommented_limit' => '5', 'remote_timeout' => '60', 'browse_perms' => '*', 'interact_perms' => '*', 'add_perms' => '*', 'upload_perms' => '*', 'private_browse_perms' => '', 'private_interact_perms' => '', 'private_add_perms' => '', 'private_upload_perms' => '', 'private_add_quota' => '', 'private_upload_quota' => '', 'private_remote_quota' => '', 'menu_selection' => 'MAIN,BROWSE,SEARCH,INSURANCEREVIEW,GARAGEREVIEW,SHOPREVIEW,QUARTERMILE,ROLLINGROAD', 'featured_vehicle_from_block' => '', 'toprated_on' => '1', 'toprated_limit' => '5', 'topquartermile_on' => '1', 'topquartermile_limit' => '5', 'topdynorun_on' => '1', 'topdynorun_limit' => '5', 'enable_quartermile' => '1', 'enable_quartermile_approval' => '1', 'enable_business_approval' => '1', 'rating_permanent' => '0', 'rating_always_updateable' => '1', 'enable_dynorun' => '1', 'enable_dynorun_approval' => '1', 'enable_insurance' => '1', 'profile_thumbs' => '1', 'enable_user_submit_make' => '1', 'enable_user_submit_model' => '1', 'version' => '2.0.0', 'garage_images' => '1', 'quartermile_image_required' => '1', 'quartermile_image_required_limit' => '13', 'dynorun_image_required' => '1', 'dynorun_image_required_limit' => '300', 'items_pending' => '0', 'private_deny_perms' => '', 'minimum_ratings_required' => '5', 'default_make' => '', 'default_model' => '');
+$params = array(
+//General Config Data
+	'cars_per_page' => '30',
+	'year_start' 			=> '1980',
+	'year_end' 			=> '1',
+	'enable_user_submit_make' 	=> '1',
+	'enable_user_submit_model' 	=> '1',
+	'dateformat' 			=> 'd M Y H:i',
+	'profile_thumbs' 		=> '1',
+	'version' 			=> '2.0.0',
+	'items_pending' 		=> '0',
+	'default_make' 			=> '',
+       	'default_model' 		=> '',
+       	'integrate_memberlist' 		=> '1',
+       	'integrate_viewtopic' 		=> '1',
+       	'integrate_profile' 		=> '1',
+//Menu Config Data
+	'enable_index_menu' 		=> '1',
+	'enable_browse_menu' 		=> '1',
+	'enable_search_menu' 		=> '1',
+	'enable_insurance_review_menu' 	=> '1',
+	'enable_garage_review_menu' 	=> '1',
+	'enable_shop_review_menu' 	=> '1',
+	'enable_quartermile_menu' 	=> '1',
+	'enable_dynorun_menu' 		=> '1',
+	'enable_garage_header' 		=> '1',
+	'enable_quartermile_header' 	=> '1',
+	'enable_dynorun_header' 	=> '1',
+	'enable_latest_vehicle_index' 	=> '1',
+	'latest_vehicle_index_limit' 	=> '10',
+//Index Config Data
+	'enable_featured_vehicle' 	=> '1',
+	'featured_vehicle_id'		=> '1',
+	'featured_vehicle_random' 	=> '0',
+	'featured_vehicle_from_block'	=> '',
+	'featured_vehicle_description'	=> '',
+	'enable_newest_vehicle' 	=> '1',
+	'newest_vehicle_limit'		=> '5',
+	'enable_updated_vehicle'	=> '1',
+	'updated_vehicle_limit'		=> '5',
+	'enable_newest_modification'	=> '1',
+	'newest_modification_limit'	=> '5',
+	'enable_updated_modification'	=> '1',
+	'updated_modification_limit'	=> '5',
+	'enable_most_modified'		=> '1',
+	'most_modified_limit'		=> '5',
+	'enable_most_spent'		=> '1',
+	'most_spent_limit'		=> '5',
+	'enable_most_viewed'		=> '1',
+	'most_viewed_limit'		=> '5',
+	'enable_last_commented'		=> '1',
+	'last_commented_limit'		=> '5',
+	'enable_top_dynorun'		=> '1',
+	'top_dynorun_limit'		=> '5',
+	'enable_top_quartermile'	=> '1',
+	'top_quartermile_limit'		=> '5',
+	'enable_top_rating'		=> '1',
+	'top_rating_limit'		=> '5',
+//Image Config Data
+	'enable_images'			=> '0',
+	'enable_vehicle_images'		=> '1',
+	'enable_modification_images'	=> '1',
+	'enable_quartermile_images'	=> '1',
+	'enable_dynorun_images'		=> '1',
+	'enable_uploaded_images' 	=> '1',
+	'enable_remote_images' 		=> '1',
+	'remote_timeout' 		=> '60',	
+	'enable_mod_gallery' 		=> '1',
+	'mod_gallery_limit' 		=> '12',
+	'max_image_kbytes' 		=> '1024',
+	'max_image_resolution' 		=> '1024',
+	'thumbnail_resolution' 		=> '150',
+//Quartermile Config Data
+	'enable_quartermile' 		=> '1',
+	'enable_quartermile_approval' 	=> '1',
+	'enable_quartermile_image_required'	=> '1',
+       	'quartermile_image_required_limit'	=> '13',
+//Dynorun Config Data
+	'enable_dynorun' 		=> '1',
+	'enable_dynorun_approval' 	=> '1',
+	'enable_dynorun_image_required' => '1',
+       	'dynorun_image_required_limit' 	=> '300',
+//Insurance Config Data
+	'enable_insurance' 		=> '1',
+	'enable_insurance_search' 	=> '1',
+//Business Config Data
+	'enable_business_approval' 	=> '1',
+//Ratings Config Data
+	'rating_permanent' 		=> '0',
+       	'rating_always_updateable' 	=> '1',
+	'minimum_ratings_required' 	=> '5',
+//Guestbook Config Data
+	'enable_guestbooks' 		=> '1',
+//Quota Config Data
+	'max_user_cars' 		=> '1',	
+	'max_upload_images' 		=> '5',
+	'max_remote_images' 		=> '5',
+	'private_add_quota' 		=> '',
+	'private_upload_quota' 		=> '',
+	'private_remote_quota' 		=> '',
+);
 while( list($config_name, $config_value) = @each($params) )
 {
 	$required_sql[] = "INSERT INTO " . $table_prefix . "garage_config (config_name, config_value) VALUES ('" . $config_name . "', '" . $config_value . "')";
 }
+//Required SQL For Images
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_vehicle_img_attached` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_slip_img_attached` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_icon_garage` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_main_menu` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_browse` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_search` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_quartermile_table` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_rollingroad_table` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_garage_review` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_shop_review` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_insurance_review` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_create_vehicle` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_edit_vehicle` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_delete_vehicle` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_view_vehicle` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_add_modification` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_add_insurance` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_add_rollingroad` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_add_quartermile` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_manage_gallery` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_edit` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_delete` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_main_vehicle` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_no_thumb` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_show_details` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_hide_details` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_move_up` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_move_down` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_set_approved` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_set_pending` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_vehicle_img_attached) VALUES (garage_camera.gif*13*18)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_slip_img_attached) VALUES (garage_slip.gif*13*12)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_icon_garage) VALUES ({LANG}/icon_garage.gif*18*59)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_main_menu) VALUES ({LANG}/garage_main_menu.gif*33*130)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_browse) VALUES ({LANG}/garage_browse.gif*33*130)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_search) VALUES ({LANG}/garage_search.gif*33*130)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_quartermile_table) VALUES ({LANG}/garage_quartermile_table.gif*33*130)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_rollingroad_table) VALUES ({LANG}/garage_rollingroad_table.gif*33*130)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_garage_review) VALUES ({LANG}/garage_garage_review.gif*33*130)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_shop_review) VALUES ({LANG}/garage_shop_review.gif*33*130)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_insurance_review) VALUES ({LANG}/garage_insurance_review.gif*33*130)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_create_vehicle) VALUES ({LANG}/garage_create_vehicle.gif*33*130)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_edit_vehicle) VALUES ({LANG}/garage_edit_vehicle.gif*33*130)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_delete_vehicle) VALUES ({LANG}/garage_delete_vehicle.gif*33*130)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_view_vehicle) VALUES ({LANG}/garage_view_vehicle.gif*33*130)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_add_modification) VALUES ({LANG}/garage_add_modification.gif*33*130)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_add_insurance) VALUES ({LANG}/garage_add_insurance.gif*33*130)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_add_rollingroad) VALUES ({LANG}/garage_add_rollingroad.gif*33*130)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_add_quartermile) VALUES ({LANG}/garage_add_quartermile.gif*33*130)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_manage_gallery) VALUES ({LANG}/garage_manage_gallery.gif*33*130)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_edit) VALUES ({LANG}/garage_edit.gif*21*34)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_delete) VALUES ({LANG}/garage_delete.gif*21*34)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_main_vehicle) VALUES ({LANG}/garage_main_vehicle.gif*33*130)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_no_thumb) VALUES ({LANG}/garage_no_thumb.gif*33*130)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_show_details) VALUES ({LANG}/garage_show_details.gif*21*34)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_hide_details) VALUES ({LANG}/garage_hide_details.gif*21*34)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_move_up) VALUES ({LANG}/garage_move_up.gif*21*34)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_move_down) VALUES ({LANG}/garage_move_down.gif*21*34)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_set_approved) VALUES ({LANG}/garage_set_approved.gif*21*34)";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET (garage_set_pending) VALUES ({LANG}/garage_set_pending.gif*21*34)";
 
 $categories_sql = array();
 $categories_sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (1, 'Engine', NULL, 1)";
@@ -1201,7 +1363,7 @@ switch( $mode )
 		//Lets Add The Required New Permissions
 		$phpbbgarage_permissions = array(
 			'local'		=> array(),
-			'global'	=> array('u_garage_browse', 'u_garage_search', 'u_garage_add_vehicle', 'u_garage_add_modification', 'u_garage_add_quartermile', 'u_garage_add_dynorun', 'u_garage_add_insurance', 'u_garage_add_business', 'u_garage_add_make', 'u_garage_rate', 'u_garage_comment', 'u_garage_upload_image', 'u_garage_remote_image', 'm_garage', 'a_garage')
+			'global'	=> array('u_garage_browse', 'u_garage_search', 'u_garage_add_vehicle', 'u_garage_add_modification', 'u_garage_add_quartermile', 'u_garage_add_dynorun', 'u_garage_add_insurance', 'u_garage_add_business', 'u_garage_add_make', 'u_garage_rate', 'u_garage_comment', 'u_garage_upload_image', 'u_garage_remote_image', 'u_garage_deny', 'm_garage', 'a_garage')
 		);
 		$auth_admin->acl_add_option($phpbbgarage_permissions);
 
@@ -1388,21 +1550,7 @@ $sql[] = "INSERT INTO `phpbb_garage_vehicle_lang` VALUES (1, 1, 'dropdown', 'dro
 $sql[] = "INSERT INTO `phpbb_garage_vehicle_lang` VALUES (2, 1, 'textfield', 'This is just a simple textfield2', 'text')";
 $sql[] = "INSERT INTO `phpbb_garage_vehicle_lang` VALUES (3, 1, 'numbers', 'numbers', '')";
 $sql[] = "INSERT INTO `phpbb_garage_vehicle_lang` VALUES (4, 1, 'textarea', 'textarea', 'textarea')";
-$sql[] = "INSERT INTO `phpbb_garage_vehicle_lang` VALUES (5, 1, 'date', 'date', '')";
-
-for( $i = 0; $i < count($sql); $i++ )
-{
-	if( !$result = $db->sql_query ($sql[$i]) )
-	{
-		$error = $db->sql_error();
-
-		echo '<li>' . $sql[$i] . '<br /> +++ <font color="#FF0000"><b>Error:</b></font> ' . $error['message'] . '</li><br />';
-	}
-	else
-	{
-		echo '<li>' . $sql[$i] . '<br /> +++ <font color="#00AA00"><b>Successfull</b></font></li><br />';
-	}
-}*/
+$sql[] = "INSERT INTO `phpbb_garage_vehicle_lang` VALUES (5, 1, 'date', 'date', '')";*/
 
 page_footer();
 

@@ -36,7 +36,6 @@ $auth->acl($user->data);
 $user->setup(array('mods/garage'));
 
 //Build All Garage Classes e.g $garage_images->
-require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_business.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_dynorun.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_image.' . $phpEx);
@@ -71,6 +70,18 @@ $template->assign_block_vars('navlinks', array(
 	'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx"))
 );
 
+//Setup Arrays..
+$currency_types 	= array('GBP', 'USD', 'EUR', 'CAD', 'YEN');
+$mileage_unit_types 	= array($user->lang['MILES'], $user->lang['KILOMETERS']);
+$boost_types 		= array('PSI', 'BAR');
+$power_types 		= array($user->lang['WHEEL'], $user->lang['HUB'], $user->lang['FLYWHEEL']);
+$cover_types 		= array($user->lang['THIRD_PARTY'], $user->lang['THIRD_PARTY_FIRE_THEFT'], $user->lang['COMPREHENSIVE'], $user->lang['COMPREHENSIVE_CLASSIC'], $user->lang['COMPREHENSIVE_REDUCED']);
+$rating_types 		= array( '10', '9', '8', '7', '6', '5', '4', '3', '2', '1');
+$rating_text 		= array( '10', '9', '8', '7', '6', '5', '4', '3', '2', '1');
+$nitrous_types 		= array('0', '25', '50', '75', '100');
+$nitrous_types_text 	= array($user->lang['NO_NITROUS'], $user->lang['25_BHP_SHOT'], $user->lang['50_BHP_SHOT'], $user->lang['75_BHP_SHOT'], $user->lang['100_BHP_SHOT']);
+$engine_types		= array($user->lang['8_CYLINDER_NA'], $user->lang['8_CYLINDER_FI'], $user->lang['6_CYLINDER_NA'], $user->lang['6_CYLINDER_FI'], $user->lang['4_CYLINDER_NA'], $user->lang['4_CYLINDER_FI']);
+
 //Decide What Mode The User Is Doing
 switch( $mode )
 {
@@ -100,7 +111,7 @@ switch( $mode )
 		);
 
 		//Check To See If User Has Too Many Vehicles Already...If So Display Notice
-		if ( sizeof($garage_vehicle->count_user_vehicles()) >= $garage_vehicle->get_user_add_quota() )
+		if ( $garage_vehicle->count_user_vehicles() >= $garage_vehicle->get_user_add_quota() )
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=5"));
 		}
@@ -178,7 +189,7 @@ switch( $mode )
 		if( $garage_image->image_attached() )
 		{
 			//Check For Remote & Local Image Quotas
-			if ( ($garage_image->remote_image_below_quota()) OR ($garage_image->upload_image_below_quota()) )
+			if ( $garage_image->below_image_quotas() )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('vehicle', $cid);
@@ -188,7 +199,7 @@ switch( $mode )
 				$garage->update_single_field(GARAGE_TABLE, 'image_id', $image_id, 'id', $cid);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
-			else if ( !($garage_image->remote_image_below_quota()) OR !($garage_image->upload_image_below_quota()) )
+			else if ( $garage_image->above_image_quotas() )
 			{
 				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=4"));
 			}
@@ -382,7 +393,7 @@ switch( $mode )
 		if ( $garage_image->image_attached() )
 		{
 			//Check For Remote & Local Image Quotas
-			if ( ($garage_image->remote_image_below_quota()) OR ($garage_image->upload_image_below_quota()) )
+			if ( $garage_image->below_image_quotas() )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('modification', $mid);
@@ -390,7 +401,7 @@ switch( $mode )
 				$garage->update_single_field(GARAGE_MODS_TABLE, 'image_id', $image_id, 'id', $mid);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
-			else if ( !($garage_image->remote_image_below_quota()) OR !($garage_image->upload_image_below_quota()) )
+			else if ( $garage_image->above_image_quotas() )
 			{
 				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=4"));
 			}
@@ -485,7 +496,7 @@ switch( $mode )
 		if( $garage_image->image_attached() )
 		{
 			//Check For Remote & Local Image Quotas
-			if ( ($garage_image->remote_image_below_quota()) OR ($garage_image->upload_image_below_quota()) )
+			if ( $garage_image->below_image_quotas() )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('modification', $mid);
@@ -493,7 +504,7 @@ switch( $mode )
 				$garage->update_single_field(GARAGE_MODS_TABLE, 'image_id', $image_id, 'id', $mid);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
-			else if ( !($garage_image->remote_image_below_quota()) OR !($garage_image->upload_image_below_quota()) )
+			else if ( $garage_image->above_image_quotas() )
 			{
 				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=4"));
 			}
@@ -599,14 +610,14 @@ switch( $mode )
 		if( $garage_image->image_attached() )
 		{
 			//Check For Remote & Local Image Quotas
-			if ( ($garage_image->remote_image_below_quota()) OR ($garage_image->upload_image_below_quota()) )
+			if ( $garage_image->below_image_quotas() )
 			{
 				//Create Thumbnail & DB Entry For Image + Link To Item
 				$image_id = $garage_image->process_image_attached('quartermile', $qmid);
 				$garage->update_single_field(GARAGE_QUARTERMILE_TABLE, 'image_id', $image_id, 'id', $qmid);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
-			else if ( !($garage_image->remote_image_below_quota()) OR !($garage_image->upload_image_below_quota()) )
+			else if ( $garage_image->above_image_quotas() )
 			{
 				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=4"));
 			}
@@ -728,14 +739,14 @@ switch( $mode )
 		if( $garage_image->image_attached() )
 		{
 			//Check For Remote & Local Image Quotas
-			if ( ($garage_image->remote_image_below_quota()) OR ($garage_image->upload_image_below_quota()) )
+			if ( $garage_image->below_image_quotas() )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('quartermile', $qmid);
 				$garage->update_single_field(GARAGE_QUARTERMILE_TABLE, 'image_id', $image_id, 'id', $qmid);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
-			else if ( !($garage_image->remote_image_below_quota()) OR !($garage_image->upload_image_below_quota()) )
+			else if ( $garage_image->above_image_quotas() )
 			{
 				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=4"));
 			}
@@ -860,14 +871,14 @@ switch( $mode )
 		if( $garage_image->image_attached() )
 		{
 			//Check For Remote & Local Image Quotas
-			if ( ($garage_image->remote_image_below_quota()) OR ($garage_image->upload_image_below_quota()) )
+			if ( $garage_image->below_image_quotas() )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('rollingroad', $rrid);
 				$garage->update_single_field(GARAGE_ROLLINGROAD_TABLE,'image_id', $image_id, 'id', $rrid);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
-			else if ( !($garage_image->remote_image_below_quota()) OR !($garage_image->upload_image_below_quota()) )
+			else if ( $garage_image->above_image_quotas() )
 			{
 				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=4"));
 			}
@@ -975,14 +986,14 @@ switch( $mode )
 		if( $garage_image->image_attached() )
 		{
 			//Check For Remote & Local Image Quotas
-			if ( ($garage_image->remote_image_below_quota()) OR ($garage_image->upload_image_below_quota()) )
+			if ( $garage_image->below_image_quotas() )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('rollingroad', $rrid);
 				$garage->update_single_field(GARAGE_ROLLINGROAD_TABLE, 'image_id', $image_id, 'id', $rrid);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
-			else if ( !($garage_image->remote_image_below_quota()) OR !($garage_image->upload_image_below_quota()) )
+			else if ( $garage_image->above_image_quotas() )
 			{
 				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=4"));
 			}
@@ -1717,7 +1728,7 @@ switch( $mode )
 		if( $garage_image->image_attached() )
 		{
 			//Check For Remote & Local Image Quotas
-			if ( ($garage_image->remote_image_below_quota()) OR ($garage_image->upload_image_below_quota()) )
+			if ( $garage_image->below_image_quotas() )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('vehicle', $cid);
@@ -1729,7 +1740,7 @@ switch( $mode )
 				}
 			}
 			//You Have Reached Your Image Quota..Error Nicely
-			else if ( !($garage_image->remote_image_below_quota()) OR !($garage_image->upload_image_below_quota()) )
+			else if ( $garage_image->above_image_quotas() )
 			{
 				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=4"));
 			}

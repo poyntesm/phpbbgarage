@@ -224,7 +224,7 @@ class garage_guestbook
 	{
 		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
-		if ( $garage_config['lastcommented_on'] != true )
+		if ( $garage_config['enable_last_commented'] != true )
 		{
 			return;
 		}
@@ -239,7 +239,7 @@ class garage_guestbook
 		);
 
 	        // What's the count? Default to 10
-		$limit = $garage_config['lastcommented_limit'] ? $garage_config['lastcommented_limit'] : 10;
+		$limit = $garage_config['last_commented_limit'] ? $garage_config['last_commented_limit'] : 10;
 
 		//Get Latest Comments
 		$comment_data = $this->get_comments($limit);

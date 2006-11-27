@@ -396,10 +396,10 @@ switch($mode)
 			$add_model_url = 'javascript:add_model('.$makes[$i]['make_id'].')';
 
 			//Set How The URL's Will Appear Since User Might Have Turned Images Off...
-			$delete_url_dsp = ( $garage_config['garage_images'] ) ? '<img src="../' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" />' : $lang['Delete'] ;
-			$status_url_dsp = ( $garage_config['garage_images'] ) ? '<img src="../' . $images['garage_'.$status_mode] . '" alt="'.$lang[$status_mode].'" title="'.$lang[$status_mode].'" border="0" />' : $lang[$status_mode];
-			$rename_url_dsp = ( $garage_config['garage_images'] ) ? '<img src="../' . $images['garage_edit'] . '" alt="'.$lang['Rename'].'" title="'.$lang['Rename'].'" border="0" />' : $lang['Rename'];
-			$add_model_url_dsp = ( $garage_config['garage_images'] ) ? '<img src="../' . $images['garage_edit'] . '" alt="'.$lang['Add_Model_Button'].'" title="'.$lang['Add_Model_Button'].'" border="0" />' : $lang['Add_Model_Button'];
+			$delete_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" />' : $lang['Delete'] ;
+			$status_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_'.$status_mode] . '" alt="'.$lang[$status_mode].'" title="'.$lang[$status_mode].'" border="0" />' : $lang[$status_mode];
+			$rename_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_edit'] . '" alt="'.$lang['Rename'].'" title="'.$lang['Rename'].'" border="0" />' : $lang['Rename'];
+			$add_model_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_edit'] . '" alt="'.$lang['Add_Model_Button'].'" title="'.$lang['Add_Model_Button'].'" border="0" />' : $lang['Add_Model_Button'];
 
 			$template->assign_block_vars('make', array(
 				'COLOR' => ($i % 2) ? 'row1' : 'row2',
@@ -430,9 +430,9 @@ switch($mode)
 				$rename_url = 'javascript:rename('.$data[$j]['model_id'].',2)';
 
 				//Set How The URL's Will Appear Since User Might Have Turned Images Off...
-				$delete_url_dsp = ( $garage_config['garage_images'] ) ? '<img src="../' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" />' : $lang['Delete'] ;
-				$status_url_dsp = ( $garage_config['garage_images'] ) ? '<img src="../' . $images['garage_'.$status_mode] . '" alt="'.$lang[$status_mode].'" title="'.$lang[$status_mode].'" border="0" />' : $lang[$status_mode];
-				$rename_url_dsp = ( $garage_config['garage_images'] ) ? '<img src="../' . $images['garage_edit'] . '" alt="'.$lang['Rename'].'" title="'.$lang['Rename'].'" border="0" />' : $lang['Rename'];
+				$delete_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" />' : $lang['Delete'] ;
+				$status_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_'.$status_mode] . '" alt="'.$lang[$status_mode].'" title="'.$lang[$status_mode].'" border="0" />' : $lang[$status_mode];
+				$rename_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_edit'] . '" alt="'.$lang['Rename'].'" title="'.$lang['Rename'].'" border="0" />' : $lang['Rename'];
 
 				$template->assign_block_vars('make.model', array(
 					'COLOR' => ($j % 2) ? 'row1' : 'row2',
