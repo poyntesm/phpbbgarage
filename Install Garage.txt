@@ -8,19 +8,21 @@
 ## 
 ## Installation Level:	Easy
 ## Installation Time:	10 Minutes
-## Files To Edit: (13)
+## Files To Edit: (14)
+## 			common.php
+## 			memberlist.php
 ## 			viewtopic.php
 ## 			viewonline.php
 ## 			includes/constants.php
-## 			includes/page_header.php
-## 			includes/usercp_viewprofile.php
-##			language/lang_english/lang_admin.php
-##			language/lang_english/lang_main.php
-## 			templates/subSilver/subSilver.cfg
-## 			templates/subSilver/viewtopic_body.tpl
-## 			templates/subSilver/overall_footer.tpl
-##			templates/subSilver/overall_header.tpl
-##			templates/subSilver/profile_view_body.tpl
+## 			includes/functions.php
+##			language/en/common.php
+##			language/en/acp/common.php
+##			styles/subSilver/imageset/imageset.cfg
+##			styles/subSilver/templates/memberlist_body.html
+##			styles/subSilver/templates/memberlist_view.html
+## 			styles/subSilver/templates/viewtopic_body.tpl
+## 			styles/subSilver/templates/overall_footer.tpl
+##			styles/subSilver/templates/overall_header.tpl
 ##
 ## Included Files: (84)
 ##			Install Garage.txt
@@ -149,92 +151,153 @@ Chmod ./garage/upload to 777
 Open your web browser and run install_garage.php
 Delete install_garage.php if it ran succesfully
 
+# 
 #-----[ OPEN ]----- 
 # 
-styles/subSilver/imageset/imageset.cfg
+common.php
 
 #
 #-----[ FIND ]------------------------------------------
 #
-img_button_topic_reply = {LANG}/button_topic_reply.gif*27*97
+<?php
 
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
-
-//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-img_vehicle_img_attached	= garage_camera.gif*13*18
-img_slip_img_attached		= garage_slip.gif*13*12
-img_icon_garage			= {LANG}/icon_garage.gif*18*59
-img_garage_main_menu		= {LANG}/garage_main_menu.gif*33*130
-img_garage_browse		= {LANG}/garage_browse.gif*33*130
-img_garage_search		= {LANG}/garage_search.gif*33*130
-img_garage_quartermile_table	= {LANG}/garage_quartermile_table.gif*33*130
-img_garage_rollingroad_table	= {LANG}/garage_rollingroad_table.gif*33*130
-img_garage_garage_review	= {LANG}/garage_garage_review.gif*33*130
-img_garage_shop_review		= {LANG}/garage_shop_review.gif*33*130
-img_garage_insurance_review	= {LANG}/garage_insurance_review.gif*33*130
-img_garage_create_vehicle	= {LANG}/garage_create_vehicle.gif*33*130
-img_garage_edit_vehicle		= {LANG}/garage_edit_vehicle.gif*33*130
-img_garage_delete_vehicle	= {LANG}/garage_delete_vehicle.gif*33*130
-img_garage_view_vehicle		= {LANG}/garage_view_vehicle.gif*33*130
-img_garage_add_modification	= {LANG}/garage_add_modification.gif*33*130
-img_garage_add_insurance	= {LANG}/garage_add_insurance.gif*33*130
-img_garage_add_rollingroad	= {LANG}/garage_add_rollingroad.gif*33*130
-img_garage_add_quartermile	= {LANG}/garage_add_quartermile.gif*33*130
-img_garage_manage_gallery	= {LANG}/garage_manage_gallery.gif*33*130
-img_garage_edit			= {LANG}/garage_edit.gif*21*34
-img_garage_delete		= {LANG}/garage_delete.gif*21*34
-img_garage_main_vehicle		= {LANG}/garage_main_vehicle.gif*33*130
-img_garage_no_thumb		= {LANG}/garage_no_thumb.gif*33*130
-img_garage_show_details		= {LANG}/garage_show_details.gif*21*34
-img_garage_hide_details		= {LANG}/garage_hide_details.gif*21*34
-img_garage_move_up		= {LANG}/garage_move_up.gif*21*34
-img_garage_move_down		= {LANG}/garage_move_down.gif*21*34
-img_garage_set_approved		= {LANG}/garage_set_approved.gif*21*34
-img_garage_set_pending		= {LANG}/garage_set_pending.gif*21*34
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-
-# 
-#-----[ OPEN ]----- 
-# 
-styles/subSilver/templates/overall_header.html
+//-- mod : Garage ----------------------------------------------------------------------------------------------------------
 
 #
 #-----[ FIND ]------------------------------------------
 #
-<td class="genmed" align="right">
+$config = $cache->obtain_config();
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+#
+#-----[ OPEN ]----- 
+# 
+memberlist.php
+
+#
+#-----[ FIND ]------------------------------------------
+#
+<?php
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+
+#
+#-----[ FIND ]------------------------------------------
+#
+			'SELECT'	=> 'u.user_id, u.group_id as default_group, u.username, u.user_colour, u.user_rank, u.user_posts, g.group_id, g.group_name, g.group_colour, g.group_type, ug.user_id as ug_user_id',
 
 #
 #-----[ IN-LINE FIND ]------------------------------------------
 #
-<td class="genmed" align="right">
+ug.user_id as ug_user_id
 
 #
 #-----[ IN-LINE AFTER, ADD ]------------------------------------------
 #
-<!-- IF S_DISPLAY_GARAGE --><a href="{U_GARAGE}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_GARAGE}" hspace="3" /> {L_GARAGE}</a>&nbsp; &nbsp;<!-- ENDIF --><!-- IF S_DISPLAY_QUARTERMILE --><a href="{U_QUARTERMILE}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_QUARTERMILE}" hspace="3" /> {L_QUARTERMILE}</a>&nbsp; &nbsp;<!-- ENDIF --><!-- IF S_DISPLAY_DYNORUN --><a href="{U_DYNORUN}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_DYNORUN}" hspace="3" /> {L_DYNORUN}</a>&nbsp; &nbsp;<!-- ENDIF -->
-
-# 
-#-----[ OPEN ]----- 
-# 
-styles/subSilver/template/overall_footer.html
+, g.id as garage_id
 
 #
 #-----[ FIND ]------------------------------------------
 #
-	<!-- IF U_ACP --><span class="gensmall">[ <a href="{U_ACP}">{L_ACP}</a> ]</span><br /><br /><!-- ENDIF -->
+			'WHERE'		=> $db->sql_in_set('u.user_id', array_unique(array_merge($admin_id_ary, $mod_id_ary))) . '
 
 #
 #-----[ BEFORE, ADD ]------------------------------------------
 #
-	<!-- IF U_PENDING --><span class="gensmall">[ <a href="{U_PENDING}">{L_PENDING_GARAGE_ITEMS}</a> ]</span><!-- ENDIF -->
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'ON'	=> 'g.user_id = u.user_id AND g.main_vehicle = 1'
+				)
+			),
+#
+#-----[ FIND ]------------------------------------------
+#
+			'S_PROFILE_ACTION'	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=group'),
+
+#
+#-----[ BEFORE, ADD ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+			'S_DISPLAY_GARAGE_PROFILE'	=> ($garage_config['integrate_profile']) ? true : false,
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+#
+#-----[ FIND ]------------------------------------------
+#
+			'U_LIST_CHAR'			=> $pagination_url . '&amp;sk=a&amp;sd=' . (($sort_key == 'l' && $sort_dir == 'a') ? 'd' : 'a'),
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+			'U_SORT_GARAGE'			=> $pagination_url . '&amp;sk=o&amp;sd=' . (($sort_key == 'o' && $sort_dir == 'a') ? 'd' : 'a'),
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+#
+#-----[ FIND ]------------------------------------------
+#
+
+			'S_SHOW_GROUP'		=> ($mode == 'group') ? true : false,
+#
+#-----[ BEFORE, ADD ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+			'S_DISPLAY_GARAGE_MEMBERLIST'	=> ($garage_config['integrate_memberlist']) ? true : false,
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
 # 
 #-----[ OPEN ]----- 
 # 
-includes/functions.php
+viewonline.php
+
+#
+#-----[ FIND ]------------------------------------------
+#
+<?php
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+
+#
+#-----[ FIND ]------------------------------------------
+#
+		case 'report':
+			$location = $user->lang['REPORTING_POST'];
+			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
+		break;
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+		case 'garage':
+			$location = $user->lang['VIEWING_GARAGE'];
+			$location_url = append_sid("{$phpbb_root_path}garage.$phpEx");
+		break;
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+#
+#-----[ OPEN ]----- 
+# 
+viewtopic.php
 
 #
 #-----[ FIND ]------------------------------------------
@@ -249,63 +312,106 @@ includes/functions.php
 #
 #-----[ FIND ]------------------------------------------
 #
-		'U_FAQ'					=> append_sid("{$phpbb_root_path}faq.$phpEx"),
+$sql = $db->sql_build_query('SELECT', array(
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add/modify
+
+#
+#-----[ FIND ]------------------------------------------
+#
+	'SELECT'	=> 'u.*, z.friend, z.foe, p.*',
+
+#
+#-----[ IN-LINE FIND ]------------------------------------------
+#
+p.*
+
+#
+#-----[ IN-LINE AFTER, ADD ]------------------------------------------
+#
+, g.id as garage_id, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle
+
+#
+#-----[ FIND ]------------------------------------------
+#
+			'ON'	=> 'z.user_id = ' . $user->data['user_id'] . ' AND z.zebra_id = p.poster_id'
+		)
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+		,array(
+			'FROM'	=> array(GARAGE_TABLE => 'g'),
+			'ON'	=> 'g.user_id = p.poster_id and g.main_vehicle = 1'
+		)
+		,array(
+			'FROM'	=> array(GARAGE_MAKES_TABLE => 'makes'),
+			'ON'	=> 'g.make_id = makes.id and makes.pending = 0'
+		)
+		,array(
+			'FROM'	=> array(GARAGE_MODELS_TABLE => 'models'),
+			'ON'	=> 'g.model_id = models.id and models.pending = 0'
+		)
+
+#
+#-----[ FIND ]------------------------------------------
+#
+	'WHERE'		=> $db->sql_in_set('p.post_id', $post_list) . '
+		AND u.user_id = p.poster_id'
+));
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+#
+#-----[ FIND ]------------------------------------------
+#
+# First Finds Anonymous User
+				'age'				=> '',
 
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
-		'U_GARAGE' 			=> append_sid("{$phpbb_root_path}garage.$phpEx"),
-		'U_QUARTERMILE' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=quartermile'),
-		'U_DYNORUN' 			=> append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=dynorun'),
-		'S_DISPLAY_GARAGE'		=> (isset($auth)) ? $auth->acl_get('u_garage_browse') : 0,
-		'S_DISPLAY_QUARTERMILE'		=> (isset($auth)) ? $auth->acl_get('u_garage_browse') : 0,
-		'S_DISPLAY_DYNORUN'		=> (isset($auth)) ? $auth->acl_get('u_garage_browse') : 0,
+				'vehicle'			=> '',
+				'garage_id'			=> '',
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
 #
 #-----[ FIND ]------------------------------------------
 #
-		'U_ACP' => ($auth->acl_get('a_') && $user->data['is_registered']) ? "{$phpbb_root_path}adm/index.$phpEx?sid=" . $user->session_id : '')
-
-#
-#-----[ BEFORE, ADD ]------------------------------------------
-#
-//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-		'U_PENDING' => ($auth->acl_get('m_garage') && $user->data['is_registered']) ? append_sid("{$phpbb_root_path}garage.$phpEx", "&mode=garage_pending", true, $user->session_id) : '',
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-
-# 
-#-----[ OPEN ]----- 
-# 
-language/en/common.php
-#
-#-----[ FIND ]------------------------------------------
-#
-<?php
+# Second Finds Normal User
+				'age'				=> '',
 
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
-//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+				'vehicle'		=> $row['vehicle'],
+				'garage_id'		=> $row['garage_id'],
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
 #
 #-----[ FIND ]------------------------------------------
 #
-	'FAQ'					=> 'FAQ',
+	$postrow = array(
 
 #
-#-----[ BEFORE, ADD ]------------------------------------------
+#-----[ AFTER, ADD ]------------------------------------------
 #
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
-	'GARAGE'				=> 'Garage',
-	'QUARTERMILE'				=> '1/4 Mile',
-	'DYNORUN'				=> 'Dynorun',
-	'PENDING_GARAGE_ITEMS'			=> 'Pending Garage Items',
-	'VIEWING_GARAGE'			=> 'Viewing Garage',
-	'VIEW_USERS_GARAGE'			=> 'View user\'s Garage',
+		'VEHICLE'			=> $user_cache[$poster_id]['vehicle'],
+		'U_VEHICLE'			=> (isset($user_cache[$poster_id]['garage_id'])) ? append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=view_vehicle&amp;CID=' . $user_cache[$poster_id]['garage_id']) : '',
+		'S_DISPLAY_GARAGE_VIEWTOPIC'	=> ($garage_config['integrate_viewtopic']) ? true : false,
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
 # 
@@ -356,7 +462,7 @@ define('GARAGE_UPLOAD_PATH', 'garage/upload/');
 # 
 #-----[ OPEN ]----- 
 # 
-viewonline.php
+includes/functions.php
 
 #
 #-----[ FIND ]------------------------------------------
@@ -365,26 +471,96 @@ viewonline.php
 
 #
 #-----[ AFTER, ADD ]------------------------------------------
+#
 //-- mod : Garage ----------------------------------------------------------------------------------------------------------
 
 #
 #-----[ FIND ]------------------------------------------
 #
-		case 'report':
-			$location = $user->lang['REPORTING_POST'];
-			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
-		break;
+	global $db, $config, $template, $SID, $_SID, $user, $auth, $phpEx, $phpbb_root_path;
+#
+#-----[ BEFORE, ADD ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- modify/add : , $garage_config
+
+#
+#-----[ IN-LINE FIND ]------------------------------------------
+#
+$phpbb_root_path
+
+#
+#-----[ IN-LINE AFTER, ADD ]------------------------------------------
+#
+, $garage_config
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+#
+#-----[ FIND ]------------------------------------------
+#
+		'U_FAQ'					=> append_sid("{$phpbb_root_path}faq.$phpEx"),
 
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
-		case 'garage':
-			$location = $user->lang['VIEWING_GARAGE'];
-			$location_url = append_sid("{$phpbb_root_path}garage.$phpEx");
-		break;
+		'U_GARAGE' 			=> append_sid("{$phpbb_root_path}garage.$phpEx"),
+		'U_QUARTERMILE' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=quartermile'),
+		'U_DYNORUN' 			=> append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=dynorun'),
+		'S_DISPLAY_GARAGE'		=> ($garage_config['enable_garage_header']) ? 1 : 0,
+		'S_DISPLAY_QUARTERMILE'		=> ($garage_config['enable_quartermile_header']) ? 1 : 0,
+		'S_DISPLAY_DYNORUN'		=> ($garage_config['enable_dynorun_header']) ? 1 : 0,
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+#
+#-----[ FIND ]------------------------------------------
+#
+		'U_ACP' => ($auth->acl_get('a_') && $user->data['is_registered']) ? "{$phpbb_root_path}adm/index.$phpEx?sid=" . $user->session_id : '')
+
+#
+#-----[ BEFORE, ADD ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+		'U_PENDING' => ($auth->acl_get('m_garage') && $user->data['is_registered']) ? append_sid("{$phpbb_root_path}garage.$phpEx", "&mode=garage_pending", true, $user->session_id) : '',
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+# 
+#-----[ OPEN ]----- 
+# 
+language/en/common.php
+#
+#-----[ FIND ]------------------------------------------
+#
+<?php
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+#
+#-----[ FIND ]------------------------------------------
+#
+	'FAQ'					=> 'FAQ',
+
+#
+#-----[ BEFORE, ADD ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+	'GARAGE'				=> 'Garage',
+	'QUARTERMILE'				=> '1/4 Mile',
+	'DYNORUN'				=> 'Dynorun',
+	'PENDING_GARAGE_ITEMS'			=> 'Pending Garage Items',
+	'VIEWING_GARAGE'			=> 'Viewing Garage',
+	'VIEW_USERS_GARAGE'			=> 'View user\'s Garage',
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
 
 # 
 #-----[ OPEN ]----- 
@@ -422,9 +598,213 @@ language/en/acp/common.php
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
 #
+#-----[ OPEN ]----- 
+# 
+styles/subSilver/imageset/imageset.cfg
+
+#
+#-----[ FIND ]------------------------------------------
+#
+img_button_topic_reply = {LANG}/button_topic_reply.gif*27*97
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+img_vehicle_img_attached	= garage_camera.gif*13*18
+img_slip_img_attached		= garage_slip.gif*13*12
+img_icon_garage			= {LANG}/icon_garage.gif*18*59
+img_garage_main_menu		= {LANG}/garage_main_menu.gif*33*130
+img_garage_browse		= {LANG}/garage_browse.gif*33*130
+img_garage_search		= {LANG}/garage_search.gif*33*130
+img_garage_quartermile_table	= {LANG}/garage_quartermile_table.gif*33*130
+img_garage_rollingroad_table	= {LANG}/garage_rollingroad_table.gif*33*130
+img_garage_garage_review	= {LANG}/garage_garage_review.gif*33*130
+img_garage_shop_review		= {LANG}/garage_shop_review.gif*33*130
+img_garage_insurance_review	= {LANG}/garage_insurance_review.gif*33*130
+img_garage_create_vehicle	= {LANG}/garage_create_vehicle.gif*33*130
+img_garage_edit_vehicle		= {LANG}/garage_edit_vehicle.gif*33*130
+img_garage_delete_vehicle	= {LANG}/garage_delete_vehicle.gif*33*130
+img_garage_view_vehicle		= {LANG}/garage_view_vehicle.gif*33*130
+img_garage_add_modification	= {LANG}/garage_add_modification.gif*33*130
+img_garage_add_insurance	= {LANG}/garage_add_insurance.gif*33*130
+img_garage_add_rollingroad	= {LANG}/garage_add_rollingroad.gif*33*130
+img_garage_add_quartermile	= {LANG}/garage_add_quartermile.gif*33*130
+img_garage_manage_gallery	= {LANG}/garage_manage_gallery.gif*33*130
+img_garage_edit			= {LANG}/garage_edit.gif*21*34
+img_garage_delete		= {LANG}/garage_delete.gif*21*34
+img_garage_main_vehicle		= {LANG}/garage_main_vehicle.gif*33*130
+img_garage_no_thumb		= {LANG}/garage_no_thumb.gif*33*130
+img_garage_show_details		= {LANG}/garage_show_details.gif*21*34
+img_garage_hide_details		= {LANG}/garage_hide_details.gif*21*34
+img_garage_move_up		= {LANG}/garage_move_up.gif*21*34
+img_garage_move_down		= {LANG}/garage_move_down.gif*21*34
+img_garage_set_approved		= {LANG}/garage_set_approved.gif*21*34
+img_garage_set_pending		= {LANG}/garage_set_pending.gif*21*34
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+# 
+#-----[ OPEN ]----- 
+# 
+styles/subSilver/templates/memberlist_body.html
+
+#
+#-----[ FIND ]------------------------------------------
+#
+	<th nowrap="nowrap" width="11%"><a href="{U_SORT_WEBSITE}">{L_WEBSITE}</a></th>
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+	<!-- IF S_DISPLAY_GARAGE_MEMBERLIST --><th nowrap="nowrap" width="11%"><a href="{U_SORT_GARAGE}">{L_GARAGE}</a></th><!-- ENDIF -->
+
+#
+#-----[ FIND ]------------------------------------------
+#
+		<td class="gen" align="center">&nbsp;<!-- IF memberrow.U_WWW --><a href="{memberrow.U_WWW}" target="_blank">{WWW_IMG}</a><!-- ENDIF -->&nbsp;</td>
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+		<td class="gen" align="center">&nbsp;<!-- IF memberrow.U_GARAGE and S_DISPLAY_GARAGE_MEMBERLIST --><a href="{memberrow.U_GARAGE}">{GARAGE_IMG}</a><!-- ENDIF -->&nbsp;</td>
+
+#
+#-----[ FIND ]------------------------------------------
+#
+<!-- IF S_SEARCH_USER and S_FORM_NAME -->9<!-- ELSE -->8<!-- ENDIF -->
+
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+<!-- IF S_SEARCH_USER and S_FORM_NAME and !S_DISPLAY_GARAGE_MEMBERLIST-->9<!-- ELSEIF S_SEARCH_USER and S_FORM_NAME and S_DISPLAY_GARAGE_MEMBERLIST-->10<!-- ELSEIF S_DISPLAY_GARAGE_MEMBERLIST -->9<!-- ELSE -->8<!-- ENDIF -->
+
+# 
+#-----[ OPEN ]----- 
+# 
+styles/subSilver/templates/memberlist_view.html
+
+#
+#-----[ FIND ]------------------------------------------
+#
+				<td><!-- IF U_WWW --><b><a class="genmed" href="{U_WWW}" target="_userwww">{U_WWW}</a></b><!-- ENDIF --></td>
+			</tr>
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+			<!-- IF S_DISPLAY_GARAGE_PROFILE -->
+			<tr>
+				<td class="gen" align="right" nowrap="nowrap">{L_GARAGE}: </td>
+				<td><a class="genmed" href="{U_GARAGE_USER_SEARCH}" >{L_SEARCH_USERS_GARAGE}</a></td>
+			</tr>
+			<!-- ENDIF -->
+
+#
+#-----[ FIND ]------------------------------------------
+#
+		<td class="row1" colspan="2"><div class="postbody" style="padding: 10px;">{SIGNATURE}</div></td>
+		</tr>
+	<!-- ENDIF -->
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+	<!-- IF S_DISPLAY_GARAGE_PROFILE and VEHICLE -->
+		<tr>
+			<td class="cat" colspan="2" align="center"><h4>{USERNAME}'s {L_MAIN_VEHICLE}</h4></td>
+		</tr>
+		<tr>
+			<td class="row1" colspan="2"><div class="postbody" style="padding: 10px;"><b>{L_VEHICLE}</b> : {VEHICLE}</div></td>
+		</tr>
+		<tr>
+			<td class="row1" colspan="2"><div class="postbody" style="padding: 10px;"><b>{L_COLOUR} </b> : {COLOUR} </div></td>
+		</tr>
+		<tr>
+			<td class="row1" colspan="2"><div class="postbody" style="padding: 10px;"><b>{L_MILEAGE}</b> : {MILEAGE} {MILEAGE_UNITS}</div></td>
+		</tr>
+		<tr>
+			<td class="row1" colspan="2"><div class="postbody" style="padding: 10px;"><b>{L_PRICE}</b> : {PRICE} {CURRENCY}</div></td>
+		</tr>
+		<tr>
+			<td class="row1" colspan="2"><div class="postbody" style="padding: 10px;"><b>{L_TOTAL_MODS}</b> : {TOTAL_MODS}</div></td>
+		</tr>
+		<tr>
+			<td class="row1" colspan="2"><div class="postbody" style="padding: 10px;"><b>{L_TOTAL_SPENT}</b> : {TOTAL_SPENT} {CURRENCY}</div></td>
+		</tr>
+		<tr>
+			<td class="row1" colspan="2"><div class="postbody" style="padding: 10px;"><b>{L_DESCRIPTION}</b> : {DESCRIPTION}</div></td>
+		</tr>
+		<tr> 
+			<td class="row1" valign="middle" align="left" colspan="2"><div class="postbody" style="padding: 10px;">{HILITE_IMAGE}</div></td>
+		</tr>
+	<!-- ENDIF -->
+
+# 
+#-----[ OPEN ]----- 
+# 
+styles/subSilver/templates/viewtopic_body.html
+
+#
+#-----[ FIND ]------------------------------------------
+#
+					<td>{postrow.POSTER_AVATAR}</td>
+				</tr>
+			<!-- ENDIF -->
+				</table>
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+			<!-- IF postrow.U_VEHICLE and postrow.S_DISPLAY_GARAGE_VIEWTOPIC -->
+				<tr>
+					<td class="postdetails"><a href={postrow.U_VEHICLE}>{postrow.VEHICLE}</a></td>
+				</tr>
+			<!-- ENDIF -->
+
+
+# 
+#-----[ OPEN ]----- 
+# 
+styles/subSilver/templates/overall_header.html
+
+#
+#-----[ FIND ]------------------------------------------
+#
+<td class="genmed" align="right">
+
+#
+#-----[ IN-LINE FIND ]------------------------------------------
+#
+<td class="genmed" align="right">
+
+#
+#-----[ IN-LINE AFTER, ADD ]------------------------------------------
+#
+<!-- IF S_DISPLAY_GARAGE --><a href="{U_GARAGE}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_GARAGE}" hspace="3" /> {L_GARAGE}</a>&nbsp; &nbsp;<!-- ENDIF --><!-- IF S_DISPLAY_QUARTERMILE --><a href="{U_QUARTERMILE}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_QUARTERMILE}" hspace="3" /> {L_QUARTERMILE}</a>&nbsp; &nbsp;<!-- ENDIF --><!-- IF S_DISPLAY_DYNORUN --><a href="{U_DYNORUN}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_DYNORUN}" hspace="3" /> {L_DYNORUN}</a>&nbsp; &nbsp;<!-- ENDIF -->
+
+# 
+#-----[ OPEN ]----- 
+# 
+styles/subSilver/template/overall_footer.html
+
+#
+#-----[ FIND ]------------------------------------------
+#
+	<!-- IF U_ACP --><span class="gensmall">[ <a href="{U_ACP}">{L_ACP}</a> ]</span><br /><br /><!-- ENDIF -->
+
+#
+#-----[ BEFORE, ADD ]------------------------------------------
+#
+	<!-- IF U_PENDING --><span class="gensmall">[ <a href="{U_PENDING}">{L_PENDING_GARAGE_ITEMS}</a> ]</span><!-- ENDIF -->
+
+#
 #-----[ SAVE/CLOSE ALL FILES ]------------------------------------------
 #
 # EoM
 
-// To Do
-Map auths added to phpbb_acl_options to roles in phpbb_acl_roles_data so on install admins & global moderators get permissions required & regiestered users too!!
+TODO: Map new permissions to roles in phpbb_acl_roles_data so on install admins & global moderators get permissions required & regiestered users too!!
+TODO: Make viewtopic page display vehicle - template side done
+TODO: Make profilepage display vehicle - template side done
+TODO: Make memberlist display garage button - template side done
