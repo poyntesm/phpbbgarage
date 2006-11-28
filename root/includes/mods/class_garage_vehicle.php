@@ -1415,7 +1415,8 @@ class garage_vehicle
 
 			//Get All Gallery Data Required
 			$gallery_data = $garage_image->get_gallery($cid);
-
+			
+			$gallery_vehicle_images = '';
 			//Process Each Image From Vehicle Gallery	
         		for ( $i = 0; $i < count($gallery_data); $i++ )
 	        	{
