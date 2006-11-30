@@ -183,6 +183,11 @@ memberlist.php
 <?php
 
 #
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+
+#
 #-----[ FIND ]------------------------------------------
 #
 'k' => $user->lang['JABBER']
@@ -213,14 +218,9 @@ memberlist.php
 , 'o' => 'u.garage_id'
 
 #
-#-----[ AFTER, ADD ]------------------------------------------
-#
-//-- mod : Garage ----------------------------------------------------------------------------------------------------------
-
-#
 #-----[ FIND ]------------------------------------------
 #
-			'SELECT'	=> 'u.user_id, u.group_id as default_group, u.username, u.user_colour, u.user_rank, u.user_posts, g.group_id, g.group_name, g.group_colour, g.group_type, ug.user_id as ug_user_id',
+			'SELECT'	=> 'u.user_id, u.group_id as default_group, u.username, u.user_colour, u.user_rank, u.user_posts, u.user_allow_pm, g.group_id, g.group_name, g.group_colour, g.group_type, ug.user_id as ug_user_id',
 
 #
 #-----[ IN-LINE FIND ]------------------------------------------
@@ -251,7 +251,7 @@ ug.user_id as ug_user_id
 #
 #-----[ FIND ]------------------------------------------
 #
-			'SEARCH_IMG'		=> $user->img('icon_user_search', $user->lang['SEARCH']),
+			'SEARCH_IMG'	=> $user->img('icon_user_search', $user->lang['SEARCH']),
 
 #
 #-----[ AFTER, ADD ]------------------------------------------
@@ -355,8 +355,7 @@ $sql = $db->sql_build_query('SELECT', array(
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
-//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add/modify
+A
 
 #
 #-----[ FIND ]------------------------------------------
@@ -426,7 +425,7 @@ p.*
 #-----[ FIND ]------------------------------------------
 #
 # Second Finds Normal User
-				'age'				=> '',
+				'age'			=> '',
 
 #
 #-----[ AFTER, ADD ]------------------------------------------
