@@ -1,11 +1,13 @@
 <?php
 /***************************************************************************
- *                               install_garage.php
+ *                              install_garage.php
  *                            -------------------
+ *   begin                : Friday, 06 May 2005
+ *   copyright            : (C) Esmond Poynton
+ *   email                : esmond.poynton@gmail.com
+ *   description          : Provides Vehicle Garage System For phpBB
  *
- *   copyright            : ©2003 Freakin' Booty ;-P & Antony Bailey
- *   project              : http://sourceforge.net/projects/dbgenerator
- *   Website              : http://freakingbooty.no-ip.com/ & http://www.rapiddr3am.net
+ *   $Id$
  *
  ***************************************************************************/
 
@@ -250,7 +252,7 @@ $params = array(
 	'profile_thumbs' 			=> '1',
 	'enable_pm_pending_notify'		=> '1',
 	'enable_email_pending_notify'		=> '1',
-	'enable_pm_pending_notify_optout'	=> '1'
+	'enable_pm_pending_notify_optout'	=> '1',
 	'enable_email_pending_notify_optout'	=> '1',
 
 //Menu Config Data
@@ -296,7 +298,7 @@ $params = array(
 	'enable_top_rating'			=> '1',
 	'top_rating_limit'			=> '5',
 //Image Config Data
-	'enable_images'				=> '0',
+	'enable_images'				=> '1',
 	'enable_vehicle_images'			=> '1',
 	'enable_modification_images'		=> '1',
 	'enable_quartermile_images'		=> '1',
@@ -344,36 +346,36 @@ while( list($config_name, $config_value) = @each($params) )
 	$required_sql[] = "INSERT INTO " . $table_prefix . "garage_config (config_name, config_value) VALUES ('" . $config_name . "', '" . $config_value . "')";
 }
 //Required SQL For Images
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_vehicle_img_attached` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_slip_img_attached` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_icon_garage` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_main_menu` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_browse` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_search` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_quartermile_table` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_dynorun_table` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_garage_review` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_shop_review` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_insurance_review` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_create_vehicle` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_edit_vehicle` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_delete_vehicle` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_view_vehicle` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_add_modification` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_add_insurance` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_add_dynorun` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_add_quartermile` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_manage_gallery` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_edit` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_delete` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_main_vehicle` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_no_thumb` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_show_details` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_hide_details` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_move_up` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_move_down` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_set_approved` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_set_pending` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_vehicle_img_attached` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_slip_img_attached` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_icon_garage` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_main_menu` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_browse` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_search` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_quartermile_table` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_dynorun_table` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_garage_review` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_shop_review` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_insurance_review` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_create_vehicle` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_edit_vehicle` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_delete_vehicle` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_view_vehicle` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_add_modification` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_add_insurance` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_add_dynorun` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_add_quartermile` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_manage_gallery` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_edit` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_delete` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_main_vehicle` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_no_thumb` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_show_details` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_hide_details` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_move_up` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_move_down` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_set_approved` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_set_pending` text NOT NULL";
 $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_vehicle_img_attached = 'garage_camera.gif*13*18'";
 $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_slip_img_attached = 'garage_slip.gif*13*12'";
 $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_icon_garage = '{LANG}/icon_garage.gif*18*59'";
@@ -1369,14 +1371,9 @@ switch( $mode )
 		//Lets Add The Required New Permissions
 		$phpbbgarage_permissions = array(
 			'local'		=> array(),
-			'global'	=> array('u_garage_browse', 'u_garage_search', 'u_garage_add_vehicle', 'u_garage_delete_vehicle', 'u_garage_add_modification', 'u_garage_delete_modification', 'u_garage_add_quartermile', 'u_garage_delete_quartermile', 'u_garage_add_dynorun', 'u_garage_delete_dynorun', 'u_garage_add_insurance', 'u_garage_delete_insurance', 'u_garage_add_business', 'u_garage_add_make_model', 'u_garage_rate', 'u_garage_comment', 'u_garage_upload_image', 'u_garage_remote_image', 'u_garage_deny', 'm_garage', 'a_garage')
+			'global'	=> array('u_garage_browse', 'u_garage_search', 'u_garage_add_vehicle', 'u_garage_delete_vehicle', 'u_garage_add_modification', 'u_garage_delete_modification', 'u_garage_add_quartermile', 'u_garage_delete_quartermile', 'u_garage_add_dynorun', 'u_garage_delete_dynorun', 'u_garage_add_insurance', 'u_garage_delete_insurance', 'u_garage_add_business', 'u_garage_add_make_model', 'u_garage_rate', 'u_garage_comment', 'u_garage_upload_image', 'u_garage_remote_image', 'u_garage_delete_image', 'u_garage_deny', 'm_garage', 'a_garage')
 		);
 		$auth_admin->acl_add_option($phpbbgarage_permissions);
-
-
-		//Let Clear & Rebuild ACP ACL Options
-		//$cache->destroy('acl_options');
-		//$auth->acl_clear_prefetch();
 
 		//If Any Errors During Table Creation Step1 Display Error Message
 		if ($errored)

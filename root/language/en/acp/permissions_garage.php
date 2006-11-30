@@ -53,10 +53,10 @@ $lang = array_merge($lang, array(
 	'acl_u_garage_deny'			=> array('lang' => 'Deny user access to the garage', 		'cat' => 'garage'),
 
 	//Moderator Garage Permissions
-	'acl_m_garage'				=> array('lang' => 'Can moderate garage', 		'cat' => 'garage'),
+	'acl_m_garage'				=> array('lang' => 'Can moderate garage', 			'cat' => 'garage'),
 
 	//Administrator Garage Permissions
- 	'acl_a_garage'				=> array('lang' => 'Can alter garage settings', 	'cat' => 'garage'),
+ 	'acl_a_garage'				=> array('lang' => 'Can alter garage settings', 		'cat' => 'garage'),
 ));
 
 ?>
