@@ -26,7 +26,6 @@ if (!defined('IN_PHPBB'))
 
 class garage_quartermile
 {
-
 	var $classname = "garage_quartermile";
 
 	/*========================================================================*/
@@ -36,27 +35,23 @@ class garage_quartermile
 	function insert_quartermile($data)
 	{
 		global $cid, $db, $garage_config;
-		$pending = ($garage_config['enable_quartermile_approval'] == '1') ? 1 : 0;
 
-		$sql = "INSERT INTO ". GARAGE_QUARTERMILE_TABLE ."
-			(
-				garage_id,
-				rt,
-				sixty,
-				three,
-				eight,
-				eightmph,
-				thou,
-				quart,
-				quartmph,
-				date_created,
-				rr_id,
-				date_updated,
-				pending
-			)
-			VALUES
-			($cid, '".$data['rt']."', '".$data['sixty']."', '".$data['three']."', '".$data['eight']."', '".$data['eightmph']."', '".$data['thou']."', '".$data['quart']."', '".$data['quartmph']."', '".time()."', '".$data['rr_id']."', '".time()."', '".$pending."')";
-		
+		$sql = 'INSERT INTO ' . GARAGE_QUARTERMILE_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+			'garage_id'	=> $cid,
+			'rt'		=> $data['rt'],
+			'sixty'		=> $data['sixty'],
+			'three'		=> $data['three'],
+			'eighth'	=> $data['eighth'],
+			'eighthmph'	=> $data['eighthmph'],
+			'thou'		=> $data['thou'],
+			'quart'		=> $data['quart'],
+			'quartmph'	=> $data['quartmph'],
+			'date_created'	=> time(),
+			'date_updated'	=> time(),
+			'rr_id'		=> $data['rr_id'],
+			'pending'	=> ($garage_config['enable_quartermile_approval'] == '1') ? 1 : 0)
+		);
+
 		if(!$result = $db->sql_query($sql))
 		{
 			message_die(GENERAL_ERROR, 'Could Not Insert Quartermile', '', __LINE__, __FILE__, $sql);
@@ -75,11 +70,24 @@ class garage_quartermile
 	{
 		global $db, $cid, $qmid, $garage_config;
 
-		$pending = ($garage_config['enable_quartermile_approval'] == '1') ? 1 : 0;
+		$update_sql = array(
+			'garage_id'	=> $cid,
+			'rt'		=> $data['rt'],
+			'sixty'		=> $data['sixty'],
+			'three'		=> $data['three'],
+			'eighth'	=> $data['eighth'],
+			'eighthmph'	=> $data['eighthmph'],
+			'thou'		=> $data['thou'],
+			'quart'		=> $data['quart'],
+			'quartmph'	=> $data['quartmph'],
+			'date_updated'	=> time(),
+			'rr_id'		=> $data['rr_id'],
+			'pending'	=> ($garage_config['enable_quartermile_approval'] == '1') ? 1 : 0)
+		);
 
-		$sql = "UPDATE ". GARAGE_QUARTERMILE_TABLE ."
-			SET rt = '".$data['rt']."', sixty = '".$data['sixty']."', three = '".$data['three']."', eight = '".$data['eight']."', eightmph = '".$data['eightmph']."', thou = '".$data['thou']."', quart = '".$data['quart']."', quartmph = '".$data['quartmph']."', rr_id = '".$data['rr_id']."', pending = '".$pending."', date_updated ='".time()."'
-			WHERE id = '$qmid' and garage_id = '$cid'";
+		$sql = 'UPDATE ' . GARAGE_QUARTERMILE_TABLE . '
+			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
+			WHERE id = $qmid AND garage_id = $cid";
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -97,23 +105,14 @@ class garage_quartermile
 	{
 		global $garage, $garage_image;
 	
-		//Right They Want To Delete A QuarterMile Time
-		if (empty($qmid))
-		{
-	 		message_die(GENERAL_ERROR, 'Quartermile ID Not Entered', '', __LINE__, __FILE__);
-		}
-	
 		//Let Get All Info For Run, Including Image Info
 		$data = $this->get_quartermile($qmid);
 	
 		//Lets See If There Is An Image Associated With This Run
 		if (!empty($data['image_id']))
 		{
-			if ( (!empty($data['attach_location'])) OR (!empty($data['attach_thumb_location'])) )
-			{
-				//Seems To Be An Image To Delete, Let Call The Function
-				$garage_image->delete_image($data['image_id']);
-			}
+			//Seems To Be An Image To Delete, Let Call The Function
+			$garage_image->delete_image($data['image_id']);
 		}
 
 		//Time To Delete The Actual Quartermile Time Now
@@ -121,137 +120,47 @@ class garage_quartermile
 
 		return ;
 	}
-	
-	/*========================================================================*/
-	// Build Top Quartermile Runs HTML If Required 
-	// Usage: show_topquartermile();
-	/*========================================================================*/
-	function show_topquartermile()
-	{
-		global $required_position, $user, $template, $db, $SID, $phpEx, $phpbb_root_path, $garage_config, $board_config;
-	
-		if ( $garage_config['enable_top_quartermile'] != true )
-		{
-			return;
-		}
-
-		$template_block = 'block_'.$required_position;
-		$template_block_row = 'block_'.$required_position.'.row';
-		$template->assign_block_vars($template_block, array(
-			'BLOCK_TITLE' => $user->lang['TOP_QUARTERMILE_RUNS'],
-			'COLUMN_1_TITLE' => $user->lang['VEHICLE'],
-			'COLUMN_2_TITLE' => $user->lang['OWNER'],
-			'COLUMN_3_TITLE' => $user->lang['QUARTERMILE'])
-		);
-	
-	        // What's the count? Default to 10
-	        $limit = $garage_config['top_quartermile_limit'] ? $garage_config['top_quartermile_limit'] : 10;
-	
-		//First Query To Return Top Time For All Or For Selected Filter...
-		$sql = "SELECT  qm.garage_id, MIN(qm.quart) as quart
-			FROM " . GARAGE_QUARTERMILE_TABLE ." AS qm
-				LEFT JOIN " . GARAGE_TABLE ." AS g ON qm.garage_id = g.id
-				LEFT JOIN " . USERS_TABLE ." AS user ON g.user_id = user.user_id
-			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-	       			LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-			WHERE	(qm.sixty IS NOT NULL
-				OR qm.three IS NOT NULL
-				OR qm.eight IS NOT NULL
-				OR qm.eightmph IS NOT NULL
-				OR qm.thou IS NOT NULL
-				OR qm.rt IS NOT NULL
-				OR qm.quartmph IS NOT NULL) AND ( qm.pending = 0 )
-				AND ( makes.pending = 0 AND models.pending = 0 )
-			GROUP BY qm.garage_id
-			ORDER BY quart ASC LIMIT $limit ";
-	
-		if( !($first_result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Error Selecting Top Quartermile Time', '', __LINE__, __FILE__, $sql);
-		}
-		
-		//Now Process All Rows Returned And Get Rest Of Required Data	
-		$i = 0;
-		while ($row = $db->sql_fetchrow($first_result) )
-		{
-			$sql = "SELECT g.id, g.user_id, user.username, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle,
-					qm.rt, qm.sixty, qm.three, qm.eight, qm.eightmph, qm.thou, qm.quart, qm.quartmph, qm.rr_id,
-					rr.bhp, rr.bhp_unit, rr.torque, rr.torque_unit, rr.boost, rr.boost_unit, rr.nitrous
-				FROM " . GARAGE_QUARTERMILE_TABLE ." AS qm
-					LEFT JOIN " . GARAGE_TABLE ." AS g ON qm.garage_id = g.id
-					LEFT JOIN " . USERS_TABLE ." AS user ON g.user_id = user.user_id
-					LEFT JOIN " . GARAGE_DYNORUN_TABLE . " AS rr ON qm.rr_id = rr.id
-				        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-	       				LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-				WHERE qm.garage_id = " . $row['garage_id'] . " AND qm.quart = " . $row['quart'];
-	
-	 		if(!$result = $db->sql_query($sql))
-			{
-				message_die(GENERAL_ERROR, "Could not query vehicle information", "", __LINE__, __FILE__, $sql);
-			}
-	 		            
-		 	$vehicle_data = $db->sql_fetchrow($result);
-	
-			$mph = (empty($vehicle_data['quartmph'])) ? 'N/A' : $vehicle_data['quartmph'];
-	            	$quartermile = $vehicle_data['quart'] .' @ ' . $mph . ' '. $user->lang['QUARTERMILE_SPEED_UNIT'];
-	
-			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']),
-				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
-				'COLUMN_2_TITLE' => $vehicle_data['username'],
-				'COLUMN_3' => $quartermile)
-			);
-	 	}
-	
-		$required_position++;
-		return ;
-	}
 
 	/*========================================================================*/
-	// Select Quartermile Data
-	// Usage: get_quartermile('quartermile id');
+	// Select Top Quartermiles Data By Vehicle From DB
+	// Usage: get_top_quartermiles('vehicle id');
 	/*========================================================================*/
-	function get_quartermile($qmid)
+	function get_top_quartermiles($pending, $sort, $order, $start = 0, $limit = 30, $addtional_where = NULL)
 	{
 		global $db;
-	
-	   	$sql = "SELECT qm.*, rr.id, rr.bhp, rr.bhp_unit, images.*, g.made_year, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
-                    	FROM " . GARAGE_QUARTERMILE_TABLE . " AS qm
-		          	LEFT JOIN " . GARAGE_TABLE . " AS g ON qm.garage_id = g.id
-		          	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-                        	LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-        			LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = qm.image_id 
-	        		LEFT JOIN " . GARAGE_DYNORUN_TABLE . " AS rr ON rr.id = qm.rr_id 
-                    	WHERE qm.id = $qmid";
 
-      		if ( !($result = $db->sql_query($sql)) )
-      		{
-         		message_die(GENERAL_ERROR, 'Could Not Select Quartermile Data', '', __LINE__, __FILE__, $sql);
-      		}
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'q.garage_id, MIN(q.quart) as quart',
+			'FROM'		=> array(
+				GARAGE_QUARTERMILE_TABLE	=> 'q',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'ON'	=> 'q.garage_id =g.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+					'ON'	=> 'g.model_id = md.id and md.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'g.user_id = u.user_id'
+				)
+			),
+			'WHERE'		=>  "(q.sixty IS NOT NULL OR q.three IS NOT NULL OR q.eight IS NOT NULL OR q.eightmph IS NOT NULL OR q.thou IS NOT NULL OR q.rt IS NOT NULL OR q.quartmph IS NOT NULL) AND ( q.pending = $pending ) AND ( mk.pending = 0 AND md.pending = 0 ) $addtional_where",
+			'GROUP_BY'	=> 'q.garage_id',
+			'ORDER_BY'	=> "$sort $order"
+		));
 
-		$row = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
-
-		return $row;
-	}
-
-	/*========================================================================*/
-	// Select Quartermile Data By Vehicle
-	// Usage: get_quartermile_by_vehicle('garage id');
-	/*========================================================================*/
-	function get_quartermile_by_vehicle($cid)
-	{
-		global $db;
-	
-		$sql = "SELECT qm.*,images.attach_id, images.attach_hits, images.attach_ext, images.attach_file, images.attach_thumb_location, images.attach_is_image, images.attach_location
-	          	FROM " . GARAGE_QUARTERMILE_TABLE . " as qm
-	                	LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = qm.image_id
-		       	WHERE qm.garage_id = $cid";
-	
-	       	if( !($result = $db->sql_query($sql)) )
-	       	{
-	        	message_die(GENERAL_ERROR, 'Could Not Select Quartermile Data', '', __LINE__, __FILE__, $sql);
+		if( !($result = $db->sql_query_limit($sql, $limit, $start)) )
+		{
+			message_die(GENERAL_ERROR, 'Could Not Select Quartermiles', '', __LINE__, __FILE__, $sql);
 		}
 
 		while ($row = $db->sql_fetchrow($result) )
@@ -269,12 +178,213 @@ class garage_quartermile
 	}
 
 	/*========================================================================*/
+	// Select Quartermile Data From DB By Vehicle ID And Quart Value
+	// Usage: get_quartermile_by_vehicle_quart('garage id', 'quart');
+	/*========================================================================*/
+	function get_quartermile_by_vehicle_quart($garage_id, $quart)
+	{
+		global $db;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'g.id, g.user_id, q.id as qmid, q.image_id, u.username, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eight, q.eightmph, q.thou, q.quart, q.quartmph, q.rr_id, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous',
+			'FROM'		=> array(
+				GARAGE_QUARTERMILE_TABLE	=> 'q',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'ON'	=> 'q.garage_id =g.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+					'ON'	=> 'g.model_id = md.id and md.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'g.user_id = u.user_id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_DYNORUN_TABLE => 'd'),
+					'ON'	=> 'q.rr_id = d.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
+					'ON'	=> 'i.attach_id = q.image_id'
+				)
+			),
+			'WHERE'		=>  "q.quart = $quart AND q.garage_id = $garage_id"
+		));
+
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could Not Select Dynorun Data For Vehicle', '', __LINE__, __FILE__, $sql);
+		}
+
+		$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		if (empty($row))
+		{
+			return;
+		}
+
+		return $row;
+	}
+
+	/*========================================================================*/
+	// Select Quartermile Data By Quartermile ID
+	// Usage: get_quartermile('quartermile id');
+	/*========================================================================*/
+	function get_quartermile($qmid)
+	{
+		global $db;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'q.*, d.id, d.bhp, d.bhp_unit, i.*, g.made_year, mk.make, md.model, CONCAT_WS(' ', g.made_year, mk.make, md.model) AS vehicle',
+			'FROM'		=> array(
+				GARAGE_QUARTERMILE_TABLE	=> 'q',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'ON'	=> 'q.garage_id =g.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+					'ON'	=> 'g.model_id = md.id and md.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_DYNORUN_TABLE => 'd'),
+					'ON'	=> 'q.rr_id = d.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
+					'ON'	=> 'i.attach_id = q.image_id'
+				)
+			),
+			'WHERE'		=>  "q.id = $qmid"
+		));
+
+      		if ( !($result = $db->sql_query($sql)) )
+      		{
+         		message_die(GENERAL_ERROR, 'Could Not Select Quartermile Data', '', __LINE__, __FILE__, $sql);
+      		}
+
+		$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $row;
+	}
+
+	/*========================================================================*/
+	// Select Quartermile Data By Vehicle ID
+	// Usage: get_quartermile_by_vehicle('garage id');
+	/*========================================================================*/
+	function get_quartermile_by_vehicle($cid)
+	{
+		global $db;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'q.*, i.attach_id, i.attach_hits, i.attach_ext, i.attach_file, i.attach_thumb_location, i.attach_is_image, i.attach_location',
+			'FROM'		=> array(
+				GARAGE_QUARTERMILE_TABLE	=> 'q',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
+					'ON'	=> 'i.attach_id = q.image_id'
+				)
+			),
+			'WHERE'		=>  "q.garage_id = $cid"
+		));
+	
+	       	if( !($result = $db->sql_query($sql)) )
+	       	{
+	        	message_die(GENERAL_ERROR, 'Could Not Select Quartermile Data For Vehicle', '', __LINE__, __FILE__, $sql);
+		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$data[] = $row;
+		}
+
+		$db->sql_freeresult($result);
+
+		if (empty($data))
+		{
+			return;
+		}
+		return $data;
+	}
+
+	/*========================================================================*/
+	// Build Top Quartermile Runs HTML If Required 
+	// Usage: show_topquartermile();
+	/*========================================================================*/
+	function show_topquartermile()
+	{
+		global $required_position, $user, $template, $db, $SID, $phpEx, $phpbb_root_path, $garage_config, $board_config;
+	
+		if ( $garage_config['enable_top_quartermile'] != true )
+		{
+			return;
+		}
+
+		$template_block = 'block_'.$required_position;
+		$template_block_row = 'block_'.$required_position.'.row';
+		$template->assign_block_vars($template_block, array(
+			'BLOCK_TITLE'	=> $user->lang['TOP_QUARTERMILE_RUNS'],
+			'COLUMN_1_TITLE'=> $user->lang['VEHICLE'],
+			'COLUMN_2_TITLE'=> $user->lang['OWNER'],
+			'COLUMN_3_TITLE'=> $user->lang['QUARTERMILE'])
+		);
+	
+	        // What's the count? Default to 10
+		$limit = $garage_config['top_quartermile_limit'] ? $garage_config['top_quartermile_limit'] : 10;
+
+		//Get Top Quartermile Times
+		$times = $this->get_top_quartermiles(0, 'quart', 'DESC', 0, $limit);
+
+		//Now Process All Rows Returned And Get Rest Of Required Data	
+		for($i = 0; $i < count($times); $i++)
+		{
+			//Get Vehicle Info For This Dynorun
+			$vehicle_data = $this->get_quartermile_by_vehicle_quart($times[$i]['garage_id'], $times[$i]['quart']);
+	
+			$mph = (empty($vehicle_data['quartmph'])) ? 'N/A' : $vehicle_data['quartmph'];
+	            	$quartermile = $vehicle_data['quart'] .' @ ' . $mph . ' '. $user->lang['QUARTERMILE_SPEED_UNIT'];
+	
+			$template->assign_block_vars($template_block_row, array(
+				'U_COLUMN_1' 	=> append_sid("{$phpbb_root_path}garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
+				'U_COLUMN_2' 	=> append_sid("{$phpbb_root_path}profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']),
+				'COLUMN_1_TITLE'=> $vehicle_data['vehicle'],
+				'COLUMN_2_TITLE'=> $vehicle_data['username'],
+				'COLUMN_3' 	=> $quartermile)
+			);
+	 	}
+	
+		$required_position++;
+		return ;
+	}
+
+	/*========================================================================*/
 	// Build Quartermile Table With/Without Pending Itesm
 	// Usage: build_quartermile_table('YES|NO');
 	/*========================================================================*/
 	function build_quartermile_table($pending)
 	{
-		global $db, $template, $images, $sort, $phpEx, $order, $garage_config, $garage_template, $user, $garage;
+		global $db, $template, $sort, $phpEx, $order, $garage_config, $garage_template, $user, $garage, $phpbb_root_path;
 
 		$pending= ($pending == 'YES') ? 1 : 0;
 		$start 	= (empty($start)) ? 0 : $start;
@@ -310,66 +420,25 @@ class garage_quartermile
 		}
 
 		//First Query To Return Top Time For All Or For Selected Filter...
-		$sql = "SELECT  qm.garage_id, MIN(qm.quart) as quart
-			FROM " . GARAGE_QUARTERMILE_TABLE ." AS qm
-				LEFT JOIN " . GARAGE_TABLE ." AS g ON qm.garage_id = g.id
-				LEFT JOIN " . USERS_TABLE ." AS user ON g.user_id = user.user_id
-			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-        			LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-			WHERE	(qm.sixty IS NOT NULL
-				OR qm.three IS NOT NULL
-				OR qm.eight IS NOT NULL
-				OR qm.eightmph IS NOT NULL
-				OR qm.thou IS NOT NULL
-				OR qm.rt IS NOT NULL
-				OR qm.quartmph IS NOT NULL) AND ( qm.pending = $pending )
-				AND ( makes.pending = 0 AND models.pending = 0 )
-				$addtional_where 
-			GROUP BY qm.garage_id
-			ORDER BY $sort $order
-			LIMIT $start, " . $garage_config['cars_per_page'];
+		$rows = $this->get_top_quartermiles($pending, $sort, $order, $start, $garage_config['cars_per_page'], $addtional_where);
 
-		if( !($first_result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Error Selecting Top Quartermile Time', '', __LINE__, __FILE__, $sql);
-		}
-
-		if ( $pending == 1)
+		if ( $pending == 1 AND !empty($rows))
 		{
 			$template->assign_block_vars('quartermile_pending', array());
 		}
 	
 		//Now Process All Rows Returned And Get Rest Of Required Data	
-		$i = 0;
-		while ($row = $db->sql_fetchrow($first_result) )
+		for($i = 0; $i < count($rows); $i++)
 		{
 			//Second Query To Return All Other Data For Top Quartermile Run
-			$sql = "SELECT g.id, g.user_id, g.made_year, makes.make, models.model, user.username, qm.id as qmid,
-				qm.rt, qm.sixty, qm.three, qm.eight, qm.eightmph, qm.thou, qm.quart, qm.quartmph, qm.rr_id,
-				rr.bhp, rr.bhp_unit, rr.torque, rr.torque_unit, rr.boost, rr.boost_unit, rr.nitrous,
-				CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, images.attach_id as image_id
-				FROM " . GARAGE_QUARTERMILE_TABLE ." AS qm
-					LEFT JOIN " . GARAGE_TABLE ." AS g ON qm.garage_id = g.id
-					LEFT JOIN " . USERS_TABLE ." AS user ON g.user_id = user.user_id
-					LEFT JOIN " . GARAGE_DYNORUN_TABLE . " AS rr ON qm.rr_id = rr.id
-				        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-        				LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-		                	LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = qm.image_id
-				WHERE qm.garage_id = " . $row['garage_id'] . " AND qm.quart = " . $row['quart'];
-
-			if( !($result = $db->sql_query($sql)) )
-			{
-				message_die(GENERAL_ERROR, 'Error Selecting Quartermile Time ', '', __LINE__, __FILE__, $sql);
-			}
-		
-			$data = $db->sql_fetchrow($result);
+			$data = $this->get_quartermile_by_vehicle_quart($rows[$i]['garage_id'], $rows[$i]['quart']);
 
 			$assign_block = ($pending == 1) ? 'quartermile_pending.row' : 'quartermile';
 			$template->assign_block_vars($assign_block, array(
 				'ROW_NUMBER' 	=> $i + ( $start + 1 ),
 				'QMID' 		=> $data['qmid'],
-				'U_IMAGE'	=> ($data['image_id']) ? append_sid("garage.$phpEx", "mode=view_gallery_item&amp;image_id=". $data['image_id']) : '',
-				'U_EDIT'	=> append_sid("garage.$phpEx", "mode=edit_quartermile&amp;QMID=" . $data['qmid'] . "&amp;CID=" . $data['id'] . "&amp;PENDING=YES"),
+				'U_IMAGE'	=> ($data['image_id']) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_gallery_item&amp;image_id=". $data['image_id']) : '',
+				'U_EDIT'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_quartermile&amp;QMID=" . $data['qmid'] . "&amp;CID=" . $data['id'] . "&amp;PENDING=YES"),
 				'IMAGE'		=> $user->img('garage_slip_img_attached', 'SLIP_IMAGE_ATTACHED'),
 				'USERNAME' 	=> $data['username'],
 				'VEHICLE' 	=> $data['vehicle'],
@@ -388,48 +457,24 @@ class garage_quartermile
 				'BOOST' 	=> $data['boost'],
 				'BOOST_UNIT' 	=> $data['boost_unit'],
 				'NITROUS' 	=> $data['nitrous'],
-				'U_VIEWVEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$data['id']),
-				'U_VIEWPROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$data['user_id']))
+				'U_VIEWVEHICLE' => append_sid("{$phpbb_root_path}garage.$phpEx?mode=view_vehicle&amp;CID=".$data['id']),
+				'U_VIEWPROFILE' => append_sid("{$phpbb_root_path}profile.$phpEx?mode=viewprofile&amp;u=".$data['user_id']))
 			);
-			$i++;
-		}
-		$db->sql_freeresult($first_result);
-
-		$sql = "SELECT COUNT(DISTINCT qm.garage_id)as total
-			FROM " . GARAGE_QUARTERMILE_TABLE ." AS qm
-				LEFT JOIN " . GARAGE_TABLE ." AS g ON qm.garage_id = g.id
-			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-        			LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-			WHERE	(qm.sixty IS NOT NULL
-				OR qm.three IS NOT NULL
-				OR qm.eight IS NOT NULL
-				OR qm.eightmph IS NOT NULL
-				OR qm.thou IS NOT NULL
-				OR qm.rt IS NOT NULL
-				OR qm.quartmph IS NOT NULL) AND ( qm.pending = $pending )
-				AND ( makes.pending = 0 AND models.pending = 0 )
-				$addtional_where";
-
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Error Getting Pagination Total', '', __LINE__, __FILE__, $sql);
 		}
 
-		$count = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
-
-		$pagination = generate_pagination("garage.$phpEx?mode=quartermile&amp;order=$sort", $count['total'], $garage_config['cars_per_page'], $start). '&nbsp;';
+		$count = count($this->get_top_quartermiles($pending, $sort, $order, 0, 10000000, $addtional_where));
+		$pagination = generate_pagination("garage.$phpEx?mode=dynorun&amp;order=$order", $count, $garage_config['cars_per_page'], $start);
 		
 		$template->assign_vars(array(
-            		'EDIT' 			=> ($garage_config['enable_images']) ? $user->img('garage_edit', 'EDIT') : $user->lang['EDIT'],
-			'S_MODE_SELECT' => $garage_template->dropdown('sort', $sort_text, $sort_values),
-			'PAGINATION' => $pagination,
-			'PAGE_NUMBER' => sprintf($user->lang['PAGE_OF'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count['total'] / $garage_config['cars_per_page'] )))
+            		'EDIT' 		=> ($garage_config['enable_images']) ? $user->img('garage_edit', 'EDIT') : $user->lang['EDIT'],
+			'S_MODE_SELECT'	=> $garage_template->dropdown('sort', $sort_text, $sort_values),
+			'PAGINATION' 	=> $pagination,
+			'PAGE_NUMBER' 	=> sprintf($user->lang['PAGE_OF'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count / $garage_config['cars_per_page'] )))
 		);
 
 		//Reset Sort Order For Pending Page
 		$sort='';
-		return $count['total'];
+		return $count;
 	}
 }
 
