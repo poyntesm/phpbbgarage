@@ -324,24 +324,34 @@ class garage
 	/*========================================================================*/
 	function pending_notification()
 	{
-		global $garage_guestbook, $user, $phpEx, $auth;
+		global $garage_guestbook, $user, $phpEx, $auth, $garage_config;
 
 		//Get All Users With The Rights To Approve Items
 		$user_ary = $auth->acl_get_list(false, array('m_garage'), false);
 
+		//$user_ary['0']['m_garage']['0'];
 		//Process All Selected Users And Send Them A PM...
-		while ($i = 567)
+		for ($i = 0, $count = sizeof($user_ary); $i < $count; $i++)
 		{
-			//Build Required PM Data
-			$data['date'] 		= date("U");
-			$data['pm_subject'] 	= $user->lang['PENDING_ITEMS'];
-			$data['link'] 		= '<a href="garage.' . $phpEx . '?mode=garage_pending">' . $user->lang['HERE'] . '</a>';
-			$data['pm_text'] 	= (sprintf($user->lang['PENDING_NOTIFY_TEXT'], $data['link']));
-			$data['author_id'] 	= $user->data['user_id'];
-			$data['user_id'] 	= $row['user_id'];
+			//If User Not Opt'd Out Of PM Notifications & PM Notifications Enabled...Then Send Them A PM
+			if ($garage_config['enable_pm_pending_notify'])
+			{
+				//Build Required PM Data
+				$data['date'] 		= date("U");
+				$data['pm_subject'] 	= $user->lang['PENDING_ITEMS'];
+				$data['link'] 		= '<a href="garage.' . $phpEx . '?mode=garage_pending">' . $user->lang['HERE'] . '</a>';
+				$data['pm_text'] 	= (sprintf($user->lang['PENDING_NOTIFY_TEXT'], $data['link']));
+				$data['author_id'] 	= $user->data['user_id'];
+				$data['user_id'] 	= $user_ary[0]['m_garage']['0'];
 	
-			//Now We Have All Data Lets Send The PM!!
-			$garage_guestbook->send_user_pm($data);
+				//Send User A PM Mofication Of New Pending Item
+				//$garage_guestbook->send_user_pm($data);
+			}
+			//If User Not Opt'd Out Of Email Notifications & Email Notifications Enabled...Then Send Them A Email
+			if ($garage_config['enable_pm_pending_notify'])
+			{
+				//Send User A Email Notification Of New Pending Item
+			}
 		}
 
 		return;

@@ -39,7 +39,21 @@ class garage_quartermile
 		$pending = ($garage_config['enable_quartermile_approval'] == '1') ? 1 : 0;
 
 		$sql = "INSERT INTO ". GARAGE_QUARTERMILE_TABLE ."
-			(garage_id, rt, sixty, three, eight, eightmph, thou, quart, quartmph, date_created, rr_id, date_updated, pending)
+			(
+				garage_id,
+				rt,
+				sixty,
+				three,
+				eight,
+				eightmph,
+				thou,
+				quart,
+				quartmph,
+				date_created,
+				rr_id,
+				date_updated,
+				pending
+			)
 			VALUES
 			($cid, '".$data['rt']."', '".$data['sixty']."', '".$data['three']."', '".$data['eight']."', '".$data['eightmph']."', '".$data['thou']."', '".$data['quart']."', '".$data['quartmph']."', '".time()."', '".$data['rr_id']."', '".time()."', '".$pending."')";
 		
@@ -114,7 +128,7 @@ class garage_quartermile
 	/*========================================================================*/
 	function show_topquartermile()
 	{
-		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
+		global $required_position, $user, $template, $db, $SID, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
 		if ( $garage_config['enable_top_quartermile'] != true )
 		{
@@ -166,7 +180,7 @@ class garage_quartermile
 				FROM " . GARAGE_QUARTERMILE_TABLE ." AS qm
 					LEFT JOIN " . GARAGE_TABLE ." AS g ON qm.garage_id = g.id
 					LEFT JOIN " . USERS_TABLE ." AS user ON g.user_id = user.user_id
-					LEFT JOIN " . GARAGE_ROLLINGROAD_TABLE . " AS rr ON qm.rr_id = rr.id
+					LEFT JOIN " . GARAGE_DYNORUN_TABLE . " AS rr ON qm.rr_id = rr.id
 				        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
 	       				LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
 				WHERE qm.garage_id = " . $row['garage_id'] . " AND qm.quart = " . $row['quart'];
@@ -179,7 +193,7 @@ class garage_quartermile
 		 	$vehicle_data = $db->sql_fetchrow($result);
 	
 			$mph = (empty($vehicle_data['quartmph'])) ? 'N/A' : $vehicle_data['quartmph'];
-	            	$quartermile = $vehicle_data['quart'] .' @ ' . $mph . ' '. $lang['Quartermile_Speed_Unit'];
+	            	$quartermile = $vehicle_data['quart'] .' @ ' . $mph . ' '. $user->lang['QUARTERMILE_SPEED_UNIT'];
 	
 			$template->assign_block_vars($template_block_row, array(
 				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
@@ -208,7 +222,7 @@ class garage_quartermile
 		          	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
                         	LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
         			LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = qm.image_id 
-	        		LEFT JOIN " . GARAGE_ROLLINGROAD_TABLE . " AS rr ON rr.id = qm.rr_id 
+	        		LEFT JOIN " . GARAGE_DYNORUN_TABLE . " AS rr ON rr.id = qm.rr_id 
                     	WHERE qm.id = $qmid";
 
       		if ( !($result = $db->sql_query($sql)) )
@@ -337,7 +351,7 @@ class garage_quartermile
 				FROM " . GARAGE_QUARTERMILE_TABLE ." AS qm
 					LEFT JOIN " . GARAGE_TABLE ." AS g ON qm.garage_id = g.id
 					LEFT JOIN " . USERS_TABLE ." AS user ON g.user_id = user.user_id
-					LEFT JOIN " . GARAGE_ROLLINGROAD_TABLE . " AS rr ON qm.rr_id = rr.id
+					LEFT JOIN " . GARAGE_DYNORUN_TABLE . " AS rr ON qm.rr_id = rr.id
 				        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
         				LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
 		                	LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = qm.image_id
@@ -350,25 +364,14 @@ class garage_quartermile
 		
 			$data = $db->sql_fetchrow($result);
 
-			$temp_url = append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=$cid");
-			$profile = '<a href="' . $temp_url . '">' . $lang['Read_profile'] . '</a>';
-
-            		$temp_url = append_sid("garage.$phpEx?mode=edit_quartermile&amp;QMID=".$data['qmid']."&amp;CID=".$data['id']."&amp;PENDING=YES");
-	            	$edit_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="'.$lang['Edit'].'" title="'.$lang['Edit'].'" border="0" /></a>';
-
-			$data['image_link'] ='';
-			if ($data['image_id'])
-			{
-				$data['image_link'] ='<a href="garage.'. $phpEx .'?mode=view_gallery_item&amp;image_id='. $data['image_id'] .'" target="_blank"><img src="' . $images['slip_image_attached'] . '" alt="'.$lang['Slip_Image_Attached'].'" title="'.$lang['Slip_Image_Attached'].'" border="0" /></a>';
-			}
-
-			$assign_block = ($pending == 1) ? 'quartermile_pending.row' : 'memberrow';
+			$assign_block = ($pending == 1) ? 'quartermile_pending.row' : 'quartermile';
 			$template->assign_block_vars($assign_block, array(
 				'ROW_NUMBER' 	=> $i + ( $start + 1 ),
 				'QMID' 		=> $data['qmid'],
-				'IMAGE_LINK' 	=> $data['image_link'],
+				'U_IMAGE'	=> ($data['image_id']) ? append_sid("garage.$phpEx", "mode=view_gallery_item&amp;image_id=". $data['image_id']) : '',
+				'U_EDIT'	=> append_sid("garage.$phpEx", "mode=edit_quartermile&amp;QMID=" . $data['qmid'] . "&amp;CID=" . $data['id'] . "&amp;PENDING=YES"),
+				'IMAGE'		=> $user->img('garage_slip_img_attached', 'SLIP_IMAGE_ATTACHED'),
 				'USERNAME' 	=> $data['username'],
-				'PROFILE' 	=> $profile, 
 				'VEHICLE' 	=> $data['vehicle'],
 				'RT' 		=> $data['rt'],
 				'SIXTY' 	=> $data['sixty'],
@@ -385,9 +388,8 @@ class garage_quartermile
 				'BOOST' 	=> $data['boost'],
 				'BOOST_UNIT' 	=> $data['boost_unit'],
 				'NITROUS' 	=> $data['nitrous'],
-				'EDIT_LINK' 	=> $edit_link,
 				'U_VIEWVEHICLE' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$data['id']),
-				'U_VIEWPROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . "=".$data['user_id']))
+				'U_VIEWPROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$data['user_id']))
 			);
 			$i++;
 		}
@@ -419,6 +421,7 @@ class garage_quartermile
 		$pagination = generate_pagination("garage.$phpEx?mode=quartermile&amp;order=$sort", $count['total'], $garage_config['cars_per_page'], $start). '&nbsp;';
 		
 		$template->assign_vars(array(
+            		'EDIT' 			=> ($garage_config['enable_images']) ? $user->img('garage_edit', 'EDIT') : $user->lang['EDIT'],
 			'S_MODE_SELECT' => $garage_template->dropdown('sort', $sort_text, $sort_values),
 			'PAGINATION' => $pagination,
 			'PAGE_NUMBER' => sprintf($user->lang['PAGE_OF'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count['total'] / $garage_config['cars_per_page'] )))

@@ -26,23 +26,23 @@
 		<th class="thTop" nowrap="nowrap">{L_NITROUS}</th>
 		<th class="thTop" nowrap="nowrap">{L_PEAKPOINT}</th>
 	</tr>
-	<!-- BEGIN memberrow -->
-	<tr> 
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gen">{memberrow.ROW_NUMBER}</span></td>
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gen">{memberrow.IMAGE_LINK}</span></td>
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gen"><a href="{memberrow.U_VIEWPROFILE}" class="gen">{memberrow.USERNAME}</a></span></td>
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gen"><a href="{memberrow.U_VIEWVEHICLE}" class="gen">{memberrow.VEHICLE}</a></span></td>
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gensmall">{memberrow.DYNOCENTER}</span></td>
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gensmall">{memberrow.BHP}</span></td>
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gensmall">{memberrow.BHP_UNIT}</span></td>
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gensmall">{memberrow.TORQUE}</span></td>
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gensmall">{memberrow.TORQUE_UNIT}</span></td>
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gensmall">{memberrow.BOOST}</span></td>
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gensmall">{memberrow.BOOST_UNIT}</span></td>
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gensmall">{memberrow.NITROUS}</span></td>
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gensmall">{memberrow.PEAKPOINT}</span></td>
+	<!-- BEGIN dynorun -->
+	<!-- IF dynorun.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+		<td align="center"><span class="gen">{dynorun.ROW_NUMBER}</span></td>
+		<td align="center"><span class="gen"><!-- IF dynorun.U_IMAGE --><a href="{dynorun.U_IMAGE}" target="_blank">{dynorun.IMAGE}</a><!-- ENDIF --></span></td>
+		<td align="center"><span class="gen"><a href="{dynorun.U_VIEWPROFILE}" class="gen">{dynorun.USERNAME}</a></span></td>
+		<td align="center"><span class="gen"><a href="{dynorun.U_VIEWVEHICLE}" class="gen">{dynorun.VEHICLE}</a></span></td>
+		<td align="center"><span class="gensmall">{dynorun.DYNOCENTER}</span></td>
+		<td align="center"><span class="gensmall">{dynorun.BHP}</span></td>
+		<td align="center"><span class="gensmall">{dynorun.BHP_UNIT}</span></td>
+		<td align="center"><span class="gensmall">{dynorun.TORQUE}</span></td>
+		<td align="center"><span class="gensmall">{dynorun.TORQUE_UNIT}</span></td>
+		<td align="center"><span class="gensmall">{dynorun.BOOST}</span></td>
+		<td align="center"><span class="gensmall">{dynorun.BOOST_UNIT}</span></td>
+		<td align="center"><span class="gensmall">{dynorun.NITROUS}</span></td>
+		<td align="center"><span class="gensmall">{dynorun.PEAKPOINT}</span></td>
 	</tr>
-	<!-- END memberrow -->
+	<!-- END dynorun -->
 	<tr> 
 		<td class="catBottom" colspan="15" height="28">&nbsp;</td>
 	</tr>

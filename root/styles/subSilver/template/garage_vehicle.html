@@ -92,14 +92,14 @@ updateModelSelect(document.edit_vehicle.model_id, '{MAKE}', '{MODEL}');
 <!--
 function add_model ()
 {
-  document.edit_vehicle.mode.value = 'user_submit_model' ;
-  document.edit_vehicle.submit() ;
+	document.edit_vehicle.action = '{S_MODE_ACTION_MODEL}';
+	document.edit_vehicle.submit() ;
 }
 
 function add_make ()
 {
-  document.edit_vehicle.mode.value = 'user_submit_make' ;
-  document.edit_vehicle.submit();
+	document.edit_vehicle.action = '{S_MODE_ACTION_MAKE}';
+	document.edit_vehicle.submit();
 }
 -->
 </script>

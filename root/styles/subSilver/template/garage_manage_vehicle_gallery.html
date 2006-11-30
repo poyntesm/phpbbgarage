@@ -8,7 +8,7 @@
 			<form enctype="multipart/form-data" method="post" name="manage_gallery" action="{S_MODE_ACTION}">
 			<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
 				<tr>
-					<th class="thHead" height="25" nowrap="nowrap" colspan="3">{L_MANAGE} {VEHICLE_DATA} {L_GALLERY}</th>
+					<th nowrap="nowrap" colspan="3">{L_MANAGE} {VEHICLE_DATA} {L_GALLERY}</th>
 				</tr>
 				<!-- BEGIN allow_images -->
 				<tr>
@@ -40,9 +40,13 @@
 			   	</tr>
 			  	<!-- BEGIN pic_row -->
 			   	<tr>
-			      		<td class="row1" align="center"><span class="gen">{pic_row.THUMB_IMAGE}</span></td>
-			      		<td class="row1" align="center"><span class="gen"><a href="{pic_row.U_REMOVE_IMAGE}">{L_REMOVE_IMAGE}</a></span></td>
-				      	<td class="row1" align="center"><span class="gen">{pic_row.HILITE}</span></td>
+					<td class="row1" align="center"><span class="gen"><a href="{pic_row.U_IMAGE}" title="{pic_row.IMAGE_TITLE}" target="_blank"><img valign="bottom" hspace="5" vspace="5" src="{pic_row.IMAGE}" /></a></span></td>
+					<td class="row1" align="center"><span class="gen"><a href="{pic_row.U_REMOVE_IMAGE}">{L_REMOVE_IMAGE}</a></span></td>
+					<!-- IF pic_row.U_SET_HILITE -->
+					<td class="row1" align="center"><span class="gen"><a href="{pic_row.U_SET_HILITE}">{L_SET_HILITE_IMAGE}</a></span></td>
+					<!-- ELSE -->
+					<td class="row1" align="center"><span class="gen"><i>{L_CURRENT_HILITE_IMAGE}</i></span></td>
+					<!-- ENDIF -->
 			   	</tr>
 			  	<!-- END pic_row -->
 			</form>

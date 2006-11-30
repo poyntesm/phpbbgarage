@@ -11,41 +11,41 @@
 
 <table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
 	<tr>
-		<th height="25" class="thCornerL" nowrap="nowrap">#</th>
-	  	<th class="thTop" nowrap="nowrap"></th>
-	  	<th class="thTop" nowrap="nowrap">{L_USERNAME}</th>
-		<th class="thTop" nowrap="nowrap">{L_VEHICLE}</th>
-		<th class="thTop" nowrap="nowrap">{L_RT}</th>
-		<th class="thTop" nowrap="nowrap">{L_SIXTY}</th>
-		<th class="thTop" nowrap="nowrap">{L_THREE}</th>
-		<th class="thTop" nowrap="nowrap">{L_EIGHTH}</th>
-		<th class="thTop" nowrap="nowrap">{L_EIGHTHMPH}</th>
-		<th class="thTop" nowrap="nowrap">{L_THOU}</th>
-		<th class="thTop" nowrap="nowrap">{L_QUART}</th>
-		<th class="thTop" nowrap="nowrap">{L_QUARTMPH}</th>
-		<th class="thTop" nowrap="nowrap">{L_BHP}</th>
-		<th class="thTop" nowrap="nowrap">{L_BHP_UNIT}</th>
-		<th class="thCornerR" nowrap="nowrap">{L_NITROUS}</th>
+		<th nowrap="nowrap">#</th>
+	  	<th nowrap="nowrap"></th>
+	  	<th nowrap="nowrap">{L_USERNAME}</th>
+		<th nowrap="nowrap">{L_VEHICLE}</th>
+		<th nowrap="nowrap">{L_RT}</th>
+		<th nowrap="nowrap">{L_SIXTY}</th>
+		<th nowrap="nowrap">{L_THREE}</th>
+		<th nowrap="nowrap">{L_EIGHTH}</th>
+		<th nowrap="nowrap">{L_EIGHTHMPH}</th>
+		<th nowrap="nowrap">{L_THOU}</th>
+		<th nowrap="nowrap">{L_QUART}</th>
+		<th nowrap="nowrap">{L_QUARTMPH}</th>
+		<th nowrap="nowrap">{L_BHP}</th>
+		<th nowrap="nowrap">{L_BHP_UNIT}</th>
+		<th nowrap="nowrap">{L_NITROUS}</th>
 	</tr>
-	<!-- BEGIN memberrow -->
-	<tr> 
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gen">{memberrow.ROW_NUMBER}</span></td>
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gen">{memberrow.IMAGE_LINK}</span></td>
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gen"><a href="{memberrow.U_VIEWPROFILE}" class="gen">{memberrow.USERNAME}</a></span></td>
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gen"><a href="{memberrow.U_VIEWVEHICLE}" class="gen">{memberrow.VEHICLE}</a></span></td>
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gensmall">{memberrow.RT}</span></td>
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gensmall">{memberrow.SIXTY}</span></td>
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gensmall">{memberrow.THREE}</span></td>
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gensmall">{memberrow.EIGTH}</span></td>
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gensmall">{memberrow.EIGHTM}</span></td>
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gensmall">{memberrow.THOU}</span></td>
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gensmall">{memberrow.QUART}</span></td>
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gensmall">{memberrow.QUARTM}</span></td>
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gensmall">{memberrow.BHP}</span></td>
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gensmall">{memberrow.BHP_UNIT}</span></td>
-		<td class="{memberrow.ROW_CLASS}" align="center"><span class="gensmall">{memberrow.NITROUS}</span></td>
+	<!-- BEGIN quartermile -->
+	<!-- IF quartermile.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+		<td align="center"><span class="gen">{quartermile.ROW_NUMBER}</span></td>
+		<td align="center"><span class="gen"><!-- IF quartermile.U_IMAGE --><a href="{quartermile.U_IMAGE}" target="_blank">{quartermile.IMAGE}</a><!-- ENDIF --></span></td>
+		<td align="center"><span class="gen"><a href="{quartermile.U_VIEWPROFILE}" class="gen">{quartermile.USERNAME}</a></span></td>
+		<td align="center"><span class="gen"><a href="{quartermile.U_VIEWVEHICLE}" class="gen">{quartermile.VEHICLE}</a></span></td>
+		<td align="center"><span class="gensmall">{quartermile.RT}</span></td>
+		<td align="center"><span class="gensmall">{quartermile.SIXTY}</span></td>
+		<td align="center"><span class="gensmall">{quartermile.THREE}</span></td>
+		<td align="center"><span class="gensmall">{quartermile.EIGTH}</span></td>
+		<td align="center"><span class="gensmall">{quartermile.EIGHTM}</span></td>
+		<td align="center"><span class="gensmall">{quartermile.THOU}</span></td>
+		<td align="center"><span class="gensmall">{quartermile.QUART}</span></td>
+		<td align="center"><span class="gensmall">{quartermile.QUARTM}</span></td>
+		<td align="center"><span class="gensmall">{quartermile.BHP}</span></td>
+		<td align="center"><span class="gensmall">{quartermile.BHP_UNIT}</span></td>
+		<td align="center"><span class="gensmall">{quartermile.NITROUS}</span></td>
 	</tr>
-	<!-- END memberrow -->
+	<!-- END quartermile -->
 	<tr> 
 		<td class="catBottom" colspan="16" height="28">&nbsp;</td>
 	</tr>

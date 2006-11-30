@@ -328,7 +328,7 @@ class garage_business
 	/*========================================================================*/
 	function build_business_table($pending)
 	{
-		global $db, $template, $images, $phpEx, $start, $sort, $sort_order, $lang, $theme, $HTTP_GET_VARS;
+		global $db, $template, $images, $phpEx, $start, $sort, $sort_order, $lang, $theme, $HTTP_GET_VARS, $user;
 
 		$pending = ($pending == 'YES') ? 1 : 0;
 
@@ -341,50 +341,39 @@ class garage_business
 			message_die(GENERAL_ERROR, 'Could Not Query Pending Business List', '', __LINE__, __FILE__, $sql);
 		}
 
-		$count = $db->sql_numrows($result);
+		$rows = NULL;
+		while ( $row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
 
-		if ($count >= 1)
+		if (sizeof($rows) >= 1)
 		{
 			$template->assign_block_vars('business_pending', array());
 		}
 
 		// loop through users
-		$i = 1;
-		while ( $row = $db->sql_fetchrow($result) )
+		for ($i = 0, $count = sizeof($rows); $i < $count; $i++)
 		{
-	            	$edit_link = '<a href="' . append_sid("garage.$phpEx?mode=edit_business&amp;BUS_ID=" . $row['id']) . '"><img src="' . $images['garage_edit'] . '" alt="' . $lang['Edit'] . '" title="' . $lang['Edit'] . '" border="0" /></a>';
-
 			//Work Out Type Of Business
-			if ( $row['insurance'] == '1' )
-			{
-		       	 	$type = $lang['Insurance'] ;
-			}
-			if ( ($row['garage'] == '1') AND ( ($row['web_shop'] == '1') OR ($row['retail_shop'] == '1')  ))
-			{
-				$type = $lang['Garage'] . ", " .  $lang['shop'] ;
-			}
-			if ( $row['garage'] == '1' )
-			{
-				$type = $lang['Garage'] ;
-			}
-			if ( $row['web_shop'] == '1' OR $row['retail_shop'] == '1' )
-			{
-				$type = $lang['Shop'];
-			}
+			$type = null;
+			$type .= ( $rows[$i]['insurance'] == '1' ) ? $user->lang['INSURANCE'] . ', ' : '';
+			$type .= ( $rows[$i]['garage'] == '1' ) ? $user->lang['GARAGE'] . ', ' : '';
+			$type .= ( $rows[$i]['web_shop'] == '1' OR $rows[$i]['retail_shop'] == '1' ) ? $user->lang['SHOP'] . ', ' : '';
+			$type = rtrim($type, ', ');
 			
 			$template->assign_block_vars('business_pending.row', array(
-				'BUSID' 	=> $row['id'],
-				'NAME' 		=> $row['title'],
-				'ADDRESS' 	=> $row['address'], 
-				'TELEPHONE' 	=> $row['telephone'],
-				'FAX' 		=> $row['fax'],
-				'WEBSITE' 	=> $row['website'],
-				'EMAIL' 	=> $row['email'],
-				'OPENING_HOURS' => $row['opening_hours'],
-				'TYPE' 		=> $type,
-				'EDIT_LINK' 	=> $edit_link)
+				'U_EDIT'	=> append_sid("garage.$phpEx", "mode=edit_business&amp;BUS_ID=" . $rows[$i]['id'] . "&amp;PENDING=YES"),
+				'BUSID' 	=> $rows[$i]['id'],
+				'NAME' 		=> $rows[$i]['title'],
+				'ADDRESS' 	=> $rows[$i]['address'], 
+				'TELEPHONE' 	=> $rows[$i]['telephone'],
+				'FAX' 		=> $rows[$i]['fax'],
+				'WEBSITE' 	=> $rows[$i]['website'],
+				'EMAIL' 	=> $rows[$i]['email'],
+				'OPENING_HOURS' => $rows[$i]['opening_hours'],
+				'TYPE' 		=> $type)
 			);
-			$i++;
 			unset($type);
 		}
 		$db->sql_freeresult($result);

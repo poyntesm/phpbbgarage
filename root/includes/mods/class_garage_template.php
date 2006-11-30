@@ -30,6 +30,7 @@ class garage_template
 
 	/*========================================================================*/
 	// Builds HTML Variables For Version & Copywrite Notice
+	// Remove This Notice & No Support Is Given
 	// Usage: version_notice();
 	/*========================================================================*/
 	function version_notice()
@@ -38,11 +39,11 @@ class garage_template
 
 		// Set Garage Version Messages.....DO NOT REMOVE....No Support For Any Garage Without It
 		$template->assign_vars(array(
-			'GARAGE_LINK' 		=> 'http://www.phpbbgarage.com/',
-			'GARAGE_VERSION'	=> $garage_config['version'],
-			'U_GARAGE' 		=> append_sid("garage.$phpEx"),
 			'L_GARAGE' 		=> $user->lang['GARAGE'],
-			'L_POWERED_BY_GARAGE'	=> 'Powered By phpBB Garage' . $user->lang['Translation_Link'])
+			'L_POWERED_BY_GARAGE'	=> 'Powered By phpBB Garage' . $user->lang['Translation_Link'],
+			'U_GARAGE' 		=> append_sid("garage.$phpEx"),
+			'GARAGE_LINK' 		=> 'http://www.phpbbgarage.com/',
+			'GARAGE_VERSION'	=> $garage_config['version'])
 		);
 
 		return;
@@ -54,7 +55,7 @@ class garage_template
 	/*========================================================================*/
 	function sidemenu()
 	{
-		global $user, $template, $phpEx, $phpbb_root_path, $garage_config, $board_config, $garage, $garage_vehicle , $auth;
+		global $user, $template, $phpEx, $phpbb_root_path, $garage_config, $garage, $garage_vehicle, $auth;
 	
 		$template->set_filenames(array(
 			'menu' => 'garage_menu.html')
@@ -77,7 +78,7 @@ class garage_template
 			'SHOP_REVIEW' 			=> ($garage_config['enable_images']) ? $user->img('garage_shop_review', 'SHOP_REVIEW') : $user->lang['SHOP_REVIEW'],
 			'GARAGE_REVIEW' 		=> ($garage_config['enable_images']) ? $user->img('garage_garage_review', 'GARAGE_REVIEW') : $user->lang['GARAGE_REVIEW'],
 			'QUARTERMILE_TABLE' 		=> ($garage_config['enable_images']) ? $user->img('garage_quartermile_table', 'QUARTERMILE_TABLE') : $user->lang['QUARTERMILE_TABLE'],
-			'DYNORUN_TABLE' 		=> ($garage_config['enable_images']) ? $user->img('garage_rollingroad_table', 'ROLLINGROAD_TABLE') : $user->lang['ROLLINGROAD_TABLE'],
+			'DYNORUN_TABLE' 		=> ($garage_config['enable_images']) ? $user->img('garage_dynorun_table', 'DYNORUN_TABLE') : $user->lang['DYNORUN_TABLE'],
 			'CREATE_VEHICLE' 		=> ($garage_config['enable_images']) ? $user->img('garage_create_vehicle', 'CREATE_VEHICLE') : $user->lang['CREATE_VEHICLE'],
 			'S_GARAGE_DISPLAY_MAIN' 	=> ($garage_config['enable_index_menu']) ? true : false,
 			'S_GARAGE_DISPLAY_BROWSE' 	=> ($garage_config['enable_browse_menu']) ? true : false,
@@ -103,8 +104,8 @@ class garage_template
 			for ($i = 0; $i < count($user_vehicles); $i++)
 			{
 		       		$template->assign_block_vars('show_vehicles.user_vehicles', array(
-       					'U_VIEW_VEHICLE' => append_sid("garage.$phpEx?mode=view_own_vehicle&amp;CID=" . $user_vehicles[$i]['id']),
-       					'VEHICLE' => $user_vehicles[$i]['vehicle'])
+       					'U_VIEW_VEHICLE'=> append_sid("garage.$phpEx?mode=view_own_vehicle&amp;CID=" . $user_vehicles[$i]['id']),
+       					'VEHICLE' 	=> $user_vehicles[$i]['vehicle'])
       				);
 			}
 		}
@@ -226,7 +227,7 @@ class garage_template
 	{
 		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
-		$html = "<select name='target_id' class='forminput'>";
+		$html = '<select name="target_id" class="forminput">';
 	
 		$sql = "SELECT id, title	
 			FROM " . GARAGE_BUSINESS_TABLE . " 
@@ -393,7 +394,7 @@ class garage_template
 	
 	/*========================================================================*/
 	// Builds The HTML For Selecting A Dynorun Entry
-	// Usage: dynorun_dropdown('rollingroad id', 'bhp @ bhp_type', 'vehicle id');
+	// Usage: dynorun_dropdown('dynorun id', 'bhp @ bhp_type', 'vehicle id');
 	/*========================================================================*/
 	function dynorun_dropdown($selected, $selected_name, $cid)
 	{
@@ -413,17 +414,17 @@ class garage_template
 		}
 	
 		$sql = "SELECT id, bhp, bhp_unit 
-			FROM " . GARAGE_ROLLINGROAD_TABLE . " 
+			FROM " . GARAGE_DYNORUN_TABLE . " 
 			WHERE garage_id = $cid";
 	
 		if( !($result = $db->sql_query($sql)) )
 		{
-			message_die(GENERAL_ERROR, 'Could not query rollingroad', '', __LINE__, __FILE__, $sql);
+			message_die(GENERAL_ERROR, 'Could not query dynorun', '', __LINE__, __FILE__, $sql);
 		}
 	
-		while ( $rollingroad = $db->sql_fetchrow($result) )
+		while ( $dynorun = $db->sql_fetchrow($result) )
 		{
-			$rr_list .= "<option value='".$rollingroad['id']."'>".$rollingroad['bhp']." BHP @ ".$rollingroad['bhp_unit']."</option>";
+			$rr_list .= "<option value='".$dynorun['id']."'>".$dynorun['bhp']." BHP @ ".$dynorun['bhp_unit']."</option>";
 		}
 		$db->sql_freeresult($result);
 		
@@ -497,30 +498,37 @@ class garage_template
 	
 	/*========================================================================*/
 	// Builds the HTML for attaching a image to entries
-	// Usage: attach_image('modification'|'vehicle');
+	// Usage: attach_image('modification'|'vehicle'|'quartermile'|'dynorun');
 	/*========================================================================*/
 	function attach_image($type)
 	{
 		global $template, $garage_config, $auth;
 
+		//If No Premissions To Attach An Image Our Job Here Is Done ;)
 		if ( (!$auth->acl_get('u_garage_upload_image')) OR (!$auth->acl_get('u_garage_remote_image')) )
 		{
 			return ;
 		}
-	
-		$template->assign_vars(array(
-			'MAXIMUM_IMAGE_FILE_SIZE' => $garage_config['max_image_kbytes'],
-			'MAXIMUM_IMAGE_RESOLUTION' => $garage_config['max_image_resolution'])
-		);
-	
+
+		//If Images For Mode Are Enabled Then Show Methods Enabled	
 		if ( $garage_config['enable_'.$type.'_images'] ) 
 		{
-	      		$template->assign_block_vars('allow_images', array());
+			//Setup Parent Template Block For Image Attachment
+			$template->assign_block_vars('allow_images', array());
+
+			//Define Image Limits
+			$template->assign_vars(array(
+				'MAXIMUM_IMAGE_FILE_SIZE'	=> $garage_config['max_image_kbytes'],
+				'MAXIMUM_IMAGE_RESOLUTION'	=> $garage_config['max_image_resolution'])
+			);
+
+			//Show Upload Image Controls If Enabled
 			if ( $garage_config['enable_uploaded_images'] )
 			{
 	      			$template->assign_block_vars('allow_images.upload_images', array());
 		
 			}
+			//Show Remote Image Link If Enabled
 			if ( $garage_config['enable_remote_images'] )
 			{
 	      			$template->assign_block_vars('allow_images.remote_images', array());
@@ -532,67 +540,67 @@ class garage_template
 	
 	/*========================================================================*/
 	// Builds The HTML For Editting Already Attached Images
-	// Usage: edit_image('image id', 'image name'),
+	// Usage: edit_image('modification'|'vehicle'|'quartermile'|'dynorun', 'image id', 'image name')
 	/*========================================================================*/
-	function edit_image($image_id, $image_name)
+	function edit_image($type, $image_id, $image_name)
 	{
-		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $garage;
+		global $template, $garage_config, $auth;
 	
+		//If No Premissions To Attach An Image Our Job Here Is Done ;)
 		if ( (!$auth->acl_get('u_garage_upload_image')) OR (!$auth->acl_get('u_garage_remote_image')) )
 		{
 			return ;
 		}
-	
-		if ( $garage_config['allow_mod_image'] ) 
+
+		//If Images For Mode Are Enabled Then Show Methods Enabled	
+		if ( $garage_config['enable_'.$type.'_images'] ) 
 		{
-	      		$template->assign_block_vars('allow_images', array());
+			//Setup Parent Template Block For Image Attachment
+			$template->assign_block_vars('allow_images', array());
+
+			//Define Image Limits
 			$template->assign_vars(array(
-				'L_IMAGE_ATTACHMENTS' => $lang['Image_Attachments'],
-				'L_IMAGE_ATTACH' => $lang['Image_Attach'],
-				'L_MAXIMUM_IMAGE_FILE_SIZE' => $lang['Maximum_Image_File_Size'],
-				'L_MAXIMUM_IMAGE_RESOLUTION' => $lang['Maximum_Image_Resolution'],
-				'L_REPLACE_WITH_NEW_IMAGE' => $lang['Replace_With_New_Image'],
-				'L_ENTER_IMAGE_URL' => $lang['Enter_Image_Url'],
-				'L_KEEP_CURRENT_IMAGE' => $lang['Enter_Image_Url'],
-				'L_REMOVE_IMAGE' => $lang['Remove_Image'],
-				'L_KEEP_CURRENT_IMAGE' => $lang['Keep_Current_Image'],
-				'L_REPLACE_WITH_NEW_IMAGE' => $lang['Replace_With_New_Image'],
-				'L_REPLACE_WITH_NEW_REMOTE_IMAGE' => $lang['Replace_With_New_Remote_Image'],
-				'L_ADD_NEW_IMAGE' => $lang['Add_New_Image'],
 				'MAXIMUM_IMAGE_FILE_SIZE' => $garage_config['max_image_kbytes'],
 				'MAXIMUM_IMAGE_RESOLUTION' => $garage_config['max_image_resolution'])
 			);
-			
+
 			if ( !empty($image_id) )
 			{
+				//Display Option To Keep Image
 	      			$template->assign_block_vars('allow_images.keep_image', array(
 					'CURRENT_IMAGE' => $image_name)
 				);
 	
+				//Display Option To Delete Image
 	      			$template->assign_block_vars('allow_images.remove_image', array(
 					'IMAGE_ID' => $image_id)
 				);
 				
-				if  ($garage_config['allow_image_upload'] )
+				//Show Upload Image Controls If Enabled
+				if  ($garage_config['enable_uploaded_images'] )
 				{
 	      				$template->assign_block_vars('allow_images.replace_image_upload', array());
 				}
-				if ( ($garage_config['allow_image_url'] ) AND (empty($image_id) == false))
+				//Show Remote Image Link If Enabled
+				if ( ($garage_config['enable_remote_images'] ) AND (empty($image_id) == FALSE))
 				{
 	      				$template->assign_block_vars('allow_images.replace_remote_image', array());
 				}
 			}
 			elseif (empty($image_id) )
 			{
-				if ( $garage_config['allow_image_upload'] )
+				//Show Upload Image Controls If Enabled
+				if ( $garage_config['enable_uploaded_images'] )
 				{
 	      				$template->assign_block_vars('allow_images.upload_images', array());
 				}
-				if ( ($garage_config['allow_image_url'] ) AND (empty($image_id) == true))
+				//Show Remote Image Link If Enabled
+				if ( $garage_config['enable_remote_images'] )
 				{
 	      				$template->assign_block_vars('allow_images.remote_images', array());
 				}
 			}
+
 		}
 		return;
 	}

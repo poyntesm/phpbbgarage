@@ -55,8 +55,8 @@
 ##			root/templates/subSilver/garage_quartermile.tpl
 ##			root/templates/subSilver/garage_quartermile_table.tpl
 ##			root/templates/subSilver/garage_reassign_business.tpl
-##			root/templates/subSilver/garage_rollingroad.tpl
-##			root/templates/subSilver/garage_rollingroad_table.tpl
+##			root/templates/subSilver/garage_dynorun.tpl
+##			root/templates/subSilver/garage_dynorun_table.tpl
 ##			root/templates/subSilver/garage_search.tpl
 ##			root/templates/subSilver/garage_user_submit.tpl
 ##			root/templates/subSilver/garage_user_submit_make.tpl
@@ -87,7 +87,7 @@
 ##			root/templates/subSilver/images/lang_english/garage_add_insurance.gif
 ##			root/templates/subSilver/images/lang_english/garage_add_modification.gif
 ##			root/templates/subSilver/images/lang_english/garage_add_quartermile.gif
-##			root/templates/subSilver/images/lang_english/garage_add_rollingroad.gif
+##			root/templates/subSilver/images/lang_english/garage_add_dynorun.gif
 ##			root/templates/subSilver/images/lang_english/garage_browse.gif
 ##			root/templates/subSilver/images/lang_english/garage_create_vehicle.gif
 ##			root/templates/subSilver/images/lang_english/garage_delete.gif
@@ -101,7 +101,7 @@
 ##			root/templates/subSilver/images/lang_english/garage_manage_gallery.gif
 ##			root/templates/subSilver/images/lang_english/garage_no_thumb.gif
 ##			root/templates/subSilver/images/lang_english/garage_quartermile_table.gif
-##			root/templates/subSilver/images/lang_english/garage_rollingroad_table.gif
+##			root/templates/subSilver/images/lang_english/garage_dynorun_table.gif
 ##			root/templates/subSilver/images/lang_english/garage_search.gif
 ##			root/templates/subSilver/images/lang_english/garage_shop_review.gif
 ##			root/templates/subSilver/images/lang_english/garage_view_vehicle.gif
@@ -565,7 +565,7 @@ $phpbb_root_path
 #
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
-		'U_PENDING' => ($auth->acl_get('m_garage') && $user->data['is_registered']) ? append_sid("{$phpbb_root_path}garage.$phpEx", "&mode=garage_pending", true, $user->session_id) : '',
+		'U_PENDING' => ($auth->acl_get('m_garage') && $user->data['is_registered']) ? append_sid("{$phpbb_root_path}garage.$phpEx", "&mode=pending", true, $user->session_id) : '',
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
 # 
@@ -585,7 +585,7 @@ includes/acp/acp_styles.php
 #-----[ AFTER, ADD ]------------------------------------------
 #
 			'garage'	=> array(
-				'garage_vehicle_img_attached', 'garage_slip_img_attached', 'garage_icon_garage', 'garage_main_menu', 'garage_browse', 'garage_search', 'garage_quartermile_table', 'garage_dynorun_table', 'garage_garage_review', 'garage_shop_review', 'garage_insurance_review', 'garage_create_vehicle', 'garage_edit_vehicle', 'garage_delete_vehicle', 'garage_view_vehicle', 'garage_add_modification', 'garage_add_insurance', 'garage_add_rollingroad', 'garage_add_quartermile', 'garage_manage_gallery', 'garage_edit', 'garage_delete', 'garage_main_vehicle', 'garage_no_thumb', 'garage_show_details', 'garage_hide_details', 'garage_move_up', 'garage_move_down', 'garage_set_approved', 'garage_set_pending',
+				'garage_vehicle_img_attached', 'garage_slip_img_attached', 'garage_icon_garage', 'garage_main_menu', 'garage_browse', 'garage_search', 'garage_quartermile_table', 'garage_dynorun_table', 'garage_garage_review', 'garage_shop_review', 'garage_insurance_review', 'garage_create_vehicle', 'garage_edit_vehicle', 'garage_delete_vehicle', 'garage_view_vehicle', 'garage_add_modification', 'garage_add_insurance', 'garage_add_dynorun', 'garage_add_quartermile', 'garage_manage_gallery', 'garage_edit', 'garage_delete', 'garage_main_vehicle', 'garage_no_thumb', 'garage_show_details', 'garage_hide_details', 'garage_move_up', 'garage_move_down', 'garage_set_approved', 'garage_set_pending',
 			),
 # 
 #-----[ OPEN ]----- 
@@ -735,7 +735,7 @@ img_garage_main_menu		= {LANG}/garage_main_menu.gif*33*130
 img_garage_browse		= {LANG}/garage_browse.gif*33*130
 img_garage_search		= {LANG}/garage_search.gif*33*130
 img_garage_quartermile_table	= {LANG}/garage_quartermile_table.gif*33*130
-img_garage_rollingroad_table	= {LANG}/garage_rollingroad_table.gif*33*130
+img_garage_dynorun_table	= {LANG}/garage_dynorun_table.gif*33*130
 img_garage_garage_review	= {LANG}/garage_garage_review.gif*33*130
 img_garage_shop_review		= {LANG}/garage_shop_review.gif*33*130
 img_garage_insurance_review	= {LANG}/garage_insurance_review.gif*33*130
@@ -745,17 +745,17 @@ img_garage_delete_vehicle	= {LANG}/garage_delete_vehicle.gif*33*130
 img_garage_view_vehicle		= {LANG}/garage_view_vehicle.gif*33*130
 img_garage_add_modification	= {LANG}/garage_add_modification.gif*33*130
 img_garage_add_insurance	= {LANG}/garage_add_insurance.gif*33*130
-img_garage_add_rollingroad	= {LANG}/garage_add_rollingroad.gif*33*130
+img_garage_add_dynorun		= {LANG}/garage_add_dynorun.gif*33*130
 img_garage_add_quartermile	= {LANG}/garage_add_quartermile.gif*33*130
 img_garage_manage_gallery	= {LANG}/garage_manage_gallery.gif*33*130
-img_garage_edit			= {LANG}/garage_edit.gif*21*34
-img_garage_delete		= {LANG}/garage_delete.gif*21*34
+img_garage_edit			= {LANG}/garage_edit.gif*16*16
+img_garage_delete		= {LANG}/garage_delete.gif*16*16
 img_garage_main_vehicle		= {LANG}/garage_main_vehicle.gif*33*130
 img_garage_no_thumb		= {LANG}/garage_no_thumb.gif*33*130
 img_garage_show_details		= {LANG}/garage_show_details.gif*21*34
 img_garage_hide_details		= {LANG}/garage_hide_details.gif*21*34
-img_garage_move_up		= {LANG}/garage_move_up.gif*21*34
-img_garage_move_down		= {LANG}/garage_move_down.gif*21*34
+img_garage_move_up		= {LANG}/garage_move_up.gif*16*16
+img_garage_move_down		= {LANG}/garage_move_down.gif*16*16
 img_garage_set_approved		= {LANG}/garage_set_approved.gif*21*34
 img_garage_set_pending		= {LANG}/garage_set_pending.gif*21*34
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------

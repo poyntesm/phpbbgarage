@@ -39,11 +39,11 @@ function confirm_delete_quartermile (car_id, qm_id)
 	}
 }
 
-function confirm_delete_rollingroad (car_id, rr_id)
+function confirm_delete_dynorun (car_id, rr_id)
 {
-	if ( confirm("{L_CONFIRM_DELETE_ROLLINGROAD}") )
+	if ( confirm("{L_CONFIRM_DELETE_DYNORUN}") )
 	{
-		window.location.href = "{U_DELETE_ROLLINGROAD}&RRID=" + rr_id + "&CID=" + car_id;
+		window.location.href = "{U_DELETE_DYNORUN}&RRID=" + rr_id + "&CID=" + car_id;
 	}
 }
 // -->
@@ -52,38 +52,39 @@ function confirm_delete_rollingroad (car_id, rr_id)
 			<!-- BEGIN switch_top_block -->
     			<table cellpadding="4" cellspacing="1" border="0" width="100%" class="tablebg">
      				<tr>
-      					<th height="25" colspan="2" class="thHead">{YEAR} {MAKE} {MODEL}</th>
+      					<th height="25" colspan="2">{YEAR} {MAKE} {MODEL}</th>
      				</tr>
-				<tr>
-      					<td class="catBottom" width="50%" colspan="2"></td>
-				</tr>
         			<tr>
             				<td class="row1" width="57%" valign="top">
                 				<table width="100%" cellpadding="4" cellspacing="1" border="0">
-		    					<!-- BEGIN owned_no -->
+		    					<!-- IF ! U_VIEW_VEHICLE -->
 		    					<tr>
    								<td class="row1"><span class="gen"><b>{L_OWNER}</b></span></td>
 		    					</tr>
                     					<tr>
-					                        <td align="center">{AVATAR_IMG}<br /><span class="gen">{PROFILE_LINK}</span></td>
+								<td align="center">{AVATAR_IMG}<br /><span class="gen"><a href="{U_PROFILE}">{USERNAME}</a></span></td>
 		   					</tr>
+							<!-- IF U_HILITE_IMAGE -->
 							<tr>
     								<td class="row1"><span class="gen"><b>{L_HILITE_IMAGE}</b></span></td>
 	           					</tr>
 							<tr>
-                        					<td align="center">{HILITE_IMAGE}<br /><span class="gensmall">{L_TOTAL_VIEWS}: {TOTAL_IMAGE_VIEWS}</span></td>
+                        					<td align="center"><a href="{U_HILITE_IMAGE}" title="{HILITE_IMAGE_TITLE}" target="_blank"><img hspace="5" vspace="5" src="{HILITE_IMAGE}" /></a><br /><span class="gensmall">{L_TOTAL_VIEWS}: {TOTAL_IMAGE_VIEWS}</span></td>
                     					</tr>
+							<!-- ENDIF -->
 			                                <tr>
 				                        	<td class="row1"><span class="gen"><b>{L_DESCRIPTION}</b></span></td>
                                    			</tr> 
 			                                <tr>
 				                        	<td align="center"><span class="gen">{DESCRIPTION}</span></td>
-                                   			</tr> 
+							</tr> 
+							<!-- ENDIF -->
+							<!-- IF U_MODERATE_VEHICLE -->
 							<tr>
-                        					<td align="center"><span class="gen">{MODERATE_VEHICLE}</span></td>
-                    					</tr>
-		    					<!-- END owned_no -->
-		    					<!-- BEGIN owned_yes -->
+								<td align="center"><span class="gen"><a href="{U_MODERATE_VEHICLE}">{MODERATE_VEHICLE}</a></span></td>
+							</tr>
+							<!-- ENDIF -->
+							<!-- IF U_VIEW_VEHICLE -->
                     					<tr>
     								<td class="row1"><span class="gen"><b>{L_MANAGE_VEHICLE_LINKS}</b><br /></span></td>
   		    					</tr>
@@ -100,11 +101,13 @@ function confirm_delete_rollingroad (car_id, rr_id)
 									<!-- IF U_MANAGE_VEHICLE_GALLERY --><a href="{U_MANAGE_VEHICLE_GALLERY}">{MANAGE_VEHICLE_GALLERY}</a>&nbsp;<!-- ENDIF -->
 									<!-- IF U_SET_MAIN_VEHICLE --><a href="{U_SET_MAIN_VEHICLE}">{SET_MAIN_VEHICLE}</a>&nbsp;<!-- ENDIF -->
 									<br />
-                    							{HILITE_IMAGE}
+									<!-- IF U_HILITE_IMAGE -->
+									<a href="{U_HILITE_IMAGE}" title="{HILITE_IMAGE_TITLE}" target="_blank"><img hspace="5" vspace="5" src="{HILITE_IMAGE}" /></a>
 									<br /></span><span class="gensmall">{L_TOTAL_VIEWS}: {TOTAL_IMAGE_VIEWS}</span>
+									<!-- ENDIF -->
                         					</td>
                     					</tr>
-							<!-- END owned_yes -->
+							<!-- ENDIF -->
                 				</table>
             				</td>
             				<td class="row1" width="43%" valign="top">
@@ -143,7 +146,7 @@ function confirm_delete_rollingroad (car_id, rr_id)
                         					<td><span class="gen">{TOTAL_VIEWS}</span></td>
                     					</tr>
             	    					<tr>
-                        					<td class="row1"  valign="top"><span class="gen"><b>{L_VEHICLE_RATING}</b></span></td>
+                        					<td class="row1" valign="top" nowrap="nowrap"><span class="gen"><b>{L_VEHICLE_RATING}</b></span></td>
                         					<td width="95%"><span class="gen">{RATING}</span></td>
                     					</tr>
 							<!-- BEGIN owned_no -->
@@ -194,7 +197,7 @@ function confirm_delete_rollingroad (car_id, rr_id)
 			<!-- BEGIN gallery_vehicle -->
     			<table width="100%" border="0" cellspacing="1" cellpadding="4" class="tablebg">
 				<tr>
-	      				<th height="25" colspan="7" class="thHead">{L_GALLERY}</th>
+	      				<th height="25" colspan="7" >{L_GALLERY}</th>
     				</tr>
    				<tr>
       					<td class="catBottom" width="100%"><span class="gen">{L_VEHICLE_PICTURES}</span></td>
@@ -207,7 +210,7 @@ function confirm_delete_rollingroad (car_id, rr_id)
 			<!-- BEGIN gallery_modification -->
     			<table width="100%" border="0" cellspacing="1" cellpadding="4" class="tablebg">
 				<tr>
-      					<th height="25" colspan="7" class="thHead">{L_GALLERY}</th>
+      					<th height="25" colspan="7" >{L_GALLERY}</th>
     				</tr>
 				<tr>
       					<td class="catBottom" width="100%"><span class="gen">{L_MODIFICATION_PICTURES} <i>({L_Showing} {SHOWING_MOD_IMAGES} {L_OF} {TOTAL_MOD_IMAGES} {L_IMAGES})</i></span></td>
@@ -224,20 +227,20 @@ function confirm_delete_rollingroad (car_id, rr_id)
 			<!-- BEGIN insurance -->
 			<table width="100%" cellpadding="1" cellspacing="1" border="0" class="tablebg">
 				<tr>
-	  				<th class="thTop" colspan="4">{L_INSURANCE_PREMIUMS}</th>
+	  				<th colspan="4">{L_INSURANCE_PREMIUMS}</th>
 				</tr>
 				<tr>
-	  				<td class="catBottom" ><span class="gen">{L_COMPANY}</span></td>
+	  				<td class="catBottom" ><span class="gen">{L_INSURANCE_COMPANY}</span></td>
 	  				<td class="catBottom" ><span class="gen">{L_PREMIUM}</span></td>
 	  				<td class="catBottom" ><span class="gen">{L_COVER_TYPE}</span></td>
-	  				<td class="catBottom" ><span class="gen"></span></td>
+	  				<!-- IF quartermile.run.U_DELETE or quartermile.run.U_EDIT--><td class="catBottom" ><span class="gen"></span></td><!-- ENDIF -->
 				</tr>
 				<!-- BEGIN premium -->
 				<tr>
 	  				<td class="row1" align="center"><span class="gensmall">{insurance.premium.COMPANY}</span></td>
 	  				<td class="row1" align="center"><span class="gensmall">{insurance.premium.PREMIUM}</span></td>
 					<td class="row1" align="center"><span class="gensmall">{insurance.premium.COVER_TYPE}</span></td>
-					<td class="row1" align="right"><span class="gensmall">{insurance.premium.EDIT_LINK} {insurance.premium.DELETE_LINK}</span></td>
+					<!-- IF insurance.premium.U_DELETE or insurance.premium.U_EDIT--><td class="row1" align="right"><span class="gensmall"><!-- ENDIF --><!-- IF insurance.premium.U_EDIT --><a href="{insurance.premium.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF insurance.premium.U_DELETE--><a href="{insurance.premium.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td>
 				</tr>
 				<!-- END premium -->
 			</table>
@@ -246,23 +249,23 @@ function confirm_delete_rollingroad (car_id, rr_id)
 			<!-- BEGIN quartermile -->
 			<table width="100%" cellpadding="1" cellspacing="1" border="0" class="tablebg">
 				<tr>
-	  				<th class="thTop" colspan="10">{L_QUARTER_MILE_TIMES}</th>
+	  				<th colspan="10">{L_QUARTER_MILE_TIMES}</th>
 				</tr>
 				<tr>
 	  				<td class="catBottom" ></th>
 	  				<td class="catBottom" ><span class="gen">{L_RT}</span></td>
 					<td class="catBottom" ><span class="gen">{L_SIXTY}</span></td>
 					<td class="catBottom" ><span class="gen">{L_THREE}</span></td>
-					<td class="catBottom" ><span class="gen">{L_EIGTH}</span></td>
-					<td class="catBottom" ><span class="gen">{L_EIGTHMPH}</span></td>
+					<td class="catBottom" ><span class="gen">{L_EIGHTH}</span></td>
+					<td class="catBottom" ><span class="gen">{L_EIGHTHMPH}</span></td>
 					<td class="catBottom" ><span class="gen">{L_THOU}</span></td>
 					<td class="catBottom" ><span class="gen">{L_QUART}</span></td>
 					<td class="catBottom" ><span class="gen">{L_QUARTMPH}</span></td>
-					<td class="catBottom" ><span class="gen"></td>
+					<!-- IF quartermile.run.U_DELETE or quartermile.run.U_EDIT--><td class="catBottom" ><span class="gen"></td><!-- ENDIF -->
 				</tr>
 				<!-- BEGIN run -->
 				<tr>
-	  				<td class="row1" align="center"><span class="gensmall">{quartermile.run.SLIP_IMAGE}</span></td>
+	  				<td class="row1" align="center"><span class="gensmall"><!-- IF quartermile.run.U_IMAGE --><a href="{quartermile.run.U_IMAGE}" target="_blank">{quartermile.run.IMAGE}</a><!-- ENDIF --></span></td>
 		  			<td class="row1" align="center"><span class="gensmall">{quartermile.run.RT}</span></td>
 		  			<td class="row1" align="center"><span class="gensmall">{quartermile.run.SIXTY}</span></td>
 					<td class="row1" align="center"><span class="gensmall">{quartermile.run.THREE}</span></td>
@@ -271,13 +274,13 @@ function confirm_delete_rollingroad (car_id, rr_id)
 					<td class="row1" align="center"><span class="gensmall">{quartermile.run.THOU}</span></td>
 					<td class="row1" align="center"><span class="gensmall">{quartermile.run.QUART}</span></td>
 					<td class="row1" align="center"><span class="gensmall">{quartermile.run.QUARTMPH}</span></td>
-					<td class="row1" align="right"><span class="gensmall">{quartermile.run.EDIT_LINK} {quartermile.run.DELETE_LINK}</span></td>
+					<!-- IF quartermile.run.U_DELETE or quartermile.run.U_EDIT--><td class="row1" align="right"><span class="gensmall"><!-- ENDIF --><!-- IF quartermile.run.U_EDIT --><a href="{quartermile.run.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF quartermile.run.U_DELETE--><a href="{quartermile.run.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td>
 				</tr>
 				<!-- END run -->
 			</table>
 			<br />
 			<!-- END quartermile -->
-			<!-- BEGIN rollingroad -->
+			<!-- BEGIN dynorun -->
 			<table width="100%" cellpadding="1" cellspacing="1" border="0" class="tablebg">
 				<tr>
 					<th class="thTop" colspan="11">{L_ROLLING_ROAD_RUNS}</th>
@@ -293,26 +296,27 @@ function confirm_delete_rollingroad (car_id, rr_id)
 					<td class="catBottom" ><span class="gen">{L_BOOST_UNIT}</span></td>
 					<td class="catBottom" ><span class="gen">{L_NITROUS}</span></td>
 					<td class="catBottom" ><span class="gen">{L_PEAKPOINT}</span></td>
-					<td class="catBottom" ></td>
+					<!-- IF dynorun.run.U_DELETE or dynorun.run.U_EDIT--><td class="catBottom" ></td><!-- ENDIF -->
+
 				</tr>
 				<!-- BEGIN run -->
 				<tr>
-	  				<td class="row1" align="center"><span class="gensmall">{rollingroad.run.SLIP_IMAGE}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{rollingroad.run.DYNOCENTER}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{rollingroad.run.BHP}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{rollingroad.run.BHP_UNIT}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{rollingroad.run.TORQUE}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{rollingroad.run.TORQUE_UNIT}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{rollingroad.run.BOOST}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{rollingroad.run.BOOST_UNIT}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{rollingroad.run.NITROUS}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{rollingroad.run.PEAKPOINT}</span></td>
-					<td class="row1" align="right"><span class="gensmall">{rollingroad.run.EDIT_LINK} {rollingroad.run.DELETE_LINK}</span></td>
+	  				<td class="row1" align="center"><span class="gensmall"><!-- IF dynorun.run.U_IMAGE --><a href="{dynorun.run.U_IMAGE}" target="_blank">{dynorun.run.IMAGE}</a><!-- ENDIF --></span></td>
+					<td class="row1" align="center"><span class="gensmall">{dynorun.run.DYNOCENTER}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{dynorun.run.BHP}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{dynorun.run.BHP_UNIT}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{dynorun.run.TORQUE}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{dynorun.run.TORQUE_UNIT}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{dynorun.run.BOOST}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{dynorun.run.BOOST_UNIT}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{dynorun.run.NITROUS}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{dynorun.run.PEAKPOINT}</span></td>
+					<!-- IF dynorun.run.U_DELETE or dynorun.run.U_EDIT--><td class="row1" align="right"><span class="gensmall"><!-- ENDIF --><!-- IF dynorun.run.U_EDIT --><a href="{dynorun.run.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF dynorun.run.U_DELETE--><a href="{dynorun.run.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td>
 				</tr>
 				<!-- END run -->
 			</table>
 			<br />
-			<!-- END rollingroad -->
+			<!-- END dynorun -->
 			<!-- BEGIN cat_row -->
  			<table width="100%" cellpadding="1" cellspacing="1" border="0" class="tablebg">
    				<tr>
@@ -326,7 +330,7 @@ function confirm_delete_rollingroad (car_id, rr_id)
 					<td class="catBottom" ><span class="gen">{L_INSTALL}</span></td>
 					<td class="catBottom" nowrap><span class="gen">{L_CREATED}</span></td>
 					<td class="catBottom" nowrap><span class="gen">{L_UPDATED}</span></td>
-					<td class="catBottom" ></td>
+					<!-- IF cat_row.user_row.U_DELETE or cat_row.user_row.U_EDIT--><td class="catBottom" ></td><!-- ENDIF -->
 				</tr>
 				<!-- BEGIN user_row -->
    				<tr>
@@ -337,7 +341,7 @@ function confirm_delete_rollingroad (car_id, rr_id)
 					<td class="row1" align="center"><span class="gensmall">{cat_row.user_row.INSTALL}</span></td>
 					<td class="row1" nowrap><span class="gensmall">{cat_row.user_row.CREATED}</span></td>
 					<td class="row1" nowrap><span class="gensmall">{cat_row.user_row.UPDATED}</span></td>
-					<td class="row1" align="right"><span class="gensmall">{cat_row.user_row.EDIT_MOD_LINK} {cat_row.user_row.DELETE_MOD_LINK}</span></td>
+					<!-- IF cat_row.user_row.U_DELETE or cat_row.user_row.U_EDIT--><td class="row1" align="right"><span class="gensmall"><!-- ENDIF --><!-- IF cat_row.user_row.U_EDIT --><a href="{cat_row.user_row.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF cat_row.user_row.U_DELETE--><a href="{cat_row.user_row.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td>
 				</tr>
   				<!-- END user_row -->
  			</table>

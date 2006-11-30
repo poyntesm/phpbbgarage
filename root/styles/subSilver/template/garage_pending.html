@@ -12,10 +12,10 @@
 				<tr>
 				<tr>
 					<td class="row1">
-					<!-- BEGIN rollingroad_pending -->
+					<!-- BEGIN dynorun_pending -->
 					<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
 						<tr>
-      							<th colspan="14">{L_ROLLINGROAD_PENDING}</th>
+      							<th colspan="14">{L_DYNORUNS_PENDING}</th>
 						</tr>
 						<tr>
 							<td class="catBottom">&nbsp;</td>
@@ -34,25 +34,25 @@
 						  	<td class="catBottom" ></td>
 						</tr>
 						<!-- BEGIN row -->
-<!-- IF rollingroad_pending.row.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-							<td><input type="checkbox" name="rr_id[]" value="{rollingroad_pending.row.RRID}" /></td>
-						  	<td align="center"><span class="gen">{rollingroad_pending.row.IMAGE_LINK}</span></td>
-						  	<td align="center"><span class="gen"><a href="{rollingroad_pending.row.U_VIEWPROFILE}" class="gen">{rollingroad_pending.row.USERNAME}</a></span></td>
-						  	<td align="center"><span class="gen"><a href="{rollingroad_pending.row.U_VIEWVEHICLE}" class="gen">{rollingroad_pending.row.VEHICLE}</a></span></td>
-							<td><span class="gen">{rollingroad_pending.row.DYNOCENTER}</span></td>
-							<td><span class="gen">{rollingroad_pending.row.BHP}</span></td>
-							<td><span class="gen">{rollingroad_pending.row.BHP_UNIT}</span></td>
-							<td><span class="gen">{rollingroad_pending.row.TORQUE}</span></td>
-							<td><span class="gen">{rollingroad_pending.row.TORQUE_UNIT}</span></td>
-							<td><span class="gen">{rollingroad_pending.row.BOOST}</span></td>
-							<td><span class="gen">{rollingroad_pending.row.BOOST_UNIT}</span></td>
-							<td><span class="gen">{rollingroad_pending.row.NITROUS}</span></td>
-							<td><span class="gen">{rollingroad_pending.row.PEAKPOINT}</span></td>
-							<td><span class="gen">{rollingroad_pending.row.EDIT_LINK}</span></td>
+<!-- IF dynorun_pending.row.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+							<td><input type="checkbox" name="rr_id[]" value="{dynorun_pending.row.RRID}" /></td>
+						  	<td align="center"><span class="gen"><!-- IF dynorun_pending.row.U_IMAGE --><a href="{dynorun_pending.row.U_IMAGE}" target="_blank">{dynorun_pending.row.IMAGE}</a><!-- ENDIF --></span></td>
+						  	<td align="center"><span class="gen"><a href="{dynorun_pending.row.U_VIEWPROFILE}" class="gen">{dynorun_pending.row.USERNAME}</a></span></td>
+						  	<td align="center"><span class="gen"><a href="{dynorun_pending.row.U_VIEWVEHICLE}" class="gen">{dynorun_pending.row.VEHICLE}</a></span></td>
+							<td><span class="gen">{dynorun_pending.row.DYNOCENTER}</span></td>
+							<td><span class="gen">{dynorun_pending.row.BHP}</span></td>
+							<td><span class="gen">{dynorun_pending.row.BHP_UNIT}</span></td>
+							<td><span class="gen">{dynorun_pending.row.TORQUE}</span></td>
+							<td><span class="gen">{dynorun_pending.row.TORQUE_UNIT}</span></td>
+							<td><span class="gen">{dynorun_pending.row.BOOST}</span></td>
+							<td><span class="gen">{dynorun_pending.row.BOOST_UNIT}</span></td>
+							<td><span class="gen">{dynorun_pending.row.NITROUS}</span></td>
+							<td><span class="gen">{dynorun_pending.row.PEAKPOINT}</span></td>
+							<td><span class="gen"><a href="{dynorun_pending.row.U_EDIT}">{EDIT}</a></span></td>
 						</tr>
 						<!-- END row -->
 					</table>
-					<!-- END rollingroad_pending -->
+					<!-- END dynorun_pending -->
 					</br>
 
 					<!-- BEGIN quartermile_pending -->
@@ -78,7 +78,7 @@
 						<!-- BEGIN row -->
 <!-- IF quartermile_pending.row.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
 							<td class="{quartermile_pending.row.ROW_CLASS}" ><input type="checkbox" name="qm_id[]" value="{quartermile_pending.row.QMID}" /></td>
-			  				<td class="{quartermile_pending.row.ROW_CLASS}" align="center"><span class="gen">{quartermile_pending.row.IMAGE_LINK}</span></td>
+			  				<td class="{quartermile_pending.row.ROW_CLASS}" align="center"><span class="gen"><!-- IF quartermile_pending.row.U_IMAGE --><a href="{quartermile_pending.row.U_IMAGE}" target="_blank">{quartermile_pending.row.IMAGE}</a><!-- ENDIF --></span></td>
 			  				<td class="{quartermile_pending.row.ROW_CLASS}" align="center"><span class="gen"><a href="{quartermile_pending.row.U_VIEWPROFILE}" class="gen">{quartermile_pending.row.USERNAME}</a></span></td>
 	  						<td class="{quartermile_pending.row.ROW_CLASS}" align="center"><span class="gen"><a href="{quartermile_pending.row.U_VIEWVEHICLE}" class="gen">{quartermile_pending.row.VEHICLE}</a></span></td>
 							<td class="{quartermile_pending.row.ROW_CLASS}"><span class="gen">{quartermile_pending.row.RT}</span></td>
@@ -89,7 +89,7 @@
 							<td class="{quartermile_pending.row.ROW_CLASS}"><span class="gen">{quartermile_pending.row.THOU}</span></td>
 							<td class="{quartermile_pending.row.ROW_CLASS}"><span class="gen">{quartermile_pending.row.QUART}</span></td>
 							<td class="{quartermile_pending.row.ROW_CLASS}"><span class="gen">{quartermile_pending.row.QUARTM}</span></td>
-							<td class="{quartermile_pending.row.ROW_CLASS}"><span class="gen">{quartermile_pending.row.EDIT_LINK}</span></td>
+							<td class="{quartermile_pending.row.ROW_CLASS}"><span class="gen"><a href="{quartermile_pending.row.U_EDIT}">{EDIT}</a></span></td>
 						</tr>
 						<!-- END row -->
 					</table>
@@ -124,7 +124,7 @@
 							<td class="{business_pending.row.ROW_CLASS}"><span class="gen">{business_pending.row.EMAIL}</span></td>
 							<td class="{business_pending.row.ROW_CLASS}"><span class="gen">{business_pending.row.OPENING_HOURS}</span></td>
 							<td class="{business_pending.row.ROW_CLASS}"><span class="gen">{business_pending.row.TYPE}</span></td>
-							<td class="{business_pending.row.ROW_CLASS}"><span class="gen">{business_pending.row.EDIT_LINK}</span></td>
+							<td class="{business_pending.row.ROW_CLASS}"><span class="gen"><a href="{business_pending.row.U_EDIT}">{EDIT}</a></span></td>
 						</tr>
 						<!-- END row -->
 					</table>

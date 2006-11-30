@@ -40,7 +40,7 @@ class garage_modification
 		$sql = "INSERT INTO ". GARAGE_MODS_TABLE ."
 			(garage_id, user_id, category_id, title, price, install_price, install_rating, product_rating, comments, date_created, date_updated, business_id, install_business_id, install_comments, purchase_rating)
 			VALUES
-			($cid, ".$garage_vehicle->get_vehicle_owner($cid).", ".$data['category_id'].", '".$data['title']."', '".$data['price']."', '".$data['install_price']."', '".$data['install_rating']."', '".$data['product_rating']."', '".$data['comments']."', '".$time()."', '".time()."', '".$data['business_id']."', '".$data['install_business_id']."', '".$data['install_comments']."', '".$data['purchase_rating']."')";
+			($cid, ".$garage_vehicle->get_vehicle_owner_id($cid).", ".$data['category_id'].", '".$data['title']."', '".$data['price']."', '".$data['install_price']."', '".$data['install_rating']."', '".$data['product_rating']."', '".$data['comments']."', '".time()."', '".time()."', '".$data['business_id']."', '".$data['install_business_id']."', '".$data['install_comments']."', '".$data['purchase_rating']."')";
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -296,7 +296,7 @@ class garage_modification
 	{
 		global $db;
 	
-		$sql = "SELECT mods.*, g.made_year, g.id, g.currency, images.*, user.username, user.user_avatar_type, user.user_allowavatar, user.user_avatar, images.attach_ext, images.attach_id, images.attach_file, cats.title as category_title, makes.make, models.model, bus.title as business_name, ins.title as install_business_name, ins.id as install_business_id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
+		$sql = "SELECT mods.*, g.made_year, g.id, g.currency, images.*, user.username, user.user_avatar_type, user.user_avatar, images.attach_ext, images.attach_id, images.attach_file, cats.title as category_title, makes.make, models.model, bus.title as business_name, ins.title as install_business_name, ins.id as install_business_id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
      			FROM (" . GARAGE_MODS_TABLE . " AS mods, " . GARAGE_TABLE . " AS g)
 				LEFT JOIN " . USERS_TABLE ." AS user ON g.user_id = user.user_id
 				LEFT JOIN " . GARAGE_CATEGORIES_TABLE . " AS cats ON cats.id = mods.category_id

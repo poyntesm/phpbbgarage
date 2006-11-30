@@ -36,7 +36,7 @@ class garage_dynorun
 	{
 		global $cid, $db, $garage_config;
 
-		$pending = ($garage_config['enable_rollingroad_approval'] == '1') ? 1 : 0;
+		$pending = ($garage_config['enable_dynorun_approval'] == '1') ? 1 : 0;
 
 		$sql = "INSERT INTO ". GARAGE_DYNORUN_TABLE ."
 			(
@@ -100,7 +100,7 @@ class garage_dynorun
 				boost_unit = '" . $data['boost_unit'] . "',
 				nitrous = '" . $data['nitrous'] . "',
 				peakpoint = '" . $data['peakpoint'] . "',
-				pending = '" . ($garage_config['enable_rollingroad_approval'] == '1') ? 1 : 0 . "',
+				pending = '" . ($garage_config['enable_dynorun_approval'] == '1') ? 1 : 0 . "',
 			       	date_updated = '".time()."'
 			WHERE id = '$rrid' 
 				AND garage_id = '$cid'";
@@ -115,9 +115,9 @@ class garage_dynorun
 
 	/*========================================================================*/
 	// Returns Count Of Dynoruns Performed By Vehicle
-	// Usage: count_dynoruns('garage id');
+	// Usage: count_runs('garage id');
 	/*========================================================================*/
-	function count_dynoruns($cid)
+	function count_runs($cid)
 	{
 		global $db;
 
@@ -311,7 +311,7 @@ class garage_dynorun
 
 	/*========================================================================*/
 	// Select Dynorun(s) Data By Vehicle From DB
-	// Usage: get_dynoruns_by_vehicle('vehicle id');
+	// Usage: get_top_dynoruns('vehicle id');
 	/*========================================================================*/
 	function get_top_dynoruns($pending, $sort, $order, $start = 0, $limit = 30, $addtional_where = NULL)
 	{
@@ -360,9 +360,9 @@ class garage_dynorun
 
 		$sql = "SELECT  d.*, 
 				i.*
-         		FROM " . GARAGE_DYNORUN_TABLE . " d, " . GARAGE_IMAGES_TABLE . " i
+         		FROM " . GARAGE_DYNORUN_TABLE . " d
+				LEFT JOIN " . GARAGE_IMAGES_TABLE ." i ON d.image_id = i.attach_id
 			WHERE d.garage_id = $cid
-				AND i.attach_id = d.image_id
 			ORDER BY d.id";
 
 		if( !($result = $db->sql_query($sql)) )
@@ -390,7 +390,7 @@ class garage_dynorun
 	/*========================================================================*/
 	function build_dynorun_table($pending)
 	{
-		global $db, $template, $images, $start, $sort, $order, $phpEx, $garage_config, $theme, $garage_model;
+		global $db, $template, $images, $start, $sort, $order, $phpEx, $garage_config, $theme, $garage_model, $user, $garage, $garage_template;
 
 		$pending= ($pending == 'YES') ? 1 : 0;
 		$start 	= (empty($start)) ? 0 : $start;
@@ -425,33 +425,29 @@ class garage_dynorun
 			);
 		}
 
-		if ($pending == 1)
-		{
-			$template->assign_block_vars('rollingroad_pending', array());
-		}
-
 		//First Query To Return Top Time For All Or For Selected Filter...
 		$rows = $this->get_top_dynoruns($pending, $sort, $order, $start, $garage_config['cars_per_page'], $addtional_where);
+
+		if ($pending == 1 AND !empty($rows))
+		{
+			$template->assign_block_vars('dynorun_pending', array());
+		}
+
 		//Now Process All Rows Returned And Get Rest Of Required Data	
 		for($i = 0; $i < count($rows); $i++)
 		{
 			//Second Query To Return All Other Data For Top Quartermile Run
 			$full_row = $this->get_dynorun_by_vehicle_bhp($rows[$i]['garage_id'], $rows[$i]['bhp']);
 
-			$full_row['image_link'] ='';
-			if ($full_row['image_id'])
-			{
-				$full_row['image_link'] ='<a href="garage.' . $phpEx . '?mode=view_gallery_item&amp;image_id='. $full_row['image_id'] . '" target="_blank"><img src="' . $images['slip_image_attached'] . '" alt="' . $lang['Slip_Image_Attached'] . '" title="' . $lang['Slip_Image_Attached'] . '" border="0" /></a>';
-			}
-
-			$assign_block = ($pending == 1) ? 'rollingroad_pending.row' : 'memberrow';
+			$assign_block = ($pending == 1) ? 'dynorun_pending.row' : 'dynorun';
 			$template->assign_block_vars($assign_block, array(
 				'U_VIEWVEHICLE'	=> append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=" . $full_row['id']),
-				'U_VIEWPROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . "=" . $data['user_id']),
-				'U_EDIT_DYNORUN'=> append_sid("garage.$phpEx", "mode=edit_dynorun&amp;RRID=" . $full_row['rr_id'] . "&amp;CID=" . $full_row['id'] . "&amp;PENDING=YES"),
+				'U_VIEWPROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;u=" . $full_row['user_id']),
+				'U_EDIT'	=> append_sid("garage.$phpEx", "mode=edit_dynorun&amp;RRID=" . $full_row['rr_id'] . "&amp;CID=" . $full_row['id'] . "&amp;PENDING=YES"),
+				'U_IMAGE'	=> ($full_row['image_id']) ? append_sid("garage.$phpEx", "mode=view_gallery_item&amp;image_id=". $full_row['image_id']) : '',
+				'IMAGE'		=> $user->img('garage_slip_img_attached', 'SLIP_IMAGE_ATTACHED'),
 				'ROW_NUMBER' 	=> $i + ( $start + 1 ),
 				'RRID' 		=> $full_row['rr_id'],
-				'IMAGE_LINK' 	=> $full_row['image_link'],
 				'USERNAME' 	=> $full_row['username'],
 				'VEHICLE' 	=> $full_row['vehicle'],
 				'DYNOCENTER' 	=> $full_row['dynocenter'],
@@ -462,8 +458,7 @@ class garage_dynorun
 				'BOOST' 	=> $full_row['boost'],
 				'BOOST_UNIT' 	=> $full_row['boost_unit'],
 				'NITROUS' 	=> $full_row['nitrous'],
-				'PEAKPOINT' 	=> $full_row['peakpoint'],
-				'EDIT_LINK' 	=> ($garage_config['enable_images']) ? $user->img('garage_edit', 'EDIT') : $user->lang['EDIT'])
+				'PEAKPOINT' 	=> $full_row['peakpoint'])
 			);
 			$i++;
 		}
@@ -473,13 +468,14 @@ class garage_dynorun
 		$pagination = generate_pagination("garage.$phpEx?mode=dynorun&amp;order=$order", $count, $garage_config['cars_per_page'], $start);
 		
 		$template->assign_vars(array(
+            		'EDIT' 		=> ($garage_config['enable_images']) ? $user->img('garage_edit', 'EDIT') : $user->lang['EDIT'],
 			'S_MODE_SELECT'	=> $garage_template->dropdown('sort', $sort_types_text, $sort_types, $sort),
 			'S_DISPLAY_PENDING' => $pending,
 			'PAGINATION' 	=> $pagination,
 			'PAGE_NUMBER' 	=> sprintf($user->lang['PAGE_OF'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count / $garage_config['cars_per_page'] )))
 		);
 
-		return $count['total'];
+		return $count;
 	}
 }
 

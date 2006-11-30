@@ -9,10 +9,6 @@
      				<tr>
       					<th height="25" colspan="2" class="thHead">{YEAR} {MAKE} {MODEL}</th>
      				</tr>
-				<tr>
-      					<td class="catBottom" width="50%"><span class="gen"></span></td>
-      					<td class="catBottom" width="50%"><span class="gen"></span></td>
-				</tr>
         			<tr>
             				<td class="row1" width="40%" valign="top">
                 				<table width="100%" cellpadding="4" cellspacing="1" border="0">
@@ -20,8 +16,18 @@
     								<td class="row1"><span class="gen"><b>{L_OWNER}</b></span></td>
 							</tr>
                     					<tr>
-	                        				<td align="center">{AVATAR_IMG}<br /><span class="normalname"><a href="{U_VIEW_PROFILE}">{USERNAME}</a></span><br />{MODIFICATION_IMAGE}</td>
-                    					</tr>
+								<td align="center">{AVATAR_IMG}<br /><span class="normalname"><a href="{U_VIEW_PROFILE}">{USERNAME}</a></span></td>
+								</td>
+							</tr>
+							<!-- IF U_MODIFICATION_IMAGE -->
+                    					<tr>
+    								<td class="row1"><span class="gen"><b>{L_IMAGE}</b></span></td>
+							</tr>
+                    					<tr>
+								<td align="center"><a href="{U_MODIFICATION_IMAGE}" title="{MODIFICATION_IMAGE_TITLE}" target="_blank"><img valign="bottom" hspace="5" vspace="5" src="{MODIFICATION_IMAGE}" /></a></td>
+							</tr>
+							<!-- ENDIF -->
+
                 				</table>
             				</td>
             				<td class="row1" valign="top">

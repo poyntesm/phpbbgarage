@@ -279,21 +279,23 @@ class garage_model
 			message_die(GENERAL_ERROR, 'Could Not Select Makes', '', __LINE__, __FILE__, $sql);
 		}
 
-		$count = $db->sql_numrows($result);
+		$rows = NULL;
+		while ( $row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
 
-		if ( $count >= 1 )
+		if ( sizeof($rows) >= 1 )
 		{
 			$template->assign_block_vars('make_pending', array());
 		}
 
-		$i = 1;
-		while ( $row = $db->sql_fetchrow($result) )
+		for ($i = 0, $count = sizeof($rows); $i < $count; $i++)
 		{
 			$template->assign_block_vars('make_pending.row', array(
-				'MAKE_ID' 	=> $row['id'],
-				'MAKE' 		=> $row['make'])
+				'MAKE_ID' 	=> $rows[$i]['id'],
+				'MAKE' 		=> $rows[$i]['make'])
 			);
-			$i++;
 		}
 		$db->sql_freeresult($result);
 
@@ -319,20 +321,23 @@ class garage_model
 			message_die(GENERAL_ERROR, 'Could not query users', '', __LINE__, __FILE__, $sql);
 		}
 
-		$count = $db->sql_numrows($result);
+		$rows = NULL;
+		while ( $row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
 
-		if ( $count >= 1 )
+		if ( sizeof($rows) >= 1 )
 		{
 			$template->assign_block_vars('model_pending', array());
 		}
 
-		$i = 1;
-		while ( $row = $db->sql_fetchrow($result) )
+		for ($i = 0, $count = sizeof($rows); $i < $count; $i++)
 		{
 			$template->assign_block_vars('model_pending.row', array(
-				'MODEL_ID'	=> $row['id'],
-				'MAKE' 		=> $row['make'],
-				'MODEL' 	=> $row['model'])
+				'MODEL_ID'	=> $rows[$i]['id'],
+				'MAKE' 		=> $rows[$i]['make'],
+				'MODEL' 	=> $rows[$i]['model'])
 			);
 			$i++;
 		}
