@@ -45,19 +45,19 @@ class garage_vehicle
 		else
 		{
 			//Get All Group Memberships
-			$groupdata = $garage->get_group_membership($user->data['user_id']);
+			$groups = group_memberships(false, array($user->data['user_id']), false);
 			
 			//Lets Get The Private Upload Groups & Quotas
 			$private_add_groups = @explode(',', $garage_config['private_add_perms']);
 			$private_add_quotas = @explode(',', $garage_config['private_add_quota']);
 
 			//Process All Groups You Are Member Of To See If Any Are Granted Permission & Quota
-			for ($i = 0; $i < count($groupdata); $i++)
+			for ($i = 0; $i < count($groups); $i++)
 			{
-				if (in_array($groupdata[$i]['group_id'], $private_add_groups))
+				if (in_array($groups[$i]['group_id'], $private_add_groups))
 				{
 					//Your A Member Of A Group Granted Permission - Find Array Key
-					$index = array_search($groupdata[$i]['group_id'], $private_add_groups);
+					$index = array_search($groups[$i]['group_id'], $private_add_groups);
 					//So Your Quota For This Group Is...
 					$quota[$i] = $private_add_quotas[$index];
 				}

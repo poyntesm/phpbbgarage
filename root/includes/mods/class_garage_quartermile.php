@@ -82,7 +82,7 @@ class garage_quartermile
 			'quartmph'	=> $data['quartmph'],
 			'date_updated'	=> time(),
 			'rr_id'		=> $data['rr_id'],
-			'pending'	=> ($garage_config['enable_quartermile_approval'] == '1') ? 1 : 0)
+			'pending'	=> ($garage_config['enable_quartermile_approval'] == '1') ? 1 : 0
 		);
 
 		$sql = 'UPDATE ' . GARAGE_QUARTERMILE_TABLE . '
@@ -246,7 +246,7 @@ class garage_quartermile
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'q.*, d.id, d.bhp, d.bhp_unit, i.*, g.made_year, mk.make, md.model, CONCAT_WS(' ', g.made_year, mk.make, md.model) AS vehicle',
+			'SELECT'	=> 'q.*, d.id, d.bhp, d.bhp_unit, i.*, g.made_year, mk.make, md.model, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
 			'FROM'		=> array(
 				GARAGE_QUARTERMILE_TABLE	=> 'q',
 			),
@@ -306,7 +306,8 @@ class garage_quartermile
 					'ON'	=> 'i.attach_id = q.image_id'
 				)
 			),
-			'WHERE'		=>  "q.garage_id = $cid"
+			'WHERE'		=> 	"q.garage_id = $cid",
+			'ORDER_BY'	=>	'q.id'
 		));
 	
 	       	if( !($result = $db->sql_query($sql)) )

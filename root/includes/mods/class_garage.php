@@ -104,8 +104,13 @@ class garage
 	{
 		global $db;
 
-		$sql = "SELECT SUM(views) AS total_views 
-			FROM " . GARAGE_TABLE;
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'SUM(g.views) as total_views',
+			'FROM'		=> array(
+				GARAGE_TABLE	=> 'g',
+			)
+		));
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -128,8 +133,12 @@ class garage
 	{
 		global $db;
 
-		$sql = "UPDATE $table 
-			SET $set_field = '$set_value' 
+		$update_sql = array(
+			$set_field	=> $set_value
+		);
+
+		$sql = 'UPDATE ' . $table . '
+			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
 			WHERE $where_field = '$where_value'";
 
 		if( !$result = $db->sql_query($sql) )
@@ -181,39 +190,6 @@ class garage
 	}
 
 	/*========================================================================*/
-	// Get All Groups User Is Member Of
-	// Usage: get_group_membership('user id');
-	/*========================================================================*/
-	function get_group_membership($user_id)
-	{
-		global $db ;
-
-		$sql = "SELECT ug.group_id, g.group_name
-	             	FROM " . USER_GROUP_TABLE . " ug, " . GROUPS_TABLE ." g
-                	WHERE ug.user_id = $user_id
-				AND ug.group_id = g.group_id AND g.group_single_user <> " . TRUE ."
-			ORDER BY g.group_name ASC";
-
-       		if( !($result = $db->sql_query($sql)) )
-       		{
-         		message_die(GENERAL_ERROR, 'Could Not Select Groups', '', __LINE__, __FILE__, $sql);
-       		}
-
-		while( $row = $db->sql_fetchrow($result) )
-		{
-			$groupdata[] = $row;
-		}
-		$db->sql_freeresult($result);
-
-		if (empty($groupdata))
-		{
-			return;
-		}
-	
-		return $groupdata;
-	}
-
-	/*========================================================================*/
 	// Select All Category Data
 	// Usage: get_categorys();
 	/*========================================================================*/
@@ -221,9 +197,14 @@ class garage
 	{
 		global $db;
 
-		$sql = "SELECT *
-			FROM " . GARAGE_CATEGORIES_TABLE . "
-			ORDER BY field_order";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'c.id, c.title, c.field_order',
+			'FROM'		=> array(
+				GARAGE_CATEGORIES_TABLE	=> 'c',
+			),
+			'ORDER_BY'	=> 'c.field_order'
+		));
 
       		if ( !($result = $db->sql_query($sql)) )
       		{
@@ -252,10 +233,15 @@ class garage
 	{
 		global $db;
 
-		$sql = "SELECT id, title, field_order
-			FROM " . GARAGE_CATEGORIES_TABLE . "
-			WHERE id = $category_id
-			ORDER BY field_order";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'c.id, c.title, c.field_order',
+			'FROM'		=> array(
+				GARAGE_CATEGORIES_TABLE	=> 'c',
+			),
+			'WHERE'		=> "c.id = $category_id",
+			'ORDER_BY'	=> 'c.field_order'
+		));
 
       		if ( !($result = $db->sql_query($sql)) )
       		{

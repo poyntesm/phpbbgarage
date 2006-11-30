@@ -91,7 +91,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ( $user->data['user_id'] == ANONYMOUS )
 		{
-			redirect(append_sid("{$phpbb_root_path}login.$phpEx", "redirect=garage.$phpEx&amp;mode=create_vehicle"));
+			login_box("garage.$phpEx?mode=create_vehicle");
 		}
 
 		//Let Check The User Is Allowed Perform This Action
@@ -155,7 +155,7 @@ switch( $mode )
 		//User Is Annoymous...So Not Allowed To Create A Vehicle
 		if ( $user->data['user_id'] == ANONYMOUS )
 		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=2"));
+			login_box("garage.$phpEx?mode=create_vehicle");
 		}
 
 		//Let Check The User Is Allowed Perform This Action
@@ -217,7 +217,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ( $user->data['user_id'] == ANONYMOUS )
 		{
-			redirect(append_sid("{$phpbb_root_path}login.$phpEx", "redirect=garage.$phpEx&amp;mode=edit_vehicle&amp;CID=$cid"));
+			login_box("garage.$phpEx?mode=edit_vehicle&amp;CID=$cid");
 		}
 
 		//Check Vehicle Ownership
@@ -275,7 +275,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ( $user->data['user_id'] == ANONYMOUS )
 		{
-			redirect(append_sid("{$phpbb_root_path}login.$phpEx", "redirect=garage.$phpEx&amp;mode=edit_vehicle&amp;CID=$cid"));
+			login_box("garage.$phpEx?mode=edit_vehicle&amp;CID=$cid");
 		}
 
 		//Check Vehicle Ownership
@@ -321,16 +321,16 @@ switch( $mode )
 	//Mode To Display Add Modification Page
 	case 'add_modification':
 
+		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
+		if ( $user->data['user_id'] == ANONYMOUS )
+		{
+			login_box("garage.$phpEx?mode=add_modification&amp;CID=$cid");
+		}
+
 		//Let Check The User Is Allowed Perform This Action
 		if (!$auth->acl_get('u_garage_add_modification'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
-		}
-
-		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if ( $user->data['user_id'] == ANONYMOUS )
-		{
-			redirect(append_sid("{$phpbb_root_path}login.$phpEx", "redirect=garage.$phpEx&amp;mode=add_modification&amp;CID=$cid"));
 		}
 
 		//Check Vehicle Ownership
@@ -370,16 +370,16 @@ switch( $mode )
 
 	case 'insert_modification':
 
+		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
+		if ( $user->data['user_id'] == ANONYMOUS )
+		{
+			login_box("garage.$phpEx?mode=add_modification&amp;CID=$cid");
+		}
+
 		//Let Check The User Is Allowed Perform This Action
 		if (!$auth->acl_get('u_garage_add_modification'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
-		}
-
-		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if ( $user->data['user_id'] == ANONYMOUS )
-		{
-			redirect(append_sid("{$phpbb_root_path}login.$phpEx", "redirect=garage.$phpEx&amp;mode=add_modification&amp;CID=$cid"));
 		}
 
 		//Check Vehicle Ownership
@@ -426,7 +426,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ( $user->data['user_id'] == ANONYMOUS )
 		{
-			redirect(append_sid("{$phpbb_root_path}login.$phpEx", "redirect=garage.$phpEx&amp;mode=edit_modification&amp;MID=$mid&amp;CID=$cid"));
+			login_box("garage.$phpEx?mode=edit_modification&amp;MID=$mid&amp;CID=$cid");
 		}
 
 		//Check Vehicle Ownership
@@ -450,7 +450,6 @@ switch( $mode )
 		$garage_template->shop_dropdown($data['business_id'], $data['business_name']);
 		$garage_template->edit_image('modification', $data['image_id'], $data['attach_file']);
 		$template->assign_vars(array(
-			'L_LEVEL2' 		=> $data['vehicle'],
        			'L_TITLE' 		=> $user->lang['MODIFY_MOD'],
        			'L_BUTTON' 		=> $user->lang['MODIFY_MOD'],
 			'U_SUBMIT_SHOP'		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;CID=$cid&amp;redirect=add_modification&amp;BUSINESS=shop"),
@@ -477,6 +476,12 @@ switch( $mode )
 		break;
 
 	case 'update_modification':
+
+		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
+		if ( $user->data['user_id'] == ANONYMOUS )
+		{
+			login_box("garage.$phpEx?mode=edit_modification&amp;MID=$mid&amp;CID=$cid");
+		}
 
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
@@ -662,7 +667,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ( $user->data['user_id'] == ANONYMOUS )
 		{
-			redirect(append_sid("{$phpbb_root_path}login.$phpEx", "redirect=garage.$phpEx&amp;mode=edit_quartermile&amp;QMID=$qmid&amp;CID=$cid"));
+			login_box("garage.$phpEx?mode=edit_quartermile&amp;QMID=$qmid&amp;CID=$cid");
 		}
 
 		//Check Vehicle Ownership
@@ -726,6 +731,12 @@ switch( $mode )
 		break;
 
 	case 'update_quartermile':
+
+		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
+		if ( $user->data['user_id'] == ANONYMOUS )
+		{
+			login_box("garage.$phpEx?mode=edit_quartermile&amp;QMID=$qmid&amp;CID=$cid");
+		}
 
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
@@ -815,6 +826,12 @@ switch( $mode )
 	
 	case 'add_dynorun':
 
+		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
+		if ( $user->data['user_id'] == ANONYMOUS )
+		{
+			login_box("garage.$phpEx?mode=add_dynorun&amp;CID=$cid");
+		}
+
 		//Let Check That Rollingroad Runs Are Allowed...If Not Redirect
 		if ($garage_config['enable_dynorun'] == '0')
 		{
@@ -858,6 +875,12 @@ switch( $mode )
 		break;
 
 	case 'insert_dynorun':
+
+		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
+		if ( $user->data['user_id'] == ANONYMOUS )
+		{
+			login_box("garage.$phpEx?mode=add_dynorun&amp;CID=$cid");
+		}
 
 		//Let Check That Rollingroad Runs Are Allowed...If Not Redirect
 		if ($garage_config['enable_dynorun'] == '0')
@@ -928,7 +951,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ( $user->data['user_id'] == ANONYMOUS )
 		{
-			redirect(append_sid("{$phpbb_root_path}login.$phpEx", "redirect=garage.$phpEx&amp;mode=edit_dynorun&amp;RRID=$rrid&amp;CID=$cid"));
+			login_box("garage.$phpEx?mode=edit_dynorun&amp;RRID=$rrid&amp;CID=$cid");
 		}
 
 		//Check Vehicle Ownership
@@ -978,6 +1001,12 @@ switch( $mode )
 		break;
 
 	case 'update_dynorun':
+
+		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
+		if ( $user->data['user_id'] == ANONYMOUS )
+		{
+			login_box("garage.$phpEx?mode=edit_dynorun&amp;RRID=$rrid&amp;CID=$cid");
+		}
 
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
@@ -1145,7 +1174,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ( $user->data['user_id'] == ANONYMOUS )
 		{
-			redirect(append_sid("{$phpbb_root_path}login.$phpEx", "redirect=garage.$phpEx&amp;mode=edit_insurance&amp;IND_ID=$ins_id&amp;CID=$cid"));
+			login_box("garage.$phpEx?mode=edit_insurance&amp;INS_ID=$ins_id&amp;CID=$cid");
 		}
 
 		//Check Vehicle Ownership
@@ -2073,7 +2102,6 @@ switch( $mode )
 		$count = $garage_business->get_insurance_business($where);
 		$pagination = generate_pagination("garage.$phpEx?mode=view_insurance_business", $count[0]['total'], 25, $start);
 
-		$template->assign_block_vars('level1', array());
 		$template->assign_vars(array(
 			'PAGINATION' => $pagination,
 			'PAGE_NUMBER' => sprintf($user->lang['PAGE_OF'], (floor( $start / 25) + 1), ceil($count[0]['total'] / 25 )))
@@ -2191,7 +2219,6 @@ switch( $mode )
 		$count = $garage_business->count_garage_business_data($data['where']);
 		$pagination = generate_pagination("garage.$phpEx?mode=view_garage_business", $count, 25, $start);
 
-		$template->assign_block_vars('level1', array());
 		$template->assign_vars(array(
 			'PAGINATION'	=> $pagination,
 			'PAGE_NUMBER'	=> sprintf($user->lang['PAGE_OF'], (floor($start / 25) + 1), ceil($count / 25)))
@@ -2312,7 +2339,6 @@ switch( $mode )
 		$count = $garage_business->count_shop_business_data($data['where']);
 		$pagination = generate_pagination("garage.$phpEx?mode=view_shop_business", $count, 25, $start);
 
-		$template->assign_block_vars('level1', array());
 		$template->assign_vars(array(
 			'PAGINATION'	=> $pagination,
 			'PAGE_NUMBER' 	=> sprintf($user->lang['PAGE_OF'], (floor($start / 25) + 1), ceil($count / 25)))
@@ -2328,7 +2354,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ( $user->data['user_id'] == ANONYMOUS )
 		{
-			redirect(append_sid("{$phpbb_root_path}login.$phpEx", "redirect=garage.$phpEx&amp;mode=user_submit_business"));
+			login_box("garage.$phpEx?mode=user_submit_business");
 		}
 
 		//Let Check The User Is Allowed Perform This Action
@@ -2499,7 +2525,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ( $user->data['user_id'] == ANONYMOUS )
 		{
-			redirect(append_sid("{$phpbb_root_path}login.$phpEx", "redirect=garage.$phpEx&amp;mode=user_submit_make"));
+			login_box("garage.$phpEx?mode=user_submit_make");
 		}
 
 		//Check This Feature Is Enabled
@@ -2543,7 +2569,7 @@ switch( $mode )
 		//User Is Annoymous...So Not Allowed To Create A Vehicle
 		if ( $user->data['user_id'] == ANONYMOUS )
 		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=2"));
+			login_box("garage.$phpEx?mode=user_submit_make");
 		}
 
 		//Let Check The User Is Allowed Perform This Action
@@ -2584,7 +2610,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ( $user->data['user_id'] == ANONYMOUS )
 		{
-			redirect(append_sid("{$phpbb_root_path}login.$phpEx", "redirect=garage.$phpEx&amp;mode=user_submit_model"));
+			login_box("garage.$phpEx?mode=user_submit_model");
 		}
 
 		//Check This Feature Is Enabled
@@ -2646,7 +2672,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ( $user->data['user_id'] == ANONYMOUS )
 		{
-			redirect(append_sid("{$phpbb_root_path}login.$phpEx", "redirect=garage.$phpEx&amp;mode=user_submit_model"));
+			login_box("garage.$phpEx?mode=user_submit_model");
 		}
 
 		//Let Check The User Is Allowed Perform This Action
@@ -2719,7 +2745,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ( $user->data['user_id'] == ANONYMOUS )
 		{
-			redirect(append_sid("{$phpbb_root_path}login.$phpEx", "redirect=garage.$phpEx&amp;mode=pending"));
+			login_box("garage.$phpEx?mode=pending");
 		}
 
 		//Check The User Is Allowed To View This Page...If Not Send Them On There Way Nicely
@@ -2766,7 +2792,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ( $user->data['user_id'] == ANONYMOUS )
 		{
-			redirect(append_sid("{$phpbb_root_path}login.$phpEx", "redirect=garage.$phpEx&amp;mode=pending"));
+			login_box("garage.$phpEx?mode=pending");
 		}
 
 		//Check The User Is Allowed To View This Page...If Not Send Them On There Way Nicely
@@ -2874,6 +2900,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ( $user->data['user_id'] == ANONYMOUS )
 		{
+			login_box("garage.$phpEx?mode=pending");
 			redirect(append_sid("{$phpbb_root_path}login.$phpEx", "redirect=garage.$phpEx&amp;mode=pending"));
 		}
 
@@ -3363,6 +3390,12 @@ switch( $mode )
 		//Let Check The User Is Allowed Perform This Action
 		if (!$auth->acl_get('u_garage_browse'))
 		{
+			//If Not Logged In Send Them To Login & Back, Maybe They Have Permission As A User 
+			if ( $user->data['user_id'] == ANONYMOUS )
+			{
+				login_box("garage.$phpEx");
+			}
+			//They Are Logged In But Not Allowed So Error Nicely Now...
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=15"));
 		}
 

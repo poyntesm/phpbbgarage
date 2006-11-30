@@ -30,9 +30,9 @@ class garage_image
 
 	/*========================================================================*/
 	// Gets User Image Upload Quota
-	// Usage: get_user_upload_image_quota();
+	// Usage: get_user_upload_image_quota(array(group_membership));
 	/*========================================================================*/
-	function get_user_upload_image_quota()
+	function get_user_upload_image_quota($groups)
 	{
 		global $user, $garage_config, $garage;
 	
@@ -44,20 +44,17 @@ class garage_image
 		//It Appears Some Groups Have Private Permissions & Quotas We Will Need To Check Them
 		else
 		{
-			//Get All Group Memberships
-			$groupdata = $garage->get_group_membership($user->data['user_id']);
-			
 			//Lets Get The Private Upload Groups & Quotas
 			$private_upload_groups = @explode(',', $garage_config['private_upload_perms']);
 			$private_upload_quotas = @explode(',', $garage_config['private_upload_quota']);
 
 			//Process All Groups You Are Member Of To See If Any Are Granted Permission & Quota
-			for ($i = 0, $count = sizeof($groupdata);$i < $count; $i++)
+			for ($i = 0, $count = sizeof($groups);$i < $count; $i++)
 			{
 				if (in_array($groupdata[$i]['group_id'], $private_upload_groups))
 				{
 					//Your A Member Of A Group Granted Permission - Find Array Key & Get Quota
-					$index = array_search($groupdata[$i]['group_id'], $private_upload_groups);
+					$index = array_search($groups[$i]['group_id'], $private_upload_groups);
 					$quota[$i] = $private_upload_quotas[$index];
 				}
 			}
@@ -74,9 +71,9 @@ class garage_image
 	}
 	/*========================================================================*/
 	// Gets User Remote Image Quota
-	// Usage: get_user_upload_image_quota();
+	// Usage: get_user_upload_image_quota(array(group_membership);
 	/*========================================================================*/
-	function get_user_remote_image_quota()
+	function get_user_remote_image_quota($groups)
 	{
 		global $user, $garage_config, $garage;
 	
@@ -88,20 +85,17 @@ class garage_image
 		//It Appears Some Groups Have Private Permissions & Quotas We Will Need To Check Them
 		else
 		{
-			//Get All Group Memberships
-			$groupdata = $garage->get_group_membership($user->data['user_id']);
-			
 			//Lets Get The Private Upload Groups & Remote Quotas
 			$private_upload_groups = @explode(',', $garage_config['private_upload_perms']);
 			$private_remote_quotas = @explode(',', $garage_config['private_remote_quota']);
 
 			//Process All Groups You Are Member Of To See If Any Are Granted Permission & Quota
-			for ($i = 0, $count = sizeof($groupdata);$i < $count; $i++)
+			for ($i = 0, $count = sizeof($groups);$i < $count; $i++)
 			{
-				if (in_array($groupdata[$i]['group_id'], $private_upload_groups))
+				if (in_array($groups[$i]['group_id'], $private_upload_groups))
 				{
 					//Your A Member Of A Group Granted Permission - Find Array Key & Get Quota
-					$index = array_search($groupdata[$i]['group_id'], $private_upload_groups);
+					$index = array_search($groups[$i]['group_id'], $private_upload_groups);
 					$quota[$i] = $private_remote_quotas[$index];
 				}
 			}
@@ -1056,8 +1050,11 @@ class garage_image
 		$user_upload_image_data = $this->get_user_upload_images($user->data['user_id']);
 		$user_remote_image_data = $this->get_user_remote_images($user->data['user_id']);
 
+		//Get Users Group Memberships Now As We Should Do This Only Once
+		$group_memberships = group_memberships(false, array($user->data['user_id']), false);
+
 		//Check For Remote & Local Image Quotas
-		if ( (($this->image_is_remote() ) AND (sizeof($user_remote_image_data) < $this->get_user_remote_image_quota($user->data['user_id']))) OR (($this->image_is_local() ) AND (sizeof($user_upload_image_data) < $this->get_user_upload_image_quota($user->data['user_id']))) )
+		if ( (($this->image_is_remote() ) AND (sizeof($user_remote_image_data) < $this->get_user_remote_image_quota($group_memberships))) OR (($this->image_is_local() ) AND (sizeof($user_upload_image_data) < $this->get_user_upload_image_quota($group_memberships))) )
 		{
 			return true;
 		}
@@ -1075,8 +1072,11 @@ class garage_image
 		$user_upload_image_data = $this->get_user_upload_images($user->data['user_id']);
 		$user_remote_image_data = $this->get_user_remote_images($user->data['user_id']);
 
+		//Get Users Group Memberships Now As We Should Do This Only Once
+		$group_memberships = group_memberships(false, array($user->data['user_id']), false);
+
 		//You Have Reached Your Image Quota
-		if ( (($this->image_is_remote() ) AND (sizeof($user_remote_image_data) >= $this->get_user_remote_image_quota($user->data['user_id']))) OR (($this->image_is_local() ) AND (sizeof($user_upload_image_data) >= $this->get_user_upload_image_quota($user->data['user_id']))) )
+		if ( (($this->image_is_remote() ) AND (sizeof($user_remote_image_data) >= $this->get_user_remote_image_quota($group_memberships))) OR (($this->image_is_local() ) AND (sizeof($user_upload_image_data) >= $this->get_user_upload_image_quota($group_memberships))) )
 		{
 			return true;
 		}
