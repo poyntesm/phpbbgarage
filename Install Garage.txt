@@ -887,7 +887,6 @@ styles/subSilver/templates/viewtopic_body.html
 					<td>{postrow.POSTER_AVATAR}</td>
 				</tr>
 			<!-- ENDIF -->
-				</table>
 
 #
 #-----[ AFTER, ADD ]------------------------------------------
