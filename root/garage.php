@@ -3317,7 +3317,7 @@ switch( $mode )
 		$count = $garage_vehicle->count_vehicle_ratings($data);
 
 		//If You Have Not Rated This Vehicle..Create A Rating	
-		if ( $count['total'] < 1 )
+		if ( $count < 1 )
 		{
 			$garage_vehicle->insert_vehicle_rating($data);
 		}

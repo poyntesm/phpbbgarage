@@ -114,12 +114,23 @@ class garage_vehicle
 	{
 		global $user, $db;
 
-		$pending = ($data['guestbook_pm_notify'] == 'on') ? 1 : 0;
-
-		$sql = "INSERT INTO ". GARAGE_TABLE ."
-			(made_year, engine_type, make_id, model_id, colour, mileage, mileage_units, price, currency, comments, user_id, date_created, date_updated, main_vehicle, guestbook_pm_notify)
-			VALUES
-			('".$data['year']."', '".$data['engine_type']."', '".$data['make_id']."', '".$data['model_id']."', '".$data['colour']."', '".$data['mileage']."', '".$data['mileage_units']."', '".$data['price']."', '".$data['currency']."', '".$data['comments']."', '".$user->data['user_id']."', '".time()."', '".time()."', '".$data['main_vehicle']."', '". $pending."')";
+		$sql = 'INSERT INTO ' . GARAGE_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+			'made_year'		=> $data['year'],
+			'engine_type'		=> $data['engine_type'],
+			'make_id'		=> $data['make_id'],
+			'model_id'		=> $data['model_id'],
+			'colour'		=> $data['colour'],
+			'mileage'		=> $data['mileage'],
+			'mileage_units'		=> $data['mileage_units'],
+			'price'			=> $data['price'],
+			'currency'		=> $data['currency'],
+			'comments'		=> $data['comments'],
+			'user_id'		=> $user->data['user_id'],
+			'date_created'		=> time(),
+			'date_updated'		=> time(),
+			'main_vehicle'		=> $data['main_vehicle'],
+			'guestbook_pm_notify'	=> ($data['guestbook_pm_notify'] == 'on') ? 1 : 0)
+		);
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -139,10 +150,12 @@ class garage_vehicle
 	{
 		global $cid, $db;
 
-		$sql = "INSERT INTO ". GARAGE_RATING_TABLE ." 
-			(garage_id,rating,user_id,rate_date)
-			VALUES 
-			('$cid', '".$data['vehicle_rating']."', '".$data['user_id']."', '".$data['rate_date']."')";
+		$sql = 'INSERT INTO ' . GARAGE_RATING_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+			'garage_id'		=> $cid,
+			'rating'		=> $data['vehicle_rating'],
+			'user_id'		=> $data['user_id'],
+			'rate_date'		=> time())
+		);
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -160,9 +173,13 @@ class garage_vehicle
 	{
 		global $user, $db;
 
-		$sql = "SELECT count(id) AS total 
-			FROM " . GARAGE_TABLE . " 
-			WHERE user_id = " . $user->data['user_id'];
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'COUNT(g.id) as total',
+			'FROM'		=> array(
+				GARAGE_TABLE	=> 'g',
+			)
+		));
 
 		if ( !($result = $db->sql_query($sql)) )
 		{
@@ -172,9 +189,9 @@ class garage_vehicle
 		$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
+		$row['total'] = (empty($row['total'])) ? 0 : $row['total'];
 		return $row['total'];
 	}
-
 
 	/*========================================================================*/
 	// Updates Vehicle In DB
@@ -184,12 +201,28 @@ class garage_vehicle
 	{
 		global $cid, $db;
 
-		$pending = ($data['guestbook_pm_notify'] == 'on') ? 1 : 0;
+		$update_sql = array(
+			'made_year'		=> $data['year'],
+			'engine_type'		=> $data['engine_type'],
+			'make_id'		=> $data['make_id'],
+			'model_id'		=> $data['model_id'],
+			'colour'		=> $data['colour'],
+			'mileage'		=> $data['mileage'],
+			'mileage_units'		=> $data['mileage_units'],
+			'price'			=> $data['price'],
+			'currency'		=> $data['currency'],
+			'comments'		=> $data['comments'],
+			'user_id'		=> $user->data['user_id'],
+			'date_updated'		=> time(),
+			'main_vehicle'		=> $data['main_vehicle'],
+			'guestbook_pm_notify'	=> ($data['guestbook_pm_notify'] == 'on') ? 1 : 0
+		);
 
-		$sql = "UPDATE ". GARAGE_TABLE ."
-			SET made_year = '".$data['year']."', engine_type = '".$data['engine_type']."', make_id = '".$data['make_id']."', model_id = '".$data['model_id']."', colour = '".$data['colour']."', mileage = '".$data['mileage']."', mileage_units = '".$data['mileage_units']."', price = '".$data['price']."', currency = '".$data['currency']."', comments = '".$data['comments']."', guestbook_pm_notify = '".$pending."'
-			WHERE id = '$cid'";
-	
+		$sql = 'UPDATE ' . GARAGE_TABLE . '
+			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
+			WHERE id = $cid";
+
+
 		if(!$result = $db->sql_query($sql))
 		{
 			message_die(GENERAL_ERROR, 'Could Not Update Vehicle', '', __LINE__, __FILE__, $sql);
@@ -206,9 +239,14 @@ class garage_vehicle
 	{
 		global $db, $cid;
 
-		$sql = "UPDATE ". GARAGE_RATING_TABLE ." 
-			SET rating = '".$data['vehicle_rating']."', rate_date = '".$data['rate_date']."'
-	       		WHERE user_id = '".$data['user_id']."' AND garage_id = '$cid';";
+		$update_sql = array(
+			'rating'	=> $data['vehicle_rating'],
+			'rate_date'	=> time() 
+		);
+
+		$sql = 'UPDATE ' . GARAGE_RATING_TABLE . '
+			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
+			WHERE user_id = " . $data['user_id'] . " AND garage_id = $cid";
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -234,10 +272,13 @@ class garage_vehicle
 			message_die(GENERAL_ERROR, 'Could Not Remove All Vehicle Ratings', '', __LINE__, __FILE__, $sql);
 		}
 
-		//Reset Weighted Values For All Vehicles
-		$sql = "UPDATE " . GARAGE_TABLE ."
-			SET weighted_rating = '0'";
-	
+		$update_sql = array(
+			'weighted_rating'	=> '0'
+		);
+
+		$sql = 'UPDATE ' . GARAGE_TABLE . '
+			SET ' . $db->sql_build_array('UPDATE', $update_sql);
+
 		if(!$result = $db->sql_query($sql))
 		{
 			message_die(GENERAL_ERROR, 'Could Not Update Vehicle Weighted Rating', '', __LINE__, __FILE__, $sql);
@@ -255,9 +296,14 @@ class garage_vehicle
 		global $db, $garage_config;
 
 		//Count Votes This Vehicle Has Recived & Average Rating So Far
-		$sql = "SELECT count(id) AS votes_recieved, AVG(rating) as average_rating
-			FROM " . GARAGE_RATING_TABLE . "
-			WHERE id = '$cid'";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'COUNT(g.id) AS votes_recieved, AVG(rating) AS average_rating',
+			'FROM'		=> array(
+				GARAGE_RATING_TABLE	=> 'g',
+			),
+			'WHERE'		=> "g.id = $cid"
+		));
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -268,8 +314,13 @@ class garage_vehicle
 		$db->sql_freeresult($result);
 
 		//Get Average Rating For All Vehicles
-		$sql = "SELECT AVG(rating) as site_average
-			FROM " . GARAGE_RATING_TABLE;
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'AVG(rating) AS site_average',
+			'FROM'		=> array(
+				GARAGE_RATING_TABLE	=> 'g',
+			)
+		));
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -298,9 +349,13 @@ class garage_vehicle
 	{
 		global $db;
 
-		$sql = "UPDATE ". GARAGE_TABLE ." 
-			SET weighted_rating = '$weighted_rating'
-	       		WHERE id = '$cid';";
+		$update_sql = array(
+			'weighted_rating'	=> $weighted_rating
+		);
+
+		$sql = 'UPDATE ' . GARAGE_TABLE . '
+			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
+			WHERE id = $cid";
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -319,8 +374,13 @@ class garage_vehicle
 		global $db;
 
 		// Get the total count of vehicles and views in the garage
-		$sql = "SELECT count(*) AS total_vehicles 
-			FROM " . GARAGE_TABLE;
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'COUNT(g.id) as total_vehicles',
+			'FROM'		=> array(
+				GARAGE_TABLE	=> 'g',
+			)
+		));
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -330,6 +390,7 @@ class garage_vehicle
 	        $row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
+		$row['total_vehicles'] = (empty($row['total_vehicles'])) ? 0 : $row['total_vehicles'];
 		return $row['total_vehicles'];
 	}
 
@@ -342,9 +403,14 @@ class garage_vehicle
 		global $cid , $db;
 
 		//Lets See If This Is To Update Or Insert A Rating
-		$sql = "SELECT count(*) as total 
-			FROM " . GARAGE_RATING_TABLE . "
-			WHERE user_id = '".$data['user_id']."' AND garage_id = '$cid'";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'COUNT(r.id) as total',
+			'FROM'		=> array(
+				GARAGE_RATING_TABLE	=> 'r',
+			),
+			'WHERE'		=> 'r.user_id = '.$data['user_id'] . " AND r.garage_id = $cid"
+		));
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -354,7 +420,8 @@ class garage_vehicle
 	        $row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		return $row;
+		$row['total'] = (empty($row['total'])) ? 0 : $row['total'];
+		return $row['total'];
 	}
 
 	/*========================================================================*/
@@ -363,31 +430,17 @@ class garage_vehicle
 	/*========================================================================*/
 	function check_ownership($cid)
 	{
-		global $user, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $auth;
-	
-		if (empty($cid))
-		{
-	 		message_die(GENERAL_ERROR, 'Vehicle ID Not Entered..', '', __LINE__, __FILE__);
-		}
-	
-		$sql = "SELECT g.user_id 
-			FROM " . GARAGE_TABLE . " g 
-			WHERE g.id = $cid ";
-	
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could not query users', '', __LINE__, __FILE__, $sql);
-		}
-	
-		$vehicle = $db->sql_fetchrow($result); 
-		$db->sql_freeresult($result);
+		global $user, $lang, $phpEx, $phpbb_root_path, $auth;
+
+		//get Vehicle Owner ID
+		$owner_id = $this->get_vehicle_owner_id($cid);
 
 	 	if ( $auth->acl_get('m_garage') )
 		{
 			//Allow A Moderator Or Administrator Do What They Want....
 			return;
 		}
-		else if ( $vehicle['user_id'] != $user->data['user_id'] )
+		else if ( $owner_id != $user->data['user_id'] )
 		{
 			$message = $lang['Not_Vehicle_Owner'] . "<br /><br />" . sprintf($lang['Click_return_garage'], "<a href=\"" . append_sid("garage.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_index'], "<a href=\"" . append_sid("index.$phpEx") . "\">", "</a>");
 	
@@ -590,26 +643,26 @@ class garage_vehicle
 		$template_block = 'block_'.$required_position;
 		$template_block_row = 'block_'.$required_position.'.row';
 		$template->assign_block_vars($template_block, array(
-			'BLOCK_TITLE' => $user->lang['LAST_UPDATED_VEHICLES'],
-			'COLUMN_1_TITLE' => $user->lang['VEHICLE'],
-			'COLUMN_2_TITLE' => $user->lang['OWNER'],
-			'COLUMN_3_TITLE' => $user->lang['UPDATED'])
+			'BLOCK_TITLE' 	=> $user->lang['LAST_UPDATED_VEHICLES'],
+			'COLUMN_1_TITLE'=> $user->lang['VEHICLE'],
+			'COLUMN_2_TITLE'=> $user->lang['OWNER'],
+			'COLUMN_3_TITLE'=> $user->lang['UPDATED'])
 		);
 	 		
 	        // What's the count? Default to 10
 		$limit = $garage_config['updated_vehicle_limit'] ? $garage_config['updated_vehicle_limit'] : 10;
 
 		//Get Latest Updated Vehicles....
-		$vehicle_data = $garage_vehicle->get_latest_updated_vehicles($limit);
+		$vehicle_data = $this->get_latest_updated_vehicles($limit);
 	
 		for ($i = 0; $i < count($vehicle_data); $i++)
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' => append_sid("garage.$phpEx", "mode=view_vehicle&CID=" . $vehicle_data[$i]['id'], true),
-				'U_COLUMN_2' => append_sid("profile.$phpEx", "mode=viewprofile&u=" . $vehicle_data[$i]['user_id'], true),
-				'COLUMN_1_TITLE' => $vehicle_data[$i]['vehicle'],
-				'COLUMN_2_TITLE' => $vehicle_data[$i]['username'],
-				'COLUMN_3' => $user->format_date($vehicle_data[$i]['date_updated']))
+				'U_COLUMN_1' 	=> append_sid("garage.$phpEx", "mode=view_vehicle&CID=" . $vehicle_data[$i]['id'], true),
+				'U_COLUMN_2' 	=> append_sid("profile.$phpEx", "mode=viewprofile&u=" . $vehicle_data[$i]['user_id'], true),
+				'COLUMN_1_TITLE'=> $vehicle_data[$i]['vehicle'],
+				'COLUMN_2_TITLE'=> $vehicle_data[$i]['username'],
+				'COLUMN_3' 	=> $user->format_date($vehicle_data[$i]['date_updated']))
 			);
 	 	}
 	
@@ -633,39 +686,26 @@ class garage_vehicle
 		$template_block = 'block_'.$required_position;
 		$template_block_row = 'block_'.$required_position.'.row';
 		$template->assign_block_vars($template_block, array(
-			'BLOCK_TITLE' => $user->lang['MOST_MONEY_SPENT'],
-			'COLUMN_1_TITLE' => $user->lang['VEHICLE'],
-			'COLUMN_2_TITLE' => $user->lang['OWNER'],
-			'COLUMN_3_TITLE' => $user->lang['TOTAL_SPENT'])
+			'BLOCK_TITLE' 	=> $user->lang['MOST_MONEY_SPENT'],
+			'COLUMN_1_TITLE'=> $user->lang['VEHICLE'],
+			'COLUMN_2_TITLE'=> $user->lang['OWNER'],
+			'COLUMN_3_TITLE'=> $user->lang['TOTAL_SPENT'])
 		);
 	 		
 	        // What's the count? Default to 10
-	        $limit = $garage_config['most_spent_limit'] ? $garage_config['most_spent_limit'] : 10;
-	 		
-	 	$sql = "SELECT g.id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, 
-	                        g.user_id, (SUM(mods.install_price) + SUM(mods.price)) AS POI, u.username, g.currency 
-	                FROM " . GARAGE_TABLE . " g 
-	                	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
-	                        LEFT JOIN " . GARAGE_MODS_TABLE . " mods ON mods.garage_id = g.id 
-	                        LEFT JOIN " . USERS_TABLE . " u ON g.user_id = u.user_id
-			WHERE makes.pending = 0 AND models.pending = 0
-	                GROUP BY g.id 
-	                ORDER BY POI DESC LIMIT $limit";
-	 		            
-	 	if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, "Could not query vehicle information", "", __LINE__, __FILE__, $sql);
-		}
-	 		            
-	 	while ( $vehicle_data = $db->sql_fetchrow($result) )
+		$limit = $garage_config['most_spent_limit'] ? $garage_config['most_spent_limit'] : 10;
+
+		//Get Most Spent Vehicles....
+		$vehicle_data = $this->get_most_spent_vehicles($limit);
+
+		for ($i = 0; $i < count($vehicle_data); $i++)
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']),
-				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
-				'COLUMN_2_TITLE' => $vehicle_data['username'],
-				'COLUMN_3' => $vehicle_data['POI'])
+				'U_COLUMN_1' 	=> append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data[$i]['id']),
+				'U_COLUMN_2' 	=> append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data[$i]['user_id']),
+				'COLUMN_1_TITLE'=> $vehicle_data[$i]['vehicle'],
+				'COLUMN_2_TITLE'=> $vehicle_data[$i]['username'],
+				'COLUMN_3' 	=> $vehicle_data[$i]['POI'])
 			);
 	 	}
 	
@@ -689,37 +729,26 @@ class garage_vehicle
 		$template_block = 'block_'.$required_position;
 		$template_block_row = 'block_'.$required_position.'.row';
 		$template->assign_block_vars($template_block, array(
-			'BLOCK_TITLE' => $user->lang['MOST_VIEWED_VEHICLE'],
-			'COLUMN_1_TITLE' => $user->lang['VEHICLE'],
-			'COLUMN_2_TITLE' => $user->lang['OWNER'],
-			'COLUMN_3_TITLE' => $user->lang['VIEWS'])
+			'BLOCK_TITLE'	=> $user->lang['MOST_VIEWED_VEHICLE'],
+			'COLUMN_1_TITLE'=> $user->lang['VEHICLE'],
+			'COLUMN_2_TITLE'=> $user->lang['OWNER'],
+			'COLUMN_3_TITLE'=> $user->lang['VIEWS'])
 		);
 	
 	        // What's the count? Default to 10
 	        $limit = $garage_config['most_viewed_limit'] ? $garage_config['most_viewed_limit'] : 10;
 	 		 		
-	 	$sql = "SELECT g.id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, 
-	                        g.user_id, g.views AS POI, u.username 
-	                FROM " . GARAGE_TABLE . " g 
-	                        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
-	                        LEFT JOIN " . USERS_TABLE . " u ON g.user_id = u.user_id
-			WHERE makes.pending = 0 AND models.pending = 0
-	                ORDER BY POI DESC LIMIT $limit";
-	 		            
-	 	if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, "Could not query vehicle information", "", __LINE__, __FILE__, $sql);
-		}
-	 		            
-	 	while ( $vehicle_data = $db->sql_fetchrow($result) )
+		//Get Most Viewed Vehicles....
+		$vehicle_data = $this->get_most_viewed_vehicles($limit);
+
+		for ($i = 0; $i < count($vehicle_data); $i++)
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']),
-				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
-				'COLUMN_2_TITLE' => $vehicle_data['username'],
-				'COLUMN_3' => $vehicle_data['POI'])
+				'U_COLUMN_1' 	=> append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data[$i]['id']),
+				'U_COLUMN_2' 	=> append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data[$i]['user_id']),
+				'COLUMN_1_TITLE'=> $vehicle_data[$i]['vehicle'],
+				'COLUMN_2_TITLE'=> $vehicle_data[$i]['username'],
+				'COLUMN_3' 	=> $vehicle_data[$i]['POI'])
 			);
 	 	}
 	
@@ -743,36 +772,26 @@ class garage_vehicle
 		$template_block = 'block_'.$required_position;
 		$template_block_row = 'block_'.$required_position.'.row';
 		$template->assign_block_vars($template_block, array(
-			'BLOCK_TITLE' => $user->lang['TOP_RATED_VEHICLES'],
-			'COLUMN_1_TITLE' => $user->lang['VEHICLE'],
-			'COLUMN_2_TITLE' => $user->lang['OWNER'],
-			'COLUMN_3_TITLE' => $user->lang['RATING'])
+			'BLOCK_TITLE' 	=> $user->lang['TOP_RATED_VEHICLES'],
+			'COLUMN_1_TITLE'=> $user->lang['VEHICLE'],
+			'COLUMN_2_TITLE'=> $user->lang['OWNER'],
+			'COLUMN_3_TITLE'=> $user->lang['RATING'])
 		);
 	
 	        // What's the count? Default to 10
 	        $limit = $garage_config['top_rating_limit'] ? $garage_config['top_rating_limit'] : 10;
 	
-		$sql =  "SELECT g.id, g.user_id, ROUND(g.weighted_rating, 2) as weighted_rating, u.username, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
-			 FROM " . GARAGE_TABLE . " g
-	                        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
-	                        LEFT JOIN " . USERS_TABLE . " u ON g.user_id = u.user_id
-			 WHERE makes.pending = 0 AND models.pending = 0
-			 ORDER BY weighted_rating DESC LIMIT $limit";
-	 		 		
-	 	if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, "Could not query vehicle information", "", __LINE__, __FILE__, $sql);
-		}
-	 		            
-	 	while ( $vehicle_data = $db->sql_fetchrow($result) )
+		//Get Top Rated Vehicles....
+		$vehicle_data = $this->get_top_rated_vehicles($limit);
+
+		for ($i = 0; $i < count($vehicle_data); $i++)
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' => append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-				'U_COLUMN_2' => append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']),
-				'COLUMN_1_TITLE' => $vehicle_data['vehicle'],
-				'COLUMN_2_TITLE' => $vehicle_data['username'],
-				'COLUMN_3' => $vehicle_data['weighted_rating'] . '/' . '10')
+				'U_COLUMN_1' 	=> append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data[$i]['id']),
+				'U_COLUMN_2' 	=> append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data[$i]['user_id']),
+				'COLUMN_1_TITLE'=> $vehicle_data[$i]['vehicle'],
+				'COLUMN_2_TITLE'=> $vehicle_data[$i]['username'],
+				'COLUMN_3' 	=> $vehicle_data[$i]['weighted_rating'] . '/' . '10')
 			);
 	 	}
 	
@@ -796,37 +815,26 @@ class garage_vehicle
 		$template_block = 'block_'.$required_position;
 		$template_block_row = 'block_'.$required_position.'.row';
 		$template->assign_block_vars($template_block, array(
-			'BLOCK_TITLE' => $user->lang['NEWEST_VEHICLES'],
-			'COLUMN_1_TITLE' => $user->lang['VEHICLE'],
-			'COLUMN_2_TITLE' => $user->lang['OWNER'],
-			'COLUMN_3_TITLE' => $user->lang['CREATED'])
+			'BLOCK_TITLE' 	=> $user->lang['NEWEST_VEHICLES'],
+			'COLUMN_1_TITLE'=> $user->lang['VEHICLE'],
+			'COLUMN_2_TITLE'=> $user->lang['OWNER'],
+			'COLUMN_3_TITLE'=> $user->lang['CREATED'])
 		);
 	 		
 	        // What's the count? Default to 10
 	        $limit = $garage_config['newest_vehicle_limit'] ? $garage_config['newest_vehicle_limit'] : 10;
 	 		 		
-	 	$sql = "SELECT g.id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, 
-	                        g.user_id, g.date_created AS POI, u.username 
-	                FROM " . GARAGE_TABLE . " g 
-	                	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
-	                        LEFT JOIN " . USERS_TABLE . " u ON g.user_id = u.user_id
-			WHERE makes.pending = 0 AND models.pending = 0
-	                ORDER BY POI DESC LIMIT $limit";
-	 		            
-	 	if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, "Could not query vehicle information", "", __LINE__, __FILE__, $sql);
-		}
-	 		            
-	 	while ( $vehicle_data = $db->sql_fetchrow($result) )
+		//Get Newest Vehicles....
+		$vehicle_data = $this->get_newest_vehicles($limit);
+
+		for ($i = 0; $i < count($vehicle_data); $i++)
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' 	=> append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-				'U_COLUMN_2' 	=> append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']),
-				'COLUMN_1_TITLE'=> $vehicle_data['vehicle'],
-				'COLUMN_2_TITLE'=> $vehicle_data['username'],
-				'COLUMN_3' 	=> $user->format_date($vehicle_data['POI']))
+				'U_COLUMN_1' 	=> append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data[$i]['id']),
+				'U_COLUMN_2' 	=> append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data[$i]['user_id']),
+				'COLUMN_1_TITLE'=> $vehicle_data[$i]['vehicle'],
+				'COLUMN_2_TITLE'=> $vehicle_data[$i]['username'],
+				'COLUMN_3' 	=> $user->format_date($vehicle_data[$i]['POI']))
 			);
 	 	}
 	
@@ -1145,7 +1153,7 @@ class garage_vehicle
 		$mod_images_found = 0;
 		$mod_images_displayed = '';
 	     
-		//Select Categories For Which A User Has Mods
+		//Select Modification Categories For Which A User Has Mods
 	      	$sql = "SELECT DISTINCT c.title, c.id
 	       		FROM  " . GARAGE_MODS_TABLE . " m, " . GARAGE_CATEGORIES_TABLE . " c
 	       		WHERE m.garage_id = $cid
@@ -1594,6 +1602,151 @@ class garage_vehicle
 	}
 
 	/*========================================================================*/
+	// Selects Newest Vehicles
+	// Usage: get_newest_vehicles('No. To Return');
+	/*========================================================================*/
+	function get_newest_vehicles($limit)
+	{
+		global $db;
+
+		$sql = "SELECT g.id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, 
+	                        g.user_id, g.date_created AS POI, u.username 
+	                FROM " . GARAGE_TABLE . " g 
+	                	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
+	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
+	                        LEFT JOIN " . USERS_TABLE . " u ON g.user_id = u.user_id
+			WHERE makes.pending = 0 AND models.pending = 0
+	                ORDER BY POI DESC LIMIT $limit";
+	 		            
+	 	if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, "Could not query vehicle information", "", __LINE__, __FILE__, $sql);
+		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		if (empty($rows))
+		{
+			return;
+		}
+
+		return $rows;
+	}
+
+	/*========================================================================*/
+	// Selects Top Rated Vehicles
+	// Usage: get_top_rated_vehicles('No. To Return');
+	/*========================================================================*/
+	function get_top_rated_vehicles($limit)
+	{
+		global $db;
+
+		$sql =  "SELECT g.id, g.user_id, ROUND(g.weighted_rating, 2) as weighted_rating, u.username, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
+			 FROM " . GARAGE_TABLE . " g
+	                        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
+	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
+	                        LEFT JOIN " . USERS_TABLE . " u ON g.user_id = u.user_id
+			 WHERE makes.pending = 0 AND models.pending = 0
+			 ORDER BY weighted_rating DESC LIMIT $limit";
+	 		 		
+	 	if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, "Could not query vehicle information", "", __LINE__, __FILE__, $sql);
+		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		if (empty($rows))
+		{
+			return;
+		}
+
+		return $rows;
+	}
+
+	/*========================================================================*/
+	// Selects Most Viewed Vehicles
+	// Usage: get_most_viewed_vehicles('No. To Return');
+	/*========================================================================*/
+	function get_most_viewed_vehicles($limit)
+	{
+		global $db;
+
+	 	$sql = "SELECT g.id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, 
+	                        g.user_id, g.views AS POI, u.username 
+	                FROM " . GARAGE_TABLE . " g 
+	                        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
+	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
+	                        LEFT JOIN " . USERS_TABLE . " u ON g.user_id = u.user_id
+			WHERE makes.pending = 0 AND models.pending = 0
+	                ORDER BY POI DESC LIMIT $limit";
+	 		            
+	 	if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, "Could not query vehicle information", "", __LINE__, __FILE__, $sql);
+		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		if (empty($rows))
+		{
+			return;
+		}
+
+		return $rows;
+	}
+
+	/*========================================================================*/
+	// Selects Most Spent Vehicle
+	// Usage: get_most_spent_vehicles('No. To Return');
+	/*========================================================================*/
+	function get_most_spent_vehicles($limit)
+	{
+		global $db;
+
+	 	$sql = "SELECT g.id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, 
+	                        g.user_id, (SUM(mods.install_price) + SUM(mods.price)) AS POI, u.username, g.currency 
+	                FROM " . GARAGE_TABLE . " g 
+	                	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
+	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
+	                        LEFT JOIN " . GARAGE_MODS_TABLE . " mods ON mods.garage_id = g.id 
+	                        LEFT JOIN " . USERS_TABLE . " u ON g.user_id = u.user_id
+			WHERE makes.pending = 0 AND models.pending = 0
+	                GROUP BY g.id 
+	                ORDER BY POI DESC LIMIT $limit";
+	 		            
+	 	if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, "Could not query vehicle information", "", __LINE__, __FILE__, $sql);
+		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		if (empty($rows))
+		{
+			return;
+		}
+
+		return $rows;
+	}
+	            
+	/*========================================================================*/
 	// Selects Lastest Updated Vehicle
 	// Usage: get_latest_updatest_vehicles('No. To Return');
 	/*========================================================================*/
@@ -1742,14 +1895,7 @@ class garage_vehicle
 			$garage_img ='<a href="' . append_sid("garage.$phpEx?mode=browse&search=yes&user=".urlencode($profiledata['username'])."") . '"><img src="' . $images['icon_garage'] . '" alt="'.$lang['Garage'].'" title="'.$lang['Garage'].'" border="0" /></a>';
 
 			$template->assign_vars(array(
-				'L_VEHICLE' => $lang['Vehicle'],
-				'L_GARAGE' => $lang['Garage'],
-				'L_COLOUR' => $lang['Colour'],
-				'L_MILEAGE' => $lang['Mileage'],
 				'L_PRICE' => $lang['Purchased_Price'],
-				'L_TOTAL_MODS' => $lang['Total_Mods'],
-				'L_TOTAL_SPENT' => $lang['Total_Spent'],
-				'L_DESCRIPTION' => $lang['Description'],
 				'L_SEARCH_USER_GARAGE' => $lang['Search_User_Garage'],
 				'YEAR' => $vehicle_data['year'],
 				'MAKE' => $vehicle_data['make'],
@@ -1773,6 +1919,5 @@ class garage_vehicle
 }
 
 $garage_vehicle = new garage_vehicle();
-
 
 ?>
