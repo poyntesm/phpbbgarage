@@ -26,7 +26,6 @@ if (!defined('IN_PHPBB'))
 
 class garage_model
 {
-
 	var $classname = "garage_model";
 
 	/*========================================================================*/
@@ -37,10 +36,9 @@ class garage_model
 	{
 		global $db;
 
-		$sql = "INSERT INTO ". GARAGE_MAKES_TABLE ." 
-			(make)
-			VALUES 
-			('".$data['make']."')";
+		$sql = 'INSERT INTO ' . GARAGE_MAKES_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+			'make'	=> $data['make'])
+		);
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -58,9 +56,14 @@ class garage_model
 	{
 		global $db;
 
-		$sql = "UPDATE ". GARAGE_MAKES_TABLE ." 
-			SET make='".$data['make']."'
-			WHERE id = ".$data['id'];
+		$update_sql = array(
+			'make'	=> $data['make'],
+		);
+
+		$sql = 'UPDATE ' . GARAGE_MAKES_TABLE . '
+			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
+			WHERE id = " . $data['id'];
+
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -78,9 +81,14 @@ class garage_model
 	{
 		global $db;
 
-		$sql = "SELECT count(*) as total 
-			FROM ". GARAGE_MAKES_TABLE ." 
-			WHERE make = '$data'";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'COUNT(mk.id) as total',
+			'FROM'		=> array(
+				GARAGE_MAKES_TABLE	=> 'mk',
+			),
+			'WHERE'		=>  "mk.make = $cid"
+		));
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -102,10 +110,10 @@ class garage_model
 	{
 		global $db;
 
-		$sql = "INSERT INTO ". GARAGE_MODELS_TABLE ." 
-			(make_id, model)
-			VALUES 
-			('".$data['make_id']."', '".$data['model']."')";
+		$sql = 'INSERT INTO ' . GARAGE_MODELS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+			'make_id'	=> $data['make_id'],
+			'model'		=> $data['model'])
+		);
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -123,9 +131,13 @@ class garage_model
 	{
 		global $db;
 
-		$sql = "UPDATE ". GARAGE_MODELS_TABLE ."
-			SET model = '".$data['model']."'
-			WHERE id = ".$data['id'];
+		$update_sql = array(
+			'model'	=> $data['model'],
+		);
+
+		$sql = 'UPDATE ' . GARAGE_MODELS_TABLE . '
+			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
+			WHERE id = " . $data['id'];
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -143,14 +155,14 @@ class garage_model
 	{
 		global $db;
 
-		$sql = "SELECT make, id 
-			FROM " . GARAGE_MAKES_TABLE . " 
-			WHERE id = $make_id";
-
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Select Make', '', __LINE__, __FILE__, $sql);
-		}
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'mk.id, mk.make',
+			'FROM'		=> array(
+				GARAGE_MAKES_TABLE	=> 'mk',
+			),
+			'WHERE'		=>  "mk.id = $make_id"
+		));
 
 		$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
@@ -166,8 +178,13 @@ class garage_model
 	{
 		global $db;
 
-		$sql = "SELECT make, id 
-			FROM " . GARAGE_MAKES_TABLE;
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'mk.id, mk.make',
+			'FROM'		=> array(
+				GARAGE_MAKES_TABLE	=> 'mk',
+			)
+		));
 
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -178,7 +195,6 @@ class garage_model
 		{
 			$data[] = $row;
 		}
-
 		$db->sql_freeresult($result);
 
 		return $data;
@@ -192,9 +208,14 @@ class garage_model
 	{
 		global $db;
 
-		$sql = "SELECT model, id, make_id 
-			FROM " . GARAGE_MODELS_TABLE. " 
-			WHERE make_id = $make_id";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'md.id, md.model, md.make_id',
+			'FROM'		=> array(
+				GARAGE_MODELS_TABLE	=> 'md',
+			),
+			'WHERE'		=>  "md.make_id = $make_id"
+		));
 
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -205,7 +226,6 @@ class garage_model
 		{
 			$data[] = $row;
 		}
-
 		$db->sql_freeresult($result);
 
 		return $data;
@@ -219,10 +239,20 @@ class garage_model
 	{
 		global $db;
 
-		$sql = "SELECT mdl.id as model_id, mdl.model, mk.id as make_id, mk.make, mdl.pending as model_pending, mk.pending as make_pending
-			FROM " . GARAGE_MAKES_TABLE. " mk 
-				LEFT JOIN " . GARAGE_MODELS_TABLE . " mdl ON mk.id = mdl.make_id
-			ORDER BY mk.make, mdl.model";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'md.id as model_id, md.model, mk.id as make_id, mk.make, md.pending as model_pending, mk.pending as make_pending',
+			'FROM'		=> array(
+				GARAGE_MAKES_TABLE	=> 'mk',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+					'ON'	=> 'mk.id = md.make_id'
+				)
+			),
+			'ORDER_BY'	=>	'mk.make, md.model'
+		));
 
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -233,7 +263,6 @@ class garage_model
 		{
 			$data[] = $row;
 		}
-
 		$db->sql_freeresult($result);
 
 		return $data;
@@ -247,9 +276,14 @@ class garage_model
 	{
 		global $db;
 
-		$sql = "SELECT model 
-			FROM " . GARAGE_MODELS_TABLE . " 
-			WHERE id = $model_id";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'md.id, md.model, md.make_id',
+			'FROM'		=> array(
+				GARAGE_MODELS_TABLE	=> 'md',
+			),
+			'WHERE'		=>  "md.id = $model_id"
+		));
 
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -270,9 +304,14 @@ class garage_model
 	{
 		global $db, $template, $theme;
 
-		$sql = "SELECT make.* 
-			FROM " . GARAGE_MAKES_TABLE ." AS make
-			WHERE make.pending = 1";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'mk.*',
+			'FROM'		=> array(
+				GARAGE_MAKES_TABLE	=> 'mk',
+			),
+			'WHERE'		=>  "mk.pending = 1"
+		));
 
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -284,6 +323,7 @@ class garage_model
 		{
 			$rows[] = $row;
 		}
+		$db->sql_freeresult($result);
 
 		if ( sizeof($rows) >= 1 )
 		{
@@ -297,7 +337,6 @@ class garage_model
 				'MAKE' 		=> $rows[$i]['make'])
 			);
 		}
-		$db->sql_freeresult($result);
 
 		//Return Count Of Pending Items
 		return $count;
@@ -311,21 +350,27 @@ class garage_model
 	{
 		global $db, $template, $theme;
 
-		$sql = "SELECT model.* , make.make
-			FROM " . GARAGE_MODELS_TABLE ." AS model
-	        		LEFT JOIN " . GARAGE_MAKES_TABLE . " AS make ON model.make_id = make.id
-			WHERE model.pending = 1";
-
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could not query users', '', __LINE__, __FILE__, $sql);
-		}
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'md.*, mk.make',
+			'FROM'		=> array(
+				GARAGE_MODELS_TABLE	=> 'md',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+					'ON'	=> 'md.make_id = mk.id'
+				)
+			),
+			'ORDER_BY'	=>	'md.pending = 1'
+		));
 
 		$rows = NULL;
 		while ( $row = $db->sql_fetchrow($result) )
 		{
 			$rows[] = $row;
 		}
+		$db->sql_freeresult($result);
 
 		if ( sizeof($rows) >= 1 )
 		{
@@ -339,9 +384,7 @@ class garage_model
 				'MAKE' 		=> $rows[$i]['make'],
 				'MODEL' 	=> $rows[$i]['model'])
 			);
-			$i++;
 		}
-		$db->sql_freeresult($result);
 
 		//Return Count Of Pending Items
 		return $count;

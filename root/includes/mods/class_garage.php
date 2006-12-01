@@ -41,7 +41,6 @@ while( $row = $db->sql_fetchrow($result) )
 
 class garage 
 {
-
 	var $classname = "garage";
 
 	/*========================================================================*/

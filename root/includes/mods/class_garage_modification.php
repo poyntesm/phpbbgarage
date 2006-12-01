@@ -26,7 +26,6 @@ if (!defined('IN_PHPBB'))
 
 class garage_modification
 {
-
 	var $classname = "garage_modification";
 
 	/*========================================================================*/
@@ -37,10 +36,23 @@ class garage_modification
 	{
 		global $cid, $db, $garage_vehicle;
 
-		$sql = "INSERT INTO ". GARAGE_MODS_TABLE ."
-			(garage_id, user_id, category_id, title, price, install_price, install_rating, product_rating, comments, date_created, date_updated, business_id, install_business_id, install_comments, purchase_rating)
-			VALUES
-			($cid, ".$garage_vehicle->get_vehicle_owner_id($cid).", ".$data['category_id'].", '".$data['title']."', '".$data['price']."', '".$data['install_price']."', '".$data['install_rating']."', '".$data['product_rating']."', '".$data['comments']."', '".time()."', '".time()."', '".$data['business_id']."', '".$data['install_business_id']."', '".$data['install_comments']."', '".$data['purchase_rating']."')";
+		$sql = 'INSERT INTO ' . GARAGE_MODS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+			'garage_id'		=> $cid,
+			'user_id'		=> $garage_vehicle->get_vehicle_owner_id($cid),
+			'category_id'		=> $data['category_id'],
+			'title'			=> $data['title'],
+			'price'			=> $data['price'],
+			'install_price'		=> $data['install_price'],
+			'install_rating'	=> $data['install_rating'],
+			'product_rating'	=> $data['product_rating'],
+			'comments,'		=> $data['comments'],
+			'date_created'		=> time(),
+			'date_updated'		=> time(),
+			'business_id'		=> $data['business_id'],
+			'install_business_id'	=> $data['install_business_id'],
+			'install_comments'	=> $data['install_comments'],
+			'purchase_rating'	=> $data['purchase_rating'])
+		);
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -60,9 +72,27 @@ class garage_modification
 	{
 		global $db, $cid, $mid;
 
-		$sql = "UPDATE ". GARAGE_MODS_TABLE ."
-			SET category_id = '".$data['category_id']."', title = '".$data['title']."', price = '".$data['price']."', install_price = '".$data['install_price']."', install_rating = '".$data['install_rating']."', product_rating = '".$data['product_rating']."', comments = '".$data['comments']."', install_comments = '".$data['install_comments']."' , business_id = '".$data['business_id']."', install_business_id = '".$data['install_business_id']."', date_updated = '".time()."', purchase_rating = '".$data['purchase_rating']."'
-			WHERE id = $mid and garage_id = $cid";
+		$update_sql = array(
+			'garage_id'		=> $cid,
+			'user_id'		=> $garage_vehicle->get_vehicle_owner_id($cid),
+			'category_id'		=> $data['category_id'],
+			'title'			=> $data['title'],
+			'price'			=> $data['price'],
+			'install_price'		=> $data['install_price'],
+			'install_rating'	=> $data['install_rating'],
+			'product_rating'	=> $data['product_rating'],
+			'comments,'		=> $data['comments'],
+			'date_updated'		=> time(),
+			'business_id'		=> $data['business_id'],
+			'install_business_id'	=> $data['install_business_id'],
+			'install_comments'	=> $data['install_comments'],
+			'purchase_rating'	=> $data['purchase_rating']
+		);
+
+		$sql = 'UPDATE ' . GARAGE_MODS_TABLE . '
+			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
+			WHERE id = $mid AND garage_id = $cid";
+
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -81,8 +111,13 @@ class garage_modification
 		global $db;
 
 	        // Get the total count of mods in the garage
-		$sql = "SELECT count(*) AS total_mods 
-			FROM " . GARAGE_MODS_TABLE;
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'COUNT(m.id) as total_mods',
+			'FROM'		=> array(
+				GARAGE_MODS_TABLE	=> 'm',
+			)
+		));
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -110,11 +145,8 @@ class garage_modification
 		//Lets See If There Is An Image Associated With This Modification
 		if (!empty($data['image_id']))
 		{
-			if ( (!empty($data['attach_location'])) OR (!empty($data['attach_thumb_location'])) )
-			{
-				//Seems To Be An Image To Delete, Let Call The Function
-				$garage_image->delete_image($data['image_id']);
-			}
+			//Seems To Be An Image To Delete, Let Call The Function
+			$garage_image->delete_image($data['image_id']);
 		}
 	
 		//Time To Delete The Actual Modification Now
@@ -122,171 +154,170 @@ class garage_modification
 	
 		return ;
 	}
-	
-	/*========================================================================*/
-	// Build Updated Modifications HTML If Required 
-	// Usage: show_updated_modifications();
-	/*========================================================================*/
-	function show_updated_modifications()
-	{
-		global $required_position, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config, $user;
-	
-		if ( $garage_config['enable_updated_modification'] != true )
-		{
-			return;
-		}
 
-		$template_block = 'block_'.$required_position;
-		$template_block_row = 'block_'.$required_position.'.row';
-		$template->assign_block_vars($template_block, array(
-			'BLOCK_TITLE' 	=> $user->lang['LAST_UPDATED_MODIFICATIONS'],
-			'COLUMN_1_TITLE'=> $user->lang['MODIFICATION'],
-			'COLUMN_2_TITLE'=> $user->lang['OWNER'],
-			'COLUMN_3_TITLE'=> $user->lang['UPDATED'])
-		);
-	 		
-	        // What's the count? Default to 10
-	        $limit = $garage_config['updated_modification_limit'] ? $garage_config['updated_modification_limit'] : 10;
-	
-	 	$sql = "SELECT mods.id, mods.garage_id, mods.user_id, mods.title AS mod_title, mods.date_updated AS POI, m.username, mods.garage_id 
-	                FROM " . GARAGE_MODS_TABLE . " AS mods 
-				LEFT JOIN " . GARAGE_TABLE . " AS g ON mods.garage_id = g.id
-			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-	                	LEFT JOIN " . USERS_TABLE . " AS m ON mods.user_id = m.user_id
-			WHERE makes.pending = 0 AND models.pending = 0
-	                ORDER BY POI DESC LIMIT $limit";
-	 		            
-	 	if(!$result = $db->sql_query($sql))
+	/*========================================================================*/
+	// Select Modifcations Based On Updated Time
+	// Usage: get_updated_modifications('limit');
+	/*========================================================================*/
+	function get_updated_modifications($limit)
+	{
+		global $db;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'm.id, m.garage_id, m.user_id, m.title AS mod_title, m.date_updated AS POI, u.username',
+			'FROM'		=> array(
+				GARAGE_MODS_TABLE	=> 'm',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'ON'	=> 'm.garage_id = g.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+					'ON'	=> 'g.model_id = md.id and md.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'm.user_id = u.user_id'
+				)
+			),
+			'WHERE'		=> "mk.pending = 0 AND md.pending = 0",
+			'ORDER_BY'	=> "POI DESC"
+		));
+
+	 	if(!$result = $db->sql_query_limit($sql, $limit))
 		{
 			message_die(GENERAL_ERROR, "Could Not Select Latest Modifications", "", __LINE__, __FILE__, $sql);
 		}
-	 		            
-	 	while ( $row = $db->sql_fetchrow($result) )
-	 	{
-			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1'	=> append_sid("garage.$phpEx", "mode=view_modification&amp;MID=" . $row['id'] . "&amp;CID=" . $row['garage_id']),
-				'U_COLUMN_2' 	=> append_sid("profile.$phpEx", "mode=viewprofile&amp;u=" . $row['user_id']),
-				'COLUMN_1_TITLE'=> $row['mod_title'],
-				'COLUMN_2_TITLE'=> $row['username'],
-				'COLUMN_3' 	=> $user->format_date($row['POI']))
-			);
-	 	}
-	
-		$required_position++;
-		return ;
-	}
-	
-	/*========================================================================*/
-	// Build Most Modified HTML If Required 
-	// Usage: show_most_modified();
-	/*========================================================================*/
-	function show_most_modified()
-	{
-		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config;
-	
-		if ( $garage_config['enable_most_modified'] != true )
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$data[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		if (empty($data))
 		{
 			return;
 		}
-
-		$template_block = 'block_'.$required_position;
-		$template_block_row = 'block_'.$required_position.'.row';
-		$template->assign_block_vars($template_block, array(
-			'BLOCK_TITLE' 	=> $user->lang['MOST_MODIFIED_VEHICLE'],
-			'COLUMN_1_TITLE'=> $user->lang['VEHICLE'],
-			'COLUMN_2_TITLE'=> $user->lang['OWNER'],
-			'COLUMN_3_TITLE'=> $user->lang['MODS'])
-		);
-	
-	        // What's the count? Default to 10
-	        $limit = $garage_config['most_modified_limit'] ? $garage_config['most_modified_limit'] : 10;
-	
-	 	$sql = "SELECT g.id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, 
-	                        g.user_id, COUNT(mods.id) AS POI, m.username 
-	                FROM " . GARAGE_TABLE . " AS g 
-	                	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-	                        LEFT JOIN " . USERS_TABLE . " AS m ON g.user_id = m.user_id 
-	                        LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON mods.garage_id = g.id
-			WHERE makes.pending = 0 AND models.pending = 0
-	                GROUP BY g.id 
-	                ORDER BY POI DESC LIMIT $limit";
-	 		            
-	 	if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, "Could Select Most Modified", "", __LINE__, __FILE__, $sql);
-		}
-	 		            
-	 	while ( $vehicle_data = $db->sql_fetchrow($result) )
-	 	{
-			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' 	=> append_sid("garage.$phpEx", "mode=view_vehicle&amp;CID=" . $vehicle_data['id']),
-				'U_COLUMN_2' 	=> append_sid("profile.$phpEx", "mode=viewprofile&amp;u=" . $vehicle_data['user_id']),
-				'COLUMN_1_TITLE'=> $vehicle_data['vehicle'],
-				'COLUMN_2_TITLE'=> $vehicle_data['username'],
-				'COLUMN_3' 	=> $vehicle_data['POI'])
-			);
-	 	}
-	
-		$required_position++;
-		return ;
+		return $data;
 	}
-	
+
 	/*========================================================================*/
-	// Build Newest Modifications HTML If Required 
-	// Usage:  show_newest_modifications()
+	// Select Modifcations Based On Created Time
+	// Usage: get_newest_modifications('limit');
 	/*========================================================================*/
-	function show_newest_modifications()
+	function get_newest_modifications($limit)
 	{
-		global $required_position, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config, $user;
-	
-		if ( $garage_config['enable_newest_modification'] != true )
+		global $db;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'm.id, m.garage_id, m.user_id, m.title AS mod_title, m.date_created AS POI, u.username',
+			'FROM'		=> array(
+				GARAGE_MODS_TABLE	=> 'm',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'ON'	=> 'm.garage_id = g.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+					'ON'	=> 'g.model_id = md.id and md.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'm.user_id = u.user_id'
+				)
+			),
+			'WHERE'		=> "mk.pending = 0 AND md.pending = 0",
+			'ORDER_BY'	=> "POI DESC"
+		));
+
+	 	if(!$result = $db->sql_query_limit($sql, $limit))
+		{
+			message_die(GENERAL_ERROR, "Could Not Select Newest Modifications", "", __LINE__, __FILE__, $sql);
+		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$data[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		if (empty($data))
 		{
 			return;
 		}
-
-		$template_block = 'block_'.$required_position;
-		$template_block_row = 'block_'.$required_position.'.row';
-		$template->assign_block_vars($template_block, array(
-			'BLOCK_TITLE' 	=> $user->lang['NEWEST_MODIFICATIONS'],
-			'COLUMN_1_TITLE'=> $user->lang['MODIFICATION'],
-			'COLUMN_2_TITLE'=> $user->lang['OWNER'],
-			'COLUMN_3_TITLE'=> $user->lang['CREATED'])
-		);
-	
-	        // What's the count? Default to 10
-	        $limit = $garage_config['newest_modification_limit'] ? $garage_config['newest_modification_limit'] : 10;
-	 		 		
-	 	$sql = "SELECT mods.id, mods.garage_id, mods.user_id, mods.title AS mod_title, mods.date_created AS POI,
-	       			m.username, mods.garage_id 
-	                FROM " . GARAGE_MODS_TABLE . " AS mods 
-				LEFT JOIN " . GARAGE_TABLE . " AS g ON mods.garage_id = g.id
-			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-	                	LEFT JOIN " . USERS_TABLE . " AS m ON mods.user_id = m.user_id
-			WHERE makes.pending = 0 AND models.pending = 0
-	                ORDER BY POI DESC LIMIT $limit";
-	 		            
-	 	if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, "Could not query vehicle information", "", __LINE__, __FILE__, $sql);
-		}
-	 		            
-	 	while ( $vehicle_data = $db->sql_fetchrow($result) )
-	 	{
-			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' 	=> append_sid("garage.$phpEx", "mode=view_modification&amp;MID=" . $vehicle_data['id'] . "&amp;CID=" . $vehicle_data['garage_id']),
-				'U_COLUMN_2' 	=> append_sid("profile.$phpEx", "mode=viewprofile&amp;u=" . $vehicle_data['user_id']),
-				'COLUMN_1_TITLE'=> $vehicle_data['mod_title'],
-				'COLUMN_2_TITLE'=> $vehicle_data['username'],
-				'COLUMN_3' 	=> $user->format_date($vehicle_data['POI']))
-			);
-	 	}
-	
-		$required_position++;
-		return ;
+		return $data;
 	}
+
+	/*========================================================================*/
+	// Select Vehicles Based On Modification Count
+	// Usage: get_most_modified('limit');
+	/*========================================================================*/
+	function get_most_modified($limit)
+	{
+		global $db;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'g.id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, g.user_id, COUNT(m.id) AS POI, u.username',
+			'FROM'		=> array(
+				GARAGE_TABLE	=> 'g',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+					'ON'	=> 'g.model_id = md.id and md.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'g.user_id = u.user_id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODS_TABLE => 'm'),
+					'ON'	=> 'g.id = m.garage_id'
+				)
+			),
+			'WHERE'		=> "mk.pending = 0 AND md.pending = 0",
+			'GROUP_BY'	=> "g.id",
+			'ORDER_BY'	=> "POI DESC"
+		));
+
+	 	if(!$result = $db->sql_query_limit($sql, $limit))
+		{
+			message_die(GENERAL_ERROR, "Could Not Select Most Modified", "", __LINE__, __FILE__, $sql);
+		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$data[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		if (empty($data))
+		{
+			return;
+		}
+		return $data;
+	}
+
 	
 	/*========================================================================*/
 	// Select All Modification Data From DB
@@ -295,17 +326,46 @@ class garage_modification
 	function get_modification($mid)
 	{
 		global $db;
-	
-		$sql = "SELECT mods.*, g.made_year, g.id, g.currency, images.*, user.username, user.user_avatar_type, user.user_avatar, images.attach_ext, images.attach_id, images.attach_file, cats.title as category_title, makes.make, models.model, bus.title as business_name, ins.title as install_business_name, ins.id as install_business_id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
-     			FROM (" . GARAGE_MODS_TABLE . " AS mods, " . GARAGE_TABLE . " AS g)
-				LEFT JOIN " . USERS_TABLE ." AS user ON g.user_id = user.user_id
-				LEFT JOIN " . GARAGE_CATEGORIES_TABLE . " AS cats ON cats.id = mods.category_id
-        			LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = mods.image_id 
-                        	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-                        	LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-                        	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " AS bus ON mods.business_id = bus.id
-                        	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " AS ins ON mods.install_business_id = ins.id
-        		WHERE mods.id = $mid AND g.id = mods.garage_id";
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'm.*, g.made_year, g.id, g.currency, i.*, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.title as business_title, b2.title as install_business_name, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
+			'FROM'		=> array(
+				GARAGE_TABLE		=> 'g',
+				GARAGE_MODS_TABLE	=> 'm',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_CATEGORIES_TABLE => 'c'),
+					'ON'	=> 'm.category_id = c.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_IMAGE_TABLE => 'i'),
+					'ON'	=> 'm.image_id = i.attach_id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+					'ON'	=> 'g.model_id = md.id and md.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'g.user_id = u.user_id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b1'),
+					'ON'	=> 'm.business_id = b1.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b2'),
+					'ON'	=> 'm.install_business_id = b2.id'
+				)
+			),
+			'WHERE'		=> "m.id = $mid AND g.id = m.garage_id"
+		));
 
       		if ( !($result = $db->sql_query($sql)) )
       		{
@@ -319,20 +379,28 @@ class garage_modification
 	}
 
 	/*========================================================================*/
-	// Select All Modification Data From DB
+	// Select Vehicle Modifications From DB By Category
 	// Usage: get_modification_by_category('modification id');
 	/*========================================================================*/
 	function get_modifications_by_category($cid, $category_id)
 	{
 		global $db;
 
-		$sql = "SELECT m.*,images.attach_id, images.attach_hits, images.attach_ext, images.attach_location,
-	                       images.attach_file, images.attach_thumb_location, images.attach_is_image 
-	       		FROM " . GARAGE_MODS_TABLE . " as m
-				LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = m.image_id
-		       	WHERE m.garage_id = $cid 
-				AND m.category_id = $category_id
-	                ORDER BY title ASC";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'm.*, i.attach_id, i.attach_hits, i.attach_ext, i.attach_location, i.attach_file, i.attach_thumb_location, i.attach_is_image ',
+			'FROM'		=> array(
+				GARAGE_MODS_TABLE	=> 'm',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_IMAGE_TABLE => 'i'),
+					'ON'	=> 'm.image_id = i.attach_id'
+				)
+			),
+			'WHERE'		=> "m.garage_id = $cid AND m.category_id = $category_id",
+			'ORDER_BY'	=> "title ASC"
+		));
 
       		if ( !($result = $db->sql_query($sql)) )
       		{
@@ -356,22 +424,37 @@ class garage_modification
 	function get_modifications_by_install_business($business_id, $start = 0 , $limit = 20)
 	{
 		global $db;
-	
-		$sql = "SELECT mods.id, mods.garage_id, mods.title AS mod_title, mods.install_price, mods.install_rating, mods.install_comments, u.username, u.user_id, makes.make, models.model, g.made_year, b.id as business_id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
-               		FROM (" . GARAGE_MODS_TABLE . " mods, " . GARAGE_BUSINESS_TABLE . " b)
-    				LEFT JOIN " . GARAGE_TABLE . " g ON ( mods.garage_id = g.id )
-		    		LEFT JOIN " . USERS_TABLE . " u ON ( mods.user_id = u.user_id )
-	        		LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
-       				LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
-			WHERE mods.install_business_id = b.id
-				AND b.garage =1
-				AND b.pending = 0
-				AND b.id = $business_id
-				AND makes.pending = 0 AND models.pending = 0
-			ORDER BY mods.id, mods.date_created DESC
-			LIMIT $start, $limit";
 
-      		if ( !($result = $db->sql_query($sql)) )
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'SELECT m.id, m.garage_id, m.title AS mod_title, m.install_price, m.install_rating, m.install_comments, u.username, u.user_id, mk.make, md.model, g.made_year, b.id as business_id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
+			'FROM'		=> array(
+				GARAGE_MODS_TABLE	=> 'm',
+				GARAGE_BUSINESS_TABLE	=> 'b',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'ON'	=> 'm._garage_id = g.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+					'ON'	=> 'g.model_id = md.id and md.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'g.user_id = u.user_id'
+				)
+			),
+			'WHERE'		=> "m.install_business_id = b.id AND b.garage =1 AND b.pending = 0 AND b.id = $business_id AND mk.pending = 0 AND md.pending = 0",
+			'ORDER_BY'	=> "m.id, m.date_created DESC"
+		));
+
+      		if ( !($result = $db->sql_query_limit($sql, $limit, $start)) )
       		{
          		message_die(GENERAL_ERROR, 'Could Not Select Modification Data', '', __LINE__, __FILE__, $sql);
       		}
@@ -393,22 +476,37 @@ class garage_modification
 	function get_modifications_by_business($business_id, $start = 0, $limit = 20)
 	{
 		global $db;
-	
-		$sql = "SELECT mods.id, mods.garage_id, mods.title AS mod_title, mods.price, mods.purchase_rating, mods.product_rating, mods.comments, u.username, u.user_id, makes.make, models.model, g.made_year, b.id as business_id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
-               		FROM (" . GARAGE_MODS_TABLE . " mods, " . GARAGE_BUSINESS_TABLE . " b)
-    				LEFT JOIN " . GARAGE_TABLE . " g ON ( mods.garage_id = g.id )
-		    		LEFT JOIN " . USERS_TABLE . " u ON ( mods.user_id = u.user_id )
-	        		LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
-       				LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
-			WHERE mods.business_id = b.id
-				AND ( b.web_shop =1 OR b.retail_shop =1 )
-				AND b.pending = 0
-				AND b.id = $business_id
-				AND makes.pending = 0 AND models.pending = 0 
-			ORDER BY mods.id, mods.date_created DESC
-			LIMIT $start, $limit";
 
-      		if ( !($result = $db->sql_query($sql)) )
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'm.id, m.garage_id, m.title AS mod_title, m.price, m.purchase_rating, m.product_rating, m.comments, u.username, u.user_id, mk.make, md.model, g.made_year, b.id as business_id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
+			'FROM'		=> array(
+				GARAGE_MODS_TABLE	=> 'm',
+				GARAGE_BUSINESS_TABLE	=> 'b',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'ON'	=> 'm._garage_id = g.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+					'ON'	=> 'g.model_id = md.id and md.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'g.user_id = u.user_id'
+				)
+			),
+			'WHERE'		=> "m.business_id = b.id AND ( b.web_shop =1 OR b.retail_shop =1 ) AND b.pending = 0 AND b.id = $business_id AND mk.pending = 0 AND md.pending = 0",
+			'ORDER_BY'	=> "m.id, m.date_created DESC"
+		));
+
+      		if ( !($result = $db->sql_query_limit($sql, $limit, $start)) )
       		{
          		message_die(GENERAL_ERROR, 'Could Not Select Modification Data', '', __LINE__, __FILE__, $sql);
       		}
@@ -428,13 +526,22 @@ class garage_modification
 	/*========================================================================*/
 	function get_modifications_by_vehicle($cid)
 	{
-
 		global $db;
 
-		$sql = "SELECT m.*, images.*, 
-         		FROM " . GARAGE_MODS_TABLE . " m
-				LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON (images.attach_id = m.image_id)
-			WHERE m.garage_id = $cid";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'm.*, i.*',
+			'FROM'		=> array(
+				GARAGE_MODS_TABLE	=> 'm',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_IMAGE_TABLE => 'i'),
+					'ON'	=> 'm.image_id = i.attach_id'
+				)
+			),
+			'WHERE'		=> "m.garage_id = $cid"
+		));
 
 		if ( !($result = $db->sql_query($sql)) )
       		{
@@ -449,6 +556,134 @@ class garage_modification
 		$db->sql_freeresult($result);
 
 		return $rows;
+	}
+
+	/*========================================================================*/
+	// Build Updated Modifications HTML If Required 
+	// Usage: show_updated_modifications();
+	/*========================================================================*/
+	function show_updated_modifications()
+	{
+		global $required_position, $template, $phpEx, $garage_config, $user, $phpbb_root_path;
+	
+		if ( $garage_config['enable_updated_modification'] != true )
+		{
+			return;
+		}
+
+		$template_block = 'block_'.$required_position;
+		$template_block_row = 'block_'.$required_position.'.row';
+		$template->assign_block_vars($template_block, array(
+			'BLOCK_TITLE' 	=> $user->lang['LAST_UPDATED_MODIFICATIONS'],
+			'COLUMN_1_TITLE'=> $user->lang['MODIFICATION'],
+			'COLUMN_2_TITLE'=> $user->lang['OWNER'],
+			'COLUMN_3_TITLE'=> $user->lang['UPDATED'])
+		);
+	 		
+	        // What's the count? Default to 10
+		$limit = $garage_config['updated_modification_limit'] ? $garage_config['updated_modification_limit'] : 10;
+
+		//Get Updated Modifications
+		$rows = $this->get_updated_modifications($limit);
+	
+		for($i = 0; $i < count($rows); $i++)
+	 	{
+			$template->assign_block_vars($template_block_row, array(
+				'U_COLUMN_1'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_modification&amp;MID=" . $rows[$i]['id'] . "&amp;CID=" . $rows[$i]['garage_id']),
+				'U_COLUMN_2' 	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $rows[$i]['user_id']),
+				'COLUMN_1_TITLE'=> $rows[$i]['mod_title'],
+				'COLUMN_2_TITLE'=> $rows[$i]['username'],
+				'COLUMN_3' 	=> $user->format_date($rows[$i]['POI']))
+			);
+	 	}
+		$required_position++;
+		return ;
+	}
+	
+	/*========================================================================*/
+	// Build Most Modified HTML If Required 
+	// Usage: show_most_modified();
+	/*========================================================================*/
+	function show_most_modified()
+	{
+		global $required_position, $user, $template, $phpEx, $garage_config, $phpbb_root_path;
+	
+		if ( $garage_config['enable_most_modified'] != true )
+		{
+			return;
+		}
+
+		$template_block = 'block_'.$required_position;
+		$template_block_row = 'block_'.$required_position.'.row';
+		$template->assign_block_vars($template_block, array(
+			'BLOCK_TITLE' 	=> $user->lang['MOST_MODIFIED_VEHICLE'],
+			'COLUMN_1_TITLE'=> $user->lang['VEHICLE'],
+			'COLUMN_2_TITLE'=> $user->lang['OWNER'],
+			'COLUMN_3_TITLE'=> $user->lang['MODS'])
+		);
+	
+	        // What's the count? Default to 10
+		$limit = $garage_config['most_modified_limit'] ? $garage_config['most_modified_limit'] : 10;
+
+		//Get Most Modified
+		$rows = $this->get_most_modified($limit);
+	
+		for($i = 0; $i < count($rows); $i++)
+	 	{
+			$template->assign_block_vars($template_block_row, array(
+				'U_COLUMN_1' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=" . $rows[$i]['id']),
+				'U_COLUMN_2' 	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $rows[$i]['user_id']),
+				'COLUMN_1_TITLE'=> $rows[$i]['vehicle'],
+				'COLUMN_2_TITLE'=> $rows[$i]['username'],
+				'COLUMN_3' 	=> $rows[$i]['POI'])
+			);
+	 	}
+	
+		$required_position++;
+		return ;
+	}
+	
+	/*========================================================================*/
+	// Build Newest Modifications HTML If Required 
+	// Usage:  show_newest_modifications()
+	/*========================================================================*/
+	function show_newest_modifications()
+	{
+		global $required_position, $template, $phpEx, $garage_config, $user, $phpbb_root_path;
+	
+		if ( $garage_config['enable_newest_modification'] != true )
+		{
+			return;
+		}
+
+		$template_block = 'block_'.$required_position;
+		$template_block_row = 'block_'.$required_position.'.row';
+		$template->assign_block_vars($template_block, array(
+			'BLOCK_TITLE' 	=> $user->lang['NEWEST_MODIFICATIONS'],
+			'COLUMN_1_TITLE'=> $user->lang['MODIFICATION'],
+			'COLUMN_2_TITLE'=> $user->lang['OWNER'],
+			'COLUMN_3_TITLE'=> $user->lang['CREATED'])
+		);
+	
+	        // What's the count? Default to 10
+	        $limit = $garage_config['newest_modification_limit'] ? $garage_config['newest_modification_limit'] : 10;
+
+		//Get Newest Modifications
+		$rows = $this->get_newest_modifications($limit);
+	
+		for($i = 0; $i < count($rows); $i++)
+	 	{
+			$template->assign_block_vars($template_block_row, array(
+				'U_COLUMN_1' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_modification&amp;MID=" . $rows[$i]['id'] . "&amp;CID=" . $rows[$i]['garage_id']),
+				'U_COLUMN_2' 	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $rows[$i]['user_id']),
+				'COLUMN_1_TITLE'=> $rows[$i]['mod_title'],
+				'COLUMN_2_TITLE'=> $rows[$i]['username'],
+				'COLUMN_3' 	=> $user->format_date($rows[$i]['POI']))
+			);
+	 	}
+	
+		$required_position++;
+		return ;
 	}
 }
 

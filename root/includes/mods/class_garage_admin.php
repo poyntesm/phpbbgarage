@@ -26,7 +26,6 @@ if (!defined('IN_PHPBB'))
 
 class garage_admin
 {
-
 	var $classname = "garage_admin";
 
 	/*========================================================================*/
@@ -37,17 +36,11 @@ class garage_admin
 	{
 		global $db;
 
-		$sql = "INSERT INTO ". GARAGE_CATEGORIES_TABLE ." 
-			(
-				title,
-				field_order
-			)
-			VALUES 
-			(
-				'" . $data['title'] . "',
-				" . $data['field_order'] . " 
-			)";
-	
+		$sql = 'INSERT INTO ' . GARAGE_CATEGORIES_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+			'title'		=> $data['title'],
+			'field_order'	=> $data['field_order'])
+		);
+
 		if(!$result = $db->sql_query($sql))
 		{
 			message_die(GENERAL_ERROR, 'Could Not Insert New Category', '', __LINE__, __FILE__, $sql);
@@ -64,9 +57,13 @@ class garage_admin
 	{
 		global $db;
 
-	        // Get the total count of mods in the garage
-		$sql = "SELECT count(*) AS total 
-			FROM " . GARAGE_CATEGORIES_TABLE;
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'COUNT(c.*) as total',
+			'FROM'		=> array(
+				GARAGE_CATEGORIES_TABLE	=> 'c',
+			)
+		));
 
 		if(!$result = $db->sql_query($sql))
 		{

@@ -26,7 +26,6 @@ if (!defined('IN_PHPBB'))
 
 class garage_guestbook
 {
-
 	var $classname = "garage_guestbook";
 
 	/*========================================================================*/
@@ -37,9 +36,15 @@ class garage_guestbook
 	{
 		global $db;
 
-        	// Get the total count of comments in the garage
-		$sql = "SELECT count(*) AS total_comments 
-			FROM " . GARAGE_GUESTBOOKS_TABLE;
+		// Get the total count of comments in the garage
+	
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'COUNT(gb.id) AS total_comments',
+			'FROM'		=> array(
+				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
+			)
+		));
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -62,10 +67,13 @@ class garage_guestbook
 	{
 		global $cid, $db, $user_ip, $user;
 
-		$sql = "INSERT INTO " . GARAGE_GUESTBOOKS_TABLE . "
-			(garage_id, author_id, post_date, ip_address, post)
-			VALUES
-			('$cid', '" . $user->data['user_id'] . "', '" . time() . "', '$user_ip', '" . $data['comments'] . "')";
+		$sql = 'INSERT INTO ' . GARAGE_GUESTBOOKS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+			'garage_id'	=> $cid,
+			'author_id'	=> $data['user_id'],
+			'post_date'	=> time(),
+			'ip_address'	=> $user_ip,
+			'post'		=> $data['comments'])
+		);
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -83,15 +91,33 @@ class garage_guestbook
 	{
 		global $db;
 
-		// Get Guestbook Entries
-        	$sql = "SELECT gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address,	u.username, u.user_id, u.user_posts, u.user_from, u.user_website, u.user_email, u.user_icq, u.user_aim, u.user_yim, u.user_regdate, u.user_msnm, u.user_viewemail, u.user_rank,	u.user_sig, u.user_sig_bbcode_uid, u.user_avatar, u.user_avatar_type, u.user_allowsmile, u.user_allow_viewonline, u.user_session_time, g.made_year, g.id as garage_id, makes.make, models.model
-                        FROM " . GARAGE_GUESTBOOKS_TABLE . " gb 
-                        	LEFT JOIN " . USERS_TABLE . " u ON gb.author_id = u.user_id 
-				LEFT JOIN " . GARAGE_TABLE ." g ON g.member_id = gb.author_id and g.main_vehicle = 1 
-       				LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
-                		LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id 
-                        WHERE gb.garage_id = $cid
-                        ORDER BY gb.post_date ASC";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address,	u.username, u.user_id, u.user_posts, u.user_from, u.user_website, u.user_email, u.user_icq, u.user_aim, u.user_yim, u.user_regdate, u.user_msnm, u.user_viewemail, u.user_rank,	u.user_sig, u.user_sig_bbcode_uid, u.user_avatar, u.user_avatar_type, u.user_allowsmile, u.user_allow_viewonline, u.user_session_time, g.made_year, g.id as garage_id, mk.make, md.model',
+			'FROM'		=> array(
+				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'gb.author_id = u.user_id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'ON'	=> 'g.user_id = gb.author_id and g.main_vehicle = 1'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+					'ON'	=> 'g.model_id = md.id and md.pending = 0'
+				)
+			),
+			'WHERE'		=>  "gb.garage_id = $cid",
+			'ORDER_BY'	=>  "gb.post_date ASC"
+		));
 
       		if ( !($result = $db->sql_query($sql)) )
       		{
@@ -120,16 +146,35 @@ class garage_guestbook
 	{
 		global $db;
 
-	 	$sql = "SELECT gb.garage_id AS id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, gb.author_id AS member_id, gb.post_date, m.username 
-	                FROM " . GARAGE_GUESTBOOKS_TABLE . " gb 
-	                	LEFT JOIN " . GARAGE_TABLE . " g ON gb.garage_id = g.id
-	                        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
-	                        LEFT JOIN " . USERS_TABLE . " m ON gb.author_id = m.user_id
-			WHERE makes.pending = 0 AND models.pending = 0
-	                ORDER BY post_date DESC LIMIT $limit";
-	
-	 	if(!$result = $db->sql_query($sql))
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'gb.garage_id AS id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, gb.author_id AS author_id, gb.post_date, u.username',
+			'FROM'		=> array(
+				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'gb.author_id = u.user_id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'ON'	=> 'g.user_id = gb.author_id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+					'ON'	=> 'g.model_id = md.id and md.pending = 0'
+				)
+			),
+			'WHERE'		=>  "mk.pending = 0 AND md.pending = 0",
+			'ORDER_BY'	=>  "gb.post_date ASC"
+		));
+
+	 	if(!$result = $db->sql_query_limit($sql, $limit))
 		{
 			message_die(GENERAL_ERROR, "Could not query vehicle information", "", __LINE__, __FILE__, $sql);
 		}
@@ -156,14 +201,33 @@ class garage_guestbook
 	{
 		global $db;
 
-		$sql = "SELECT gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, gb.garage_id, g.made_year, makes.make, models.model, u.username, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
-               	        FROM " . GARAGE_GUESTBOOKS_TABLE . " gb 
-				LEFT JOIN " . GARAGE_TABLE . " g on g.id = gb.garage_id
-                        	LEFT JOIN " . USERS_TABLE . " u ON g.member_id = u.user_id 
-       				LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id
-                		LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
-                        WHERE gb.id = $comment_id
-                        ORDER BY gb.post_date ASC";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, gb.garage_id, g.made_year, mk.make, md.model, u.username, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
+			'FROM'		=> array(
+				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'gb.author_id = u.user_id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'ON'	=> 'g.user_id = gb.author_id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+					'ON'	=> 'g.model_id = md.id and md.pending = 0'
+				)
+			),
+			'WHERE'		=>  "gb.id = $comment_id",
+			'ORDER_BY'	=>  "gb.post_date ASC"
+		));
 
               	if( !($result = $db->sql_query($sql)) )
        		{
@@ -188,6 +252,12 @@ class garage_guestbook
 	function send_user_pm($data)
 	{
 		global $db, $garage, $user;
+
+		//
+		//
+		//	REPLACE WITH A NATIVE FUNCTION ????
+		//
+		//
 
 		$garage->update_single_field(USERS_TABLE, 'user_new_privmsg', '1', 'user_id', $user->data['user_id']);	
 		$garage->update_single_field(USERS_TABLE, 'user_last_privmsg', '9999999999', 'user_id', $user->data['user_id']);	

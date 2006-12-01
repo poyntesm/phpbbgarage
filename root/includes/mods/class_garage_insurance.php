@@ -36,10 +36,13 @@ class garage_insurance
 	{
 		global $cid, $db;
 
-		$sql = "INSERT INTO " . GARAGE_INSURANCE_TABLE . "
-			(garage_id, premium, cover_type, comments, business_id)
-			VALUES
-			('$cid', '" . $data['premium'] . "', '" . $data['cover_type'] . "', '" . $data['comments'] . "', '" . $data['business_id'] . "')";
+		$sql = 'INSERT INTO ' . GARAGE_INSURANCE_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+			'garage_id'	=> $cid,
+			'premium'	=> $data['premium'],
+			'cover_type'	=> $data['cover_type'],
+			'comments'	=> $data['comments'],
+			'business_id'	=> $data['business_id'])
+		);
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -57,9 +60,17 @@ class garage_insurance
 	{
 		global $db, $cid, $ins_id;
 
-		$sql = "UPDATE " . GARAGE_INSURANCE_TABLE . "
-			SET business_id = '" . $data['business_id'] . "', premium = '".$data['premium']."', cover_type = '".$data['cover_type']."', comments = '".$data['comments']."' 
-			WHERE id = '$ins_id' and garage_id = '$cid'";
+		$update_sql = array(
+			'premium'	=> $data['premium'],
+			'cover_type'	=> $data['cover_type'],
+			'comments'	=> $data['comments'],
+			'business_id'	=> $data['business_id']
+		);
+
+		$sql = 'UPDATE ' . GARAGE_INSURANCE_TABLE . '
+			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
+			WHERE id = $ins_id AND garage_id = $cid";
+
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -77,12 +88,6 @@ class garage_insurance
 	{
 		global $garage;
 	
-		//Right They Want To Delete A Insurance
-		if (empty($ins_id))
-		{
-	 		message_die(GENERAL_ERROR, 'Insurance ID Not Entered', '', __LINE__, __FILE__);
-		}
-
 		//Time To Delete The Actual Insurance Premium
 		$garage->delete_rows(GARAGE_INSURANCE_TABLE, 'id', $ins_id);	
 	
@@ -97,13 +102,32 @@ class garage_insurance
 	{
 		global $db;
 
-		$sql = "SELECT ins.*, bus.title, g.made_year, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
-     			FROM " . GARAGE_INSURANCE_TABLE . " AS ins 
-                        	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " AS bus ON ins.business_id = bus.id
-		          	LEFT JOIN " . GARAGE_TABLE . " AS g ON ins.garage_id = g.id
-		          	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-                        	LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-        		WHERE ins.id = $ins_id ";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'in.*, b.title, g.made_year, mk.make, md.model, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
+			'FROM'		=> array(
+				GARAGE_INSURANCE_TABLE	=> 'in',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'ON'	=> 'g.id = in.garage_id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+					'ON'	=> 'g.model_id = md.id and md.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b'),
+					'ON'	=> 'b_id = in.business_id'
+				)
+			),
+			'WHERE'		=>  "in.id = $ins_id"
+		));
 
       		if ( !($result = $db->sql_query($sql)) )
       		{
@@ -120,25 +144,48 @@ class garage_insurance
 	// Select All Insurance Premiums Data From DB
 	// Usage: get_all_premiums('additional where', 'order', 'ASC|DESC', 'start', 'end');
 	/*========================================================================*/
-	function get_all_premiums($additional_where = NULL, $order_by, $sort_order, $start = 0, $end = 10000)
+	function get_all_premiums($additional_where = NULL, $order_by, $sort_order, $start = 0, $limit = 10000)
 	{
 		global $db;
 
-		$sql = "SELECT i.*, g.*, b.title, b.id as business_id, makes.make, models.model, user.username, user.user_id, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
-        		FROM " . GARAGE_INSURANCE_TABLE . " AS i 
-                    		LEFT JOIN " . GARAGE_TABLE . " AS g ON i.garage_id = g.id
-	                    	LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON i.garage_id = mods.garage_id
-        	            	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " AS b ON i.business_id = b.id
-			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-		        	LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id 
-			        LEFT JOIN " . USERS_TABLE . " AS user ON g.user_id = user.user_id 
-			WHERE makes.pending = 0 AND models.pending = 0
-				".$additional_where."
-		        GROUP BY i.id
-			ORDER BY $order_by $sort_order
-			LIMIT $start, $end";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'i.*, g.*, b.title, b.id as business_id, mk.make, md.model, u.username, u.user_id, ( SUM(m.price) + SUM(m.install_price) ) AS total_spent, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
+			'FROM'		=> array(
+				GARAGE_INSURANCE_TABLE	=> 'i',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'ON'	=> 'g.id = in.garage_id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+					'ON'	=> 'g.model_id = md.id and md.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b'),
+					'ON'	=> 'i.business_id = b.id'
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'g.user_id = u.user_id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODS_TABLE => 'm'),
+					'ON'	=> 'i.garage_id = m.garage_id'
+				)
+			),
+			'WHERE'		=>  "mk.pending = 0 AND md.pending = 0 $additional_where",
+			'GROUP_BY'	=>  "i.id",
+			'ORDER_BY'	=>  "$order_by $sort_order"
+		));
 
-      		if ( !($result = $db->sql_query($sql)) )
+      		if ( !($result = $db->sql_query_limit($sql, $limit, $start)) )
       		{
          		message_die(GENERAL_ERROR, 'Could Not Get Insurance Data', '', __LINE__, __FILE__, $sql);
       		}
@@ -165,19 +212,37 @@ class garage_insurance
 	{
 		global $db;
 
-		$sql = "SELECT i.*, g.made_year, b.title, b.id as business_id, makes.make, models.model, user.username, user.user_id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
-       			FROM " . GARAGE_INSURANCE_TABLE . " i 
-               	    		LEFT JOIN " . GARAGE_TABLE . " g ON ( i.garage_id = g.id )
-       	        	    	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " b ON ( i.business_id = b.id )
-		        	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON ( g.make_id = makes.id )
-		        	LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON ( g.model_id = models.id )
-			        LEFT JOIN " . USERS_TABLE . " user ON ( g.user_id = user.user_id )
-			WHERE i.business_id = b.id
-				AND b.insurance =1
-				AND b.pending = 0
-				AND b.id = $business_id
-				AND makes.pending = 0 AND models.pending = 0 
-			GROUP BY i.id";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'i.*, g.made_year, b.title, b.id as business_id, mk.make, md.model, u.username, u.user_id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
+			'FROM'		=> array(
+				GARAGE_INSURANCE_TABLE	=> 'i',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'ON'	=> 'g.id = in.garage_id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+					'ON'	=> 'g.model_id = md.id and md.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b'),
+					'ON'	=> 'i.business_id = b.id'
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'g.user_id = u.user_id'
+				)
+			),
+			'WHERE'		=>  "i.business_id = b.id AND b.insurance =1 AND b.pending = 0 AND b.id = $business_id AND mk.pending = 0 AND md.pending = 0",
+			'GROUP_BY'	=>  "i.id"
+		));
 
 	   	if ( !($result = $db->sql_query($sql)) )
       		{
@@ -201,13 +266,15 @@ class garage_insurance
 	{
 		global $db;
 
-		$sql = "SELECT round(max( i.premium ),2) AS max, round(min( i.premium ),2) AS min, round(avg( i.premium ),2) AS avg
-			FROM " . GARAGE_BUSINESS_TABLE . " b, " . GARAGE_INSURANCE_TABLE . " i
-			WHERE i.business_id = b.id
-				AND b.id = $business_id 
-				AND b.insurance =1
-				AND i.cover_type = '".htmlspecialchars($cover_type)."'
-				AND i.premium > 0";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'round(max( i.premium ),2) AS max, round(min( i.premium ),2) AS min, round(avg( i.premium ),2) AS avg',
+			'FROM'		=> array(
+				GARAGE_BUSINESS_TABLE	=> 'b',
+				GARAGE_INSURANCE_TABLE	=> 'i',
+			),
+			'WHERE'		=>  "i.business_id = b.id AND b.id = $business_id AND b.insurance =1 AND i.cover_type = '".htmlspecialchars($cover_type)."' AND i.premium > 0"
+		));
 
 		if( !($result = $db->sql_query($sql)) )
        		{
@@ -228,10 +295,20 @@ class garage_insurance
 	{
 		global $db;
 
-		$sql = "SELECT ins.*, bus.title
-	        	FROM " . GARAGE_INSURANCE_TABLE . " as ins
-	                	LEFT JOIN " . GARAGE_BUSINESS_TABLE . " AS bus ON ins.business_id = bus.id
-		       	WHERE garage_id = $cid";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'i.*, b.*',
+			'FROM'		=> array(
+				GARAGE_INSURANCE_TABLE	=> 'i',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b'),
+					'ON'	=> 'i.business_id = b.id'
+				)
+			),
+			'WHERE'		=>  "i.garage_id = $cid"
+		));
 	
 	       	if( !($result = $db->sql_query($sql)) )
 	       	{

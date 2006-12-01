@@ -136,7 +136,7 @@ class garage_dynorun
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'count(d.id) as total',
+			'SELECT'	=> 'COUNT(d.id) as total',
 			'FROM'		=> array(
 				GARAGE_DYNORUN_TABLE	=> 'd',
 			),
@@ -309,7 +309,6 @@ class garage_dynorun
 		{
 			$data[] = $row;
 		}
-
 		$db->sql_freeresult($result);
 
 		if (empty($data))

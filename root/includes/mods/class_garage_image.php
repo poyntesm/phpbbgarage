@@ -183,16 +183,10 @@ class garage_image
 	{
 		global $db, $cid;
 
-		$sql = "INSERT INTO ". GARAGE_GALLERY_TABLE ." 
-			(
-				garage_id,
-				image_id
-			)
-			VALUES 
-			(
-				$cid,
-				$image_id
-			)";
+		$sql = 'INSERT INTO ' . GARAGE_GALLERY_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+			'garage_id'	=> $cid,
+			'image_id'	=> $image_id)
+		);
 
 		if( !$result = $db->sql_query($sql) )
 		{
@@ -538,36 +532,20 @@ class garage_image
 	{
 		global $db;
 
-		$sql = "INSERT INTO ". GARAGE_IMAGES_TABLE ." 
-			(
-				garage_id,
-				attach_location,
-				attach_hits,
-				attach_ext,
-				attach_file,
-				attach_thumb_location,
-				attach_thumb_width,
-				attach_thumb_height,
-				attach_is_image,
-				attach_date,
-				attach_filesize,
-				attach_thumb_filesize
-			)
-			VALUES 
-			(
-				'".$data['garage_id']."',
-				'".$data['location']."',
-				'0',
-				'".$data['ext']."',
-				'".$data['file']."',
-				'".$data['thumb_location']."',
-				'".$data['thumb_width']."',
-				'".$data['thumb_height']."',
-				'".$data['is_image']."',
-				'".time()."',
-				'".$data['filesize']."',
-				'".$data['thumb_filesize']."'
-			)";
+		$sql = 'INSERT INTO ' . GARAGE_IMAGES_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+			'garage_id'		=> $data['garage_id'],
+			'attach_location'	=> $data['location'],
+			'attach_hits'		=> '0',
+			'attach_ext'		=> $data['ext'],
+			'attach_file'		=> $data['file'],
+			'attach_thumb_location'	=> $data['thumb_location'],
+			'attach_thumb_width'	=> $data['thumb_width'],
+			'attach_thumb_height'	=> $data['thumb_height'],
+			'attach_is_image'	=> $data['is_image'],
+			'attach_date'		=> time(),
+			'attach_filesize'	=> $data['filesize'],
+			'attach_thumb_filesize'	=> $data['thumb_filesize'])
+		);
 
 		if( !$result = $db->sql_query($sql) )
 		{
@@ -862,9 +840,14 @@ class garage_image
 	{
 		global $db;
 
-		$sql = "SELECT  * 
-			FROM " . GARAGE_IMAGES_TABLE . " 
-			WHERE attach_id = $image_id";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'i.*',
+			'FROM'		=> array(
+				GARAGE_IMAGES_TABLE	=> 'i',
+			),
+			'WHERE'		=>  "i.attach_id = $image_id"
+		));
 
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -890,11 +873,16 @@ class garage_image
 	{
 		global $db;
 
-		$sql = "SELECT  * 
-			FROM " . GARAGE_IMAGES_TABLE . " 
-			ORDER BY rand() LIMIT $required";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'i.*',
+			'FROM'		=> array(
+				GARAGE_IMAGES_TABLE	=> 'i',
+			),
+			'ORDER_BY'	=>  "rand()"
+		));
 
-		if( !($result = $db->sql_query($sql)) )
+		if( !($result = $db->sql_query_limit($sql, $required)) )
 		{
 			message_die(GENERAL_ERROR, 'Could Not Select Random Image Data', '', __LINE__, __FILE__, $sql);
 		}
@@ -920,9 +908,14 @@ class garage_image
 	{
 		global $db;
 
-		$sql = "SELECT  * 
-			FROM " . GARAGE_IMAGES_TABLE . " 
-			ORDER BY attach_id ASC";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'i.*',
+			'FROM'		=> array(
+				GARAGE_IMAGES_TABLE	=> 'i',
+			),
+			'ORDER_BY'	=>  "i.attach_id ASC"
+		));
 
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -950,11 +943,21 @@ class garage_image
 	{
 		global $db;
 
-		$sql = "SELECT gallery.*, images.*
-     			FROM " . GARAGE_GALLERY_TABLE . " gallery
-        			LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON images.attach_id = gallery.image_id 
-        		WHERE gallery.garage_id = $cid
-			GROUP BY gallery.id";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'gl.*, i.*',
+			'FROM'		=> array(
+				GARAGE_GALLERY_TABLE	=> 'gl',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
+					'ON'	=> 'i.attach_id = gl.image_id'
+				)
+			),
+			'WHERE'		=>  "gl.garage_id = $cid",
+			'GROUP_BY'	=>  "gl.id"
+		));
 
       		if ( !($result = $db->sql_query($sql)) )
       		{
@@ -982,11 +985,20 @@ class garage_image
 	{
 		global $db;
 
-		$sql = "SELECT img.*
-     			FROM " . GARAGE_IMAGES_TABLE . " img
-        			LEFT JOIN " . GARAGE_TABLE . " g ON g.id = img.garage_id 
-			WHERE g.user_id = $user_id 
-				AND img.attach_location NOT LIKE 'http://%'";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'i.*',
+			'FROM'		=> array(
+				GARAGE_IMAGES_TABLE	=> 'i',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'ON'	=> 'g.id = i.garage_id'
+				)
+			),
+			'WHERE'		=>  "g.user_id = $user_id AND i.attach_location NOT LIKE 'http://%'"
+		));
 
       		if ( !($result = $db->sql_query($sql)) )
       		{
@@ -1014,11 +1026,20 @@ class garage_image
 	{
 		global $db;
 
-		$sql = "SELECT img.*
-     			FROM " . GARAGE_IMAGES_TABLE . " img
-        			LEFT JOIN " . GARAGE_TABLE . " g ON g.id = img.garage_id 
-			WHERE g.user_id = $user_id 
-				AND img.attach_location LIKE 'http://%'";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'i.*',
+			'FROM'		=> array(
+				GARAGE_IMAGES_TABLE	=> 'i',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'ON'	=> 'g.id = i.garage_id'
+				)
+			),
+			'WHERE'		=>  "g.user_id = $user_id AND i.attach_location LIKE 'http://%'"
+		));
 
       		if ( !($result = $db->sql_query($sql)) )
       		{
@@ -1136,7 +1157,7 @@ class garage_image
 	// Rebuild Thumbnails
 	// Usage: rebuild_thumbs('start point', 'per cycle', 'already completed', 'log file');
 	/*========================================================================*/
-	function rebuild_thumbs($start, $cycle, $done, $file) 
+	function rebuild_thumbs($start, $limit, $done, $file) 
 	{
 	
 		global $userdata, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $garage;
@@ -1152,13 +1173,18 @@ class garage_image
 		//Count Total Images So We Know How Many Need Processing
 		$total = $this->count_total_images();
 	
-	       	// Loop through the images avoiding limit
-	        $sql = "SELECT *
-			FROM  " . GARAGE_IMAGES_TABLE . "
-			WHERE attach_is_image = 1 
-			ORDER BY attach_id ASC LIMIT $start, $cycle";
+		// Loop through the images avoiding limit
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'i.*',
+			'FROM'		=> array(
+				GARAGE_IMAGES_TABLE	=> 'i',
+			),
+			'WHERE'		=>  "i.attach_is_image = 1",
+			'ORDER_BY'	=>  "i.attach_id ASC"
+		));
 	
-		if ( !($result = $db->sql_query($sql)) )
+		if ( !($result = $db->sql_query_limit($sql, $limit, $start)) )
 		{
 			message_die(GENERAL_ERROR, 'Error Getting Image Data', '', __LINE__, __FILE__, $sql);
 		}

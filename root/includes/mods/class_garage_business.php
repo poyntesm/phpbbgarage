@@ -36,37 +36,21 @@ class garage_business
 	{
 		global $db;
 
-		$sql = "INSERT INTO " . GARAGE_BUSINESS_TABLE . " 
-			(
-				title,
-				address,
-				telephone,
-				fax,
-				website,
-				email,
-				opening_hours,
-				insurance,
-				garage,
-				retail_shop,
-				web_shop,
-				pending
-			)
-			VALUES 
-			(
-				'" . $data['title'] . "',
-				'" . $data['address'] . "',
-				'" . $data['telephone'] . "',
-				'" . $data['fax'] . "',
-				'" . $data['website'] . "',
-				'" . $data['email'] . "',
-				'" . $data['opening_hours'] . "',
-				'" . $data['insurance'] . "',
-				'" . $data['garage'] . "',
-				'" . $data['retail_shop'] . "',
-				'" . $data['web_shop'] . "',
-				'" . $data['pending'] . "'
-			)";
-	
+		$sql = 'INSERT INTO ' . GARAGE_BUSINESS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+			'title'		=> $data['title'],
+			'address'	=> $data['address'],
+			'telephone'	=> $data['telephone'],
+			'fax'		=> $data['fax'],
+			'website'	=> $data['website'],
+			'email'		=> $data['email'],
+			'opening_hours'	=> $data['opening_hours'],
+			'insurance'	=> $data['insurance'],
+			'garage'	=> $data['garage'],
+			'retail_shop'	=> $data['retail_shop'],
+			'web_shop'	=> $data['web_shop'],
+			'pending'	=> $data['pending'])
+		);
+
 		if(!$result = $db->sql_query($sql))
 		{
 			message_die(GENERAL_ERROR, 'Could Not Insert New Business', '', __LINE__, __FILE__, $sql);
@@ -83,22 +67,25 @@ class garage_business
 	{
 		global $db;
 
-		$sql = "UPDATE " . GARAGE_BUSINESS_TABLE . " 
-			SET 
-				title = '" . $data['title'] . "',
-				address = '" . $data['address'] . "',
-				telephone = '" . $data['telephone'] . "',
-				fax = '" . $data['fax'] . "',
-				website = '" . $data['website'] . "',
-				email = '" . $data['email'] . "',
-				opening_hours = '" . $data['opening_hours'] . "',
-				insurance = '" . $data['insurance'] . "',
-				garage = '" . $data['garage'] . "',
-				retail_shop = '" . $data['retail_shop'] . "',
-				web_shop = '" . $data['web_shop'] . "',
-			       	pending = '" . $data['pending'] . "'
-			WHERE id = '" . $data['id'] . "'";
-	
+		$update_sql = array(
+			'title'		=> $data['title'],
+			'address'	=> $data['address'],
+			'telephone'	=> $data['telephone'],
+			'fax'		=> $data['fax'],
+			'website'	=> $data['website'],
+			'email'		=> $data['email'],
+			'opening_hours'	=> $data['opening_hours'],
+			'insurance'	=> $data['insurance'],
+			'garage'	=> $data['garage'],
+			'retail_shop'	=> $data['retail_shop'],
+			'web_shop'	=> $data['web_shop'],
+			'pending'	=> $data['pending']
+		);
+
+		$sql = 'UPDATE ' . GARAGE_BUSINESS_TABLE . '
+			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
+			WHERE id = " . $data['id'];
+
 		if(!$result = $db->sql_query($sql))
 		{
 			message_die(GENERAL_ERROR, 'Could Not Update Business', '', __LINE__, __FILE__, $sql);
@@ -115,9 +102,14 @@ class garage_business
 	{
 		global $db;
 
-		$sql = "SELECT * 
-			FROM " . GARAGE_BUSINESS_TABLE . "
-			WHERE id = $bus_id";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'b.*',
+			'FROM'		=> array(
+				GARAGE_BUSINESS_TABLE	=> 'b',
+			),
+			'WHERE'		=>  "b.id = $bus_id"
+		));
 
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -138,8 +130,13 @@ class garage_business
 	{
 		global $db;
 
-		$sql = "SELECT * 
-			FROM " . GARAGE_BUSINESS_TABLE ;
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'b.*',
+			'FROM'		=> array(
+				GARAGE_BUSINESS_TABLE	=> 'b',
+			)
+		));
 
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -150,7 +147,6 @@ class garage_business
 		{
 			$data[] = $row;
 		}
-
 		$db->sql_freeresult($result);
 
 		return $data;
@@ -164,19 +160,19 @@ class garage_business
 	{
 		global $db;
 
-		$sql = "SELECT 	b.*,
-			       	sum( install_rating ) AS rating,
-		       		count( * ) *10 AS total_rating
-			FROM " . GARAGE_BUSINESS_TABLE . " b, " . GARAGE_MODS_TABLE . " m
-			WHERE m.install_business_id = b.id
-				AND b.garage =1
-				AND b.pending =0
-				$where
-			GROUP BY b.id
-			ORDER BY rating DESC
-			LIMIT $start, $limit";
-			
-      		if ( !($result = $db->sql_query($sql)) )
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'b.*, SUM(install_rating) AS rating, COUNT(*) *10 AS total_rating',
+			'FROM'		=> array(
+				GARAGE_BUSINESS_TABLE	=> 'b',
+				GARAGE_MODS_TABLE	=> 'm',
+			),
+			'WHERE'		=>  "m.install_business_id = b.id AND b.garage =1 AND b.pending =0 $where",
+			'GROUP_BY'	=>  "b.id",
+			'ODER_BY'	=>  "rating DESC"
+		));
+
+      		if ( !($result = $db->sql_query_limit($sql, $limit, $start)) )
       		{
          		message_die(GENERAL_ERROR, 'Could Select Business Data', '', __LINE__, __FILE__, $sql);
       		}
@@ -203,19 +199,19 @@ class garage_business
 	{
 		global $db;
 
-		$sql = "SELECT  b.*,
-				sum( purchase_rating ) AS rating,
-			       	count( * ) *10 AS total_rating
-			FROM " . GARAGE_BUSINESS_TABLE . " b, " . GARAGE_MODS_TABLE . " m
-			WHERE m.business_id = b.id
-				AND ( b.web_shop =1 OR b.retail_shop = 1 )
-				AND b.pending =0
-				$where
-			GROUP BY b.id
-			ORDER BY rating DESC
-			LIMIT $start, $limit";
-			
-      		if ( !($result = $db->sql_query($sql)) )
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'b.*, SUM(purchase_rating) AS rating, COUNT(*) *10 AS total_rating',
+			'FROM'		=> array(
+				GARAGE_BUSINESS_TABLE	=> 'b',
+				GARAGE_MODS_TABLE	=> 'm',
+			),
+			'WHERE'		=>  "m.business_id = b.id AND ( b.web_shop =1 OR b.retail_shop = 1 ) AND b.pending =0 $where",
+			'GROUP_BY'	=>  "b.id",
+			'ODER_BY'	=>  "rating DESC"
+		));
+
+      		if ( !($result = $db->sql_query_limit($sql, $limit, $start)) )
       		{
          		message_die(GENERAL_ERROR, 'Could Select Business Data', '', __LINE__, __FILE__, $sql);
       		}
@@ -242,16 +238,17 @@ class garage_business
 	{
 		global $db, $where;
 
-		$sql = "SELECT  b.*,
-		       		COUNT(DISTINCT b.id) as total
-       	 		FROM  " . GARAGE_BUSINESS_TABLE . " b 
-       			WHERE b.insurance = 1 
-				AND b.pending = 0
-				$where
-			GROUP BY b.id
-			LIMIT $start, $limit";
-	
-      		if ( !($result = $db->sql_query($sql)) )
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'b.*, COUNT(DISTINCT b.id) as total',
+			'FROM'		=> array(
+				GARAGE_BUSINESS_TABLE	=> 'b',
+			),
+			'WHERE'		=>  "b.insurance = 1 AND b.pending = 0	$where",
+			'GROUP_BY'	=>  "b.id"
+		));
+
+      		if ( !($result = $db->sql_query_limit($sql, $limit, $start)) )
       		{
          		message_die(GENERAL_ERROR, 'Could Select Business Data', '', __LINE__, __FILE__, $sql);
       		}
@@ -278,12 +275,15 @@ class garage_business
 	{
 		global $db;
 
-		$sql = "SELECT count(DISTINCT b.title) as total
-			FROM " . GARAGE_BUSINESS_TABLE . " b, " . GARAGE_MODS_TABLE . " m
-			WHERE m.install_business_id = b.id
-				AND b.garage =1
-				AND b.pending =0
-				$additional_where";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'count(DISTINCT b.title) as total',
+			'FROM'		=> array(
+				GARAGE_BUSINESS_TABLE	=> 'b',
+				GARAGE_MODSTABLE	=> 'm',
+			),
+			'WHERE'		=>  "m.install_business_id = b.id AND b.garage =1 AND b.pending =0 $additional_where"
+		));
 
 		if ( !($result = $db->sql_query($sql)) )
 		{
@@ -304,12 +304,15 @@ class garage_business
 	{
 		global $db;
 
-		$sql = "SELECT count(DISTINCT b.title) as total
-			FROM " . GARAGE_BUSINESS_TABLE . " b, " . GARAGE_MODS_TABLE . " m
-			WHERE m.business_id = b.id
-				AND ( b.web_shop =1 OR b.retail_shop =1 )
-				AND b.pending =0
-				$additional_where";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'COUNT(DISTINCT b.title) as total',
+			'FROM'		=> array(
+				GARAGE_BUSINESS_TABLE	=> 'b',
+				GARAGE_MODS_TABLE	=> 'm',
+			),
+			'WHERE'		=>  "m.business_id = b.id AND ( b.web_shop =1 OR b.retail_shop =1 ) AND b.pending =0 $additional_where"
+		));
 
 		if ( !($result = $db->sql_query($sql)) )
 		{
@@ -332,9 +335,14 @@ class garage_business
 
 		$pending = ($pending == 'YES') ? 1 : 0;
 
-		$sql = "SELECT bus.* 
-			FROM " . GARAGE_BUSINESS_TABLE ." AS bus
-			WHERE bus.pending = 1";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'b.*',
+			'FROM'		=> array(
+				GARAGE_BUSINESS_TABLE	=> 'b',
+			),
+			'WHERE'		=>  "b.pending = 1"
+		));
 
 		if( !($result = $db->sql_query($sql)) )
 		{
@@ -346,6 +354,7 @@ class garage_business
 		{
 			$rows[] = $row;
 		}
+		$db->sql_freeresult($result);
 
 		if (sizeof($rows) >= 1)
 		{
@@ -376,7 +385,6 @@ class garage_business
 			);
 			unset($type);
 		}
-		$db->sql_freeresult($result);
 
 		//Return Count Of Pending Items
 		return $count;
