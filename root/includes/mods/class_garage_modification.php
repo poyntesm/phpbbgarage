@@ -340,7 +340,7 @@ class garage_modification
 					'ON'	=> 'm.category_id = c.id'
 				)
 				,array(
-					'FROM'	=> array(GARAGE_IMAGE_TABLE => 'i'),
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
 					'ON'	=> 'm.image_id = i.attach_id'
 				)
 				,array(
@@ -394,7 +394,7 @@ class garage_modification
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_IMAGE_TABLE => 'i'),
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
 					'ON'	=> 'm.image_id = i.attach_id'
 				)
 			),
@@ -536,7 +536,7 @@ class garage_modification
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_IMAGE_TABLE => 'i'),
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
 					'ON'	=> 'm.image_id = i.attach_id'
 				)
 			),
