@@ -219,8 +219,8 @@ $lang = array_merge($lang, array(
 	'IMAGE' 			=> 'Image',
 	'REMOVE_IMAGE' 			=> 'Remove Image',
 	'REMOVE' 			=> 'Remove From Pending Listings - Delete Item From Users Garage',
-	'REASSIGN' 			=> 'Remove From Pending Listings - Delete & Reassign (SELECT ONLY ONE BUSINESS)',
-	'APPROVE' 			=> 'Approve From Pending Listings',
+	'REASSIGN' 			=> 'Reassign',
+	'APPROVE' 			=> 'Approve',
 	'HILITE_IMAGE' 			=> 'Hilite Image',
 	'CURRENT_HILITE_IMAGE' 		=> 'Current Hilite Image',
 	'SET_HILITE_IMAGE' 		=> 'Set Hilite Image',
@@ -296,6 +296,7 @@ $lang = array_merge($lang, array(
 	'APPROVE_BUSINESS' 		=> 'Approve Business',
 	'REMOVE_BUSINESS' 		=> 'Remove Business',
 	'BUSINESS_NAME' 		=> 'Business Name',
+	'BUSINESS_TITLE' 		=> 'Business Title',
 	'ADDRESS' 			=> 'Address',
 	'TELEPHONE' 			=> 'Telephone No.',
 	'FAX' 				=> 'Fax No.',
@@ -635,6 +636,8 @@ $lang = array_merge($lang, array(
 	'4_CYLINDER_FI' 		=> '4 Cylinder Forced Induction',
 	'SORT' 				=> 'Sort',
 	'CATEGORY' 			=> 'Category',
+
+	//INSTALLATION LANGUAGE KEYS
 	'INSTALL_STEP1_SUCCESS'		=> 'phpBB Garage v2 Install Step 1 Successfull',
 	'INSTALL_STEP1_SUCCESS_EXPLAIN'	=> 'All the phpBB Garage tables have been successfully created and all required configuration data has been created.<br />This will allow phpBB Garage to work. To make life easier of you the site administrator there are two optional steps left.<br /><br /><b>Step2:</b> Creates deafult modification categories for your users vehicles. The current defaults are : Engine, Transmission, Suspension, Brakes, Interior, Exterior, Audio, Alloys &amp; Tyres and Security<br /><b>Step3:</b> Creates a deafault set of vehicle Makes &amp; Models for your user\'s to choose from on vehicle creation. To see a list of current defaults <u><a href="http://www.phpbbgarge.com/default_models.html">Click Here</a></u><br /><br />To proceed select the button below for which action you would like to perform.<form name="" action="%s" method="post"><table><tr><td class="row1" align="center"><input type="submit" name="confirm" value="Complete Step 2 [Optional]" class="btnmain" /></td></tr></table></form><form name="" action="%s" method="post"><table><tr><td class="row1" align="center"><input type="submit" name="confirm" value="Complete Step 3 [Optional]" class="btnmain" /></td></tr></table></form><form name="" action="%s" method="post"><table><tr><td class="row1" align="center"><input type="submit" name="confirm" value="Finish Install" class="btnmain" /></td></tr></table></form>',
 	'INSTALL_STEP1_FAILED'		=> 'phpBB Garage v2 Install Step 1 Failed',
@@ -648,6 +651,19 @@ $lang = array_merge($lang, array(
 	'INSTALL_COMPLETE_EXPLAIN'	=> 'This installation is completed. Click <u><a href="%s">Here</a></u> to view your garage.<br />This file can now be deleted.',
 	'INSTALL_PHPBBGARAGE'		=> 'Welcome To the phpBB Garage v2 Install',
 	'INSTALL_PHPBBGARAGE_EXPLAIN'	=> 'This installation is broken into sections. Each section is listed below.<br /><br />1)Table Creation & Configuration Data [Required] <br />2)Modification Category Creation [Optional] <br />3)Default Vehicle Make & Model Data [Optional] <br /><br />To proceed and start step 1 of installtion please click the \'Proceed\' button below. <form name="" action="%s" method="post"><table><tr><td class="row1" align="center"><input type="submit" name="confirm" value="Proceed" class="btnmain" /></td></tr></table></form>',
+
+	//MCP LANGUAGE KEYS
+	'NO_MAKES_PENDING'		=> 'There are no makes requiring approval currently.',
+	'NO_MODELS_PENDING'		=> 'There are no models requiring approval currently.',
+	'NO_BUSINESS_PENDING'		=> 'There are no business\'s requiring approval currently.',
+	'NO_QUARTERMILES_PENDING'	=> 'There are no quartermiles requiring approval currently.',
+	'NO_DYNORUNS_PENDING'		=> 'There are no dynoruns requiring approval currently.',
+	'NO_MAKE_SELECTED'		=> 'You must select at least one make to perform this action.',
+	'NO_MODEL_SELECTED'		=> 'You must select at least one model to perform this action.',
+	'NO_BUSINESS_SELECTED'		=> 'You must select at least one business to perform this action.',
+	'NO_QUARTERMILE_SELECTED'	=> 'You must select at least one quartermile to perform this action.',
+	'NO_DYNORUN_SELECTED'		=> 'You must select at least one dynorun to perform this action.',
+	'DISAPPROVE_QUARTERMILE'	=> 'Dissaprove quartermile time.',	
 
 ));
 

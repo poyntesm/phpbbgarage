@@ -150,17 +150,17 @@ class garage_template
 			return;
 		}	
 	
-		$year_list = "<select name='year' class='forminput'>";
+		$year_list = '<select name="year" class="forminput">';
 	
 		for ( $year = $end_year; $year >= $garage_config['year_start']; $year-- ) 
 		{
 			if ( $year == $selected ) 
 			{
-				$year_list .= "<option value='$year' selected='selected'>$year</option>";
+				$year_list .= '<option value="'.$year.'" selected="selected">'.$year.'</option>';
 			} 
 			else 
 			{
-				$year_list .= "<option value='$year'>$year</option>";
+				$year_list .= '<option value="'.$year.'">'.$year.'</option>';
 			}
 		}
 	
@@ -481,8 +481,8 @@ class garage_template
 		$select = "<select name='".$select_name."'>";
 		if (empty($selected_option))
 		{
-			$select .= "<option value=''>".$user->lang['SELECT_A_OPTION']."</option>";
-			$select .= "<option value=''>------</option>";
+			$select .= '<option value="">'.$user->lang['SELECT_A_OPTION'].'</option>';
+			$select .= '<option value="">------</option>';
 		}
 	
 		for($i = 0; $i < count($select_text); $i++)

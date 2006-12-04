@@ -17,13 +17,13 @@
 ## 			includes/functions.php
 ##			includes/acp/acp_styles.php
 ##			language/en/common.php
+##			language/en/mcp.php
 ##			language/en/acp/common.php
 ##			language/en/acp/styles.php
 ##			styles/subSilver/imageset/imageset.cfg
 ##			styles/subSilver/templates/memberlist_body.html
 ##			styles/subSilver/templates/memberlist_view.html
 ## 			styles/subSilver/templates/viewtopic_body.tpl
-## 			styles/subSilver/templates/overall_footer.tpl
 ##			styles/subSilver/templates/overall_header.tpl
 ##
 ## Included Files: (84)
@@ -554,19 +554,6 @@ $phpbb_root_path
 		'S_DISPLAY_DYNORUN'		=> ($garage_config['enable_dynorun_header']) ? 1 : 0,
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
-#
-#-----[ FIND ]------------------------------------------
-#
-		'U_ACP' => ($auth->acl_get('a_') && $user->data['is_registered']) ? "{$phpbb_root_path}adm/index.$phpEx?sid=" . $user->session_id : '')
-
-#
-#-----[ BEFORE, ADD ]------------------------------------------
-#
-//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-		'U_PENDING' => ($auth->acl_get('m_garage') && $user->data['is_registered']) ? append_sid("{$phpbb_root_path}garage.$phpEx", "&mode=pending", true, $user->session_id) : '',
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-
 # 
 #-----[ OPEN ]----- 
 # 
@@ -615,6 +602,40 @@ language/en/common.php
 	'PENDING_GARAGE_ITEMS'			=> 'Pending Garage Items',
 	'VIEWING_GARAGE'			=> 'Viewing Garage',
 	'VIEW_USERS_GARAGE'			=> 'View user\'s Garage',
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+# 
+#-----[ OPEN ]----- 
+# 
+language/en/mcp.php
+#
+#-----[ FIND ]------------------------------------------
+#
+<?php
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+
+#
+#-----[ FIND ]------------------------------------------
+#
+$lang = array_merge($lang, array(
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+	'MCP_GARAGE'				=> 'Garage',
+	'MCP_GARAGE_UNAPPROVED_MAKES'		=> 'Makes awaiting approval',
+	'MCP_GARAGE_UNAPPROVED_MODELS'		=> 'Models awaiting approval',
+	'MCP_GARAGE_UNAPPROVED_BUSINESS'	=> 'Business\'s awaiting approval',
+	'MCP_GARAGE_UNAPPROVED_QUARTERMILES'	=> 'Quartermiles awaiting approval',
+	'MCP_GARAGE_UNAPPROVED_DYNORUNS'	=> 'Dynoruns awaiting approval',
+
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
 # 
@@ -917,21 +938,6 @@ styles/subSilver/templates/overall_header.html
 #-----[ IN-LINE AFTER, ADD ]------------------------------------------
 #
 <!-- IF S_DISPLAY_GARAGE --><a href="{U_GARAGE}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_GARAGE}" hspace="3" /> {L_GARAGE}</a>&nbsp; &nbsp;<!-- ENDIF --><!-- IF S_DISPLAY_QUARTERMILE --><a href="{U_QUARTERMILE}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_QUARTERMILE}" hspace="3" /> {L_QUARTERMILE}</a>&nbsp; &nbsp;<!-- ENDIF --><!-- IF S_DISPLAY_DYNORUN --><a href="{U_DYNORUN}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_DYNORUN}" hspace="3" /> {L_DYNORUN}</a>&nbsp; &nbsp;<!-- ENDIF -->
-
-# 
-#-----[ OPEN ]----- 
-# 
-styles/subSilver/template/overall_footer.html
-
-#
-#-----[ FIND ]------------------------------------------
-#
-	<!-- IF U_ACP --><span class="gensmall">[ <a href="{U_ACP}">{L_ACP}</a> ]</span><br /><br /><!-- ENDIF -->
-
-#
-#-----[ BEFORE, ADD ]------------------------------------------
-#
-	<!-- IF U_PENDING --><span class="gensmall">[ <a href="{U_PENDING}">{L_PENDING_GARAGE_ITEMS}</a> ]</span><!-- ENDIF -->
 
 #
 #-----[ SAVE/CLOSE ALL FILES ]------------------------------------------

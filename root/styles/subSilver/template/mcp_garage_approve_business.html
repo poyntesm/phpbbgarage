@@ -26,16 +26,16 @@
 		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{business_row.EMAIL}</td>
 		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{business_row.OPENING_HOURS}</td>
 		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{business_row.TYPE}</td>
-		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap"><a href="{business_pending.row.U_EDIT}">{EDIT}</a></td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap"><a href="{business_row.U_EDIT}">{business_row.EDIT}</a></td>
 		<td align="center"><input type="checkbox" class="radio" name="business_id_list[]" value="{business_row.ID}" /></td>
 	</tr>
 <!-- BEGINELSE -->
 	<tr>
-		<td class="row1" colspan="6" height="30" align="center" valign="middle"><span class="gen">{L_NO_BUSINESS}</span></td>
+		<td class="row1" colspan="10" height="30" align="center" valign="middle"><span class="gen">{L_NO_BUSINESS_PENDING}</span></td>
 	</tr>
 <!-- END business_row -->
 <tr>
-	<td class="cat" colspan="6" align="center"><input class="btnmain" type="submit" name="action[approve]" value="{L_APPROVE}" />&nbsp;&nbsp;<input class="btnlite" type="submit" name="action[disapprove]" value="{L_DISAPPROVE}" /></td>
+	<td class="cat" colspan="10" align="center"><input class="btnmain" type="submit" name="action[approve_business]" value="{L_APPROVE}" />&nbsp;&nbsp;<input class="btnlite" type="submit" name="action[disapprove_business]" value="{L_DISAPPROVE}" />&nbsp;&nbsp;<input class="btnlite" type="submit" name="action[reassign_business]" value="{L_REASSIGN}" /></td>
 </tr>
 </table>
 

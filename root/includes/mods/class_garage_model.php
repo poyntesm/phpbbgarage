@@ -298,11 +298,11 @@ class garage_model
 
 	/*========================================================================*/
 	// Build Pending Make Table
-	// Usage: build_make_table();
+	// Usage: get_pending_makes();
 	/*========================================================================*/
-	function build_make_table()
+	function get_pending_makes()
 	{
-		global $db, $template, $theme;
+		global $db;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -325,28 +325,14 @@ class garage_model
 		}
 		$db->sql_freeresult($result);
 
-		if ( sizeof($rows) >= 1 )
-		{
-			$template->assign_block_vars('make_pending', array());
-		}
-
-		for ($i = 0, $count = sizeof($rows); $i < $count; $i++)
-		{
-			$template->assign_block_vars('make_pending.row', array(
-				'MAKE_ID' 	=> $rows[$i]['id'],
-				'MAKE' 		=> $rows[$i]['make'])
-			);
-		}
-
-		//Return Count Of Pending Items
-		return $count;
+		return;
 	}
 
 	/*========================================================================*/
 	// Build Pending Model Table
-	// Usage: build_model_table();
+	// Usage: get_pending_models();
 	/*========================================================================*/
-	function build_model_table()
+	function get_pending_models()
 	{
 		global $db, $template, $theme;
 
@@ -365,6 +351,11 @@ class garage_model
 			'ORDER_BY'	=>	'md.pending = 1'
 		));
 
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could Not Select Models', '', __LINE__, __FILE__, $sql);
+		}
+
 		$rows = NULL;
 		while ( $row = $db->sql_fetchrow($result) )
 		{
@@ -372,23 +363,7 @@ class garage_model
 		}
 		$db->sql_freeresult($result);
 
-		if ( sizeof($rows) >= 1 )
-		{
-			$template->assign_block_vars('model_pending', array());
-		}
-
-		for ($i = 0, $count = sizeof($rows); $i < $count; $i++)
-		{
-			$template->assign_block_vars('model_pending.row', array(
-				'MODEL_ID'	=> $rows[$i]['id'],
-				'MAKE' 		=> $rows[$i]['make'],
-				'MODEL' 	=> $rows[$i]['model'])
-			);
-		}
-
-		//Return Count Of Pending Items
-		return $count;
-
+		return;
 	}
 
 	/*========================================================================*/

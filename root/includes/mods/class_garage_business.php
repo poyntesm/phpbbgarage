@@ -116,7 +116,7 @@ class garage_business
 			message_die(GENERAL_ERROR, 'Could Not Select Specific Business Data', '', __LINE__, __FILE__, $sql);
 		}
 
-		$row = $db->sql_fetchrow($result);
+		$data = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
 		return $data;
@@ -148,6 +148,42 @@ class garage_business
 			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/*========================================================================*/
+	// Select All Pending Business Data From DB
+	// Usage: get_pending_business();
+	/*========================================================================*/
+	function get_pending_business()
+	{
+		global $db;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'b.*',
+			'FROM'		=> array(
+				GARAGE_BUSINESS_TABLE	=> 'b',
+			),
+			'WHERE'		=>  "b.pending = 1"
+		));
+
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could Not Select All Business Data', '', __LINE__, __FILE__, $sql);
+		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$data[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		if (empty($data))
+		{
+			return;
+		}
 
 		return $data;
 	}
@@ -326,68 +362,46 @@ class garage_business
 	}
 
 	/*========================================================================*/
-	// Build Business List With Or Without Pending Items
-	// Usage: build_business_table('YES|NO');
+	// Count Shop Business Data In DB
+	// Usage: count_shop_business_data('additional where');
 	/*========================================================================*/
-	function build_business_table($pending)
+	function reassign_business($additional_where)
 	{
-		global $db, $template, $images, $phpEx, $start, $sort, $sort_order, $lang, $theme, $HTTP_GET_VARS, $user;
+		global $db;
 
-		$pending = ($pending == 'YES') ? 1 : 0;
-
-		$sql = $db->sql_build_query('SELECT', 
-			array(
-			'SELECT'	=> 'b.*',
-			'FROM'		=> array(
-				GARAGE_BUSINESS_TABLE	=> 'b',
-			),
-			'WHERE'		=>  "b.pending = 1"
-		));
-
-		if( !($result = $db->sql_query($sql)) )
+		//We Need To Check Only One Business Was Selected
+		$total = sizeof($HTTP_POST_VARS['bus_id']);
+		if ( $total > 1 )
 		{
-			message_die(GENERAL_ERROR, 'Could Not Query Pending Business List', '', __LINE__, __FILE__, $sql);
+			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=22"));
 		}
 
-		$rows = NULL;
-		while ( $row = $db->sql_fetchrow($result) )
-		{
-			$rows[] = $row;
-		}
-		$db->sql_freeresult($result);
+		//Get Business ID We Are Going To Delete
+		$bus_id = intval($HTTP_POST_VARS['bus_id'][0]);
 
-		if (sizeof($rows) >= 1)
-		{
-			$template->assign_block_vars('business_pending', array());
-		}
+		$data = $garage_business->get_business($bus_id);
 
-		// loop through users
-		for ($i = 0, $count = sizeof($rows); $i < $count; $i++)
-		{
-			//Work Out Type Of Business
-			$type = null;
-			$type .= ( $rows[$i]['insurance'] == '1' ) ? $user->lang['INSURANCE'] . ', ' : '';
-			$type .= ( $rows[$i]['garage'] == '1' ) ? $user->lang['GARAGE'] . ', ' : '';
-			$type .= ( $rows[$i]['web_shop'] == '1' OR $rows[$i]['retail_shop'] == '1' ) ? $user->lang['SHOP'] . ', ' : '';
-			$type = rtrim($type, ', ');
-			
-			$template->assign_block_vars('business_pending.row', array(
-				'U_EDIT'	=> append_sid("garage.$phpEx", "mode=edit_business&amp;BUS_ID=" . $rows[$i]['id'] . "&amp;PENDING=YES"),
-				'BUSID' 	=> $rows[$i]['id'],
-				'NAME' 		=> $rows[$i]['title'],
-				'ADDRESS' 	=> $rows[$i]['address'], 
-				'TELEPHONE' 	=> $rows[$i]['telephone'],
-				'FAX' 		=> $rows[$i]['fax'],
-				'WEBSITE' 	=> $rows[$i]['website'],
-				'EMAIL' 	=> $rows[$i]['email'],
-				'OPENING_HOURS' => $rows[$i]['opening_hours'],
-				'TYPE' 		=> $type)
-			);
-			unset($type);
-		}
+		//Generate Page Header
+		page_header($page_title);
 
-		//Return Count Of Pending Items
-		return $count;
+		//Set Template Files In Use For This Mode
+		$template->set_filenames(array(
+			'header' => 'garage_header.html',
+			'body'   => 'garage_reassign_business.html')
+		);
+
+		//Build Dropdown Box Of Business's To Reassign It To
+		$garage_business->reassign_business_dropdown($bus_id);
+
+		//Set Up Template Varibles
+		$template->assign_vars(array(
+			'NAME'		=> $data['title'],
+			'BUSINESS_ID'	=> $data['id'],
+			'S_MODE_ACTION'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=reassign_business"))
+		);
+
+		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
+		$garage_template->sidemenu();
 	}
 }
 

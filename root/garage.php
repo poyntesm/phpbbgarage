@@ -70,6 +70,11 @@ $template->assign_block_vars('navlinks', array(
 	'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx"))
 );
 
+//Display MCP Link If Authorised
+$template->assign_vars(array(
+	'U_MCP'	=> ($auth->acl_get('m_garage')) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=garage', true, $user->session_id) : '')
+);
+
 //Setup Arrays..
 $currency_types 	= array('GBP', 'USD', 'EUR', 'CAD', 'YEN');
 $mileage_unit_types 	= array($user->lang['MILES'], $user->lang['KILOMETERS']);
@@ -446,8 +451,8 @@ switch( $mode )
 
 		//Build All Required HTML parts
 		$garage_template->category_dropdown($data['category_id']);
-		$garage_template->garage_install_dropdown($data['install_business_id'], $data['install_business_name']);
-		$garage_template->shop_dropdown($data['business_id'], $data['business_name']);
+		$garage_template->garage_install_dropdown($data['install_business_id'], $data['install_business_title']);
+		$garage_template->shop_dropdown($data['business_id'], $data['business_title']);
 		$garage_template->edit_image('modification', $data['image_id'], $data['attach_file']);
 		$template->assign_vars(array(
        			'L_TITLE' 		=> $user->lang['MODIFY_MOD'],
@@ -614,7 +619,7 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params	= array('rt', 'sixty', 'three', 'eight', 'eightmph', 'thou', 'quart', 'quartmph', 'rr_id', 'install_comments');
+		$params	= array('rt', 'sixty', 'three', 'eighth', 'eighthmph', 'thou', 'quart', 'quartmph', 'rr_id', 'install_comments');
 		$data 	= $garage->process_post_vars($params);
 
 		//Checks All Required Data Is Present
@@ -716,8 +721,8 @@ switch( $mode )
 			'RT'			=> $data['rt'],
 			'SIXTY'			=> $data['sixty'],
 			'THREE' 		=> $data['three'],
-			'EIGHT' 		=> $data['eight'],
-			'EIGHTMPH' 		=> $data['eightmph'],
+			'EIGHT' 		=> $data['eighth'],
+			'EIGHTMPH' 		=> $data['eighthmph'],
 			'THOU' 			=> $data['thou'],
 			'QUART' 		=> $data['quart'],
 			'QUARTMPH' 		=> $data['quartmph'],
@@ -742,7 +747,7 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('rt', 'sixty', 'three', 'eight', 'eightmph', 'thou', 'quart', 'quartmph', 'rr_id', 'install_comments', 'editupload', 'image_id', 'pending_redirect');
+		$params = array('rt', 'sixty', 'three', 'eighth', 'eighthmph', 'thou', 'quart', 'quartmph', 'rr_id', 'install_comments', 'editupload', 'image_id', 'pending_redirect');
 		$data = $garage->process_post_vars($params);
 
 		//Checks All Required Data Is Present
@@ -794,9 +799,9 @@ switch( $mode )
 		}
 
 		//If Editting From Pending Page Redirect Back To There Instead
-		if ( $data['pending_redirect'] == 'YES' )
+		if ( $data['pending_redirect'] == 'MCP' )
 		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=pending"));
+			redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_quartermiles"));
 		}
 
 		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
@@ -1064,9 +1069,9 @@ switch( $mode )
 		}
 
 		//If Editting From Pending Page Redirect Back To There Instead
-		if ( $data['pending_redirect'] == 'YES' )
+		if ( $data['pending_redirect'] == 'MCP' )
 		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=pending"));
+			redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_dynoruns"));
 		}
 
 		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
@@ -1680,8 +1685,8 @@ switch( $mode )
 			'MODEL' 		=> $data['model'],
             		'PRODUCT_RATING' 	=> $data['product_rating'],
             		'INSTALL_RATING' 	=> $data['install_rating'],
-            		'BUSINESS_NAME' 	=> $data['business_name'],
-			'BUSINESS' 		=> $data['install_business_name'],
+            		'BUSINESS_NAME' 	=> $data['business_title'],
+			'BUSINESS' 		=> $data['install_business_title'],
 			'USERNAME' 		=> $data['username'],
             		'AVATAR_IMG' 		=> $data['avatar'],
             		'DATE_UPDATED' 		=> $user->format_date($data['date_updated']),
@@ -2516,7 +2521,7 @@ switch( $mode )
 		//Update The Business With Data Acquired
 		$garage_business->update_business($data);
 
-		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=pending"));
+		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_business"));
 
 		break;
 
@@ -2740,168 +2745,12 @@ switch( $mode )
 
 		break;
 
-	case 'pending':
-
-		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if ( $user->data['user_id'] == ANONYMOUS )
-		{
-			login_box("garage.$phpEx?mode=pending");
-		}
-
-		//Check The User Is Allowed To View This Page...If Not Send Them On There Way Nicely
-		if (!$auth->acl_get('m_garage'))
-		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=13"));
-		}
-
-		//Generate Page Header
-		page_header($page_title);
-
-		//Set Template Files In Use For This Mode
-		$template->set_filenames(array(
-			'header' => 'garage_header.html',
-			'body'   => 'garage_pending.html')
-		);
-
-		//Build The Tables With Only Pending Times And Get Returned Count
-		$pending_quartermile_count = $garage_quartermile->build_quartermile_table('YES');
-		$pending_dynorun_count 	= $garage_dynorun->build_dynorun_table('YES');
-		$pending_business_count = $garage_business->build_business_table('YES');
-		$pending_make_count 	= $garage_model->build_make_table('YES');
-		$pending_model_count 	= $garage_model->build_model_table('YES');
-
-		//Display A Nice Message Saying Nothing Is Pending Approval If Needed
-		if ( $pending_quartermile_count == '0' AND $pending_dynorun_count == '0' AND $pending_business_count == '0' AND $pending_make_count == '0' AND  $pending_model_count == '0' )
-		{
-			$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', 0, 'config_name', 'items_pending');
-			$template->assign_block_vars('no_pending_items', array());
-		}
-
-		//Set Up Template Varibles
-		$template->assign_vars(array(
-			'S_ACTION' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=garage_approval"))
-		);
-
-		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$garage_template->sidemenu();
-
-		break;
-
-	case 'garage_approval':
-
-		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if ( $user->data['user_id'] == ANONYMOUS )
-		{
-			login_box("garage.$phpEx?mode=pending");
-		}
-
-		//Check The User Is Allowed To View This Page...If Not Send Them On There Way Nicely
-		if (!$auth->acl_get('m_garage'))
-		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=13"));
-		}
-
-		//Get All Data Posted And Make It Safe To Use
-		$params = array('action');
-		$data = $garage->process_post_vars($params);
-
-		//Setup Arrays Needed For Data
-		$qm_id = array(); $rr_id = array(); $bus_id = array(); $mk_id = array(); $mdl_id = array();
-		$params = array('qm_id' => GARAGE_QUARTERMILE_TABLE, 'rr_id' => GARAGE_DYNORUN_TABLE, 'bus_id' => GARAGE_BUSINESS_TABLE, 'mk_id' => GARAGE_MAKES_TABLE, 'mdl_id' => GARAGE_MODELS_TABLE);
-
-		//Check If We Are Doing A Business Reassign
-		if ( $data['action'] == 'REASSIGN' )
-		{
-			//We Need To Check Only One Business Was Selected
-			$total = sizeof($HTTP_POST_VARS['bus_id']);
-			if ( $total > 1 )
-			{
-				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=22"));
-			}
-
-			//Get Business ID We Are Going To Delete
-			$bus_id = intval($HTTP_POST_VARS['bus_id'][0]);
-
-			$data = $garage_business->get_business($bus_id);
-
-			//Generate Page Header
-			page_header($page_title);
-
-			//Set Template Files In Use For This Mode
-			$template->set_filenames(array(
-				'header' => 'garage_header.html',
-				'body'   => 'garage_reassign_business.html')
-			);
-
-			//Build Dropdown Box Of Business's To Reassign It To
-			$garage_business->reassign_business_dropdown($bus_id);
-
-			//Set Up Template Varibles
-			$template->assign_vars(array(
-				'NAME'		=> $data['title'],
-				'BUSINESS_ID'	=> $data['id'],
-				'S_MODE_ACTION'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=reassign_business"))
-			);
-
-			//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-			$garage_template->sidemenu();
-
-			break;
-		}
-
-		//Process Each Pending Type For Updates
-		while( list($ids, $table) = @each($params) )
-		{
-			//Check We Have Been Passed ID's To Work On
-			if ( !empty($HTTP_POST_VARS[$ids]) )
-			{
-				$pending_ids = $HTTP_POST_VARS[$ids];
-
-				//Process For Removing
-				if ( $data['action'] == 'REMOVE' )
-				{
-					for ($i = 0, $count = sizeof($pending_ids);$i < $count; $i++)
-					{
-						$id = intval($pending_ids[$i]);
-
-						//If Quartermile Need To Call Correct Function To Delete Images Too
-						if ( $table ==  GARAGE_QUARTERMILE_TABLE)
-						{
-							$garage_quartermile->delete_quartermile($id);
-						}
-						//If Rollingroad Need To Call Correct Function To Delete Images Too
-						else if  ( $table ==  GARAGE_DYNORUN_TABLE)
-						{
-							$garage_dynorun->delete_dynorun($id);
-						}
-						else
-						{
-							$garage->delete_rows($table, 'id', $id);
-						}
-					}
-				}
-				//Process For Approval...
-				else if ( $data['action'] == 'APPROVE' )
-				{
-					for ($i = 0, $count = sizeof($pending_ids);$i < $count; $i++)
-					{
-						$garage->update_single_field($table, 'pending', 0, 'id', intval($pending_ids[$i]));
-					}
-				}
-			}
-		}
-
-		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=pending"));
-
-		break;
-
 	case 'reassign_business':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ( $user->data['user_id'] == ANONYMOUS )
 		{
 			login_box("garage.$phpEx?mode=pending");
-			redirect(append_sid("{$phpbb_root_path}login.$phpEx", "redirect=garage.$phpEx&amp;mode=pending"));
 		}
 
 		//Check The User Is Allowed To View This Page...If Not Send Them On There Way Nicely

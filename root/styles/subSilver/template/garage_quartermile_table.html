@@ -1,5 +1,13 @@
 <!-- INCLUDE overall_header.html -->
 
+<!-- IF U_MCP -->
+	<div id="pageheader">
+		<p class="linkmcp">[ <a href="{U_MCP}">{L_MCP}</a> ]</p>
+	</div>
+
+	<br clear="all" /><br />
+<!-- ENDIF -->
+
 <!-- INCLUDE garage_vehicle_select_javascript.html -->
 
 <form enctype="multipart/form-data" method="post" name="filter_quartermile_table" action="{S_MODE_ACTION}">
@@ -36,11 +44,11 @@
 		<td align="center"><span class="gensmall">{quartermile.RT}</span></td>
 		<td align="center"><span class="gensmall">{quartermile.SIXTY}</span></td>
 		<td align="center"><span class="gensmall">{quartermile.THREE}</span></td>
-		<td align="center"><span class="gensmall">{quartermile.EIGTH}</span></td>
-		<td align="center"><span class="gensmall">{quartermile.EIGHTM}</span></td>
+		<td align="center"><span class="gensmall">{quartermile.EIGHTH}</span></td>
+		<td align="center"><span class="gensmall">{quartermile.EIGHTHMPH}</span></td>
 		<td align="center"><span class="gensmall">{quartermile.THOU}</span></td>
 		<td align="center"><span class="gensmall">{quartermile.QUART}</span></td>
-		<td align="center"><span class="gensmall">{quartermile.QUARTM}</span></td>
+		<td align="center"><span class="gensmall">{quartermile.QUARTMPH}</span></td>
 		<td align="center"><span class="gensmall">{quartermile.BHP}</span></td>
 		<td align="center"><span class="gensmall">{quartermile.BHP_UNIT}</span></td>
 		<td align="center"><span class="gensmall">{quartermile.NITROUS}</span></td>

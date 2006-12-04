@@ -153,7 +153,7 @@ class garage_quartermile
 					'ON'	=> 'g.user_id = u.user_id'
 				)
 			),
-			'WHERE'		=>  "(q.sixty IS NOT NULL OR q.three IS NOT NULL OR q.eight IS NOT NULL OR q.eightmph IS NOT NULL OR q.thou IS NOT NULL OR q.rt IS NOT NULL OR q.quartmph IS NOT NULL) AND ( q.pending = $pending ) AND ( mk.pending = 0 AND md.pending = 0 ) $addtional_where",
+			'WHERE'		=>  "(q.sixty IS NOT NULL OR q.three IS NOT NULL OR q.eighth IS NOT NULL OR q.eighthmph IS NOT NULL OR q.thou IS NOT NULL OR q.rt IS NOT NULL OR q.quartmph IS NOT NULL) AND ( q.pending = $pending ) AND ( mk.pending = 0 AND md.pending = 0 ) $addtional_where",
 			'GROUP_BY'	=> 'q.garage_id',
 			'ORDER_BY'	=> "$sort $order"
 		));
@@ -187,7 +187,7 @@ class garage_quartermile
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id, g.user_id, q.id as qmid, q.image_id, u.username, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eight, q.eightmph, q.thou, q.quart, q.quartmph, q.rr_id, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous',
+			'SELECT'	=> 'g.id, g.user_id, q.id as qmid, q.image_id, u.username, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.rr_id, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous',
 			'FROM'		=> array(
 				GARAGE_QUARTERMILE_TABLE	=> 'q',
 			),
@@ -234,6 +234,64 @@ class garage_quartermile
 		}
 
 		return $row;
+	}
+
+	/*========================================================================*/
+	// Select Quartermile Data From DB By Vehicle ID And Quart Value
+	// Usage: get_quartermile_by_vehicle_quart('garage id', 'quart');
+	/*========================================================================*/
+	function get_pending_quartermiles()
+	{
+		global $db;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'g.id as garage_id, u.user_id, g.user_id, q.id as qmid, q.image_id, u.username, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.rr_id',
+			'FROM'		=> array(
+				GARAGE_QUARTERMILE_TABLE	=> 'q',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'ON'	=> 'q.garage_id =g.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+					'ON'	=> 'g.model_id = md.id and md.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'g.user_id = u.user_id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
+					'ON'	=> 'i.attach_id = q.image_id'
+				)
+			),
+			'WHERE'		=>  "q.pending = 1"
+		));
+
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could Not Select Pending Quartermile Data', '', __LINE__, __FILE__, $sql);
+		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$data[] = $row;
+		}
+
+		$db->sql_freeresult($result);
+
+		if (empty($data))
+		{
+			return;
+		}
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -393,7 +451,7 @@ class garage_quartermile
 
 		// Sorting Via QuarterMile
 		$sort_text = array($user->lang['RT'], $user->lang['SIXTY'], $user->lang['THREE'], $user->lang['EIGHTH'], $user->lang['EIGHTHMPH'], $user->lang['THOU'],  $user->lang['QUART'], $user->lang['QUARTMPH']);
-		$sort_values = array('qm.rt', 'qm.sixty', 'qm.three', 'qm.eight', 'qm.eightmph', 'qm.thou', 'quart', 'qm.quartmph');
+		$sort_values = array('qm.rt', 'qm.sixty', 'qm.three', 'qm.eighth', 'qm.eighthmph', 'qm.thou', 'quart', 'qm.quartmph');
 
 		//Get All Data Posted And Make It Safe To Use
 		$addtional_where = '';
@@ -446,8 +504,8 @@ class garage_quartermile
 				'RT' 		=> $data['rt'],
 				'SIXTY' 	=> $data['sixty'],
 				'THREE' 	=> $data['three'],
-				'EIGTH' 	=> $data['eight'],
-				'EIGHTM' 	=> $data['eightmph'],
+				'EIGHTH' 	=> $data['eighth'],
+				'EIGHTHMPH' 	=> $data['eighthmph'],
 				'THOU' 		=> $data['thou'],
 				'QUART' 	=> $data['quart'],
 				'QUARTM' 	=> $data['quartmph'],
@@ -476,6 +534,415 @@ class garage_quartermile
 		//Reset Sort Order For Pending Page
 		$sort='';
 		return $count;
+	}
+
+	/*========================================================================*/
+	// Approve Quartermile Times
+	// Usage: approve_quartermile(array(), 'mode');
+	/*========================================================================*/
+	function approve_quartermile($post_id_list, $mode)
+	{
+		global $db, $template, $user, $config;
+		global $phpEx, $phpbb_root_path;
+
+		$redirect = request_var('redirect', $user->data['session_page']);
+		$success_msg = '';
+
+		$s_hidden_fields = build_hidden_fields(array(
+			'i'		=> 'garage',
+			'mode'		=> $mode,
+			'post_id_list'	=> $post_id_list,
+			'f'				=> $forum_id,
+			'action'		=> 'approve',
+			'redirect'		=> $redirect)
+		);
+
+		if (confirm_box(true))
+		{
+			$notify_poster = (isset($_REQUEST['notify_poster'])) ? true : false;
+
+			$post_info = get_post_data($post_id_list, 'm_approve');
+
+			// If Topic -> total_topics = total_topics+1, total_posts = total_posts+1, forum_topics = forum_topics+1, forum_posts = forum_posts+1
+			// If Post -> total_posts = total_posts+1, forum_posts = forum_posts+1, topic_replies = topic_replies+1
+
+			$total_topics = $total_posts = $forum_topics = $forum_posts = 0;
+			$topic_approve_sql = $topic_replies_sql = $post_approve_sql = $topic_id_list = array();
+
+			foreach ($post_info as $post_id => $post_data)
+			{
+				$topic_id_list[$post_data['topic_id']] = 1;
+	
+				// Topic or Post. ;)
+				if ($post_data['topic_first_post_id'] == $post_id)
+				{
+					if ($post_data['forum_id'])
+					{
+						$total_topics++;
+						$forum_topics++;
+					}
+
+					$topic_approve_sql[] = $post_data['topic_id'];
+				}
+				else
+				{
+					if (!isset($topic_replies_sql[$post_data['topic_id']]))
+					{
+						$topic_replies_sql[$post_data['topic_id']] = 1;
+					}
+					else
+					{
+						$topic_replies_sql[$post_data['topic_id']]++;
+					}
+				}
+	
+				if ($post_data['forum_id'])
+				{
+					$total_posts++;
+					$forum_posts++;
+				}
+	
+				$post_approve_sql[] = $post_id;
+			}
+
+			if (sizeof($topic_approve_sql))
+			{
+				$sql = 'UPDATE ' . TOPICS_TABLE . '
+					SET topic_approved = 1
+						WHERE ' . $db->sql_in_set('topic_id', $topic_approve_sql);
+				$db->sql_query($sql);
+			}
+
+			if (sizeof($post_approve_sql))
+			{
+				$sql = 'UPDATE ' . POSTS_TABLE . '
+					SET post_approved = 1
+					WHERE ' . $db->sql_in_set('post_id', $post_approve_sql);
+				$db->sql_query($sql);
+			}
+
+			if (sizeof($topic_replies_sql))
+			{
+				foreach ($topic_replies_sql as $topic_id => $num_replies)
+				{
+					$sql = 'UPDATE ' . TOPICS_TABLE . "
+						SET topic_replies = topic_replies + $num_replies
+						WHERE topic_id = $topic_id";
+					$db->sql_query($sql);
+				}
+			}
+	
+			if ($forum_topics || $forum_posts)
+			{
+				$sql = 'UPDATE ' . FORUMS_TABLE . '
+					SET ';
+				$sql .= ($forum_topics) ? "forum_topics = forum_topics + $forum_topics" : '';
+				$sql .= ($forum_topics && $forum_posts) ? ', ' : '';
+				$sql .= ($forum_posts) ? "forum_posts = forum_posts + $forum_posts" : '';
+				$sql .= " WHERE forum_id = $forum_id";
+
+				$db->sql_query($sql);
+			}
+
+			if ($total_topics)
+			{
+				set_config('num_topics', $config['num_topics'] + $total_topics, true);
+			}
+	
+			if ($total_posts)
+			{
+				set_config('num_posts', $config['num_posts'] + $total_posts, true);
+			}
+			unset($topic_approve_sql, $topic_replies_sql, $post_approve_sql);
+	
+			update_post_information('topic', array_keys($topic_id_list));
+			update_post_information('forum', $forum_id);
+			unset($topic_id_list);
+
+			$messenger = new messenger();
+
+			// Notify Poster?
+			if ($notify_poster)
+			{
+				$email_sig = str_replace('<br />', "\n", "-- \n" . $config['board_email_sig']);
+
+				foreach ($post_info as $post_id => $post_data)
+				{
+					if ($post_data['poster_id'] == ANONYMOUS)
+					{
+						continue;
+					}
+
+					$email_template = ($post_data['post_id'] == $post_data['topic_first_post_id'] && $post_data['post_id'] == $post_data['topic_last_post_id']) ? 'topic_approved' : 'post_approved';
+
+					$messenger->template($email_template, $post_data['user_lang']);
+
+					$messenger->replyto($config['board_email']);
+					$messenger->to($post_data['user_email'], $post_data['username']);
+					$messenger->im($post_data['user_jabber'], $post_data['username']);
+
+					$messenger->assign_vars(array(
+						'EMAIL_SIG'		=> $email_sig,
+						'SITENAME'		=> $config['sitename'],
+						'USERNAME'		=> html_entity_decode($post_data['username']),
+						'POST_SUBJECT'	=> html_entity_decode(censor_text($post_data['post_subject'])),
+						'TOPIC_TITLE'	=> html_entity_decode(censor_text($post_data['topic_title'])),
+		
+						'U_VIEW_TOPIC'	=> generate_board_url() . "/viewtopic.$phpEx?f=$forum_id&t={$post_data['topic_id']}&e=0",
+						'U_VIEW_POST'	=> generate_board_url() . "/viewtopic.$phpEx?f=$forum_id&t={$post_data['topic_id']}&p=$post_id&e=$post_id")
+					);
+
+					$messenger->send($post_data['user_notify_type']);
+					$messenger->reset();
+				}
+
+				$messenger->save_queue();
+			}
+
+			// Send out normal user notifications
+			$email_sig = str_replace('<br />', "\n", "-- \n" . $config['board_email_sig']);
+	
+			foreach ($post_info as $post_id => $post_data)
+			{
+				if ($post_id == $post_data['topic_first_post_id'] && $post_id == $post_data['topic_last_post_id'])
+				{
+					// Forum Notifications
+					user_notification('post', $post_data['topic_title'], $post_data['topic_title'], $post_data['forum_name'], $forum_id, $post_data['topic_id'], $post_id);
+				}
+				else
+				{
+					// Topic Notifications
+					user_notification('reply', $post_data['post_subject'], $post_data['topic_title'], $post_data['forum_name'], $forum_id, $post_data['topic_id'], $post_id);
+				}
+			}
+			unset($post_info);
+
+			if ($forum_topics)
+			{
+				$success_msg = ($forum_topics == 1) ? 'TOPIC_APPROVED_SUCCESS' : 'TOPICS_APPROVED_SUCCESS';
+			}
+			else
+			{
+				$success_msg = (sizeof($post_id_list) == 1) ? 'POST_APPROVED_SUCCESS' : 'POSTS_APPROVED_SUCCESS';
+			}
+		}
+		else
+		{
+			$template->assign_vars(array(
+				'S_NOTIFY_POSTER'	=> true,
+				'S_APPROVE'			=> true)
+			);
+
+			confirm_box(false, 'APPROVE_POST' . ((sizeof($post_id_list) == 1) ? '' : 'S'), $s_hidden_fields, 'mcp_approve.html');
+		}
+
+		$redirect = request_var('redirect', "index.$phpEx");
+		$redirect = reapply_sid($redirect);
+
+		if (!$success_msg)
+		{
+			redirect($redirect);
+		}
+		else
+		{
+			meta_refresh(3, $redirect);
+			trigger_error($user->lang[$success_msg] . '<br /><br />' . sprintf($user->lang['RETURN_PAGE'], "<a href=\"$redirect\">", '</a>'));
+		}
+	}
+
+	/*========================================================================*/
+	// Approve Quartermile Times
+	// Usage: approve_quartermile(array(), 'mode');
+	/*========================================================================*/
+	function disapprove_quartermile($post_id_list, $mode)
+	{
+		global $db, $template, $user, $config;
+		global $phpEx, $phpbb_root_path;
+
+		$redirect = request_var('redirect', build_url(array('t', 'mode')) . '&amp;mode=unapproved_quartermiles');
+		$reason = request_var('reason', '', true);
+		$reason_id = request_var('reason_id', 0);
+		$success_msg = $additional_msg = '';
+
+		$s_hidden_fields = build_hidden_fields(array(
+			'i'			=> 'queue',
+			'mode'			=> $mode,
+			'id_list'		=> $post_id_list,
+			'action'		=> 'disapprove_quartermile',
+			'redirect'		=> $redirect)
+		);
+
+		$notify_poster = (isset($_REQUEST['notify_poster'])) ? true : false;
+		$disapprove_reason = '';
+
+		if ($reason_id)
+		{
+			$sql = 'SELECT reason_title, reason_description
+				FROM ' . REPORTS_REASONS_TABLE . "
+				WHERE reason_id = $reason_id";
+			$result = $db->sql_query($sql);
+			$row = $db->sql_fetchrow($result);
+			$db->sql_freeresult($result);
+
+			if (!$row || (!$reason && $row['reason_title'] == 'other'))
+			{
+				$additional_msg = $user->lang['NO_REASON_DISAPPROVAL'];
+				unset($_POST['confirm']);
+			}
+			else
+			{
+				// If the reason is defined within the language file, we will use the localized version, else just use the database entry...
+				$disapprove_reason = ($row['reason_title'] != 'other') ? ((isset($user->lang['report_reasons']['DESCRIPTION'][strtoupper($row['reason_title'])])) ? $user->lang['report_reasons']['DESCRIPTION'][strtoupper($row['reason_title'])] : $row['reason_description']) : '';
+				$disapprove_reason .= ($reason) ? "\n\n" . $reason : '';
+			}
+		}
+
+		if (confirm_box(true))
+		{
+			$post_info = get_post_data($post_id_list, 'm_approve');
+	
+
+			$forum_topics_real = 0;
+			$topic_replies_real_sql = $post_disapprove_sql = $topic_id_list = array();
+
+			foreach ($post_info as $post_id => $post_data)
+			{
+				$topic_id_list[$post_data['topic_id']] = 1;
+
+				// Topic or Post. ;)
+				if ($post_data['topic_first_post_id'] == $post_id && $post_data['topic_last_post_id'] == $post_id)
+				{
+					if ($post_data['forum_id'])
+					{
+						$forum_topics_real++;
+					}
+				}
+				else
+				{
+					if (!isset($topic_replies_real_sql[$post_data['topic_id']]))
+					{
+						$topic_replies_real_sql[$post_data['topic_id']] = 1;
+					}
+					else
+					{
+						$topic_replies_real_sql[$post_data['topic_id']]++;
+					}
+				}
+
+				$post_disapprove_sql[] = $post_id;
+			}
+
+			if ($forum_topics_real)
+			{
+				$sql = 'UPDATE ' . FORUMS_TABLE . "
+					SET forum_topics_real = forum_topics_real - $forum_topics_real
+					WHERE forum_id = $forum_id";
+				$db->sql_query($sql);
+			}
+
+			if (sizeof($topic_replies_real_sql))
+			{
+				foreach ($topic_replies_real_sql as $topic_id => $num_replies)
+				{
+					$sql = 'UPDATE ' . TOPICS_TABLE . "
+						SET topic_replies_real = topic_replies_real - $num_replies
+						WHERE topic_id = $topic_id";
+					$db->sql_query($sql);
+				}
+			}
+
+			if (sizeof($post_disapprove_sql))
+			{
+				if (!function_exists('delete_posts'))
+				{
+					include_once($phpbb_root_path . 'includes/functions_admin.' . $phpEx);
+				}
+
+				// We do not check for permissions here, because the moderator allowed approval/disapproval should be allowed to delete the disapproved posts
+				delete_posts('post_id', $post_disapprove_sql);
+			}
+			unset($post_disapprove_sql, $topic_replies_real_sql);
+
+			update_post_information('topic', array_keys($topic_id_list));
+			update_post_information('forum', $forum_id);
+			unset($topic_id_list);
+
+			$messenger = new messenger();
+
+			// Notify Poster?
+			if ($notify_poster)
+			{
+				$email_sig = str_replace('<br />', "\n", "-- \n" . $config['board_email_sig']);
+
+				foreach ($post_info as $post_id => $post_data)
+				{
+					if ($post_data['poster_id'] == ANONYMOUS)
+					{
+						continue;
+					}
+
+					$email_template = ($post_data['post_id'] == $post_data['topic_first_post_id'] && $post_data['post_id'] == $post_data['topic_last_post_id']) ? 'topic_disapproved' : 'post_disapproved';
+
+					$messenger->template($email_template, $post_data['user_lang']);
+
+					$messenger->replyto($config['board_email']);
+					$messenger->to($post_data['user_email'], $post_data['username']);
+					$messenger->im($post_data['user_jabber'], $post_data['username']);
+
+					$messenger->assign_vars(array(
+						'EMAIL_SIG'	=> $email_sig,
+						'SITENAME'	=> $config['sitename'],
+						'USERNAME'	=> html_entity_decode($post_data['username']),
+						'REASON'	=> html_entity_decode($disapprove_reason),
+						'POST_SUBJECT'	=> html_entity_decode(censor_text($post_data['post_subject'])),
+						'TOPIC_TITLE'	=> html_entity_decode(censor_text($post_data['topic_title'])))
+					);
+	
+					$messenger->send($post_data['user_notify_type']);
+					$messenger->reset();
+				}	
+
+				$messenger->save_queue();
+			}
+			unset($post_info, $disapprove_reason);
+	
+			if ($forum_topics_real)
+			{
+				$success_msg = ($forum_topics_real == 1) ? 'TOPIC_DISAPPROVED_SUCCESS' : 'TOPICS_DISAPPROVED_SUCCESS';
+			}
+			else
+			{
+				$success_msg = (sizeof($post_id_list) == 1) ? 'POST_DISAPPROVED_SUCCESS' : 'POSTS_DISAPPROVED_SUCCESS';
+			}
+		}
+		else
+		{
+			include_once($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+
+			display_reasons($reason_id);
+
+			$template->assign_vars(array(
+				'S_NOTIFY_POSTER'	=> true,
+				'S_APPROVE'		=> false,
+				'REASON'		=> $reason,
+				'ADDITIONAL_MSG'	=> $additional_msg)
+			);
+
+			confirm_box(false, 'DISAPPROVE_QUARTERMILE' . ((sizeof($post_id_list) == 1) ? '' : 'S'), $s_hidden_fields, 'mcp_approve.html');
+		}
+
+		$redirect = request_var('redirect', "index.$phpEx");
+		$redirect = reapply_sid($redirect);
+
+		if (!$success_msg)
+		{
+			redirect($redirect);
+		}
+		else
+		{
+			meta_refresh(3, $redirect);
+			trigger_error($user->lang[$success_msg] . '<br /><br />' . sprintf($user->lang['RETURN_PAGE'], "<a href=\"$redirect\">", '</a>'));
+		}
 	}
 }
 
