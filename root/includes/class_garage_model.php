@@ -246,7 +246,7 @@ class garage_model
 	{
 		global $db;
 
-		$sql = "SELECT model 
+		$sql = "SELECT *
 			FROM " . GARAGE_MODELS_TABLE . " 
 			WHERE id = $model_id";
 
