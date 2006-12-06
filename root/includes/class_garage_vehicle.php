@@ -1741,20 +1741,35 @@ class garage_vehicle
 	/*========================================================================*/
 	function profile_integration($user_id)
 	{
-		global $images, $template, $profiledata, $lang, $phpEx, $garage_config;
+		global $images, $template, $profiledata, $lang, $phpEx, $phpbb_root_path, $db;
+
+		include_once($phpbb_root_path . 'includes/class_garage_image.' . $phpEx);
+		include_once($phpbb_root_path . 'includes/class_garage_modification.' . $phpEx);
 
 		//Get Vehicle Data
 		$vehicle_data = $this->select_user_main_vehicle_data($user_id);
 
 		if ( count($vehicle_data) > 0 )
 		{
+			$sql = "SELECT config_name, config_value 
+				FROM " . GARAGE_CONFIG_TABLE;
+
+			if(!$result = $db->sql_query($sql))
+			{
+				message_die(GENERAL_ERROR, "Could Not Query Garage Config Information", "", __LINE__, __FILE__, $sql);
+			}
+
+			while( $row = $db->sql_fetchrow($result) )
+			{
+				$garage_config[$row['config_name']] = $row['config_value'];
+			}
+
 			$template->assign_block_vars('garage_vehicle', array());
 			$total_spent = $vehicle_data['total_spent'] ? $vehicle_data['total_spent'] : 0;
 
 			//Display Just Thumbnails Of All Images Or Just One Main Image
 			if ( $garage_config['profile_thumbs'] == 1 )
 			{
-
 				//Build List Of Gallery Images For Vehicle
 				$gallery_data = $garage_image->select_gallery_data($vehicle_data['id']);
         			for ( $i=0; $i < count($gallery_data); $i++ )

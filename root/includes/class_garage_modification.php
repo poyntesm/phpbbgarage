@@ -437,7 +437,7 @@ class garage_modification
 
 		global $db;
 
-		$sql = "SELECT m.*, images.*, 
+		$sql = "SELECT m.*, images.* 
          		FROM " . GARAGE_MODS_TABLE . " m
 				LEFT JOIN " . GARAGE_IMAGES_TABLE . " images ON (images.attach_id = m.image_id)
 			WHERE m.garage_id = $cid";
