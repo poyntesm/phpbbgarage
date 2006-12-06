@@ -173,8 +173,6 @@ copy root/*.* TO *.*
 #
 #-----[ DIY INSTRUCTIONS ]------------------------------------------
 #
-Create directory ./garage 
-Create directory ./garage/upload 
 Chmod ./garage/ to 755
 Chmod ./garage/upload to 777
 Open your web browser and run install_garage.php
@@ -224,6 +222,7 @@ memberlist.php
 #-----[ FIND ]------------------------------------------
 #
 $sql = "SELECT username, user_id, user_viewemail, user_posts, user_regdate, user_from, user_website, user_email, user_icq, user_aim, user_yim, user_msnm, user_avatar, user_avatar_type, user_allowavatar 
+#
 #-----[ IN-LINE FIND ]------------------------------------------
 #
 user_allowavatar
