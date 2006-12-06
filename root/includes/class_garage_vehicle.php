@@ -1741,7 +1741,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function profile_integration($user_id)
 	{
-		global $images, $template, $profiledata, $lang, $phpEx;
+		global $images, $template, $profiledata, $lang, $phpEx, $garage_config;
 
 		//Get Vehicle Data
 		$vehicle_data = $this->select_user_main_vehicle_data($user_id);
