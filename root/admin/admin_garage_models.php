@@ -161,7 +161,7 @@ switch($mode)
 		$data = $garage_model->select_make_data($data['id']);
 
 		//Get All Make Data To Build Dropdown Of Where To Move Linked Items To
-		$all_data = $garage_model->select_all_make_data('');
+		$all_data = $garage_model->select_all_makes_data('');
 
 		//Build Dropdown Options For Where To Love Linked Items To
 		for ($i = 0; $i < count($all_data); $i++)
@@ -308,7 +308,7 @@ switch($mode)
 		$data = $garage_model->select_model_data($data['id']);
 
 		//Get All Models For Make Data To Build Dropdown Of Where To Move Linked Items To
-		$all_data = $garage_model->select_all_model_from_make_data($data['make_id']);
+		$all_data = $garage_model->select_all_models_from_make_data($data['make_id']);
 
 		//Build Dropdown Options For Where To Love Linked Items To
 		for ($i = 0; $i < count($all_data); $i++)
