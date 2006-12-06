@@ -1834,7 +1834,7 @@ class garage_vehicle
 		       		'COLOUR' => $vehicle_data['color'],
 			       	'HILITE_IMAGE' => $hilite_image,
 		        	'MILEAGE' => $vehicle_data['mileage'],
-			        'MILEAGE_UNITS' => $vehicle_data['mileage_unit'],
+			        'MILEAGE_UNITS' => $vehicle_data['mileage_units'],
 		        	'PRICE' => $vehicle_data['price'],
 			        'CURRENCY' => $vehicle_data['currency'],
 		        	'TOTAL_MODS' => $vehicle_data['total_mods'],
