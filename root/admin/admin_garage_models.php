@@ -326,7 +326,7 @@ switch($mode)
 		);
 
 		$template->assign_vars(array(
-			'S_GARAGE_ACTION' => append_sid("admin_garage_models.$phpEx?mode=delete_model&amp;id=".$data[0]['id']),
+			'S_GARAGE_ACTION' => append_sid("admin_garage_models.$phpEx?mode=delete_model&amp;id=".$data['id']),
 			'S_TITLE' => $data['model'],
 			'L_DELETE' => $lang['Delete_Model'],
 			'L_DELETE_EXPLAIN' => $lang['Delete_Model_Explain'],
