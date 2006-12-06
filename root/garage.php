@@ -2514,7 +2514,7 @@ switch( $mode )
 		$garage->check_permissions('ADD',"garage.$phpEx?mode=error&EID=14");
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('mode_redirect', 'name', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
+		$params = array('mode_redirect', 'title', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
 		$data = $garage->process_post_vars($params);
 		$data['pending'] = ($garage_config['enable_business_approval'] == '1') ? 1 : 0 ;
 		$data['insurance'] = ($data['insurance'] == 'on') ? 1 : 0 ;
