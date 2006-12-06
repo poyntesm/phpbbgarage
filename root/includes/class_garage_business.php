@@ -89,7 +89,7 @@ class garage_business
 		$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		return $data;
+		return $row;
 	}
 
 	/*========================================================================*/
