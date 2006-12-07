@@ -560,6 +560,38 @@ class garage_dynorun
 		$sort='';
 		return $count;
 	}
+
+	/*========================================================================*/
+	// Approve Dynoruns
+	// Usage: approve_dynorun(array(), 'mode');
+	/*========================================================================*/
+	function approve_dynorun($id_list, $mode)
+	{
+		global $phpbb_root_path, $phpEx, $garage;
+
+		for($i = 0; $i < count($id_list); $i++)
+		{
+			$garage->update_single_field(GARAGE_DYNORUN_TABLE, 'pending', 0, 'id', $id_list[$i]);
+		}
+
+		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_dynoruns"));
+	}
+
+	/*========================================================================*/
+	// Approve Dynoruns
+	// Usage: approve_quartermile(array(), 'mode');
+	/*========================================================================*/
+	function disapprove_dynorun($id_list, $mode)
+	{
+		global $phpbb_root_path, $phpEx;
+
+		for($i = 0; $i < count($id_list); $i++)
+		{
+			$this->delete_dynorun($id_list[$i]);
+		}
+
+		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_dynoruns"));
+	}
 }
 
 $garage_dynorun = new garage_dynorun();

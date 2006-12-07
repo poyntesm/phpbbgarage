@@ -27,7 +27,7 @@ class mcp_garage
 	{
 		global $auth, $db, $user, $template;
 		global $config, $phpbb_root_path, $phpEx, $action;
-		global $garage_config;
+		global $garage_config, $garage_template, $garage_vehicle, $garage_business;
 
 		$start = request_var('start', 0);
 
@@ -38,7 +38,9 @@ class mcp_garage
 		include_once($phpbb_root_path . 'includes/mods/class_garage_model.' . $phpEx);
 		include_once($phpbb_root_path . 'includes/mods/class_garage_business.' . $phpEx);
 		include_once($phpbb_root_path . 'includes/mods/class_garage_quartermile.' . $phpEx);
+		include_once($phpbb_root_path . 'includes/mods/class_garage_template.' . $phpEx);
 		include_once($phpbb_root_path . 'includes/mods/class_garage_dynorun.' . $phpEx);
+		include_once($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
 		include_once($phpbb_root_path . 'includes/functions_messenger.' . $phpEx);
 
 		switch ($action)
@@ -293,7 +295,12 @@ class mcp_garage
 				);
 
 				$this->tpl_name = 'mcp_garage_approve_dynoruns';
-			break;
+				break;
+
+			case 'reassign_business':
+
+				break;
+
 		}
 	}
 }

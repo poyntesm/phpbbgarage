@@ -365,21 +365,17 @@ class garage_business
 	// Count Shop Business Data In DB
 	// Usage: count_shop_business_data('additional where');
 	/*========================================================================*/
-	function reassign_business($additional_where)
+	function reassign_business($id_list)
 	{
-		global $db;
+		global $template, $garage_template, $page_title, $phpbb_root_path, $phpEx;
 
-		//We Need To Check Only One Business Was Selected
-		$total = sizeof($HTTP_POST_VARS['bus_id']);
-		if ( $total > 1 )
+		$exclude_list = null;
+		for($i = 0; $i < count($id_list); $i++)
 		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=22"));
+			$data[] 	= $this->get_business($id_list[$i]);
+			$exclude_list 	.= $id_list[$i] . ',';
 		}
-
-		//Get Business ID We Are Going To Delete
-		$bus_id = intval($HTTP_POST_VARS['bus_id'][0]);
-
-		$data = $garage_business->get_business($bus_id);
+		$exclude_list = rtrim($exclude_list, ', ');
 
 		//Generate Page Header
 		page_header($page_title);
@@ -390,18 +386,83 @@ class garage_business
 			'body'   => 'garage_reassign_business.html')
 		);
 
-		//Build Dropdown Box Of Business's To Reassign It To
-		$garage_business->reassign_business_dropdown($bus_id);
+		//Build Dropdown Box Of Business's To Reassign It 
+		$garage_template->reassign_business_dropdown($exclude_list);
+
+		$business_names = null;
+		for ($i = 0, $count = sizeof($data); $i < $count; $i++)
+		{
+			$business_names	.= $data[$i]['title'] . ',';
+			$template->assign_block_vars('business', array(
+				'ID'	=> $data[$i]['id'])
+			);
+		}
+		$business_names = rtrim($business_names, ', ');
 
 		//Set Up Template Varibles
 		$template->assign_vars(array(
-			'NAME'		=> $data['title'],
-			'BUSINESS_ID'	=> $data['id'],
-			'S_MODE_ACTION'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=reassign_business"))
+			'BUSINESS_NAMES'	=> $business_names,
+			'S_MODE_ACTION'		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=reassign_business"))
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$garage_template->sidemenu();
+
+		$garage_template->version_notice();
+
+		//Set Template Files In Used For Footer
+		$template->set_filenames(array(
+			'garage_footer' => 'garage_footer.html')
+		);
+
+		//Generate Page Footer
+		page_footer();
+	}
+
+	/*========================================================================*/
+	// Delete Quartermile Entry Including Image 
+	// Usage: delete_quartermile('quartermile id');
+	/*========================================================================*/
+	function delete_business($id)
+	{
+		global $garage, $garage_image;
+	
+		//Time To Delete The Actual Quartermile Time Now
+		$garage->delete_rows(GARAGE_BUSINESS_TABLE, 'id', $id);
+
+		return ;
+	}
+
+	/*========================================================================*/
+	// Approve Dynoruns
+	// Usage: approve_dynorun(array(), 'mode');
+	/*========================================================================*/
+	function approve_business($id_list, $mode)
+	{
+		global $phpbb_root_path, $phpEx, $garage;
+
+		for($i = 0; $i < count($id_list); $i++)
+		{
+			$garage->update_single_field(GARAGE_BUSINESS_TABLE, 'pending', 0, 'id', $id_list[$i]);
+		}
+
+		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_business"));
+	}
+
+	/*========================================================================*/
+	// Approve Dynoruns
+	// Usage: approve_quartermile(array(), 'mode');
+	/*========================================================================*/
+	function disapprove_business($id_list, $mode)
+	{
+		global $phpbb_root_path, $phpEx;
+
+		for($i = 0; $i < count($id_list); $i++)
+		{
+			$this->delete_business($id_list[$i]);
+		}
+
+		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_business"));
 	}
 }
 

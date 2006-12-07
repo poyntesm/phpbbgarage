@@ -228,11 +228,11 @@ class garage_template
 		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
 		$html = '<select name="target_id" class="forminput">';
-	
+
 		$sql = "SELECT id, title	
 			FROM " . GARAGE_BUSINESS_TABLE . " 
 			WHERE pending = 0 	
-				and id != $exclude
+				and id NOT IN ($exclude)
 			ORDER BY title ASC";
 	
 		if( !($result = $db->sql_query($sql)) )

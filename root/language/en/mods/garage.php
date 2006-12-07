@@ -496,6 +496,7 @@ $lang = array_merge($lang, array(
 	'QUARTERMILE_SPEED_UNIT' 	=> 'MPH', 
 	'REASSIGN_BUSINESS' 		=> 'Reassign Business',
 	'BUSINESS_DELETED' 		=> 'Business Deleted : ',
+	'BUSINESS_DELETING' 		=> 'Business Deleting : ',
 	'REASSIGN_TO' 			=> 'Business To Reassign Items To : ',
 	'REASSIGN_BUTTON' 		=> 'Reassign',
 	'TRANSLATION_LINK' 		=> '',
@@ -664,6 +665,12 @@ $lang = array_merge($lang, array(
 	'NO_QUARTERMILE_SELECTED'	=> 'You must select at least one quartermile to perform this action.',
 	'NO_DYNORUN_SELECTED'		=> 'You must select at least one dynorun to perform this action.',
 	'DISAPPROVE_QUARTERMILE'	=> 'Dissaprove quartermile time.',	
+
+	//UCP LANGUAGE KEYS
+	'EMAIL_OPTOUT'			=> 'Optout of pending notification emails',
+	'PM_OPTOUT'			=> 'Optout of pending notification private messages',
+	'EMAIL_OPTOUT_DISABLED'		=> 'The forum administrator has configured it so optout of email notifications is disabled, or pending notification is switched off.',
+	'PM_OPTOUT_DISABLED'		=> 'The forum administrator has configured it so optout of pm notifications is disabled, or pending notification is switched off.',
 
 ));
 

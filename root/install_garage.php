@@ -345,6 +345,9 @@ while( list($config_name, $config_value) = @each($params) )
 {
 	$required_sql[] = "INSERT INTO " . $table_prefix . "garage_config (config_name, config_value) VALUES ('" . $config_name . "', '" . $config_value . "')";
 }
+//Required SQL For User Preferences
+$required_sql[] = "ALTER TABLE " . $table_prefix . "users ADD `user_garage_mod_email_optout` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0',";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "users ADD `user_garage_mod_pm_optout` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0',";
 //Required SQL For Images
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_vehicle_img_attached` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_slip_img_attached` text NOT NULL";

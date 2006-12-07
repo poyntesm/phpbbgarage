@@ -18,6 +18,7 @@
 ##			includes/acp/acp_styles.php
 ##			language/en/common.php
 ##			language/en/mcp.php
+##			language/en/ucp.php
 ##			language/en/acp/common.php
 ##			language/en/acp/styles.php
 ##			styles/subSilver/imageset/imageset.cfg
@@ -636,6 +637,36 @@ $lang = array_merge($lang, array(
 	'MCP_GARAGE_UNAPPROVED_QUARTERMILES'	=> 'Quartermiles awaiting approval',
 	'MCP_GARAGE_UNAPPROVED_DYNORUNS'	=> 'Dynoruns awaiting approval',
 
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+# 
+#-----[ OPEN ]----- 
+# 
+language/en/ucp.php
+#
+#-----[ FIND ]------------------------------------------
+#
+<?php
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+
+#
+#-----[ FIND ]------------------------------------------
+#
+$lang = array_merge($lang, array(
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+	'UCP_GARAGE'				=> 'Garage',
+	'UCP_GARAGE_OPTIONS'			=> 'Edit global settings',
+	'UCP_GARAGE_MODERATION'			=> 'Edit moderator notification settings',
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
 # 
