@@ -65,7 +65,6 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage (
 		`date_updated` int(10) default NULL,
 		`make_id` int(10) unsigned NOT NULL default '0',
 		`model_id` int(10) unsigned NOT NULL default '0',
-		`guestbook_pm_notify` tinyint(1) NOT NULL default '0',
 		`main_vehicle` tinyint(1) NOT NULL default '0',
 		`weighted_rating` double NOT NULL default '0',
 		PRIMARY KEY  (`id`),
@@ -243,7 +242,6 @@ $params = array(
 	'enable_user_submit_model' 		=> '1',
 	'dateformat' 				=> 'd M Y H:i',
 	'version' 				=> '2.0.0',
-	'items_pending' 			=> '0',
 	'default_make' 				=> '',
        	'default_model' 			=> '',
        	'integrate_memberlist' 			=> '1',
@@ -269,6 +267,7 @@ $params = array(
 	'enable_dynorun_header' 		=> '1',
 	'enable_latest_vehicle_index' 		=> '1',
 	'latest_vehicle_index_limit' 		=> '10',
+
 //Index Config Data
 	'enable_featured_vehicle' 		=> '1',
 	'featured_vehicle_id'			=> '1',
@@ -297,6 +296,7 @@ $params = array(
 	'top_quartermile_limit'			=> '5',
 	'enable_top_rating'			=> '1',
 	'top_rating_limit'			=> '5',
+
 //Image Config Data
 	'enable_images'				=> '1',
 	'enable_vehicle_images'			=> '1',
@@ -311,28 +311,35 @@ $params = array(
 	'max_image_kbytes' 			=> '1024',
 	'max_image_resolution' 			=> '1024',
 	'thumbnail_resolution' 			=> '150',
+
 //Quartermile Config Data
 	'enable_quartermile' 			=> '1',
 	'enable_quartermile_approval' 		=> '1',
 	'enable_quartermile_image_required'	=> '1',
-       	'quartermile_image_required_limit'	=> '13',
+	'quartermile_image_required_limit'	=> '13',
+
 //Dynorun Config Data
 	'enable_dynorun' 			=> '1',
 	'enable_dynorun_approval' 		=> '1',
 	'enable_dynorun_image_required' 	=> '1',
-       	'dynorun_image_required_limit' 		=> '300',
+	'dynorun_image_required_limit' 		=> '300',
+
 //Insurance Config Data
 	'enable_insurance' 			=> '1',
 	'enable_insurance_search' 		=> '1',
+
 //Business Config Data
 	'enable_user_submit_business' 		=> '1',
 	'enable_business_approval' 		=> '1',
+
 //Ratings Config Data
 	'rating_permanent' 			=> '0',
        	'rating_always_updateable' 		=> '1',
 	'minimum_ratings_required' 		=> '5',
+
 //Guestbook Config Data
 	'enable_guestbooks' 			=> '1',
+
 //Quota Config Data
 	'max_user_cars' 			=> '1',	
 	'max_upload_images' 			=> '5',
@@ -346,6 +353,7 @@ while( list($config_name, $config_value) = @each($params) )
 	$required_sql[] = "INSERT INTO " . $table_prefix . "garage_config (config_name, config_value) VALUES ('" . $config_name . "', '" . $config_value . "')";
 }
 //Required SQL For User Preferences
+$required_sql[] = "ALTER TABLE " . $table_prefix . "users ADD `user_garage_guestbook_notify` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '1',";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "users ADD `user_garage_mod_email_optout` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0',";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "users ADD `user_garage_mod_pm_optout` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0',";
 //Required SQL For Images

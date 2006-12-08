@@ -179,7 +179,7 @@ switch( $mode )
 		}
 
 		//Get All Data Posted And Make It Safe To Use
-		$params	= array('year', 'make_id', 'model_id', 'colour', 'mileage', 'mileage_units', 'price', 'currency', 'comments', 'guestbook_pm_notify', 'engine_type');
+		$params	= array('year', 'make_id', 'model_id', 'colour', 'mileage', 'mileage_units', 'price', 'currency', 'comments', 'engine_type');
 		$data	= $garage->process_post_vars($params);
 
 		//Set As Main User Vehicle If No Other Vehicle Exists For User
@@ -253,7 +253,6 @@ switch( $mode )
 			'MAKE' 			=> $data['make'],
 			'MODEL' 		=> $data['model'],
 			'YEAR' 			=> $data['made_year'],
-			'CHECKED' 		=> ($data['guestbook_pm_notify'] == true) ? 'checked="checked"': '',
 			'COLOUR' 		=> $data['colour'],
 			'MILEAGE' 		=> $data['mileage'],
 			'PRICE' 		=> $data['price'],
@@ -287,7 +286,7 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('year', 'make_id', 'model_id', 'colour', 'mileage', 'mileage_units', 'price', 'currency', 'comments', 'guestbook_pm_notify', 'engine_type');
+		$params = array('year', 'make_id', 'model_id', 'colour', 'mileage', 'mileage_units', 'price', 'currency', 'comments', 'engine_type');
 		$data = $garage->process_post_vars($params);
 
 		//Checks All Required Data Is Present
@@ -659,8 +658,7 @@ switch( $mode )
 		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
 		if ( $garage_config['enable_quartermile_approval'] )
 		{
-			$garage->pending_notification();
-			$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', '1', 'config_name', 'items_pending');
+			$garage->pending_notification('unapproved_quartermiles');
 		}
 
 		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
@@ -794,8 +792,7 @@ switch( $mode )
 		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
 		if ( $garage_config['enable_quartermile_approval'] )
 		{
-			$garage->pending_notification();
-			$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', '1', 'config_name', 'items_pending');
+			$garage->pending_notification('unapproved_quartermiles');
 		}
 
 		//If Editting From Pending Page Redirect Back To There Instead
@@ -943,8 +940,7 @@ switch( $mode )
 		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
 		if ( $garage_config['enable_dynorun_approval'] )
 		{
-			$garage->pending_notification();
-			$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', 1, 'config_name', 'items_pending');
+			$garage->pending_notification('unapproved_dynoruns');
 		}
 
 		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
@@ -1064,8 +1060,7 @@ switch( $mode )
 		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
 		if ( $garage_config['enable_dynorun_approval'] )
 		{
-			$garage->pending_notification();
-			$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', 1, 'config_name', 'items_pending');
+			$garage->pending_notification('unapproved_dynoruns');
 		}
 
 		//If Editting From Pending Page Redirect Back To There Instead
@@ -2432,9 +2427,7 @@ switch( $mode )
 		if ( $data['pending'] == 1 )
 		{
 			//Perform Any Pending Notifications Requried
-			$garage->pending_notification();
-			//Mark System As Having Pending Item(s)...
-			$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', $data['pending'], 'config_name', 'items_pending');
+			$garage->pending_notification('unapproved_business');
 		}
 
 		//Create The Business Now...
@@ -2600,11 +2593,8 @@ switch( $mode )
 		//Create The Make
 		$garage_model->insert_make($data);
 
-		//All Makes & Models Require Approval
-		$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', '1', 'config_name', 'items_pending');
-
 		//Perform Any Pending Notifications Requried
-		$garage->pending_notification();
+		$garage->pending_notification('unapproved_makes');
 
 		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=create_vehicle&amp;MAKE=" . $data['make']));
 
@@ -2697,8 +2687,7 @@ switch( $mode )
 		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
 		if ( $data['pending'] == 1 )
 		{
-			$garage->pending_notification();
-			$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', $data['pending'], 'config_name', 'items_pending');
+			$garage->pending_notification('unapproved_models');
 		}
 
 		//Create The Model
@@ -3020,19 +3009,38 @@ switch( $mode )
 		//Insert The Comment Into Vehicle Guestbook
 		$garage_guestbook->insert_vehicle_comment($data);
 
-		//Get Vehicle Data So We Can Check If We Need To PM User
+		//Get Vehicle Data So We Can Check If We Need To PM Owner
 		$data = $garage_vehicle->get_vehicle($cid);		
 
 		//If User Has Requested Notification On Comments Sent Them A PM
-		if ( $data['guestbook_pm_notify'] )
+		if ( $garage_guestbook->notify_on_comment($data['user_id']))
 		{
-			//Build Rest Of Required Data
-			$data['pm_subject'] 	= $user->lang['GUESTBOOK_NOTIFY_SUBJECT'];
+			include_once($phpbb_root_path . 'includes/functions_privmsgs.' . $phpEx);
+			include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
+
 			$data['vehicle_link'] 	= '<a href="garage.'.$phpEx.'?mode=view_guestbook&CID=$cid">' . $user->lang['HERE'] . '</a>';
-             		$data['pm_text'] 	= (sprintf($user->lang['GUESTBOOK_NOTIFY_TEXT'], $data['vehicle_link']));
+
+			$message_parser = new parse_message();
+			$message_parser->message = sprintf($user->lang['GUESTBOOK_NOTIFY_TEXT'], $data['vehicle_link']);
+			$message_parser->parse(true, true, true, false, false, true, true);
+
+			$pm_data = array(
+				'from_user_id'			=> $user->data['user_id'],
+				'from_user_ip'			=> $user->data['user_ip'],
+				'from_username'			=> $user->data['username'],
+				'enable_sig'			=> false,
+				'enable_bbcode'			=> true,
+				'enable_smilies'		=> true,
+				'enable_urls'			=> false,
+				'icon_id'			=> 0,
+				'bbcode_bitfield'		=> $message_parser->bbcode_bitfield,
+				'bbcode_uid'			=> $message_parser->bbcode_uid,
+				'message'			=> $message_parser->message,
+				'address_list'			=> array('u' => array($data['user_id'] => 'to')),
+			);
 
 			//Now We Have All Data Lets Send The PM!!
-			$garage_guestbook->send_user_pm($data);
+			submit_pm('post', $user->lang['GUESTBOOK_NOTIFY_SUBJECT'], $pm_data, false, false);
 		}
 
 		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_guestbook&amp;CID=$cid"));

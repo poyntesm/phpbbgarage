@@ -128,8 +128,7 @@ class garage_vehicle
 			'user_id'		=> $user->data['user_id'],
 			'date_created'		=> time(),
 			'date_updated'		=> time(),
-			'main_vehicle'		=> $data['main_vehicle'],
-			'guestbook_pm_notify'	=> ($data['guestbook_pm_notify'] == 'on') ? 1 : 0)
+			'main_vehicle'		=> $data['main_vehicle'])
 		);
 
 		if(!$result = $db->sql_query($sql))
@@ -178,7 +177,8 @@ class garage_vehicle
 			'SELECT'	=> 'COUNT(g.id) as total',
 			'FROM'		=> array(
 				GARAGE_TABLE	=> 'g',
-			)
+			),
+			'WHERE'		=> 'g.user_id = ' . $user->data['user_id']
 		));
 
 		if ( !($result = $db->sql_query($sql)) )
@@ -214,8 +214,7 @@ class garage_vehicle
 			'comments'		=> $data['comments'],
 			'user_id'		=> $user->data['user_id'],
 			'date_updated'		=> time(),
-			'main_vehicle'		=> $data['main_vehicle'],
-			'guestbook_pm_notify'	=> ($data['guestbook_pm_notify'] == 'on') ? 1 : 0
+			'main_vehicle'		=> $data['main_vehicle']
 		);
 
 		$sql = 'UPDATE ' . GARAGE_TABLE . '

@@ -304,38 +304,152 @@ class garage
 	}
 
 	/*========================================================================*/
-	// Send All Admins & Moderators A PM Notifing Them Of Pending Items
-	// Usage: check_pending_items();
+	// Returns List Of Moderators To Notify Of Pending Items By Email & Jabber
+	// Usage: moderators_requiring_email($moder);
 	/*========================================================================*/
-	function pending_notification()
+	function moderators_requiring_email($moderators)
 	{
-		global $garage_guestbook, $user, $phpEx, $auth, $garage_config;
+		global $db;
 
-		//Get All Users With The Rights To Approve Items
-		$user_ary = $auth->acl_get_list(false, array('m_garage'), false);
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'u.user_id, u.username, u.user_email, u.user_lang, u.user_jabber, u.user_notify_type',
+			'FROM'		=> array(
+				USERS_TABLE	=> 'u',
+			),
+			'WHERE'		=> $db->sql_in_set('u.user_id', $moderators[0]['m_garage']) . ' AND u.user_garage_mod_email_optout = 0'
+		));
 
-		//$user_ary['0']['m_garage']['0'];
-		//Process All Selected Users And Send Them A PM...
-		for ($i = 0, $count = sizeof($user_ary); $i < $count; $i++)
+		if( !($result = $db->sql_query($sql)) )
 		{
-			//If User Not Opt'd Out Of PM Notifications & PM Notifications Enabled...Then Send Them A PM
-			if ($garage_config['enable_pm_pending_notify'])
+			message_die(GENERAL_ERROR, 'Could Not Select Moderations To Email/Jabber', '', __LINE__, __FILE__, $sql);
+		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$data[] = $row;
+		}
+
+		$db->sql_freeresult($result);
+
+		if (empty($data))
+		{
+			return;
+		}
+		return $data;
+	}
+
+	/*========================================================================*/
+	// Returns List Of Moderators To Notify Of Pending Items By Private Message
+	// Usage: moderators_requiring_pm($moderators);
+	/*========================================================================*/
+	function moderators_requiring_pm($moderators)
+	{
+		global $db;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'u.user_id',
+			'FROM'		=> array(
+				USERS_TABLE	=> 'u',
+			),
+			'WHERE'  	=> $db->sql_in_set('u.user_id', $moderators[0]['m_garage']) . ' AND u.user_garage_mod_pm_optout = 0'
+		));
+
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could Not Select Moderators To PM', '', __LINE__, __FILE__, $sql);
+		}
+
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$data[] = $row;
+		}
+
+		$db->sql_freeresult($result);
+
+		if (empty($data))
+		{
+			return;
+		}
+		return $data;
+	}
+
+	/*========================================================================*/
+	// Send All Admins & Moderators A PM Notifing Them Of Pending Items
+	// Takes Into Account Moderators That Optout If Allowed
+	// Usage: pending_notification(MCP mode to approve);
+	/*========================================================================*/
+	function pending_notification($mcp_mode_to_approve)
+	{
+		global $user, $phpEx, $auth, $garage_config, $config, $garage, $phpbb_root_path;
+
+		//Get All Users With The Rights To Approve Items If We Need To
+		if ( $garage_config['enable_email_pending_notify'] OR $garage_config['enable_pm_pending_notify'] )
+		{
+			$garage_moderators = $auth->acl_get_list(false, array('m_garage'), false);
+		}
+
+		//Do We Send Email && Jabber Notifications On Pending Items?
+		if ($garage_config['enable_email_pending_notify'])
+		{
+			//Get All Garage Moderators To Notify Via Email
+			$moderators_to_email = $garage->moderators_requiring_email($garage_moderators, $garage_config['enable_email_pending_notify_optout'] );
+
+			//Process All Moderator Returned And Send Them Notification Via There Perferred Methods (Email/Jabber)
+			for ($i = 0, $count = sizeof($moderators_to_email);$i < $count; $i++)
 			{
-				//Build Required PM Data
-				$data['date'] 		= date("U");
-				$data['pm_subject'] 	= $user->lang['PENDING_ITEMS'];
-				$data['link'] 		= '<a href="garage.' . $phpEx . '?mode=garage_pending">' . $user->lang['HERE'] . '</a>';
-				$data['pm_text'] 	= (sprintf($user->lang['PENDING_NOTIFY_TEXT'], $data['link']));
-				$data['author_id'] 	= $user->data['user_id'];
-				$data['user_id'] 	= $user_ary[0]['m_garage']['0'];
-	
-				//Send User A PM Mofication Of New Pending Item
-				//$garage_guestbook->send_user_pm($data);
+				include_once($phpbb_root_path . 'includes/functions_messenger.' . $phpEx);
+
+				$messenger = new messenger();
+				$messenger->template('garage_pending', $moderators_to_email[$i]['user_lang']);
+				$messenger->replyto($config['board_contact']);
+				$messenger->to($moderators_to_email[$i]['user_email'], $moderators_to_email[$i]['username']);
+				$messenger->im($moderators_to_email[$i]['user_jabber'], $moderators_to_email[$i]['username']);
+
+				$messenger->assign_vars(array(
+					'U_MCP'		=> generate_board_url() . "/mcp.$phpEx?i=garage&mode=$mcp_mode_to_approve")
+				);
+
+				//Send Them The Actual Notification
+				$messenger->send($moderators_to_email[$i]['user_notify_type']);
 			}
-			//If User Not Opt'd Out Of Email Notifications & Email Notifications Enabled...Then Send Them A Email
-			if ($garage_config['enable_pm_pending_notify'])
+		}
+
+		//Do We Send Private Message Notifications On Pending Items?
+		if ($garage_config['enable_pm_pending_notify'])
+		{
+			//Get All Garage Moderators To Notify Via PM
+			$moderators_to_pm = $garage->moderators_requiring_pm($garage_moderators, $garage_config['enable_pm_pending_notify_optout']);
+
+			//Process All Moderator Returned And Send Them Notification Via Private Message
+			for ($i = 0, $count = sizeof($moderators_to_pm);$i < $count; $i++)
 			{
-				//Send User A Email Notification Of New Pending Item
+				include_once($phpbb_root_path . 'includes/functions_privmsgs.' . $phpEx);
+				include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
+
+				$message_parser = new parse_message();
+				$message_parser->message = sprintf($user->lang['PENDING_NOTIFY_TEXT'], '<a href="mcp.' . $phpEx . '?i=garage&mode=' . $mcp_mode_to_approve .'">' . $user->lang['HERE'] . '</a>');
+				$message_parser->parse(true, true, true, false, false, true, true);
+
+				$pm_data = array(
+					'from_user_id'			=> $user->data['user_id'],
+					'from_user_ip'			=> $user->data['user_ip'],
+					'from_username'			=> $user->data['username'],
+					'enable_sig'			=> false,
+					'enable_bbcode'			=> true,
+					'enable_smilies'		=> true,
+					'enable_urls'			=> false,
+					'icon_id'			=> 0,
+					'bbcode_bitfield'		=> $message_parser->bbcode_bitfield,
+					'bbcode_uid'			=> $message_parser->bbcode_uid,
+					'message'			=> $message_parser->message,
+					'address_list'			=> array('u' => array($moderators_to_pm[$i]['user_id'] => 'to')),
+				);
+
+				//Now We Have All Data Lets Send The PM!!
+				submit_pm('post', $user->lang['PENDING_ITEMS'], $pm_data, false, false);
 			}
 		}
 

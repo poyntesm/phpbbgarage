@@ -20,8 +20,8 @@ class ucp_garage_info
 			'title'		=> 'UCP_GARAGE',
 			'version'	=> '1.0.0',
 			'modes'		=> array(
-				'options'	=> array('title' => 'UCP_GARAGE_OPTIONS', 'auth' => 'acl_u_garage_browse', 'cat' => array('UCP_GARAGE')),
-				'moderation'	=> array('title' => 'UCP_GARAGE_MODERATION', 'auth' => 'acl_m_garage', 'cat' => array('UCP_GARAGE')),
+				'options'	=> array('title' => 'UCP_GARAGE_OPTIONS', 'auth' => '', 'cat' => array('UCP_GARAGE')),
+				'notify'	=> array('title' => 'UCP_GARAGE_NOTIFY', 'auth' => '', 'cat' => array('UCP_GARAGE')),
 			),
 		);
 	}

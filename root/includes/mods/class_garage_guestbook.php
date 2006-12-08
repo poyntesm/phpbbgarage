@@ -246,44 +246,35 @@ class garage_guestbook
 	}
 
 	/*========================================================================*/
-	// Send A PM To A User
-	// Usage: send_user_pm(array());
+	// Notify On Comment?
+	// Usage: notify_on_comment();
 	/*========================================================================*/
-	function send_user_pm($data)
+	function notify_on_comment($user_id)
 	{
-		global $db, $garage, $user;
+		global  $db;
 
-		//
-		//
-		//	REPLACE WITH A NATIVE FUNCTION ????
-		//
-		//
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'u.user_garage_guestbook_notify',
+			'FROM'		=> array(
+				USERS_TABLE	=> 'u',
+			),
+			'WHERE'		=> "u.user_id = $user_id"
+		));
 
-		$garage->update_single_field(USERS_TABLE, 'user_new_privmsg', '1', 'user_id', $user->data['user_id']);	
-		$garage->update_single_field(USERS_TABLE, 'user_last_privmsg', '9999999999', 'user_id', $user->data['user_id']);	
-		$sql = "INSERT INTO " . PRIVMSGS_TABLE . " 
-			(privmsgs_type, privmsgs_subject, privmsgs_from_userid, privmsgs_to_userid, privmsgs_date, privmsgs_enable_html, privmsgs_enable_bbcode, privmsgs_enable_smilies, privmsgs_attach_sig)
-			VALUES 
-			('0', '" . $data['pm_subject'] . "', '" . $user->data['user_id'] . "', '" . $data['user_id'] . "', '" . date("U") . "', '0', '1', '1', '0')";
-           	
-	 	if ( !$db->sql_query($sql) )
-         	{
-            		message_die(GENERAL_ERROR, 'Could Not Insert PM Sent Info', '', __LINE__, __FILE__, $sql);
-         	}
-   
-      		$id = $db->sql_nextid();
+		if ( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Error Counting User Vehicles', '', __LINE__, __FILE__, $sql);
+		}
 
-		$sql = "INSERT INTO " . PRIVMSGS_TEXT_TABLE . " 
-			(privmsgs_text_id, privmsgs_text) 
-			VALUES 
-			($id, '" . $data['pm_text'] . "' )";
+		$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
 
-           	if ( !$db->sql_query($sql) )
-         	{
-            		message_die(GENERAL_ERROR, 'Could Not Insert PM Sent Text', '', __LINE__, __FILE__, $sql);
-         	}
-
-		return ;
+		if ($row['user_garage_guestbook_notify'])
+		{
+			return true;
+		}
+		return false;
 	}
 
 	/*========================================================================*/

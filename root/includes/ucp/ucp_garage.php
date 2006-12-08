@@ -55,12 +55,16 @@ class ucp_garage
 				}
 
 				$template->assign_vars(array(
-					'S_SIG'		=> $data['sig'],
-					'S_NOTIFY'	=> $data['garage_email_optout'])
+					'L_TITLE'	=> $user->lang['UCP_GARAGE_OPTIONS'],
+					'S_HIDDEN_FIELDS'	=> $s_hidden_fields,
+					'S_UCP_ACTION'		=> $this->u_action)
 				);
+
+				$this->tpl_name = 'ucp_garage_' . $mode;
+				$this->page_title = 'UCP_GARAGE_' . strtoupper($mode);
 			break;
 
-			case 'moderation':
+			case 'notify':
 
 				$data = array(
 					'email_optout'	=> request_var('email_optout', $user->data['user_garage_mod_email_optout']),
@@ -86,23 +90,19 @@ class ucp_garage
 				}
 
 				$template->assign_vars(array(
-					'S_DISPLAY_EMAIL_OPTOUT'=> ($garage_config['enable_email_pending_notify'] && $garage_config['enable_email_pending_notify_optout']) ? 1 : 0,
-					'S_DISPLAY_PM_OPTOUT'	=> ($garage_config['enable_pm_pending_notify'] && $garage_config['enable_pm_pending_notify_optout']) ? 1 : 0,
+					'L_TITLE'		=> $user->lang['UCP_GARAGE_NOTIFY'],
+					'S_DISPLAY_EMAIL_OPTOUT'=> ($garage_config['enable_email_pending_notify'] && $garage_config['enable_email_pending_notify_optout'] && $auth->acl_get('m_garage')) ? 1 : 0,
+					'S_DISPLAY_PM_OPTOUT'	=> ($garage_config['enable_pm_pending_notify'] && $garage_config['enable_pm_pending_notify_optout'] && $auth->acl_get('m_garage')) ? 1 : 0,
 					'S_EMAIL_OPTOUT'	=> $data['email_optout'],
-					'S_PM_OPTOUT'		=> $data['pm_optout'])
+					'S_PM_OPTOUT'		=> $data['pm_optout'],
+					'S_HIDDEN_FIELDS'	=> $s_hidden_fields,
+					'S_UCP_ACTION'		=> $this->u_action)
 				);
+				$this->tpl_name = 'ucp_garage_notify';
+				$this->page_title = 'UCP_GARAGE_NOTIFY';
+
 			break;
 		}
-
-		$template->assign_vars(array(
-			'L_TITLE'			=> $user->lang['UCP_GARAGE_' . strtoupper($mode)],
-
-			'S_HIDDEN_FIELDS'	=> $s_hidden_fields,
-			'S_UCP_ACTION'		=> $this->u_action)
-		);
-
-		$this->tpl_name = 'ucp_garage_' . $mode;
-		$this->page_title = 'UCP_PREFS_' . strtoupper($mode);
 	}
 }
 
