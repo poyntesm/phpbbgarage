@@ -671,6 +671,7 @@ $lang = array_merge($lang, array(
 	'PM_OPTOUT'			=> 'Optout of pending notification private messages',
 	'EMAIL_OPTOUT_DISABLED'		=> 'The forum administrator has configured it so optout of email notifications is disabled, or pending notification is switched off.',
 	'PM_OPTOUT_DISABLED'		=> 'The forum administrator has configured it so optout of pm notifications is disabled, or pending notification is switched off.',
+	'GUESTBOOK_NOTIFY'		=> 'Private message notification of comments to your vehicles',
 
 ));
 

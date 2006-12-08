@@ -1,0 +1,10 @@
+Subject: phpBB Garage Pending Item
+
+Hello,
+
+An item requiring approval within phpBB Garage has been created. Please review the item and then approve or dissaprove it.
+
+Use this link to approve/dissaprove the item(s):
+{U_MCP}
+
+{EMAIL_SIG}
