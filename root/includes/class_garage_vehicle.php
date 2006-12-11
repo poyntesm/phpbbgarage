@@ -1741,29 +1741,17 @@ class garage_vehicle
 	/*========================================================================*/
 	function profile_integration($user_id)
 	{
-		global $images, $template, $profiledata, $lang, $phpEx, $phpbb_root_path, $db;
+		global $images, $template, $profiledata, $lang, $phpEx, $phpbb_root_path, $db, $garage_config, $garage;
 
+		include_once($phpbb_root_path . 'includes/class_garage.' . $phpEx);
 		include_once($phpbb_root_path . 'includes/class_garage_image.' . $phpEx);
 		include_once($phpbb_root_path . 'includes/class_garage_modification.' . $phpEx);
 
 		//Get Vehicle Data
 		$vehicle_data = $this->select_user_main_vehicle_data($user_id);
 
-		if ( count($vehicle_data) > 0 )
+		if ( !empty($vehicle_data) )
 		{
-			$sql = "SELECT config_name, config_value 
-				FROM " . GARAGE_CONFIG_TABLE;
-
-			if(!$result = $db->sql_query($sql))
-			{
-				message_die(GENERAL_ERROR, "Could Not Query Garage Config Information", "", __LINE__, __FILE__, $sql);
-			}
-
-			while( $row = $db->sql_fetchrow($result) )
-			{
-				$garage_config[$row['config_name']] = $row['config_value'];
-			}
-
 			$template->assign_block_vars('garage_vehicle', array());
 			$total_spent = $vehicle_data['total_spent'] ? $vehicle_data['total_spent'] : 0;
 

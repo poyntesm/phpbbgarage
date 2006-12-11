@@ -508,9 +508,9 @@ $admin_link = ( $userdata['user_level'] == ADMIN ) ? '<a href="admin/index.' . $
 
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
-include_once($phpbb_root_path . 'includes/class_garage.' . $phpEx);
 if ( in_array($userdata['user_level'], array(ADMIN, MOD)) )
 {
+	include_once($phpbb_root_path . 'includes/class_garage.' . $phpEx);
 	//If Pending Items Exist Then Create Link
 	if ( $garage->check_pending_items() )
 	{
