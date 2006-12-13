@@ -67,6 +67,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage (
 		`model_id` int(10) unsigned NOT NULL default '0',
 		`main_vehicle` tinyint(1) NOT NULL default '0',
 		`weighted_rating` double NOT NULL default '0',
+		`pending` tinyint(1) NOT NULL default '0',
 		PRIMARY KEY  (`id`),
 		KEY `date_created` (`date_created`),
 		KEY `date_updated` (`date_updated`),
@@ -252,6 +253,7 @@ $params = array(
 	'enable_email_pending_notify'		=> '1',
 	'enable_pm_pending_notify_optout'	=> '1',
 	'enable_email_pending_notify_optout'	=> '1',
+	'enable_vehicle_approval'		=> '1',
 
 //Menu Config Data
 	'enable_index_menu' 			=> '1',
@@ -270,6 +272,8 @@ $params = array(
 
 //Index Config Data
 	'enable_featured_vehicle' 		=> '1',
+	'index_columns'				=> '2',
+	'enable_user_index_columns'		=> '1',
 	'featured_vehicle_id'			=> '1',
 	'featured_vehicle_random' 		=> '0',
 	'featured_vehicle_from_block'		=> '',
@@ -339,6 +343,7 @@ $params = array(
 
 //Guestbook Config Data
 	'enable_guestbooks' 			=> '1',
+	'enable_guestbooks_comment_approval' 	=> '1',
 
 //Quota Config Data
 	'max_user_cars' 			=> '1',	
@@ -353,7 +358,9 @@ while( list($config_name, $config_value) = @each($params) )
 	$required_sql[] = "INSERT INTO " . $table_prefix . "garage_config (config_name, config_value) VALUES ('" . $config_name . "', '" . $config_value . "')";
 }
 //Required SQL For User Preferences
-$required_sql[] = "ALTER TABLE " . $table_prefix . "users ADD `user_garage_guestbook_notify` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '1',";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "users ADD `user_garage_index_columns` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '2',";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "users ADD `user_garage_guestbook_email_notify` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '1',";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "users ADD `user_garage_guestbook_pm_notify` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '1',";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "users ADD `user_garage_mod_email_optout` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0',";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "users ADD `user_garage_mod_pm_optout` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0',";
 //Required SQL For Images

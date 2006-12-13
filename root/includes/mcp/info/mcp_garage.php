@@ -20,11 +20,13 @@ class mcp_garage_info
 			'title'		=> 'MCP_GARAGE',
 			'version'	=> '1.0.0',
 			'modes'		=> array(
+				'unapproved_vehicles'		=> array('title' => 'MCP_GARAGE_UNAPPROVED_VEHICLES', 'auth' => 'acl_m_garage', 'cat' => array('MCP_GARAGE')),
 				'unapproved_makes'		=> array('title' => 'MCP_GARAGE_UNAPPROVED_MAKES', 'auth' => 'acl_m_garage', 'cat' => array('MCP_GARAGE')),
 				'unapproved_models'		=> array('title' => 'MCP_GARAGE_UNAPPROVED_MODELS', 'auth' => 'acl_m_garage', 'cat' => array('MCP_GARAGE')),
 				'unapproved_business'		=> array('title' => 'MCP_GARAGE_UNAPPROVED_BUSINESS', 'auth' => 'acl_m_garage', 'cat' => array('MCP_GARAGE')),
 				'unapproved_quartermiles'	=> array('title' => 'MCP_GARAGE_UNAPPROVED_QUARTERMILES', 'auth' => 'acl_m_garage', 'cat' => array('MCP_GARAGE')),
 				'unapproved_dynoruns'		=> array('title' => 'MCP_GARAGE_UNAPPROVED_DYNORUNS', 'auth' => 'acl_m_garage', 'cat' => array('MCP_GARAGE')),
+				'unapproved_guestbook_comments'	=> array('title' => 'MCP_GARAGE_UNAPPROVED_GUESTBOOK_COMMENTS', 'auth' => 'acl_m_garage', 'cat' => array('MCP_GARAGE')),
 			),
 		);
 	}

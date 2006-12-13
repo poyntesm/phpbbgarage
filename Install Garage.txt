@@ -630,12 +630,14 @@ $lang = array_merge($lang, array(
 
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
-	'MCP_GARAGE'				=> 'Garage',
-	'MCP_GARAGE_UNAPPROVED_MAKES'		=> 'Makes awaiting approval',
-	'MCP_GARAGE_UNAPPROVED_MODELS'		=> 'Models awaiting approval',
-	'MCP_GARAGE_UNAPPROVED_BUSINESS'	=> 'Business\'s awaiting approval',
-	'MCP_GARAGE_UNAPPROVED_QUARTERMILES'	=> 'Quartermiles awaiting approval',
-	'MCP_GARAGE_UNAPPROVED_DYNORUNS'	=> 'Dynoruns awaiting approval',
+	'MCP_GARAGE'					=> 'Garage',
+	'MCP_GARAGE_UNAPPROVED_VEHICLES'		=> 'Vehicles awaiting approval',
+	'MCP_GARAGE_UNAPPROVED_GUESTBOOK_COMMENTS'	=> 'Comments awaiting approval',
+	'MCP_GARAGE_UNAPPROVED_MAKES'			=> 'Makes awaiting approval',
+	'MCP_GARAGE_UNAPPROVED_MODELS'			=> 'Models awaiting approval',
+	'MCP_GARAGE_UNAPPROVED_BUSINESS'		=> 'Business\'s awaiting approval',
+	'MCP_GARAGE_UNAPPROVED_QUARTERMILES'		=> 'Quartermiles awaiting approval',
+	'MCP_GARAGE_UNAPPROVED_DYNORUNS'		=> 'Dynoruns awaiting approval',
 
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 

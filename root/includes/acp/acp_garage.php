@@ -53,6 +53,7 @@ class acp_garage
 						'enable_email_pending_notify'		=> array('lang' => 'PENDING_EMAIL_NOTIFY', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_pm_pending_notify_optout'	=> array('lang' => 'PENDING_PM_NOTIFY_OPTOUT', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_email_pending_notify_optout'	=> array('lang' => 'PENDING_EMAIL_NOTIFY_OPTOUT', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_vehicle_approval'		=> array('lang' => 'ENABLE_VEHICLE_APPROVAL', 'type' => 'radio:yes_no', 'explain' => true),
 
 						'legend2'				=> 'ACP_GARAGE_MENU_CONFIG',
 						'enable_browse_menu' 			=> array('lang' => 'ENABLE_BROWSE_MENU', 'type' => 'radio:yes_no', 'explain' => true),
@@ -69,6 +70,8 @@ class acp_garage
 						'latest_vehicle_index_limit' 		=> array('lang' => 'LATESTMAIN_VEHCILE_LIMIT', 'type' => 'text:3:4', 'explain' => true),
 
 						'legend3'				=> 'ACP_GARAGE_INDEX_CONFIG',
+						'index_columns' 			=> array('lang' => 'GARAGE_INDEX_COLUMNS', 'type' => 'custom', 'method' => 'index_columns', 'explain' => true),
+						'enable_user_index_columns' 		=> array('lang' => 'ENABLE_USER_INDEX_COLUMNS', 'type' => 'radio:yes:no', 'explain' => true),
 						'enable_featured_vehicle' 		=> array('lang' => 'ENABLE_FEATURED_VEHICLE', 'type' => 'radio:yes_no', 'explain' => true),
 						'featured_vehicle_id'			=> array('lang' => 'FEATURED_VEHICLE_ID', 'type' => 'text:3:4', 'explain' => true),
 						'featured_vehicle_random' 		=> array('lang' => 'FEATURED_VEHICLE_RANDOM', 'type' => 'radio:yes_no', 'explain' => true),
@@ -118,27 +121,28 @@ class acp_garage
 						'enable_quartermile_image_required'	=> array('lang' => 'ENABLE_QUARTERMILE_IMAGE_REQUIRED', 'type' => 'radio:yes_no', 'explain' => true),
 						'quartermile_image_required_limit'	=> array('lang' => 'QUARTERMILE_IMAGE_REQUIRED_LIMIT', 'type' => 'text:3:4', 'explain' => true),
 
-						'legend6'			=> 'ACP_GARAGE_DYNORUN_CONFIG',
-						'enable_dynorun'		=> array('lang' => 'ENABLE_DYNORUN', 'type' => 'radio:yes_no', 'explain' => true),
-						'enable_dynorun_approval'	=> array('lang' => 'ENABLE_DYNORUN_APPROVAL', 'type' => 'radio:yes_no', 'explain' => true),
-						'enable_dynorun_image_required'	=> array('lang' => 'ENABLE_DYNORUN_IMAGE_REQUIRED', 'type' => 'radio:yes_no', 'explain' => true),
-						'dynorun_image_required_limit'	=> array('lang' => 'DYNORUN_IMAGE_REQUIRED_LIMIT', 'type' => 'text:3:4', 'explain' => true),
+						'legend6'				=> 'ACP_GARAGE_DYNORUN_CONFIG',
+						'enable_dynorun'			=> array('lang' => 'ENABLE_DYNORUN', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_dynorun_approval'		=> array('lang' => 'ENABLE_DYNORUN_APPROVAL', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_dynorun_image_required'		=> array('lang' => 'ENABLE_DYNORUN_IMAGE_REQUIRED', 'type' => 'radio:yes_no', 'explain' => true),
+						'dynorun_image_required_limit'		=> array('lang' => 'DYNORUN_IMAGE_REQUIRED_LIMIT', 'type' => 'text:3:4', 'explain' => true),
 
-						'legend7'			=> 'ACP_GARAGE_INSURANCE_CONFIG',
-						'enable_insurance'		=> array('lang' => 'ENABLE_INSURANCE', 'type' => 'radio:yes_no', 'explain' => true),
-						'enable_insurance_search'	=> array('lang' => 'ENABLE_INSURANCE_SEARCH', 'type' => 'radio:yes_no', 'explain' => true),
+						'legend7'				=> 'ACP_GARAGE_INSURANCE_CONFIG',
+						'enable_insurance'			=> array('lang' => 'ENABLE_INSURANCE', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_insurance_search'		=> array('lang' => 'ENABLE_INSURANCE_SEARCH', 'type' => 'radio:yes_no', 'explain' => true),
 
-						'legend8'			=> 'ACP_GARAGE_BUSINESS_CONFIG',
-						'enable_user_submit_business'	=> array('lang' => 'USER_SUBMIT_BUSINESS', 'type' => 'radio:yes_no', 'explain' => true),
-						'enable_business_approval'	=> array('lang' => 'BUSINESS_APPROVAL', 'type' => 'radio:yes_no', 'explain' => true),
+						'legend8'				=> 'ACP_GARAGE_BUSINESS_CONFIG',
+						'enable_user_submit_business'		=> array('lang' => 'USER_SUBMIT_BUSINESS', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_business_approval'		=> array('lang' => 'BUSINESS_APPROVAL', 'type' => 'radio:yes_no', 'explain' => true),
 
-						'legend9'			=> 'ACP_GARAGE_VEHICLE_RATING_CONFIG',
-						'rating_permanent'		=> array('lang' => 'RATING_PERMANENT', 'type' => 'radio:yes_no', 'explain' => true),
-						'rating_always_updateable'	=> array('lang' => 'RATING_ALWAYS_UPDATEABLE', 'type' => 'radio:yes_no', 'explain' => true),
-						'minimum_ratings_required'	=> array('lang' => 'RATING_MINIMUM_REQUIRED', 'type' => 'text:3:4', 'explain' => true),
+						'legend9'				=> 'ACP_GARAGE_VEHICLE_RATING_CONFIG',
+						'rating_permanent'			=> array('lang' => 'RATING_PERMANENT', 'type' => 'radio:yes_no', 'explain' => true),
+						'rating_always_updateable'		=> array('lang' => 'RATING_ALWAYS_UPDATEABLE', 'type' => 'radio:yes_no', 'explain' => true),
+						'minimum_ratings_required'		=> array('lang' => 'RATING_MINIMUM_REQUIRED', 'type' => 'text:3:4', 'explain' => true),
 
-						'legend10'			=> 'ACP_GARAGE_GUESTBOOK_CONFIG',
-						'enable_guestbooks'		=> array('lang' => 'ENABLE_GUESTBOOK', 'type' => 'radio:yes_no', 'explain' => true),
+						'legend10'				=> 'ACP_GARAGE_GUESTBOOK_CONFIG',
+						'enable_guestbooks'			=> array('lang' => 'ENABLE_GUESTBOOK', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_guestbooks_comment_approval'	=> array('lang' => 'ENABLE_GUESTBOOK_COMMENT_APPROVAL', 'type' => 'radio:yes_no', 'explain' => true),
 
 					)
 				);
@@ -233,64 +237,14 @@ class acp_garage
 
 	}
 
-
 	/**
 	* Select captcha pixel noise
 	*/
-	function captcha_pixel_noise_select($value, $key = '')
+	function index_columns($value, $key = '')
 	{
 		global $user;
 
-		return '<option value="0"' . (($value == 0) ? ' selected="selected"' : '') . '>' . $user->lang['NONE'] . '</option><option value="1"' . (($value == 1) ? ' selected="selected"' : '') . '>' . $user->lang['LIGHT'] . '</option><option value="2"' . (($value == 2) ? ' selected="selected"' : '') . '>' . $user->lang['MEDIUM'] . '</option><option value="3"' . (($value == 3) ? ' selected="selected"' : '') . '>' . $user->lang['HEAVY'] . '</option>';
-	}
-
-	/**
-	* Select ip validation
-	*/
-	function select_ip_check($value, $key = '')
-	{
-		$radio_ary = array(4 => 'ALL', 3 => 'CLASS_C', 2 => 'CLASS_B', 0 => 'NONE');
-
-		return h_radio('config[ip_check]', $radio_ary, $value, $key);
-	}
-
-	/**
-	* Select account activation method
-	*/
-	function select_acc_activation($value, $key = '')
-	{
-		global $user, $config;
-
-		$radio_ary = array(USER_ACTIVATION_DISABLE => 'ACC_DISABLE', USER_ACTIVATION_NONE => 'ACC_NONE');
-		if ($config['email_enable'])
-		{
-			$radio_ary += array(USER_ACTIVATION_SELF => 'ACC_USER', USER_ACTIVATION_ADMIN => 'ACC_ADMIN');
-		}
-
-		return h_radio('config[require_activation]', $radio_ary, $value, $key);
-	}
-
-	/**
-	* Maximum/Minimum username length
-	*/
-	function username_length($value, $key = '')
-	{
-		global $user;
-
-		return '<input id="' . $key . '" type="text" size="3" maxlength="3" name="config[min_name_chars]" value="' . $value . '" /> ' . $user->lang['MIN_CHARS'] . '&nbsp;&nbsp;<input type="text" size="3" maxlength="3" name="config[max_name_chars]" value="' . $this->new_config['max_name_chars'] . '" /> ' . $user->lang['MAX_CHARS'];
-	}
-
-
-	/**
-	* Board disable option and message
-	*/
-	function board_disable($value, $key)
-	{
-		global $user;
-
-		$radio_ary = array(1 => 'YES', 0 => 'NO');
-
-		return h_radio('config[board_disable]', $radio_ary, $value) . '<br /><input id="' . $key . '" type="text" name="config[board_disable_msg]" maxlength="255" size="40" value="' . $this->new_config['board_disable_msg'] . '" />';
+		return '<select name="config[index_columns]" id="index_columns"><option value="1"' . (($value == 1) ? ' selected="selected"' : '') . '>1</option><option value="2"' . (($value == 2) ? ' selected="selected"' : '') . '>2</option><option value="3"' . (($value == 3) ? ' selected="selected"' : '') . '>3</option><option value="4"' . (($value == 4) ? ' selected="selected"' : '') . '>4</option></select>';
 	}
 
 	/**

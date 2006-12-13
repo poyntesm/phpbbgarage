@@ -60,6 +60,38 @@ class garage_guestbook
 	}
 
 	/*========================================================================*/
+	// Count The Total Commnets Vehciles Have Recieved
+	// Usage: count_total_comments();
+	/*========================================================================*/
+	function count_vehicle_comments($cid)
+	{
+		global $db;
+
+		// Get the total count of comments in the garage
+	
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'COUNT(gb.id) AS total',
+			'FROM'		=> array(
+				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
+			),
+			'WHERE'		=> "gb.garage_id = $cid"
+		));
+
+		if(!$result = $db->sql_query($sql))
+		{
+			message_die(GENERAL_ERROR, 'Error Counting Comments', '', __LINE__, __FILE__, $sql);
+		}
+
+        	$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		$row['total'] = (empty($row['total'])) ? 0 : $row['total'];
+
+		return $row['total'];
+	}
+
+	/*========================================================================*/
 	// Insert Comment Into DB
 	// Usage: insert_vehicle_comment(array());
 	/*========================================================================*/
@@ -120,6 +152,49 @@ class garage_guestbook
 		));
 
       		if ( !($result = $db->sql_query($sql)) )
+      		{
+         		message_die(GENERAL_ERROR, 'Could Not Get Vehicle Comment Data', '', __LINE__, __FILE__, $sql);
+      		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$rows[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		if (empty($rows))
+		{
+			return;
+		}
+
+		return $rows;
+	}
+
+	/*========================================================================*/
+	// Select Specific Vehicle Comments Data From DB
+	// Usage: get_vehicle_comments('garage id');
+	/*========================================================================*/
+	function get_vehicle_comments_profile($cid)
+	{
+		global $db;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'SUBSTRING(REPLACE(gb.post,\'<br />\',\' \'),1,75) AS post, gb.author_id, u.username',
+			'FROM'		=> array(
+				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'gb.author_id = u.user_id'
+				)
+			),
+			'WHERE'		=>  "gb.garage_id = $cid",
+			'ORDER_BY'	=>  "gb.post_date DESC"
+		));
+
+      		if ( !($result = $db->sql_query_limit($sql, 5)) )
       		{
          		message_die(GENERAL_ERROR, 'Could Not Get Vehicle Comment Data', '', __LINE__, __FILE__, $sql);
       		}

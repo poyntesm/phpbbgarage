@@ -212,6 +212,12 @@ switch( $mode )
 			}
 		}
 
+		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
+		if ( $garage_config['enable_vehicle_approval'] )
+		{
+			$garage->pending_notification('unapproved_vehicles');
+		}
+
 		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
 
 		break;
@@ -298,6 +304,12 @@ switch( $mode )
 	
 		//Update Timestamp For Vehicle	
 		$garage_vehicle->update_vehicle_time($cid);
+
+		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
+		if ( $garage_config['enable_vehicle_approval'] )
+		{
+			$garage->pending_notification('unapproved_vehicles');
+		}
 
 		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
 
@@ -3043,6 +3055,12 @@ switch( $mode )
 			submit_pm('post', $user->lang['GUESTBOOK_NOTIFY_SUBJECT'], $pm_data, false, false);
 		}
 
+		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
+		if ( $garage_config['enable_guestbooks_comment_approval'] )
+		{
+			$garage->pending_notification('unapproved_guestbook_comments');
+		}
+
 		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_guestbook&amp;CID=$cid"));
 
 		break;
@@ -3096,6 +3114,12 @@ switch( $mode )
 
 		//Update The Comment In The Vehicle Guestbook
 		$garage->update_single_field(GARAGE_GUESTBOOKS_TABLE, 'post', $data['comments'], 'id', $data['COMMENT_ID']);
+
+		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
+		if ( $garage_config['enable_guestbooks_comment_approval'] )
+		{
+			$garage->pending_notification('unapproved_guestbook_comments');
+		}
 
 		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_guestbook&amp;CID=$cid"));
 
@@ -3280,6 +3304,7 @@ switch( $mode )
 		$garage_vehicle->show_toprated();
 
 		$template->assign_vars(array(
+			'S_INDEX_COLUMNS' 	=> ($garage_config['enable_user_index_columns'] && ($user->data['user_garage_index_columns'] != $garage_config['index_columns'])) ? $user->data['user_garage_index_columns'] : $garage_config['index_columns'],
 			'TOTAL_VEHICLES' 	=> $garage_vehicle->count_total_vehicles(),
 			'TOTAL_VIEWS' 		=> $garage->count_total_views(),
 			'TOTAL_MODIFICATIONS' 	=> $garage_modification->count_total_modifications(),

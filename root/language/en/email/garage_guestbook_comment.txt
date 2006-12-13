@@ -1,0 +1,7 @@
+Subject: phpBB Garage - Vehicle Comment Recieved
+
+Hello,
+
+A vehicle you own has recieved a comment. Please use the following link to view it {U_VIEW_COMMENT}
+
+{EMAIL_SIG}

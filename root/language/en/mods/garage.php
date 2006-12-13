@@ -27,6 +27,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
+	'NO_ITEM_TO_LIST'		=> 'No Items To List Yet',
 	'ANY_MODEL' 			=> 'Any Model',
 	'SELECT_MODEL' 			=> 'Select Model',
 	'GARAGE_CATEGORIES_TITLE' 	=> 'Garage Categories Control',
@@ -654,11 +655,13 @@ $lang = array_merge($lang, array(
 	'INSTALL_PHPBBGARAGE_EXPLAIN'	=> 'This installation is broken into sections. Each section is listed below.<br /><br />1)Table Creation & Configuration Data [Required] <br />2)Modification Category Creation [Optional] <br />3)Default Vehicle Make & Model Data [Optional] <br /><br />To proceed and start step 1 of installtion please click the \'Proceed\' button below. <form name="" action="%s" method="post"><table><tr><td class="row1" align="center"><input type="submit" name="confirm" value="Proceed" class="btnmain" /></td></tr></table></form>',
 
 	//MCP LANGUAGE KEYS
+	'NO_VEHICLES_PENDING'		=> 'There are no vehicles requiring approval currently.',
 	'NO_MAKES_PENDING'		=> 'There are no makes requiring approval currently.',
 	'NO_MODELS_PENDING'		=> 'There are no models requiring approval currently.',
 	'NO_BUSINESS_PENDING'		=> 'There are no business\'s requiring approval currently.',
 	'NO_QUARTERMILES_PENDING'	=> 'There are no quartermiles requiring approval currently.',
 	'NO_DYNORUNS_PENDING'		=> 'There are no dynoruns requiring approval currently.',
+	'NO_VEHICLE_SELECTED'		=> 'You must select at least one vehicle to perform this action.',
 	'NO_MAKE_SELECTED'		=> 'You must select at least one make to perform this action.',
 	'NO_MODEL_SELECTED'		=> 'You must select at least one model to perform this action.',
 	'NO_BUSINESS_SELECTED'		=> 'You must select at least one business to perform this action.',
@@ -669,9 +672,9 @@ $lang = array_merge($lang, array(
 	//UCP LANGUAGE KEYS
 	'EMAIL_OPTOUT'			=> 'Optout of pending notification emails',
 	'PM_OPTOUT'			=> 'Optout of pending notification private messages',
-	'EMAIL_OPTOUT_DISABLED'		=> 'The forum administrator has configured it so optout of email notifications is disabled, or pending notification is switched off.',
-	'PM_OPTOUT_DISABLED'		=> 'The forum administrator has configured it so optout of pm notifications is disabled, or pending notification is switched off.',
-	'GUESTBOOK_NOTIFY'		=> 'Private message notification of comments to your vehicles',
+	'GUESTBOOK_EMAIL_NOTIFY'	=> 'Email notification of comments to your vehicles',
+	'GUESTBOOK_PM_NOTIFY'		=> 'Private message notification of comments to your vehicles',
+	'INDEX_COLUMNS'			=> 'Number of columns on index page'
 
 ));
 

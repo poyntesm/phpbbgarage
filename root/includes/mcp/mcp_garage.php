@@ -27,7 +27,7 @@ class mcp_garage
 	{
 		global $auth, $db, $user, $template;
 		global $config, $phpbb_root_path, $phpEx, $action;
-		global $garage_config, $garage_template, $garage_vehicle, $garage_business;
+		global $garage_config, $garage_template, $garage_vehicle, $garage_business, $garage_guestbook;
 
 		$start = request_var('start', 0);
 
@@ -40,11 +40,22 @@ class mcp_garage
 		include_once($phpbb_root_path . 'includes/mods/class_garage_quartermile.' . $phpEx);
 		include_once($phpbb_root_path . 'includes/mods/class_garage_template.' . $phpEx);
 		include_once($phpbb_root_path . 'includes/mods/class_garage_dynorun.' . $phpEx);
+		include_once($phpbb_root_path . 'includes/mods/class_garage_guestbook.' . $phpEx);
 		include_once($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
 		include_once($phpbb_root_path . 'includes/functions_messenger.' . $phpEx);
 
 		switch ($action)
 		{
+			case 'approve_vehicle':
+				$id_list = request_var('vehicle_id_list', array(0));
+
+				if (!sizeof($id_list))
+				{
+					trigger_error('NO_VEHICLE_SELECTED');
+				}
+
+				$garage_vehicle->approve_vehicle($id_list, $mode);
+			break;
 			case 'approve_make':
 				$id_list = request_var('make_id_list', array(0));
 
@@ -94,6 +105,26 @@ class mcp_garage
 				}
 
 				$garage_dynorun->approve_dynorun($id_list, $mode);
+			break;
+			case 'approve_guestbook_comments':
+				$id_list = request_var('comments_id_list', array(0));
+
+				if (!sizeof($id_list))
+				{
+					trigger_error('NO_COMMENT_SELECTED');
+				}
+
+				$garage_guestbook->approve_comment($id_list, $mode);
+			break;
+			case 'disapprove_vehicle':
+				$id_list = request_var('vehicle_id_list', array(0));
+
+				if (!sizeof($id_list))
+				{
+					trigger_error('NO_VEHICLE_SELECTED');
+				}
+
+				$garage_vehicle->disapprove_vehicle($id_list, $mode);
 			break;
 			case 'disapprove_make':
 				$id_list = request_var('make_id_list', array(0));
@@ -145,6 +176,16 @@ class mcp_garage
 
 				$garage_dynorun->disapprove_dynorun($id_list, $mode);
 			break;
+			case 'disapprove_guestbook':
+				$id_list = request_var('comment_id_list', array(0));
+
+				if (!sizeof($id_list))
+				{
+					trigger_error('NO_COMMENT_SELECTED');
+				}
+
+				$garage_guestbook->disapprove_comment($id_list, $mode);
+			break;
 			case 'reassign_business':
 				$id_list = request_var('business_id_list', array(0));
 
@@ -159,13 +200,42 @@ class mcp_garage
 
 		switch ($mode)
 		{
+			case 'unapproved_vehicles':
+				$data = $garage_vehicle->get_pending_vehicles();
+
+				for ($i = 0, $count = sizeof($data);$i < $count; $i++)
+				{
+					$template->assign_block_vars('vehicle_row', array(
+						'U_PROFILE'	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $data[$i]['user_id']),
+						'U_EDIT'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_vehicle&amp;CID=" . $data[$i]['id']. "&amp;redirect=MCP"),
+						'USERNAME'	=> $data[$i]['username'],
+						'ID'		=> $data[$i]['id'],
+						'MAKE'		=> $data[$i]['make'],
+						'MODEL'		=> $data[$i]['model'],
+						'ENGINE_TYPE'	=> $data[$i]['engine_type'],
+						'COLOUR'	=> $data[$i]['colour'],
+						'PRICE'		=> $data[$i]['price'],
+						'CURRENCY'	=> $data[$i]['currency'],
+						'MILEAGE'	=> $data[$i]['mileage'],
+						'MILEAGE_UNIT'	=> $data[$i]['mileage_units'],
+						'EDIT'		=> ($garage_config['enable_images']) ? $user->img('garage_edit', 'EDIT') : $user->lang['EDIT'])
+					);
+				}
+
+				$template->assign_vars(array(
+					'S_MCP_ACTION'	=> build_url(array('t', 'f', 'sd', 'st', 'sk')))
+				);
+
+				$this->tpl_name = 'mcp_garage_approve_vehicles';
+			break;
+
 			case 'unapproved_makes':
 
 				$data = $garage_model->get_pending_makes();
 
 				for ($i = 0, $count = sizeof($data);$i < $count; $i++)
 				{
-					$template->assign_block_vars('makes_row', array(
+					$template->assign_block_vars('vehicle_row', array(
 						'ID'	=> $data[$i]['id'],
 						'MAKE'	=> $data[$i]['make'])
 					);
