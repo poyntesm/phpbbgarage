@@ -318,7 +318,7 @@ switch($mode)
 			{
 				continue;
 			}
-			$select_to .= '<option value="'. $all_data[$i]['id'] .'">'. $all_data[$i]['title'] .'</option>';
+			$select_to .= '<option value="'. $all_data[$i]['id'] .'">'. $all_data[$i]['model'] .'</option>';
 		}
 
 		$template->set_filenames(array(
