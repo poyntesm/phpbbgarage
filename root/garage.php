@@ -3001,7 +3001,7 @@ switch( $mode )
 			);
 
 			//Build Dropdown Box Of Business's To Reassign It To
-			$garage_business->reassign_business_dropdown($bus_id);
+			$garage_template->reassign_business_dropdown($bus_id);
 
 			//Set Up Template Varibles
 			$template->assign_block_vars('level1', array());
