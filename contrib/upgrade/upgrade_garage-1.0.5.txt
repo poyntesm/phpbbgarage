@@ -4,26 +4,24 @@
 ## MOD Description:
 ##			Updates phpBB Garage From 1.0.5 To 1.2.0
 ##
-## MOD Version:		1.2.0
+## MOD Version:		1.0.0
 ## 
 ## Installation Level:	Easy
 ## Installation Time:	10 Minutes
-## Files To Edit: (4)
-##			templates/subSilver/viewtopic_body.tpl
-##			templates/subSilver/memberlist_body.tpl
-##			language/lang_english/lang_main.php
-##			includes/usercp_viewprofile.php
-##			includes/page_tail.php
+## Files To Edit: (8)
 ##			viewtopic.php
 ##			memberlist.php
+##			includes/usercp_viewprofile.php
+##			includes/page_tail.php
+##			language/lang_english/lang_main.php
 ##			templates/subSilver/subSilver.cfg
+##			templates/subSilver/viewtopic_body.tpl
+##			templates/subSilver/memberlist_body.tpl
 ##
-## Included Files: (84)
+## Included Files: (91)
 ##			Install Garage.txt
+##			READ ME FIRST.txt
 ##			Upgrade.txt
-##			contrib/Install Garage PCP.txt
-##			contrib/profilcp/
-##			contrib/templates/
 ## 			root/garage.php
 ## 			root/install_garage.php
 ##			root/admin/admin_garage_business.php
@@ -32,7 +30,18 @@
 ##			root/admin/admin_garage_models.php
 ##			root/admin/admin_garage_permissions.php
 ##			root/admin/admin_garage_tools.php
-##			root/includes/functions_garage.php
+##			root/includes/class_garage.php
+##			root/includes/class_garage_admin.php
+##			root/includes/class_garage_business.php
+##			root/includes/class_garage_dynorun.php
+##			root/includes/class_garage_guestbook.php
+##			root/includes/class_garage_image.php
+##			root/includes/class_garage_insurance.php
+##			root/includes/class_garage_model.php
+##			root/includes/class_garage_modification.php
+##			root/includes/class_garage_quartermile.php
+##			root/includes/class_garage_template.php
+##			root/includes/class_garage_vehicle.php
 ##			root/language/lang_english/lang_garage.php
 ##			root/language/lang_english/lang_garage_error.php
 ##			root/templates/subSilver/garage.tpl
@@ -101,16 +110,6 @@
 ##			root/templates/subSilver/images/lang_english/garage_shop_review.gif
 ##			root/templates/subSilver/images/lang_english/garage_view_vehicle.gif
 ##			root/templates/subSilver/images/lang_english/icon_garage.gif
-##			upgrade/upgrade_garage-1.0.0.php
-##			upgrade/upgrade_garage-1.0.0.txt
-##			upgrade/upgrade_garage-1.0.2.php
-##			upgrade/upgrade_garage-1.0.2.txt
-##			upgrade/upgrade_garage-1.0.3.php
-##			upgrade/upgrade_garage-1.0.3.php
-##			upgrade/upgrade_garage-1.0.4.txt
-##			upgrade/upgrade_garage-1.0.4.txt
-##			upgrade/upgrade_garage-1.0.5.txt
-##			upgrade/upgrade_garage-1.0.5.txt
 ## License: http://opensource.org/licenses/gpl-license.php GNU General Public License v2 or any later version
 ######################################################################################
 ## For security purposes, please check: http://www.phpbb.com/mods/
@@ -122,19 +121,14 @@
 ###################################################################################### 
 ## Author Notes: 
 ##
+##	- http://forums.phpbbgarage.com is the home of phpBBGarage so drop by
 ##	- This Mod Was Inspired By IPB Based Garage By Matthew C. Veno
 ##
 ######################################################################################
 ## MOD History: 
-##   27-02-2006 - Version 1.0.2
-##	- Fix javascript error on adding a new model
-##	- Fix setting private permissions
-##	- Fix offset year
-##	- Fix userlink in viewing insurance business
+##   14-12-2006 - Version 1.0.0
+##	- First 1.0.5 -> 1.2.0 Upgrade MOD File..hence MOD v1.0.0 ;)
 ##
-##   01-02-2006 - Version 1.0.0
-##	- Version Submitted To phpBB.com's MOD DB. (Resubmitted with changes 01-02-2006)
-## 			
 ###################################################################################### 
 ## Before Adding This MOD To Your Forum, You Should Back Up All Files Related To This MOD 
 ###################################################################################### 
@@ -144,38 +138,36 @@
 #
 copy upgrade/upgrade_garage-1.0.5.php TO upgrade_garage-1.0.5.php
 copy root/*.* TO *.*
-
 #
 #-----[ DIY INSTRUCTIONS ]------------------------------------------
 #
 Open in your web browser and run upgrade_garage-1.0.5.php
-Delete upgrade_garage-1.0.5.php if it ran succesfull
-
+Delete upgrade_garage-1.0.5.php if it ran succesfully
+Delete includes/functions_garage.php
 # 
 #-----[ OPEN ]----- 
 # 
-templates/subSilver/subSilver.cfg
-
+viewtopic.php
 #
 #-----[ FIND ]------------------------------------------
 #
-$images['garage_no_thumb']		= "$current_template_images/{LANG}/garage_no_thumb.gif";
-
+	$garage_id = $postrow[$i]['garage_id'];
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
-$images['garage_show_details']		= "$current_template_images/{LANG}/garage_show_details.gif";
-$images['garage_hide_details']		= "$current_template_images/{LANG}/garage_hide_details.gif";
-$images['garage_move_up']		= "$current_template_images/{LANG}/garage_move_up.gif";
-$images['garage_move_down']		= "$current_template_images/{LANG}/garage_move_down.gif";
-$images['garage_set_approved']		= "$current_template_images/{LANG}/garage_set_approved.gif";
-$images['garage_set_pending']		= "$current_template_images/{LANG}/garage_set_pending.gif";
-
+	$garage_img = ( $postrow[$i]['garage_id'] ) ?'<a href="' . append_sid("garage.$phpEx?mode=browse&search=yes&user=".$postrow[$i]['username']."") . '"><img src="' . $images['icon_garage'] . '" alt="'.$lang['View_Users_Garage'].'" title="'.$lang['View_Users_Garage'].'" border="0" /></a>' : '';
+#
+#-----[ FIND ]------------------------------------------
+#
+		'POSTER_CAR_MAKE' => $poster_car_make,
+#
+#-----[ BEFORE, ADD ]------------------------------------------
+#
+		'GARAGE_IMG' => $garage_img,
 # 
 #-----[ OPEN ]----- 
 # 
 memberlist.php
-
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -184,7 +176,6 @@ memberlist.php
 #-----[ AFTER, ADD ]------------------------------------------
 #
 //-- mod : Garage ----------------------------------------------------------------------------------------------------------
-
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -196,7 +187,6 @@ memberlist.php
 //-- add
 	'L_GARAGE' => $lang['Garage'],
 //-- mod finsh : Garage ----------------------------------------------------------------------------------------------------
-
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -204,13 +194,11 @@ memberlist.php
 		$order_by = "user_regdate $sort_order LIMIT $start, " . $board_config['topics_per_page'];
 		break;
 }
-
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- modify
-
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -222,7 +210,6 @@ user_allowavatar
 #-----[ IN-LINE AFTER, ADD ]------------------------------------------
 #
 , g.id as garage_id
-
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -231,17 +218,14 @@ user_allowavatar
 #-----[ AFTER, ADD ]------------------------------------------
 #
 		LEFT JOIN " . GARAGE_TABLE ." g ON ( g.member_id = user_id and g.main_vehicle = 1)
-
 #
 #-----[ FIND ]------------------------------------------
 #
 	ORDER BY $order_by";
-
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
 //-- mod finsh : Garage ----------------------------------------------------------------------------------------------------
-
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -253,7 +237,6 @@ user_allowavatar
 //-- add
 		$garage_img = ( $row['garage_id'] ) ?'<a href="' . append_sid("garage.$phpEx?mode=browse&search=yes&user=" . $row['username'] . "") . '"><img src="' . $images['icon_garage'] . '" alt="'.$lang['View_Users_Garage'].'" title="'.$lang['View_Users_Garage'].'" border="0" /></a>' : '';
 //-- mod finsh : Garage ----------------------------------------------------------------------------------------------------
-
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -265,172 +248,10 @@ user_allowavatar
 //-- add
 			'GARAGE_IMG' => $garage_img,
 //-- mod finsh : Garage ----------------------------------------------------------------------------------------------------
-
-# 
-#-----[ OPEN ]----- 
-# 
-viewtopic.php
-
-#
-#-----[ FIND ]------------------------------------------
-#
-	$garage_id = $postrow[$i]['garage_id'];
-#
-#-----[ AFTER, ADD ]------------------------------------------
-#
-	$garage_img = ( $postrow[$i]['garage_id'] ) ?'<a href="' . append_sid("garage.$phpEx?mode=browse&search=yes&user=".$postrow[$i]['username']."") . '"><img src="' . $images['icon_garage'] . '" alt="'.$lang['View_Users_Garage'].'" title="'.$lang['View_Users_Garage'].'" border="0" /></a>' : '';
-
-
-#
-#-----[ FIND ]------------------------------------------
-#
-		'POSTER_CAR_MAKE' => $poster_car_make,
-
-#
-#-----[ BEFORE, ADD ]------------------------------------------
-#
-		'GARAGE_IMG' => $garage_img,
-
-# 
-#-----[ OPEN ]----- 
-# 
-includes/page_tail.php
-
-#
-#-----[ FIND ]------------------------------------------
-#
-if ( $userdata['user_level'] == ADMIN )
-{
-	$sql = "SELECT count(*) AS total
-		FROM ". GARAGE_QUARTERMILE_TABLE ." qm
-		WHERE qm.pending = 1";
-	if( !($result = $db->sql_query($sql)) )
-	{
-		message_die(GENERAL_ERROR, 'Could not query information', '', __LINE__, __FILE__, $sql);
-	}
-
-	$count = $db->sql_fetchrow($result);
-	$db->sql_freeresult($result);
-
-	$temp_url = append_sid("garage.$phpEx?mode=garage_pending");
-	//We Have At Least One Pending Image So Display Link
-	if ( $count['total'] > 0 )
-	{
-		$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
-	}
-	//Not Found A Pending Item So Lets Keep Checking Other Types
-	else
-	{
-		$sql = "SELECT count(*) AS total
-			FROM ". GARAGE_ROLLINGROAD_TABLE ." rr
-			WHERE rr.pending = 1";
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could not query pics information', '', __LINE__, __FILE__, $sql);
-		}
-
-		$count = $db->sql_fetchrow($result);
-		$db->sql_freeresult($result);
-		//We Have At Least One Pending Image So Display Link
-		if ( $count['total'] > 0 )
-		{
-			$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
-		}
-		//Still Not Found A Pending Item So Lets Keep Checking Other Types
-		else
-		{
-			$sql = "SELECT count(*) AS total
-				FROM ". GARAGE_BUSINESS_TABLE ." bus
-				WHERE bus.pending = 1";
-			if( !($result = $db->sql_query($sql)) )
-			{
-				message_die(GENERAL_ERROR, 'Could not query pics information', '', __LINE__, __FILE__, $sql);
-			}
-
-			$count = $db->sql_fetchrow($result);
-			$db->sql_freeresult($result);
-			if ( $count['total'] > 0 )
-			{
-				$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
-			}
-			//Still Not Found A Pending Item So Lets Keep Checking Other Types
-			else
-			{
-				$sql = "SELECT count(*) AS total
-					FROM ". GARAGE_MODELS_TABLE ." models
-					WHERE models.pending = 1";
-				if( !($result = $db->sql_query($sql)) )
-				{
-					message_die(GENERAL_ERROR, 'Could not query pics information', '', __LINE__, __FILE__, $sql);
-				}
-
-				$count = $db->sql_fetchrow($result);
-				$db->sql_freeresult($result);
-				if ( $count['total'] > 0 )
-				{
-					$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
-				}
-				else
-				{
-					$sql = "SELECT count(*) AS total
-						FROM ". GARAGE_MAKES_TABLE ." makes
-						WHERE makes.pending = 1";
-					if( !($result = $db->sql_query($sql)) )
-					{
-						message_die(GENERAL_ERROR, 'Could not query pics information', '', __LINE__, __FILE__, $sql);
-					}
-
-					$count = $db->sql_fetchrow($result);
-					$db->sql_freeresult($result);
-					if ( $count['total'] > 0 )
-					{
-						$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
-					}
-					//Out Of Luck No More Tables To Check
-					else
-					{
-						$pending_link = '';
-					}
-				}
-			}
-		}
-	}
-}
-#
-#-----[ REPLACE WITH ]------------------------------------------
-#
-include_once($phpbb_root_path . 'includes/class_garage.' . $phpEx);
-if ( in_array($userdata['user_level'], array(ADMIN, MOD)) )
-{
-	//If Pending Items Exist Then Create Link
-	if ( $garage->check_pending_items() )
-	{
-		$temp_url = append_sid("garage.$phpEx?mode=garage_pending");
-		$pending_link = '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;';
-		$template->assign_vars(array(
-			'PENDING_LINK' => $pending_link)
-		);
-	}
-}
-
-#
-#-----[ FIND ]------------------------------------------
-#
-//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-	'PENDING_LINK' => $pending_link,
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-
-#
-#-----[ REPLACE WITH ]------------------------------------------
-#
-# Replace with a blank line
-
 # 
 #-----[ OPEN ]----- 
 # 
 includes/usercp_viewprofile.php
-
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -575,7 +396,6 @@ if ( $db->sql_numrows($result) > 0 )
 		'U_SEARCH_USER_GARAGE' => append_sid("garage.$phpEx?mode=browse"))
 	);
 }
-
 #
 #-----[ REPLACE WITH ]------------------------------------------
 #
@@ -587,27 +407,188 @@ require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/
 require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage_error.' . $phpEx);
 require($phpbb_root_path . 'includes/class_garage_vehicle.' . $phpEx);
 $garage_vehicle->profile_integration($profiledata['user_id']);
+# 
+#-----[ OPEN ]----- 
+# 
+includes/page_tail.php
+#
+#-----[ FIND ]------------------------------------------
+#
+if ( $userdata['user_level'] == ADMIN )
+{
+	$sql = "SELECT count(*) AS total
+		FROM ". GARAGE_QUARTERMILE_TABLE ." qm
+		WHERE qm.pending = 1";
+	if( !($result = $db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'Could not query information', '', __LINE__, __FILE__, $sql);
+	}
+
+	$count = $db->sql_fetchrow($result);
+	$db->sql_freeresult($result);
+
+	$temp_url = append_sid("garage.$phpEx?mode=garage_pending");
+	//We Have At Least One Pending Image So Display Link
+	if ( $count['total'] > 0 )
+	{
+		$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
+	}
+	//Not Found A Pending Item So Lets Keep Checking Other Types
+	else
+	{
+		$sql = "SELECT count(*) AS total
+			FROM ". GARAGE_ROLLINGROAD_TABLE ." rr
+			WHERE rr.pending = 1";
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could not query pics information', '', __LINE__, __FILE__, $sql);
+		}
+
+		$count = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+		//We Have At Least One Pending Image So Display Link
+		if ( $count['total'] > 0 )
+		{
+			$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
+		}
+		//Still Not Found A Pending Item So Lets Keep Checking Other Types
+		else
+		{
+			$sql = "SELECT count(*) AS total
+				FROM ". GARAGE_BUSINESS_TABLE ." bus
+				WHERE bus.pending = 1";
+			if( !($result = $db->sql_query($sql)) )
+			{
+				message_die(GENERAL_ERROR, 'Could not query pics information', '', __LINE__, __FILE__, $sql);
+			}
+
+			$count = $db->sql_fetchrow($result);
+			$db->sql_freeresult($result);
+			if ( $count['total'] > 0 )
+			{
+				$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
+			}
+			//Still Not Found A Pending Item So Lets Keep Checking Other Types
+			else
+			{
+				$sql = "SELECT count(*) AS total
+					FROM ". GARAGE_MODELS_TABLE ." models
+					WHERE models.pending = 1";
+				if( !($result = $db->sql_query($sql)) )
+				{
+					message_die(GENERAL_ERROR, 'Could not query pics information', '', __LINE__, __FILE__, $sql);
+				}
+
+				$count = $db->sql_fetchrow($result);
+				$db->sql_freeresult($result);
+				if ( $count['total'] > 0 )
+				{
+					$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
+				}
+				else
+				{
+					$sql = "SELECT count(*) AS total
+						FROM ". GARAGE_MAKES_TABLE ." makes
+						WHERE makes.pending = 1";
+					if( !($result = $db->sql_query($sql)) )
+					{
+						message_die(GENERAL_ERROR, 'Could not query pics information', '', __LINE__, __FILE__, $sql);
+					}
+
+					$count = $db->sql_fetchrow($result);
+					$db->sql_freeresult($result);
+					if ( $count['total'] > 0 )
+					{
+						$pending_link = ( $userdata['user_level'] == ADMIN || $userdata['full_mod'] == FULL_MOD ) ? '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;' : '';
+					}
+					//Out Of Luck No More Tables To Check
+					else
+					{
+						$pending_link = '';
+					}
+				}
+			}
+		}
+	}
+}
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+if ( in_array($userdata['user_level'], array(ADMIN, MOD)) )
+{
+	include_once($phpbb_root_path . 'includes/class_garage.' . $phpEx);
+	//If Pending Items Exist Then Create Link
+	if ( $garage->check_pending_items() )
+	{
+		$temp_url = append_sid("garage.$phpEx?mode=garage_pending");
+		$pending_link = '<a href="'.$temp_url.'">' . $lang['Pending_Items'] . '</a>&nbsp;&nbsp;';
+		$template->assign_vars(array(
+			'PENDING_LINK' => $pending_link)
+		);
+	}
+}
+#
+#-----[ FIND ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+	'PENDING_LINK' => $pending_link,
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+# Replace with a blank line
 
 # 
 #-----[ OPEN ]----- 
 # 
 language/lang_english/lang_main.php
-
 #
 #-----[ FIND ]------------------------------------------
 #
 $lang['Viewing_Garage'] = 'Viewing Garage';
-
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
 $lang['View_Users_Garage'] = 'View user\'s Garage';
-
+# 
+#-----[ OPEN ]----- 
+# 
+templates/subSilver/subSilver.cfg
+#
+#-----[ FIND ]------------------------------------------
+#
+$images['garage_no_thumb']		= "$current_template_images/{LANG}/garage_no_thumb.gif";
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+$images['garage_show_details']		= "$current_template_images/{LANG}/garage_show_details.gif";
+$images['garage_hide_details']		= "$current_template_images/{LANG}/garage_hide_details.gif";
+$images['garage_move_up']		= "$current_template_images/{LANG}/garage_move_up.gif";
+$images['garage_move_down']		= "$current_template_images/{LANG}/garage_move_down.gif";
+$images['garage_set_approved']		= "$current_template_images/{LANG}/garage_set_approved.gif";
+$images['garage_set_pending']		= "$current_template_images/{LANG}/garage_set_pending.gif";
+# 
+#-----[ OPEN ]----- 
+# 
+templates/subSilver/viewtopic_body.tpl
+#
+#-----[ FIND ]------------------------------------------
+#
+# this is a partial search : the full line is longer
+				<td valign="middle" nowrap="nowrap">{postrow.PROFILE_IMG}
+#
+#-----[ IN-LINE FIND ]------------------------------------------
+#
+{postrow.PROFILE_IMG}
+#
+#-----[ IN-LINE AFTER, ADD ]------------------------------------------
+#
+ {postrow.GARAGE_IMG}
 # 
 #-----[ OPEN ]----- 
 # 
 templates/subSilver/memberlist_body.tpl
-
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -632,26 +613,6 @@ templates/subSilver/memberlist_body.tpl
 #-----[ REPLACE WITH ]------------------------------------------
 #
 	  <td class="catBottom" colspan="9" height="28">&nbsp;</td>
-
-# 
-#-----[ OPEN ]----- 
-# 
-templates/subSilver/viewtopic_body.tpl
-
-#
-#-----[ FIND ]------------------------------------------
-#
-# this is a partial search : the full line is longer
-				<td valign="middle" nowrap="nowrap">{postrow.PROFILE_IMG}
-#
-#-----[ IN-LINE FIND ]------------------------------------------
-#
-{postrow.PROFILE_IMG}
-#
-#-----[ IN-LINE AFTER, ADD ]------------------------------------------
-#
- {postrow.GARAGE_IMG}
-
 #
 #-----[ SAVE/CLOSE ALL FILES ]------------------------------------------
 #
