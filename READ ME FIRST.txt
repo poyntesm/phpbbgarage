@@ -11,10 +11,6 @@ DIRECTORIES
   3. Directory `/translations` - Holds install files for languages other than English. Only needed for sites using languages other than English.
   4. Directory `/templates` - Holds install files for templates other than the standard phpBB template subSilver. You only need files from this location if you are using a template other than subSilver. Please note if your template is not here I do not have detailed install instructions. You will need to try adapt the install from the standard one.
 
-If you are installing for the first time and do not have the PCP MOD installed please use the 'Install Garage.txt' instruction file.
-
-If you are installing for the first time and do have the PCP MOD installed please use the '/contrib/ProfileCP/Install Garage.txt' instruction file.
-
 If you are upgrading from any version please use the 'Upgrade Garage.txt' instruction file.
 
 Enjoy phpBB Garage!! Support can be obtained from http://www.phpbbgarage.com or http://forums.phpbbgarage.com

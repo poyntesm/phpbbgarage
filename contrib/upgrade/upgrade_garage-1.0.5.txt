@@ -9,10 +9,14 @@
 ## Installation Level:	Easy
 ## Installation Time:	10 Minutes
 ## Files To Edit: (4)
-## 			root/garage.php
-##			root/admin/admin_garage_permissions.php
-##			root/includes/functions_garage.php
-##			root/templates/subSilver/garage_vehicle.tpl
+##			templates/subSilver/viewtopic_body.tpl
+##			templates/subSilver/memberlist_body.tpl
+##			language/lang_english/lang_main.php
+##			includes/usercp_viewprofile.php
+##			includes/page_tail.php
+##			viewtopic.php
+##			memberlist.php
+##			templates/subSilver/subSilver.cfg
 ##
 ## Included Files: (84)
 ##			Install Garage.txt
@@ -139,6 +143,7 @@
 #-----[ COPY ]------------------------------------------
 #
 copy upgrade/upgrade_garage-1.0.5.php TO upgrade_garage-1.0.5.php
+copy root/*.* TO *.*
 
 #
 #-----[ DIY INSTRUCTIONS ]------------------------------------------
@@ -165,8 +170,6 @@ $images['garage_move_up']		= "$current_template_images/{LANG}/garage_move_up.gif
 $images['garage_move_down']		= "$current_template_images/{LANG}/garage_move_down.gif";
 $images['garage_set_approved']		= "$current_template_images/{LANG}/garage_set_approved.gif";
 $images['garage_set_pending']		= "$current_template_images/{LANG}/garage_set_pending.gif";
-
-
 
 # 
 #-----[ OPEN ]----- 
