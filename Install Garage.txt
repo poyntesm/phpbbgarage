@@ -29,9 +29,6 @@
 ##			Install Garage.txt
 ##			READ ME FIRST.txt
 ##			Upgrade.txt
-##			contrib/profilcp/Install Garage PCP.txt
-##			contrib/profilcp/profil_garage_body.tpl
-##			contrib/profilcp/profilcp_public_garage.php
 ## 			root/garage.php
 ## 			root/install_garage.php
 ##			root/admin/admin_garage_business.php
@@ -40,7 +37,18 @@
 ##			root/admin/admin_garage_models.php
 ##			root/admin/admin_garage_permissions.php
 ##			root/admin/admin_garage_tools.php
-##			root/includes/functions_garage.php
+##			root/includes/class_garage.php
+##			root/includes/class_garage_admin.php
+##			root/includes/class_garage_business.php
+##			root/includes/class_garage_dynorun.php
+##			root/includes/class_garage_guestbook.php
+##			root/includes/class_garage_image.php
+##			root/includes/class_garage_insurance.php
+##			root/includes/class_garage_model.php
+##			root/includes/class_garage_modification.php
+##			root/includes/class_garage_quartermile.php
+##			root/includes/class_garage_template.php
+##			root/includes/class_garage_vehicle.php
 ##			root/language/lang_english/lang_garage.php
 ##			root/language/lang_english/lang_garage_error.php
 ##			root/templates/subSilver/garage.tpl
@@ -109,16 +117,6 @@
 ##			root/templates/subSilver/images/lang_english/garage_shop_review.gif
 ##			root/templates/subSilver/images/lang_english/garage_view_vehicle.gif
 ##			root/templates/subSilver/images/lang_english/icon_garage.gif
-##			upgrade/upgrade_garage-1.0.0.txt
-##			upgrade/upgrade_garage-1.0.0.php
-##			upgrade/upgrade_garage-1.0.2.txt
-##			upgrade/upgrade_garage-1.0.2.php
-##			upgrade/upgrade_garage-1.0.3.txt
-##			upgrade/upgrade_garage-1.0.3.php
-##			upgrade/upgrade_garage-1.0.4.txt
-##			upgrade/upgrade_garage-1.0.4.php
-##			upgrade/upgrade_garage-1.0.5.txt
-##			upgrade/upgrade_garage-1.0.5.php
 ## License: http://opensource.org/licenses/gpl-license.php GNU General Public License v2 or any later version
 ######################################################################################
 ## For security purposes, please check: http://www.phpbb.com/mods/
@@ -130,6 +128,7 @@
 ###################################################################################### 
 ## Author Notes: 
 ##
+##	- http://forums.phpbbgarage.com is the home of phpBBGarage so drop by
 ##	- This Mod Was Inspired By IPB Based Garage By Matthew C. Veno
 ##
 ######################################################################################
@@ -169,7 +168,6 @@
 #-----[ COPY ]------------------------------------------
 #
 copy root/*.* TO *.*
-
 #
 #-----[ DIY INSTRUCTIONS ]------------------------------------------
 #
@@ -177,12 +175,10 @@ Chmod ./garage/ to 755
 Chmod ./garage/upload to 777
 Open your web browser and run install_garage.php
 Delete install_garage.php if it ran succesfully
-
 # 
 #-----[ OPEN ]----- 
 # 
 memberlist.php
-
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -191,7 +187,6 @@ memberlist.php
 #-----[ AFTER, ADD ]------------------------------------------
 #
 //-- mod : Garage ----------------------------------------------------------------------------------------------------------
-
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -203,7 +198,6 @@ memberlist.php
 //-- add
 	'L_GARAGE' => $lang['Garage'],
 //-- mod finsh : Garage ----------------------------------------------------------------------------------------------------
-
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -211,13 +205,11 @@ memberlist.php
 		$order_by = "user_regdate $sort_order LIMIT $start, " . $board_config['topics_per_page'];
 		break;
 }
-
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- modify
-
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -230,7 +222,6 @@ user_allowavatar
 #-----[ IN-LINE AFTER, ADD ]------------------------------------------
 #
 , g.id as garage_id
-
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -239,17 +230,14 @@ user_allowavatar
 #-----[ AFTER, ADD ]------------------------------------------
 #
 		LEFT JOIN " . GARAGE_TABLE ." g ON ( g.member_id = user_id and g.main_vehicle = 1)
-
 #
 #-----[ FIND ]------------------------------------------
 #
 	ORDER BY $order_by";
-
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
 //-- mod finsh : Garage ----------------------------------------------------------------------------------------------------
-
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -261,7 +249,6 @@ user_allowavatar
 //-- add
 		$garage_img = ( $row['garage_id'] ) ?'<a href="' . append_sid("garage.$phpEx?mode=browse&search=yes&user=" . $row['username'] . "") . '"><img src="' . $images['icon_garage'] . '" alt="'.$lang['View_Users_Garage'].'" title="'.$lang['View_Users_Garage'].'" border="0" /></a>' : '';
 //-- mod finsh : Garage ----------------------------------------------------------------------------------------------------
-
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -273,12 +260,10 @@ user_allowavatar
 //-- add
 			'GARAGE_IMG' => $garage_img,
 //-- mod finsh : Garage ----------------------------------------------------------------------------------------------------
-
 # 
 #-----[ OPEN ]----- 
 # 
 viewtopic.php
-
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -307,9 +292,7 @@ $sql = "SELECT u.username, u.user_id, u.user_posts, u.user_from
 #
 #-----[ IN-LINE FIND ]------------------------------------------
 #
-
 pt.post_text, pt.post_subject, pt.bbcode_uid
-
 #
 #-----[ IN-LINE AFTER, ADD ]------------------------------------------
 #
@@ -322,7 +305,6 @@ pt.post_text, pt.post_subject, pt.bbcode_uid
 #-----[ IN-LINE FIND ]------------------------------------------
 #
 FROM
-
 #
 #-----[ IN-LINE AFTER, ADD ]------------------------------------------
 #
@@ -331,12 +313,10 @@ FROM
 #-----[ IN-LINE FIND ]------------------------------------------
 #
 pt
-
 #
 #-----[ IN-LINE AFTER, ADD ]------------------------------------------
 #
  )
-
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
@@ -351,13 +331,10 @@ pt
 #-----[ AFTER, ADD ]------------------------------------------
 #
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-
 #
 #-----[ FIND ]------------------------------------------
 #
-
 	$poster_from = ( $postrow[$i]['user_from'] && $postrow[$i]['user_id'] != ANONYMOUS ) ? $lang['Location'] . ': ' . $postrow[$i]['user_from'] : '';
-
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
@@ -373,7 +350,6 @@ pt
 #-----[ FIND ]------------------------------------------
 #
 		'POSTER_FROM' => $poster_from,
-
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
@@ -389,12 +365,10 @@ pt
 #-----[ OPEN ]----- 
 # 
 viewonline.php
-
 #
 #-----[ FIND ]------------------------------------------
 #
 <?php
-
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
@@ -420,12 +394,10 @@ viewonline.php
 #-----[ OPEN ]----- 
 # 
 includes/constants.php
-
 #
 #-----[ FIND ]------------------------------------------
 #
 <?php
-
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
@@ -434,7 +406,6 @@ includes/constants.php
 #-----[ FIND ]------------------------------------------
 #
 ?>
-
 #
 #-----[ BEFORE, ADD ]------------------------------------------
 #
@@ -461,12 +432,10 @@ define('PAGE_GARAGE', -2120);
 #-----[ OPEN ]----- 
 # 
 includes/page_header.php
-
 #
 #-----[ FIND ]------------------------------------------
 #
 <?php
-
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
@@ -489,7 +458,6 @@ includes/page_header.php
 #-----[ OPEN ]----- 
 # 
 includes/page_tail.php
-
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -505,7 +473,6 @@ $admin_link = ( $userdata['user_level'] == ADMIN ) ? '<a href="admin/index.' . $
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
-
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 if ( in_array($userdata['user_level'], array(ADMIN, MOD)) )
@@ -522,17 +489,14 @@ if ( in_array($userdata['user_level'], array(ADMIN, MOD)) )
 	}
 }
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-
 # 
 #-----[ OPEN ]----- 
 # 
 includes/usercp_viewprofile.php
-
 #
 #-----[ FIND ]------------------------------------------
 #
 <?php
-
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
@@ -544,7 +508,6 @@ make_jumpbox('viewforum.'.$phpEx);
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
-
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 if(empty($board_config['default_lang']))
@@ -556,17 +519,14 @@ require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/
 require($phpbb_root_path . 'includes/class_garage_vehicle.' . $phpEx);
 $garage_vehicle->profile_integration($profiledata['user_id']);
 //-- mod finish: Garage ----------------------------------------------------------------------------------------------------
-
 # 
 #-----[ OPEN ]------------------------------------------
 # 
 language/lang_english/lang_admin.php
-
 #
 #-----[ FIND ]------------------------------------------
 #
 <?php
-
 #
 #-----[ AFTER, ADD ]------------------------------------
 #
@@ -575,7 +535,6 @@ language/lang_english/lang_admin.php
 #-----[ FIND ]------------------------------------------
 #
 ?>
-
 #
 #-----[ BEFORE, ADD ]------------------------------------
 #
@@ -588,17 +547,14 @@ $lang['Makes & Models'] = 'Makes & Models';
 $lang['Permissions'] = 'Permissions';
 $lang['Tools'] = 'Tools';
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-
 # 
 #-----[ OPEN ]----- 
 # 
 language/lang_english/lang_main.php
-
 #
 #-----[ FIND ]------------------------------------------
 #
 <?php
-
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
@@ -606,15 +562,12 @@ language/lang_english/lang_main.php
 # 
 #-----[ FIND ]----- 
 # 
- 
 //
 // That's all, Folks!
 // -------------------------------------------------
-
 #
 #-----[ BEFORE, ADD ]------------------------------------------
 #
-
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 $lang['Garage'] = 'Garage';
@@ -623,12 +576,10 @@ $lang['View_Users_Garage'] = 'View user\'s Garage';
 $lang['Quartermile_Table'] = '1/4 Mile Table';
 $lang['Pending_Items'] = 'View Pending Garage Items';
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-
 # 
 #-----[ OPEN ]----- 
 # 
 templates/subSilver/memberlist_body.tpl
-
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -653,12 +604,10 @@ templates/subSilver/memberlist_body.tpl
 #-----[ REPLACE WITH ]------------------------------------------
 #
 	  <td class="catBottom" colspan="9" height="28">&nbsp;</td>
-
 # 
 #-----[ OPEN ]----- 
 # 
 templates/subSilver/viewtopic_body.tpl
-
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -671,9 +620,7 @@ templates/subSilver/viewtopic_body.tpl
 #
 #-----[ IN-LINE AFTER, ADD ]------------------------------------------
 #
-
 <br /><br /><a href="{postrow.VIEW_POSTER_CARPROFILE}" >{postrow.POSTER_CAR_YEAR} {postrow.POSTER_CAR_MAKE} {postrow.POSTER_CAR_MODEL}</a>
-
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -691,7 +638,6 @@ templates/subSilver/viewtopic_body.tpl
 #-----[ OPEN ]----- 
 # 
 templates/subSilver/overall_footer.tpl
-
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -703,14 +649,11 @@ templates/subSilver/overall_footer.tpl
 #
 #-----[ IN-LINE AFTER, ADD ]------------------------------------------
 #
-
 {PENDING_LINK}
-
 # 
 #-----[ OPEN ]----- 
 # 
 templates/subSilver/overall_header.tpl
-
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -727,7 +670,6 @@ templates/subSilver/overall_header.tpl
 #-----[ OPEN ]----- 
 # 
 templates/subSilver/profile_view_body.tpl
-
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -784,12 +726,10 @@ templates/subSilver/profile_view_body.tpl
 #-----[ OPEN ]----- 
 # 
 templates/subSilver/subSilver.cfg
-
 #
 #-----[ FIND ]------------------------------------------
 #
 <?php
-
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
@@ -801,7 +741,6 @@ templates/subSilver/subSilver.cfg
 #
 #-----[ BEFORE, ADD ]------------------------------------------
 #
-
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 $images['vehicle_image_attached']	= "$current_template_images/garage_camera.gif";
@@ -835,7 +774,6 @@ $images['garage_move_down']		= "$current_template_images/{LANG}/garage_move_down
 $images['garage_set_approved']		= "$current_template_images/{LANG}/garage_set_approved.gif";
 $images['garage_set_pending']		= "$current_template_images/{LANG}/garage_set_pending.gif";
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-
 #
 #-----[ SAVE/CLOSE ALL FILES ]------------------------------------------
 #

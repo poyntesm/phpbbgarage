@@ -35,12 +35,14 @@ class garage_model
 	/*========================================================================*/
 	function insert_make($data)
 	{
-		global $db;
+		global $db, $userdata;
+
+		$pending = (in_array($userdata['user_level'], array(MOD, ADMIN))) ? 0 : 1;
 
 		$sql = "INSERT INTO ". GARAGE_MAKES_TABLE ." 
-			(make)
+			(make, pending)
 			VALUES 
-			('".$data['make']."')";
+			('".$data['make']."', $pending)";
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -99,12 +101,14 @@ class garage_model
 	/*========================================================================*/
 	function insert_model($data)
 	{
-		global $db;
+		global $db, $userdata;
+
+		$pending = (in_array($userdata['user_level'], array(MOD, ADMIN))) ? 0 : 1;
 
 		$sql = "INSERT INTO ". GARAGE_MODELS_TABLE ." 
-			(make_id, model)
+			(make_id, model, pending)
 			VALUES 
-			('".$data['make_id']."', '".$data['model']."')";
+			('".$data['make_id']."', '".$data['model']."', $pending)";
 
 		if(!$result = $db->sql_query($sql))
 		{

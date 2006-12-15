@@ -2703,8 +2703,11 @@ switch( $mode )
 		$garage_model->insert_make($data);
 
 		//All Makes & Models Require Approval
-		$garage->pending_notification();
-		$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', '1', 'config_name', 'items_pending');
+		if ((!in_array($userdata['user_level'], array(MOD, ADMIN))))
+		{
+			$garage->pending_notification();
+			$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', '1', 'config_name', 'items_pending');
+		}
 
 		redirect(append_sid("garage.$phpEx?mode=create_vehicle&MAKE=" . $data['make'] . "&YEAR=" . $data['year'], true));
 
@@ -2783,8 +2786,11 @@ switch( $mode )
 		$params = array('make', 'make_id', 'model');
 		$garage->check_required_vars($params);
 
-		$garage->pending_notification();
-		$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', '1', 'config_name', 'items_pending');
+		if ((!in_array($userdata['user_level'], array(MOD, ADMIN))))
+		{
+			$garage->pending_notification();
+			$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', '1', 'config_name', 'items_pending');
+		}
 
 		//Create The Model
 		$garage_model->insert_model($data);
@@ -2983,7 +2989,7 @@ switch( $mode )
 		{
 			//We Need To Check Only One Business Was Selected
 			$total = count($HTTP_POST_VARS['bus_id']);
-			if ( $total > 1 )
+			if ( $total != 1 )
 			{
 				redirect(append_sid("garage.$phpEx?mode=error&EID=22", true));
 			}
