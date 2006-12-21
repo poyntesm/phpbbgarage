@@ -1,4 +1,38 @@
 <!-- INCLUDE overall_header.html -->
+<script type="text/javascript" src="{T_TEMPLATE_PATH}/garage_ajax.js"></script>
+<script type="text/javascript">
+var ajax = new sack();
+
+function get_model_list(sel)
+{
+	var make_id = sel.options[sel.selectedIndex].value;
+	document.getElementById('model_id').options.length = 0;
+	ajax.requestFile = 'garage.php?mode=get_model_list&make_id='+make_id;
+	ajax.onCompletion = build_model_list;
+	ajax.runAJAX();
+}
+
+function get_product_list(sel)
+{
+	var make_id = sel.options[sel.selectedIndex].value;
+	document.getElementById('product_id').options.length = 0;
+	ajax.requestFile = 'garage.php?mode=get_product_list&manufacturer_id='+make_id;
+	ajax.onCompletion = build_product_list;
+	ajax.runAJAX();
+}
+
+function build_model_list()
+{
+	var obj = document.getElementById('model_id');
+	eval(ajax.response);
+} 
+
+function build_product_list()
+{
+	var obj = document.getElementById('product_id');
+	eval(ajax.response);
+} 
+</script>
 
 <!-- IF U_MCP -->
 	<div id="pageheader">
@@ -16,86 +50,58 @@
 			<form method="post" name="search_by_vehicle" action="{S_MODE_ACTION_SEARCH_VEHICLE}">
 			<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
 				<tr>
-					<th class="thHead" height="25" nowrap="nowrap" colspan="2">{L_SEARCH_GARAGE}</th>
+					<th class="thHead" height="25" nowrap="nowrap" colspan="3">{L_SEARCH_GARAGE}</th>
 				</tr>
 				<tr>
-					<td class="cat" align="center" height="28" colspan="2"><span class="gen">{L_SEARCH_BY_VEHICLE}</span></td>
+					<td class="cat" align="center" height="28" colspan="3"><span class="gen">{L_SEARCH_BY_VEHICLE}</span></td>
 				</tr>
 				<tr>
-					<td class="row1" width="30%"><span class="gen"><b>{L_MAKE}</b></span></td>
-					<td class="row2"><select name="make_id" onchange="updateModelSelect(this.form.model_id, this.options[this.selectedIndex].text, '');" class="forminput"><option value="">{L_SELECT_MODEL}</option></select></td>
+					<td class="row1" align="center"><input type="checkbox" name="search_year" value="1" /></td>
+					<td class="row1" width="30%"><span class="gen"><b>{L_VEHICLE}&nbsp;{L_YEAR}</b></span></td>
+					<td class="row2">{YEAR_LIST}</td>
 				</tr>
 				<tr>
-					<td class="row1" width="30%"><span class="gen"><b>{L_MODEL}</b></span></td>
-					<td class="row2"><select name="model_id" class="forminput"><option value="">{L_ANY_MODEL}</option></select></td>
+					<td class="row1" align="center"><input type="checkbox" name="search_make" value="1" /></td>
+					<td class="row1" width="30%"><span class="gen"><b>{L_VEHICLE}&nbsp;{L_MAKE}</b></span></td>
+					<td class="row2"><select id="make_id" name="make_id" onchange="get_model_list(this)" ><option value="{MAKE_ID}">{L_SELECT_MAKE}</option><option value="">------</option><!-- BEGIN make--><option value="{make.ID}">{make.MAKE}</option><!-- END make --></select></td>
 				</tr>
 				<tr>
-					<td class="cat" align="center" height="28" colspan="2"><input name="submit" type="submit" value="{L_SEARCH}" class="liteoption" /></td>
-				</tr>
-        		</table>
-			</form>
-			<br />
-
-			<form method="post" name="search_by_username" action="{S_MODE_ACTION_SEARCH_USERNAME}">
-			<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
-				<tr>
-					<th class="thHead" height="25" nowrap="nowrap" colspan="2">{L_SEARCH_GARAGE}</th>
+					<td class="row1" align="center"><input type="checkbox" name="search_model" value="1" /></td>
+					<td class="row1" width="30%"><span class="gen"><b>{L_VEHICLE}&nbsp;{L_MODEL}</b></span></td>
+					<td class="row2"><select id="model_id" name="model_id"><option value="">{L_SELECT_MODEL}</option><option value="">------</option></select></td>
 				</tr>
 				<tr>
-					<td class="cat" align="center" height="28" colspan="2"><span class="gen">{L_SEARCH_BY_MEMBER}</span></td>
+					<td class="row1" align="center"><input type="checkbox" name="search_model" value="1" /></td>
+					<td class="row1" width="30%"><span class="gen"><b>{L_MODIFICATION}&nbsp;{L_CATEGORY}</b></span></td>
+					<td class="row2">{CATEGORY_LIST}</select></td>
 				</tr>
 				<tr>
+					<td class="row1" align="center"><input type="checkbox" name="search_model" value="1" /></td>
+					<td class="row1" width="30%"><span class="gen"><b>{L_MODIFICATION}&nbsp;{L_MANUFACTURER}</b></span></td>
+					<td class="row2"><select id="manufacturer_id" name="model_id" onchange="get_product_list(this)" ><option value="">{L_SELECT_MANUFACTURER}</option><option value="">------</option><!-- BEGIN manufacturer--><option value="{manufacturer.ID}">{manufacturer.TITLE}</option><!-- END manufacturer --></select></td>
+				</tr>
+				<tr>
+					<td class="row1" align="center"><input type="checkbox" name="search_model" value="1" /></td>
+					<td class="row1" width="30%"><span class="gen"><b>{L_MODIFICATION}&nbsp;{L_PRODUCT}</b></span></td>
+					<td class="row2"><select id="product_id" name="model_id"><option value="">{L_SELECT_PRODUCT}</option><option value="">------</option></select></td>
+				</tr>
+				<tr>
+					<td class="row1" align="center"><input type="checkbox" name="search_username" value="1" /></td>
 					<td class="row1" width="30%"><span class="gen"><b>{L_MEMBER_NAME}</b></span></td>
 					<td class="row2"><input name="username" type="text" class="post" size="35" value="" /></td>
 				</tr>
 				<tr>
-					<td class="cat" align="center" height="28" colspan="2"><input name="submit" type="submit" value="{L_SEARCH}" class="liteoption" /></td>
+					<td class="cat" align="center" height="28" colspan="3"><input name="submit" type="submit" value="{L_SEARCH}" class="liteoption" /></td>
 				</tr>
         		</table>
 			</form>
+			<br />
+
 
 <!-- IF S_DISPLAY_SEARCH_INSURANCE -->
-			<br />
-			<form method="post" name="search_by_insurance" action="{S_MODE_ACTION_SEARCH_INSURANCE}">
-			<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
-				<tr>
-					<th class="thHead" height="25" nowrap="nowrap" colspan="2">{L_SEARCH_GARAGE}</th>
-				</tr>
-				<tr>
-					<td class="cat" align="center" height="28" colspan="2"><span class="gen">{L_SEARCH_INSURANCE_BY_VEHICLE}</span></td>
-				</tr>
-				<tr>
-					<td class="row1" width="30%"><span class="gen"><b>{L_MAKE}</b></span></td>
-					<td class="row2"><select name="make_id" onchange="updateModelSelect(this.form.model_id, this.options[this.selectedIndex].text, '');" class="forminput"><option value="">{L_SELECT_MODEL}</option></select></td>
-				</tr>
-				<tr>
-					<td class="row1" width="30%"><span class="gen"><b>{L_MODEL}</b></span></td>
-					<td class="row2"><select name="model_id" class="forminput"><option value="">{L_ANY_MODEL}</option></select></td>
-				</tr>
-				<tr>
-					<td class="cat" align="center" height="28" colspan="2"><input name="submit" type="submit" value="{L_SEARCH}" class="liteoption" /></td>
-				</tr>
-        		</table>
-			</form>
 <!-- ENDIF -->
 
 		</td>
-
-<script language="JavaScript1.1" type="text/javascript">
-<!--
-// Update the make dropdown.
-updateMakeSelect(document.search_by_vehicle.make_id, '');
-updateModelSelect(document.search_by_vehicle.model_id, '');
-//-->
-</script>
-
-<script language="JavaScript1.1" type="text/javascript">
-<!--
-// Update the make dropdown.
-updateMakeSelect(document.search_by_insurance.make_id, '');
-updateModelSelect(document.search_by_insurance.model_id, '');
-//-->
-</script>
 
 <!-- INCLUDE garage_footer.html -->
 

@@ -1154,16 +1154,17 @@ class garage_vehicle
 		                        $mod_images_found++;
 				}
 
-	            		$template->assign_block_vars('category.modification', array(
-	               			'IMAGE_ATTACHED'	=> ($modification_data[$j]['image_id']) ? '<a href="garage.'. $phpEx .'?mode=view_gallery_item&amp;image_id='. $modification_data[$j]['image_id'] .'" target="_blank"><img src="' . $images['vehicle_image_attached'] . '" alt="'.$user->lang['MODIFICATION_IMAGE_ATTACHED'].'" title="'.$user->lang['MODIFICATION_IMAGE_ATTACHED'].'" border="0" /></a>' : '',
-	               			'COST' 			=> $modification_data[$j]['price'],
-	               			'INSTALL' 		=> $modification_data[$j]['install_price'],
-	               			'RATING' 		=> $modification_data[$j]['product_rating'],
-	               			'CREATED' 		=> $user->format_date($modification_data[$j]['date_created']),
-	               			'UPDATED' 		=> $user->format_date($modification_data[$j]['date_updated']),
-	               			'MODIFICATION' 		=> '<a href="' . append_sid("garage.$phpEx?mode=view_modification&amp;CID=$cid&amp;MID=" . $modification_data[$j]['id']) . '">' . $modification_data[$j]['title'] . '</a>',
-					'U_EDIT'		=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage.$phpEx?mode=edit_modification&amp;MID=". $modification_data[$j]['id'] . "&amp;CID=$cid") : '',
-					'U_DELETE' 		=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_modification'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_mod(' . $cid . ',' . $modification_data[$j]['id'] . ')' : '')
+				$template->assign_block_vars('category.modification', array(
+					'U_IMAGE'	=> ($modification_data[$j]['image_id']) ? append_sid("garage.$phpEx", "mode=view_gallery_item&amp;image_id=". $modification_data[$j]['image_id']) : '',
+					'IMAGE'		=> $user->img('garage_vehicle_img_attached', 'MODIFICATION_IMAGE_ATTACHED'),
+	               			'COST' 		=> $modification_data[$j]['price'],
+	               			'INSTALL' 	=> $modification_data[$j]['install_price'],
+	               			'RATING' 	=> $modification_data[$j]['product_rating'],
+	               			'CREATED' 	=> $user->format_date($modification_data[$j]['date_created']),
+	               			'UPDATED' 	=> $user->format_date($modification_data[$j]['date_updated']),
+	               			'MODIFICATION' 	=> '<a href="' . append_sid("garage.$phpEx?mode=view_modification&amp;CID=$cid&amp;MID=" . $modification_data[$j]['id']) . '">' . $modification_data[$j]['title'] . '</a>',
+					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage.$phpEx?mode=edit_modification&amp;MID=". $modification_data[$j]['id'] . "&amp;CID=$cid") : '',
+					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_modification'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_mod(' . $cid . ',' . $modification_data[$j]['id'] . ')' : '')
 	            		);
 	
 				//See If Mod Has An Image Attached And Display Gallery If Enabled & Below Limits

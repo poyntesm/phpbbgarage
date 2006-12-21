@@ -18,16 +18,18 @@
 				<tr>
 					<th class="thHead" height="25" nowrap="nowrap" colspan="2">{L_TITLE}</th>
 				</tr>
+				<!-- IF S_DISPLAY_PENDING -->
 				<tr>
 					<td class="row1" colspan="2" width="20%" align="center"><span class="gen"><br />{L_BUSINESS_NOTICE}<br /><br /></span></td>
 				</tr>
+				<!-- ENDIF -->
 				<tr>
 					<td class="row1" width="20%"><span class="gen"><b>{L_BUSINESS_NAME}</b></span></td>
 					<td class="row2"><input name="title" type="text" class="post" size="35" value="{TITLE}" /> <span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</span></td>
 				</tr>
 				<tr>
 					<td class="row1" width="35%"><span class="gen"><b>{L_ADDRESS}</b></span></td>
-					<td class="row2"><textarea name="address" cols="60" rows="5" wrap="soft"   class="post">{ADDRESS}</textarea></td>
+					<td class="row2"><textarea name="address" cols="40" rows="4" wrap="soft"   class="post">{ADDRESS}</textarea></td>
 				</tr>
 				<tr>
 					<td class="row1" width="20%"><span class="gen"><b>{L_TELEPHONE}</b></span></td>
@@ -47,14 +49,14 @@
 				</tr>
 				<tr>
 					<td class="row1" width="35%"><span class="gen"><b>{L_OPENING_HOURS}</b></span></td>
-					<td class="row2"><textarea name="opening_hours" cols="60" rows="5" wrap="soft" class="post">{OPENING_HOURS}</textarea></td>
+					<td class="row2"><textarea name="opening_hours" cols="40" rows="4" wrap="soft" class="post">{OPENING_HOURS}</textarea></td>
 				</tr>
 				<tr>
 					<td class="row1" width="20%"><span class="gen"><b>{L_TYPE}</b></span></td>
-					<td class="row2">{L_INSURANCE} : <input type="checkbox" name="insurance" {INSURANCE_CHECKED} /><br />{L_GARAGE} : <input type="checkbox" name="garage" {GARAGE_CHECKED} /><br />{L_RETAIL_SHOP} : <input type="checkbox" name="retail_shop" {RETAIL_CHECKED} /><br />{L_WEB_SHOP} : <input type="checkbox" name="web_shop" {WEBSHOP_CHECKED} /></td>
+					<td class="row2">{L_INSURANCE}&nbsp;:&nbsp;<input type="checkbox" name="type[]" value="{BUSINESS_INSURANCE}" <!-- IF S_BUSINESS_INSURANCE -->checked="checked"<!-- ENDIF --> /><br />{L_GARAGE}&nbsp;:&nbsp;<input type="checkbox" name="type[]" value="{BUSINESS_GARAGE}" <!-- IF S_BUSINESS_GARAGE-->checked="checked"<!-- ENDIF --> /><br />{L_RETAIL}&nbsp;:&nbsp;<input type="checkbox" name="type[]" value="{BUSINESS_RETAIL}" <!-- IF S_BUSINESS_RETAIL -->checked="checked"<!-- ENDIF --> /><br />{L_PRODUCT_MANUFACTURER}&nbsp;:&nbsp;<input type="checkbox" name="type[]" value="{BUSINESS_PRODUCT}" <!-- IF S_BUSINESS_PRODUCT -->checked="checked"<!-- ENDIF --> /></td>
 				</tr>
 				<tr>
-					<td class="cat" align="center" height="28" colspan="2"><input type="hidden" value="{CID}" name="CID" /><input type="hidden" value="{BUSINESS_ID}" name="id" /><input type="hidden" value="{MODE_REDIRECT}" name="mode_redirect" /><input name="submit" type="submit" value="{L_BUTTON}" class="liteoption" /></td>
+					<td class="cat" align="center" height="28" colspan="2"><input type="hidden" value="{CID}" name="CID" /><input type="hidden" value="{BUSINESS_ID}" name="id" /><input type="hidden" value="{REDIRECT}" name="redirect" /><input name="submit" type="submit" value="{L_BUTTON}" class="liteoption" /></td>
 				</tr>
 			</table>
 			</form>

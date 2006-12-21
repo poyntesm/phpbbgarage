@@ -142,7 +142,14 @@ class acp_garage
 
 						'legend10'				=> 'ACP_GARAGE_GUESTBOOK_CONFIG',
 						'enable_guestbooks'			=> array('lang' => 'ENABLE_GUESTBOOK', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_guestbooks_bbcode'		=> array('lang' => 'ENABLE_GUESTBOOK_BBCODE', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_guestbooks_comment_approval'	=> array('lang' => 'ENABLE_GUESTBOOK_COMMENT_APPROVAL', 'type' => 'radio:yes_no', 'explain' => true),
+
+						'legend11'				=> 'ACP_GARAGE_PRODUCT_CONFIG',
+						'enable_user_submit_product'		=> array('lang' => 'ENABLE_USER_SUBMIT_PRODUCT', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_product_approval'		=> array('lang' => 'ENABLE_PRODUCT_APPROVAL', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_product_search'			=> array('lang' => 'ENABLE_PRODUCT_SEARCH', 'type' => 'radio:yes_no', 'explain' => true),
+
 
 					)
 				);

@@ -1,4 +1,31 @@
 <!-- INCLUDE overall_header.html -->
+<script type="text/javascript" src="{T_TEMPLATE_PATH}/garage_ajax.js"></script>
+<script type="text/javascript">
+var ajax = new sack();
+
+function get_model_list(sel)
+{
+	var make_id = sel.options[sel.selectedIndex].value;
+	document.getElementById('model_id').options.length = 0;
+	ajax.requestFile = 'garage.php?mode=get_model_list&make_id='+make_id;
+	ajax.onCompletion = build_model_list;
+	ajax.runAJAX();
+}
+
+function update_model_list(make_id, model_id)
+{
+	document.getElementById('model_id').options.length = 0;
+	ajax.requestFile = 'garage.php?mode=get_model_list&model_id='+model_id+'&make_id='+make_id;
+	ajax.onCompletion = build_model_list;
+	ajax.runAJAX();
+}
+
+function build_model_list()
+{
+	var obj = document.getElementById('model_id');
+	eval(ajax.response);
+} 
+</script>
 
 <!-- IF U_MCP -->
 	<div id="pageheader">
@@ -8,12 +35,10 @@
 	<br clear="all" /><br />
 <!-- ENDIF -->
 
-<!-- INCLUDE garage_vehicle_select_javascript.html -->
-
 <form enctype="multipart/form-data" method="post" name="filter_quartermile_table" action="{S_MODE_ACTION}">
 <table width="100%" cellspacing="2" cellpadding="2" border="0" align="center"> 
 	<tr>
-		<td align="left" nowrap="nowrap"><span class="genmed">{L_MAKE}:&nbsp;<select name="make_id" onchange="updateModelSelect(this.form.model_id, this.options[this.selectedIndex].text, '');" class="forminput"><option value="">{L_SELECT_MODEL}</option></select>&nbsp;{L_MODEL}:&nbsp;<select name="model_id" class="forminput"><option value="">{L_ANY_MODEL}</option></select>&nbsp;{L_QUARTERMILE_SORTED_BY}:&nbsp;{S_MODE_SELECT}&nbsp;&nbsp;{L_ORDER}&nbsp;{S_ORDER_SELECT}&nbsp;&nbsp;<input type="submit" name="submit" value="{L_SORT}" class="liteoption" /></span></td>
+		<td align="left" nowrap="nowrap"><span class="genmed">{L_MAKE}:&nbsp;<select id="make_id" name="make_id" onchange="get_model_list(this)" ><option value="{MAKE_ID}">{L_SELECT_MAKE}</option><!-- BEGIN make--><option value="{make.ID}" <!-- IF make.S_SELECTED -->selected="selected"<!-- ENDIF -->>{make.MAKE}</option><!-- END make --></select>&nbsp;{L_MODEL}:&nbsp;<select id="model_id" name="model_id"></select>&nbsp;{L_QUARTERMILE_SORTED_BY}:&nbsp;{S_MODE_SELECT}&nbsp;&nbsp;{L_ORDER}&nbsp;{S_ORDER_SELECT}&nbsp;&nbsp;<input type="submit" name="submit" value="{L_SORT}" class="liteoption" /></span></td>
 	</tr>
 </table>
 
@@ -69,9 +94,8 @@
 
 <script language="JavaScript1.1" type="text/javascript">
 <!--
-// Update the make dropdown.
-updateMakeSelect(document.filter_quartermile_table.make_id, '{MAKE}');
-updateModelSelect(document.filter_quartermile_table.model_id, '{MAKE}', '{MODEL}');
+//Fill The Model Dropdown If We Are Editing + Select Correct One
+update_model_list('{MAKE_ID}', '{MODEL_ID}');
 //-->
 </script>
 

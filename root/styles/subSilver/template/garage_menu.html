@@ -1,7 +1,7 @@
 		<td width="23%" valign="top" >
 			<table width="100%" cellpadding="2" cellspacing="1" border="0" class="tablebg">
 				<tr>
-					<th class="thHead" height="25" colspan="1">{L_MENU}</th>
+					<th>{L_MENU}</th>
 				</tr>
 				<tr>
 					<td class="row1" align="center"><span class="genmed">
@@ -21,7 +21,7 @@
 			<!-- BEGIN show_vehicles -->
 			<table width="100%" cellpadding="2" cellspacing="1" border="0" class="tablebg">
 				<tr>
-					<th class="thHead" height="25" colspan="4">{L_MY_VEHICLES}</th>
+					<th>{L_MY_VEHICLES}</th>
 				</tr>
 				<!-- IF S_GARAGE_DISPLAY_CREATE_VEHICLE -->
 				<tr>
@@ -37,17 +37,17 @@
 			<br />
 			<!-- END show_vehicles -->
 
-			<!-- BEGIN lastupdatedvehiclesmain_on -->
+			<!-- IF S_GARAGE_DISPLAY_UPDATED_VEHICLES -->
 			<table width="100%" cellpadding="2" cellspacing="1" border="0" class="tablebg">
 				<tr>
-					<th class="thHead" height="25" colspan="4">{L_LATEST_UPDATED}</th>
+					<th>{L_LATEST_UPDATED}</th>
 				</tr>
 				<!-- BEGIN updated_vehicles -->
 				<tr>
-					<td class="row1" align="left" nowrap><span class="genmed"><a href="{lastupdatedvehiclesmain_on.updated_vehicles.U_VIEW_VEHICLE}">{lastupdatedvehiclesmain_on.updated_vehicles.VEHICLE}</a><br>{lastupdatedvehiclesmain_on.updated_vehicles.UPDATED_TIME}<br>{L_OWNER}: <a href="{lastupdatedvehiclesmain_on.updated_vehicles.U_VIEW_PROFILE}">{lastupdatedvehiclesmain_on.updated_vehicles.USERNAME}</a></span></td>
+					<td class="row1" align="left" nowrap="nowrap"><span class="genmed"><a href="{updated_vehicles.U_VIEW_VEHICLE}">{updated_vehicles.VEHICLE}</a><br>{updated_vehicles.UPDATED_TIME}<br>{L_OWNER}:&nbsp;<a href="{updated_vehicles.U_VIEW_PROFILE}">{updated_vehicles.USERNAME}</a></span></td>
 				</tr>
 				<!-- END updated_vehicles -->
 			</table>
 			<br />
-			<!-- END lastupdatedvehiclesmain_on -->
+			<!-- ENDIF -->
 		</td>

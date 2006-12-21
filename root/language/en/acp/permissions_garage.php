@@ -45,6 +45,7 @@ $lang = array_merge($lang, array(
 	'acl_u_garage_delete_insurance'		=> array('lang' => 'Can delete insurance from garage', 		'cat' => 'garage'),
 	'acl_u_garage_add_business'		=> array('lang' => 'Can add business to garage', 		'cat' => 'garage'),
 	'acl_u_garage_add_make_model'		=> array('lang' => 'Can add makes and models to garage',	'cat' => 'garage'),
+	'acl_u_garage_add_product'		=> array('lang' => 'Can add products to garage',	'cat' => 'garage'),
 	'acl_u_garage_rate'			=> array('lang' => 'Can rate items in garage', 			'cat' => 'garage'),
 	'acl_u_garage_comment'			=> array('lang' => 'Can comment in garage', 			'cat' => 'garage'),
 	'acl_u_garage_upload_image'		=> array('lang' => 'Can upload image to garage', 		'cat' => 'garage'),

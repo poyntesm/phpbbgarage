@@ -274,10 +274,10 @@ class mcp_garage
 
 				for ($i = 0, $count = sizeof($data);$i < $count; $i++)
 				{
-					$type = null;
-					$type .= ( $data[$i]['insurance'] == '1' ) ? $user->lang['INSURANCE'] . ', ' : '';
-					$type .= ( $data[$i]['garage'] == '1' ) ? $user->lang['GARAGE'] . ', ' : '';
-					$type .= ( $data[$i]['web_shop'] == '1' OR $data[$i]['retail_shop'] == '1' ) ? $user->lang['SHOP'] . ', ' : '';
+					$type = (in_array(BUSINESS_INSURANCE, explode(",", $data[$i]['type']))) ? $user->lang['INSURANCE'] . ', ' : '';
+					$type .= (in_array(BUSINESS_GARAGE, explode(",", $data[$i]['type']))) ? $user->lang['GARAGE'] . ', ' : '';
+					$type .= (in_array(BUSINESS_RETAIL, explode(",", $data[$i]['type']))) ? $user->lang['SHOP'] . ', ' : '';
+					$type .= (in_array(BUSINESS_PRODUCT, explode(",", $data[$i]['type']))) ? $user->lang['MANUFACTURER'] . ', ' : '';
 					$type = rtrim($type, ', ');
 
 					$template->assign_block_vars('business_row', array(

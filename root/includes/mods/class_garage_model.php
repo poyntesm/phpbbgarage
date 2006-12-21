@@ -297,6 +297,34 @@ class garage_model
 	}
 
 	/*========================================================================*/
+	// Select Model Data From DB
+	// Usage: get_models_by_make('make');
+	/*========================================================================*/
+	function get_models_by_make($make_id)
+	{
+		global $db;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'md.id, md.model, md.make_id',
+			'FROM'		=> array(
+				GARAGE_MODELS_TABLE	=> 'md',
+			),
+			'WHERE'		=>  "md.make_id = $make_id"
+		));
+
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could Not Select Model', '', __LINE__, __FILE__, $sql);
+		}
+
+		$row = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $row;
+	}
+
+	/*========================================================================*/
 	// Build Pending Make Table
 	// Usage: get_pending_makes();
 	/*========================================================================*/

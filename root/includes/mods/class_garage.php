@@ -24,6 +24,9 @@ if (!defined('IN_PHPBB'))
 	die('Hacking attempt');
 }
 
+//Inlcude Garage Constants
+include_once($phpbb_root_path . 'includes/mods/constants_garage.'. $phpEx);
+
 // Build Up Garage Config...We Will Use These Values Many A Time
 $sql = "SELECT config_name, config_value 
 	FROM " . GARAGE_CONFIG_TABLE;
@@ -38,20 +41,19 @@ while( $row = $db->sql_fetchrow($result) )
 	$garage_config[$row['config_name']] = $row['config_value'];
 }
 
-
 class garage 
 {
 	var $classname = "garage";
 
 	/*========================================================================*/
-	// Makes Safe Any Posted Variables
-	// Usage: process_post_vars(array());
+	// Makes Safe Any User Input
+	// Usage: process_vars(array());
 	/*========================================================================*/
-	function process_post_vars($params = array())
+	function process_vars($params = array())
 	{
-		while( list($var, $param) = @each($params) )
+		while(list($var, $param) = @each($params) )
 		{
-			$data[$param] = request_var($param, '');
+			$data[$var] = request_var($var, $param );
 		}
 
 		return $data;
@@ -190,9 +192,9 @@ class garage
 
 	/*========================================================================*/
 	// Select All Category Data
-	// Usage: get_categorys();
+	// Usage: get_categories();
 	/*========================================================================*/
-	function get_categorys()
+	function get_categories()
 	{
 		global $db;
 
@@ -285,6 +287,35 @@ class garage
 	{
 		list($usec, $sec) = explode(' ', microtime());
 		return (float) $sec + ((float) $usec * 100000);
+	}
+
+	/*========================================================================*/
+	// Seed Random Number Generator
+	// Usage: make_seed();
+	/*========================================================================*/
+	function year_list()
+	{
+		global $garage_config;
+
+		// Grab the current year
+		$my_array = localtime(time(), 1) ;
+		$current_date = $my_array["tm_year"] +1900 ;
+	
+	        // Calculate end year based on offset configured
+	        $end_year = $current_date + $garage_config['year_end'];
+	
+		// A simple check to prevent infinite loop
+		if ( $garage_config['year_start'] > $end_year ) 
+		{
+			return;
+		}	
+	
+		for ( $year = $end_year; $year >= $garage_config['year_start']; $year-- ) 
+		{
+			$years[] = $year;
+		}
+
+		return $years;
 	}
 
 	/*========================================================================*/

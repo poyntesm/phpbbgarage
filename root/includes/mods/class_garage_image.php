@@ -188,10 +188,7 @@ class garage_image
 			'image_id'	=> $image_id)
 		);
 
-		if( !$result = $db->sql_query($sql) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Insert Image Into Gallery', '', __LINE__, __FILE__, $sql);
-		}
+		$db->sql_query($sql);
 
 		return;
 	}
@@ -547,14 +544,9 @@ class garage_image
 			'attach_thumb_filesize'	=> $data['thumb_filesize'])
 		);
 
-		if( !$result = $db->sql_query($sql) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Insert Image Data', '', __LINE__, __FILE__, $sql);
-		}
-	
-		$image_id = $db->sql_nextid();
-
-		return $image_id;
+		$db->sql_query($sql);
+		
+		return $db->sql_nextid();
 	}
 	
 	/*========================================================================*/
@@ -849,11 +841,7 @@ class garage_image
 			'WHERE'		=>  "i.attach_id = $image_id"
 		));
 
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Select Specific Image Data', '', __LINE__, __FILE__, $sql);
-		}
-		
+		$result = $db->sql_query($sql);
 		$row = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
@@ -882,11 +870,7 @@ class garage_image
 			'ORDER_BY'	=>  "rand()"
 		));
 
-		if( !($result = $db->sql_query_limit($sql, $required)) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Select Random Image Data', '', __LINE__, __FILE__, $sql);
-		}
-		
+		$result = $db->sql_query_limit($sql, $required);
 		while ($row = $db->sql_fetchrow($result) )
 		{
 			$rows[] = $row;
@@ -917,11 +901,7 @@ class garage_image
 			'ORDER_BY'	=>  "i.attach_id ASC"
 		));
 
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Select All Image Data', '', __LINE__, __FILE__, $sql);
-		}
-		
+		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result) )
 		{
 			$rows[] = $row;
@@ -959,11 +939,7 @@ class garage_image
 			'GROUP_BY'	=>  "gl.id"
 		));
 
-      		if ( !($result = $db->sql_query($sql)) )
-      		{
-         		message_die(GENERAL_ERROR, 'Could Not Select Vehicle Gallery Images Data', '', __LINE__, __FILE__, $sql);
-      		}
-
+      		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result) )
 		{
 			$rows[] = $row;
@@ -1000,11 +976,7 @@ class garage_image
 			'WHERE'		=>  "g.user_id = $user_id AND i.attach_location NOT LIKE 'http://%'"
 		));
 
-      		if ( !($result = $db->sql_query($sql)) )
-      		{
-         		message_die(GENERAL_ERROR, 'Could Not Select User Uploaded Images Data', '', __LINE__, __FILE__, $sql);
-      		}
-
+      		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result) )
 		{
 			$rows[] = $row;
@@ -1041,11 +1013,7 @@ class garage_image
 			'WHERE'		=>  "g.user_id = $user_id AND i.attach_location LIKE 'http://%'"
 		));
 
-      		if ( !($result = $db->sql_query($sql)) )
-      		{
-         		message_die(GENERAL_ERROR, 'Could Not Select User Remote Images Data', '', __LINE__, __FILE__, $sql);
-      		}
-
+      		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result) )
 		{
 			$rows[] = $row;
@@ -1065,7 +1033,9 @@ class garage_image
 	/*========================================================================*/
 	function below_image_quotas()
 	{
-		global $user;
+		global $phpbb_root_path, $phpEx, $user;
+
+		include_once($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 
 		//Get All Users Images So We Can Workout Current Quota Usage
 		$user_upload_image_data = $this->get_user_upload_images($user->data['user_id']);
@@ -1087,7 +1057,9 @@ class garage_image
 	/*========================================================================*/
 	function above_image_quotas()
 	{
-		global $user;
+		global $phpbb_root_path, $phpEx, $user;
+
+		include_once($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 
 		//Get All Users Images So We Can Workout Current Quota Usage
 		$user_upload_image_data = $this->get_user_upload_images($user->data['user_id']);
@@ -1184,10 +1156,7 @@ class garage_image
 			'ORDER_BY'	=>  "i.attach_id ASC"
 		));
 	
-		if ( !($result = $db->sql_query_limit($sql, $limit, $start)) )
-		{
-			message_die(GENERAL_ERROR, 'Error Getting Image Data', '', __LINE__, __FILE__, $sql);
-		}
+		$result = $db->sql_query_limit($sql, $limit, $start);
 	
 		//We Must Be Complete As We Have No More Images To Process
 		if ( $db->sql_numrows($result) < 1 )

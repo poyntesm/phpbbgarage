@@ -83,10 +83,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_business (
 		`website` varchar(255) default NULL,
 		`email` varchar(32) default NULL,
 		`opening_hours` varchar(255) default NULL,
-		`insurance` tinyint(1) NOT NULL default '0',
-		`retail_shop` tinyint(1) NOT NULL default '0',
-		`web_shop` tinyint(1) NOT NULL default '0',
-		`garage` tinyint(1) NOT NULL default '0',
+		`type` varchar(32) default NULL,
 		`pending` tinyint(1) NOT NULL default '0',
 		`comments` text,
 		PRIMARY KEY  (`id`)
@@ -168,7 +165,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_mods (
 		`garage_id` int(10) unsigned NOT NULL default '0',
 		`user_id` int(10) NOT NULL default '0',
 		`category_id` int(10) unsigned NOT NULL default '0',
-		`title` varchar(255) NOT NULL default '',
+		`product_id` int(10) unsigned NOT NULL default '0',
 		`price` int(10) unsigned NOT NULL default '0',
 		`install_price` int(10) unsigned NOT NULL default '0',
 		`product_rating` tinyint(2) default NULL,
@@ -188,6 +185,13 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_mods (
 		KEY `garage_id` (`garage_id`),
 		KEY `date_created` (`date_created`),
 		KEY `date_updated` (`date_updated`)
+		)";
+$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_products (
+		`id` int(10) unsigned NOT NULL auto_increment,
+		`business_id` int(10) default NULL,
+		`category_id` int(10) unsigned NOT NULL default '0',
+		`title` varchar(255) NOT NULL default '',
+		PRIMARY KEY  (`id`),
 		)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_quartermile (
 		`id` int(10) unsigned NOT NULL auto_increment,
@@ -343,6 +347,7 @@ $params = array(
 
 //Guestbook Config Data
 	'enable_guestbooks' 			=> '1',
+	'enable_guestbooks_bbcode' 		=> '1',
 	'enable_guestbooks_comment_approval' 	=> '1',
 
 //Quota Config Data
@@ -1389,7 +1394,7 @@ switch( $mode )
 		//Lets Add The Required New Permissions
 		$phpbbgarage_permissions = array(
 			'local'		=> array(),
-			'global'	=> array('u_garage_browse', 'u_garage_search', 'u_garage_add_vehicle', 'u_garage_delete_vehicle', 'u_garage_add_modification', 'u_garage_delete_modification', 'u_garage_add_quartermile', 'u_garage_delete_quartermile', 'u_garage_add_dynorun', 'u_garage_delete_dynorun', 'u_garage_add_insurance', 'u_garage_delete_insurance', 'u_garage_add_business', 'u_garage_add_make_model', 'u_garage_rate', 'u_garage_comment', 'u_garage_upload_image', 'u_garage_remote_image', 'u_garage_delete_image', 'u_garage_deny', 'm_garage', 'a_garage')
+			'global'	=> array('u_garage_browse', 'u_garage_search', 'u_garage_add_vehicle', 'u_garage_delete_vehicle', 'u_garage_add_modification', 'u_garage_delete_modification', 'u_garage_add_quartermile', 'u_garage_delete_quartermile', 'u_garage_add_dynorun', 'u_garage_delete_dynorun', 'u_garage_add_insurance', 'u_garage_delete_insurance', 'u_garage_add_business', 'u_garage_add_make_model', 'u_garage_add_product', 'u_garage_rate', 'u_garage_comment', 'u_garage_upload_image', 'u_garage_remote_image', 'u_garage_delete_image', 'u_garage_deny', 'm_garage', 'a_garage')
 		);
 		$auth_admin->acl_add_option($phpbbgarage_permissions);
 

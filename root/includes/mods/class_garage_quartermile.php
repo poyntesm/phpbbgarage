@@ -125,7 +125,7 @@ class garage_quartermile
 	// Select Top Quartermiles Data By Vehicle From DB
 	// Usage: get_top_quartermiles('vehicle id');
 	/*========================================================================*/
-	function get_top_quartermiles($pending, $sort, $order, $start = 0, $limit = 30, $addtional_where = NULL)
+	function get_top_quartermiles($sort, $order, $start = 0, $limit = 30, $addtional_where = NULL)
 	{
 		global $db;
 
@@ -153,7 +153,7 @@ class garage_quartermile
 					'ON'	=> 'g.user_id = u.user_id'
 				)
 			),
-			'WHERE'		=>  "(q.sixty IS NOT NULL OR q.three IS NOT NULL OR q.eighth IS NOT NULL OR q.eighthmph IS NOT NULL OR q.thou IS NOT NULL OR q.rt IS NOT NULL OR q.quartmph IS NOT NULL) AND ( q.pending = $pending ) AND ( mk.pending = 0 AND md.pending = 0 ) $addtional_where",
+			'WHERE'		=>  "(q.sixty IS NOT NULL OR q.three IS NOT NULL OR q.eighth IS NOT NULL OR q.eighthmph IS NOT NULL OR q.thou IS NOT NULL OR q.rt IS NOT NULL OR q.quartmph IS NOT NULL) AND ( q.pending = 0 ) AND ( mk.pending = 0 AND md.pending = 0 ) $addtional_where",
 			'GROUP_BY'	=> 'q.garage_id',
 			'ORDER_BY'	=> "$sort $order"
 		));
@@ -413,7 +413,7 @@ class garage_quartermile
 		$limit = $garage_config['top_quartermile_limit'] ? $garage_config['top_quartermile_limit'] : 10;
 
 		//Get Top Quartermile Times
-		$times = $this->get_top_quartermiles(0, 'quart', 'DESC', 0, $limit);
+		$times = $this->get_top_quartermiles('quart', 'DESC', 0, $limit);
 
 		//Now Process All Rows Returned And Get Rest Of Required Data	
 		for($i = 0; $i < count($times); $i++)
@@ -439,13 +439,12 @@ class garage_quartermile
 
 	/*========================================================================*/
 	// Build Quartermile Table With/Without Pending Itesm
-	// Usage: build_quartermile_table('YES|NO');
+	// Usage: build_quartermile_table();
 	/*========================================================================*/
-	function build_quartermile_table($pending)
+	function build_quartermile_table()
 	{
-		global $db, $template, $sort, $phpEx, $order, $garage_config, $garage_template, $user, $garage, $phpbb_root_path;
+		global $db, $template, $sort, $phpEx, $order, $garage_config, $garage_template, $user, $garage, $phpbb_root_path, $garage_model;
 
-		$pending= ($pending == 'YES') ? 1 : 0;
 		$start 	= (empty($start)) ? 0 : $start;
 		$sort 	= (empty($sort)) ? 'quart' : $sort;
 
@@ -453,47 +452,56 @@ class garage_quartermile
 		$sort_text = array($user->lang['RT'], $user->lang['SIXTY'], $user->lang['THREE'], $user->lang['EIGHTH'], $user->lang['EIGHTHMPH'], $user->lang['THOU'],  $user->lang['QUART'], $user->lang['QUARTMPH']);
 		$sort_values = array('qm.rt', 'qm.sixty', 'qm.three', 'qm.eighth', 'qm.eighthmph', 'qm.thou', 'quart', 'qm.quartmph');
 
+
 		//Get All Data Posted And Make It Safe To Use
 		$addtional_where = '';
-		$params = array('make_id', 'model_id');
-		$data = $garage->process_post_vars($params);
+		$params = array('make_id' => '', 'model_id' => '');
+		$data = $garage->process_vars($params);
 
+		//Build Make List Now So We Can Use Selected Make Info
+		$makes = $garage_model->get_all_makes();
+		for ($i = 0, $count = sizeof($makes);$i < $count; $i++)
+		{
+			$template->assign_block_vars('make', array(
+				'ID'		=> $makes[$i]['id'],
+				'MAKE'		=> $makes[$i]['make'],
+				'S_SELECTED'	=> ($data['make_id'] == $makes[$i]['id']) ? true: false)
+			);
+		}
+
+		//Determine If We Are Filtering By Make
 		if (!empty($data['make_id']))
 		{
 			//Pull Required Data From DB
 			$data = $garage_model->get_make($data['make_id']);
 			$addtional_where .= "AND g.make_id = '$make_id'";
 			$template->assign_vars(array(
-				'MAKE'	=> $data['make'])
+				'MAKE_ID'	=> $data['id'])
 			);
 		}
 
+		//Determine If We Are Filtering By Model
 		if (!empty($model_id))
 		{
 			//Pull Required Data From DB
 			$data = $garage_model->get_model($data['model_id']);
 			$addtional_where .= "AND g.model_id = '$model_id'";
 			$template->assign_vars(array(
-				'MODEL'	=> $data['model'])
+				'MODEL_ID'	=> $data['id'])
 			);
 		}
 
-		//First Query To Return Top Time For All Or For Selected Filter...
-		$rows = $this->get_top_quartermiles($pending, $sort, $order, $start, $garage_config['cars_per_page'], $addtional_where);
 
-		if ( $pending == 1 AND !empty($rows))
-		{
-			$template->assign_block_vars('quartermile_pending', array());
-		}
-	
+
+		//First Query To Return Top Time For All Or For Selected Filter...
+		$rows = $this->get_top_quartermiles($sort, $order, $start, $garage_config['cars_per_page'], $addtional_where);
+
 		//Now Process All Rows Returned And Get Rest Of Required Data	
 		for($i = 0; $i < count($rows); $i++)
 		{
 			//Second Query To Return All Other Data For Top Quartermile Run
 			$data = $this->get_quartermile_by_vehicle_quart($rows[$i]['garage_id'], $rows[$i]['quart']);
-
-			$assign_block = ($pending == 1) ? 'quartermile_pending.row' : 'quartermile';
-			$template->assign_block_vars($assign_block, array(
+			$template->assign_block_vars('quartermile', array(
 				'ROW_NUMBER' 	=> $i + ( $start + 1 ),
 				'QMID' 		=> $data['qmid'],
 				'U_IMAGE'	=> ($data['image_id']) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_gallery_item&amp;image_id=". $data['image_id']) : '',
@@ -521,7 +529,7 @@ class garage_quartermile
 			);
 		}
 
-		$count = count($this->get_top_quartermiles($pending, $sort, $order, 0, 10000000, $addtional_where));
+		$count = count($this->get_top_quartermiles($sort, $order, 0, 10000000, $addtional_where));
 		$pagination = generate_pagination("garage.$phpEx?mode=dynorun&amp;order=$order", $count, $garage_config['cars_per_page'], $start);
 		
 		$template->assign_vars(array(

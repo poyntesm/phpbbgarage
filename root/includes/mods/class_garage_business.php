@@ -32,9 +32,9 @@ class garage_business
 	// Inserts Business Into DB
 	// Usage: insert_business(array());
 	/*========================================================================*/
-	function insert_business($data)
+	function insert_business($data, $type = null)
 	{
-		global $db;
+		global $db, $garage_config;
 
 		$sql = 'INSERT INTO ' . GARAGE_BUSINESS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 			'title'		=> $data['title'],
@@ -44,11 +44,8 @@ class garage_business
 			'website'	=> $data['website'],
 			'email'		=> $data['email'],
 			'opening_hours'	=> $data['opening_hours'],
-			'insurance'	=> $data['insurance'],
-			'garage'	=> $data['garage'],
-			'retail_shop'	=> $data['retail_shop'],
-			'web_shop'	=> $data['web_shop'],
-			'pending'	=> $data['pending'])
+			'type'		=> implode(",", $data['type']),
+			'pending'	=> ($garage_config['enable_business_approval'] == '1') ? 1 : 0 )
 		);
 
 		if(!$result = $db->sql_query($sql))
@@ -65,7 +62,7 @@ class garage_business
 	/*========================================================================*/
 	function update_business($data)
 	{
-		global $db;
+		global $db, $garage_config;
 
 		$update_sql = array(
 			'title'		=> $data['title'],
@@ -75,11 +72,8 @@ class garage_business
 			'website'	=> $data['website'],
 			'email'		=> $data['email'],
 			'opening_hours'	=> $data['opening_hours'],
-			'insurance'	=> $data['insurance'],
-			'garage'	=> $data['garage'],
-			'retail_shop'	=> $data['retail_shop'],
-			'web_shop'	=> $data['web_shop'],
-			'pending'	=> $data['pending']
+			'type'		=> implode(",", $data['type']),
+			'pending'	=> ($garage_config['enable_business_approval'] == '1') ? 1 : 0 
 		);
 
 		$sql = 'UPDATE ' . GARAGE_BUSINESS_TABLE . '
@@ -153,6 +147,39 @@ class garage_business
 	}
 
 	/*========================================================================*/
+	// Select All Business Data From DB
+	// Usage: get_all_business();
+	/*========================================================================*/
+	function get_business_by_type($type)
+	{
+		global $db;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'b.*',
+			'FROM'		=> array(
+				GARAGE_BUSINESS_TABLE	=> 'b',
+			),
+			'WHERE'		=> "b.type LIKE '%$type%'",
+			'ORDER_BY'	=> "b.title ASC"
+
+		));
+
+		if( !($result = $db->sql_query($sql)) )
+		{
+			message_die(GENERAL_ERROR, 'Could Not Select All Business Data', '', __LINE__, __FILE__, $sql);
+		}
+
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$data[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/*========================================================================*/
 	// Select All Pending Business Data From DB
 	// Usage: get_pending_business();
 	/*========================================================================*/
@@ -203,7 +230,7 @@ class garage_business
 				GARAGE_BUSINESS_TABLE	=> 'b',
 				GARAGE_MODS_TABLE	=> 'm',
 			),
-			'WHERE'		=>  "m.install_business_id = b.id AND b.garage =1 AND b.pending =0 $where",
+			'WHERE'		=>  "m.install_business_id = b.id AND b.type LIKE '%" . BUSINESS_GARAGE . "%' AND b.pending = 0 $where",
 			'GROUP_BY'	=>  "b.id",
 			'ODER_BY'	=>  "rating DESC"
 		));
@@ -242,7 +269,7 @@ class garage_business
 				GARAGE_BUSINESS_TABLE	=> 'b',
 				GARAGE_MODS_TABLE	=> 'm',
 			),
-			'WHERE'		=>  "m.business_id = b.id AND ( b.web_shop =1 OR b.retail_shop = 1 ) AND b.pending =0 $where",
+			'WHERE'		=>  "m.business_id = b.id AND b.type LIKE '%" . BUSINESS_RETAIL . "%'  AND b.pending =0 $where",
 			'GROUP_BY'	=>  "b.id",
 			'ODER_BY'	=>  "rating DESC"
 		));
@@ -280,7 +307,7 @@ class garage_business
 			'FROM'		=> array(
 				GARAGE_BUSINESS_TABLE	=> 'b',
 			),
-			'WHERE'		=>  "b.insurance = 1 AND b.pending = 0	$where",
+			'WHERE'		=>  "b.type LIKE '%" . BUSINESS_INSURANCE . "%' AND b.pending = 0 $where",
 			'GROUP_BY'	=>  "b.id"
 		));
 
@@ -318,7 +345,7 @@ class garage_business
 				GARAGE_BUSINESS_TABLE	=> 'b',
 				GARAGE_MODSTABLE	=> 'm',
 			),
-			'WHERE'		=>  "m.install_business_id = b.id AND b.garage =1 AND b.pending =0 $additional_where"
+			'WHERE'		=>  "m.install_business_id = b.id AND b.type LIKE '%" . BUSINESS_GARAGE . "%' AND b.pending =0 $additional_where"
 		));
 
 		if ( !($result = $db->sql_query($sql)) )
@@ -347,7 +374,7 @@ class garage_business
 				GARAGE_BUSINESS_TABLE	=> 'b',
 				GARAGE_MODS_TABLE	=> 'm',
 			),
-			'WHERE'		=>  "m.business_id = b.id AND ( b.web_shop =1 OR b.retail_shop =1 ) AND b.pending =0 $additional_where"
+			'WHERE'		=>  "m.business_id = b.id AND b.type LIKE '%" . BUSINESS_RETAIL . "%' AND b.pending =0 $additional_where"
 		));
 
 		if ( !($result = $db->sql_query($sql)) )

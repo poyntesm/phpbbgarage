@@ -330,7 +330,7 @@ function confirm_delete_dynorun (car_id, rr_id)
 				</tr>
 				<!-- BEGIN modification -->
    				<tr>
-					<td class="row1"><span class="gen">{category.modification.IMAGE_ATTACHED}</span></td>
+					<td class="row1"><span class="gen"><!-- IF category.modification.U_IMAGE --><a href="{category.modification.U_IMAGE}" target="_blank">{category.modification.IMAGE}</a><!-- ENDIF --></span></td>
 					<td class="row1"><span class="gen">{category.modification.MODIFICATION}</span></td>
 					<td class="row1" align="center"><span class="gensmall">{category.modification.RATING}</span></td>
 					<td class="row1" align="center"><span class="gensmall">{category.modification.COST}</span></td>
