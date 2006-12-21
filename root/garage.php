@@ -3370,7 +3370,7 @@ switch( $mode )
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=21"));
 		}
 
-		$count = $garage_vehicle->count_vehicle_ratings($data);
+		$count = $garage_vehicle->count_user_vehicle_ratings($data['user_id']);
 
 		//If You Have Not Rated This Vehicle..Create A Rating	
 		if ( $count < 1 )

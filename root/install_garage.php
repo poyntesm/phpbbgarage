@@ -165,14 +165,15 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_mods (
 		`garage_id` int(10) unsigned NOT NULL default '0',
 		`user_id` int(10) NOT NULL default '0',
 		`category_id` int(10) unsigned NOT NULL default '0',
+		`manufacturer_id` int(10) unsigned NOT NULL default '0',
 		`product_id` int(10) unsigned NOT NULL default '0',
 		`price` int(10) unsigned NOT NULL default '0',
 		`install_price` int(10) unsigned NOT NULL default '0',
 		`product_rating` tinyint(2) default NULL,
 		`purchase_rating` tinyint(2) default NULL,
 		`install_rating` tinyint(2) default NULL,
-		`business_id` int(10) default NULL,
-		`install_business_id` int(10) default NULL,
+		`shop_id` int(10) default NULL,
+		`installer_id` int(10) default NULL,
 		`comments` text,
 		`install_comments` text,
 		`image_id` int(10) unsigned default NULL,
@@ -349,6 +350,11 @@ $params = array(
 	'enable_guestbooks' 			=> '1',
 	'enable_guestbooks_bbcode' 		=> '1',
 	'enable_guestbooks_comment_approval' 	=> '1',
+
+//Product Config Data
+	'enable_user_submit_product'		=> '1',
+	'enable_product_approval'		=> '1',
+	'enable_product_search'			=> '1',
 
 //Quota Config Data
 	'max_user_cars' 			=> '1',	

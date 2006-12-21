@@ -48,7 +48,6 @@ class acp_garage
 						'integrate_memberlist'			=> array('lang' => 'INTEGRATE_MEMBERLIST', 'type' => 'radio:yes_no', 'explain' => true),
 						'integrate_profile'			=> array('lang' => 'INTEGRATE_PROFILE', 'type' => 'radio:yes_no', 'explain' => true),
 						'profile_thumbs'			=> array('lang' => 'PROFILE_INTEGRATION', 'type' => 'radio:yes_no', 'explain' => true),
-						'profile_thumbs'			=> array('lang' => 'PROFILE_INTEGRATION', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_pm_pending_notify'		=> array('lang' => 'PENDING_PM_NOTIFY', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_email_pending_notify'		=> array('lang' => 'PENDING_EMAIL_NOTIFY', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_pm_pending_notify_optout'	=> array('lang' => 'PENDING_PM_NOTIFY_OPTOUT', 'type' => 'radio:yes_no', 'explain' => true),
@@ -149,8 +148,6 @@ class acp_garage
 						'enable_user_submit_product'		=> array('lang' => 'ENABLE_USER_SUBMIT_PRODUCT', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_product_approval'		=> array('lang' => 'ENABLE_PRODUCT_APPROVAL', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_product_search'			=> array('lang' => 'ENABLE_PRODUCT_SEARCH', 'type' => 'radio:yes_no', 'explain' => true),
-
-
 					)
 				);
 

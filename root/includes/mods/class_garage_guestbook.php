@@ -36,27 +36,23 @@ class garage_guestbook
 	{
 		global $db;
 
-		// Get the total count of comments in the garage
+		$data = null;
 	
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'COUNT(gb.id) AS total_comments',
+			'SELECT'	=> 'COUNT(gb.id) AS total',
 			'FROM'		=> array(
 				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
 			)
 		));
 
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Error Counting Comments', '', __LINE__, __FILE__, $sql);
-		}
-
-        	$row = $db->sql_fetchrow($result);
+		$result = $db->sql_query($sql);
+        	$data = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		$row['total_comments'] = (empty($row['total_comments'])) ? 0 : $row['total_comments'];
+		$data['total'] = (empty($data['total'])) ? 0 : $data['total'];
 
-		return $row['total_comments'];
+		return $data['total'];
 	}
 
 	/*========================================================================*/
@@ -67,8 +63,8 @@ class garage_guestbook
 	{
 		global $db;
 
-		// Get the total count of comments in the garage
-	
+		$data = null;
+
 		$sql = $db->sql_build_query('SELECT', 
 			array(
 			'SELECT'	=> 'COUNT(gb.id) AS total',
@@ -78,17 +74,13 @@ class garage_guestbook
 			'WHERE'		=> "gb.garage_id = $cid"
 		));
 
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Error Counting Comments', '', __LINE__, __FILE__, $sql);
-		}
-
-        	$row = $db->sql_fetchrow($result);
+		$result = $db->sql_query($sql);
+        	$data = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		$row['total'] = (empty($row['total'])) ? 0 : $row['total'];
+		$data['total'] = (empty($data['total'])) ? 0 : $data['total'];
 
-		return $row['total'];
+		return $data['total'];
 	}
 
 	/*========================================================================*/
@@ -107,10 +99,7 @@ class garage_guestbook
 			'post'		=> $data['comments'])
 		);
 
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Could Not Insert Vehicle Comment', '', __LINE__, __FILE__, $sql);
-		}
+		$db->sql_query($sql);
 
 		return;
 	}
@@ -123,9 +112,11 @@ class garage_guestbook
 	{
 		global $db;
 
+		$data = null;
+
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address,	u.username, u.user_id, u.user_posts, u.user_from, u.user_website, u.user_email, u.user_icq, u.user_aim, u.user_yim, u.user_regdate, u.user_msnm, u.user_viewemail, u.user_rank,	u.user_sig, u.user_sig_bbcode_uid, u.user_avatar, u.user_avatar_type, u.user_allowsmile, u.user_allow_viewonline, u.user_session_time, g.made_year, g.id as garage_id, mk.make, md.model',
+			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, u.username, u.user_id, u.user_posts, u.user_from, u.user_website, u.user_email, u.user_icq, u.user_aim, u.user_yim, u.user_regdate, u.user_msnm, u.user_viewemail, u.user_rank,	u.user_sig, u.user_sig_bbcode_uid, u.user_avatar, u.user_avatar_type, u.user_allowsmile, u.user_allow_viewonline, u.user_session_time, g.made_year, g.id as garage_id, mk.make, md.model',
 			'FROM'		=> array(
 				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
 			),
@@ -151,32 +142,25 @@ class garage_guestbook
 			'ORDER_BY'	=>  "gb.post_date ASC"
 		));
 
-      		if ( !($result = $db->sql_query($sql)) )
-      		{
-         		message_die(GENERAL_ERROR, 'Could Not Get Vehicle Comment Data', '', __LINE__, __FILE__, $sql);
-      		}
-
-		while ($row = $db->sql_fetchrow($result) )
+      		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
 		{
-			$rows[] = $row;
+			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
 
-		if (empty($rows))
-		{
-			return;
-		}
-
-		return $rows;
+		return $data;
 	}
 
 	/*========================================================================*/
 	// Select Specific Vehicle Comments Data From DB
 	// Usage: get_vehicle_comments('garage id');
 	/*========================================================================*/
-	function get_vehicle_comments_profile($cid)
+	function get_vehicle_comments_profile($cid, $limit = 5)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -194,23 +178,14 @@ class garage_guestbook
 			'ORDER_BY'	=>  "gb.post_date DESC"
 		));
 
-      		if ( !($result = $db->sql_query_limit($sql, 5)) )
-      		{
-         		message_die(GENERAL_ERROR, 'Could Not Get Vehicle Comment Data', '', __LINE__, __FILE__, $sql);
-      		}
-
+      		$result = $db->sql_query_limit($sql, $limit);
 		while ($row = $db->sql_fetchrow($result) )
 		{
-			$rows[] = $row;
+			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
 
-		if (empty($rows))
-		{
-			return;
-		}
-
-		return $rows;
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -220,6 +195,8 @@ class garage_guestbook
 	function get_comments($limit)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -249,23 +226,14 @@ class garage_guestbook
 			'ORDER_BY'	=>  "gb.post_date ASC"
 		));
 
-	 	if(!$result = $db->sql_query_limit($sql, $limit))
-		{
-			message_die(GENERAL_ERROR, "Could not query vehicle information", "", __LINE__, __FILE__, $sql);
-		}
-		
+	 	$result = $db->sql_query_limit($sql, $limit);
 		while ($row = $db->sql_fetchrow($result) )
 		{
-			$rows[] = $row;
+			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
 
-		if (empty($rows))
-		{
-			return;
-		}
-
-		return $rows;
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -275,6 +243,8 @@ class garage_guestbook
 	function get_comment($comment_id)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -304,20 +274,11 @@ class garage_guestbook
 			'ORDER_BY'	=>  "gb.post_date ASC"
 		));
 
-              	if( !($result = $db->sql_query($sql)) )
-       		{
-          		message_die(GENERAL_ERROR, 'Could Not Select Comment Data', '', __LINE__, __FILE__, $sql);
-       		}
-
-		$row = $db->sql_fetchrow($result);
+              	$result = $db->sql_query($sql);
+		$data = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		if (empty($row))
-		{
-			return $row;
-		}
-
-		return $row;
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -328,6 +289,8 @@ class garage_guestbook
 	{
 		global  $db;
 
+		$data = null;
+
 		$sql = $db->sql_build_query('SELECT', 
 			array(
 			'SELECT'	=> 'u.user_garage_guestbook_notify',
@@ -337,15 +300,11 @@ class garage_guestbook
 			'WHERE'		=> "u.user_id = $user_id"
 		));
 
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Error Counting User Vehicles', '', __LINE__, __FILE__, $sql);
-		}
-
-		$row = $db->sql_fetchrow($result);
+		$result = $db->sql_query($sql);
+		$data = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		if ($row['user_garage_guestbook_notify'])
+		if ($data['user_garage_guestbook_notify'])
 		{
 			return true;
 		}
@@ -374,10 +333,8 @@ class garage_guestbook
 			'COLUMN_3_TITLE'=> $user->lang['POSTED_DATE'])
 		);
 
-	        // What's the count? Default to 10
 		$limit = $garage_config['last_commented_limit'] ? $garage_config['last_commented_limit'] : 10;
 
-		//Get Latest Comments
 		$comment_data = $this->get_comments($limit);
 
 		for($i = 0; $i < count($comment_data); $i++)

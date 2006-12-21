@@ -28,18 +28,20 @@ if (!defined('IN_PHPBB'))
 include_once($phpbb_root_path . 'includes/mods/constants_garage.'. $phpEx);
 
 // Build Up Garage Config...We Will Use These Values Many A Time
-$sql = "SELECT config_name, config_value 
-	FROM " . GARAGE_CONFIG_TABLE;
+$sql = $db->sql_build_query('SELECT', 
+	array(
+	'SELECT'	=> 'c.config_name, c.config_value',
+	'FROM'		=> array(
+		GARAGE_CONFIG_TABLE	=> 'c',
+	)
+));
 
-if(!$result = $db->sql_query($sql))
-{
-	message_die(GENERAL_ERROR, "Could Not Query Garage Config Information", "", __LINE__, __FILE__, $sql);
-}
-
+$result = $db->sql_query($sql);
 while( $row = $db->sql_fetchrow($result) )
 {
 	$garage_config[$row['config_name']] = $row['config_value'];
 }
+$db->sql_freeresult($result);
 
 class garage 
 {
@@ -105,25 +107,23 @@ class garage
 	{
 		global $db;
 
+		$data = null;
+
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'SUM(g.views) as total_views',
+			'SELECT'	=> 'SUM(g.views) as total',
 			'FROM'		=> array(
 				GARAGE_TABLE	=> 'g',
 			)
 		));
 
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Error Counting Views', '', __LINE__, __FILE__, $sql);
-		}
-
-	        $row = $db->sql_fetchrow($result);
+		$result = $db->sql_query($sql);
+	        $data = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		$row['total_views'] = (empty($row['total_views'])) ? 0 : $row['total_views'];
+		$data['total'] = (empty($data['total'])) ? 0 : $data['total'];
 
-		return $row['total_views'];
+		return $data['total'];
 	}
 
 	/*========================================================================*/
@@ -142,10 +142,7 @@ class garage
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
 			WHERE $where_field = '$where_value'";
 
-		if( !$result = $db->sql_query($sql) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Update DB', '', __LINE__, __FILE__, $sql);
-		}
+		$db->sql_query($sql);
 	
 		return;
 	}
@@ -162,10 +159,7 @@ class garage
 			SET $set_field = $set_field + 1 
 			WHERE $where_field = $where_value";
 
-		if ( !$db->sql_query($sql) )
-		{
-			message_die(GENERAL_ERROR, "Could Not Update View Count", '', __LINE__, __FILE__, $sql);
-		}
+		$db->sql_query($sql);
 
 		return;
 	}
@@ -182,10 +176,7 @@ class garage
 			FROM $table 
 			WHERE $where_field = '$where_value'";
 
-		if( !$result = $db->sql_query($sql) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Perform Delete', '', __LINE__, __FILE__, $sql);
-		}
+		$db->sql_query($sql);
 
 		return;
 	}
@@ -198,6 +189,8 @@ class garage
 	{
 		global $db;
 
+		$data = null;
+
 		$sql = $db->sql_build_query('SELECT', 
 			array(
 			'SELECT'	=> 'c.id, c.title, c.field_order',
@@ -207,21 +200,12 @@ class garage
 			'ORDER_BY'	=> 'c.field_order'
 		));
 
-      		if ( !($result = $db->sql_query($sql)) )
-      		{
-         		message_die(GENERAL_ERROR, 'Could Not Select All Categories Data', '', __LINE__, __FILE__, $sql);
-      		}
-
+      		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result) )
 		{
 			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
-	
-		if (empty($data))
-		{
-			return;
-		}
 	
 		return $data;
 	}
@@ -234,6 +218,8 @@ class garage
 	{
 		global $db;
 
+		$data = null;
+
 		$sql = $db->sql_build_query('SELECT', 
 			array(
 			'SELECT'	=> 'c.id, c.title, c.field_order',
@@ -244,20 +230,11 @@ class garage
 			'ORDER_BY'	=> 'c.field_order'
 		));
 
-      		if ( !($result = $db->sql_query($sql)) )
-      		{
-         		message_die(GENERAL_ERROR, 'Could Not Select Category Data', '', __LINE__, __FILE__, $sql);
-      		}
-
-		$row = $db->sql_fetchrow($result);
+      		$result = $db->sql_query($sql);
+		$data = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		if (empty($row))
-		{
-			return;
-		}
-	
-		return $row;
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -319,28 +296,14 @@ class garage
 	}
 
 	/*========================================================================*/
-	// Check If Any Pending Items Exists
-	// Usage: check_pending_items();
-	/*========================================================================*/
-	function check_pending_items()
-	{
-		global $garage_config;
-
-		if ($garage_config['items_pending'] == 1)
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-	/*========================================================================*/
 	// Returns List Of Moderators To Notify Of Pending Items By Email & Jabber
 	// Usage: moderators_requiring_email($moder);
 	/*========================================================================*/
 	function moderators_requiring_email($moderators)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -351,22 +314,13 @@ class garage
 			'WHERE'		=> $db->sql_in_set('u.user_id', $moderators[0]['m_garage']) . ' AND u.user_garage_mod_email_optout = 0'
 		));
 
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Select Moderations To Email/Jabber', '', __LINE__, __FILE__, $sql);
-		}
-
+		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result) )
 		{
 			$data[] = $row;
 		}
-
 		$db->sql_freeresult($result);
 
-		if (empty($data))
-		{
-			return;
-		}
 		return $data;
 	}
 
@@ -378,6 +332,8 @@ class garage
 	{
 		global $db;
 
+		$data = null;
+
 		$sql = $db->sql_build_query('SELECT', 
 			array(
 			'SELECT'	=> 'u.user_id',
@@ -387,23 +343,13 @@ class garage
 			'WHERE'  	=> $db->sql_in_set('u.user_id', $moderators[0]['m_garage']) . ' AND u.user_garage_mod_pm_optout = 0'
 		));
 
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Select Moderators To PM', '', __LINE__, __FILE__, $sql);
-		}
-
-
+		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result) )
 		{
 			$data[] = $row;
 		}
-
 		$db->sql_freeresult($result);
 
-		if (empty($data))
-		{
-			return;
-		}
 		return $data;
 	}
 

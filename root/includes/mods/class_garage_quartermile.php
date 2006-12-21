@@ -52,14 +52,9 @@ class garage_quartermile
 			'pending'	=> ($garage_config['enable_quartermile_approval'] == '1') ? 1 : 0)
 		);
 
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Could Not Insert Quartermile', '', __LINE__, __FILE__, $sql);
-		}
-	
-		$qmid = $db->sql_nextid();
+		$db->sql_query($sql);
 
-		return $qmid;
+		return $db->sql_nextid();
 	}
 
 	/*========================================================================*/
@@ -89,10 +84,7 @@ class garage_quartermile
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
 			WHERE id = $qmid AND garage_id = $cid";
 
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Could Not Update Quartermile', '', __LINE__, __FILE__, $sql);
-		}
+		$db->sql_query($sql);
 
 		return;
 	}
@@ -105,17 +97,13 @@ class garage_quartermile
 	{
 		global $garage, $garage_image;
 	
-		//Let Get All Info For Run, Including Image Info
 		$data = $this->get_quartermile($qmid);
 	
-		//Lets See If There Is An Image Associated With This Run
 		if (!empty($data['image_id']))
 		{
-			//Seems To Be An Image To Delete, Let Call The Function
 			$garage_image->delete_image($data['image_id']);
 		}
 
-		//Time To Delete The Actual Quartermile Time Now
 		$garage->delete_rows(GARAGE_QUARTERMILE_TABLE, 'id', $qmid);
 
 		return ;
@@ -128,6 +116,8 @@ class garage_quartermile
 	function get_top_quartermiles($sort, $order, $start = 0, $limit = 30, $addtional_where = NULL)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -158,22 +148,14 @@ class garage_quartermile
 			'ORDER_BY'	=> "$sort $order"
 		));
 
-		if( !($result = $db->sql_query_limit($sql, $limit, $start)) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Select Quartermiles', '', __LINE__, __FILE__, $sql);
-		}
-
-		while ($row = $db->sql_fetchrow($result) )
+		$result = $db->sql_query_limit($sql, $limit, $start);
+		while ($row = $db->sql_fetchrow($result))
 		{
 			$data[] = $row;
 		}
 
 		$db->sql_freeresult($result);
 
-		if (empty($data))
-		{
-			return;
-		}
 		return $data;
 	}
 
@@ -184,6 +166,8 @@ class garage_quartermile
 	function get_quartermile_by_vehicle_quart($garage_id, $quart)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -220,20 +204,11 @@ class garage_quartermile
 			'WHERE'		=>  "q.quart = $quart AND q.garage_id = $garage_id"
 		));
 
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Select Dynorun Data For Vehicle', '', __LINE__, __FILE__, $sql);
-		}
-
-		$row = $db->sql_fetchrow($result);
+		$result = $db->sql_query($sql);
+		$data = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		if (empty($row))
-		{
-			return;
-		}
-
-		return $row;
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -243,6 +218,8 @@ class garage_quartermile
 	function get_pending_quartermiles()
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -275,22 +252,14 @@ class garage_quartermile
 			'WHERE'		=>  "q.pending = 1"
 		));
 
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Select Pending Quartermile Data', '', __LINE__, __FILE__, $sql);
-		}
-
-		while ($row = $db->sql_fetchrow($result) )
+		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
 		{
 			$data[] = $row;
 		}
 
 		$db->sql_freeresult($result);
 
-		if (empty($data))
-		{
-			return;
-		}
 		return $data;
 	}
 
@@ -301,6 +270,8 @@ class garage_quartermile
 	function get_quartermile($qmid)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -333,15 +304,11 @@ class garage_quartermile
 			'WHERE'		=>  "q.id = $qmid"
 		));
 
-      		if ( !($result = $db->sql_query($sql)) )
-      		{
-         		message_die(GENERAL_ERROR, 'Could Not Select Quartermile Data', '', __LINE__, __FILE__, $sql);
-      		}
-
-		$row = $db->sql_fetchrow($result);
+      		$result = $db->sql_query($sql);
+		$data = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		return $row;
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -351,6 +318,8 @@ class garage_quartermile
 	function get_quartermile_by_vehicle($cid)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -368,22 +337,13 @@ class garage_quartermile
 			'ORDER_BY'	=>	'q.id'
 		));
 	
-	       	if( !($result = $db->sql_query($sql)) )
-	       	{
-	        	message_die(GENERAL_ERROR, 'Could Not Select Quartermile Data For Vehicle', '', __LINE__, __FILE__, $sql);
-		}
-
-		while ($row = $db->sql_fetchrow($result) )
+	       	$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
 		{
 			$data[] = $row;
 		}
-
 		$db->sql_freeresult($result);
 
-		if (empty($data))
-		{
-			return;
-		}
 		return $data;
 	}
 
@@ -409,16 +369,12 @@ class garage_quartermile
 			'COLUMN_3_TITLE'=> $user->lang['QUARTERMILE'])
 		);
 	
-	        // What's the count? Default to 10
 		$limit = $garage_config['top_quartermile_limit'] ? $garage_config['top_quartermile_limit'] : 10;
 
-		//Get Top Quartermile Times
 		$times = $this->get_top_quartermiles('quart', 'DESC', 0, $limit);
 
-		//Now Process All Rows Returned And Get Rest Of Required Data	
 		for($i = 0; $i < count($times); $i++)
 		{
-			//Get Vehicle Info For This Dynorun
 			$vehicle_data = $this->get_quartermile_by_vehicle_quart($times[$i]['garage_id'], $times[$i]['quart']);
 	
 			$mph = (empty($vehicle_data['quartmph'])) ? 'N/A' : $vehicle_data['quartmph'];

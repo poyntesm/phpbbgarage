@@ -48,10 +48,7 @@ class garage_business
 			'pending'	=> ($garage_config['enable_business_approval'] == '1') ? 1 : 0 )
 		);
 
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Could Not Insert New Business', '', __LINE__, __FILE__, $sql);
-		}
+		$result = $db->sql_query($sql);
 
 		return;
 	}
@@ -80,10 +77,7 @@ class garage_business
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
 			WHERE id = " . $data['id'];
 
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Could Not Update Business', '', __LINE__, __FILE__, $sql);
-		}
+		$result = $db->sql_query($sql);
 
 		return;
 	}
@@ -96,6 +90,8 @@ class garage_business
 	{
 		global $db;
 
+		$data = null;
+
 		$sql = $db->sql_build_query('SELECT', 
 			array(
 			'SELECT'	=> 'b.*',
@@ -105,11 +101,7 @@ class garage_business
 			'WHERE'		=>  "b.id = $bus_id"
 		));
 
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Select Specific Business Data', '', __LINE__, __FILE__, $sql);
-		}
-
+		$result = $db->sql_query($sql);
 		$data = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
@@ -124,6 +116,8 @@ class garage_business
 	{
 		global $db;
 
+		$data = null;
+
 		$sql = $db->sql_build_query('SELECT', 
 			array(
 			'SELECT'	=> 'b.*',
@@ -132,11 +126,7 @@ class garage_business
 			)
 		));
 
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Select All Business Data', '', __LINE__, __FILE__, $sql);
-		}
-
+		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result) )
 		{
 			$data[] = $row;
@@ -154,6 +144,8 @@ class garage_business
 	{
 		global $db;
 
+		$data = null;
+
 		$sql = $db->sql_build_query('SELECT', 
 			array(
 			'SELECT'	=> 'b.*',
@@ -165,11 +157,7 @@ class garage_business
 
 		));
 
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Select All Business Data', '', __LINE__, __FILE__, $sql);
-		}
-
+		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result) )
 		{
 			$data[] = $row;
@@ -187,6 +175,8 @@ class garage_business
 	{
 		global $db;
 
+		$data = null;
+
 		$sql = $db->sql_build_query('SELECT', 
 			array(
 			'SELECT'	=> 'b.*',
@@ -196,21 +186,12 @@ class garage_business
 			'WHERE'		=>  "b.pending = 1"
 		));
 
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Select All Business Data', '', __LINE__, __FILE__, $sql);
-		}
-
+		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result) )
 		{
 			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
-
-		if (empty($data))
-		{
-			return;
-		}
 
 		return $data;
 	}
@@ -222,6 +203,8 @@ class garage_business
 	function get_garage_business($where, $start = 0, $limit = 20)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -235,23 +218,14 @@ class garage_business
 			'ODER_BY'	=>  "rating DESC"
 		));
 
-      		if ( !($result = $db->sql_query_limit($sql, $limit, $start)) )
-      		{
-         		message_die(GENERAL_ERROR, 'Could Select Business Data', '', __LINE__, __FILE__, $sql);
-      		}
-
+      		$result = $db->sql_query_limit($sql, $limit, $start);
 		while( $row = $db->sql_fetchrow($result) )
 		{
-			$rows[] = $row;
+			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
 
-		if (empty($rows))
-		{
-			return;
-		}
-
-		return $rows;
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -261,6 +235,8 @@ class garage_business
 	function get_shop_business($where, $start = 0, $limit = 20)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -274,23 +250,14 @@ class garage_business
 			'ODER_BY'	=>  "rating DESC"
 		));
 
-      		if ( !($result = $db->sql_query_limit($sql, $limit, $start)) )
-      		{
-         		message_die(GENERAL_ERROR, 'Could Select Business Data', '', __LINE__, __FILE__, $sql);
-      		}
-
+      		$result = $db->sql_query_limit($sql, $limit, $start);
 		while( $row = $db->sql_fetchrow($result) )
 		{
-			$rows[] = $row;
+			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
 
-		if (empty($rows))
-		{
-			return;
-		}
-
-		return $rows;
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -300,6 +267,8 @@ class garage_business
 	function get_insurance_business($where, $start = 0,  $limit = 20)
 	{
 		global $db, $where;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -311,23 +280,14 @@ class garage_business
 			'GROUP_BY'	=>  "b.id"
 		));
 
-      		if ( !($result = $db->sql_query_limit($sql, $limit, $start)) )
-      		{
-         		message_die(GENERAL_ERROR, 'Could Select Business Data', '', __LINE__, __FILE__, $sql);
-      		}
-
+      		$result = $db->sql_query_limit($sql, $limit, $start);
 		while( $row = $db->sql_fetchrow($result) )
 		{
-			$rows[] = $row;
+			$data[] = $row;
 		}
       		$db->sql_freeresult($result);
 
-		if (empty($rows))
-		{
-			return;
-		}
-
-		return $rows;
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -337,6 +297,8 @@ class garage_business
 	function count_garage_business_data($additional_where)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -348,15 +310,11 @@ class garage_business
 			'WHERE'		=>  "m.install_business_id = b.id AND b.type LIKE '%" . BUSINESS_GARAGE . "%' AND b.pending =0 $additional_where"
 		));
 
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Error Getting Pagination Total', '', __LINE__, __FILE__, $sql);
-		}
-
-		$row = $db->sql_fetchrow($result);
+		$result = $db->sql_query($sql);
+		$data = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		return $row['total'];
+		return $data['total'];
 	}
 
 	/*========================================================================*/
@@ -366,6 +324,8 @@ class garage_business
 	function count_shop_business_data($additional_where)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -377,15 +337,11 @@ class garage_business
 			'WHERE'		=>  "m.business_id = b.id AND b.type LIKE '%" . BUSINESS_RETAIL . "%' AND b.pending =0 $additional_where"
 		));
 
-		if ( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Error Getting Pagination Total', '', __LINE__, __FILE__, $sql);
-		}
-
-		$row = $db->sql_fetchrow($result);
+		$result = $db->sql_query($sql);
+		$data = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		return $row['total'];
+		return $data['total'];
 	}
 
 	/*========================================================================*/

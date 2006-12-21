@@ -44,10 +44,7 @@ class garage_insurance
 			'business_id'	=> $data['business_id'])
 		);
 
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Could Not Insert Insurance Premium', '', __LINE__, __FILE__, $sql);
-		}
+		$db->sql_query($sql);
 
 		return;
 	}
@@ -72,10 +69,7 @@ class garage_insurance
 			WHERE id = $ins_id AND garage_id = $cid";
 
 
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Could Not Update Insurance Premium', '', __LINE__, __FILE__, $sql);
-		}
+		$db->sql_query($sql);
 
 		return;
 	}
@@ -88,7 +82,6 @@ class garage_insurance
 	{
 		global $garage;
 	
-		//Time To Delete The Actual Insurance Premium
 		$garage->delete_rows(GARAGE_INSURANCE_TABLE, 'id', $ins_id);	
 	
 		return ;
@@ -101,6 +94,8 @@ class garage_insurance
 	function get_premium($ins_id)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -129,15 +124,11 @@ class garage_insurance
 			'WHERE'		=>  "in.id = $ins_id"
 		));
 
-      		if ( !($result = $db->sql_query($sql)) )
-      		{
-         		message_die(GENERAL_ERROR, 'Could Not Select Insurance', '', __LINE__, __FILE__, $sql);
-      		}
-
-		$row = $db->sql_fetchrow($result);
+      		$result = $db->sql_query($sql);
+		$data = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		return $row;
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -147,6 +138,8 @@ class garage_insurance
 	function get_all_premiums($additional_where = NULL, $order_by, $sort_order, $start = 0, $limit = 10000)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -185,23 +178,14 @@ class garage_insurance
 			'ORDER_BY'	=>  "$order_by $sort_order"
 		));
 
-      		if ( !($result = $db->sql_query_limit($sql, $limit, $start)) )
-      		{
-         		message_die(GENERAL_ERROR, 'Could Not Get Insurance Data', '', __LINE__, __FILE__, $sql);
-      		}
-
-		while ($row = $db->sql_fetchrow($result) )
+      		$result = $db->sql_query_limit($sql, $limit, $start);
+		while ($row = $db->sql_fetchrow($result))
 		{
-			$rows[] = $row;
+			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
 
-		if (empty($rows))
-		{
-			return;
-		}
-
-		return $rows;
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -211,6 +195,8 @@ class garage_insurance
 	function get_all_premiums_by_business($business_id)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -244,18 +230,14 @@ class garage_insurance
 			'GROUP_BY'	=>  "i.id"
 		));
 
-	   	if ( !($result = $db->sql_query($sql)) )
-      		{
-       			message_die(GENERAL_ERROR, 'Could Select All Insuance Data', '', __LINE__, __FILE__, $sql);
-		}
-
-		while( $row = $db->sql_fetchrow($result) )
+	   	$result = $db->sql_query($sql);
+		while($row = $db->sql_fetchrow($result))
 		{
-			$rows[] = $row;
+			$data[] = $row;
 		}
       		$db->sql_freeresult($result);
 
-		return $rows;
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -265,6 +247,8 @@ class garage_insurance
 	function get_premiums_stats_by_business_and_covertype($business_id, $cover_type)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -276,15 +260,11 @@ class garage_insurance
 			'WHERE'		=>  "i.business_id = b.id AND b.id = $business_id AND b.type = " . BUSINESS_INSURANCE . " AND i.cover_type = '".htmlspecialchars($cover_type)."' AND i.premium > 0"
 		));
 
-		if( !($result = $db->sql_query($sql)) )
-       		{
-            		message_die(GENERAL_ERROR, 'Could Not Select Insurance Premium Data', '', __LINE__, __FILE__, $sql);
-		}
-
-		$row = $db->sql_fetchrow($result);
+		$result = $db->sql_query($sql);
+		$data = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		return $row;
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -294,6 +274,8 @@ class garage_insurance
 	function get_premiums_by_vehicle($cid)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -310,22 +292,14 @@ class garage_insurance
 			'WHERE'		=>  "i.garage_id = $cid"
 		));
 	
-	       	if( !($result = $db->sql_query($sql)) )
-	       	{
-	        	message_die(GENERAL_ERROR, 'Could Not Select Insurance Data', '', __LINE__, __FILE__, $sql);
-		}
-		
-		while( $row = $db->sql_fetchrow($result) )
+	       	$result = $db->sql_query($sql);
+		while($row = $db->sql_fetchrow($result))
 		{
-			$rows[] = $row;
+			$data[] = $row;
 		}
       		$db->sql_freeresult($result);
 
-		if (empty($rows))
-		{
-			return;
-		}
-		return $rows;
+		return $data;
 	}
 }
 

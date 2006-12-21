@@ -144,20 +144,22 @@ class garage_modification
 	{
 		global $db;
 
+		$data = null;
+
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'COUNT(m.id) as total_mods',
+			'SELECT'	=> 'COUNT(m.id) as total',
 			'FROM'		=> array(
 				GARAGE_MODS_TABLE	=> 'm',
 			)
 		));
 
 		$result = $db->sql_query($sql);
-        	$row = $db->sql_fetchrow($result);
+        	$data = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		$row['total_mods'] = (empty($row['total_mods'])) ? 0 : $row['total_mods'];
-		return $row['total_mods'];
+		$data['total'] = (empty($data['total'])) ? 0 : $data['total'];
+		return $data['total'];
 	}
 
 	/*========================================================================*/
@@ -167,6 +169,8 @@ class garage_modification
 	function get_updated_modifications($limit)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -207,10 +211,6 @@ class garage_modification
 		}
 		$db->sql_freeresult($result);
 
-		if (empty($data))
-		{
-			return;
-		}
 		return $data;
 	}
 
@@ -221,6 +221,8 @@ class garage_modification
 	function get_products_by_manufacturer($business_id, $category_id = null)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql_array = array(
 			'SELECT'	=> 'p.*',
@@ -248,10 +250,6 @@ class garage_modification
 		}
 		$db->sql_freeresult($result);
 
-		if (empty($data))
-		{
-			return;
-		}
 		return $data;
 	}
 
@@ -262,6 +260,8 @@ class garage_modification
 	function get_newest_modifications($limit)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -302,10 +302,6 @@ class garage_modification
 		}
 		$db->sql_freeresult($result);
 
-		if (empty($data))
-		{
-			return;
-		}
 		return $data;
 	}
 
@@ -316,6 +312,8 @@ class garage_modification
 	function get_most_modified($limit)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -353,10 +351,6 @@ class garage_modification
 		}
 		$db->sql_freeresult($result);
 
-		if (empty($data))
-		{
-			return;
-		}
 		return $data;
 	}
 
@@ -368,6 +362,8 @@ class garage_modification
 	function get_modification($mid)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -414,10 +410,10 @@ class garage_modification
 		));
 
       		$result = $db->sql_query($sql);
-		$row = $db->sql_fetchrow($result);
+		$data = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		return $row;
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -427,6 +423,8 @@ class garage_modification
 	function get_modifications_by_category($cid, $category_id)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -451,12 +449,12 @@ class garage_modification
       		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
-			$rows[] = $row;
+			$data[] = $row;
 		}
 
 		$db->sql_freeresult($result);
 
-		return $rows;
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -466,6 +464,8 @@ class garage_modification
 	function get_modifications_by_install_business($business_id, $start = 0 , $limit = 20)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -501,14 +501,14 @@ class garage_modification
 		));
 
       		$result = $db->sql_query_limit($sql, $limit, $start);
-		while ($row = $db->sql_fetchrow($result) )
+		while ($row = $db->sql_fetchrow($result))
 		{
-			$rows[] = $row;
+			$data[] = $row;
 		}
 
 		$db->sql_freeresult($result);
 
-		return $rows;
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -518,6 +518,8 @@ class garage_modification
 	function get_modifications_by_business($business_id, $start = 0, $limit = 20)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -553,14 +555,14 @@ class garage_modification
 		));
 
       		$result = $db->sql_query_limit($sql, $limit, $start);
-		while ($row = $db->sql_fetchrow($result) )
+		while ($row = $db->sql_fetchrow($result))
 		{
-			$rows[] = $row;
+			$data[] = $row;
 		}
 
 		$db->sql_freeresult($result);
 
-		return $rows;
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -570,6 +572,8 @@ class garage_modification
 	function get_modifications_by_vehicle($cid)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -591,14 +595,14 @@ class garage_modification
 		));
 
 		$result = $db->sql_query($sql);
-		while ($row = $db->sql_fetchrow($result) )
+		while ($row = $db->sql_fetchrow($result))
 		{
-			$rows[] = $row;
+			$data[] = $row;
 		}
 
 		$db->sql_freeresult($result);
 
-		return $rows;
+		return $data;
 	}
 
 	/*========================================================================*/

@@ -227,16 +227,9 @@ class garage_image
 		//If phpinfo() is disabled use a specified / fail-safe choice...
 		if (preg_match('/phpinfo/', ini_get('disable_functions'))) 
 		{
-			if ($user_ver == 2) 
-			{
-				$gd_ver = 2;
-				return 2;
-			}
-			else 
-			{
-				$gd_ver = 1;
-				return 1;
-			}
+			$gd_ver = ($user_ver == 2) ? 2 : 1;
+
+			return $gd_ver;
 		}
 		//Otherwise Use phpinfo()
 		ob_start();
@@ -832,6 +825,8 @@ class garage_image
 	{
 		global $db;
 
+		$data = null;
+
 		$sql = $db->sql_build_query('SELECT', 
 			array(
 			'SELECT'	=> 'i.*',
@@ -842,15 +837,10 @@ class garage_image
 		));
 
 		$result = $db->sql_query($sql);
-		$row = $db->sql_fetchrow($result);
+		$data = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		if (empty($row))
-		{
-			return;
-		}
-	
-		return $row;
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -860,6 +850,8 @@ class garage_image
 	function get_random_image($required = 5)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -871,17 +863,13 @@ class garage_image
 		));
 
 		$result = $db->sql_query_limit($sql, $required);
-		while ($row = $db->sql_fetchrow($result) )
+		while ($row = $db->sql_fetchrow($result))
 		{
-			$rows[] = $row;
+			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
 	
-		if (empty($rows))
-		{
-			return;
-		}
-		return $rows;
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -891,6 +879,8 @@ class garage_image
 	function get_all_images()
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -902,17 +892,13 @@ class garage_image
 		));
 
 		$result = $db->sql_query($sql);
-		while ($row = $db->sql_fetchrow($result) )
+		while ($row = $db->sql_fetchrow($result))
 		{
-			$rows[] = $row;
+			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
 	
-		if (empty($rows))
-		{
-			return;
-		}
-		return $rows;
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -922,6 +908,8 @@ class garage_image
 	function get_gallery($cid)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -940,17 +928,13 @@ class garage_image
 		));
 
       		$result = $db->sql_query($sql);
-		while ($row = $db->sql_fetchrow($result) )
+		while ($row = $db->sql_fetchrow($result))
 		{
-			$rows[] = $row;
+			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
 
-		if (empty($rows))
-		{
-			return;
-		}
-		return $rows;
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -960,6 +944,8 @@ class garage_image
 	function get_user_upload_images($user_id)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -977,17 +963,13 @@ class garage_image
 		));
 
       		$result = $db->sql_query($sql);
-		while ($row = $db->sql_fetchrow($result) )
+		while ($row = $db->sql_fetchrow($result))
 		{
-			$rows[] = $row;
+			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
 	
-		if (empty($rows))
-		{
-			return;
-		}
-		return $rows;
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -997,6 +979,8 @@ class garage_image
 	function get_user_remote_images($user_id)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -1014,17 +998,13 @@ class garage_image
 		));
 
       		$result = $db->sql_query($sql);
-		while ($row = $db->sql_fetchrow($result) )
+		while ($row = $db->sql_fetchrow($result))
 		{
-			$rows[] = $row;
+			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
 	
-		if (empty($rows))
-		{
-			return;
-		}
-		return $rows;
+		return $data;
 	}
 
 	/*========================================================================*/

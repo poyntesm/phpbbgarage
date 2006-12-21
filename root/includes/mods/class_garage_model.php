@@ -40,10 +40,7 @@ class garage_model
 			'make'	=> $data['make'])
 		);
 
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Could Not Insert New Make', '', __LINE__, __FILE__, $sql);
-		}
+		$db->sql_query($sql);
 
 		return;
 	}
@@ -65,21 +62,20 @@ class garage_model
 			WHERE id = " . $data['id'];
 
 
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Could Not Insert New Make', '', __LINE__, __FILE__, $sql);
-		}
+		$db->sql_query($sql);
 
 		return;
 	}
 
 	/*========================================================================*/
 	// Count Makes With Certain Name
-	// Usage: count_make(array());
+	// Usage: count_make('make');
 	/*========================================================================*/
-	function count_make($data)
+	function count_make($make)
 	{
 		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -87,19 +83,15 @@ class garage_model
 			'FROM'		=> array(
 				GARAGE_MAKES_TABLE	=> 'mk',
 			),
-			'WHERE'		=>  "mk.make = $cid"
+			'WHERE'		=>  "mk.make = $make"
 		));
 
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Could Not Count Makes', '', __LINE__, __FILE__, $sql);
-		}
-
-		$row = $db->sql_fetchrow($result);
+		$result = $db->sql_query($sql);
+		$data = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		$row['total'] = (empty($row['total'])) ? 0 : $row['total'];
-		return $row['total'];
+		$data['total'] = (empty($data['total'])) ? 0 : $data['total'];
+		return $data['total'];
 	}
 
 	/*========================================================================*/
@@ -115,10 +107,7 @@ class garage_model
 			'model'		=> $data['model'])
 		);
 
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Could Not Insert New Model', '', __LINE__, __FILE__, $sql);
-		}
+		$db->sql_query($sql);
 
 		return;
 	}
@@ -139,10 +128,7 @@ class garage_model
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
 			WHERE id = " . $data['id'];
 
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Could Not Update Model', '', __LINE__, __FILE__, $sql);
-		}
+		$db->sql_query($sql);
 
 		return;
 	}
@@ -155,6 +141,8 @@ class garage_model
 	{
 		global $db;
 
+		$data = null;
+
 		$sql = $db->sql_build_query('SELECT', 
 			array(
 			'SELECT'	=> 'mk.id, mk.make',
@@ -164,10 +152,11 @@ class garage_model
 			'WHERE'		=>  "mk.id = $make_id"
 		));
 
-		$row = $db->sql_fetchrow($result);
+		$result = $db->sql_query($sql);
+		$data = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		return $row;
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -178,6 +167,8 @@ class garage_model
 	{
 		global $db;
 
+		$data = null;
+
 		$sql = $db->sql_build_query('SELECT', 
 			array(
 			'SELECT'	=> 'mk.id, mk.make',
@@ -186,12 +177,8 @@ class garage_model
 			)
 		));
 
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not All Select Make Data', '', __LINE__, __FILE__, $sql);
-		}
-
-		while ($row = $db->sql_fetchrow($result) )
+		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
 		{
 			$data[] = $row;
 		}
@@ -208,6 +195,8 @@ class garage_model
 	{
 		global $db;
 
+		$data = null;
+
 		$sql = $db->sql_build_query('SELECT', 
 			array(
 			'SELECT'	=> 'md.id, md.model, md.make_id',
@@ -217,12 +206,8 @@ class garage_model
 			'WHERE'		=>  "md.make_id = $make_id"
 		));
 
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Select Models From Make', '', __LINE__, __FILE__, $sql);
-		}
-
-		while ($row = $db->sql_fetchrow($result) )
+		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
 		{
 			$data[] = $row;
 		}
@@ -239,6 +224,8 @@ class garage_model
 	{
 		global $db;
 
+		$data = null;
+
 		$sql = $db->sql_build_query('SELECT', 
 			array(
 			'SELECT'	=> 'md.id as model_id, md.model, mk.id as make_id, mk.make, md.pending as model_pending, mk.pending as make_pending',
@@ -254,12 +241,8 @@ class garage_model
 			'ORDER_BY'	=>	'mk.make, md.model'
 		));
 
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Select All Makes And Models', '', __LINE__, __FILE__, $sql);
-		}
-
-		while ($row = $db->sql_fetchrow($result) )
+		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
 		{
 			$data[] = $row;
 		}
@@ -276,6 +259,8 @@ class garage_model
 	{
 		global $db;
 
+		$data = null;
+
 		$sql = $db->sql_build_query('SELECT', 
 			array(
 			'SELECT'	=> 'md.id, md.model, md.make_id',
@@ -285,15 +270,11 @@ class garage_model
 			'WHERE'		=>  "md.id = $model_id"
 		));
 
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Select Model', '', __LINE__, __FILE__, $sql);
-		}
-
-		$row = $db->sql_fetchrow($result);
+		$result = $db->sql_query($sql);
+		$data = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		return $row;
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -304,6 +285,8 @@ class garage_model
 	{
 		global $db;
 
+		$data = null;
+
 		$sql = $db->sql_build_query('SELECT', 
 			array(
 			'SELECT'	=> 'md.id, md.model, md.make_id',
@@ -313,15 +296,11 @@ class garage_model
 			'WHERE'		=>  "md.make_id = $make_id"
 		));
 
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could Not Select Model', '', __LINE__, __FILE__, $sql);
-		}
-
-		$row = $db->sql_fetchrow($result);
+		$result = $db->sql_query($sql);
+		$data = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		return $row;
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -332,6 +311,8 @@ class garage_model
 	{
 		global $db;
 
+		$data = null;
+
 		$sql = $db->sql_build_query('SELECT', 
 			array(
 			'SELECT'	=> 'mk.*',
@@ -341,19 +322,14 @@ class garage_model
 			'WHERE'		=>  "mk.pending = 1"
 		));
 
-		if( !($result = $db->sql_query($sql)) )
+		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
 		{
-			message_die(GENERAL_ERROR, 'Could Not Select Makes', '', __LINE__, __FILE__, $sql);
-		}
-
-		$rows = NULL;
-		while ( $row = $db->sql_fetchrow($result) )
-		{
-			$rows[] = $row;
+			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
 
-		return;
+		return $data;
 	}
 
 	/*========================================================================*/
@@ -362,7 +338,9 @@ class garage_model
 	/*========================================================================*/
 	function get_pending_models()
 	{
-		global $db, $template, $theme;
+		global $db;
+
+		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -379,19 +357,14 @@ class garage_model
 			'ORDER_BY'	=>	'md.pending = 1'
 		));
 
-		if( !($result = $db->sql_query($sql)) )
+		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
 		{
-			message_die(GENERAL_ERROR, 'Could Not Select Models', '', __LINE__, __FILE__, $sql);
-		}
-
-		$rows = NULL;
-		while ( $row = $db->sql_fetchrow($result) )
-		{
-			$rows[] = $row;
+			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
 
-		return;
+		return $data;
 	}
 
 	/*========================================================================*/

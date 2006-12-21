@@ -41,10 +41,7 @@ class garage_admin
 			'field_order'	=> $data['field_order'])
 		);
 
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Could Not Insert New Category', '', __LINE__, __FILE__, $sql);
-		}
+		$db->sql_query($sql);
 
 		return;
 	}
@@ -57,6 +54,8 @@ class garage_admin
 	{
 		global $db;
 
+		$data = null;
+
 		$sql = $db->sql_build_query('SELECT', 
 			array(
 			'SELECT'	=> 'COUNT(c.*) as total',
@@ -65,17 +64,13 @@ class garage_admin
 			)
 		));
 
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Error Counting Categories', '', __LINE__, __FILE__, $sql);
-		}
-
-        	$row = $db->sql_fetchrow($result);
+		$result = $db->sql_query($sql);
+        	$data = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
-		$row['total'] = (empty($row['total'])) ? 0 : $row['total'];
+		$data['total'] = (empty($data['total'])) ? 0 : $data['total'];
 
-		return $row['total'];
+		return $data['total'];
 	}
 
 	/*========================================================================*/

@@ -145,12 +145,8 @@ class garage_template
 				and id NOT IN ($exclude)
 			ORDER BY title ASC";
 	
-		if( !($result = $db->sql_query($sql)) )
-		{
-			message_die(GENERAL_ERROR, 'Could not query businesses', '', __LINE__, __FILE__, $sql);
-		}
-	
-		while ( $row = $db->sql_fetchrow($result) )
+		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
 		{
 			$html .= "<option value='".$row['id']."'>".$row['title']."</option>";
 		}
@@ -214,7 +210,7 @@ class garage_template
 	// Builds The HTML For Selection Box
 	// Usage: dropdown('select name', 'options text', 'options values', 'selected option');
 	/*========================================================================*/
-	function dropdown($select_name, $select_text, $select_types, $selected_option = NULL)
+	function dropdown($select_name, $select_text, $select_types, $selected_option = null)
 	{
 		global $template, $user;
 	
