@@ -608,7 +608,7 @@ switch( $mode )
 		//If Dynoruns Exist, Allow User To Link Quartermile Times To Know Vehicle Spec..
 		if ( $garage_dynorun->count_runs($cid) > 0 )
 		{
-			$template->assign_block_vars(array(
+			$template->assign_vars(array(
 				'S_DISPLAY_DYNORUNS' => true)
 			);
 			$dynoruns = $garage_dynorun->get_dynoruns_by_vehicle($cid);
