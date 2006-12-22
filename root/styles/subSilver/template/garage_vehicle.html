@@ -45,18 +45,18 @@ function build_model_list()
 			<form id="edit_vehicle" enctype="multipart/form-data" method="post" name="edit_vehicle" action="{S_MODE_ACTION}">
 			<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
 				<tr>
-					<th class="thHead" height="25" nowrap="nowrap" colspan="2">{VEHICLE_DATA}</th>
+					<th height="25" colspan="2">{VEHICLE_DATA}</th>
 				</tr>
 				<tr>
 					<td class="cat" align="center" height="28" colspan="2"><span class="gen">{L_TITLE}</span></td>
 				</tr>
 				<tr>
 					<td class="row1" width="30%"><span class="gen"><b>{L_YEAR}</b></span></td>
-					<td class="row2">{YEAR_LIST}&nbsp;<span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font></span></td>
+					<td class="row2"><select id="made_year" name="made_year"><option value="">{L_SELECT_YEAR}</option><option value="">------</option><!-- BEGIN year --><option value="{year.VALUE}" <!-- IF year.S_SELECTED -->selected="selected"<!-- ENDIF -->>{year.TEXT}</option><!-- END year --></select>&nbsp;<span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font></span></td>
 				</tr>
 				<tr>
 					<td class="row1" width="30%"><span class="gen"><b>{L_MAKE}</b></span></td>
-					<td class="row2"><select id="make_id" name="make_id" onchange="get_model_list(this)" ><option value="">{L_SELECT_MAKE}</option><option value="">------</option><!-- BEGIN make--><option value="{make.ID}" <!-- IF make.S_SELECTED -->selected="selected"<!-- ENDIF -->>{make.MAKE}</option><!-- END make --></select>&nbsp;<span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span>
+					<td class="row2"><select id="make_id" name="make_id" onchange="get_model_list(this)" ><option value="">{L_SELECT_MAKE}</option><option value="">------</option><!-- BEGIN make --><option value="{make.VALUE}" <!-- IF make.S_SELECTED -->selected="selected"<!-- ENDIF -->>{make.TEXT}</option><!-- END make --></select>&nbsp;<span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span>
 					<!-- IF S_DISPLAY_SUBMIT_MAKE -->
 						&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="{U_USER_SUBMIT_MAKE}">{L_HERE}</a></span>
 					<!-- ENDIF -->
@@ -72,7 +72,7 @@ function build_model_list()
 				</tr>
 				<tr>
 					<td class="row1" width="30%"><span class="gen"><b>{L_ENGINE_TYPE}</b></span></td>
-					<td class="row2">{ENGINE_TYPES}</td>
+					<td class="row2"><select id="engine_type" name="engine_type"><option value="">{L_SELECT_ENGINE_TYPE}</option><option value="">------</option><!-- BEGIN engine --><option value="{engine.VALUE}" <!-- IF engine.S_SELECTED -->selected="selected"<!-- ENDIF -->>{engine.TEXT}</option><!-- END engine --></select></td>
 				</tr>
 				<tr>
 					<td class="row1" width="30%"><span class="gen"><b>{L_COLOUR}</b></span></td>
@@ -80,33 +80,19 @@ function build_model_list()
 				</tr>
 				<tr>
 					<td class="row1" width="30%"><span class="gen"><b>{L_MILEAGE}</b></span></td>
-					<td class="row2"><input name="mileage" type="text" class="post" size="15" value="{MILEAGE}" /> {MILEAGE_UNITS}</td>
+					<td class="row2"><input name="mileage" type="text" class="post" size="15" value="{MILEAGE}" />&nbsp;<select id="mileage_units" name="mileage_units"><option value="">{L_SELECT_MILEAGE_UNIT}</option><option value="">------</option><!-- BEGIN mileage --><option value="{mileage.VALUE}" <!-- IF mileage.S_SELECTED -->selected="selected"<!-- ENDIF -->>{mileage.TEXT}</option><!-- END mileage --></select></td>
 				</tr>
 				<tr>
 					<td class="row1" width="30%"><span class="gen"><b>{L_PURCHASED_PRICE}</b></span></td>
-					<td class="row2"><input name="price" type="text" class="post" size="10" value="{PRICE}" /><span class="gen"> {L_CURRENCY}: </span>{CURRENCY_UNITS}</td>
+					<td class="row2"><input name="price" type="text" class="post" size="10" value="{PRICE}" /><span class="gen">&nbsp;{L_CURRENCY}:&nbsp;</span><select id="currency_unit" name="currency_unit"><option value="">{L_SELECT_CURRENCY_UNIT}</option><option value="">------</option><!-- BEGIN currency --><option value="{currency.VALUE}" <!-- IF currency.S_SELECTED -->selected="selected"<!-- ENDIF -->>{currency.TEXT}</option><!-- END currency --></select></td>
 				</tr>
 				<tr>
 					<td class="row1" width="30%"><span class="gen"><b>{L_DESCRIPTION}</b></span></td>
 					<td class="row2"><textarea name="comments" cols="60" rows="5" wrap="soft" class="post" value="{COMMENTS}">{COMMENTS}</textarea></td>
 				</tr>
-				<!-- BEGIN allow_images -->
-				<tr>
-					<td class="cat" align="center" height="28" colspan="2"><span class="gen">{L_IMAGE_ATTACHMENTS}</span></td>
-				</tr>
-				<!-- BEGIN upload_images -->
-				<tr>
-					<td class="row1" width="32%"><span class="gen"><b>{L_IMAGE_ATTACH}<br />{L_MAXIMUM_IMAGE_FILE_SIZE} : {MAXIMUM_IMAGE_FILE_SIZE} {L_KBYTES}<br />{L_MAXIMUM_IMAGE_RESOLUTION} : {MAXIMUM_IMAGE_RESOLUTION}</b></span></td>
-					<td class="row2"><input class="post" size="30"  type="file" size="30" name="FILE_UPLOAD" /></td>
-				</tr>
-				<!-- END upload_images -->
-				<!-- BEGIN remote_images -->
-				<tr>
-					<td class="row1" width="32%"><span class="gen"><b>{L_ENTER_IMAGE_URL}</b></span></td>
-					<td class="row2"><input name="url_image" type="text" class="post" size="40" maxlength="255" value="http://" /></td>
-				</tr>
-				<!-- END remote_images -->
-				<!-- END allow_images -->
+
+				<!-- INCLUDE garage_image_attach.html -->
+
 				<tr>
 					<td class="cat" align="center" height="28" colspan="2"><input type="hidden" value="{CID}" name="CID" /><input name="edit_vehicle" type="submit" value="{L_BUTTON}" class="liteoption" /></td>
 				</tr>

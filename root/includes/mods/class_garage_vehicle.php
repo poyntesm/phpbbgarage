@@ -188,7 +188,7 @@ class garage_vehicle
 	// Returns Count Of Users Vehicles
 	// Usage: count_user_vehicles();
 	/*========================================================================*/
-	function get_user_vehicle_rating()
+	function get_user_vehicle_rating($cid)
 	{
 		global $user, $db;
 
@@ -200,7 +200,7 @@ class garage_vehicle
 			'FROM'		=> array(
 				GARAGE_RATING_TABLE	=> 'r',
 			),
-			'WHERE'		=> "r.user_id" . $user->data['user_id'] ." AND garage_id = $cid",
+			'WHERE'		=> "r.user_id = " . $user->data['user_id'] ." AND garage_id = $cid",
 			'GROUP_BY'	=> 'r.id'
 		));
 
@@ -944,10 +944,10 @@ class garage_vehicle
 			//Never Rate So Show Them The Rate Button
 			if ( $rating['total'] < 1 )
 			{
+			 	$garage_template->rating_dropdown('rating');
 				$template->assign_vars(array(
-					'S_DISPLAY_RATE'	=> 1,
-					'L_RATING_NOTICE' 	=> '',
-					'RATE_VEHICLE' 		=> $garage_template->dropdown('vehicle_rating',$rating_text,$rating_types,''))
+					'S_DISPLAY_RATE'	=> true,
+					'L_RATING_NOTICE' 	=> '')
 				);
 			}
 			//Rated Already But Permanent So Do Not Show Button
@@ -960,9 +960,9 @@ class garage_vehicle
 			//Rated Already But Not Permanent & Always Updateable
 			else if ( ( $rating['total'] > 0 ) AND (!$garage_config['rating_permanent']) AND ($garage_config['rating_always_updateable']) )
 			{
+			 	$garage_template->rating_dropdown('rating');
 				$template->assign_vars(array(
-					'S_DISPLAY_RATE'	=> 1,
-					'RATE_VEHICLE'		=> $garage_template->dropdown('vehicle_rating',$rating_text,$rating_types,''),
+					'S_DISPLAY_RATE'	=> true,
 					'L_RATING_NOTICE'	=> $user->lang['UPDATE_RATING'])
 				);
 			}
@@ -976,9 +976,9 @@ class garage_vehicle
 			//Rated Already But Not Permanent & Updated Not Always Allowed, Vehicle Updated So Rate Update Allowed
 			else if ( ( $rating['total'] > 0 ) AND (!$garage_config['rating_permanent']) AND (!$garage_config['rating_always_updateable']) AND ($row['rate_date'] < $vehicle['date_updated']) )
 			{
+			 	$garage_template->rating_dropdown('rating');
 				$template->assign_vars(array(
-					'S_DISPLAY_RATE'	=> 1,
-					'RATE_VEHICLE'		=>$garage_template->dropdown('vehicle_rating',$rating_text,$rating_types,''),
+					'S_DISPLAY_RATE'	=> true,
 					'L_RATING_NOTICE' 	=> $user->lang['UPDATE_RATING'])
 				);
 			}

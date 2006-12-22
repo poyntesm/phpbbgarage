@@ -403,11 +403,7 @@ class garage_quartermile
 
 		$start 	= (empty($start)) ? 0 : $start;
 		$sort 	= (empty($sort)) ? 'quart' : $sort;
-
-		// Sorting Via QuarterMile
-		$sort_text = array($user->lang['RT'], $user->lang['SIXTY'], $user->lang['THREE'], $user->lang['EIGHTH'], $user->lang['EIGHTHMPH'], $user->lang['THOU'],  $user->lang['QUART'], $user->lang['QUARTMPH']);
-		$sort_values = array('qm.rt', 'qm.sixty', 'qm.three', 'qm.eighth', 'qm.eighthmph', 'qm.thou', 'quart', 'qm.quartmph');
-
+		$order 	= (empty($rder)) ? 'ASC' : $order;
 
 		//Get All Data Posted And Make It Safe To Use
 		$addtional_where = '';
@@ -447,8 +443,6 @@ class garage_quartermile
 			);
 		}
 
-
-
 		//First Query To Return Top Time For All Or For Selected Filter...
 		$rows = $this->get_top_quartermiles($sort, $order, $start, $garage_config['cars_per_page'], $addtional_where);
 
@@ -487,16 +481,15 @@ class garage_quartermile
 
 		$count = count($this->get_top_quartermiles($sort, $order, 0, 10000000, $addtional_where));
 		$pagination = generate_pagination("garage.$phpEx?mode=dynorun&amp;order=$order", $count, $garage_config['cars_per_page'], $start);
-		
+
+		$garage_template->sort_dropdown('quartermile', $sort);	
+		$garage_template->order_dropdown($order);
 		$template->assign_vars(array(
             		'EDIT' 		=> ($garage_config['enable_images']) ? $user->img('garage_edit', 'EDIT') : $user->lang['EDIT'],
-			'S_MODE_SELECT'	=> $garage_template->dropdown('sort', $sort_text, $sort_values),
 			'PAGINATION' 	=> $pagination,
 			'PAGE_NUMBER' 	=> sprintf($user->lang['PAGE_OF'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count / $garage_config['cars_per_page'] )))
 		);
 
-		//Reset Sort Order For Pending Page
-		$sort='';
 		return $count;
 	}
 

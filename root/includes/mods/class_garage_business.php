@@ -140,6 +140,36 @@ class garage_business
 	// Select All Business Data From DB
 	// Usage: get_all_business();
 	/*========================================================================*/
+	function get_reassign_business()
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'b.*',
+			'FROM'		=> array(
+				GARAGE_BUSINESS_TABLE	=> 'b',
+			),
+			'WHERE'		=> "b.pending = 0 AND b.id NOT IN ($exclude)",
+			'ORDER_BY' 	=> 'b.title ASC'
+		));
+
+		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$data[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/*========================================================================*/
+	// Select All Business Data From DB
+	// Usage: get_all_business();
+	/*========================================================================*/
 	function get_business_by_type($type)
 	{
 		global $db;
@@ -370,7 +400,8 @@ class garage_business
 		);
 
 		//Build Dropdown Box Of Business's To Reassign It 
-		$garage_template->reassign_business_dropdown($exclude_list);
+		$business = $this->get_reassign_business($exclude_list);
+		$garage_template->reassign_business_dropdown($business);
 
 		$business_names = null;
 		for ($i = 0, $count = sizeof($data); $i < $count; $i++)

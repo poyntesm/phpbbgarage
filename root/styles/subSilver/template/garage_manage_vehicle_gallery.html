@@ -18,26 +18,9 @@
 				<tr>
 					<th nowrap="nowrap" colspan="3">{L_MANAGE} {VEHICLE_DATA} {L_GALLERY}</th>
 				</tr>
-				<!-- BEGIN allow_images -->
-				<tr>
-					<td class="cat" align="center" height="28" colspan="3"><span class="gen">{L_IMAGE_ATTACHMENTS}</span></td>
-				</tr>
-				<!-- BEGIN upload_images -->
-				<tr>
-					<td class="row1" width="32%"><span class="gen"><b>{L_IMAGE_ATTACH}<br />{L_MAXIMUM_IMAGE_FILE_SIZE} : {MAXIMUM_IMAGE_FILE_SIZE} {L_KBYTES}<br />{L_MAXIMUM_IMAGE_RESOLUTION} : {MAXIMUM_IMAGE_RESOLUTION}</b></span></td>
-					<td class="row2" colspan="2"><input class="post" size="30"  type="file" size="30" name="FILE_UPLOAD" /></td>
-				</tr>
-				<!-- END upload_images -->
-				<!-- BEGIN remote_images -->
-				<tr>
-					<td class="row1" width="32%"><span class="gen"><b>{L_ENTER_IMAGE_URL}</b></span></td>
-					<td class="row2" colspan="2"><input name="url_image" type="text" class="post" size="40" maxlength="255" value="http://" /></td>
-				</tr>
-				<!-- END remote_images -->
-				<tr>
-					<td class="cat" align="center" height="28" colspan="3"><span class="gen"><input type="hidden" value="insert_gallery_image" name="mode" /><input type="hidden" value="{CID}" name="CID" /><input name="submit" type="submit" value="{L_ADD_NEW_IMAGE}" class="liteoption" /></span></td>
-				</tr>
-				<!-- END allow_images -->
+
+				<!-- INCLUDE garage_image_attach.html -->
+
 				<tr>
 					<td class="row1" width="32%" colspan="3"><span class="gen">{L_MANAGE_VEHICLE_GALLERY_NOTE}</span></td>
 				</tr>

@@ -294,7 +294,7 @@ class garage_dynorun
 	// Select Dynorun(s) Data By Vehicle From DB
 	// Usage: get_top_dynoruns('vehicle id');
 	/*========================================================================*/
-	function get_top_dynoruns($pending, $sort, $order, $start = 0, $limit = 30, $addtional_where = NULL)
+	function get_top_dynoruns($sort, $order, $start = 0, $limit = 30, $addtional_where = NULL)
 	{
 		global $db, $garage;
 
@@ -324,7 +324,7 @@ class garage_dynorun
 					'ON'	=> 'g.user_id = u.user_id'
 				)
 			),
-			'WHERE'		=> "d.pending = $pending AND mk.pending = 0 AND md.pending = 0 $addtional_where ",
+			'WHERE'		=> "d.pending = 0 AND mk.pending = 0 AND md.pending = 0 $addtional_where ",
 			'GROUP_BY'	=> 'd.garage_id',
 			'ORDER_BY'	=> "$sort $order"
 		));
@@ -399,7 +399,7 @@ class garage_dynorun
 	
 		$limit = $garage_config['top_dynorun_limit'] ? $garage_config['top_dynorun_limit'] : 10;
 
-		$runs = $this->get_top_dynoruns(0, 'bhp', 'DESC', 0, $limit);
+		$runs = $this->get_top_dynoruns('bhp', 'DESC', 0, $limit);
 	
 		for($i = 0; $i < count($runs); $i++)
 		{
@@ -420,22 +420,20 @@ class garage_dynorun
 
 	/*========================================================================*/
 	// Build Dynorun Table
-	// Usage: build_dynorun_table('YES|NO');
+	// Usage: build_dynorun_table();
 	/*========================================================================*/
-	function build_dynorun_table($pending)
+	function build_dynorun_table()
 	{
 		global $db, $template, $start, $sort, $order, $phpEx, $garage_config, $garage_model, $user, $garage, $garage_template, $phpbb_root_path;
 
-		$pending= ($pending == 'YES') ? 1 : 0;
 		$start 	= (empty($start)) ? 0 : $start;
 		$sort 	= (empty($sort)) ? 'bhp' : $sort;
-		$sort_types_text = array($user->lang['DYNOCENTER'], $user->lang['BHP'], $user->lang['BHP_UNIT'], $user->lang['TORQUE'], $user->lang['TORQUE_UNIT'], $user->lang['BOOST'], $user->lang['BOOST_UNIT'], $user->lang['NITROUS'], $user->lang['PEAKPOINT']);
-		$sort_types = array('rr.dynocenter', 'bhp', 'rr.bhp_unit, bhp', 'rr.torque', 'rr.torque_unit, rr.torque', 'rr.boost', 'rr.boost_unit, rr.boost', 'rr.nitrous', 'peakpoint');
+		$order 	= (empty($order)) ? 'ASC' : $order;
 
 		//Get All Data Posted And Make It Safe To Use
 		$addtional_where = '';
 		$params = array('make_id', 'model_id');
-		$data = $garage->process_post_vars($params);
+		$data = $garage->process_vars($params);
 
 		//If Filtering By Make ID Get Make To Update Dropdown
 		if (!empty($data['make_id']))
@@ -460,12 +458,7 @@ class garage_dynorun
 		}
 
 		//First Query To Return Top Time For All Or For Selected Filter...
-		$rows = $this->get_top_dynoruns($pending, $sort, $order, $start, $garage_config['cars_per_page'], $addtional_where);
-
-		if ($pending == 1 AND !empty($rows))
-		{
-			$template->assign_block_vars('dynorun_pending', array());
-		}
+		$rows = $this->get_top_dynoruns($sort, $order, $start, $garage_config['cars_per_page'], $addtional_where);
 
 		//Now Process All Rows Returned And Get Rest Of Required Data	
 		for($i = 0; $i < count($rows); $i++)
@@ -473,8 +466,7 @@ class garage_dynorun
 			//Second Query To Return All Other Data For Top Quartermile Run
 			$full_row = $this->get_dynorun_by_vehicle_bhp($rows[$i]['garage_id'], $rows[$i]['bhp']);
 
-			$assign_block = ($pending == 1) ? 'dynorun_pending.row' : 'dynorun';
-			$template->assign_block_vars($assign_block, array(
+			$template->assign_block_vars('dynorun', array(
 				'U_VIEWVEHICLE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=" . $full_row['id']),
 				'U_VIEWPROFILE' => append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $full_row['user_id']),
 				'U_EDIT'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_dynorun&amp;RRID=" . $full_row['rr_id'] . "&amp;CID=" . $full_row['id'] . "&amp;PENDING=YES"),
@@ -497,19 +489,17 @@ class garage_dynorun
 		}
 
 		//Get All Top Dynoruns To Work Out Pagination
-		$count = count($this->get_top_dynoruns($pending, $sort, $order, 0, 10000000, $addtional_where));
+		$count = count($this->get_top_dynoruns($sort, $order, 0, 10000000, $addtional_where));
 		$pagination = generate_pagination("garage.$phpEx?mode=dynorun&amp;order=$order", $count, $garage_config['cars_per_page'], $start);
-		
+
+		$garage_template->sort_dropdown('dynorun', $sort);
+		$garage_template->order_dropdown($order);
 		$template->assign_vars(array(
             		'EDIT' 			=> ($garage_config['enable_images']) ? $user->img('garage_edit', 'EDIT') : $user->lang['EDIT'],
-			'S_MODE_SELECT'		=> $garage_template->dropdown('sort', $sort_types_text, $sort_types, $sort),
-			'S_DISPLAY_PENDING' 	=> $pending,
 			'PAGINATION' 		=> $pagination,
 			'PAGE_NUMBER' 		=> sprintf($user->lang['PAGE_OF'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count / $garage_config['cars_per_page'] )))
 		);
 
-		//Reset Sort Order For Pending Page
-		$sort='';
 		return $count;
 	}
 

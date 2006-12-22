@@ -18,7 +18,7 @@
 			</table>
 			<br />
 
-			<!-- BEGIN show_vehicles -->
+			<!-- IF S_DISPLAY_USER_VEHICLES -->
 			<table width="100%" cellpadding="2" cellspacing="1" border="0" class="tablebg">
 				<tr>
 					<th>{L_MY_VEHICLES}</th>
@@ -30,12 +30,12 @@
 				<!-- ENDIF -->
 				<!-- BEGIN user_vehicles -->
 				<tr>
-					<td class="row1" align="left"><span class="genmed"><a href="{show_vehicles.user_vehicles.U_VIEW_VEHICLE}">{show_vehicles.user_vehicles.VEHICLE}</a></span></td>
+					<td class="row1" align="left"><span class="genmed"><a href="{user_vehicles.U_VIEW_VEHICLE}">{user_vehicles.VEHICLE}</a></span></td>
 				</tr>
 				<!-- END user_vehicles -->
 			</table>
 			<br />
-			<!-- END show_vehicles -->
+			<!-- ENDIF -->
 
 			<!-- IF S_GARAGE_DISPLAY_UPDATED_VEHICLES -->
 			<table width="100%" cellpadding="2" cellspacing="1" border="0" class="tablebg">

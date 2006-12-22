@@ -59,7 +59,7 @@ function confirm_delete_dynorun (car_id, rr_id)
 		<td width="72%" valign="top">
     			<table cellpadding="4" cellspacing="1" border="0" width="100%" class="tablebg">
      				<tr>
-      					<th height="25" colspan="2">{YEAR} {MAKE} {MODEL}</th>
+      					<th height="25" colspan="2">{YEAR}&nbsp;{MAKE}&nbsp;{MODEL}</th>
      				</tr>
         			<tr>
             				<td class="row1" width="57%" valign="top">
@@ -110,7 +110,7 @@ function confirm_delete_dynorun (car_id, rr_id)
 									<br />
 									<!-- IF U_HILITE_IMAGE -->
 									<a href="{U_HILITE_IMAGE}" title="{HILITE_IMAGE_TITLE}" target="_blank"><img hspace="5" vspace="5" src="{HILITE_IMAGE}" /></a>
-									<br /></span><span class="gensmall">{L_TOTAL_VIEWS}: {TOTAL_IMAGE_VIEWS}</span>
+									<br /></span><span class="gensmall">{L_TOTAL_VIEWS}:&nbsp;{TOTAL_IMAGE_VIEWS}</span>
 									<!-- ENDIF -->
                         					</td>
                     					</tr>
@@ -122,7 +122,7 @@ function confirm_delete_dynorun (car_id, rr_id)
                 				<table cellpadding="4" cellspacing="1" width="100%">
                     					<tr>
                         					<td class="row1" ><span class="gen"><b>{L_VEHICLE}</b></span></td>
-                        					<td><span class="gen">{YEAR} {MAKE} {MODEL}</span></td>
+                        					<td><span class="gen">{YEAR}&nbsp;{MAKE}&nbsp;{MODEL}</span></td>
                     					</tr>
                     					<tr>
                         					<td class="row1" ><span class="gen"><b>{L_COLOUR}</b></span></td>
@@ -159,7 +159,7 @@ function confirm_delete_dynorun (car_id, rr_id)
 							<!-- IF ! S_DISPLAY_VEHICLE_OWNER -->
             	    					<tr>
                         					<td class="row1"  valign="top" ><span class="gen"><b>{L_PLEASE_RATE}</b></span></td>
-                        					<td width="85%">{RATE_VEHICLE} <input type="hidden" value="rate_vehicle" name="mode" /><input type="hidden" value="{CID}" name="CID" />
+                        					<td width="85%"><select id="vehicle_rating" name="vehicle_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN rating --><option value="{rating.VALUE}" <!-- IF rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{rating.TEXT}</option><!-- END rating --></select>&nbsp;<input type="hidden" value="rate_vehicle" name="mode" /><input type="hidden" value="{CID}" name="CID" />
 								<!-- IF S_DISPLAY_RATE -->
 								<input name="submit" type="submit" value="{L_RATE}" class="liteoption" />
 								<!-- ENDIF rate -->

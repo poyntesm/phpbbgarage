@@ -75,18 +75,6 @@ $template->assign_vars(array(
 	'U_MCP'	=> ($auth->acl_get('m_garage')) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=garage', true, $user->session_id) : '')
 );
 
-//Setup Arrays..
-$currency_types 	= array('GBP', 'USD', 'EUR', 'CAD', 'YEN');
-$mileage_unit_types 	= array($user->lang['MILES'], $user->lang['KILOMETERS']);
-$boost_types 		= array('PSI', 'BAR');
-$power_types 		= array($user->lang['WHEEL'], $user->lang['HUB'], $user->lang['FLYWHEEL']);
-$cover_types 		= array($user->lang['THIRD_PARTY'], $user->lang['THIRD_PARTY_FIRE_THEFT'], $user->lang['COMPREHENSIVE'], $user->lang['COMPREHENSIVE_CLASSIC'], $user->lang['COMPREHENSIVE_REDUCED']);
-$rating_types 		= array('10', '9', '8', '7', '6', '5', '4', '3', '2', '1');
-$rating_text 		= array('10', '9', '8', '7', '6', '5', '4', '3', '2', '1');
-$nitrous_types 		= array('0', '25', '50', '75', '100');
-$nitrous_types_text 	= array($user->lang['NO_NITROUS'], $user->lang['25_BHP_SHOT'], $user->lang['50_BHP_SHOT'], $user->lang['75_BHP_SHOT'], $user->lang['100_BHP_SHOT']);
-$engine_types		= array($user->lang['8_CYLINDER_NA'], $user->lang['8_CYLINDER_FI'], $user->lang['6_CYLINDER_NA'], $user->lang['6_CYLINDER_FI'], $user->lang['4_CYLINDER_NA'], $user->lang['4_CYLINDER_FI']);
-
 //Decide What Mode The User Is Doing
 switch( $mode )
 {
@@ -126,21 +114,17 @@ switch( $mode )
 		$data['MAKE']	= (empty($data['MAKE'])) ? $garage_config['default_make'] : $data['MAKE'];
 		$data['MODEL']	= (empty($data['MODEL'])) ? $garage_config['default_model'] : $data['MODEL'];
 
-		//Get Years As Defined By Admin In ACP
+		//Get Required Data
 		$years = $garage->year_list();
-
-		//Build Make List
 		$makes = $garage_model->get_all_makes();
-		for ($i = 0, $count = sizeof($makes);$i < $count; $i++)
-		{
-			$template->assign_block_vars('make', array(
-				'ID'	=> $makes[$i]['id'],
-				'MAKE'	=> $makes[$i]['make'])
-			);
-		}
 
 		//Build All Required Javascript, Arrays & HTML
 		$garage_template->attach_image('vehicle');
+		$garage_template->make_dropdown($makes);
+		$garage_template->engine_dropdown();
+		$garage_template->currency_dropdown();
+		$garage_template->mileage_dropdown();
+		$garage_template->year_dropdown($years, $data['YEAR']);
 		$template->assign_vars(array(
 			'L_TITLE' 		=> $user->lang['CREATE_NEW_VEHICLE'],
 			'L_BUTTON' 		=> $user->lang['CREATE_NEW_VEHICLE'],
@@ -148,10 +132,6 @@ switch( $mode )
 			'U_USER_SUBMIT_MODEL' 	=> "javascript:add_model()",
 			'MAKE' 			=> $data['MAKE'],
 			'MODEL'			=> $data['MODEL'],
-			'ENGINE_TYPES'		=> $garage_template->dropdown('engine_type', $engine_types, $engine_types),
-			'CURRENCY_UNITS'	=> $garage_template->dropdown('currency', $currency_types, $currency_types),
-			'MILEAGE_UNITS' 	=> $garage_template->dropdown('mileage_units', $mileage_unit_types, $mileage_unit_types),
-			'YEAR_LIST' 		=> $garage_template->dropdown('made_year', $years, $years, $data['YEAR']),
 			'S_DISPLAY_SUBMIT_MAKE'	=> $garage_config['enable_user_submit_make'],
 			'S_DISPLAY_SUBMIT_MODEL'=> $garage_config['enable_user_submit_make'],
 			'S_MODE_ACTION_MAKE' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_make"),
@@ -254,21 +234,16 @@ switch( $mode )
 		);
 
 		//Pull Required Vehicle Data From DB
-		$data = $garage_vehicle->get_vehicle($cid);
-		$years= $garage->year_list();
-
-		//Build Make List
-		$makes = $garage_model->get_all_makes();
-		for ($i = 0, $count = sizeof($makes);$i < $count; $i++)
-		{
-			$template->assign_block_vars('make', array(
-				'ID'		=> $makes[$i]['id'],
-				'MAKE'		=> $makes[$i]['make'],
-				'S_SELECTED'	=> ($data['make_id'] == $makes[$i]['id']) ? true: false)
-			);
-		}
+		$data 	= $garage_vehicle->get_vehicle($cid);
+		$years	= $garage->year_list();
+		$makes 	= $garage_model->get_all_makes();
 
 		//Build All Required Javascript And Arrays
+		$garage_template->make_dropdown($makes, $data['make_id']);
+		$garage_template->engine_dropdown($data['engine_type']);
+		$garage_template->currency_dropdown($data['currency']);
+		$garage_template->mileage_dropdown($data['mileage_units']);
+		$garage_template->year_dropdown($data['made_year']);
 		$template->assign_vars(array(
        			'L_TITLE' 		=> $user->lang['EDIT_VEHICLE'],
 			'L_BUTTON' 		=> $user->lang['EDIT_VEHICLE'],
@@ -283,10 +258,6 @@ switch( $mode )
 			'MILEAGE' 		=> $data['mileage'],
 			'PRICE' 		=> $data['price'],
 			'COMMENTS' 		=> $data['comments'],
-			'ENGINE_TYPES'		=> $garage_template->dropdown('engine_type', $engine_types, $engine_types, $data['engine_type']),
-			'CURRENCY_UNITS'	=> $garage_template->dropdown('currency', $currency_types, $currency_types, $data['currency']),
-			'MILEAGE_UNITS'		=> $garage_template->dropdown('mileage_units', $mileage_unit_types, $mileage_unit_types, $data['mileage_units']),
-			'YEAR_LIST' 		=> $garage_template->dropdown('made_year', $years, $years, $data['made_year']),
 			'S_DISPLAY_SUBMIT_MAKE'	=> $garage_config['enable_user_submit_make'],
 			'S_DISPLAY_SUBMIT_MODEL'=> $garage_config['enable_user_submit_make'],
 			'S_MODE_ACTION_MAKE' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_make"),
@@ -386,41 +357,20 @@ switch( $mode )
 		$data = $garage->process_vars($params);
 
 		//Get Required Data For Dropdowns
-		$categories 		= $garage->get_categories();
-		$business 		= $garage_business->get_business_by_type(BUSINESS_RETAIL);
-		$install_business 	= $garage_business->get_business_by_type(BUSINESS_GARAGE);
-		$manufacturers 		= $garage_business->get_business_by_type(BUSINESS_PRODUCT);
-
-		//Prepare Data For Dropdown Generation
-		for ($i = 0, $count = sizeof($categories);$i < $count; $i++)
-		{
-			$template->assign_block_vars('category', array(
-				'ID'		=> $categories[$i]['id'],
-				'TITLE'		=> $categories[$i]['title'],
-				'S_SELECTED'	=> ($data['category_id'] == $categories[$i]['id']) ? true : false)
-			);
-		}
-		for ($i = 0, $count = sizeof($business);$i < $count; $i++)
-		{
-			$business_id[] = $business[$i]['id'];
-			$business_title[] = $business[$i]['title'];
-		}
-		for ($i = 0, $count = sizeof($install_business);$i < $count; $i++)
-		{
-			$install_business_id[] = $install_business[$i]['id'];
-			$install_business_title[] = $install_business[$i]['title'];
-		}
-		for ($i = 0, $count = sizeof($manufacturers);$i < $count; $i++)
-		{
-			$template->assign_block_vars('manufacturer', array(
-				'ID'		=> $manufacturers[$i]['id'],
-				'TITLE'		=> $manufacturers[$i]['title'],
-				'S_SELECTED'	=> ($data['manufacturer_id'] == $manufacturers[$i]['id']) ? true : false)
-			);
-		}
+		$categories 	= $garage->get_categories();
+		$shops	 	= $garage_business->get_business_by_type(BUSINESS_RETAIL);
+		$garages 	= $garage_business->get_business_by_type(BUSINESS_GARAGE);
+		$manufacturers 	= $garage_business->get_business_by_type(BUSINESS_PRODUCT);
 
 		//Build HTML Components
 		$garage_template->attach_image('modification');
+		$garage_template->category_dropdown($categories, $data['category_id']);
+		$garage_template->manufacturer_dropdown($manufacturers, $data['manufacturer_id']);
+		$garage_template->retail_dropdown($shops);
+		$garage_template->garage_dropdown($garages);
+		$garage_template->rating_dropdown('product_rating');
+		$garage_template->rating_dropdown('purchase_rating');
+		$garage_template->rating_dropdown('install_rating');
 		$template->assign_vars(array(
 			'L_BUTTON' 			=> $user->lang['ADD_MODIFICATION'],
 			'L_TITLE' 			=> $user->lang['ADD_MODIFICATION'],
@@ -432,11 +382,6 @@ switch( $mode )
 			'CATEGORY_ID' 			=> $data['category_id'],
 			'MANUFACTURER_ID' 		=> $data['manufacturer_id'],
 			'PRODUCT_ID' 			=> $data['product_id'],
-			'PRODUCT_RATINGS' 		=> $garage_template->dropdown('product_rating', $rating_text, $rating_types),
-			'PURCHASE_RATINGS' 		=> $garage_template->dropdown('purchase_rating', $rating_text, $rating_types),
-			'INSTALL_RATINGS' 		=> $garage_template->dropdown('install_rating', $rating_text, $rating_types),
-			'SHOP_LIST' 			=> $garage_template->dropdown('shop_id', $business_title, $business_id),
-			'GARAGE_INSTALL_LIST'		=> $garage_template->dropdown('installer_id', $install_business_title, $install_business_id),
 			'S_DISPLAY_SUBMIT_BUSINESS'	=> ($garage_config['enable_user_submit_business'] && $auth->acl_get('u_garage_add_business')) ? true : false,
 			'S_MODE_ACTION_PRODUCT' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_product"),
 			'S_MODE_ACTION'			=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=insert_modification&amp;CID=$cid"))
@@ -521,42 +466,21 @@ switch( $mode )
 		);
 		
 		//Get Required Data
-		$data 			= $garage_modification->get_modification($mid);
-		$categories 		= $garage->get_categories();
-		$business 		= $garage_business->get_business_by_type(BUSINESS_RETAIL);
-		$install_business 	= $garage_business->get_business_by_type(BUSINESS_GARAGE);
-		$manufacturers 		= $garage_business->get_business_by_type(BUSINESS_PRODUCT);
-
-		//Prepare Data For Dropdown Generation
-		for ($i = 0, $count = sizeof($categories);$i < $count; $i++)
-		{
-			$template->assign_block_vars('category', array(
-				'ID'		=> $categories[$i]['id'],
-				'TITLE'		=> $categories[$i]['title'],
-				'S_SELECTED'	=> ($data['category_id'] == $categories[$i]['id']) ? true : false)
-			);
-		}
-		for ($i = 0, $count = sizeof($business);$i < $count; $i++)
-		{
-			$business_id[] = $business[$i]['id'];
-			$business_title[] = $business[$i]['title'];
-		}
-		for ($i = 0, $count = sizeof($install_business);$i < $count; $i++)
-		{
-			$install_business_id[] = $install_business[$i]['id'];
-			$install_business_title[] = $install_business[$i]['title'];
-		}
-		for ($i = 0, $count = sizeof($manufacturers);$i < $count; $i++)
-		{
-			$template->assign_block_vars('manufacturer', array(
-				'ID'		=> $manufacturers[$i]['id'],
-				'TITLE'		=> $manufacturers[$i]['title'],
-				'S_SELECTED'	=> ($data['manufacturer_id'] == $manufacturers[$i]['id']) ? true : false)
-			);
-		}
+		$data 		= $garage_modification->get_modification($mid);
+		$categories 	= $garage->get_categories();
+		$shops 		= $garage_business->get_business_by_type(BUSINESS_RETAIL);
+		$garages 	= $garage_business->get_business_by_type(BUSINESS_GARAGE);
+		$manufacturers 	= $garage_business->get_business_by_type(BUSINESS_PRODUCT);
 
 		//Build All Required HTML parts
 		$garage_template->edit_image('modification', $data['image_id'], $data['attach_file']);
+		$garage_template->category_dropdown($categories, $data['category_id']);
+		$garage_template->manufacturer_dropdown($manufacturers, $data['manufacturer_id']);
+		$garage_template->retail_dropdown($shops, $data['shop_id']);
+		$garage_template->garage_dropdown($garages, $data['installer_id']);
+		$garage_template->rating_dropdown('product_rating', $data['product_rating']);
+		$garage_template->rating_dropdown('purchase_rating', $data['purchase_rating']);
+		$garage_template->rating_dropdown('install_rating', $data['install_rating']);
 		$template->assign_vars(array(
        			'L_TITLE' 		=> $user->lang['MODIFY_MOD'],
        			'L_BUTTON' 		=> $user->lang['MODIFY_MOD'],
@@ -575,11 +499,6 @@ switch( $mode )
 			'CATEGORY_ID' 		=> $data['category_id'],
 			'MANUFACTURER_ID' 	=> $data['manufacturer_id'],
 			'PRODUCT_ID' 		=> $data['product_id'],
-			'PRODUCT_RATINGS' 	=> $garage_template->dropdown('product_rating', $rating_text, $rating_types, $data['product_rating']),
-			'PURCHASE_RATINGS'	=> $garage_template->dropdown('purchase_rating', $rating_text, $rating_types, $data['purchase_rating']),
-			'INSTALL_RATINGS' 	=> $garage_template->dropdown('install_rating', $rating_text, $rating_types, $data['install_rating']),
-			'SHOP_LIST' 		=> $garage_template->dropdown('business_id', $business_title, $business_id, $data['shop_id']),
-			'GARAGE_INSTALL_LIST'	=> $garage_template->dropdown('install_business_id', $install_business_title, $install_business_id, $data['installer_id']),
 			'COMMENTS' 		=> $data['comments'],
 			'INSTALL_COMMENTS' 	=> $data['install_comments'],
 			'S_DISPLAY_SUBMIT_BUS'	=> $garage_config['enable_user_submit_business'],
@@ -689,8 +608,11 @@ switch( $mode )
 		//If Dynoruns Exist, Allow User To Link Quartermile Times To Know Vehicle Spec..
 		if ( $garage_dynorun->count_runs($cid) > 0 )
 		{
-			$template->assign_block_vars('link_rr', array());
-			$garage_template->dynorun_dropdown(NULL, NULL, $cid);
+			$template->assign_block_vars(array(
+				'S_DISPLAY_DYNORUNS' => true)
+			);
+			$dynoruns = $garage_dynorun->get_dynoruns_by_vehicle($cid);
+			$garage_template->dynorun_dropdown($dynoruns);
 		}
 
 		$garage_template->attach_image('quartermile');
@@ -935,15 +857,9 @@ switch( $mode )
 		}
 
 		//Let Check That Rollingroad Runs Are Allowed...If Not Redirect
-		if (!$garage_config['enable_dynorun'])
+		if (!$garage_config['enable_dynorun'] || !$auth->acl_get('u_garage_add_dynorun'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=18"));
-		}
-
-		//Let Check The User Is Allowed Perform This Action
-		if (!$auth->acl_get('u_garage_add_dynorun'))
-		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
 		}
 
 		//Check Vehicle Ownership
@@ -960,13 +876,13 @@ switch( $mode )
 
 		//Build Required HTML Components Like Drop Down Boxes.....
 		$garage_template->attach_image('dynorun');
+		$garage_template->nitrous_dropdown();
+		$garage_template->power_dropdown('bhp_unit');
+		$garage_template->power_dropdown('torque_unit');
+		$garage_template->boost_dropdown();
 		$template->assign_vars(array(
 			'L_TITLE'  	=> $user->lang['ADD_NEW_RUN'],
 			'L_BUTTON'  	=> $user->lang['ADD_NEW_RUN'],
-			'NITROUS_UNITS'	=> $garage_template->dropdown('nitrous', $nitrous_types_text, $nitrous_types),
-			'TORQUE_UNITS' 	=> $garage_template->dropdown('torque_unit', $power_types, $power_types),
-			'BHP_UNITS' 	=> $garage_template->dropdown('bhp_unit', $power_types, $power_types),
-			'BOOST_UNITS' 	=> $garage_template->dropdown('boost_unit', $boost_types, $boost_types),
 			'CID' 		=> $cid,
 			'S_MODE_ACTION' => append_sid("{$phpbb_root_path}garage.$phpEx", "mode=insert_dynorun"))
          	);
@@ -1076,7 +992,10 @@ switch( $mode )
 
 		//Build All Required HTML
 		$garage_template->edit_image('dynorun', $data['image_id'], $data['attach_file']);
-
+		$garage_template->nitrous_dropdown($data['nitrous']);
+		$garage_template->power_dropdown('bhp_unit', $data['bhp_unit']);
+		$garage_template->power_dropdown('torque_unit', $data['torque_unit']);
+		$garage_template->boost_dropdown($data['boost_unit']);
 		$template->assign_vars(array(
 			'L_TITLE'  		=> $user->lang['EDIT_RUN'],
 			'L_BUTTON'  		=> $user->lang['EDIT_RUN'],
@@ -1089,10 +1008,6 @@ switch( $mode )
 			'NITROUS' 		=> $data['nitrous'],
 			'PEAKPOINT' 		=> $data['peakpoint'],
 			'PENDING_REDIRECT'	=> $redirect['PENDING'],
-			'NITROUS_UNITS' 	=> $garage_template->dropdown('nitrous', $nitrous_types_text, $nitrous_types, $data['nitrous']),
-			'BOOST_UNITS' 		=> $garage_template->dropdown('boost_unit', $boost_types, $boost_types, $data['boost_unit']),
-			'TORQUE_UNITS' 		=> $garage_template->dropdown('torque_unit', $power_types, $power_types, $data['torque_unit']),
-			'BHP_UNITS' 		=> $garage_template->dropdown('bhp_unit', $power_types, $power_types, $data['bhp_unit']),
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=update_dynorun"))
 		);
 
@@ -1223,21 +1138,14 @@ switch( $mode )
 		//Get Data
 		$insurance_business 	= $garage_business->get_business_by_type(BUSINESS_INSURANCE);
 
-		//Prepare Data For Dropdown Generation
-		for ($i = 0, $count = sizeof($insurance_business);$i < $count; $i++)
-		{
-			$insurance_id[] = $insurance_business[$i]['id'];
-			$insurance_title[] = $insurance_business[$i]['title'];
-		}
-
 		//Build All Required HTML Components
+		$garage_template->insurance_dropdown($insurance_business);
+		$garage_template->cover_dropdown();
 		$template->assign_vars(array(
 			'L_TITLE' 		=> $user->lang['ADD_PREMIUM'],
 			'L_BUTTON' 		=> $user->lang['ADD_PREMIUM'],
 			'U_SUBMIT_BUSINESS' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;CID=$cid&amp;redirect=add_insurance&amp;BUSINESS=" . BUSINESS_INSURANCE),
 			'CID' 			=> $cid,
-			'INSURANCE_LIST' 	=> $garage_template->dropdown('business_id', $insurance_title, $insurance_id),
-			'COVER_TYPE_LIST' 	=> $garage_template->dropdown('cover_type', $cover_types, $cover_types),
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=insert_insurance"))
 		);
 
@@ -1311,6 +1219,8 @@ switch( $mode )
 		}
 
 		//Build Required HTML Components
+		$garage_template->insurance_dropdown($insurance_business, $data['business_id']);
+		$garage_template->cover_dropdown($data['cover_type']);
 		$template->assign_vars(array(
 			'L_TITLE' 		=> $user->lang['EDIT_PREMIUM'],
 			'L_BUTTON' 		=> $user->lang['EDIT_PREMIUM'],
@@ -1318,8 +1228,6 @@ switch( $mode )
 			'CID' 			=> $cid,
 			'PREMIUM' 		=> $data['premium'],
 			'COMMENTS' 		=> $data['comments'],
-			'INSURANCE_LIST' 	=> $garage_template->dropdown('business_id', $insurance_title, $insurance_id, $data['business_id']),
-			'COVER_TYPE_LIST' 	=> $garage_template->dropdown('cover_type', $cover_types, $cover_types, $data['cover_type']),
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=update_insurance"))
 		);
 
@@ -1395,13 +1303,6 @@ switch( $mode )
 		//Build Page Header ;)
 		page_header($page_title);
 
-		//Setup Arrays For Producing Sort Options Drop Down Selection Box
-		$sort_types_text = array($user->lang['LAST_CREATED'], $user->lang['LAST_UPDATED'], $user->lang['OWNER'], $user->lang['YEAR'], $user->lang['MAKE'], $user->lang['MODEL'],  $user->lang['COLOUR'], $user->lang['TOTAL_VIEWS'], $user->lang['TOTAL_MODS']);
-		$sort_types = array('date_created', 'date_updated', 'username', 'made_year', 'make', 'model', 'colour', 'views', 'total_mods');
-
-		//Build All Required HTML
-		$garage_template->order($order);
-
 		//Get All Vehicle Data....
 		$data = $garage_vehicle->get_all_vehicles('', $sort, $order, $start, $garage_config['cars_per_page']);
 		for ($i = 0, $count = sizeof($data); $i < $count; $i++)
@@ -1432,10 +1333,11 @@ switch( $mode )
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$phpbb_root_path}garage.$phpEx", "mode=browse"))
 		);
 
+		$garage_template->order_dropdown($order);
+		$garage_template->sort_dropdown('vehicle', $sort);
 		$template->assign_vars(array(
 			'PAGINATION' 	=> $pagination,
 			'PAGE_NUMBER' 	=> sprintf($user->lang['PAGE_OF'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count[0]['total'] / $garage_config['cars_per_page'] )), 
-			'S_SORT_SELECT'	=> $garage_template->dropdown('sort', $sort_types_text, $sort_types, $sort),
 			'S_MODE_ACTION' => append_sid("{$phpbb_root_path}garage.$phpEx", "mode=browse"))
 		);
 	
@@ -1470,40 +1372,17 @@ switch( $mode )
 		);
 
 		//Get Years As Defined By Admin In ACP
-		$years = $garage->year_list();
-
-		//Build Make List
-		$makes = $garage_model->get_all_makes();
-		for ($i = 0, $count = sizeof($makes);$i < $count; $i++)
-		{
-			$template->assign_block_vars('make', array(
-				'ID'	=> $makes[$i]['id'],
-				'MAKE'	=> $makes[$i]['make'])
-			);
-		}
-
-		//Build Product Manufacturer List
-		$manufacturers = $garage_business->get_business_by_type(BUSINESS_PRODUCT);
-		for ($i = 0, $count = sizeof($manufacturers);$i < $count; $i++)
-		{
-			$template->assign_block_vars('manufacturer', array(
-				'ID'	=> $manufacturers[$i]['id'],
-				'TITLE'	=> $manufacturers[$i]['title'])
-			);
-		}
-
-		//Prepare Data For Dropdown Generation
-		$categories 		= $garage->get_categories();
-		for ($i = 0, $count = sizeof($categories);$i < $count; $i++)
-		{
-			$categories_id[] = $categories[$i]['id'];
-			$categories_title[] = $categories[$i]['title'];
-		}
+		$years 		= $garage->year_list();
+		$manufacturers 	= $garage_business->get_business_by_type(BUSINESS_PRODUCT);
+		$makes 		= $garage_model->get_all_makes();
+		$categories 	= $garage->get_categories();
 
 		//Build All Required Javascript And Arrays
+		$garage_template->category_dropdown($categories);
+		$garage_template->year_dropdown($years);
+		$garage_template->make_dropdown($makes);
+		$garage_template->manufacturer_dropdown($manufacturers);
 		$template->assign_vars(array(
-			'CATEGORY_LIST' 			=> $garage_template->dropdown('category_id', $categories_title, $categories_id),
-			'YEAR_LIST' 				=> $garage_template->dropdown('made_year', $years, $years),
 			'S_DISPLAY_SEARCH_INSURANCE'		=> $garage_config['enable_insurance'],
 			'S_MODE_ACTION_SEARCH_USERNAME' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=search_username"),
 			'S_MODE_ACTION_SEARCH_INSURANCE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=search_insurance"),
@@ -1555,7 +1434,7 @@ switch( $mode )
 		$sort_types = array('date_created', 'date_updated', 'username', 'made_year', 'make', 'model', 'colour', 'views', 'total_mods');
 
 		//Build All Required HTML
-		$garage_template->order($sort_order);
+		$garage_template->order_dropdown($sort_order);
 
 		//Get All Vehicle Data....
 		$data = $garage_vehicle->get_all_vehicles($search_data['where'], $sort, $order, $start, $garage_config['cars_per_page']);
@@ -1636,7 +1515,7 @@ switch( $mode )
 		$sort_types = array('date_created', 'date_updated', 'username', 'made_year', 'make', 'model', 'colour', 'views', 'total_mods');
 
 		//Build All Required HTML
-		$garage_template->order($sort_order);
+		$garage_template->order_dropdown($sort_order);
 
 		//Get All Vehicle Data....
 		$data = $garage_vehicle->get_all_vehicles($search_data['where'], $sort, $order, $start, $garage_config['cars_per_page']);
@@ -1714,7 +1593,7 @@ switch( $mode )
 		);
 
 		//Pre Build All Side Menus
-		$garage_template->order($sort_order);
+		$garage_template->order_dropdown($sort_order);
 
 		//Get All Insurance Data....
 		$data = $garage_insurance->get_all_premiums($search_data['where'], $sort, $order, $start, $garage_config['cars_per_page']);
@@ -2212,6 +2091,7 @@ switch( $mode )
         	 	$template->assign_block_vars($detail, array());
 
 			//Now Loop Through All Insurance Cover Types...
+			$cover_types = array($user->lang['THIRD_PARTY'], $user->lang['THIRD_PARTY_FIRE_THEFT'], $user->lang['COMPREHENSIVE'], $user->lang['COMPREHENSIVE_CLASSIC'], $user->lang['COMPREHENSIVE_REDUCED']);
 			for($j = 0, $count2 = sizeof($cover_types);$j < $count2; $j++)
 			{
 				//Pull MIN/MAX/AVG Of Specific Cover Type By Business ID
@@ -2935,7 +2815,6 @@ switch( $mode )
 		$garage_quartermile->build_quartermile_table();
 
 		//Build Required HTML, Javascript And Arrays
-		$garage_template->order($order);
 		$template->assign_vars(array(
 			'S_MODE_ACTION'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=quartermile"))
 		);
@@ -3003,7 +2882,6 @@ switch( $mode )
 		$garage_dynorun->build_dynorun_table();
 
 		//Build All Required HTML, Javascript And Arrays
-		$garage_template->order($order);
 		$template->assign_vars(array(
 			'S_MODE_ACTION'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=dynorun"))
 		);
