@@ -48,7 +48,7 @@ $template->set_filenames(array(
 
 //Setup All The Required SQL Arrays
 $required_sql = array();
-$required_sql[] = "CREATE TABLE " . $table_prefix . "garage (
+$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_vehicles (
 		`id` int(10) unsigned NOT NULL auto_increment,
 		`user_id` int(10) NOT NULL default '0',
 		`made_year` varchar(4) NOT NULL default '2003',
@@ -59,7 +59,6 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage (
 		`price` int(10) unsigned default NULL,
 		`currency` varchar(32) NOT NULL default 'USD',
 		`comments` varchar(255) default NULL,
-		`image_id` int(10) unsigned default NULL,
 		`views` int(10) unsigned NOT NULL default '0',
 		`date_created` int(10) default NULL,
 		`date_updated` int(10) default NULL,
@@ -102,10 +101,32 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_config (
 		`config_value` varchar(255) NOT NULL default '',
 		PRIMARY KEY  (`config_name`)
 		)";
-$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_gallery (
+$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_vehicle_gallery (
 		`id` int(10) unsigned NOT NULL auto_increment,
 		`garage_id` int(10) unsigned NOT NULL default '0',
 		`image_id` int(10) unsigned NOT NULL default '0',
+		`hilite` tinyint(1) unsigned NOT NULL default '0',
+		PRIMARY KEY  (`id`)
+		)";
+$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_modification_gallery (
+		`id` int(10) unsigned NOT NULL auto_increment,
+		`modification_id` int(10) unsigned NOT NULL default '0',
+		`image_id` int(10) unsigned NOT NULL default '0',
+		`hilite` tinyint(1) unsigned NOT NULL default '0',
+		PRIMARY KEY  (`id`)
+		)";
+$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_quartermile_gallery (
+		`id` int(10) unsigned NOT NULL auto_increment,
+		`quartermile_id` int(10) unsigned NOT NULL default '0',
+		`image_id` int(10) unsigned NOT NULL default '0',
+		`hilite` tinyint(1) unsigned NOT NULL default '0',
+		PRIMARY KEY  (`id`)
+		)";
+$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_dynorun_gallery (
+		`id` int(10) unsigned NOT NULL auto_increment,
+		`dynorun_id` int(10) unsigned NOT NULL default '0',
+		`image_id` int(10) unsigned NOT NULL default '0',
+		`hilite` tinyint(1) unsigned NOT NULL default '0',
 		PRIMARY KEY  (`id`)
 		)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_guestbooks (
@@ -136,7 +157,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_images (
 		`attach_thumb_filesize` int(10) NOT NULL default '0',
 		PRIMARY KEY  (`attach_id`)
 		)";
-$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_insurance (
+$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_premiums (
 		`id` int(10) NOT NULL auto_increment,
 		`garage_id` int(10) unsigned default NULL,
 		`business_id` int(10) unsigned default NULL,
@@ -160,7 +181,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_models (
 		PRIMARY KEY  (`id`),
 		KEY `make_id` (`make_id`)
 		)";
-$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_mods (
+$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_modifications (
 		`id` int(10) unsigned NOT NULL auto_increment,
 		`garage_id` int(10) unsigned NOT NULL default '0',
 		`user_id` int(10) NOT NULL default '0',
@@ -176,7 +197,6 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_mods (
 		`installer_id` int(10) default NULL,
 		`comments` text,
 		`install_comments` text,
-		`image_id` int(10) unsigned default NULL,
 		`date_created` int(10) default NULL,
 		`date_updated` int(10) default NULL,
 		PRIMARY KEY  (`id`),
@@ -206,8 +226,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_quartermile (
 		`quart` decimal(6,3) default NULL,
 		`quartmph` decimal(6,3) default NULL,
 		`pending` tinyint(1) NOT NULL default '1',
-		`image_id` int(10) unsigned default NULL,
-		`rr_id` int(10) unsigned default NULL,
+		`dynorun_id` int(10) unsigned default NULL,
 		`date_created` int(10) default NULL,
 		`date_updated` int(10) default NULL,
 		PRIMARY KEY  (`id`)
@@ -224,7 +243,6 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_dynorun (
 		`nitrous` int(10) default NULL,
 		`dynocenter` varchar(32) default NULL,
 		`peakpoint` decimal(7,3) default NULL,
-		`image_id` int(10) unsigned default NULL,
 		`date_created` int(10) default NULL,
 		`date_updated` int(10) default NULL,
 		`pending` tinyint(1) NOT NULL default '1',
