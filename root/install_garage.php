@@ -263,6 +263,8 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_tracks (
 	)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_laps (
 		`id` int(10) NOT NULL auto_increment,
+		`garage_id` int(10) NOT NULL default '0',
+		`track_id` int(10) NOT NULL default '0',
 	)";
 //Required Configuration Options
 $params = array(
