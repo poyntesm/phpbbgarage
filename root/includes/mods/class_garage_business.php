@@ -241,7 +241,7 @@ class garage_business
 			'SELECT'	=> 'b.*, SUM(install_rating) AS rating, COUNT(*) *10 AS total_rating',
 			'FROM'		=> array(
 				GARAGE_BUSINESS_TABLE	=> 'b',
-				GARAGE_MODS_TABLE	=> 'm',
+				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 			),
 			'WHERE'		=>  "m.install_business_id = b.id AND b.type LIKE '%" . BUSINESS_GARAGE . "%' AND b.pending = 0 $where",
 			'GROUP_BY'	=>  "b.id",
@@ -273,7 +273,7 @@ class garage_business
 			'SELECT'	=> 'b.*, SUM(purchase_rating) AS rating, COUNT(*) *10 AS total_rating',
 			'FROM'		=> array(
 				GARAGE_BUSINESS_TABLE	=> 'b',
-				GARAGE_MODS_TABLE	=> 'm',
+				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 			),
 			'WHERE'		=>  "m.business_id = b.id AND b.type LIKE '%" . BUSINESS_RETAIL . "%'  AND b.pending =0 $where",
 			'GROUP_BY'	=>  "b.id",
@@ -362,7 +362,7 @@ class garage_business
 			'SELECT'	=> 'COUNT(DISTINCT b.title) as total',
 			'FROM'		=> array(
 				GARAGE_BUSINESS_TABLE	=> 'b',
-				GARAGE_MODS_TABLE	=> 'm',
+				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 			),
 			'WHERE'		=>  "m.business_id = b.id AND b.type LIKE '%" . BUSINESS_RETAIL . "%' AND b.pending =0 $additional_where"
 		));

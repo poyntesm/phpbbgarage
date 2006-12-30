@@ -36,7 +36,7 @@ class garage_dynorun
 	{
 		global $cid, $db, $garage_config;
 
-		$sql = 'INSERT INTO ' . GARAGE_DYNORUN_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+		$sql = 'INSERT INTO ' . GARAGE_DYNORUNS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 			'garage_id'	=> $cid,
 			'dynocenter'	=> $data['dynocenter'],
 			'bhp'		=> $data['bhp'],
@@ -80,7 +80,7 @@ class garage_dynorun
 			'pending'	=> ($garage_config['enable_dynorun_approval'] == '1') ? 1 : 0
 		);
 
-		$sql = 'UPDATE ' . GARAGE_DYNORUN_TABLE . '
+		$sql = 'UPDATE ' . GARAGE_DYNORUNS_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
 			WHERE id = $rrid AND garage_id = $cid";
 
@@ -109,10 +109,10 @@ class garage_dynorun
 		}
 	
 		//Update Quartermile Table For An Matched Times
-		$garage->update_single_field(GARAGE_QUARTERMILE_TABLE, 'rr_id', 'NULL', 'rr_id', $id);	
+		$garage->update_single_field(GARAGE_QUARTERMILES_TABLE, 'rr_id', 'NULL', 'rr_id', $id);	
 	
 		//Time To Delete The Actual RollingRoad Run Now
-		$garage->delete_rows(GARAGE_DYNORUN_TABLE, 'id', $id);
+		$garage->delete_rows(GARAGE_DYNORUNS_TABLE, 'id', $id);
 	
 		return ;
 	}
@@ -131,7 +131,7 @@ class garage_dynorun
 			array(
 			'SELECT'	=> 'COUNT(d.id) as total',
 			'FROM'		=> array(
-				GARAGE_DYNORUN_TABLE	=> 'd',
+				GARAGE_DYNORUNS_TABLE	=> 'd',
 			),
 			'WHERE'		=>  "d.garage_id = $cid"
 		));
@@ -145,7 +145,33 @@ class garage_dynorun
 		return $data['total'];
 	}
 
-	
+	/*========================================================================*/
+	// Returns Count Of Dynorun Images
+	// Usage: count_dynorun_images('vehicle id', 'dynorun id');
+	/*========================================================================*/
+	function count_dynorun_images($cid, $rrid)
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'COUNT(dg.id) as total',
+			'FROM'		=> array(
+				GARAGE_DYNORUN_GALLERY_TABLE	=> 'dg',
+			),
+			'WHERE'		=> "dg.garage_id = $cid AND dg.dynorun_id = $rrid"
+		));
+
+		$result = $db->sql_query($sql);
+	        $data = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		$data['total'] = (empty($data['total'])) ? 0 : $data['total'];
+		return $data['total'];
+	}
+
 	/*========================================================================*/
 	// Select All Dynorun Data From DB
 	// Usage: get_dynorun('dynorun id');
@@ -161,11 +187,11 @@ class garage_dynorun
 			'SELECT'	=> 'g.id, g.made_year, g.user_id, mk.make, md.model, d.dynocenter, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, d.peakpoint, i.attach_id as image_id, i.attach_file, d.id as rr_id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
 
 			'FROM'		=> array(
-				GARAGE_DYNORUN_TABLE	=> 'd',
+				GARAGE_DYNORUNS_TABLE	=> 'd',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
 					'ON'	=> 'd.garage_id =g.id'
 				)
 				,array(
@@ -205,11 +231,11 @@ class garage_dynorun
 			array(
 			'SELECT'	=> 'g.id, g.made_year, g.user_id, mk.make, md.model, u.username, u.user_id, d.dynocenter, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, round(d.peakpoint,0) as peakpoint, i.attach_id as image_id, d.id as rr_id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
 			'FROM'		=> array(
-				GARAGE_DYNORUN_TABLE	=> 'd',
+				GARAGE_DYNORUNS_TABLE	=> 'd',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
 					'ON'	=> 'd.garage_id =g.id'
 				)
 				,array(
@@ -256,11 +282,11 @@ class garage_dynorun
 			array(
 			'SELECT'	=> 'g.id, g.made_year, g.user_id, mk.make, md.model, u.username, d.dynocenter, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, round(d.peakpoint,0) as peakpoint, i.attach_id as image_id, d.id as rr_id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
 			'FROM'		=> array(
-				GARAGE_DYNORUN_TABLE	=> 'd',
+				GARAGE_DYNORUNS_TABLE	=> 'd',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
 					'ON'	=> 'd.garage_id =g.id'
 				)
 				,array(
@@ -276,8 +302,12 @@ class garage_dynorun
 					'ON'	=> 'g.user_id = u.user_id'
 				)
 				,array(
+					'FROM'	=> array(GARAGE_DYNORUN_GALLERY_TABLE => 'dg'),
+					'ON'	=> 'g.id = dg.garage_id'
+				)
+				,array(
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
-					'ON'	=> 'i.attach_id = d.image_id'
+					'ON'	=> 'i.attach_id = dg.image_id'
 				)
 			),
 			'WHERE'		=>  "d.bhp = $bhp AND d.garage_id = $garage_id"
@@ -304,11 +334,11 @@ class garage_dynorun
 			array(
 			'SELECT'	=> 'd.garage_id, MAX(d.bhp) as bhp',
 			'FROM'		=> array(
-				GARAGE_DYNORUN_TABLE	=> 'd',
+				GARAGE_DYNORUNS_TABLE	=> 'd',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
 					'ON'	=> 'd.garage_id =g.id'
 				)
 				,array(
@@ -353,7 +383,7 @@ class garage_dynorun
 			array(
 			'SELECT'	=> 'd.*, i.*',
 			'FROM'		=> array(
-				GARAGE_DYNORUN_TABLE	=> 'd',
+				GARAGE_DYNORUNS_TABLE	=> 'd',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
@@ -513,7 +543,7 @@ class garage_dynorun
 
 		for($i = 0; $i < count($id_list); $i++)
 		{
-			$garage->update_single_field(GARAGE_DYNORUN_TABLE, 'pending', 0, 'id', $id_list[$i]);
+			$garage->update_single_field(GARAGE_DYNORUNS_TABLE, 'pending', 0, 'id', $id_list[$i]);
 		}
 
 		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_dynoruns"));

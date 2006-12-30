@@ -16,6 +16,7 @@ define('BUSINESS_PRODUCT', 1);
 define('BUSINESS_INSURANCE', 2);
 define('BUSINESS_GARAGE', 3);
 define('BUSINESS_RETAIL', 4);
+define('BUSINESS_DYNOCENTRE', 5);
 
 //Define Insurance Types
 define('COMPREHENSIVE', 1);
@@ -24,10 +25,10 @@ define('COMPREHENSIVE', 1);
 define('GARAGE_VEHICLES_TABLE', $table_prefix.'garage_vehicles');
 define('GARAGE_CONFIG_TABLE', $table_prefix.'garage_config');
 define('GARAGE_CATEGORIES_TABLE', $table_prefix.'garage_categories');
-define('GARAGE_VEHICLE_GALLERY_TABLE', $table_prefix.'garage_vehicle_gallery');
-define('GARAGE_MODIFICATION_GALLERY_TABLE', $table_prefix.'garage_modification_gallery');
-define('GARAGE_QUARTERMILE_GALLERY_TABLE', $table_prefix.'garage_quartermile_gallery');
-define('GARAGE_DYNORUN_GALLERY_TABLE', $table_prefix.'garage_vehicle_gallery');
+define('GARAGE_VEHICLE_GALLERY_TABLE', $table_prefix.'garage_vehicles_gallery');
+define('GARAGE_MODIFICATION_GALLERY_TABLE', $table_prefix.'garage_modifications_gallery');
+define('GARAGE_QUARTERMILE_GALLERY_TABLE', $table_prefix.'garage_quartermiles_gallery');
+define('GARAGE_DYNORUN_GALLERY_TABLE', $table_prefix.'garage_vehicles_gallery');
 define('GARAGE_GUESTBOOKS_TABLE', $table_prefix.'garage_guestbooks');
 define('GARAGE_IMAGES_TABLE', $table_prefix.'garage_images');
 define('GARAGE_MAKES_TABLE', $table_prefix.'garage_makes');

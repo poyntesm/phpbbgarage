@@ -100,14 +100,14 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_config (
 		`config_value` varchar(255) NOT NULL default '',
 		PRIMARY KEY  (`config_name`)
 		)";
-$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_vehicle_gallery (
+$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_vehicles_gallery (
 		`id` int(10) unsigned NOT NULL auto_increment,
 		`garage_id` int(10) unsigned NOT NULL default '0',
 		`image_id` int(10) unsigned NOT NULL default '0',
 		`hilite` tinyint(1) unsigned NOT NULL default '0',
 		PRIMARY KEY  (`id`)
 		)";
-$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_modification_gallery (
+$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_modifications_gallery (
 		`id` int(10) unsigned NOT NULL auto_increment,
 		`garage_id` int(10) unsigned NOT NULL default '0',
 		`modification_id` int(10) unsigned NOT NULL default '0',
@@ -115,7 +115,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_modification_gallery
 		`hilite` tinyint(1) unsigned NOT NULL default '0',
 		PRIMARY KEY  (`id`)
 		)";
-$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_quartermile_gallery (
+$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_quartermiles_gallery (
 		`id` int(10) unsigned NOT NULL auto_increment,
 		`garage_id` int(10) unsigned NOT NULL default '0',
 		`quartermile_id` int(10) unsigned NOT NULL default '0',
@@ -123,7 +123,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_quartermile_gallery 
 		`hilite` tinyint(1) unsigned NOT NULL default '0',
 		PRIMARY KEY  (`id`)
 		)";
-$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_dynorun_gallery (
+$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_dynoruns_gallery (
 		`id` int(10) unsigned NOT NULL auto_increment,
 		`garage_id` int(10) unsigned NOT NULL default '0',
 		`dynorun_id` int(10) unsigned NOT NULL default '0',

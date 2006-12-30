@@ -177,15 +177,76 @@ class garage_image
 
 	/*========================================================================*/
 	// Inserts Existing Image Into Vehicle Gallery
-	// Usage: insert_gallery_image('image id');
+	// Usage: insert_vehicle_gallery_image('image id', 1|0);
 	/*========================================================================*/
-	function insert_gallery_image($image_id)
+	function insert_vehicle_gallery_image($image_id, $hilite)
 	{
 		global $db, $cid;
 
-		$sql = 'INSERT INTO ' . GARAGE_GALLERY_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+		$sql = 'INSERT INTO ' . GARAGE_VEHICLE_GALLERY_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 			'garage_id'	=> $cid,
-			'image_id'	=> $image_id)
+			'image_id'	=> $image_id,
+			'hilite'	=> $hilite)
+		);
+
+		$db->sql_query($sql);
+
+		return;
+	}
+
+	/*========================================================================*/
+	// Inserts Existing Image Into Modification Gallery
+	// Usage: insert_modification_gallery_image('image id', 1|0);
+	/*========================================================================*/
+	function insert_modification_gallery_image($image_id, $hilite)
+	{
+		global $db, $cid, $mid;
+
+		$sql = 'INSERT INTO ' . GARAGE_MODIFICATION_GALLERY_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+			'garage_id'		=> $cid,
+			'modification_id'	=> $mid,
+			'image_id'		=> $image_id,
+			'hilite'		=> $hilite)
+		);
+
+		$db->sql_query($sql);
+
+		return;
+	}
+
+	/*========================================================================*/
+	// Inserts Existing Image Into Quartermile Gallery
+	// Usage: insert_quartermile_gallery_image('image id', 1|0);
+	/*========================================================================*/
+	function insert_quartermile_gallery_image($image_id, $hilite)
+	{
+		global $db, $cid, $qmid;
+
+		$sql = 'INSERT INTO ' . GARAGE_QUARTERMILE_GALLERY_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+			'garage_id'	=> $cid,
+			'quartermile_id'=> $qmid,
+			'image_id'	=> $image_id,
+			'hilite'	=> $hilite)
+		);
+
+		$db->sql_query($sql);
+
+		return;
+	}
+
+	/*========================================================================*/
+	// Inserts Existing Image Into Dynorun Gallery
+	// Usage: insert_dynorun_gallery_image('image id', 1|0);
+	/*========================================================================*/
+	function insert_dynorun_gallery_image($image_id, $hilite)
+	{
+		global $db, $cid, $rrid;
+
+		$sql = 'INSERT INTO ' . GARAGE_DYNORUN_GALLERY_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+			'garage_id'	=> $cid,
+			'dynorun_id'	=> $rrid,
+			'image_id'	=> $image_id,
+			'hilite'	=> $hilite)
 		);
 
 		$db->sql_query($sql);
@@ -740,7 +801,7 @@ class garage_image
 		$data = $garage_vehicle->get_vehicle($cid);
 		if ( $data['image_id']  == $image_id)
 		{
-			$garage->update_single_field(GARAGE_TABLE,'image_id','NULL','image_id',$image_id);
+			$garage->update_single_field(GARAGE_VEHICLES_TABLE,'image_id','NULL','image_id',$image_id);
 		}
 
 		//Remove From Gallery DB Table
@@ -955,7 +1016,7 @@ class garage_image
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
 					'ON'	=> 'g.id = i.garage_id'
 				)
 			),
@@ -990,7 +1051,7 @@ class garage_image
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
 					'ON'	=> 'g.id = i.garage_id'
 				)
 			),

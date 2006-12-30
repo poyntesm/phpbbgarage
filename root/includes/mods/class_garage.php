@@ -113,7 +113,7 @@ class garage
 			array(
 			'SELECT'	=> 'SUM(g.views) as total',
 			'FROM'		=> array(
-				GARAGE_TABLE	=> 'g',
+				GARAGE_VEHICLES_TABLE	=> 'g',
 			)
 		));
 

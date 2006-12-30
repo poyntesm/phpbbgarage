@@ -126,7 +126,7 @@ class garage_guestbook
 					'ON'	=> 'gb.author_id = u.user_id'
 				)
 				,array(
-					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
 					'ON'	=> 'g.user_id = gb.author_id and g.main_vehicle = 1'
 				)
 				,array(
@@ -210,7 +210,7 @@ class garage_guestbook
 					'ON'	=> 'gb.author_id = u.user_id'
 				)
 				,array(
-					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
 					'ON'	=> 'g.user_id = gb.author_id'
 				)
 				,array(
@@ -258,7 +258,7 @@ class garage_guestbook
 					'ON'	=> 'gb.author_id = u.user_id'
 				)
 				,array(
-					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
 					'ON'	=> 'g.user_id = gb.author_id'
 				)
 				,array(

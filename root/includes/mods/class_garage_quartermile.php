@@ -36,7 +36,7 @@ class garage_quartermile
 	{
 		global $cid, $db, $garage_config;
 
-		$sql = 'INSERT INTO ' . GARAGE_QUARTERMILE_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+		$sql = 'INSERT INTO ' . GARAGE_QUARTERMILES_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 			'garage_id'	=> $cid,
 			'rt'		=> $data['rt'],
 			'sixty'		=> $data['sixty'],
@@ -80,7 +80,7 @@ class garage_quartermile
 			'pending'	=> ($garage_config['enable_quartermile_approval'] == '1') ? 1 : 0
 		);
 
-		$sql = 'UPDATE ' . GARAGE_QUARTERMILE_TABLE . '
+		$sql = 'UPDATE ' . GARAGE_QUARTERMILES_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
 			WHERE id = $qmid AND garage_id = $cid";
 
@@ -104,9 +104,36 @@ class garage_quartermile
 			$garage_image->delete_image($data['image_id']);
 		}
 
-		$garage->delete_rows(GARAGE_QUARTERMILE_TABLE, 'id', $qmid);
+		$garage->delete_rows(GARAGE_QUARTERMILES_TABLE, 'id', $qmid);
 
 		return ;
+	}
+
+	/*========================================================================*/
+	// Returns Count Of Quartermile Images
+	// Usage: count_quartermile_images('vehicle id', 'quartermile id');
+	/*========================================================================*/
+	function count_quartermile_images($cid, $qmid)
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'COUNT(qg.id) as total',
+			'FROM'		=> array(
+				GARAGE_QUARTERMILE_GALLERY_TABLE	=> 'qg',
+			),
+			'WHERE'		=> "qg.garage_id = $cid AND qg.quartermile_id = $qmid"
+		));
+
+		$result = $db->sql_query($sql);
+	        $data = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		$data['total'] = (empty($data['total'])) ? 0 : $data['total'];
+		return $data['total'];
 	}
 
 	/*========================================================================*/
@@ -123,11 +150,11 @@ class garage_quartermile
 			array(
 			'SELECT'	=> 'q.garage_id, MIN(q.quart) as quart',
 			'FROM'		=> array(
-				GARAGE_QUARTERMILE_TABLE	=> 'q',
+				GARAGE_QUARTERMILES_TABLE	=> 'q',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
 					'ON'	=> 'q.garage_id =g.id'
 				)
 				,array(
@@ -171,13 +198,13 @@ class garage_quartermile
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id, g.user_id, q.id as qmid, q.image_id, u.username, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.rr_id, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous',
+			'SELECT'	=> 'g.id, g.user_id, q.id as qmid, qg.image_id, u.username, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.rr_id, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous',
 			'FROM'		=> array(
-				GARAGE_QUARTERMILE_TABLE	=> 'q',
+				GARAGE_QUARTERMILES_TABLE	=> 'q',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
 					'ON'	=> 'q.garage_id =g.id'
 				)
 				,array(
@@ -193,12 +220,16 @@ class garage_quartermile
 					'ON'	=> 'g.user_id = u.user_id'
 				)
 				,array(
-					'FROM'	=> array(GARAGE_DYNORUN_TABLE => 'd'),
+					'FROM'	=> array(GARAGE_DYNORUNS_TABLE => 'd'),
 					'ON'	=> 'q.rr_id = d.id'
 				)
 				,array(
+					'FROM'	=> array(GARAGE_QUARTERMILE_GALLERY_TABLE => 'qg'),
+					'ON'	=> 'g.id = qg.garage_id'
+				)
+				,array(
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
-					'ON'	=> 'i.attach_id = q.image_id'
+					'ON'	=> 'i.attach_id = qg.image_id'
 				)
 			),
 			'WHERE'		=>  "q.quart = $quart AND q.garage_id = $garage_id"
@@ -225,11 +256,11 @@ class garage_quartermile
 			array(
 			'SELECT'	=> 'g.id as garage_id, u.user_id, g.user_id, q.id as qmid, q.image_id, u.username, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.rr_id',
 			'FROM'		=> array(
-				GARAGE_QUARTERMILE_TABLE	=> 'q',
+				GARAGE_QUARTERMILES_TABLE	=> 'q',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
 					'ON'	=> 'q.garage_id =g.id'
 				)
 				,array(
@@ -277,11 +308,11 @@ class garage_quartermile
 			array(
 			'SELECT'	=> 'q.*, d.id, d.bhp, d.bhp_unit, i.*, g.made_year, mk.make, md.model, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
 			'FROM'		=> array(
-				GARAGE_QUARTERMILE_TABLE	=> 'q',
+				GARAGE_QUARTERMILES_TABLE	=> 'q',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
 					'ON'	=> 'q.garage_id =g.id'
 				)
 				,array(
@@ -293,7 +324,7 @@ class garage_quartermile
 					'ON'	=> 'g.model_id = md.id and md.pending = 0'
 				)
 				,array(
-					'FROM'	=> array(GARAGE_DYNORUN_TABLE => 'd'),
+					'FROM'	=> array(GARAGE_DYNORUNS_TABLE => 'd'),
 					'ON'	=> 'q.rr_id = d.id'
 				)
 				,array(
@@ -325,7 +356,7 @@ class garage_quartermile
 			array(
 			'SELECT'	=> 'q.*, i.attach_id, i.attach_hits, i.attach_ext, i.attach_file, i.attach_thumb_location, i.attach_is_image, i.attach_location',
 			'FROM'		=> array(
-				GARAGE_QUARTERMILE_TABLE	=> 'q',
+				GARAGE_QUARTERMILES_TABLE	=> 'q',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
@@ -503,7 +534,7 @@ class garage_quartermile
 
 		for($i = 0; $i < count($id_list); $i++)
 		{
-			$garage->update_single_field(GARAGE_QUARTERMILE_TABLE, 'pending', 0, 'id', $id_list[$i]);
+			$garage->update_single_field(GARAGE_QUARTERMILES_TABLE, 'pending', 0, 'id', $id_list[$i]);
 		}
 
 		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_quartermiles"));

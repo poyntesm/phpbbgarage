@@ -105,7 +105,7 @@ class garage_insurance
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
 					'ON'	=> 'g.id = in.garage_id'
 				)
 				,array(
@@ -149,7 +149,7 @@ class garage_insurance
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
 					'ON'	=> 'g.id = in.garage_id'
 				)
 				,array(
@@ -169,7 +169,7 @@ class garage_insurance
 					'ON'	=> 'g.user_id = u.user_id'
 				)
 				,array(
-					'FROM'	=> array(GARAGE_MODS_TABLE => 'm'),
+					'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'm'),
 					'ON'	=> 'i.garage_id = m.garage_id'
 				)
 			),
@@ -206,7 +206,7 @@ class garage_insurance
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
 					'ON'	=> 'g.id = in.garage_id'
 				)
 				,array(

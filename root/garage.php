@@ -191,9 +191,8 @@ switch( $mode )
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('vehicle', $cid);
 				//Insert Image Into Vehicles Gallery
-				$garage_image->insert_gallery_image($image_id);
-				//Set Image As Hilite Image For Vehicle
-				$garage->update_single_field(GARAGE_TABLE, 'image_id', $image_id, 'id', $cid);
+				$hilite = $garage_vehicle->hilite_exists($cid);
+				$garage_image->insert_vehicle_gallery_image($image_id, $hilite);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
 			else if ($garage_image->above_image_quotas())
@@ -431,8 +430,9 @@ switch( $mode )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('modification', $mid);
-				//Set Image To This Modification
-				$garage->update_single_field(GARAGE_MODS_TABLE, 'image_id', $image_id, 'id', $mid);
+				//Insert Image Into Modifications Gallery
+				$hilite = $garage_modification->hilite_exists($cid, $mid);
+				$garage_image->insert_modification_gallery_image($image_id, $hilite);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
 			else if ($garage_image->above_image_quotas())
@@ -539,7 +539,7 @@ switch( $mode )
 		if ( ($data['editupload'] == 'delete') OR ( $data['editupload'] == 'new') )
 		{
 			$garage_image->delete_image($data['image_id']);
-			$garage->update_single_field(GARAGE_MODS_TABLE, 'image_id', 'NULL', 'id', $mid);
+			$garage->update_single_field(GARAGE_MODIFICATIONS_TABLE, 'image_id', 'NULL', 'id', $mid);
 		}
 
 		//If Any Image Variables Set Enter The Image Handling
@@ -551,7 +551,7 @@ switch( $mode )
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('modification', $mid);
 				//Set Image To This Modification
-				$garage->update_single_field(GARAGE_MODS_TABLE, 'image_id', $image_id, 'id', $mid);
+				$garage->update_single_field(GARAGE_MODIFICATIONS_TABLE, 'image_id', $image_id, 'id', $mid);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
 			else if ( $garage_image->above_image_quotas() )
@@ -661,7 +661,9 @@ switch( $mode )
 			{
 				//Create Thumbnail & DB Entry For Image + Link To Item
 				$image_id = $garage_image->process_image_attached('quartermile', $qmid);
-				$garage->update_single_field(GARAGE_QUARTERMILE_TABLE, 'image_id', $image_id, 'id', $qmid);
+				//Insert Image Into Quartermiles Gallery
+				$hilite = $garage_quartermile->hilite_exists($cid, $qmid);
+				$garage_image->insert_quartermile_gallery_image($image_id, $hilite);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
 			else if ( $garage_image->above_image_quotas() )
@@ -784,7 +786,7 @@ switch( $mode )
 		if (($data['editupload'] == 'delete') OR ($data['editupload'] == 'new'))
 		{
 			$garage_image->delete_image($data['image_id']);
-			$garage->update_single_field(GARAGE_QUARTERMILE_TABLE, 'image_id', 'NULL', 'id', $qmid);
+			$garage->update_single_field(GARAGE_QUARTERMILES_TABLE, 'image_id', 'NULL', 'id', $qmid);
 		}
 
 		//If Any Image Variables Set Enter The Image Handling
@@ -795,7 +797,7 @@ switch( $mode )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('quartermile', $qmid);
-				$garage->update_single_field(GARAGE_QUARTERMILE_TABLE, 'image_id', $image_id, 'id', $qmid);
+				$garage->update_single_field(GARAGE_QUARTERMILES_TABLE, 'image_id', $image_id, 'id', $qmid);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
 			else if ($garage_image->above_image_quotas())
@@ -937,7 +939,9 @@ switch( $mode )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('dynorun', $rrid);
-				$garage->update_single_field(GARAGE_DYNORUN_TABLE,'image_id', $image_id, 'id', $rrid);
+				//Insert Image Into Dynoruns Gallery
+				$hilite = $garage_dynorun->hilite_exists($cid, $rrid);
+				$garage_image->insert_dynorun_gallery_image($image_id, $hilite);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
 			else if ($garage_image->above_image_quotas())
@@ -1045,7 +1049,7 @@ switch( $mode )
 		if (($data['editupload'] == 'delete') OR ($data['editupload'] == 'new'))
 		{
 			$garage_image->delete_image($data['image_id']);
-			$garage->update_single_field(GARAGE_DYNORUN_TABLE, 'image_id', 'NULL', 'id', $rrid);
+			$garage->update_single_field(GARAGE_DYNORUNS_TABLE, 'image_id', 'NULL', 'id', $rrid);
 		}
 
 		//If Any Image Variables Set Enter The Image Handling
@@ -1056,7 +1060,7 @@ switch( $mode )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('dynorun', $rrid);
-				$garage->update_single_field(GARAGE_DYNORUN_TABLE, 'image_id', $image_id, 'id', $rrid);
+				$garage->update_single_field(GARAGE_DYNORUNS_TABLE, 'image_id', $image_id, 'id', $rrid);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
 			else if ($garage_image->above_image_quotas())
@@ -1654,7 +1658,7 @@ switch( $mode )
 		$garage_template->sidemenu();
 
 		//Update View Count For Vehicle
-		$garage->update_view_count(GARAGE_TABLE, 'views', 'id', $cid);
+		$garage->update_view_count(GARAGE_VEHICLES_TABLE, 'views', 'id', $cid);
 
 		break;
 
@@ -1783,10 +1787,10 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Update All Vehicles They Own To Not Main Vehicle
-		$garage->update_single_field(GARAGE_TABLE, 'main_vehicle', 0 ,'user_id', $garage_vehicle->get_vehicle_owner_id($cid));
+		$garage->update_single_field(GARAGE_VEHICLES_TABLE, 'main_vehicle', 0 ,'user_id', $garage_vehicle->get_vehicle_owner_id($cid));
 
 		//Now We Update This Vehicle To The Main Vehicle
-		$garage->update_single_field(GARAGE_TABLE, 'main_vehicle', 1, 'id', $cid);
+		$garage->update_single_field(GARAGE_VEHICLES_TABLE, 'main_vehicle', 1, 'id', $cid);
 
 		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
 
@@ -1814,12 +1818,8 @@ switch( $mode )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('vehicle', $cid);
-				$garage_image->insert_gallery_image($image_id);
-				//If First Image And Set As Vehicle Hilite Image
-				if (empty($data['image_id']))
-				{
-					$garage->update_single_field(GARAGE_TABLE, 'image_id', $image_id, 'id', $cid);
-				}
+				$hilite = $garage_vehicle->hilite_exists($cid);
+				$garage_image->insert_vehicle_gallery_image($image_id, $hilite);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
 			else if ($garage_image->above_image_quotas())
@@ -2002,7 +2002,7 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Set Image As Hilite Image For Vehicle
-		$garage->update_single_field(GARAGE_TABLE, 'image_id', $image_id, 'id', $cid);
+		$garage->update_single_field(GARAGE_VEHICLES_TABLE, 'image_id', $image_id, 'id', $cid);
 
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
@@ -2844,8 +2844,8 @@ switch( $mode )
 		$garage->check_required_vars($params);
 
 		//Lets Update All Possible Business Fields With The Reassigned Business
-		$garage->update_single_field(GARAGE_MODS_TABLE, 'business_id', $data['target_id'], 'business_id', $data['business_id']);
-		$garage->update_single_field(GARAGE_MODS_TABLE, 'install_business_id', $data['target_id'], 'install_business_id', $data['business_id']);
+		$garage->update_single_field(GARAGE_MODIFICATIONS_TABLE, 'business_id', $data['target_id'], 'business_id', $data['business_id']);
+		$garage->update_single_field(GARAGE_MODIFICATIONS_TABLE, 'install_business_id', $data['target_id'], 'install_business_id', $data['business_id']);
 		$garage->update_single_field(GARAGE_INSURANCE_TABLE, 'business_id', $data['target_id'], 'business_id', $data['business_id']);
 
 		//Since We Have Updated All Item Lets Do The Original Delete Now

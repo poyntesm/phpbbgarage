@@ -114,7 +114,7 @@ class garage_vehicle
 	{
 		global $user, $db, $garage_config;
 
-		$sql = 'INSERT INTO ' . GARAGE_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+		$sql = 'INSERT INTO ' . GARAGE_VEHICLES_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 			'made_year'		=> $data['year'],
 			'engine_type'		=> $data['engine_type'],
 			'make_id'		=> $data['make_id'],
@@ -145,7 +145,7 @@ class garage_vehicle
 	{
 		global $cid, $db;
 
-		$sql = 'INSERT INTO ' . GARAGE_RATING_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+		$sql = 'INSERT INTO ' . GARAGE_RATINGS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 			'garage_id'		=> $cid,
 			'rating'		=> $data['vehicle_rating'],
 			'user_id'		=> $data['user_id'],
@@ -171,7 +171,7 @@ class garage_vehicle
 			array(
 			'SELECT'	=> 'COUNT(g.id) as total',
 			'FROM'		=> array(
-				GARAGE_TABLE	=> 'g',
+				GARAGE_VEHICLES_TABLE	=> 'g',
 			),
 			'WHERE'		=> 'g.user_id = ' . $user->data['user_id']
 		));
@@ -198,7 +198,7 @@ class garage_vehicle
 			array(
 			'SELECT'	=> 'COUNT(*) as total, r.rate_date',
 			'FROM'		=> array(
-				GARAGE_RATING_TABLE	=> 'r',
+				GARAGE_RATINGS_TABLE	=> 'r',
 			),
 			'WHERE'		=> "r.user_id = " . $user->data['user_id'] ." AND garage_id = $cid",
 			'GROUP_BY'	=> 'r.id'
@@ -236,7 +236,7 @@ class garage_vehicle
 			'pending'		=> ($garage_config['enable_vehicle_approval']) ? 1 : 0
 		);
 
-		$sql = 'UPDATE ' . GARAGE_TABLE . '
+		$sql = 'UPDATE ' . GARAGE_VEHICLES_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
 			WHERE id = $cid";
 
@@ -258,7 +258,7 @@ class garage_vehicle
 			'rate_date'	=> time() 
 		);
 
-		$sql = 'UPDATE ' . GARAGE_RATING_TABLE . '
+		$sql = 'UPDATE ' . GARAGE_RATINGS_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
 			WHERE user_id = " . $data['user_id'] . " AND garage_id = $cid";
 
@@ -275,7 +275,7 @@ class garage_vehicle
 	{
 		global $db;
 
-		$sql = "DELETE FROM " . GARAGE_RATING_TABLE;
+		$sql = "DELETE FROM " . GARAGE_RATINGS_TABLE;
 	
 		$db->sql_query($sql);
 
@@ -283,7 +283,7 @@ class garage_vehicle
 			'weighted_rating'	=> '0'
 		);
 
-		$sql = 'UPDATE ' . GARAGE_TABLE . '
+		$sql = 'UPDATE ' . GARAGE_VEHICLES_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql);
 
 		$db->sql_query($sql);
@@ -303,7 +303,7 @@ class garage_vehicle
 			array(
 			'SELECT'	=> 'COUNT(g.id) AS votes_recieved, AVG(rating) AS average_rating',
 			'FROM'		=> array(
-				GARAGE_RATING_TABLE	=> 'g',
+				GARAGE_RATINGS_TABLE	=> 'g',
 			),
 			'WHERE'		=> "g.id = $cid"
 		));
@@ -316,7 +316,7 @@ class garage_vehicle
 			array(
 			'SELECT'	=> 'AVG(rating) AS site_average',
 			'FROM'		=> array(
-				GARAGE_RATING_TABLE	=> 'g',
+				GARAGE_RATINGS_TABLE	=> 'g',
 			)
 		));
 
@@ -347,7 +347,7 @@ class garage_vehicle
 			'weighted_rating'	=> $weighted_rating
 		);
 
-		$sql = 'UPDATE ' . GARAGE_TABLE . '
+		$sql = 'UPDATE ' . GARAGE_VEHICLES_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
 			WHERE id = $cid";
 
@@ -371,7 +371,7 @@ class garage_vehicle
 			array(
 			'SELECT'	=> 'COUNT(g.id) as total',
 			'FROM'		=> array(
-				GARAGE_TABLE	=> 'g',
+				GARAGE_VEHICLES_TABLE	=> 'g',
 			)
 		));
 
@@ -384,22 +384,22 @@ class garage_vehicle
 	}
 
 	/*========================================================================*/
-	// Returns Count Of Ratings Give To Vehicle By A User
-	// Usage: count_user_vehicle_ratings('user id');
+	// Returns Count Of Vehicle Images
+	// Usage: count_vehicle_images('vehicle id');
 	/*========================================================================*/
-	function count_user_vehicle_ratings($id)
+	function count_vehicle_images($cid)
 	{
-		global $cid, $db;
+		global $db;
 
 		$data = null;
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'COUNT(r.id) as total',
+			'SELECT'	=> 'COUNT(vg.id) as total',
 			'FROM'		=> array(
-				GARAGE_RATING_TABLE	=> 'r',
+				GARAGE_VEHICLE_GALLERY_TABLE	=> 'vg',
 			),
-			'WHERE'		=> "r.user_id = $id AND r.garage_id = $cid"
+			'WHERE'		=> "vg.garage_id = $cid"
 		));
 
 		$result = $db->sql_query($sql);
@@ -439,7 +439,7 @@ class garage_vehicle
 	{
 		global $garage;
 		
-		$garage->update_single_field(GARAGE_TABLE, 'date_updated', time(), 'id', $cid);
+		$garage->update_single_field(GARAGE_VEHICLES_TABLE, 'date_updated', time(), 'id', $cid);
 	
 		return;
 	}
@@ -457,94 +457,170 @@ class garage_vehicle
 		{
 			$template->assign_block_vars('show_featured_vehicle', array());
 
-			// If we are using random, go fetch!
-			$featured_vehicle_id = '';
-	       		if ( $garage_config['featured_vehicle_random'] == 'on' )
-       			{
-				$sql = "SELECT g.id 
-					FROM " . GARAGE_TABLE . " g
-	                        		LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-			                        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id 
-					WHERE makes.pending = 0 and models.pending = 0 and image_id IS NOT NULL 
-					ORDER BY rand() LIMIT 1";
+			//Start To Build SQl For Selecting Featured Vehicle..We Will Extend This Array Based On User Options
+			$sql_array = array(
+				'SELECT'	=> 'g.id, g.made_year, vg.image_id, g.user_id, makes.make, models.model, images.attach_id, images.attach_hits, images.attach_thumb_location, u.username, images.attach_is_image, images.attach_location, COUNT(mods.id) AS mod_count, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, images.attach_file, (SUM(mods.install_price) + SUM(mods.price)) AS money_spent, sum( r.rating ) AS rating',
+				'FROM'		=> array(
+					GARAGE_VEHICLES_TABLE	=> 'g',
+				),
+				'LEFT_JOIN'	=> array(
+					array(
+						'FROM'	=> array(GARAGE_MAKES_TABLE => 'makes'),
+						'ON'	=> 'g.make_id = makes.id',
+					)
+					,array(
+						'FROM'	=> array(GARAGE_VEHICLE_GALLERY_TABLE => 'vg'),
+						'ON'	=> 'g.id = vg.garage_id AND vg.hilite = 1',
+					)
+					,array(
+						'FROM'	=> array(GARAGE_IMAGES_TABLE => 'images'),
+						'ON'	=> 'images.attach_id = vg.image_id',
+					)
+					,array(
+						'FROM'	=> array(GARAGE_MODELS_TABLE => 'models'),
+						'ON'	=> 'g.model_id = models.id ',
+					)
+					,array(
+						'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'mods'),
+						'ON'	=> 'g.id = mods.garage_id ',
+					)
+					,array(
+						'FROM'	=> array(GARAGE_RATINGS_TABLE => 'r'),
+						'ON'	=> 'g.id = r.garage_id ',
+					)
+					,array(
+						'FROM'	=> array(USERS_TABLE => 'u'),
+						'ON'	=> 'g.user_id = u.user_id',
+					)
+				)
+			);
 
-    				$result = $db->sql_query($sql);
+			//If we are using random, go fetch!
+			$featured_vehicle_id = null;
+	       		if ( $garage_config['featured_vehicle_random'] == 'on' )
+			{
+				$sql = $db->sql_build_query('SELECT', 
+				array(
+					'SELECT'	=> 'g.id',
+					'FROM'		=> array(
+						GARAGE_VEHICLES_TABLE	=> 'g',
+					),
+					'LEFT_JOIN'	=> array(
+						array(
+							'FROM'	=> array(GARAGE_MAKES_TABLE => 'md'),
+							'ON'	=> 'g.make_id = mk.id'
+						)
+						,array(
+							'FROM'	=> array(GARAGE_MODELS_TABLE => 'mk'),
+							'ON'	=> 'g.model_id = md.id'
+						)
+					),
+					'WHERE'		=> "makes.pending = 0 and models.pending = 0 and image_id IS NOT NULL",
+					'ORDER_BY'	=> "rand()"
+				));
+
+    				$result = $db->sql_query_limit($sql, 1);
 				$vehicle_data = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
 
+				//Update SQL Array With Required Statements
 				$featured_vehicle_id = $vehicle_data['id'];
-	       			$where = "WHERE g.id='".$vehicle_data['id']."' GROUP BY g.id";
+				$sql_array['WHERE'] = "g.id =" . $vehicle_data['id'];
+				$sql_array['GROUP_BY'] = "g.id";
+				$sql_array['ORDER_BY'] = "g.id ASC";
 	 	 	}
 			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Newest_Vehicles'] )
 			{
-	       			$where = "WHERE makes.pending = 0 and models.pending = 0 
-					  GROUP BY g.id ORDER BY g.date_created DESC LIMIT 1";
+				$sql_array['WHERE'] = "makes.pending = 0 and models.pending = 0";
+				$sql_array['GROUP_BY'] = "g.id";
+				$sql_array['ORDER_BY'] = "g.date_created DESC";
 			}
 			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Last_Updated_Vehicles'] )
 			{
-	       			$where = "WHERE makes.pending = 0 and models.pending = 0 
-					  GROUP BY g.id ORDER BY g.date_updated DESC LIMIT 1";
+				$sql_array['WHERE'] = "makes.pending = 0 and models.pending = 0";
+				$sql_array['GROUP_BY'] = "g.id";
+				$sql_array['ORDER_BY'] = "g.date_updated DESC";
 			}
 			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Newest_Modifications'] )
 			{
-	       			$where = "WHERE makes.pending = 0 and models.pending = 0 
-					  GROUP BY g.id ORDER BY mods.date_created DESC LIMIT 1";
+				$sql_array['WHERE'] = "makes.pending = 0 and models.pending = 0";
+				$sql_array['GROUP_BY'] = "g.id";
+				$sql_array['ORDER_BY'] = "mods.date_created DESC";
 			}
 			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Last_Updated_Modifications'] )
 			{
-	       			$where = "WHERE makes.pending = 0 and models.pending = 0 
-					  GROUP BY g.id ORDER BY mods.date_updated DESC LIMIT 1";
+				$sql_array['WHERE'] = "makes.pending = 0 and models.pending = 0";
+				$sql_array['GROUP_BY'] = "g.id";
+				$sql_array['ORDER_BY'] = "mods.date_updated";
 			}
 			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Most_Modified_Vehicle'] )
 			{
-	       			$where = "WHERE makes.pending = 0 and models.pending = 0 
-					  GROUP BY g.id ORDER BY mod_count DESC LIMIT 1";
+				$sql_array['WHERE'] = "makes.pending = 0 and models.pending = 0";
+				$sql_array['GROUP_BY'] = "g.id";
+				$sql_array['ORDER_BY'] = "mod_count DESC";
 			}
 			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Most_Money_Spent'] )
 			{
-	       			$where = "WHERE makes.pending = 0 and models.pending = 0 
-					  GROUP BY g.id ORDER BY money_spent DESC LIMIT 1";
+				$sql_array['WHERE'] = "makes.pending = 0 and models.pending = 0";
+				$sql_array['GROUP_BY'] = "g.id";
+				$sql_array['ORDER_BY'] = "money_spent DESC";
 			}
 			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Most_Viewed_Vehicle'] )
 			{
-	       			$where = "WHERE makes.pending = 0 and models.pending = 0 
-					  GROUP BY g.id ORDER BY g.views DESC LIMIT 1";
+				$sql_array['WHERE'] = "makes.pending = 0 and models.pending = 0";
+				$sql_array['GROUP_BY'] = "g.id";
+				$sql_array['ORDER_BY'] = "g.views DESC";
 			}
 			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Latest_Vehicle_Comments'] )
 			{
-				$where = "LEFT JOIN " . GARAGE_GUESTBOOKS_TABLE . " AS gb on g.id = gb.garage_id
-	  				  WHERE makes.pending = 0 and models.pending = 0
-					  GROUP BY g.id ORDER BY gb.post_date DESC LIMIT 1";
+				$sql_array['LEFT_JOIN'] .= array(array(
+								'FROM'	=> array(GARAGE_GUESTBOOKS_TABLE => 'gb'),	
+								'ON'	=> 'g.id = gb.garage_id'
+							));
+				$sql_array['WHERE'] = "makes.pending = 0 and models.pending = 0";
+				$sql_array['GROUP_BY'] = "g.id";
+				$sql_array['ORDER_BY'] = "gb.post_date DESC";
 			}
 			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Top_Quartermile_Runs'] )
 			{
-				$where = "LEFT JOIN " . GARAGE_QUARTERMILE_TABLE . " AS qm on g.id = qm.garage_id
-	  				  WHERE makes.pending = 0 and models.pending = 0
-					  GROUP BY g.id ORDER BY qm.quart ASC LIMIT 1";
+				$sql_array['LEFT_JOIN'] .= array(array(
+								'FROM'	=> array(GARAGE_QUARTERMILES_TABLE => 'qm'),	
+								'ON'	=> 'g.id = qm.garage_id'
+							));
+				$sql_array['WHERE'] = "makes.pending = 0 and models.pending = 0";
+				$sql_array['GROUP_BY'] = "g.id";
+				$sql_array['ORDER_BY'] = "qm.quart ASC";
 			}
 			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Top_Dyno_Runs'] )
 			{
-				$where = "LEFT JOIN " . GARAGE_DYNORUN_TABLE . " AS rr on g.id = rr.garage_id
-	  				  WHERE makes.pending = 0 and models.pending = 0
-					  GROUP BY g.id ORDER BY rr.bhp DESC LIMIT 1";
+				$sql_array['LEFT_JOIN'] .= array(array(
+								'FROM'	=> array(GARAGE_DYNORUNS_TABLE => 'rr'),	
+								'ON'	=> 'g.id = rr.garage_id'
+							));
+				$sql_array['WHERE'] = "makes.pending = 0 and models.pending = 0";
+				$sql_array['GROUP_BY'] = "g.id";
+				$sql_array['ORDER_BY'] = "rr.bhp DESC";
 			}
 			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Top_Rated_Vehicles'] )
 			{
-				 $where = "WHERE makes.pending = 0 and models.pending = 0
-				 	   GROUP BY g.id ORDER BY rating DESC LIMIT 1";
+				$sql_array['WHERE'] = "makes.pending = 0 and models.pending = 0";
+				$sql_array['GROUP_BY'] = "g.id";
+				$sql_array['ORDER_BY'] = "rating DESC";
 			}
 			else
 			{
 				$featured_vehicle_id = $garage_config['featured_vehicle_id'];
-		    		$where = "WHERE g.id='".$garage_config['featured_vehicle_id']."' GROUP BY g.id";
+				$sql_array['WHERE'] = "g.id = " . $garage_config['featured_vehicle_id'];
+				$sql_array['GROUP_BY'] = "g.id";
+				$sql_array['ORDER_BY'] = "g.id DESC";
 			}
 
-			// Make sure the vehicle exists
+			//Make sure the vehicle exists if entered in ACP..
 			$sql = $db->sql_build_query('SELECT', 
 				array(
 				'SELECT'	=> 'COUNT(g.id) as num_vehicle',
 				'FROM'		=> array(
-					GARAGE_TABLE	=> 'g',
+					GARAGE_VEHICLES_TABLE	=> 'g',
 				),
 				'WHERE'		=> "id = ". $featured_vehicle_id,
 			));
@@ -554,18 +630,17 @@ class garage_vehicle
 	
 		        if ( $total_vehicles > 0 OR (!empty($garage_config['featured_vehicle_from_block'])) )
 	        	{
-		            	// Grab the vehicle info and prep the HTML
-				$sql = "SELECT g.id, g.made_year, g.image_id, g.user_id, makes.make, models.model, images.attach_id, images.attach_hits, images.attach_thumb_location, m.username, images.attach_is_image, images.attach_location, COUNT(mods.id) AS mod_count, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, images.attach_file, (SUM(mods.install_price) + SUM(mods.price)) AS money_spent, sum( r.rating ) AS rating
-	                 	        FROM " . GARAGE_TABLE . " AS g 
-	                        		LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-		                            	LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = g.image_id
-			                        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id 
-			                        LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON g.id = mods.garage_id 
-			                        LEFT JOIN " . GARAGE_RATING_TABLE . " AS r ON g.id = r.garage_id 
-	        		                LEFT JOIN " . USERS_TABLE . " AS m ON g.user_id = m.user_id
-				    	$where";
+				//Build Complete SQL Statement Now With All Options
+				$sql = $db->sql_build_query('SELECT', array(
+					'SELECT'	=> $sql_array['SELECT'],
+					'FROM'		=> $sql_array['FROM'],
+					'LEFT_JOIN'	=> $sql_array['LEFT_JOIN'],
+					'WHERE'		=> $sql_array['WHERE'],
+					'GROUP_BY'	=> $sql_array['GROUP_BY'],
+					'ORDER_BY'	=> $sql_array['ORDER_BY'],
+				));
 	
-				$result = $db->sql_query($sql);
+				$result = $db->sql_query_limit($sql, 1);
 	        	    	$vehicle_data = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
 	
@@ -860,7 +935,7 @@ class garage_vehicle
 			$garage_image->delete_image($images[$i]['id']);
 		}
 	
-		$garage->delete_rows(GARAGE_TABLE, 'id', $id);
+		$garage->delete_rows(GARAGE_VEHICLES_TABLE, 'id', $id);
 	
 		return;
 	}
@@ -1220,25 +1295,42 @@ class garage_vehicle
 	// Select All Vehicles Data From Db
 	// Usage: get_all_vehicles();
 	/*========================================================================*/
-	function get_all_vehicles($additional_where = NULL, $order_by, $sort_order, $start = 0, $end = 10000)
+	function get_all_vehicles($additional_where = NULL, $order, $sort, $start = 0, $limit = 10000)
 	{
 		global $db;
 
 		$data = null;
 
-		$sql = "SELECT g.*, makes.make, models.model, user.username, count(mods.id) AS total_mods, count(*) as total
-        		FROM " . GARAGE_TABLE . " AS g 
-                    		LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON mods.garage_id = g.id
-			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-			        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id 
-			        LEFT JOIN " . USERS_TABLE . " AS user ON g.user_id = user.user_id 
-			WHERE makes.pending = 0 AND models.pending = 0
-				" . $additional_where . "
-		        GROUP BY g.id
-			ORDER BY $order_by $sort_order
-			LIMIT $start, $end";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'g.*, makes.make, models.model, user.username, count(mods.id) AS total_mods, count(*) as total',
+			'FROM'		=> array(
+				GARAGE_VEHICLES_TABLE	=> 'g',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_MODICIATIONS_TABLE => 'mods'),	
+					'ON'	=> 'mods.garage_id = g.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'makes'),
+					'ON'	=> 'g.make_id = makes.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'models'),
+					'ON'	=> 'g.model_id = models.id'
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'user'),
+					'ON'	=> 'g.user_id = user.user_id'
+				)
+			),
+			'WHERE'		=> "mk.pending = 0 AND md.pending = 0 " . $additional_where,
+			'GROUP_BY'	=> "g.id",
+			'ORDER_BY'	=> "$order $sort"
+		));
 
-      		$result = $db->sql_query($sql);
+      		$result = $db->sql_query_limit($sql, $limit, $start);
 		while ($row = $db->sql_fetchrow($result) )
 		{
 			$data[] = $row;
@@ -1258,15 +1350,37 @@ class garage_vehicle
 
 		$data = null;
 
-	   	$sql = "SELECT g.*, ROUND(g.weighted_rating, 2) as weighted_rating, images.*, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id
-                      	FROM " . GARAGE_TABLE . " AS g  
-				LEFT JOIN " . USERS_TABLE ." AS user ON g.user_id = user.user_id
-	                       	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-        	                LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-				LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON g.id = mods.garage_id
-				LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = g.image_id
-                    	WHERE g.id = $cid
-	                GROUP BY g.id";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'g.*, ROUND(g.weighted_rating, 2) as weighted_rating, images.*, makes.make, models.model, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id',
+			'FROM'		=> array(
+				GARAGE_VEHICLES_TABLE	=> 'g',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_MODICIATIONS_TABLE => 'mods'),	
+					'ON'	=> 'mods.garage_id = g.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'makes'),
+					'ON'	=> 'g.make_id = makes.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'models'),
+					'ON'	=> 'g.model_id = models.id'
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'user'),
+					'ON'	=> 'g.user_id = user.user_id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'images'),
+					'ON'	=> 'images.attach_id = g.image_id'
+				)
+			),
+			'WHERE'		=> "g.id = $cid",
+			'GROUP_BY'	=> "g.id"
+		));
 
       		$result = $db->sql_query($sql);
 		$data = $db->sql_fetchrow($result);
@@ -1285,15 +1399,37 @@ class garage_vehicle
 
 		$data = null;
 
-	   	$sql = "SELECT g.*, ROUND(g.weighted_rating, 2) as weighted_rating, images.*, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id
-                      	FROM " . GARAGE_TABLE . " AS g  
-				LEFT JOIN " . USERS_TABLE ." AS user ON g.user_id = user.user_id
-	                       	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-        	                LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-				LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON g.id = mods.garage_id
-				LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = g.image_id
-                    	WHERE g.pending = 1
-	                GROUP BY g.id";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'SELECT g.*, ROUND(g.weighted_rating, 2) as weighted_rating, images.*, makes.make, models.model, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id',
+			'FROM'		=> array(
+				GARAGE_VEHICLES_TABLE	=> 'g',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_MODICIATIONS_TABLE => 'mods'),	
+					'ON'	=> 'mods.garage_id = g.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'makes'),
+					'ON'	=> 'g.make_id = makes.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'models'),
+					'ON'	=> 'g.model_id = models.id'
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'user'),
+					'ON'	=> 'g.user_id = user.user_id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'images'),
+					'ON'	=> 'images.attach_id = g.image_id'
+				)
+			),
+			'WHERE'		=> "g.pending = 1",
+			'GROUP_BY'	=> "g.id"
+		));
 
       		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result) )
@@ -1315,10 +1451,16 @@ class garage_vehicle
 
 		$data = null;
 
-	   	$sql = "SELECT u.username
-                      	FROM " . GARAGE_TABLE . " g  ,  " . USERS_TABLE ." u
-                    	WHERE g.id = $cid and g.user_id = u.user_id
-	                GROUP BY g.id";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'u.username',
+			'FROM'		=> array(
+				GARAGE_VEHICLES_TABLE	=> 'g',
+				USERS_TABLE		=> 'u',
+			),
+			'WHERE'		=> "g.id = $cid and g.user_id = u.user_id",
+			'GROUP_BY'	=> "g.id",
+		));
 
       		$result = $db->sql_query($sql);
 		$data = $db->sql_fetchrow($result);
@@ -1337,10 +1479,16 @@ class garage_vehicle
 
 		$data = null;
 
-	   	$sql = "SELECT u.user_id
-                      	FROM " . GARAGE_TABLE . " g  ,  " . USERS_TABLE ." u
-                    	WHERE g.id = $cid and g.user_id = u.user_id
-	                GROUP BY g.id";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'u.user_id',
+			'FROM'		=> array(
+				GARAGE_VEHICLES_TABLE	=> 'g',
+				USERS_TABLE		=> 'u',
+			),
+			'WHERE'		=> "g.id = $cid and g.user_id = u.user_id",
+			'GROUP_BY'	=> "g.id",
+		));
 
       		$result = $db->sql_query($sql);
 		$data = $db->sql_fetchrow($result);
@@ -1360,15 +1508,41 @@ class garage_vehicle
 
 		$data = null;
 
-	   	$sql = "SELECT g.*, ROUND(g.weighted_rating, 2) as weighted_rating, images.*, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id
-                      	FROM " . GARAGE_TABLE . " AS g  
-				LEFT JOIN " . USERS_TABLE ." AS user ON g.user_id = user.user_id
-	                       	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-        	                LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-				LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON g.id = mods.garage_id
-				LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = g.image_id
-                    	WHERE g.user_id = $user_id
-			GROUP BY g.id";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'g.*, ROUND(g.weighted_rating, 2) as weighted_rating, images.*, makes.make, models.model, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id',
+			'FROM'		=> array(
+				GARAGE_VEHICLES_TABLE	=> 'g',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'mods'),	
+					'ON'	=> 'mods.garage_id = g.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'makes'),
+					'ON'	=> 'g.make_id = makes.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'models'),
+					'ON'	=> 'g.model_id = models.id'
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'user'),
+					'ON'	=> 'g.user_id = user.user_id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_VEHICLE_GALLERY_TABLE => 'vg'),
+					'ON'	=> 'g.id = vg.garage_id AND vg.hilite = 1'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'images'),
+					'ON'	=> 'images.attach_id = vg.image_id'
+				)
+			),
+			'WHERE'		=> "g.user_id = $user_id",
+			'GROUP_BY'	=> "g.id"
+		));
 
       		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
@@ -1390,11 +1564,24 @@ class garage_vehicle
 
 		$data = null;
 
-		$sql = "SELECT r.*, u.username
-        		FROM " . GARAGE_RATING_TABLE . " r
-                    		LEFT JOIN " . GARAGE_TABLE . " g ON r.garage_id = g.id
-				LEFT JOIN " . USERS_TABLE . " u ON r.user_id = u.user_id
-			WHERE r.garage_id ='$cid'";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'r.*, u.username',
+			'FROM'		=> array(
+				GARAGE_RATINGS_TABLE	=> 'r',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),	
+					'ON'	=> 'r.garage_id = g.id'
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'user'),
+					'ON'	=> 'r.user_id = u.user_id'
+				)
+			),
+			'WHERE'		=> "r.garage_id = $cid"
+		));
 
       		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
@@ -1416,16 +1603,31 @@ class garage_vehicle
 
 		$data = null;
 
-		$sql = "SELECT g.id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, 
-	                        g.user_id, g.date_created AS POI, u.username 
-	                FROM " . GARAGE_TABLE . " g 
-	                	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
-	                        LEFT JOIN " . USERS_TABLE . " u ON g.user_id = u.user_id
-			WHERE makes.pending = 0 AND models.pending = 0
-	                ORDER BY POI DESC LIMIT $limit";
-	 		            
-	 	$result = $db->sql_query($sql);
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'g.id, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, g.user_id, g.date_created AS POI, u.username',
+			'FROM'		=> array(
+				GARAGE_VEHICLES_TABLE	=> 'g',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'makes'),	
+					'ON'	=> 'g.make_id = makes.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'models'),	
+					'ON'	=> 'g.model_id = models.id'
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'g.user_id = u.user_id'
+				)
+			),
+			'WHERE'		=> "makes.pending = 0 AND models.pending = 0",
+			'ODRDER_BY'	=> "POI DESC"
+		));
+
+	 	$result = $db->sql_query_limit($sql, $limit);
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$data[] = $row;
@@ -1445,15 +1647,31 @@ class garage_vehicle
 
 		$data = null;
 
-		$sql =  "SELECT g.id, g.user_id, ROUND(g.weighted_rating, 2) as weighted_rating, u.username, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
-			 FROM " . GARAGE_TABLE . " g
-	                        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
-	                        LEFT JOIN " . USERS_TABLE . " u ON g.user_id = u.user_id
-			 WHERE makes.pending = 0 AND models.pending = 0
-			 ORDER BY weighted_rating DESC LIMIT $limit";
-	 		 		
-	 	$result = $db->sql_query($sql);
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'g.id, g.user_id, ROUND(g.weighted_rating, 2) as weighted_rating, u.username, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle',
+			'FROM'		=> array(
+				GARAGE_VEHICLES_TABLE	=> 'g',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'makes'),	
+					'ON'	=> 'g.make_id = makes.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'models'),	
+					'ON'	=> 'g.model_id = models.id'
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'g.user_id = u.user_id'
+				)
+			),
+			'WHERE'		=> "makes.pending = 0 AND models.pending = 0",
+			'ODRDER_BY'	=> "g.weighted_rating DESC"
+		));
+
+	 	$result = $db->sql_query_limit($sql, $limit);
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$data[] = $row;
@@ -1473,16 +1691,31 @@ class garage_vehicle
 
 		$data = null;
 
-	 	$sql = "SELECT g.id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, 
-	                        g.user_id, g.views AS POI, u.username 
-	                FROM " . GARAGE_TABLE . " g 
-	                        LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
-	                        LEFT JOIN " . USERS_TABLE . " u ON g.user_id = u.user_id
-			WHERE makes.pending = 0 AND models.pending = 0
-	                ORDER BY POI DESC LIMIT $limit";
-	 		            
-	 	$result = $db->sql_query($sql);
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'g.id, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle,  g.user_id, g.views AS POI, u.username',
+			'FROM'		=> array(
+				GARAGE_VEHICLES_TABLE	=> 'g',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'makes'),	
+					'ON'	=> 'g.make_id = makes.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'models'),	
+					'ON'	=> 'g.model_id = models.id'
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'g.user_id = u.user_id'
+				)
+			),
+			'WHERE'		=> "makes.pending = 0 AND models.pending = 0",
+			'ODRDER_BY'	=> "POI DESC"
+		));
+
+	 	$result = $db->sql_query_limit($sql, $limit);
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$data[] = $row;
@@ -1502,18 +1735,36 @@ class garage_vehicle
 
 		$data = null;
 
-	 	$sql = "SELECT g.id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, 
-	                        g.user_id, (SUM(mods.install_price) + SUM(mods.price)) AS POI, u.username, g.currency 
-	                FROM " . GARAGE_TABLE . " g 
-	                	LEFT JOIN " . GARAGE_MAKES_TABLE . " makes ON g.make_id = makes.id 
-	                        LEFT JOIN " . GARAGE_MODELS_TABLE . " models ON g.model_id = models.id
-	                        LEFT JOIN " . GARAGE_MODS_TABLE . " mods ON mods.garage_id = g.id 
-	                        LEFT JOIN " . USERS_TABLE . " u ON g.user_id = u.user_id
-			WHERE makes.pending = 0 AND models.pending = 0
-	                GROUP BY g.id 
-	                ORDER BY POI DESC LIMIT $limit";
-	 		            
-	 	$result = $db->sql_query($sql);
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'g.id, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, g.user_id, (SUM(mods.install_price) + SUM(mods.price)) AS POI, u.username, g.currency',
+			'FROM'		=> array(
+				GARAGE_VEHICLES_TABLE	=> 'g',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'makes'),	
+					'ON'	=> 'g.make_id = makes.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'models'),	
+					'ON'	=> 'g.model_id = models.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'mods'),
+					'ON'	=> 'mods.garage_id = g.id'
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'g.user_id = u.user_id'
+				)
+			),
+			'WHERE'		=> 'makes.pending = 0 AND models.pending = 0',
+			'GROUP_BY'	=> 'g.id',
+			'ODRDER_BY'	=> 'POI DESC'
+		));
+
+	 	$result = $db->sql_query_limit($sql, $limit);
 		while ($row = $db->sql_fetchrow($result) )
 		{
 			$data[] = $row;
@@ -1533,12 +1784,17 @@ class garage_vehicle
 
 		$data = null;
 
-	      	$sql = "SELECT DISTINCT c.title, c.id
-	       		FROM  " . GARAGE_MODS_TABLE . " m, " . GARAGE_CATEGORIES_TABLE . " c
-	       		WHERE m.garage_id = $cid
-	       			AND m.category_id = c.id
-			ORDER by c.field_order";
-	
+		$sql = $db->sql_build_query('SELECT_DISTINCT', 
+			array(
+			'SELECT'	=> 'c.title, c.id',
+			'FROM'		=> array(
+				GARAGE_CATEGORIES_TABLE		=> 'c',
+				GARAGE_MODIFICATIONS_TABLE	=> 'm',
+			),
+			'WHERE'		=> "m.garage_id = $cid AND m.category_id = c.id",
+			'ODRDER_BY'	=> 'c.field_order DESC'
+		));
+
 	      	$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
@@ -1553,22 +1809,37 @@ class garage_vehicle
 	// Selects Lastest Updated Vehicle
 	// Usage: get_latest_updatest_vehicles('No. To Return');
 	/*========================================================================*/
-	function get_latest_updated_vehicles($vehicles_required)
+	function get_latest_updated_vehicles($limit)
 	{
 		global $db;
 
 		$data = null;
 
-		$sql = "SELECT g.id, g.made_year, g.user_id, g.date_updated, user.username, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle
-  			FROM " . GARAGE_TABLE . " AS g 
-        			LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
-        			LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id 
-				LEFT JOIN " . USERS_TABLE . " AS user ON g.user_id = user.user_id 
-			WHERE makes.pending = 0 AND models.pending = 0 
-	        	ORDER BY g.date_updated DESC
-			LIMIT 0, " . $vehicles_required;
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'g.id, g.made_year, g.user_id, g.date_updated, u.username, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle',
+			'FROM'		=> array(
+				GARAGE_VEHICLES_TABLE	=> 'g',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'makes'),	
+					'ON'	=> 'g.make_id = makes.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'models'),	
+					'ON'	=> 'g.model_id = models.id'
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'g.user_id = u.user_id'
+				)
+			),
+			'WHERE'		=> 'makes.pending = 0 AND models.pending = 0',
+			'ORDER_BY'	=> 'g.date_updated DESC'
+		));
 
-      		$result = $db->sql_query($sql);
+      		$result = $db->sql_query_limit($sql, $limit);
 		while ($row = $db->sql_fetchrow($result) )
 		{
 			$data[] = $row;
@@ -1588,15 +1859,37 @@ class garage_vehicle
 
 		$data = null;
 
-	   	$sql = "SELECT g.*, images.*, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id
-                      	FROM " . GARAGE_TABLE . " AS g  
-				LEFT JOIN " . USERS_TABLE ." AS user ON g.user_id = user.user_id
-	                       	LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id
-        	                LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id
-				LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON g.id = mods.garage_id
-				LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = g.image_id
-                    	WHERE g.user_id = $user_id and g.main_vehicle =1
-	                GROUP BY g.id";
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'g.*, images.*, makes.make, models.model, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id',
+			'FROM'		=> array(
+				GARAGE_VEHICLES_TABLE	=> 'g',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'makes'),	
+					'ON'	=> 'g.make_id = makes.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'models'),	
+					'ON'	=> 'g.model_id = models.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'mods'),
+					'ON'	=> 'g.id = mods.garage_id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'images'),
+					'ON'	=> 'images.attach_id = g.image_id'
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'g.user_id = u.user_id'
+				)
+			),
+			'WHERE'		=> "g.user_id = $user_id and g.main_vehicle =1",
+			'GROUP_BY'	=> 'g.id'
+		));
 
       		$result = $db->sql_query($sql);
 		$data = $db->sql_fetchrow($result);
@@ -1720,7 +2013,7 @@ class garage_vehicle
 
 		for($i = 0; $i < count($id_list); $i++)
 		{
-			$garage->update_single_field(GARAGE_TABLE, 'pending', 0, 'id', $id_list[$i]);
+			$garage->update_single_field(GARAGE_VEHICLES_TABLE, 'pending', 0, 'id', $id_list[$i]);
 		}
 
 		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_vehicles"));

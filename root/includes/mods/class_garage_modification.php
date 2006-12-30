@@ -36,7 +36,7 @@ class garage_modification
 	{
 		global $cid, $db, $garage_vehicle;
 
-		$sql = 'INSERT INTO ' . GARAGE_MODS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+		$sql = 'INSERT INTO ' . GARAGE_MODIFICATIONS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 			'garage_id'		=> $cid,
 			'user_id'		=> $garage_vehicle->get_vehicle_owner_id($cid),
 			'category_id'		=> $data['category_id'],
@@ -87,7 +87,7 @@ class garage_modification
 			'date_updated'		=> time(),
 		);
 
-		$sql = 'UPDATE ' . GARAGE_MODS_TABLE . '
+		$sql = 'UPDATE ' . GARAGE_MODIFICATIONS_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
 			WHERE id = $mid AND garage_id = $cid";
 
@@ -111,7 +111,7 @@ class garage_modification
 			$garage_image->delete_image($data['image_id']);
 		}
 	
-		$garage->delete_rows(GARAGE_MODS_TABLE, 'id', $mid);
+		$garage->delete_rows(GARAGE_MODIFICATIONS_TABLE, 'id', $mid);
 	
 		return ;
 	}
@@ -135,6 +135,32 @@ class garage_modification
 		return $db->sql_nextid();
 	}
 
+	/*========================================================================*/
+	// Returns Count Of Modiciation Images
+	// Usage: count_modification_images('vehicle id', 'modification id');
+	/*========================================================================*/
+	function count_modification_images($cid, $mid)
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'COUNT(mg.id) as total',
+			'FROM'		=> array(
+				GARAGE_MODIFICATION_GALLERY_TABLE	=> 'mg',
+			),
+			'WHERE'		=> "mg.garage_id = $cid AND mg.modification_id = $mid"
+		));
+
+		$result = $db->sql_query($sql);
+	        $data = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		$data['total'] = (empty($data['total'])) ? 0 : $data['total'];
+		return $data['total'];
+	}
 
 	/*========================================================================*/
 	// Count The Total Modifications Within The Garage
@@ -150,7 +176,7 @@ class garage_modification
 			array(
 			'SELECT'	=> 'COUNT(m.id) as total',
 			'FROM'		=> array(
-				GARAGE_MODS_TABLE	=> 'm',
+				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 			)
 		));
 
@@ -176,7 +202,7 @@ class garage_modification
 			array(
 			'SELECT'	=> 'm.id, m.garage_id, m.user_id, p.title AS mod_title, m.date_updated AS POI, u.username',
 			'FROM'		=> array(
-				GARAGE_MODS_TABLE	=> 'm',
+				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
@@ -184,7 +210,7 @@ class garage_modification
 					'ON'	=> 'm.product_id = p.id'
 				)
 				,array(
-					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
 					'ON'	=> 'm.garage_id = g.id'
 				)
 				,array(
@@ -267,7 +293,7 @@ class garage_modification
 			array(
 			'SELECT'	=> 'm.id, m.garage_id, m.user_id, p.title AS mod_title, m.date_created AS POI, u.username',
 			'FROM'		=> array(
-				GARAGE_MODS_TABLE	=> 'm',
+				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
@@ -275,7 +301,7 @@ class garage_modification
 					'ON'	=> 'm.product_id = p.id'
 				)
 				,array(
-					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
 					'ON'	=> 'm.garage_id = g.id'
 				)
 				,array(
@@ -319,7 +345,7 @@ class garage_modification
 			array(
 			'SELECT'	=> 'g.id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, g.user_id, COUNT(m.id) AS POI, u.username',
 			'FROM'		=> array(
-				GARAGE_TABLE	=> 'g',
+				GARAGE_VEHICLES_TABLE	=> 'g',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
@@ -335,7 +361,7 @@ class garage_modification
 					'ON'	=> 'g.user_id = u.user_id'
 				)
 				,array(
-					'FROM'	=> array(GARAGE_MODS_TABLE => 'm'),
+					'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'm'),
 					'ON'	=> 'g.id = m.garage_id'
 				)
 			),
@@ -369,8 +395,8 @@ class garage_modification
 			array(
 			'SELECT'	=> 'm.*, g.made_year, g.id, g.currency, i.*, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.title as business_title, b2.title as install_business_title, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, p.title',
 			'FROM'		=> array(
-				GARAGE_TABLE		=> 'g',
-				GARAGE_MODS_TABLE	=> 'm',
+				GARAGE_VEHICLES_TABLE	=> 'g',
+				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
@@ -430,7 +456,7 @@ class garage_modification
 			array(
 			'SELECT'	=> 'm.*, i.*, p.title',
 			'FROM'		=> array(
-				GARAGE_MODS_TABLE	=> 'm',
+				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
@@ -471,7 +497,7 @@ class garage_modification
 			array(
 			'SELECT'	=> 'SELECT m.id, m.garage_id, p.title AS mod_title, m.install_price, m.install_rating, m.install_comments, u.username, u.user_id, mk.make, md.model, g.made_year, b.id as business_id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
 			'FROM'		=> array(
-				GARAGE_MODS_TABLE	=> 'm',
+				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 				GARAGE_BUSINESS_TABLE	=> 'b',
 			),
 			'LEFT_JOIN'	=> array(
@@ -480,7 +506,7 @@ class garage_modification
 					'ON'	=> 'm.product_id = p.id'
 				)
 				,array(
-					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
 					'ON'	=> 'm._garage_id = g.id'
 				)
 				,array(
@@ -525,7 +551,7 @@ class garage_modification
 			array(
 			'SELECT'	=> 'm.id, m.garage_id, p.title AS mod_title, m.price, m.purchase_rating, m.product_rating, m.comments, u.username, u.user_id, mk.make, md.model, g.made_year, b.id as business_id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
 			'FROM'		=> array(
-				GARAGE_MODS_TABLE	=> 'm',
+				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 				GARAGE_BUSINESS_TABLE	=> 'b',
 			),
 			'LEFT_JOIN'	=> array(
@@ -534,7 +560,7 @@ class garage_modification
 					'ON'	=> 'm.product_id = p.id'
 				)
 				,array(
-					'FROM'	=> array(GARAGE_TABLE => 'g'),
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
 					'ON'	=> 'm.garage_id = g.id'
 				)
 				,array(
@@ -579,7 +605,7 @@ class garage_modification
 			array(
 			'SELECT'	=> 'm.*, i.*, p.*',
 			'FROM'		=> array(
-				GARAGE_MODS_TABLE	=> 'm',
+				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
