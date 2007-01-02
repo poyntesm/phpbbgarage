@@ -110,10 +110,26 @@ class garage_quartermile
 	}
 
 	/*========================================================================*/
-	// Returns Count Of Quartermile Images
-	// Usage: count_quartermile_images('vehicle id', 'quartermile id');
+	// Determines If Image Is Hilite Image
+	// Usage: hilite_exists('quartermile id');
 	/*========================================================================*/
-	function count_quartermile_images($cid, $qmid)
+	function hilite_exists($qmid)
+	{
+		$hilite = 1;
+
+		if ($this->count_quartermile_images($qmid) > 0)
+		{
+			$hilite = 0;
+		}
+	
+		return $hilite;
+	}
+
+	/*========================================================================*/
+	// Returns Count Of Quartermile Images
+	// Usage: count_quartermile_images('quartermile id');
+	/*========================================================================*/
+	function count_quartermile_images($qmid)
 	{
 		global $db;
 
@@ -125,7 +141,7 @@ class garage_quartermile
 			'FROM'		=> array(
 				GARAGE_QUARTERMILE_GALLERY_TABLE	=> 'qg',
 			),
-			'WHERE'		=> "qg.garage_id = $cid AND qg.quartermile_id = $qmid"
+			'WHERE'		=> "qg.quartermile_id = $qmid"
 		));
 
 		$result = $db->sql_query($sql);
@@ -225,7 +241,7 @@ class garage_quartermile
 				)
 				,array(
 					'FROM'	=> array(GARAGE_QUARTERMILE_GALLERY_TABLE => 'qg'),
-					'ON'	=> 'g.id = qg.garage_id'
+					'ON'	=> 'q.id = qg.quartermile_id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
@@ -276,8 +292,12 @@ class garage_quartermile
 					'ON'	=> 'g.user_id = u.user_id'
 				)
 				,array(
+					'FROM'	=> array(GARAGE_QUARTERMILE_GALLERY_TABLE => 'qg'),
+					'ON'	=> 'q.id = qg.quartermile_id'
+				)
+				,array(
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
-					'ON'	=> 'i.attach_id = q.image_id'
+					'ON'	=> 'i.attach_id = qg.image_id'
 				)
 			),
 			'WHERE'		=>  "q.pending = 1"
@@ -328,8 +348,12 @@ class garage_quartermile
 					'ON'	=> 'q.rr_id = d.id'
 				)
 				,array(
+					'FROM'	=> array(GARAGE_QUARTERMILE_GALLERY_TABLE => 'qg'),
+					'ON'	=> 'q.id = qg.quartermile_id'
+				)
+				,array(
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
-					'ON'	=> 'i.attach_id = q.image_id'
+					'ON'	=> 'i.attach_id = qg.image_id'
 				)
 			),
 			'WHERE'		=>  "q.id = $qmid"
@@ -360,8 +384,12 @@ class garage_quartermile
 			),
 			'LEFT_JOIN'	=> array(
 				array(
+					'FROM'	=> array(GARAGE_QUARTERMILE_GALLERY_TABLE => 'qg'),
+					'ON'	=> 'q.id = qg.quartermile_id'
+				)
+				,array(
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
-					'ON'	=> 'i.attach_id = q.image_id'
+					'ON'	=> 'i.attach_id = qg.image_id'
 				)
 			),
 			'WHERE'		=> 	"q.garage_id = $cid",

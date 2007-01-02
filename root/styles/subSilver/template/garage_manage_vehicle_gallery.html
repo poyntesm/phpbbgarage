@@ -14,7 +14,15 @@
 
 		<td width="72%" valign="top">
 			<form enctype="multipart/form-data" method="post" name="manage_gallery" action="{S_MODE_ACTION}">
+			<table>
+				<tr>
+					<td><a href="{U_EDIT_DATA}">Data</a></td>
+					<td><a href="{U_MANAGE_GALLERY}">Images</a></td>
+					<td></td>
+				</tr>
+			</table>
 			<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
+			
 				<tr>
 					<th nowrap="nowrap" colspan="3">{L_MANAGE} {VEHICLE_DATA} {L_GALLERY}</th>
 				</tr>
@@ -22,7 +30,7 @@
 				<!-- INCLUDE garage_image_attach.html -->
 
 				<tr>
-					<td class="row1" width="32%" colspan="3"><span class="gen">{L_MANAGE_VEHICLE_GALLERY_NOTE}</span></td>
+					<td class="cat" align="center" height="28" colspan="3"><span class="gen"><input type="hidden" value="{CID}" name="CID" /><input type="hidden" value="{MID}" name="MID" /><input type="hidden" value="{QMID}" name="QMID" /><input type="hidden" value="{RRID}" name="RRID" /><input name="submit" type="submit" value="{L_ADD_NEW_IMAGE}" class="liteoption" /></span></td>
 				</tr>
 			 	<tr>
 					<td class="cat" width="32%" align="center"><span class="gen">{L_IMAGE}</span></td>
@@ -38,7 +46,11 @@
 					<!-- ELSE -->
 					<td class="row1" align="center"><span class="gen"><i>{L_CURRENT_HILITE_IMAGE}</i></span></td>
 					<!-- ENDIF -->
-			   	</tr>
+				</tr>
+				<!-- BEGINELSE -->
+				<tr>
+					<td class="row1" align="center" valign="middle" colspan="3">{L_NO_ITEM_TO_LIST}</td>
+				</tr>
 			  	<!-- END pic_row -->
 			</form>
 			</table>

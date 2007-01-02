@@ -136,10 +136,26 @@ class garage_modification
 	}
 
 	/*========================================================================*/
-	// Returns Count Of Modiciation Images
-	// Usage: count_modification_images('vehicle id', 'modification id');
+	// Determines If Image Is Hilite Image
+	// Usage: hilite_exists('vehicle id', 'modification id');
 	/*========================================================================*/
-	function count_modification_images($cid, $mid)
+	function hilite_exists($mid)
+	{
+		$hilite = 1;
+
+		if ($this->count_modification_images($mid) > 0)
+		{
+			$hilite = 0;
+		}
+	
+		return $hilite;
+	}
+
+	/*========================================================================*/
+	// Returns Count Of Modiciation Images
+	// Usage: count_modification_images('modification id');
+	/*========================================================================*/
+	function count_modification_images($mid)
 	{
 		global $db;
 
@@ -151,7 +167,7 @@ class garage_modification
 			'FROM'		=> array(
 				GARAGE_MODIFICATION_GALLERY_TABLE	=> 'mg',
 			),
-			'WHERE'		=> "mg.garage_id = $cid AND mg.modification_id = $mid"
+			'WHERE'		=> "mg.modification_id = $mid"
 		));
 
 		$result = $db->sql_query($sql);
@@ -408,8 +424,12 @@ class garage_modification
 					'ON'	=> 'm.category_id = c.id'
 				)
 				,array(
+					'FROM'	=> array(GARAGE_MODIFICATION_GALLERY_TABLE => 'mg'),
+					'ON'	=> 'm.id = mg.modification_id AND mg.hilite = 1',
+				)
+				,array(
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
-					'ON'	=> 'm.image_id = i.attach_id'
+					'ON'	=> 'mg.image_id = i.attach_id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
@@ -464,8 +484,12 @@ class garage_modification
 					'ON'	=> 'm.product_id = p.id'
 				)
 				,array(
+					'FROM'	=> array(GARAGE_MODIFICATION_GALLERY_TABLE => 'mg'),
+					'ON'	=> 'm.id = mg.modification_id AND mg.hilite = 1',
+				)
+				,array(
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
-					'ON'	=> 'm.image_id = i.attach_id'
+					'ON'	=> 'mg.image_id = i.attach_id'
 				)
 			),
 			'WHERE'		=> "m.garage_id = $cid AND m.category_id = $category_id",
@@ -613,8 +637,12 @@ class garage_modification
 					'ON'	=> 'm.product_id = p.id'
 				)
 				,array(
+					'FROM'	=> array(GARAGE_MODIFICATION_GALLERY_TABLE => 'mg'),
+					'ON'	=> 'm.id = mg.modification_id AND mg.hilite = 1',
+				)
+				,array(
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
-					'ON'	=> 'm.image_id = i.attach_id'
+					'ON'	=> 'mg.image_id = i.attach_id'
 				)
 			),
 			'WHERE'		=> "m.garage_id = $cid"

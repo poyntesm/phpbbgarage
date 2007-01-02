@@ -158,6 +158,7 @@ $lang = array_merge($lang, array(
 	'VEHICLE_DELETED' 		=> 'Vehicle Deleted',
 	'MODIFICATION_DELETED' 		=> 'Modification Deleted',
 	'MODIFICATION' 			=> 'Modification',
+	'RESULTS_DISPLAY'		=> 'Display Results As',
 	'RATING' 			=> 'Rating',
 	'COST' 				=> 'Cost',
 	'TITLE' 			=> 'Title',
@@ -175,6 +176,7 @@ $lang = array_merge($lang, array(
 	'WELCOME' 			=> 'Welcome To The Garage',
 	'WELCOME_TEXT' 			=> 'Get your vehicle(s) listed in the Garage Today, to share with the world what you drive and what toys and modifications you have. The Garage can be a useful tool for finding vehicles and mods and getting some valuable insight!',
 	'TOTAL_VEHICLES' 		=> 'Total Vehicles',
+	'_VEHICLES' 			=> 'Vehicles',
 	'TOTAL_MODIFICATIONS' 		=> 'Total Modifications',
 	'TOTAL_COMMENTS' 		=> 'Total Comments',
 	'TOTAL_VIEWS' 			=> 'Total Views',
@@ -323,7 +325,11 @@ $lang = array_merge($lang, array(
 	'APPROVE_QM' 			=> 'Approve Time',
 	'QM_APPROVED' 			=> 'Quarter Mile Time Approved',
 	'REMOVE_QM' 			=> 'Remove Time',
-	'DYNORUNS'	 		=> 'Dynouns',
+	'DYNORUNS'	 		=> 'Dynoruns',
+	'QUARTERMILES'	 		=> 'Quartermiles',
+	'MODIFICATIONS'	 		=> 'Modifications',
+	'VEHICLES'	 		=> 'Vehicles',
+	'TRACK_TIMES'	 		=> 'Track Times',
 	'GALLERY' 			=> 'Gallery',
 	'VEHICLE_PICTURES' 		=> 'Vehicle Pictures',
 	'MODIFICATION_PICTURES' 	=> 'Modification Pictures',
@@ -698,7 +704,7 @@ $lang = array_merge($lang, array(
 	'PM_OPTOUT'			=> 'Optout of pending notification private messages',
 	'GUESTBOOK_EMAIL_NOTIFY'	=> 'Email notification of comments to your vehicles',
 	'GUESTBOOK_PM_NOTIFY'		=> 'Private message notification of comments to your vehicles',
-	'INDEX_COLUMNS'			=> 'Number of columns on index page'
+	'INDEX_COLUMNS'			=> 'Number of columns on index page',
 
 ));
 

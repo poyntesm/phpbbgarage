@@ -38,7 +38,7 @@ class garage_dynorun
 
 		$sql = 'INSERT INTO ' . GARAGE_DYNORUNS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 			'garage_id'	=> $cid,
-			'dynocenter'	=> $data['dynocenter'],
+			'dynocentre_id'	=> $data['dynocentre_id'],
 			'bhp'		=> $data['bhp'],
 			'bhp_unit'	=> $data['bhp_unit'],
 			'torque'	=> $data['torque'],
@@ -67,7 +67,7 @@ class garage_dynorun
 
 		$update_sql = array(
 			'garage_id'	=> $cid,
-			'dynocenter'	=> $data['dynocenter'],
+			'dynocentre_id'	=> $data['dynocentre_id'],
 			'bhp'		=> $data['bhp'],
 			'bhp_unit'	=> $data['bhp_unit'],
 			'torque'	=> $data['torque'],
@@ -146,10 +146,26 @@ class garage_dynorun
 	}
 
 	/*========================================================================*/
-	// Returns Count Of Dynorun Images
-	// Usage: count_dynorun_images('vehicle id', 'dynorun id');
+	// Determines If Image Is Hilite Image
+	// Usage: hilite_exists('dynorun id');
 	/*========================================================================*/
-	function count_dynorun_images($cid, $rrid)
+	function hilite_exists($rrid)
+	{
+		$hilite = 1;
+
+		if ($this->count_dynorun_images($rrid) > 0)
+		{
+			$hilite = 0;
+		}
+	
+		return $hilite;
+	}
+
+	/*========================================================================*/
+	// Returns Count Of Dynorun Images
+	// Usage: count_dynorun_images('dynorun id');
+	/*========================================================================*/
+	function count_dynorun_images($rrid)
 	{
 		global $db;
 
@@ -161,7 +177,7 @@ class garage_dynorun
 			'FROM'		=> array(
 				GARAGE_DYNORUN_GALLERY_TABLE	=> 'dg',
 			),
-			'WHERE'		=> "dg.garage_id = $cid AND dg.dynorun_id = $rrid"
+			'WHERE'		=> "dg.dynorun_id = $rrid"
 		));
 
 		$result = $db->sql_query($sql);
@@ -203,8 +219,12 @@ class garage_dynorun
 					'ON'	=> 'g.model_id = md.id and md.pending = 0'
 				)
 				,array(
+					'FROM'	=> array(GARAGE_DYNORUN_GALLERY_TABLE => 'dg'),
+					'ON'	=> 'd.id = dg.dynorun_id'
+				)
+				,array(
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
-					'ON'	=> 'i.attach_id = d.image_id'
+					'ON'	=> 'i.attach_id = dg.image_id'
 				)
 			),
 			'WHERE'		=>  "d.id = $rrid"
@@ -251,8 +271,12 @@ class garage_dynorun
 					'ON'	=> 'g.user_id = u.user_id'
 				)
 				,array(
+					'FROM'	=> array(GARAGE_DYNORUN_GALLERY_TABLE => 'dg'),
+					'ON'	=> 'd.id = dg.dynorun_id'
+				)
+				,array(
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
-					'ON'	=> 'i.attach_id = d.image_id'
+					'ON'	=> 'i.attach_id = dg.image_id'
 				)
 			),
 			'WHERE'		=>  "d.pending = 1"
@@ -387,8 +411,12 @@ class garage_dynorun
 			),
 			'LEFT_JOIN'	=> array(
 				array(
+					'FROM'	=> array(GARAGE_DYNORUN_GALLERY_TABLE => 'dg'),
+					'ON'	=> 'd.id = dg.dynorun_id'
+				)
+				,array(
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
-					'ON'	=> 'i.attach_id = d.image_id'
+					'ON'	=> 'i.attach_id = dg.image_id'
 				)
 			),
 			'WHERE'		=>	"d.garage_id = $cid",

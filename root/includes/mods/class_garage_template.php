@@ -170,76 +170,6 @@ class garage_template
 		return;
 	}
 	
-	/*========================================================================*/
-	// Builds The HTML For Editting Already Attached Images
-	// Usage: edit_image('modification'|'vehicle'|'quartermile'|'dynorun', 'image id')
-	/*========================================================================*/
-	function edit_image($type, $image_id)
-	{
-		global $template, $garage_config, $auth, $garage_image;
-	
-		//If No Premissions To Attach An Image Our Job Here Is Done ;)
-		if ( (!$auth->acl_get('u_garage_upload_image')) OR (!$auth->acl_get('u_garage_remote_image')) )
-		{
-			return ;
-		}
-
-		//If Images For Mode Are Enabled Then Show Methods Enabled	
-		if ( $garage_config['enable_'.$type.'_images'] ) 
-		{
-			//Setup Parent Template Block For Image Attachment
-			$template->assign_vars(array('S_DISPLAY_IMAGE_ATTACH_OPTIONS' => true));
-
-			//Define Image Limits
-			$template->assign_vars(array(
-				'MAXIMUM_IMAGE_FILE_SIZE' => $garage_config['max_image_kbytes'],
-				'MAXIMUM_IMAGE_RESOLUTION' => $garage_config['max_image_resolution'])
-			);
-
-			if ( !empty($image_id) )
-			{
-
-				$data = $garage_image->get_image($image_id);
-				//Display Option To Keep Or Remove Image
-				$template->assign_vars(array(
-					'U_IMAGE'			=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_gallery_item&amp;type=garage_mod&amp;image_id=" . $data['attach_id']),
-					'IMAGE_TITLE'			=> $data['attach_file'],
-					'IMAGE'				=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $data['attach_thumb_location'],
-					'IMAGE_ID' 			=> $image_id,
-					'CURRENT_IMAGE' 		=> $data['attach_file'],
-					'S_DISPLAY_KEEP_IMAGE' 		=> true,
-					'S_DISPLAY_REMOVE_IMAGE' 	=> true)
-				);
-				
-				//Show Upload Image Controls If Enabled
-				if  ($garage_config['enable_uploaded_images'] )
-				{
-					$template->assign_vars(array('S_DISPLAY_REPLACE_UPLOAD_IMAGE' => true));
-				}
-				//Show Remote Image Link If Enabled
-				if ( ($garage_config['enable_remote_images'] ) AND (empty($image_id) == FALSE))
-				{
-					$template->assign_vars(array('S_DISPLAY_REPLACE_REMOTE_IMAGE' => true));
-				}
-			}
-			elseif (empty($image_id) )
-			{
-				//Show Upload Image Controls If Enabled
-				if ( $garage_config['enable_uploaded_images'] )
-				{
-					$template->assign_vars(array('S_DISPLAY_UPLOAD_IMAGE' => true));
-				}
-				//Show Remote Image Link If Enabled
-				if ( $garage_config['enable_remote_images'] )
-				{
-					$template->assign_vars(array('S_DISPLAY_REMOTE_IMAGE' => true));
-				}
-			}
-
-		}
-		return;
-	}
-	
 	function order_dropdown($selected = null)
 	{
 		global $template, $user;
@@ -355,6 +285,20 @@ class garage_template
 				'VALUE'		=> $garages[$i]['id'],
 				'TEXT'		=> $garages[$i]['title'],
 				'S_SELECTED'	=> ($selected_id == $garages[$i]['id']) ? true : false)
+			);
+		}
+	}
+
+	function dynocentre_dropdown($dynocentres, $selected_id = null)
+	{
+		global $template;
+
+		for ($i = 0, $count = sizeof($dynocentres);$i < $count; $i++)
+		{
+			$template->assign_block_vars('dynocentre', array(
+				'VALUE'		=> $dynocentres[$i]['id'],
+				'TEXT'		=> $dynocentres[$i]['title'],
+				'S_SELECTED'	=> ($selected_id == $dynocentres[$i]['id']) ? true : false)
 			);
 		}
 	}

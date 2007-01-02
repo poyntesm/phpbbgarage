@@ -43,6 +43,16 @@ function build_model_list()
 
 			<td width="72%" valign="top" >
 			<form id="edit_vehicle" enctype="multipart/form-data" method="post" name="edit_vehicle" action="{S_MODE_ACTION}">
+
+			<!-- IF U_MANAGE_GALLERY -->
+			<table>
+				<tr>
+					<td><a href="{U_EDIT_VEHICLE}">Data</a></td>
+					<td><a href="{U_MANAGE_GALLERY}">Images</a></td>
+					<td></td>
+				</tr>
+			</table>
+			<!-- ENDIF -->
 			<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
 				<tr>
 					<th height="25" colspan="2">{VEHICLE_DATA}</th>

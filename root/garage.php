@@ -176,7 +176,7 @@ switch( $mode )
 		$data['main_vehicle'] = ($user_vehicle_count == 0) ? 1 : 0;
 
 		//Checks All Required Data Is Present
-		$params = array('year', 'make_id', 'model_id');
+		$params = array('made_year', 'make_id', 'model_id');
 		$garage->check_required_vars($params);
 
 		//Insert The Vehicle Into The DB And Get The CID
@@ -246,6 +246,8 @@ switch( $mode )
 		$template->assign_vars(array(
        			'L_TITLE' 		=> $user->lang['EDIT_VEHICLE'],
 			'L_BUTTON' 		=> $user->lang['EDIT_VEHICLE'],
+			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_vehicle&amp;CID=$cid"),
+			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=manage_vehicle_gallery&amp;CID=$cid"),
 			'U_USER_SUBMIT_MAKE' 	=> "javascript:add_make()",
 			'U_USER_SUBMIT_MODEL' 	=> "javascript:add_model()",
 			'CID' 			=> $cid,
@@ -473,7 +475,6 @@ switch( $mode )
 		$manufacturers 	= $garage_business->get_business_by_type(BUSINESS_PRODUCT);
 
 		//Build All Required HTML parts
-		$garage_template->edit_image('modification', $data['image_id'], $data['attach_file']);
 		$garage_template->category_dropdown($categories, $data['category_id']);
 		$garage_template->manufacturer_dropdown($manufacturers, $data['manufacturer_id']);
 		$garage_template->retail_dropdown($shops, $data['shop_id']);
@@ -483,7 +484,9 @@ switch( $mode )
 		$garage_template->rating_dropdown('install_rating', $data['install_rating']);
 		$template->assign_vars(array(
        			'L_TITLE' 		=> $user->lang['MODIFY_MOD'],
-       			'L_BUTTON' 		=> $user->lang['MODIFY_MOD'],
+			'L_BUTTON' 		=> $user->lang['MODIFY_MOD'],
+			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_modification&amp;CID=$cid&amp;MID=$mid"),
+			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=manage_modification_gallery&amp;CID=$cid&amp;MID=$mid"),
 			'U_SUBMIT_PRODUCT'	=> "javascript:add_product('edit_modification')",
 			'U_SUBMIT_SHOP'		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;CID=$cid&amp;redirect=add_modification&amp;BUSINESS=" . BUSINESS_RETAIL),
 			'U_SUBMIT_GARAGE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;CID=$cid&amp;redirect=add_modification&amp;BUSINESS=" . BUSINESS_GARAGE),
@@ -534,31 +537,6 @@ switch( $mode )
 
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
-
-		//User Has Chosen To Delete Existing Image
-		if ( ($data['editupload'] == 'delete') OR ( $data['editupload'] == 'new') )
-		{
-			$garage_image->delete_image($data['image_id']);
-			$garage->update_single_field(GARAGE_MODIFICATIONS_TABLE, 'image_id', 'NULL', 'id', $mid);
-		}
-
-		//If Any Image Variables Set Enter The Image Handling
-		if ($garage_image->image_attached() )
-		{
-			//Check For Remote & Local Image Quotas
-			if ( $garage_image->below_image_quotas() )
-			{
-				//Create Thumbnail & DB Entry For Image
-				$image_id = $garage_image->process_image_attached('modification', $mid);
-				//Set Image To This Modification
-				$garage->update_single_field(GARAGE_MODIFICATIONS_TABLE, 'image_id', $image_id, 'id', $mid);
-			}
-			//You Have Reached Your Image Quota..Error Nicely
-			else if ( $garage_image->above_image_quotas() )
-			{
-				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=4"));
-			}
-		}
 
 		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
 
@@ -734,17 +712,18 @@ switch( $mode )
 		}
 
 		//Build All HTML Parts
-		$garage_template->edit_image('quartermile', $data['image_id'], $data['attach_file']);
 		$template->assign_vars(array(
 			'L_TITLE'		=> $user->lang['EDIT_TIME'],
 			'L_BUTTON'		=> $user->lang['EDIT_TIME'],
+			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_quartermile&amp;CID=$cid&amp;QMID=$qmid"),
+			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=manage_quartermile_gallery&amp;CID=$cid&amp;QMID=$qmid"),
 			'CID'			=> $cid,
 			'QMID'			=> $qmid,
 			'RT'			=> $data['rt'],
 			'SIXTY'			=> $data['sixty'],
 			'THREE' 		=> $data['three'],
-			'EIGHT' 		=> $data['eighth'],
-			'EIGHTMPH' 		=> $data['eighthmph'],
+			'EIGHTH' 		=> $data['eighth'],
+			'EIGHTHMPH' 		=> $data['eighthmph'],
 			'THOU' 			=> $data['thou'],
 			'QUART' 		=> $data['quart'],
 			'QUARTMPH' 		=> $data['quartmph'],
@@ -785,8 +764,7 @@ switch( $mode )
 		//Removed The Old Image If Required By A Delete Or A New Image Existing
 		if (($data['editupload'] == 'delete') OR ($data['editupload'] == 'new'))
 		{
-			$garage_image->delete_image($data['image_id']);
-			$garage->update_single_field(GARAGE_QUARTERMILES_TABLE, 'image_id', 'NULL', 'id', $qmid);
+			$garage_image->delete_quartermile_image($data['image_id']);
 		}
 
 		//If Any Image Variables Set Enter The Image Handling
@@ -876,12 +854,15 @@ switch( $mode )
 			'body'   => 'garage_dynorun.html')
 		);
 
+		$dynocentres 	= $garage_business->get_business_by_type(BUSINESS_DYNOCENTRE);
+
 		//Build Required HTML Components Like Drop Down Boxes.....
 		$garage_template->attach_image('dynorun');
 		$garage_template->nitrous_dropdown();
 		$garage_template->power_dropdown('bhp_unit');
 		$garage_template->power_dropdown('torque_unit');
 		$garage_template->boost_dropdown();
+		$garage_template->dynocentre_dropdown($dynocentres);
 		$template->assign_vars(array(
 			'L_TITLE'  	=> $user->lang['ADD_NEW_RUN'],
 			'L_BUTTON'  	=> $user->lang['ADD_NEW_RUN'],
@@ -918,7 +899,7 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('dynocenter' => '', 'bhp' => '', 'bhp_unit' => '', 'torque' => '', 'torque_unit' => '', 'boost' => '', 'boost_unit' => '', 'nitrous' => '', 'peakpoint' => '');
+		$params = array('dynocentre_id' => '', 'bhp' => '', 'bhp_unit' => '', 'torque' => '', 'torque_unit' => '', 'boost' => '', 'boost_unit' => '', 'nitrous' => '', 'peakpoint' => '');
 		$data 	= $garage->process_vars($params);
 
 		//Checks All Required Data Is Present
@@ -994,18 +975,21 @@ switch( $mode )
 		$params = array('PENDING' => '');
 		$redirect = $garage->process_vars($params);
 
+		$dynocentres 	= $garage_business->get_business_by_type(BUSINESS_DYNOCENTRE);
+
 		//Build All Required HTML
-		$garage_template->edit_image('dynorun', $data['image_id'], $data['attach_file']);
 		$garage_template->nitrous_dropdown($data['nitrous']);
 		$garage_template->power_dropdown('bhp_unit', $data['bhp_unit']);
 		$garage_template->power_dropdown('torque_unit', $data['torque_unit']);
 		$garage_template->boost_dropdown($data['boost_unit']);
+		$garage_template->boost_dropdown($dynocentres ,$data['dynocentre_id']);
 		$template->assign_vars(array(
 			'L_TITLE'  		=> $user->lang['EDIT_RUN'],
 			'L_BUTTON'  		=> $user->lang['EDIT_RUN'],
+			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_dynorun&amp;CID=$cid&amp;RRID=$rrid"),
+			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=manage_dynorun_gallery&amp;CID=$cid&amp;RRID=$rrid"),
 			'CID' 			=> $cid,
 			'RRID' 			=> $rrid,
-			'DYNOCENTER' 		=> $data['dynocenter'],
 			'BHP' 			=> $data['bhp'],
 			'TORQUE' 		=> $data['torque'],
 			'BOOST' 		=> $data['boost'],
@@ -1032,7 +1016,7 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('dynocenter' => '', 'bhp' => '', 'bhp_unit' => '', 'torque' => '', 'torque_unit' => '', 'boost' => '', 'boost_unit' => '', 'nitrous' => '', 'peakpoint' => '', 'editupload' => '', 'image_id' => '', 'pending_redirect' => '');
+		$params = array('dynocentre_id' => '', 'bhp' => '', 'bhp_unit' => '', 'torque' => '', 'torque_unit' => '', 'boost' => '', 'boost_unit' => '', 'nitrous' => '', 'peakpoint' => '', 'editupload' => '', 'image_id' => '', 'pending_redirect' => '');
 		$data 	= $garage->process_vars($params);
 
 		//Checks All Required Data Is Present
@@ -1048,8 +1032,7 @@ switch( $mode )
 		//Removed The Old Image If Required By A Delete Or A New Image Existing
 		if (($data['editupload'] == 'delete') OR ($data['editupload'] == 'new'))
 		{
-			$garage_image->delete_image($data['image_id']);
-			$garage->update_single_field(GARAGE_DYNORUNS_TABLE, 'image_id', 'NULL', 'id', $rrid);
+			$garage_image->delete_dynorun_image($data['image_id']);
 		}
 
 		//If Any Image Variables Set Enter The Image Handling
@@ -1682,6 +1665,27 @@ switch( $mode )
 		//Pull Required Modification Data From DB
 		$data = $garage_modification->get_modification($mid);
 
+		//Get All Gallery Data Required
+		$gallery_data = $garage_image->get_modification_gallery($cid, $mid);
+			
+		//Process Each Image From Modification Gallery	
+       		for ( $i = 0; $i < count($gallery_data); $i++ )
+        	{
+               		// Do we have a thumbnail?  If so, our job is simple here :)
+			if ( (empty($gallery_data[$i]['attach_thumb_location']) == false) AND ($gallery_data[$i]['attach_thumb_location'] != $gallery_data[$i]['attach_location']) )
+			{
+				$template->assign_vars(array(
+					'S_DISPLAY_GALLERIES' 	=> true,
+				));
+
+				$template->assign_block_vars('modification_image', array(
+					'U_IMAGE' 	=> append_sid('garage.'.$phpEx.'?mode=view_gallery_item&amp;image_id='. $gallery_data[$i]['attach_id']),
+					'IMAGE_NAME'	=> $gallery_data[$i]['attach_file'],
+					'IMAGE_SOURCE'	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $gallery_data[$i]['attach_thumb_location'])
+				);
+               		} 
+	       	}
+
 		//Build The Owners Avatar Image If Any...
 		$data['avatar'] = '';
 		if ($data['user_avatar'] AND $user->optionget('viewavatars'))
@@ -1704,9 +1708,6 @@ switch( $mode )
 			'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $data['user_id']),
 			'U_VIEW_GARAGE_BUSINESS'=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_garage_business&amp;business_id=" . $data['installer_id']),
 			'U_VIEW_SHOP_BUSINESS' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_shop_business&amp;business_id=" . $data['shop_id']),
-			'U_MODIFICATION_IMAGE' 	=> (($data['attach_id']) AND ($data['attach_is_image']) AND (!empty($data['attach_thumb_location'])) AND (!empty($data['attach_location']))) ?  append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_gallery_item&amp;type=garage_mod&amp;image_id=" . $data['attach_id']) : '' ,
-            		'MODIFICATION_IMAGE' 	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $data['attach_thumb_location'] ,
-            		'MODIFICATION_IMAGE_TITLE'=> $data['attach_file'],
 			'YEAR' 			=> $data['made_year'],
 			'MAKE' 			=> $data['make'],
 			'MODEL' 		=> $data['model'],
@@ -1796,7 +1797,7 @@ switch( $mode )
 
 		break;
 
-	case 'insert_gallery_image':
+	case 'insert_vehicle_image':
 
 		//Let Check The User Is Allowed Perform This Action
 		if ((!$auth->acl_get('u_garage_upload_image')) OR (!$auth->acl_get('u_garage_remote_image')))
@@ -1807,9 +1808,6 @@ switch( $mode )
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 
-		//Pull Vehicle Data So We Can Check For Hilite Image
-		$data = $garage_vehicle->get_vehicle($cid);
-
 		//If Any Image Variables Set Enter The Image Handling
 		if ($garage_image->image_attached())
 		{
@@ -1818,6 +1816,7 @@ switch( $mode )
 			{
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('vehicle', $cid);
+				//Insert Image Into Vehicles Gallery
 				$hilite = $garage_vehicle->hilite_exists($cid);
 				$garage_image->insert_vehicle_gallery_image($image_id, $hilite);
 			}
@@ -1832,6 +1831,117 @@ switch( $mode )
 		$garage_vehicle->update_vehicle_time($cid);
 
 		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=manage_vehicle_gallery&amp;CID=$cid"));
+
+		break;
+
+	case 'insert_modification_image':
+
+		//Let Check The User Is Allowed Perform This Action
+		if ((!$auth->acl_get('u_garage_upload_image')) OR (!$auth->acl_get('u_garage_remote_image')))
+		{
+			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=16"));
+		}
+
+		//Check Vehicle Ownership
+		$garage_vehicle->check_ownership($cid);
+
+		//If Any Image Variables Set Enter The Image Handling
+		if ($garage_image->image_attached())
+		{
+			//Check For Remote & Local Image Quotas
+			if ($garage_image->below_image_quotas())
+			{
+				//Create Thumbnail & DB Entry For Image
+				$image_id = $garage_image->process_image_attached('modification', $mid);
+				//Insert Image Into Modification Gallery
+				$hilite = $garage_modification->hilite_exists($mid);
+				$garage_image->insert_modification_gallery_image($image_id, $hilite);
+			}
+			//You Have Reached Your Image Quota..Error Nicely
+			else if ($garage_image->above_image_quotas())
+			{
+				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=4"));
+			}
+		}
+
+		//Update Timestamp For Vehicle
+		$garage_vehicle->update_vehicle_time($cid);
+
+		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=manage_modification_gallery&amp;CID=$cid&amp;MID=$mid"));
+
+		break;
+
+	case 'insert_quartermile_image':
+
+		//Let Check The User Is Allowed Perform This Action
+		if ((!$auth->acl_get('u_garage_upload_image')) OR (!$auth->acl_get('u_garage_remote_image')))
+		{
+			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=16"));
+		}
+
+		//Check Vehicle Ownership
+		$garage_vehicle->check_ownership($cid);
+
+		//If Any Image Variables Set Enter The Image Handling
+		if ($garage_image->image_attached())
+		{
+			//Check For Remote & Local Image Quotas
+			if ($garage_image->below_image_quotas())
+			{
+				//Create Thumbnail & DB Entry For Image
+				$image_id = $garage_image->process_image_attached('quartermile', $qmid);
+				//Insert Image Into Quartermile Gallery
+				$hilite = $garage_quartermile->hilite_exists($qmid);
+				$garage_image->insert_quartermile_gallery_image($image_id, $hilite);
+			}
+			//You Have Reached Your Image Quota..Error Nicely
+			else if ($garage_image->above_image_quotas())
+			{
+				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=4"));
+			}
+		}
+
+		//Update Timestamp For Vehicle
+		$garage_vehicle->update_vehicle_time($cid);
+
+		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=manage_quartermile_gallery&amp;CID=$cid&amp;QMID=$qmid"));
+
+		break;
+
+	case 'insert_dynorun_image':
+
+		//Let Check The User Is Allowed Perform This Action
+		if ((!$auth->acl_get('u_garage_upload_image')) OR (!$auth->acl_get('u_garage_remote_image')))
+		{
+			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=16"));
+		}
+
+		//Check Vehicle Ownership
+		$garage_vehicle->check_ownership($cid);
+
+		//If Any Image Variables Set Enter The Image Handling
+		if ($garage_image->image_attached())
+		{
+			//Check For Remote & Local Image Quotas
+			if ($garage_image->below_image_quotas())
+			{
+				//Create Thumbnail & DB Entry For Image
+				$image_id = $garage_image->process_image_attached('dynorun', $rrid);
+				//Insert Image Into Dynorun Gallery
+				$hilite = $garage_dynorun->hilite_exists($rrid);
+				$garage_image->insert_dynorun_gallery_image($image_id, $hilite);
+			}
+			//You Have Reached Your Image Quota..Error Nicely
+			else if ($garage_image->above_image_quotas())
+			{
+				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=4"));
+			}
+		}
+
+		//Update Timestamp For Vehicle
+		$garage_vehicle->update_vehicle_time($cid);
+
+		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=manage_dynorun_gallery&amp;CID=$cid&amp;RRID=$rrid"));
 
 		break;
 
@@ -1911,7 +2021,7 @@ switch( $mode )
 				$template->assign_block_vars('pic_row', array(
 					'U_VIEW_PROFILE'=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;" . POST_USERS_URL . "=" .$data[$i]['user_id']),
 					'U_VIEW_VEHICLE'=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=" .$data[$i]['garage_id']),
-					'U_IMAGE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_gallery_item&amp;type=garage_mod&amp;image_id=" . $data[$i]['attach_id']),
+					'U_IMAGE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_gallery_item&amp;image_id=" . $data[$i]['attach_id']),
 					'IMAGE_TITLE'	=> $data[$i]['attach_file'],
 					'IMAGE'		=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'],
 					'VEHICLE' 	=> $data[$i]['vehicle'],
@@ -1969,26 +2079,28 @@ switch( $mode )
 		//Pre Build All Side Menus
 		$garage_template->attach_image('vehicle');
 
-		//Pull Vehicle Data From DB So We Can Check For Hilite Image
-		$vehicle_data = $garage_vehicle->get_vehicle($cid);
-
 		//Pull Vehicle Gallery Data From DB
-		$data = $garage_image->get_gallery($cid);
+		$data = $garage_image->get_vehicle_gallery($cid);
 
 		//Process Each Image From Vehicle Gallery
 		for ($i = 0, $count = sizeof($data);$i < $count; $i++)
 		{
 			$template->assign_block_vars('pic_row', array(
-				'U_IMAGE'	=> (($data[$i]['image_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location']))) ? append_sid("{$phpbb_root_path}garage. $phpEx", "?mode=view_gallery_item&amp;type=garage_mod&amp;image_id=" . $data[$i]['image_id']) : '',
-				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=remove_gallery_item&amp;&amp;CID=$cid&amp;image_id=" . $data[$i]['image_id']),
-				'U_SET_HILITE'	=> ($data[$i]['image_id'] != $vehicle_data['image_id']) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=set_hilite&amp;image_id=" . $data[$i]['image_id'] . "&amp;CID=$cid") : '',
+				'U_IMAGE'	=> (($data[$i]['attach_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location']))) ? append_sid("{$phpbb_root_path}garage. $phpEx", "?mode=view_gallery_item&amp;image_id=" . $data[$i]['attach_id']) : '',
+				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=remove_vehicle_image&amp;&amp;CID=$cid&amp;image_id=" . $data[$i]['attach_id']),
+				'U_SET_HILITE'	=> ($data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=set_vehicle_hilite&amp;image_id=" . $data[$i]['attach_id'] . "&amp;CID=$cid") : '',
 				'IMAGE' 	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'],
 				'IMAGE_TITLE' 	=> $data[$i]['attach_file'])
 			);
 		}
 
 		$template->assign_vars(array(
-			'CID' => $cid)
+			'CID' => $cid,
+			'EDIT_VEHICLE' 		=> ($garage_config['enable_images']) ? $user->img('garage_main_menu', 'MAIN_MENU') : $user->lang['EDIT_ITEM'],
+			'MANAGE_GALLERY' 	=> ($garage_config['enable_images']) ? $user->img('garage_main_menu', 'MAIN_MENU') : $user->lang['MANAGE_IMAGES'],
+			'U_EDIT_DATA' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_vehicle&amp;CID=$cid"),
+			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=manage_vehicle_gallery&amp;CID=$cid"),
+			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=insert_vehicle_image"))
          	);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
@@ -1996,33 +2108,280 @@ switch( $mode )
 
 		break;
 
-	case 'set_hilite':
+	case 'manage_modification_gallery':
 
-		//Check Vehicle Ownership
+		//Let Check The User Is Allowed Perform This Action
+		if ((!$auth->acl_get('u_garage_upload_image')) OR (!$auth->acl_get('u_garage_remote_image')))
+		{
+			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=16"));
+		}
+
+		//Check Vehicle Ownership		
 		$garage_vehicle->check_ownership($cid);
 
-		//Set Image As Hilite Image For Vehicle
-		$garage->update_single_field(GARAGE_VEHICLES_TABLE, 'image_id', $image_id, 'id', $cid);
+		//Build Page Header ;)
+		page_header($page_title);
+		
+		//Set Template Files In Use For This Mode
+		$template->set_filenames(array(
+			'header' => 'garage_header.html',
+			'body'   => 'garage_manage_vehicle_gallery.html')
+		);
 
-		//Update Timestamp For Vehicle
-		$garage_vehicle->update_vehicle_time($cid);
+		//Pre Build All Side Menus
+		$garage_template->attach_image('modification');
 
-		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
+		//Pull Modification Gallery Data From DB
+		$data = $garage_image->get_modification_gallery($cid, $mid);
+
+		//Process Each Image From Modification Gallery
+		for ($i = 0, $count = sizeof($data);$i < $count; $i++)
+		{
+			$template->assign_block_vars('pic_row', array(
+				'U_IMAGE'	=> (($data[$i]['attach_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location']))) ? append_sid("{$phpbb_root_path}garage. $phpEx", "?mode=view_gallery_item&amp;image_id=" . $data[$i]['attach_id']) : '',
+				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=remove_modification_image&amp;&amp;CID=$cid&amp;MID=$mid&amp;image_id=" . $data[$i]['attach_id']),
+				'U_SET_HILITE'	=> ($data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=set_modification_hilite&amp;image_id=" . $data[$i]['attach_id'] . "&amp;CID=$cid&amp;MID=$mid") : '',
+				'IMAGE' 	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'],
+				'IMAGE_TITLE' 	=> $data[$i]['attach_file'])
+			);
+		}
+
+		$template->assign_vars(array(
+			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_modification&amp;CID=$cid&amp;MID=$mid"),
+			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=manage_modification_gallery&amp;CID=$cid&amp;MID=$mid"),
+			'MID' => $mid,
+			'CID' => $cid,
+			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=insert_modification_image"))
+         	);
+
+		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
+		$garage_template->sidemenu();		
 
 		break;
 
-	case 'remove_gallery_item':
+	case 'manage_quartermile_gallery':
+
+		//Let Check The User Is Allowed Perform This Action
+		if ((!$auth->acl_get('u_garage_upload_image')) OR (!$auth->acl_get('u_garage_remote_image')))
+		{
+			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=16"));
+		}
+
+		//Check Vehicle Ownership		
+		$garage_vehicle->check_ownership($cid);
+
+		//Build Page Header ;)
+		page_header($page_title);
+		
+		//Set Template Files In Use For This Mode
+		$template->set_filenames(array(
+			'header' => 'garage_header.html',
+			'body'   => 'garage_manage_vehicle_gallery.html')
+		);
+
+		//Pre Build All Side Menus
+		$garage_template->attach_image('quartermile');
+
+		//Pull Quartermile Gallery Data From DB
+		$data = $garage_image->get_quartermile_gallery($cid, $qmid);
+
+		//Process Each Image From Quartermile Gallery
+		for ($i = 0, $count = sizeof($data);$i < $count; $i++)
+		{
+			$template->assign_block_vars('pic_row', array(
+				'U_IMAGE'	=> (($data[$i]['attach_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location']))) ? append_sid("{$phpbb_root_path}garage. $phpEx", "?mode=view_gallery_item&amp;image_id=" . $data[$i]['attach_id']) : '',
+				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=remove_quartermile_image&amp;&amp;CID=$cid&amp;QMID=$qmid&amp;image_id=" . $data[$i]['attach_id']),
+				'U_SET_HILITE'	=> ($data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=set_quartermile_hilite&amp;image_id=" . $data[$i]['attach_id'] . "&amp;CID=$cid&amp;QMID=$qmid") : '',
+				'IMAGE' 	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'],
+				'IMAGE_TITLE' 	=> $data[$i]['attach_file'])
+			);
+		}
+
+		$template->assign_vars(array(
+			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_quartermile&amp;CID=$cid&amp;QMID=$qmid"),
+			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=manage_quartermile_gallery&amp;CID=$cid&amp;QMID=$qmid"),
+			'QMID' => $qmid,
+			'CID' => $cid,
+			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=insert_quartermile_image"))
+         	);
+
+		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
+		$garage_template->sidemenu();		
+
+		break;
+
+	case 'manage_dynorun_gallery':
+
+		//Let Check The User Is Allowed Perform This Action
+		if ((!$auth->acl_get('u_garage_upload_image')) OR (!$auth->acl_get('u_garage_remote_image')))
+		{
+			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=16"));
+		}
+
+		//Check Vehicle Ownership		
+		$garage_vehicle->check_ownership($cid);
+
+		//Build Page Header ;)
+		page_header($page_title);
+		
+		//Set Template Files In Use For This Mode
+		$template->set_filenames(array(
+			'header' => 'garage_header.html',
+			'body'   => 'garage_manage_vehicle_gallery.html')
+		);
+
+		//Pre Build All Side Menus
+		$garage_template->attach_image('quartermile');
+
+		//Pull Dynorun Gallery Data From DB
+		$data = $garage_image->get_dynorun_gallery($cid, $rrid);
+
+		//Process Each Image From Dynorun Gallery
+		for ($i = 0, $count = sizeof($data);$i < $count; $i++)
+		{
+			$template->assign_block_vars('pic_row', array(
+				'U_IMAGE'	=> (($data[$i]['attach_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location']))) ? append_sid("{$phpbb_root_path}garage. $phpEx", "?mode=view_gallery_item&amp;image_id=" . $data[$i]['attach_id']) : '',
+				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=remove_dynorun_image&amp;&amp;CID=$cid&amp;RRID=$rrid&amp;image_id=" . $data[$i]['attach_id']),
+				'U_SET_HILITE'	=> ($data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=set_dynorun_hilite&amp;image_id=" . $data[$i]['attach_id'] . "&amp;CID=$cid&amp;RRID=$rrid") : '',
+				'IMAGE' 	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'],
+				'IMAGE_TITLE' 	=> $data[$i]['attach_file'])
+			);
+		}
+
+		$template->assign_vars(array(
+			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_dynorun&amp;CID=$cid&amp;RRID=$rrid"),
+			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=manage_dynorun_gallery&amp;CID=$cid&amp;RRID=$rrid"),
+			'RRID' => $rrid,
+			'CID' => $cid,
+			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=insert_dynorun_image"))
+         	);
+
+		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
+		$garage_template->sidemenu();		
+
+		break;
+
+	case 'set_vehicle_hilite':
 
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 
-		//Remove Image From Vehicle Gallery & Deletes Image
-		$garage_image->delete_gallery_image($image_id);
+		//Set All Images To Non Hilite So We Do Not End Up With Two Hilites & Then Set Hilite
+		$garage->update_single_field(GARAGE_VEHICLE_GALLERY_TABLE, 'hilite', 0, 'garage_id', $cid);
+		$garage->update_single_field(GARAGE_VEHICLE_GALLERY_TABLE, 'hilite', 1, 'image_id', $image_id);
 
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
 		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=manage_vehicle_gallery&amp;CID=$cid"));
+
+		break;
+
+	case 'set_modification_hilite':
+
+		//Check Vehicle Ownership
+		$garage_vehicle->check_ownership($cid);
+
+		//Set All Images To Non Hilite So We Do Not End Up With Two Hilites & Then Set Hilite
+		$garage->update_single_field(GARAGE_MODIFICATION_GALLERY_TABLE, 'hilite', 0, 'modification_id', $mid);
+		$garage->update_single_field(GARAGE_MODIFICATION_GALLERY_TABLE, 'hilite', 1, 'image_id', $image_id);
+
+		//Update Timestamp For Vehicle
+		$garage_vehicle->update_vehicle_time($cid);
+
+		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=manage_modification_gallery&amp;CID=$cid&amp;MID=$mid"));
+
+		break;
+
+	case 'set_quartermile_hilite':
+
+		//Check Vehicle Ownership
+		$garage_vehicle->check_ownership($cid);
+
+		//Set All Images To Non Hilite So We Do Not End Up With Two Hilites & Then Set Hilite
+		$garage->update_single_field(GARAGE_QUARTERMILE_GALLERY_TABLE, 'hilite', 0, 'quartermile_id', $qmid);
+		$garage->update_single_field(GARAGE_QUARTERMILE_GALLERY_TABLE, 'hilite', 1, 'image_id', $image_id);
+
+		//Update Timestamp For Vehicle
+		$garage_vehicle->update_vehicle_time($cid);
+
+		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=manage_quartermile_gallery&amp;CID=$cid&amp;QMID=$qmid"));
+
+		break;
+
+	case 'set_dynorun_hilite':
+
+		//Check Vehicle Ownership
+		$garage_vehicle->check_ownership($cid);
+
+		//Set All Images To Non Hilite So We Do Not End Up With Two Hilites & Then Set Hilite
+		$garage->update_single_field(GARAGE_DYNORUN_GALLERY_TABLE, 'hilite', 0, 'dynorun_id', $rrid);
+		$garage->update_single_field(GARAGE_DYNORUN_GALLERY_TABLE, 'hilite', 1, 'image_id', $image_id);
+
+		//Update Timestamp For Vehicle
+		$garage_vehicle->update_vehicle_time($cid);
+
+		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=manage_dynorun_gallery&amp;CID=$cid&amp;RRID=$rrid"));
+
+		break;
+
+	case 'remove_vehicle_image':
+
+		//Check Vehicle Ownership
+		$garage_vehicle->check_ownership($cid);
+
+		//Remove Image From Vehicle Gallery & Deletes Image
+		$garage_image->delete_vehicle_image($image_id);
+
+		//Update Timestamp For Vehicle
+		$garage_vehicle->update_vehicle_time($cid);
+
+		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=manage_vehicle_gallery&amp;CID=$cid"));
+
+		break;
+
+	case 'remove_modification_image':
+
+		//Check Vehicle Ownership
+		$garage_vehicle->check_ownership($cid);
+
+		//Remove Image From Modification Gallery & Deletes Image
+		$garage_image->delete_modification_image($image_id);
+
+		//Update Timestamp For Vehicle
+		$garage_vehicle->update_vehicle_time($cid);
+
+		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=manage_modification_gallery&amp;CID=$cid&amp;MID=$mid"));
+
+		break;
+
+	case 'remove_quartermile_image':
+
+		//Check Vehicle Ownership
+		$garage_vehicle->check_ownership($cid);
+
+		//Remove Image From Quartermile Gallery & Deletes Image
+		$garage_image->delete_quartermile_image($image_id);
+
+		//Update Timestamp For Vehicle
+		$garage_vehicle->update_vehicle_time($cid);
+
+		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=manage_quartermile_gallery&amp;CID=$cid&amp;QMID=$qmid"));
+
+		break;
+
+	case 'remove_dynorun_image':
+
+		//Check Vehicle Ownership
+		$garage_vehicle->check_ownership($cid);
+
+		//Remove Image From Dynorun Gallery & Deletes Image
+		$garage_image->delete_dynorun_image($image_id);
+
+		//Update Timestamp For Vehicle
+		$garage_vehicle->update_vehicle_time($cid);
+
+		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=manage_dynorun_gallery&amp;CID=$cid&amp;RRID=$rrid"));
 
 		break;
 

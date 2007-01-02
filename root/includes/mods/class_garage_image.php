@@ -787,25 +787,61 @@ class garage_image
 	}
 	
 	/*========================================================================*/
-	// Delete A Gallery Image
-	// Usage: delete_gallery_image('image id');
+	// Delete A Vehicle Image
+	// Usage: delete_vehicle_image('image id');
 	/*========================================================================*/
-	function delete_gallery_image($image_id)
+	function delete_vehicle_gallery_image($image_id)
 	{
-		global $cid, $garage_vehicle, $garage;
+		global $garage;
 
-		//Delete DB Entry & Files
 		$this->delete_image($image_id);
 
-		//If Hilite Image Reset DB Field For Vehicle
-		$data = $garage_vehicle->get_vehicle($cid);
-		if ( $data['image_id']  == $image_id)
-		{
-			$garage->update_single_field(GARAGE_VEHICLES_TABLE,'image_id','NULL','image_id',$image_id);
-		}
+		$garage->delete_rows(GARAGE_VEHICLE_GALLERY_TABLE, 'image_id', $image_id);
 
-		//Remove From Gallery DB Table
-		$garage->delete_rows(GARAGE_GALLERY_TABLE, 'image_id', $image_id);
+		return;
+	}
+
+	/*========================================================================*/
+	// Delete A Modification Image
+	// Usage: delete_modification_image('image id');
+	/*========================================================================*/
+	function delete_modification_image($image_id)
+	{
+		global $garage;
+
+		$this->delete_image($image_id);
+
+		$garage->delete_rows(GARAGE_VEHICLE_GALLERY_TABLE, 'image_id', $image_id);
+
+		return;
+	}
+
+	/*========================================================================*/
+	// Delete A Quartermile Image
+	// Usage: delete_quartermile_image('image id');
+	/*========================================================================*/
+	function delete_quartermile_image($image_id)
+	{
+		global $garage;
+
+		$this->delete_image($image_id);
+
+		$garage->delete_rows(GARAGE_QUARTERMILE_GALLERY_TABLE, 'image_id', $image_id);
+
+		return;
+	}
+
+	/*========================================================================*/
+	// Delete A Dynorun Image
+	// Usage: delete_dynorun_image('image id');
+	/*========================================================================*/
+	function delete_dynorun_image($image_id)
+	{
+		global $garage;
+
+		$this->delete_image($image_id);
+
+		$garage->delete_rows(GARAGE_DYNORUN_GALLERY_TABLE, 'image_id', $image_id);
 
 		return;
 	}
@@ -963,10 +999,10 @@ class garage_image
 	}
 
 	/*========================================================================*/
-	// Select Gallery Data From Single Vehicle From DB
-	// Usage: get_gallery('vehicle id');
+	// Select Vehicle Gallery Data
+	// Usage: get_vehicle_gallery('vehicle id');
 	/*========================================================================*/
-	function get_gallery($cid)
+	function get_vehicle_gallery($cid)
 	{
 		global $db;
 
@@ -974,18 +1010,126 @@ class garage_image
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'gl.*, i.*',
+			'SELECT'	=> 'vg.*, i.*',
 			'FROM'		=> array(
-				GARAGE_GALLERY_TABLE	=> 'gl',
+				GARAGE_VEHICLE_GALLERY_TABLE	=> 'vg',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
-					'ON'	=> 'i.attach_id = gl.image_id'
+					'ON'	=> 'i.attach_id = vg.image_id'
 				)
 			),
-			'WHERE'		=>  "gl.garage_id = $cid",
-			'GROUP_BY'	=>  "gl.id"
+			'WHERE'		=>  "vg.garage_id = $cid",
+			'GROUP_BY'	=>  "vg.id"
+		));
+
+      		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$data[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/*========================================================================*/
+	// Select Modification Gallery Data
+	// Usage: get_modification_gallery('vehicle id', 'modification id');
+	/*========================================================================*/
+	function get_modification_gallery($cid, $mid)
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'mg.*, i.*',
+			'FROM'		=> array(
+				GARAGE_MODIFICATION_GALLERY_TABLE	=> 'mg',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
+					'ON'	=> 'i.attach_id = mg.image_id'
+				)
+			),
+			'WHERE'		=>  "mg.garage_id = $cid AND mg.modification_id = $mid",
+			'GROUP_BY'	=>  "mg.id"
+		));
+
+      		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$data[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/*========================================================================*/
+	// Select Quartermile Gallery Data
+	// Usage: get_quartermile_gallery('vehicle id', 'quartermile id');
+	/*========================================================================*/
+	function get_quartermile_gallery($cid, $qmid)
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'qg.*, i.*',
+			'FROM'		=> array(
+				GARAGE_QUARTERMILE_GALLERY_TABLE	=> 'qg',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
+					'ON'	=> 'i.attach_id = qg.image_id'
+				)
+			),
+			'WHERE'		=>  "qg.garage_id = $cid AND qg.quartermile_id = $qmid",
+			'GROUP_BY'	=>  "qg.id"
+		));
+
+      		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$data[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/*========================================================================*/
+	// Select Dynorun Gallery Data
+	// Usage: get_dynorun_gallery('vehicle id', 'dynorun id');
+	/*========================================================================*/
+	function get_dynorun_gallery($cid, $rrid)
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'dg.*, i.*',
+			'FROM'		=> array(
+				GARAGE_DYNORUN_GALLERY_TABLE	=> 'dg',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
+					'ON'	=> 'i.attach_id = dg.image_id'
+				)
+			),
+			'WHERE'		=>  "dg.garage_id = $cid AND dg.dynorun_id = $rrid",
+			'GROUP_BY'	=>  "dg.id"
 		));
 
       		$result = $db->sql_query($sql);

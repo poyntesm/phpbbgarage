@@ -36,7 +36,7 @@ class garage_insurance
 	{
 		global $cid, $db;
 
-		$sql = 'INSERT INTO ' . GARAGE_INSURANCE_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+		$sql = 'INSERT INTO ' . GARAGE_PREMIUMS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 			'garage_id'	=> $cid,
 			'premium'	=> $data['premium'],
 			'cover_type'	=> $data['cover_type'],
@@ -64,7 +64,7 @@ class garage_insurance
 			'business_id'	=> $data['business_id']
 		);
 
-		$sql = 'UPDATE ' . GARAGE_INSURANCE_TABLE . '
+		$sql = 'UPDATE ' . GARAGE_PREMIUMS_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
 			WHERE id = $ins_id AND garage_id = $cid";
 
@@ -82,7 +82,7 @@ class garage_insurance
 	{
 		global $garage;
 	
-		$garage->delete_rows(GARAGE_INSURANCE_TABLE, 'id', $ins_id);	
+		$garage->delete_rows(GARAGE_PREMIUMS_TABLE, 'id', $ins_id);	
 	
 		return ;
 	}
@@ -101,7 +101,7 @@ class garage_insurance
 			array(
 			'SELECT'	=> 'in.*, b.title, g.made_year, mk.make, md.model, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
 			'FROM'		=> array(
-				GARAGE_INSURANCE_TABLE	=> 'in',
+				GARAGE_PREMIUMS_TABLE	=> 'in',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
@@ -145,7 +145,7 @@ class garage_insurance
 			array(
 			'SELECT'	=> 'i.*, g.*, b.title, b.id as business_id, mk.make, md.model, u.username, u.user_id, ( SUM(m.price) + SUM(m.install_price) ) AS total_spent, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
 			'FROM'		=> array(
-				GARAGE_INSURANCE_TABLE	=> 'i',
+				GARAGE_PREMIUMS_TABLE	=> 'i',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
@@ -202,7 +202,7 @@ class garage_insurance
 			array(
 			'SELECT'	=> 'i.*, g.made_year, b.title, b.id as business_id, mk.make, md.model, u.username, u.user_id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
 			'FROM'		=> array(
-				GARAGE_INSURANCE_TABLE	=> 'i',
+				GARAGE_PREMIUMS_TABLE	=> 'i',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
@@ -255,7 +255,7 @@ class garage_insurance
 			'SELECT'	=> 'round(max( i.premium ),2) AS max, round(min( i.premium ),2) AS min, round(avg( i.premium ),2) AS avg',
 			'FROM'		=> array(
 				GARAGE_BUSINESS_TABLE	=> 'b',
-				GARAGE_INSURANCE_TABLE	=> 'i',
+				GARAGE_PREMIUMS_TABLE	=> 'i',
 			),
 			'WHERE'		=>  "i.business_id = b.id AND b.id = $business_id AND b.type = " . BUSINESS_INSURANCE . " AND i.cover_type = '".htmlspecialchars($cover_type)."' AND i.premium > 0"
 		));
@@ -281,7 +281,7 @@ class garage_insurance
 			array(
 			'SELECT'	=> 'i.*, b.*',
 			'FROM'		=> array(
-				GARAGE_INSURANCE_TABLE	=> 'i',
+				GARAGE_PREMIUMS_TABLE	=> 'i',
 			),
 			'LEFT_JOIN'	=> array(
 				array(

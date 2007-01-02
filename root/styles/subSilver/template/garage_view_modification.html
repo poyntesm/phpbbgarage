@@ -15,7 +15,7 @@
 		<td width="72%" valign="top" >
     			<table cellpadding="4" cellspacing="1" border="0" width="100%" class="tablebg">
      				<tr>
-      					<th height="25" colspan="2" class="thHead">{YEAR} {MAKE} {MODEL}</th>
+      					<th height="25" colspan="2">{YEAR} {MAKE} {MODEL}</th>
      				</tr>
         			<tr>
             				<td class="row1" width="40%" valign="top">
@@ -27,15 +27,6 @@
 								<td align="center">{AVATAR_IMG}<br /><span class="normalname"><a href="{U_VIEW_PROFILE}">{USERNAME}</a></span></td>
 								</td>
 							</tr>
-							<!-- IF U_MODIFICATION_IMAGE -->
-                    					<tr>
-    								<td class="row1"><span class="gen"><b>{L_IMAGE}</b></span></td>
-							</tr>
-                    					<tr>
-								<td align="center"><a href="{U_MODIFICATION_IMAGE}" title="{MODIFICATION_IMAGE_TITLE}" target="_blank"><img valign="bottom" hspace="5" vspace="5" src="{MODIFICATION_IMAGE}" /></a></td>
-							</tr>
-							<!-- ENDIF -->
-
                 				</table>
             				</td>
             				<td class="row1" valign="top">
@@ -89,35 +80,26 @@
         			</tr>
     			</table>
 			<br />
+
+			<!-- IF S_DISPLAY_GALLERIES -->
+    			<table width="100%" border="0" cellspacing="1" cellpadding="4" class="tablebg">
+				<tr>
+      					<th height="25">{L_GALLERY}</th>
+    				</tr>
+				<tr>
+      					<td class="cat" width="100%"><span class="gen">{L_MODIFICATION_PICTURES}</span></td>
+     				</tr>
+        			<tr>
+					<td class="row1">
+						<!-- BEGIN modification_image -->
+							<a href="{modification_image.U_IMAGE}"><img hspace="5" vspace="5" name="{modification_image.IMAGE_NAME}" src="{modification_image.IMAGE_SOURCE}" /></a>
+						<!-- END modification_image -->
+					</td>
+        			</tr>
+    			</table>
+			<br />
+			<!-- ENDIF -->
  	
-			<!-- BEGIN cat_row -->
- 			<table width="100%" cellpadding="2" cellspacing="0" border="0" class="tablebg">
-   				<tr>
-      					<th height="25" colspan="7" class="thHead">{cat_row.CATEGORY_TITLE}</th>
-				</tr>
-   				<tr>
-      					<td class="cat" width="3%"><span class="gen"></span></td>
-      					<td class="cat" width="30"><span class="gen">{L_MODIFICATION}</span></td>
-      					<td class="cat" width="8%"><span class="gen">{L_RATING}</span></td>
-      					<td class="cat" width="8%"><span class="gen">{L_COST}</span></td>
-      					<td class="cat" width="9%"><span class="gen">{L_INSTALL}</span></td>
-      					<td class="cat" width="25%"><span class="gen">{L_CREATED}</span></td>
-      					<td class="cat" width="25%"><span class="gen">{L_UPDATED}</span></td>
-   				</tr>
-  				<!-- BEGIN user_row -->
-   				<tr>
-      					<td class="row1"><span class="gen"></span></td>
-      					<td class="row1"><span class="gen">{cat_row.user_row.MODIFICATION}</span></td>
-      					<td class="row1"><span class="gen">{cat_row.user_row.RATING}</span></td>
-      					<td class="row1"><span class="gen">{cat_row.user_row.COST}</span></td>
-      					<td class="row1"><span class="gen">{cat_row.user_row.INSTALL}</span></td>
-      					<td class="row1"><span class="gen">{cat_row.user_row.CREATED}</span></td>
-      					<td class="row1"><span class="gen">{cat_row.user_row.UPDATED}</span></td>
-				</tr>
-  				<!-- END user_row -->
- 			</table>
- 			<br /> 
- 			<!-- END cat_row -->
 		</td>
 
 <!-- INCLUDE garage_footer.html -->
