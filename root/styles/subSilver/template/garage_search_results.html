@@ -13,15 +13,51 @@
 <!-- INCLUDE garage_menu.html -->
 
 	<td width="72%" valign="top">
-			<!-- BEGIN switch_search --> 
 			<table width="100%" border="0" cellspacing="1" cellpadding="4" class="tablebg">
 	  			<tr>
 					<td valign="top" class="row1" align="center"><span class="gen"><b>{SEARCH_MESSAGE}</b></span><br /></td>
 	  			</tr>
 			</table>
 			<br />
-			<!-- END switch_search -->
 
+			<!-- IF S_DISPLAY_VEHICLE_RESULTS -->
+			<form method="post" action="{S_MODE_ACTION}">
+			<table width="100%" cellpadding="2" cellspacing="1" border="0" class="tablebg">
+				<tr> 
+	  				<th nowrap="nowrap"></th>
+					<th nowrap="nowrap">{L_YEAR}</th>
+					<th nowrap="nowrap">{L_MAKE}</th>
+					<th nowrap="nowrap">{L_MODEL}</th>
+					<th>{L_COLOUR}</th>
+					<th nowrap="nowrap">{L_OWNER}</th>
+					<th nowrap="nowrap">{L_VIEWS}</th>
+					<th nowrap="nowrap">{L_MODS}</th>
+					<th nowrap="nowrap">{L_UPDATED}</th>
+				</tr>
+				<!-- BEGIN vehiclerow -->
+<!-- IF vehiclerow.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+	  				<td align="center"><span class="gen">{vehiclerow.IMAGE_ATTACHED}</span></td>
+	  				<td align="center"><span class="gensmall">{vehiclerow.YEAR}</span></td>
+					<td align="center"><span class="gensmall">{vehiclerow.MAKE}</span></td>
+					<td align="center"><span class="gensmall"><a href="{vehiclerow.U_VIEW_VEHICLE}">{vehiclerow.MODEL}</a></span></td>
+					<td align="center"><span class="gensmall">{vehiclerow.COLOUR}</span></td>
+					<td align="center"><span class="gen"><a href="{vehiclerow.U_VIEW_VEHICLE}">{vehiclerow.OWNER}</a></span></td>
+					<td align="center"><span class="gensmall">{vehiclerow.VIEWS}</span></td>
+					<td align="center"><span class="gensmall">{vehiclerow.MODS}</span></td>
+					<td align="center"><span class="gensmall">{vehiclerow.UPDATED}</span></td>
+				</tr>
+				<!-- END vehiclerow -->
+				<tr>
+					<td class="cat" align="center" height="28" colspan="9"><span class="genmed">{L_SORTED_BY}&nbsp;<select id="sort" name="sort"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN sort --><option value="{sort.VALUE}" <!-- IF sort.S_SELECTED -->selected="selected"<!-- ENDIF -->>{sort.TEXT}</option><!-- END sort --></select>&nbsp;&nbsp;{L_IN}&nbsp;<select id="order" name="order"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN order --><option value="{order.VALUE}" <!-- IF order.S_SELECTED -->selected="selected"<!-- ENDIF -->>{order.TEXT}</option><!-- END order --></select>&nbsp;&nbsp;<input type="hidden" name="make_id" value="{MAKE_ID}" /><input type="hidden" name="model_id" value="{MODEL_ID}" class="liteoption" /><input type="hidden" name="search" value="{SEARCH_PERFORMED}" class="liteoption" /><input type="submit" name="submit" value="{L_GO}" class="liteoption" /></td>
+				</tr>
+			</table>
+			</form>
+			<!-- ENDIF -->
+
+			<!-- IF S_DISPLAY_MODIFICATION_RESULTS -->
+			<!-- ENDIF -->
+
+			<!-- IF S_DISPLAY_PREMIUM_RESULTS -->
 			<form method="post" action="{S_MODE_ACTION}">
 			<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
 				<tr> 
@@ -48,13 +84,18 @@
 					<td class="cat" align="center" height="28" colspan="9"><span class="genmed">{L_INSURANCE_SORTED_BY}&nbsp;{S_SORT_SELECT}&nbsp;&nbsp;{L_IN}&nbsp;<select id="order" name="order"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN order --><option value="{order.VALUE}" <!-- IF order.S_SELECTED -->selected="selected"<!-- ENDIF -->>{order.TEXT}</option><!-- END order --></select>&nbsp;&nbsp;<input type="hidden" value="{MODEL_ID}" name="model_id" /><input type="hidden" value="{MAKE_ID}" name="make_id" /><input type="submit" name="submit" value="{L_GO}" class="liteoption" /></td>
 				</tr>
 			</table>
-			<table width="100%" cellspacing="0" cellpadding="0" border="0">
-  				<tr> 
-					<td><span class="nav">{PAGE_NUMBER}</span></td>
-					<td align="right"><span class="gensmall">{S_TIMEZONE}</span><br /><span class="nav">{PAGINATION}</span></td>
-  				</tr>
-			</table>
 			</form>
+			<!-- ENDIF -->
+
+			<!-- IF S_DISPLAY_QUARTERMILE_RESULTS -->
+			<!-- ENDIF -->
+
+			<!-- IF S_DISPLAY_DYNORUN_RESULTS -->
+			<!-- ENDIF -->
+
+			<!-- IF S_DISPLAY_LAP_RESULTS -->
+			<!-- ENDIF -->
+
 		</td>
 
 <!-- INCLUDE garage_footer.html -->

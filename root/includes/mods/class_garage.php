@@ -297,6 +297,129 @@ class garage
 
 	/*========================================================================*/
 	// Returns List Of Moderators To Notify Of Pending Items By Email & Jabber
+	// Usage: perform_search(array());
+	/*========================================================================*/
+	function perform_search($search_options)
+	{
+		global $db, $garage_config, $garage_template, $sort, $order, $start;
+
+		$data = null;
+
+		//Lets Build The Main Parts For The Query & Some Template Stuff..We Will Add Conditions Later..
+		if ($search_options['display_as'] == 'vehicles')
+		{
+			//Handle Sorting & Ordering
+			$sort = (empty($sort)) ? 'date_created' : $sort;
+			$garage_template->sort_dropdown('vehicle', $sort);
+			$order = (empty($order)) ? 'ASC' : $order;
+			$garage_template->order_dropdown($order);
+
+			//Handle SQL Part
+			$sql_array['SELECT'] = "v.*, mk.make, md.model, u.username, count(m.id) AS total_mods";
+			$sql_array['FROM'] = array(GARAGE_VEHICLES_TABLE	=> 'v');
+			$sql_array['GROUP_BY'] = "v.id";
+			$sql_array['ORDER_BY'] = "$sort $order";
+		}
+		else if ($search_options['display_as'] == 'modifications')
+		{
+			//Handle Sorting & Ordering
+			$sort = (empty($sort)) ? 'date_created' : $sort;
+			$garage_template->sort_dropdown('modification', $sort);
+			$order = (empty($order)) ? 'ASC' : $order;
+			$garage_template->order_dropdown($order);
+
+			//Handle SQL Part
+			$sql_array['SELECT'] = "m.*, g.made_year, g.id, g.currency, i.*, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.title as business_title, b2.title as install_business_title, CONCAT_WS(' ', g.made_year, mk.make, md.model) AS vehicle, p.title";
+			$sql_array['FROM'] = array(GARAGE_MODIFICATIONS_TABLE	=> 'm');
+			$sql_array['GROUP_BY'] = "m.id";
+			$sql_array['ORDER_BY'] = "$sort $order";
+		}
+		else if ($search_options['display_as'] == 'premiums')
+		{
+			//Handle Sorting & Ordering
+			$sort = (empty($sort)) ? 'premium' : $sort;
+			$garage_template->sort_dropdown('vehicle', $sort);
+			$order = (empty($order)) ? 'ASC' : $order;
+			$garage_template->order_dropdown($order);
+
+			//Handle SQL Part
+			$sql_array['SELECT'] = "p.*, g.*, b.title, b.id as business_id, mk.make, md.model, u.username, u.user_id, ( SUM(m.price) + SUM(m.install_price) ) AS total_spent, CONCAT_WS(' ', g.made_year, mk.make, md.model) AS vehicle";
+			$sql_array['FROM'] = array(GARAGE_PREMIUMS_TABLE	=> 'p');
+			$sql_array['GROUP_BY'] = "p.id";
+			$sql_array['ORDER_BY'] = "$sort $order";
+		}
+		else if ($search_options['display_as'] == 'quartermiles')
+		{
+			//Handle Sorting & Ordering
+			$sort = (empty($sort)) ? 'quart' : $sort;
+			$garage_template->sort_dropdown('quartermile', $sort);
+			$order = (empty($order)) ? 'ASC' : $order;
+			$garage_template->order_dropdown($order);
+
+			//Handle SQL Part
+			$sql_array['SELECT'] = "g.id, g.user_id, q.id as qmid, qg.image_id, u.username, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.rr_id, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous";
+			$sql_array['FROM'] = array(GARAGE_QUARTERMILES_TABLE	=> 'q');
+			$sql_array['GROUP_BY'] = "q.id";
+			$sql_array['ORDER_BY'] = "$sort $order";
+		}
+		else if ($search_options['display_as'] == 'dynoruns')
+		{
+			//Handle Sorting & Ordering
+			$sort = (empty($sort)) ? 'bhp' : $sort;
+			$garage_template->sort_dropdown('dynorun', $sort);
+			$order = (empty($order)) ? 'ASC' : $order;
+			$garage_template->order_dropdown($order);
+
+			//Handle SQL Part
+			$sql_array['SELECT'] = "g.id, g.made_year, g.user_id, mk.make, md.model, d.dynocenter, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, d.peakpoint, i.attach_id as image_id, i.attach_file, d.id as rr_id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle";
+			$sql_array['FROM'] = array(GARAGE_DYNORUNS_TABLE	=> 'd');
+			$sql_array['GROUP_BY'] = "d.id";
+			$sql_array['ORDER_BY'] = "$sort $order";
+		}
+		else if ($search_options['display_as'] == 'track_times')
+		{
+			//Handle Sorting & Ordering
+			$sort = (empty($sort)) ? 'lap_time' : $sort;
+			$garage_template->sort_dropdown('icle', $sort);
+			$order = (empty($order)) ? 'ASC' : $order;
+			$garage_template->order_dropdown($order);
+
+			//Handle SQL Part
+			$sql_array['SELECT'] = "";
+			$sql_array['FROM'] = array(GARAGE_LAPS_TABLE	=> 'l');
+			$sql_array['GROUP_BY'] = "l.id";
+			$sql_array['ORDER_BY'] = "$sort $order";
+		}
+
+		//We Will Always Need Make & Model Info
+		$sql_array['LEFT_JOIN'] = "";
+		$sql_array['LEFT_JOIN']	= array(array('FROM' => array(GARAGE_MAKES_TABLE => 'mk'), 'ON' => 'v.make_id = mk.id and mk.pending = 0'), array('FROM' => array(GARAGE_MODELS_TABLE => 'md'), 'ON' => 'v.model_id = md.id and md.pending = 0'));
+
+		//Now We Need To Worry...And I Mean Worry About WHERE's :-(
+		$sql_array['WHERE'] = "";
+
+		//Build Complete SQL Statement Now With All Options
+		$sql = $db->sql_build_query('SELECT', array(
+			'SELECT'	=> $sql_array['SELECT'],
+			'FROM'		=> $sql_array['FROM'],
+			'LEFT_JOIN'	=> $sql_array['LEFT_JOIN'],
+			'WHERE'		=> $sql_array['WHERE'],
+			'GROUP_BY'	=> $sql_array['GROUP_BY'],
+			'ORDER_BY'	=> $sql_array['ORDER_BY'],
+		));
+	
+		$result = $db->sql_query_limit($sql, $garage_config['cars_per_page'], $start);
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$data[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/*========================================================================*/
+	// Returns List Of Moderators To Notify Of Pending Items By Email & Jabber
 	// Usage: moderators_requiring_email($moder);
 	/*========================================================================*/
 	function moderators_requiring_email($moderators)

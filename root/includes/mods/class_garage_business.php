@@ -32,7 +32,7 @@ class garage_business
 	// Inserts Business Into DB
 	// Usage: insert_business(array());
 	/*========================================================================*/
-	function insert_business($data, $type = null)
+	function insert_business($data)
 	{
 		global $db, $garage_config;
 
@@ -44,7 +44,11 @@ class garage_business
 			'website'	=> $data['website'],
 			'email'		=> $data['email'],
 			'opening_hours'	=> $data['opening_hours'],
-			'type'		=> implode(",", $data['type']),
+			'insurance'	=> $data['insurance'],
+			'garage'	=> $data['garage'],
+			'retail'	=> $data['retail'],
+			'product'	=> $data['product'],
+			'dynocentre'	=> $data['dynocentre'],
 			'pending'	=> ($garage_config['enable_business_approval'] == '1') ? 1 : 0 )
 		);
 
@@ -69,7 +73,11 @@ class garage_business
 			'website'	=> $data['website'],
 			'email'		=> $data['email'],
 			'opening_hours'	=> $data['opening_hours'],
-			'type'		=> implode(",", $data['type']),
+			'insurance'	=> $data['insurance'],
+			'garage'	=> $data['garage'],
+			'retail'	=> $data['retail'],
+			'product'	=> $data['product'],
+			'dynocentre'	=> $data['dynocentre'],
 			'pending'	=> ($garage_config['enable_business_approval'] == '1') ? 1 : 0 
 		);
 

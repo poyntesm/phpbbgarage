@@ -595,10 +595,10 @@ switch( $mode )
 
 		$garage_template->attach_image('quartermile');
 		$template->assign_vars(array(
-			'L_TITLE'  	=> $user->lang['ADD_NEW_TIME'],
-			'L_BUTTON'  	=> $user->lang['ADD_NEW_TIME'],
-			'CID' 		=> $cid,
-			'S_MODE_ACTION' => append_sid("{$phpbb_root_path}garage.$phpEx", "mode=insert_quartermile"))
+			'L_TITLE'  			=> $user->lang['ADD_NEW_TIME'],
+			'L_BUTTON'  			=> $user->lang['ADD_NEW_TIME'],
+			'CID' 				=> $cid,
+			'S_MODE_ACTION' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=insert_quartermile"))
          	);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
@@ -864,10 +864,11 @@ switch( $mode )
 		$garage_template->boost_dropdown();
 		$garage_template->dynocentre_dropdown($dynocentres);
 		$template->assign_vars(array(
-			'L_TITLE'  	=> $user->lang['ADD_NEW_RUN'],
-			'L_BUTTON'  	=> $user->lang['ADD_NEW_RUN'],
-			'CID' 		=> $cid,
-			'S_MODE_ACTION' => append_sid("{$phpbb_root_path}garage.$phpEx", "mode=insert_dynorun"))
+			'L_TITLE'  			=> $user->lang['ADD_NEW_RUN'],
+			'L_BUTTON'  			=> $user->lang['ADD_NEW_RUN'],
+			'U_SUBMIT_BUSINESS_DYNOCENTRE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;CID=$cid&amp;redirect=add_dynorun&amp;BUSINESS=" . BUSINESS_DYNOCENTRE ),
+			'CID' 				=> $cid,
+			'S_MODE_ACTION' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=insert_dynorun"))
          	);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
@@ -1370,10 +1371,10 @@ switch( $mode )
 		$garage_template->make_dropdown($makes);
 		$garage_template->manufacturer_dropdown($manufacturers);
 		$template->assign_vars(array(
-			'S_DISPLAY_SEARCH_INSURANCE'		=> $garage_config['enable_insurance'],
-			'S_MODE_ACTION_SEARCH_USERNAME' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=search_username"),
-			'S_MODE_ACTION_SEARCH_INSURANCE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=search_insurance"),
-			'S_MODE_ACTION_SEARCH_VEHICLE' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=search_vehicle"))
+			'U_FIND_USERNAME'		=> append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=searchuser&amp;form=search_garage&amp;field=username'),
+			'UA_FIND_USERNAME'		=> append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=searchuser&form=search_garage&field=username', false),
+			'S_DISPLAY_SEARCH_INSURANCE'	=> $garage_config['enable_insurance'],
+			'S_MODE_ACTION_SEARCH' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=search_results"))
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
@@ -1381,8 +1382,7 @@ switch( $mode )
 
 		break;
 
-	//Mode To Display A List Of Vehicles..Also Used To Display Search Results For Search By Make/Model/User
-	case 'search_vehicle':
+	case 'search_results':
 
 		//Let Check The User Is Allowed Perform This Action
 		if (!$auth->acl_get('u_garage_search'))
@@ -1390,15 +1390,17 @@ switch( $mode )
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=15"));
 		}
 
+		//Get All Data Posted And Make It Safe To Use
+		$params		= array('search_year' => '', 'search_make' => '', 'search_model' => '', 'search_category' => '', 'search_manufacturer' => '', 'search_product' => '', 'search_username' => '', 'display_as' => '', 'made_year' => '', 'make_id' => '', 'model_id' => '', 'category_id' => '', 'manufacturer_id' => '', 'product_id' => '', 'username' => '');
+		$data 		= $garage->process_vars($params);
+
 		//Set Required Values To Defaults If They Are Empty
 		$start	= (empty($start)) ? '0' : $start;
-		$sort	= (empty($sort)) ? 'date_updated' : $sort;
-		$order	= (empty($order)) ? 'DESC' : $order;
 
 		//Set Template Files In Use For This Mode
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
-			'body'   => 'garage_browse.html')
+			'body'   => 'garage_search_results.html')
 		);
 
 		//Build Page Header ;)
@@ -1409,25 +1411,18 @@ switch( $mode )
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=search"))
 		);
 
-		$search_data = $garage_model->build_search_for_user_make_model();
+		//Lets Let The Search Function Do The Hard Work & Return Required Data
+		$results_data = $garage->perform_search($data);
 
-      		$template->assign_block_vars('switch_search', array());
-		$template->assign_vars(array(
-			'SEARCH_MESSAGE' => $search_data['search_message'])
-		);
-
-		//Setup Arrays For Producing Sort Options Drop Down Selection Box
-		$sort_types_text = array($user->lang['LAST_CREATED'], $user->lang['LAST_UPDATED'], $user->lang['OWNER'], $user->lang['YEAR'], $user->lang['MAKE'], $user->lang['MODEL'],  $user->lang['COLOUR'], $user->lang['TOTAL_VIEWS'], $user->lang['TOTAL_MODS']);
-		$sort_types = array('date_created', 'date_updated', 'username', 'made_year', 'make', 'model', 'colour', 'views', 'total_mods');
-
-		//Build All Required HTML
-		$garage_template->order_dropdown($sort_order);
-
-		//Get All Vehicle Data....
-		$data = $garage_vehicle->get_all_vehicles($search_data['where'], $sort, $order, $start, $garage_config['cars_per_page']);
-		for ($i = 0, $count = sizeof($data); $i < $count; $i++)
-      		{
-			$template->assign_block_vars('vehiclerow', array(
+		//Depending On Search Results Required We Have Different Data To Pass To Template Engine
+		if ($data['display_as'] == 'vehicles')
+		{
+			//Display Results As Vehicle
+			$template->assign_vars(array(
+				'S_DISPLAY_VEHICLE_RESULTS' 	=> true,
+			));
+			//Provide Results To Template Engine
+			$template->assign_block_vars('vehicle', array(
 				'U_VIEW_VEHICLE'=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=" . $data[$i]['id']),
 				'U_VIEW_PROFILE'=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $data[$i]['user_id']),
 				'ROW_NUMBER' 	=> $i + ( $start + 1 ),
@@ -1439,154 +1434,28 @@ switch( $mode )
 				'VIEWS'		=> $data[$i]['views'],
 				'MODS'		=> $data[$i]['total_mods'],
 				'MODEL'		=> $data[$i]['model'],
-				'OWNER'		=> $data[$i]['username'])
-			);
+				'OWNER'		=> $data[$i]['username'],
+			));
 		}
-
-		//Count Total Returned For Pagination...Notice No $start or $end to get complete count
-		$count = $garage_vehicle->get_all_vehicles($search_data['where'], $sort, $order);
-
-		$pagination = generate_pagination("garage.$phpEx?mode=browse&amp" . $search_data['make_pagination'] . $search_data['model_pagination'] . ";sort=$sort&amp;order=$order", $count[0]['total'], $garage_config['cars_per_page'], $start);
-
-		$template->assign_vars(array(
-			'MAKE_ID' 	=> $search_data['make_id'],
-			'MODEL_ID' 	=> $search_data['model_id'],
-			'PAGINATION' 	=> $pagination,
-			'PAGE_NUMBER' 	=> sprintf($user->lang['PAGE_OF'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count[0]['total'] / $garage_config['cars_per_page'] )), 
-			'S_SORT_SELECT' => $garage_template->dropdown('sort', $sort_types_text, $sort_types, $sort),
-			'S_MODE_ACTION' => append_sid("{$phpbb_root_path}garage.$phpEx", "mode=browse"))
-		);
-	
-		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$garage_template->sidemenu();
-
-		break;
-
-	//Mode To Display A List Of Vehicles..Also Used To Display Search Results For Search By Make/Model/User
-	case 'search_username':
-
-		//Let Check The User Is Allowed Perform This Action
-		if (!$auth->acl_get('u_garage_search'))
+		else if ($data['display_as'] == 'modifications')
 		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=15"));
+			//Display Results As Modifications
+			$template->assign_vars(array(
+				'S_DISPLAY_MODIFICATION_RESULTS'=> true,
+			));
+			//Provide Results To Template Engine
+			$template->assign_block_vars('vehicle', array(
+				''	=> '',
+			));
 		}
-
-		//Set Required Values To Defaults If They Are Empty
-		$start	= (empty($start)) ? '0' : $start;
-		$sort	= (empty($sort)) ? 'date_updated' : $sort;
-		$order	= (empty($order)) ? 'DESC' : $order;
-
-		//Set Template Files In Use For This Mode
-		$template->set_filenames(array(
-			'header' => 'garage_header.html',
-			'body'   => 'garage_browse.html')
-		);
-
-		//Build Page Header ;)
-		page_header($page_title);
-
-		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $user->lang['SEARCH'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$phpbb_root_path}garage.$phpEx", "mode=search"))
-		);
-
-		$search_data = $garage_model->build_search_for_user_make_model();
-
-      		$template->assign_block_vars('switch_search', array());
-		$template->assign_vars(array(
-			'SEARCH_MESSAGE' => $search_data['search_message'])
-		);
-
-		//Setup Arrays For Producing Sort Options Drop Down Selection Box
-		$sort_types_text = array($user->lang['LAST_CREATED'], $user->lang['LAST_UPDATED'], $user->lang['OWNER'], $user->lang['YEAR'], $user->lang['MAKE'], $user->lang['MODEL'],  $user->lang['COLOUR'], $user->lang['TOTAL_VIEWS'], $user->lang['TOTAL_MODS']);
-		$sort_types = array('date_created', 'date_updated', 'username', 'made_year', 'make', 'model', 'colour', 'views', 'total_mods');
-
-		//Build All Required HTML
-		$garage_template->order_dropdown($sort_order);
-
-		//Get All Vehicle Data....
-		$data = $garage_vehicle->get_all_vehicles($search_data['where'], $sort, $order, $start, $garage_config['cars_per_page']);
-		for ($i = 0, $count = sizeof($data); $i < $count; $i++)
-      		{
-			$template->assign_block_vars('vehiclerow', array(
-				'U_VIEW_VEHICLE'=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=" . $data[$i]['id']),
-				'U_VIEW_PROFILE'=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $data[$i]['user_id']),
-				'ROW_NUMBER' 	=> $i + ( $start + 1 ),
-				'IMAGE_ATTACHED'=> ($data[$i]['image_id']) ? $user->img('vehicle_image_attached', 'VEHICLE_IMAGE_ATTAHCED') : '',
-				'YEAR' 		=> $data[$i]['made_year'],
-				'MAKE' 		=> $data[$i]['make'],
-				'COLOUR' 	=> $data[$i]['colour'],
-				'UPDATED' 	=> $user->format_date($data[$i]['date_updated']),
-				'VIEWS' 	=> $data[$i]['views'],
-				'MODS' 		=> $data[$i]['total_mods'],
-				'MODEL'		=> $data[$i]['model'],
-				'OWNER'	 	=> $data[$i]['username'])
-			);
-		}
-
-		//Count Total Returned For Pagination...Notice No $start or $end to get complete count
-		$count = $garage_vehicle->get_all_vehicles($search_data['where'], $sort, $order);
-
-		$pagination = generate_pagination("garage.$phpEx?mode=search_username&amp;sort=$sort&amp;order=$order", $count[0]['total'], $garage_config['cars_per_page'], $start);
-
-		$template->assign_vars(array(
-			'PAGINATION' 	=> $pagination,
-			'PAGE_NUMBER' 	=> sprintf($user->lang['PAGE_OF'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count[0]['total'] / $garage_config['cars_per_page'] )), 
-			'S_SORT_SELECT' => $garage_template->dropdown('sort', $sort_types_text, $sort_types, $sort),
-			'S_MODE_ACTION' => append_sid("{$phpbb_root_path}garage.$phpEx", "mode=browse"))
-		);
-	
-		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$garage_template->sidemenu();
-
-		break;
-
-	//Mode To Display Searches Of Insurance
-	case 'search_insurance':
-
-		//Let Check The User Is Allowed Perform This Action
-		if (!$auth->acl_get('u_garage_browse'))
+		else if ($data['display_as'] == 'premiums')
 		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=15"));
-		}
-
-		//Set Required Values To Defaults If They Are Empty
-		$start	= (empty($start)) ? '0' : $start;
-		$sort	= (empty($sort)) ? 'premium' : $sort;
-		$order	= (empty($order)) ? 'ASC' : $order;
-
-		//Build Page Header ;)
-		page_header($page_title);
-
-		//Set Template Files In Use For This Mode
-		$template->set_filenames(array(
-			'header'	=> 'garage_header.html',
-			'body' 		=> 'garage_browse_insurance.html')
-		);
-
-		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $user->lang['SEARCH'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$phpbb_root_path}garage.$phpEx", "mode=search"))
-		);
-
-		$search_data = $garage_model->build_insurance_search_for_make_model();
-		
-		$sort_types_text = array($user->lang['PRICE'], $user->lang['MOD_PRICE'], $user->lang['OWNER'], $user->lang['PREMIUM'], $user->lang['COVER_TYPE'], $user->lang['BUSINESS_NAME']);
-		$sort_types = array('g.price', 'total_spent', 'username', 'premium', 'cover_type', 'name');
-
-	      	$template->assign_block_vars('switch_search', array());
-		$template->assign_vars(array(
-			'SEARCH_MESSAGE' => $search_data['search_message'])
-		);
-
-		//Pre Build All Side Menus
-		$garage_template->order_dropdown($sort_order);
-
-		//Get All Insurance Data....
-		$data = $garage_insurance->get_all_premiums($search_data['where'], $sort, $order, $start, $garage_config['cars_per_page']);
-		for ($i = 0, $count = sizeof($data);$i < $count; $i++)
-      		{
-			$template->assign_block_vars('vehiclerow', array(
+			//Display Results As Premiums
+			$template->assign_vars(array(
+				'S_DISPLAY_PREMIUM_RESULTS' 	=> true,
+			));
+			//Provide Results To Template Engine
+			$template->assign_block_vars('vehicle', array(
 				'U_VIEW_VEHICLE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=" . $data[$i]['id']),
 				'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $data[$i]['user_id']),
 				'U_VIEW_BUSINESS' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_insurance_business&amp;business_id=" . $data[$i]['business_id']),
@@ -1596,21 +1465,42 @@ switch( $mode )
 				'PRICE' 		=> $data[$i]['price'],
 				'MOD_PRICE' 		=> $data[$i]['total_spent'],
 				'PREMIUM' 		=> $data[$i]['premium'],
-				'COVER_TYPE' 		=> $data[$i]['cover_type'])
-			);
+				'COVER_TYPE' 		=> $data[$i]['cover_type'],
+			));
 		}
-
-		//Count Total Returned For Pagination...Notice No $start or $end to get complete count
-		$count = sizeof($garage_insurance->get_all_premiums($search_data['where'], $sort, $order));
-
-		$pagination = generate_pagination("garage.$phpEx?mode=search_insurance&amp;make_id=" . $search_data['make_id'] . "&amp;model_id=" . $search_data['model_id'] . "&amp;sort=$sort&amp;order=$order", $count, $garage_config['cars_per_page'], $start);
-
-		$template->assign_vars(array(
-			'PAGINATION' 	=> $pagination,
-			'PAGE_NUMBER' 	=> sprintf($user->lang['PAGE_OF'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count / $garage_config['cars_per_page'] )), 
-			'S_SORT_SELECT' => $garage_template->dropdown('sort', $sort_types_text, $sort_types, $sort),
-			'S_MODE_ACTION' => append_sid("{$phpbb_root_path}garage.$phpEx", "mode=search_insurance"))
-		);
+		else if ($data['display_as'] == 'quartermiles')
+		{
+			//Display Results As Quartermiles
+			$template->assign_vars(array(
+				'S_DISPLAY_QUARTERMILE_RESULTS'	=> true,
+			));
+			//Provide Results To Template Engine
+			$template->assign_block_vars('vehicle', array(
+				''	=> '',
+			));
+		}
+		else if ($data['display_as'] == 'dynoruns')
+		{
+			//Display Results As Dynoruns
+			$template->assign_vars(array(
+				'S_DISPLAY_DYNORUN_RESULTS' 	=> true,
+			));
+			//Provide Results To Template Engine
+			$template->assign_block_vars('vehicle', array(
+				''	=> '',
+			));
+		}
+		else if ($data['display_as'] == 'track_times')
+		{
+			//Display Results As Track Times
+			$template->assign_vars(array(
+				'S_DISPLAY_LAP_RESULTS' 	=> true,
+			));
+			//Provide Results To Template Engine
+			$template->assign_block_vars('vehicle', array(
+				''	=> '',
+			));
+		}
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$garage_template->sidemenu();
@@ -2763,15 +2653,12 @@ switch( $mode )
 			'L_BUTTON'		=> $user->lang['ADD_NEW_BUSINESS'],
 			'CID' 			=> $cid,
 			'REDIRECT'		=> $data['redirect'],
-			'BUSINESS_INSURANCE' 	=> BUSINESS_INSURANCE,
-			'BUSINESS_GARAGE' 	=> BUSINESS_GARAGE,
-			'BUSINESS_RETAIL' 	=> BUSINESS_RETAIL,
-			'BUSINESS_PRODUCT' 	=> BUSINESS_PRODUCT,
 			'S_DISPLAY_PENDING' 	=> $garage_config['enable_business_approval'],
 			'S_BUSINESS_INSURANCE' 	=> ($data['BUSINESS'] == BUSINESS_INSURANCE) ? true : false,
 			'S_BUSINESS_GARAGE' 	=> ($data['BUSINESS'] == BUSINESS_GARAGE) ? true : false,
 			'S_BUSINESS_RETAIL' 	=> ($data['BUSINESS'] == BUSINESS_RETAIL) ? true : false,
 			'S_BUSINESS_PRODUCT' 	=> ($data['BUSINESS'] == BUSINESS_PRODUCT) ? true : false,
+			'S_BUSINESS_DYNOCENTRE' => ($data['BUSINESS'] == BUSINESS_DYNOCENTRE) ? true : false,
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=insert_business"))
 		);
 
@@ -2789,7 +2676,7 @@ switch( $mode )
 		}
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('redirect' => '', 'title' => '', 'address' => '', 'telephone' => '', 'fax' => '', 'website' => '', 'email' => '', 'opening_hours' => '', 'type' => array(0));
+		$params = array('redirect' => '', 'title' => '', 'address' => '', 'telephone' => '', 'fax' => '', 'website' => '', 'email' => '', 'opening_hours' => '', 'product' => '', 'insurance' => '', 'garage' => '', 'retail' => '', 'dynocentre' => '');
 		$data 	= $garage->process_vars($params);
 
 		//Check They Entered http:// In The Front Of The Link
@@ -2848,15 +2735,12 @@ switch( $mode )
 			'EMAIL'			=> $data['email'],
 			'OPENING_HOURS'		=> $data['opening_hours'],
 			'BUSINESS_ID'		=> $data['id'],
-			'BUSINESS_INSURANCE' 	=> BUSINESS_INSURANCE,
-			'BUSINESS_GARAGE' 	=> BUSINESS_GARAGE,
-			'BUSINESS_RETAIL' 	=> BUSINESS_RETAIL,
-			'BUSINESS_PRODUCT' 	=> BUSINESS_PRODUCT,
 			'S_DISPLAY_PENDING' 	=> $garage_config['enable_business_approval'],
-			'S_BUSINESS_INSURANCE' 	=> (in_array(BUSINESS_INSURANCE, explode(",", $data[$i]['type']))) ? true : false,
-			'S_BUSINESS_GARAGE' 	=> (in_array(BUSINESS_GARAGE, explode(",", $data[$i]['type']))) ? true : false,
-			'S_BUSINESS_RETAIL' 	=> (in_array(BUSINESS_RETAIL, explode(",", $data[$i]['type']))) ? true : false,
-			'S_BUSINESS_PRODUCT' 	=> (in_array(BUSINESS_PRODUCT, explode(",", $data[$i]['type']))) ? true : false,
+			'S_BUSINESS_INSURANCE' 	=> ($data['insurance']) ? true : false,
+			'S_BUSINESS_GARAGE' 	=> ($data['garage']) ? true : false,
+			'S_BUSINESS_RETAIL' 	=> ($data['retail']) ? true : false,
+			'S_BUSINESS_PRODUCT' 	=> ($data['product']) ? true : false,
+			'S_BUSINESS_DYNOCENTRE'	=> ($data['dynocentre']) ? true : false,
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=update_business"))
 		);
 
@@ -2874,7 +2758,7 @@ switch( $mode )
 		}
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('id' => '', 'title' => '', 'address' => '', 'telephone' => '', 'fax' => '', 'website' => '', 'email' => '', 'opening_hours' => '', 'type' => array(0));
+		$params = array('id' => '', 'title' => '', 'address' => '', 'telephone' => '', 'fax' => '', 'website' => '', 'email' => '', 'opening_hours' => '', 'product' => '', 'insurance' => '', 'garage' => '', 'retail' => '', 'dynocentre' => '');
 		$data 	= $garage->process_vars($params);
 
 		//Check They Entered http:// In The Front Of The Link
