@@ -34,19 +34,19 @@
 					<th nowrap="nowrap">{L_MODS}</th>
 					<th nowrap="nowrap">{L_UPDATED}</th>
 				</tr>
-				<!-- BEGIN vehiclerow -->
-<!-- IF vehiclerow.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-	  				<td align="center"><span class="gen">{vehiclerow.IMAGE_ATTACHED}</span></td>
-	  				<td align="center"><span class="gensmall">{vehiclerow.YEAR}</span></td>
-					<td align="center"><span class="gensmall">{vehiclerow.MAKE}</span></td>
-					<td align="center"><span class="gensmall"><a href="{vehiclerow.U_VIEW_VEHICLE}">{vehiclerow.MODEL}</a></span></td>
-					<td align="center"><span class="gensmall">{vehiclerow.COLOUR}</span></td>
-					<td align="center"><span class="gen"><a href="{vehiclerow.U_VIEW_VEHICLE}">{vehiclerow.OWNER}</a></span></td>
-					<td align="center"><span class="gensmall">{vehiclerow.VIEWS}</span></td>
-					<td align="center"><span class="gensmall">{vehiclerow.MODS}</span></td>
-					<td align="center"><span class="gensmall">{vehiclerow.UPDATED}</span></td>
+				<!-- BEGIN vehicle -->
+<!-- IF vehicle.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+	  				<td align="center"><span class="gen">{vehicle.IMAGE_ATTACHED}</span></td>
+	  				<td align="center"><span class="gensmall">{vehicle.YEAR}</span></td>
+					<td align="center"><span class="gensmall">{vehicle.MAKE}</span></td>
+					<td align="center"><span class="gensmall"><a href="{vehicle.U_VIEW_VEHICLE}">{vehicle.MODEL}</a></span></td>
+					<td align="center"><span class="gensmall">{vehicle.COLOUR}</span></td>
+					<td align="center"><span class="gen"><a href="{vehicle.U_VIEW_VEHICLE}">{vehicle.OWNER}</a></span></td>
+					<td align="center"><span class="gensmall">{vehicle.VIEWS}</span></td>
+					<td align="center"><span class="gensmall">{vehicle.MODS}</span></td>
+					<td align="center"><span class="gensmall">{vehicle.UPDATED}</span></td>
 				</tr>
-				<!-- END vehiclerow -->
+				<!-- END vehicle -->
 				<tr>
 					<td class="cat" align="center" height="28" colspan="9"><span class="genmed">{L_SORTED_BY}&nbsp;<select id="sort" name="sort"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN sort --><option value="{sort.VALUE}" <!-- IF sort.S_SELECTED -->selected="selected"<!-- ENDIF -->>{sort.TEXT}</option><!-- END sort --></select>&nbsp;&nbsp;{L_IN}&nbsp;<select id="order" name="order"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN order --><option value="{order.VALUE}" <!-- IF order.S_SELECTED -->selected="selected"<!-- ENDIF -->>{order.TEXT}</option><!-- END order --></select>&nbsp;&nbsp;<input type="hidden" name="make_id" value="{MAKE_ID}" /><input type="hidden" name="model_id" value="{MODEL_ID}" class="liteoption" /><input type="hidden" name="search" value="{SEARCH_PERFORMED}" class="liteoption" /><input type="submit" name="submit" value="{L_GO}" class="liteoption" /></td>
 				</tr>
@@ -69,17 +69,17 @@
 					<th class="thTop" nowrap="nowrap">{L_COVER_TYPE}</th>
 					<th class="thCornerR" nowrap="nowrap">{L_BUSINESS_NAME}</th>
 				</tr>
-				<!-- BEGIN vehiclerow -->
-<!-- IF vehiclerow.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-	  				<td align="center" valign="middle"><span class="gensmall"><a href="{vehiclerow.U_VIEW_VEHICLE}">{vehiclerow.VEHICLE}</a></span></td>
-					<td align="center" valign="middle"><span class="gensmall">{vehiclerow.PRICE}</span></td>
-					<td align="center" valign="middle"><span class="gensmall">{vehiclerow.MOD_PRICE}</span></td>
-					<td align="center" valign="middle"><span class="gensmall"><a href="{vehiclerow.U_VIEW_PROFILE}">{vehiclerow.USERNAME}</a></span></td>
-					<td align="center" valign="middle"><span class="gensmall">{vehiclerow.PREMIUM}</span></td>
-					<td align="center" valign="middle"><span class="gensmall">{vehiclerow.COVER_TYPE}</span></td>
-					<td align="center" valign="middle"><span class="gensmall"><a href="{vehiclerow.U_VIEW_BUSINESS}">{vehiclerow.BUSINESS}</a></span></td>
+				<!-- BEGIN vehicle -->
+<!-- IF vehicle.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+	  				<td align="center" valign="middle"><span class="gensmall"><a href="{vehicle.U_VIEW_VEHICLE}">{vehicle.VEHICLE}</a></span></td>
+					<td align="center" valign="middle"><span class="gensmall">{vehicle.PRICE}</span></td>
+					<td align="center" valign="middle"><span class="gensmall">{vehicle.MOD_PRICE}</span></td>
+					<td align="center" valign="middle"><span class="gensmall"><a href="{vehicle.U_VIEW_PROFILE}">{vehicle.USERNAME}</a></span></td>
+					<td align="center" valign="middle"><span class="gensmall">{vehicle.PREMIUM}</span></td>
+					<td align="center" valign="middle"><span class="gensmall">{vehicle.COVER_TYPE}</span></td>
+					<td align="center" valign="middle"><span class="gensmall"><a href="{vehicle.U_VIEW_BUSINESS}">{vehicle.BUSINESS}</a></span></td>
 				</tr>
-				<!-- END vehiclerow -->
+				<!-- END vehicle -->
 				<tr>
 					<td class="cat" align="center" height="28" colspan="9"><span class="genmed">{L_INSURANCE_SORTED_BY}&nbsp;{S_SORT_SELECT}&nbsp;&nbsp;{L_IN}&nbsp;<select id="order" name="order"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN order --><option value="{order.VALUE}" <!-- IF order.S_SELECTED -->selected="selected"<!-- ENDIF -->>{order.TEXT}</option><!-- END order --></select>&nbsp;&nbsp;<input type="hidden" value="{MODEL_ID}" name="model_id" /><input type="hidden" value="{MAKE_ID}" name="make_id" /><input type="submit" name="submit" value="{L_GO}" class="liteoption" /></td>
 				</tr>
