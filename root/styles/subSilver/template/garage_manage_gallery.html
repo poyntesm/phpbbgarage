@@ -1,0 +1,63 @@
+<!-- INCLUDE overall_header.html -->
+
+<!-- IF U_MCP -->
+	<div id="pageheader">
+		<p class="linkmcp">[ <a href="{U_MCP}">{L_MCP}</a> ]</p>
+	</div>
+
+	<br clear="all" /><br />
+<!-- ENDIF -->
+
+<!-- INCLUDE garage_header.html -->
+
+<!-- INCLUDE garage_menu.html -->
+
+		<td width="72%" valign="top">
+			<form enctype="multipart/form-data" method="post" name="manage_gallery" action="{S_MODE_ACTION}">
+			<table>
+				<tr>
+					<td>
+					<div id="tabs">
+						<ul>
+							<li><a href="{U_EDIT_DATA}"><span>Data</span></a></li>
+							<li id="activetab"><a href="{U_MANAGE_GALLERY}"><span>Images</span></a></li>
+						</ul>
+					</div>
+					</td>
+				</tr>
+			</table>
+			<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
+			
+				<!-- INCLUDE garage_image_attach.html -->
+
+				<tr>
+					<td class="cat" align="center" height="28" colspan="3"><span class="gen"><input type="hidden" value="{CID}" name="CID" /><input type="hidden" value="{MID}" name="MID" /><input type="hidden" value="{QMID}" name="QMID" /><input type="hidden" value="{RRID}" name="RRID" /><input name="submit" type="submit" value="{L_ADD_NEW_IMAGE}" class="liteoption" /></span></td>
+				</tr>
+			 	<tr>
+					<td class="cat" width="32%" align="center"><span class="gen">{L_IMAGE}</span></td>
+			      		<td class="cat" width="32%" align="center"><span class="gen">{L_REMOVE_IMAGE}</span></td>
+					<td class="cat" width="32%" align="center"><span class="gen">{L_HILITE_IMAGE}</span></td>
+			   	</tr>
+			  	<!-- BEGIN pic_row -->
+			   	<tr>
+					<td class="row1" align="center"><span class="gen"><a href="{pic_row.U_IMAGE}" title="{pic_row.IMAGE_TITLE}" target="_blank"><img valign="bottom" hspace="5" vspace="5" src="{pic_row.IMAGE}" /></a></span></td>
+					<td class="row1" align="center"><span class="gen"><a href="{pic_row.U_REMOVE_IMAGE}">{L_REMOVE_IMAGE}</a></span></td>
+					<!-- IF pic_row.U_SET_HILITE -->
+					<td class="row1" align="center"><span class="gen"><a href="{pic_row.U_SET_HILITE}">{L_SET_HILITE_IMAGE}</a></span></td>
+					<!-- ELSE -->
+					<td class="row1" align="center"><span class="gen"><i>{L_CURRENT_HILITE_IMAGE}</i></span></td>
+					<!-- ENDIF -->
+				</tr>
+				<!-- BEGINELSE -->
+				<tr>
+					<td class="row1" align="center" valign="middle" colspan="3">{L_NO_ITEM_TO_LIST}</td>
+				</tr>
+			  	<!-- END pic_row -->
+			</form>
+			</table>
+		</td>
+
+<!-- INCLUDE garage_footer.html -->
+
+<!-- INCLUDE overall_footer.html -->
+
