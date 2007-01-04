@@ -315,10 +315,40 @@ class garage
 			$garage_template->order_dropdown($order);
 
 			//Handle SQL Part
-			$sql_array['SELECT'] = "v.*, mk.make, md.model, u.username, count(m.id) AS total_mods";
-			$sql_array['FROM'] = array(GARAGE_VEHICLES_TABLE	=> 'v');
-			$sql_array['GROUP_BY'] = "v.id";
-			$sql_array['ORDER_BY'] = "$sort $order";
+			$sql_array = array(
+				'SELECT'	=> 'v.*, i.*, mk.make, md.model, u.username, count(m.id) AS total_mods',
+				'FROM'		=> array(
+					GARAGE_VEHICLES_TABLE	=> 'v',
+				),
+				'LEFT_JOIN'	=> array(
+					array(
+						'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'm'),	
+						'ON'	=> 'v.id = m.garage_id'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+						'ON'	=> 'v.make_id = mk.id and mk.pending = 0'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+						'ON'	=> 'v.model_id = md.id and md.pending = 0'
+					)
+					,array(
+						'FROM'	=> array(USERS_TABLE => 'u'),
+						'ON'	=> 'v.user_id = u.user_id'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_VEHICLE_GALLERY_TABLE => 'vg'),
+						'ON'	=> 'v.id = vg.garage_id AND vg.hilite = 1'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
+						'ON'	=> 'vg.image_id = i.attach_id'
+					)
+				),
+				'GROUP_BY'	=> "v.id",
+				'ORDER_BY'	=> "$sort $order"
+			);
 		}
 		else if ($search_options['display_as'] == 'modifications')
 		{
@@ -329,24 +359,100 @@ class garage
 			$garage_template->order_dropdown($order);
 
 			//Handle SQL Part
-			$sql_array['SELECT'] = "m.*, g.made_year, g.id, g.currency, i.*, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.title as business_title, b2.title as install_business_title, CONCAT_WS(' ', g.made_year, mk.make, md.model) AS vehicle, p.title";
-			$sql_array['FROM'] = array(GARAGE_MODIFICATIONS_TABLE	=> 'm');
-			$sql_array['GROUP_BY'] = "m.id";
-			$sql_array['ORDER_BY'] = "$sort $order";
+			$sql_array = array(
+				'SELECT'	=> "m.*, v.made_year, v.id, v.currency, i.*, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.title as business_title, b2.title as install_business_title, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle",
+				'FROM'		=> array(
+					GARAGE_MODIFICATIONS_TABLE	=> 'm',
+				),
+				'LEFT_JOIN'	=> array(
+					array(
+						'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'v'),	
+						'ON'	=> 'm.garage_id = v.id'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_CATEGORIES_TABLE => 'c'),	
+						'ON'	=> 'm.category_id = c.id'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+						'ON'	=> 'v.make_id = mk.id and mk.pending = 0'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+						'ON'	=> 'v.model_id = md.id and md.pending = 0'
+					)
+					,array(
+						'FROM'	=> array(USERS_TABLE => 'u'),
+						'ON'	=> 'v.user_id = u.user_id'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_MODIFICATION_GALLERY_TABLE => 'mg'),
+						'ON'	=> 'v.id = mg.garage_id AND mg.hilite = 1'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
+						'ON'	=> 'mg.image_id = i.attach_id'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b1'),
+						'ON'	=> 'm.manufacturer_id = b1.id'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b2'),
+						'ON'	=> 'm.shop_id = b2.id'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b3'),
+						'ON'	=> 'm.installer_id = b3.id'
+					)
+				),
+				'GROUP_BY'	=> "m.id",
+				'ORDER_BY'	=> "$sort $order"
+			);
 		}
 		else if ($search_options['display_as'] == 'premiums')
 		{
 			//Handle Sorting & Ordering
 			$sort = (empty($sort)) ? 'premium' : $sort;
-			$garage_template->sort_dropdown('vehicle', $sort);
+			$garage_template->sort_dropdown('premium', $sort);
 			$order = (empty($order)) ? 'ASC' : $order;
 			$garage_template->order_dropdown($order);
 
 			//Handle SQL Part
-			$sql_array['SELECT'] = "p.*, g.*, b.title, b.id as business_id, mk.make, md.model, u.username, u.user_id, ( SUM(m.price) + SUM(m.install_price) ) AS total_spent, CONCAT_WS(' ', g.made_year, mk.make, md.model) AS vehicle";
-			$sql_array['FROM'] = array(GARAGE_PREMIUMS_TABLE	=> 'p');
-			$sql_array['GROUP_BY'] = "p.id";
-			$sql_array['ORDER_BY'] = "$sort $order";
+			$sql_array = array(
+				'SELECT'	=> "p.*, v.*, b.title, b.id as business_id, mk.make, md.model, u.username, u.user_id, ( SUM(m.price) + SUM(m.install_price) ) AS total_spent, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle",
+				'FROM'		=> array(
+					GARAGE_PREMIUMS_TABLE	=> 'p',
+				),
+				'LEFT_JOIN'	=> array(
+					array(
+						'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'v'),	
+						'ON'	=> 'p.garage_id = v.id'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+						'ON'	=> 'v.make_id = mk.id and mk.pending = 0'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+						'ON'	=> 'v.model_id = md.id and md.pending = 0'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'm'),	
+						'ON'	=> 'v.id = m.garage_id'
+					)
+					,array(
+						'FROM'	=> array(USERS_TABLE => 'u'),
+						'ON'	=> 'v.user_id = u.user_id'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b'),
+						'ON'	=> 'p.business_id = b.id'
+					)
+				),
+				'GROUP_BY'	=> "p.id",
+				'ORDER_BY'	=> "$sort $order"
+			);
 		}
 		else if ($search_options['display_as'] == 'quartermiles')
 		{
@@ -357,10 +463,48 @@ class garage
 			$garage_template->order_dropdown($order);
 
 			//Handle SQL Part
-			$sql_array['SELECT'] = "g.id, g.user_id, q.id as qmid, qg.image_id, u.username, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.rr_id, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous";
-			$sql_array['FROM'] = array(GARAGE_QUARTERMILES_TABLE	=> 'q');
-			$sql_array['GROUP_BY'] = "q.id";
-			$sql_array['ORDER_BY'] = "$sort $order";
+			$sql_array = array(
+				'SELECT'	=> "v.id, v.user_id, q.id as qmid, qg.image_id, u.username, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.rr_id, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous",
+				'FROM'		=> array(
+					GARAGE_QUARTERMILES_TABLE	=> 'q',
+				),
+				'LEFT_JOIN'	=> array(
+					array(
+						'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'v'),	
+						'ON'	=> 'q.garage_id = v.id'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_DYNORUNS_TABLE => 'd'),	
+						'ON'	=> 'q.rr_id = d.id'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+						'ON'	=> 'v.make_id = mk.id and mk.pending = 0'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+						'ON'	=> 'v.model_id = md.id and md.pending = 0'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'm'),	
+						'ON'	=> 'v.id = m.garage_id'
+					)
+					,array(
+						'FROM'	=> array(USERS_TABLE => 'u'),
+						'ON'	=> 'v.user_id = u.user_id'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_QUARTERMILE_GALLERY_TABLE => 'qg'),
+						'ON'	=> 'v.id = qg.garage_id AND qg.hilite = 1'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
+						'ON'	=> 'qg.image_id = i.attach_id'
+					)
+				),
+				'GROUP_BY'	=> "q.id",
+				'ORDER_BY'	=> "$sort $order"
+			);
 		}
 		else if ($search_options['display_as'] == 'dynoruns')
 		{
@@ -371,10 +515,44 @@ class garage
 			$garage_template->order_dropdown($order);
 
 			//Handle SQL Part
-			$sql_array['SELECT'] = "g.id, g.made_year, g.user_id, mk.make, md.model, d.dynocenter, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, d.peakpoint, i.attach_id as image_id, i.attach_file, d.id as rr_id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle";
-			$sql_array['FROM'] = array(GARAGE_DYNORUNS_TABLE	=> 'd');
-			$sql_array['GROUP_BY'] = "d.id";
-			$sql_array['ORDER_BY'] = "$sort $order";
+			$sql_array = array(
+				'SELECT'	=> "v.id, v.made_year, v.user_id, mk.make, md.model, d.dynocenter, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, d.peakpoint, i.attach_id as image_id, i.attach_file, d.id as rr_id, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle",
+				'FROM'		=> array(
+					GARAGE_DYNORUNS_TABLE	=> 'd',
+				),
+				'LEFT_JOIN'	=> array(
+					array(
+						'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'v'),	
+						'ON'	=> 'd.garage_id = v.id'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+						'ON'	=> 'v.make_id = mk.id and mk.pending = 0'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+						'ON'	=> 'v.model_id = md.id and md.pending = 0'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'm'),	
+						'ON'	=> 'v.id = m.garage_id'
+					)
+					,array(
+						'FROM'	=> array(USERS_TABLE => 'u'),
+						'ON'	=> 'v.user_id = u.user_id'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_QUARTERMILE_GALLERY_TABLE => 'qg'),
+						'ON'	=> 'v.id = qg.garage_id AND qg.hilite = 1'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
+						'ON'	=> 'qg.image_id = i.attach_id'
+					)
+				),
+				'GROUP_BY'	=> "d.id",
+				'ORDER_BY'	=> "$sort $order"
+			);
 		}
 		else if ($search_options['display_as'] == 'track_times')
 		{
@@ -390,10 +568,6 @@ class garage
 			$sql_array['GROUP_BY'] = "l.id";
 			$sql_array['ORDER_BY'] = "$sort $order";
 		}
-
-		//We Will Always Need Make & Model Info
-		$sql_array['LEFT_JOIN'] = "";
-		$sql_array['LEFT_JOIN']	= array(array('FROM' => array(GARAGE_MAKES_TABLE => 'mk'), 'ON' => 'v.make_id = mk.id and mk.pending = 0'), array('FROM' => array(GARAGE_MODELS_TABLE => 'md'), 'ON' => 'v.model_id = md.id and md.pending = 0'));
 
 		//Now We Need To Worry...And I Mean Worry About WHERE's :-(
 		$sql_array['WHERE'] = "";

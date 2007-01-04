@@ -678,7 +678,7 @@ class garage_vehicle
 							$thumb_image = $absolute_url . GARAGE_UPLOAD_PATH . $vehicle_data['attach_thumb_location'];
 
 						}
-						$featured_image = '<a href="'.$absolute_url.'garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $vehicle_data['attach_id'] .'" title="' . $vehicle_data['attach_file'] .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" /></a>';
+						$featured_image = '<a href="'.$absolute_url.'garage.'.$phpEx.'?mode=view_image&amp;type=garage_mod&amp;image_id='. $vehicle_data['attach_id'] .'" title="' . $vehicle_data['attach_file'] .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" /></a>';
 	                		} 
 	        		}
 				$template->assign_vars(array(
@@ -1121,15 +1121,15 @@ class garage_vehicle
 				}
 
 				$template->assign_block_vars('category.modification', array(
-					'U_IMAGE'	=> ($modification_data[$j]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_gallery_item&amp;image_id=". $modification_data[$j]['attach_id']) : '',
+					'U_IMAGE'	=> ($modification_data[$j]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_image&amp;image_id=". $modification_data[$j]['attach_id']) : '',
 					'IMAGE'		=> $user->img('garage_vehicle_img_attached', 'MODIFICATION_IMAGE_ATTACHED'),
 	               			'COST' 		=> $modification_data[$j]['price'],
 	               			'INSTALL' 	=> $modification_data[$j]['install_price'],
 	               			'RATING' 	=> $modification_data[$j]['product_rating'],
 	               			'CREATED' 	=> $user->format_date($modification_data[$j]['date_created']),
 	               			'UPDATED' 	=> $user->format_date($modification_data[$j]['date_updated']),
-	               			'MODIFICATION' 	=> '<a href="' . append_sid("garage.$phpEx?mode=view_modification&amp;CID=$cid&amp;MID=" . $modification_data[$j]['id']) . '">' . $modification_data[$j]['title'] . '</a>',
-					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage.$phpEx?mode=edit_modification&amp;MID=". $modification_data[$j]['id'] . "&amp;CID=$cid") : '',
+	               			'MODIFICATION' 	=> '<a href="' . append_sid("garage_modification.$phpEx?mode=view_modification&amp;CID=$cid&amp;MID=" . $modification_data[$j]['id']) . '">' . $modification_data[$j]['title'] . '</a>',
+					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage_modification.$phpEx?mode=edit_modification&amp;MID=". $modification_data[$j]['id'] . "&amp;CID=$cid") : '',
 					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_modification'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_mod(' . $cid . ',' . $modification_data[$j]['id'] . ')' : '')
 	            		);
 	
@@ -1141,7 +1141,7 @@ class garage_vehicle
 					if ( (empty($modification_data[$i]['attach_thumb_location']) == false) AND ($modification_data[$j]['attach_thumb_location'] != $modification_data[$j]['attach_location']) )
 					{
 						$template->assign_block_vars('modification_image', array(
-							'U_IMAGE' 	=> append_sid('garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $modification_data[$j]['attach_id']),
+							'U_IMAGE' 	=> append_sid('garage.'.$phpEx.'?mode=view_image&amp;image_id='. $modification_data[$j]['attach_id']),
 							'IMAGE_NAME'	=> $modification_data[$j]['attach_file'],
 							'IMAGE_SOURCE'	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $modification_data[$j]['attach_thumb_location'])
 						);
@@ -1187,9 +1187,9 @@ class garage_vehicle
 					'THOU' 		=> $quartermile_data[$i]['thou'],
 					'QUART' 	=> $quartermile_data[$i]['quart'],
 					'QUARTMPH' 	=> $quartermile_data[$i]['quartmph'],
-					'U_IMAGE'	=> ($quartermile_data[$i]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_gallery_item&amp;image_id=". $quartermile_data[$i]['attach_id']) : '',
+					'U_IMAGE'	=> ($quartermile_data[$i]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_image&amp;image_id=". $quartermile_data[$i]['attach_id']) : '',
 					'IMAGE'		=> $user->img('garage_slip_img_attached', 'SLIP_IMAGE_ATTACHED'),
-					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage.$phpEx?mode=edit_quartermile&amp;QMID=".$quartermile_data[$i]['id']."&amp;CID=$cid") : '',
+					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage_quartermile.$phpEx?mode=edit_quartermile&amp;QMID=".$quartermile_data[$i]['id']."&amp;CID=$cid") : '',
 					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_quartermile'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_quartermile(' . $cid . ',' . $quartermile_data[$i]['id'] . ')' : '')
 				);
 			}
@@ -1214,9 +1214,9 @@ class garage_vehicle
 					'BOOST_UNIT' 	=> $dynorun_data[$i]['boost_unit'],
 					'NITROUS' 	=> $dynorun_data[$i]['nitrous'],
 					'PEAKPOINT' 	=> $dynorun_data[$i]['peakpoint'],
-					'U_IMAGE'	=> ($dynorun_data[$i]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_gallery_item&amp;image_id=". $dynorun_data[$i]['attach_id']) : '',
+					'U_IMAGE'	=> ($dynorun_data[$i]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_image&amp;image_id=". $dynorun_data[$i]['attach_id']) : '',
 					'IMAGE'		=> $user->img('garage_slip_img_attached', 'SLIP_IMAGE_ATTACHED'),
-					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage.$phpEx?mode=edit_dynorun&amp;RRID=".$dynorun_data[$i]['id']."&amp;CID=$cid") : '',
+					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage_dynorun.$phpEx?mode=edit_dynorun&amp;RRID=".$dynorun_data[$i]['id']."&amp;CID=$cid") : '',
 					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_dynorun'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_dynorun(' . $cid . ',' . $dynorun_data[$i]['id'] . ')' : '')
 				);
 			}
@@ -1237,7 +1237,7 @@ class garage_vehicle
 				{
 
 					$template->assign_block_vars('vehicle_image', array(
-						'U_IMAGE' 	=> append_sid('garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $gallery_data[$i]['attach_id']),
+						'U_IMAGE' 	=> append_sid('garage.'.$phpEx.'?mode=view_image&amp;image_id='. $gallery_data[$i]['attach_id']),
 						'IMAGE_NAME'	=> $gallery_data[$i]['attach_file'],
 						'IMAGE_SOURCE'	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $gallery_data[$i]['attach_thumb_location'])
 					);
@@ -1246,23 +1246,23 @@ class garage_vehicle
 	       	}
 
 		$template->assign_vars(array(
-			'U_DELETE_MODIFICATION'		=> append_sid("garage.$phpEx?mode=delete_modification"),
-			'U_DELETE_QUARTERMILE'		=> append_sid("garage.$phpEx?mode=delete_quartermile"),
+			'U_DELETE_MODIFICATION'		=> append_sid("garage_modification.$phpEx?mode=delete_modification"),
+			'U_DELETE_QUARTERMILE'		=> append_sid("garage_quartermile.$phpEx?mode=delete_quartermile"),
 			'U_DELETE_PREMIUM' 		=> append_sid("garage.$phpEx?mode=delete_insurance"),
-			'U_DELETE_DYNORUN' 		=> append_sid("garage.$phpEx?mode=delete_dynorun"),
+			'U_DELETE_DYNORUN' 		=> append_sid("garage_dynorun.$phpEx?mode=delete_dynorun"),
 			'U_GUESTBOOK' 			=> append_sid("garage.$phpEx?mode=view_guestbook&amp;CID=$cid"),
             		'U_PROFILE' 			=> append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle['user_id']),
-            		'U_VIEW_VEHICLE' 		=> ( $owned == 'YES' ) ? append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=$cid") : '',
-            		'U_EDIT_VEHICLE' 		=> ( $owned == 'YES' ) ? append_sid("garage.$phpEx?mode=edit_vehicle&amp;CID=$cid") : '',
+            		'U_VIEW_VEHICLE' 		=> ( $owned == 'YES' ) ? append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;CID=$cid") : '',
+            		'U_EDIT_VEHICLE' 		=> ( $owned == 'YES' ) ? append_sid("garage_vehicle.$phpEx?mode=edit_vehicle&amp;CID=$cid") : '',
             		'U_DELETE_VEHICLE' 		=> ( ($owned == 'YES' AND $auth->acl_get('u_garage_delete_vehicle')) OR ($auth->acl_get('m_garage'))) ? 'javascript:confirm_delete_car(' . $cid . ')' : '',
-            		'U_ADD_MODIFICATION' 		=> ( $owned == 'YES' ) ? append_sid("garage.$phpEx?mode=add_modification&amp;CID=$cid") : '',
+            		'U_ADD_MODIFICATION' 		=> ( $owned == 'YES' ) ? append_sid("garage_modification.$phpEx?mode=add_modification&amp;CID=$cid") : '',
             		'U_ADD_INSURANCE' 		=> ( $owned == 'YES' AND $garage_config['enable_insurance'] ) ? append_sid("garage.$phpEx?mode=add_insurance&amp;CID=$cid") : '',
-            		'U_ADD_QUARTERMILE' 		=> ( $owned == 'YES' AND $garage_config['enable_quartermile'] ) ? append_sid("garage.$phpEx?mode=add_quartermile&amp;CID=$cid") : '',
-            		'U_ADD_DYNORUN' 		=> ( $owned == 'YES' AND $garage_config['enable_dynorun'] ) ? append_sid("garage.$phpEx?mode=add_dynorun&amp;CID=$cid") : '',
-            		'U_MANAGE_VEHICLE_GALLERY'	=> ( $owned == 'YES' ) ? append_sid("garage.$phpEx?mode=manage_vehicle_gallery&amp;CID=$cid") : '',
+            		'U_ADD_QUARTERMILE' 		=> ( $owned == 'YES' AND $garage_config['enable_quartermile'] ) ? append_sid("garage_quartermile.$phpEx?mode=add_quartermile&amp;CID=$cid") : '',
+            		'U_ADD_DYNORUN' 		=> ( $owned == 'YES' AND $garage_config['enable_dynorun'] ) ? append_sid("garage_dynorun.$phpEx?mode=add_dynorun&amp;CID=$cid") : '',
+            		'U_MANAGE_VEHICLE_GALLERY'	=> ( $owned == 'YES' ) ? append_sid("garage_vehicle.$phpEx?mode=manage_vehicle_gallery&amp;CID=$cid") : '',
 			'U_SET_MAIN_VEHICLE' 		=> ( ($owned == 'YES' OR $owned == 'MODERATE') AND ($vehicle['main_vehicle'] == 0) ) ?  append_sid("garage.$phpEx?mode=set_main&amp;CID=$cid"): '' ,
-			'U_MODERATE_VEHICLE' 		=> ( $owned == 'NO' AND $auth->acl_get('m_garage')) ?  append_sid("garage.$phpEx?mode=moderate_vehicle&amp;CID=$cid"): '' ,
-			'U_HILITE_IMAGE' 		=> ( ($vehicle['attach_id']) AND ($vehicle['attach_is_image']) AND (!empty($vehicle['attach_thumb_location'])) AND (!empty($vehicle['attach_location'])) ) ?  append_sid("garage.$phpEx?mode=view_gallery_item&amp;type=garage_mod&amp;image_id=". $vehicle['attach_id']): '' ,
+			'U_MODERATE_VEHICLE' 		=> ( $owned == 'NO' AND $auth->acl_get('m_garage')) ?  append_sid("garage_vehicle.$phpEx?mode=moderate_vehicle&amp;CID=$cid"): '' ,
+			'U_HILITE_IMAGE' 		=> ( ($vehicle['attach_id']) AND ($vehicle['attach_is_image']) AND (!empty($vehicle['attach_thumb_location'])) AND (!empty($vehicle['attach_location'])) ) ?  append_sid("garage.$phpEx?mode=view_image&amp;image_id=". $vehicle['attach_id']): '' ,
 
 			'S_DISPLAY_VEHICLE_OWNER'	=> ($owned == 'MODERATE' || $owned == 'YES') ? 1 : 0,
 			'S_DISPLAY_GUESTBOOK'		=> ($garage_config['enable_guestbooks'] && $owned == 'NO') ? 1 : 0,
@@ -1960,7 +1960,7 @@ class garage_vehicle
                 				{
                     					// Form the image link
 							$thumb_image = GARAGE_UPLOAD_PATH . $gallery_data[$i]['attach_thumb_location'];
-							$hilite_image .= '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $gallery_data[$i]['attach_id'] .' title=' . $gallery_data[$i]['attach_file'] .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
+							$hilite_image .= '<a href=garage.'.$phpEx.'?mode=view_image&amp;type=garage_gallery&amp;image_id='. $gallery_data[$i]['attach_id'] .' title=' . $gallery_data[$i]['attach_file'] .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
                					} 
 					}
 				}
@@ -1976,7 +1976,7 @@ class garage_vehicle
 		                		{
                 		    			// Form the image link
 							$thumb_image = GARAGE_UPLOAD_PATH . $mod_data[$i]['attach_thumb_location'];
-							$hilite_image .= '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $mod_data[$i]['attach_id'] .' title=' . $mod_data[$i]['attach_file'] .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
+							$hilite_image .= '<a href=garage.'.$phpEx.'?mode=view_image&amp;type=garage_gallery&amp;image_id='. $mod_data[$i]['attach_id'] .' title=' . $mod_data[$i]['attach_file'] .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
 		               			} 
 					}
 			        }
@@ -1993,7 +1993,7 @@ class garage_vehicle
 						$id = $vehicle_data['attach_id'];
 						$title = $vehicle_data['attach_file'];
 						$total_image_views = $vehicle_data['attach_hits'];
-						$hilite_image = '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
+						$hilite_image = '<a href=garage.'.$phpEx.'?mode=view_image&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
 					}
 					else
 					{
@@ -2001,7 +2001,7 @@ class garage_vehicle
 						$id = $vehicle_data['attach_id'];
 						$title = $vehicle_data['attach_file'];
 						$total_image_views = $vehicle_data['attach_hits'];
-						$hilite_image = '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
+						$hilite_image = '<a href=garage.'.$phpEx.'?mode=view_image&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
 					}
 				}
 			}

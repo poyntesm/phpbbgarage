@@ -84,9 +84,14 @@ function build_product_list()
 			<!-- IF U_MANAGE_GALLERY -->
 			<table>
 				<tr>
-					<td><a href="{U_EDIT_VEHICLE}">Data</a></td>
-					<td><a href="{U_MANAGE_GALLERY}">Images</a></td>
-					<td></td>
+					<td>
+					<div id="tabs">
+						<ul>
+							<li id="activetab"><a href="{U_EDIT_DATA}"><span>Data</span></a></li>
+							<li><a href="{U_MANAGE_GALLERY}"><span>Images</span></a></li>
+						</ul>
+					</div>
+					</td>
 				</tr>
 			</table>
 			<!-- ENDIF -->

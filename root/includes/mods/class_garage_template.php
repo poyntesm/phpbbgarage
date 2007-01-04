@@ -68,9 +68,9 @@ class garage_template
 			'U_GARAGE_INSURANCE_REVIEW' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_insurance_business"),
 			'U_GARAGE_SHOP_REVIEW' 			=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_shop_business"),
 			'U_GARAGE_GARAGE_REVIEW' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_garage_business"),
-			'U_GARAGE_QUARTERMILE_TABLE' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=quartermile"),
-			'U_GARAGE_DYNORUN_TABLE' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=dynorun"),
-			'U_GARAGE_CREATE_VEHICLE' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=create_vehicle"),
+			'U_GARAGE_QUARTERMILE_TABLE' 		=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=quartermile_table"),
+			'U_GARAGE_DYNORUN_TABLE' 		=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=dynorun_table"),
+			'U_GARAGE_CREATE_VEHICLE' 		=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_vehicle"),
 			'MAIN' 					=> ($garage_config['enable_images']) ? $user->img('garage_main_menu', 'MAIN_MENU') : $user->lang['MAIN_MENU'],
 			'BROWSE' 				=> ($garage_config['enable_images']) ? $user->img('garage_browse', 'BROWSE_GARAGE') : $user->lang['BROWSE_GARAGE'],
 			'SEARCH' 				=> ($garage_config['enable_images']) ? $user->img('garage_search', 'SEARCH_GARAGE') : $user->lang['SEARCH_GARAGE'],
@@ -107,7 +107,7 @@ class garage_template
 			for ($i = 0; $i < count($user_vehicles); $i++)
 			{
 		       		$template->assign_block_vars('user_vehicles', array(
-       					'U_VIEW_VEHICLE'=> append_sid("garage.$phpEx?mode=view_own_vehicle&amp;CID=" . $user_vehicles[$i]['id']),
+       					'U_VIEW_VEHICLE'=> append_sid("garage_vehicle.$phpEx?mode=view_own_vehicle&amp;CID=" . $user_vehicles[$i]['id']),
        					'VEHICLE' 	=> $user_vehicles[$i]['vehicle'])
       				);
 			}
@@ -119,7 +119,7 @@ class garage_template
 			for ($i = 0; $i < count($vehicles); $i++)
 			{
        				$template->assign_block_vars('updated_vehicles', array(
-       					'U_VIEW_VEHICLE'=> append_sid("garage.$phpEx", "mode=view_vehicle&amp;CID=" . $vehicles[$i]['id'], true),
+       					'U_VIEW_VEHICLE'=> append_sid("garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" . $vehicles[$i]['id'], true),
 		       			'U_VIEW_PROFILE'=> append_sid("profile.$phpEx", "mode=viewprofile&amp;u=".$vehicles[$i]['user_id'], true),
        					'VEHICLE' 	=> $vehicles[$i]['vehicle'],
        					'UPDATED_TIME' 	=> $user->format_date($vehicles[$i]['date_updated']),
@@ -213,8 +213,8 @@ class garage_template
 		}
 		else if ($type == 'dynorun')
 		{
-			$values = array('rr.dynocenter', 'bhp', 'rr.bhp_unit, bhp', 'rr.torque', 'rr.torque_unit, rr.torque', 'rr.boost', 'rr.boost_unit, rr.boost', 'rr.nitrous', 'rr.peakpoint');
-			$texts = array($user->lang['DYNOCENTER'], $user->lang['BHP'], $user->lang['BHP_UNIT'], $user->lang['TORQUE'], $user->lang['TORQUE_UNIT'], $user->lang['BOOST'], $user->lang['BOOST_UNIT'], $user->lang['NITROUS'], $user->lang['PEAKPOINT']);
+			$values = array('rr.dynocentre_id', 'bhp', 'rr.bhp_unit, bhp', 'rr.torque', 'rr.torque_unit, rr.torque', 'rr.boost', 'rr.boost_unit, rr.boost', 'rr.nitrous', 'rr.peakpoint');
+			$texts = array($user->lang['DYNOCENTRE'], $user->lang['BHP'], $user->lang['BHP_UNIT'], $user->lang['TORQUE'], $user->lang['TORQUE_UNIT'], $user->lang['BOOST'], $user->lang['BOOST_UNIT'], $user->lang['NITROUS'], $user->lang['PEAKPOINT']);
 		}
 		else if ($type == 'track_time')
 		{
