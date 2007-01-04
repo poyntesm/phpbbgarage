@@ -16,17 +16,18 @@
 			<form enctype="multipart/form-data" method="post" name="manage_gallery" action="{S_MODE_ACTION}">
 			<table>
 				<tr>
-					<td><a href="{U_EDIT_DATA}">Data</a></td>
-					<td><a href="{U_MANAGE_GALLERY}">Images</a></td>
-					<td></td>
+					<td>
+					<div id="tabs">
+						<ul>
+							<li><a href="{U_EDIT_DATA}"><span>Data</span></a></li>
+							<li id="activetab"><a href="{U_MANAGE_GALLERY}"><span>Images</span></a></li>
+						</ul>
+					</div>
+					</td>
 				</tr>
 			</table>
 			<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
 			
-				<tr>
-					<th nowrap="nowrap" colspan="3">{L_MANAGE} {VEHICLE_DATA} {L_GALLERY}</th>
-				</tr>
-
 				<!-- INCLUDE garage_image_attach.html -->
 
 				<tr>
