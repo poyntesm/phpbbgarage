@@ -47,6 +47,10 @@
 					<td align="center"><span class="gensmall">{vehicle.MODS}</span></td>
 					<td align="center"><span class="gensmall">{vehicle.UPDATED}</span></td>
 				</tr>
+				<!-- BEGINELSE -->
+				<tr class="row1">
+					<td align="center" colspan="12"><span class="gen">{L_SEARCH_PRODUCED_NO_RESULTS}</span></td>
+				</tr>
 				<!-- END vehicle -->
 				<tr>
 					<td class="cat" align="center" height="28" colspan="9"><span class="genmed">{L_SORTED_BY}&nbsp;<select id="sort" name="sort"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN sort --><option value="{sort.VALUE}" <!-- IF sort.S_SELECTED -->selected="selected"<!-- ENDIF -->>{sort.TEXT}</option><!-- END sort --></select>&nbsp;&nbsp;{L_IN}&nbsp;<select id="order" name="order"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN order --><option value="{order.VALUE}" <!-- IF order.S_SELECTED -->selected="selected"<!-- ENDIF -->>{order.TEXT}</option><!-- END order --></select>&nbsp;&nbsp;<input type="submit" name="submit" value="{L_GO}" class="liteoption" /></td>
@@ -75,6 +79,10 @@
 					<td align="center" valign="middle"><span class="gensmall">{vehicle.COVER_TYPE}</span></td>
 					<td align="center" valign="middle"><span class="gensmall"><a href="{vehicle.U_VIEW_BUSINESS}">{vehicle.BUSINESS}</a></span></td>
 				</tr>
+				<!-- BEGINELSE -->
+				<tr class="row1">
+					<td align="center" colspan="12"><span class="gen">{L_SEARCH_PRODUCED_NO_RESULTS}</span></td>
+				</tr>
 				<!-- END modification -->
 				<tr>
 					<td class="cat" align="center" height="28" colspan="9"><span class="genmed">{L_MODIFICATIONS_SORTED_BY}&nbsp;<select id="sort" name="sort"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN sort --><option value="{sort.VALUE}" <!-- IF sort.S_SELECTED -->selected="selected"<!-- ENDIF -->>{sort.TEXT}</option><!-- END sort --></select>&nbsp;&nbsp;{L_IN}&nbsp;<select id="order" name="order"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN order --><option value="{order.VALUE}" <!-- IF order.S_SELECTED -->selected="selected"<!-- ENDIF -->>{order.TEXT}</option><!-- END order --></select>&nbsp;&nbsp;<input type="submit" name="submit" value="{L_GO}" class="liteoption" /></td>
@@ -93,7 +101,7 @@
 					<th class="thTop" nowrap="nowrap">{L_COVER_TYPE}</th>
 					<th class="thCornerR" nowrap="nowrap">{L_BUSINESS_NAME}</th>
 				</tr>
-				<!-- BEGIN vehicle -->
+				<!-- BEGIN premium -->
 <!-- IF vehicle.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
 	  				<td align="center" valign="middle"><span class="gensmall"><a href="{vehicle.U_VIEW_VEHICLE}">{vehicle.VEHICLE}</a></span></td>
 					<td align="center" valign="middle"><span class="gensmall">{vehicle.PRICE}</span></td>
@@ -103,7 +111,11 @@
 					<td align="center" valign="middle"><span class="gensmall">{vehicle.COVER_TYPE}</span></td>
 					<td align="center" valign="middle"><span class="gensmall"><a href="{vehicle.U_VIEW_BUSINESS}">{vehicle.BUSINESS}</a></span></td>
 				</tr>
-				<!-- END vehicle -->
+				<!-- BEGINELSE -->
+				<tr class="row1">
+					<td align="center" colspan="12"><span class="gen">{L_SEARCH_PRODUCED_NO_RESULTS}</span></td>
+				</tr>
+				<!-- END premium -->
 				<tr>
 					<td class="cat" align="center" height="28" colspan="9"><span class="genmed">{L_INSURANCE_SORTED_BY}&nbsp;<select id="sort" name="sort"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN sort --><option value="{sort.VALUE}" <!-- IF sort.S_SELECTED -->selected="selected"<!-- ENDIF -->>{sort.TEXT}</option><!-- END sort --></select>&nbsp;&nbsp;{L_IN}&nbsp;<select id="order" name="order"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN order --><option value="{order.VALUE}" <!-- IF order.S_SELECTED -->selected="selected"<!-- ENDIF -->>{order.TEXT}</option><!-- END order --></select>&nbsp;&nbsp;<input type="submit" name="submit" value="{L_GO}" class="liteoption" /></td>
 				</tr>
@@ -139,6 +151,10 @@
 					<td align="center"><span class="gensmall">{quartermile.QUART}</span></td>
 					<td align="center"><span class="gensmall">{quartermile.QUARTMPH}</span></td>
 				</tr>
+				<!-- BEGINELSE -->
+				<tr class="row1">
+					<td align="center" colspan="12"><span class="gen">{L_SEARCH_PRODUCED_NO_RESULTS}</span></td>
+				</tr>
 				<!-- END quartermile -->
 				<tr> 
 					<td class="cat" align="center" height="28" colspan="12"><span class="genmed">{L_QUARTERMILE_SORTED_BY}&nbsp;<select id="sort" name="sort"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN sort --><option value="{sort.VALUE}" <!-- IF sort.S_SELECTED -->selected="selected"<!-- ENDIF -->>{sort.TEXT}</option><!-- END sort --></select>&nbsp;&nbsp;{L_IN}&nbsp;<select id="order" name="order"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN order --><option value="{order.VALUE}" <!-- IF order.S_SELECTED -->selected="selected"<!-- ENDIF -->>{order.TEXT}</option><!-- END order --></select>&nbsp;&nbsp;<input type="submit" name="submit" value="{L_GO}" class="liteoption" /></td>
@@ -170,6 +186,10 @@
 					<td align="center"><span class="gensmall">{dynorun.BOOST}&nbsp;{dynorun.BOOST_UNIT}</span></td>
 					<td align="center"><span class="gensmall">{dynorun.NITROUS}</span></td>
 					<td align="center"><span class="gensmall">{dynorun.PEAKPOINT}</span></td>
+				</tr>
+				<!-- BEGINELSE -->
+				<tr class="row1">
+					<td align="center" colspan="12"><span class="gen">{L_SEARCH_PRODUCED_NO_RESULTS}</span></td>
 				</tr>
 				<!-- END dynorun -->
 				<tr> 
