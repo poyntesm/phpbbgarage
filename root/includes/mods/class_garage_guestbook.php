@@ -344,7 +344,7 @@ class garage_guestbook
 				'U_COLUMN_2' 	=> append_sid("profile.$phpEx", "mode=viewprofile&amp;" . POST_USERS_URL . "=" . $comment_data[$i]['member_id']),
 				'COLUMN_1_TITLE'=> $comment_data[$i]['vehicle'],
 				'COLUMN_2_TITLE'=> $comment_data[$i]['username'],
-				'COLUMN_3' 	=> $user->format_date($comment_data[$i]['post_date']))
+				'COLUMN_3_TITLE'=> $user->format_date($comment_data[$i]['post_date']))
 			);
 	 	}
 	

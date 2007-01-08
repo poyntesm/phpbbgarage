@@ -1,13 +1,13 @@
 <?php
 /***************************************************************************
- *                              garage.php
+ *                              garage_guestbook.php
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton
  *   email                : esmond.poynton@gmail.com
  *   description          : Provides Vehicle Garage System For phpBB
  *
- *   $Id: garage.php 330 2007-01-04 16:44:32Z poyntesm $
+ *   $Id$
  *
  ***************************************************************************/
 

@@ -200,7 +200,7 @@ class garage_dynorun
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id, g.made_year, g.user_id, mk.make, md.model, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, d.peakpoint, i.attach_id as image_id, i.attach_file, d.id as rr_id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, b.title, d.dynocentre_id',
+			'SELECT'	=> 'u.*, g.id, g.made_year, g.user_id, mk.make, md.model, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, d.peakpoint, i.attach_id as image_id, i.attach_file, d.id as rr_id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, b.title, d.dynocentre_id',
 
 			'FROM'		=> array(
 				GARAGE_DYNORUNS_TABLE	=> 'd',
@@ -209,6 +209,10 @@ class garage_dynorun
 				array(
 					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
 					'ON'	=> 'd.garage_id =g.id'
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'g.user_id = u.user_id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
@@ -417,7 +421,7 @@ class garage_dynorun
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'd.*, i.*, b.title',
+			'SELECT'	=> 'd.*, d.id as rrid, i.*, b.title',
 			'FROM'		=> array(
 				GARAGE_DYNORUNS_TABLE	=> 'd',
 			),
@@ -480,11 +484,12 @@ class garage_dynorun
 			$vehicle_data = $this->get_dynorun_by_vehicle_bhp($runs[$i]['garage_id'], $runs[$i]['bhp']);
 
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=".$vehicle_data['id']),
+				'U_COLUMN_1' 	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=".$vehicle_data['id']),
 				'U_COLUMN_2' 	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=".$vehicle_data['user_id']),
+				'U_COLUMN_3' 	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=view_dynorun&amp;CID=".$vehicle_data['id']."&amp;RRID=".$vehicle_data['rr_id']),
 				'COLUMN_1_TITLE'=> $vehicle_data['vehicle'],
 				'COLUMN_2_TITLE'=> $vehicle_data['username'],
-				'COLUMN_3' 	=> $vehicle_data['bhp'] .' ' . $vehicle_data['bhp_unit'] . ' / ' . $vehicle_data['torque'] .' ' . $vehicle_data['torque_unit'] . ' / '. $vehicle_data['nitrous'])
+				'COLUMN_3_TITLE'=> $vehicle_data['bhp'] .' ' . $vehicle_data['bhp_unit'] . ' / ' . $vehicle_data['torque'] .' ' . $vehicle_data['torque_unit'] . ' / '. $vehicle_data['nitrous'])
 			);
 	 	}
 	

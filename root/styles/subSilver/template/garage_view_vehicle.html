@@ -266,7 +266,7 @@ function confirm_delete_dynorun (car_id, rr_id)
 					<td class="row1" align="center"><span class="gensmall">{quartermile.run.EIGHTH}</span></td>
 					<td class="row1" align="center"><span class="gensmall">{quartermile.run.EIGHTHMPH}</span></td>
 					<td class="row1" align="center"><span class="gensmall">{quartermile.run.THOU}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{quartermile.run.QUART}</span></td>
+					<td class="row1" align="center"><span class="gensmall"><a href="{quartermile.run.U_QUART}">{quartermile.run.QUART}</a></span></td>
 					<td class="row1" align="center"><span class="gensmall">{quartermile.run.QUARTMPH}</span></td>
 					<!-- IF S_DISPLAY_VEHICLE_OWNER--><td class="row1" align="right"><span class="gensmall"><!-- IF quartermile.run.U_EDIT --><a href="{quartermile.run.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF quartermile.run.U_DELETE--><a href="{quartermile.run.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
 				</tr>
@@ -298,7 +298,7 @@ function confirm_delete_dynorun (car_id, rr_id)
 				<tr>
 	  				<td class="row1" align="center"><span class="gensmall"><!-- IF dynorun.run.U_IMAGE --><a href="{dynorun.run.U_IMAGE}" target="_blank">{dynorun.run.IMAGE}</a><!-- ENDIF --></span></td>
 					<td class="row1" align="center"><span class="gensmall">{dynorun.run.DYNOCENTER}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{dynorun.run.BHP}</span></td>
+					<td class="row1" align="center"><span class="gensmall"><a href="{dynorun.run.U_BHP}">{dynorun.run.BHP}</a></span></td>
 					<td class="row1" align="center"><span class="gensmall">{dynorun.run.BHP_UNIT}</span></td>
 					<td class="row1" align="center"><span class="gensmall">{dynorun.run.TORQUE}</span></td>
 					<td class="row1" align="center"><span class="gensmall">{dynorun.run.TORQUE_UNIT}</span></td>

@@ -1,13 +1,13 @@
 <?php
 /***************************************************************************
- *                              garage.php
+ *                              garage_dynorun.php
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton
  *   email                : esmond.poynton@gmail.com
  *   description          : Provides Vehicle Garage System For phpBB
  *
- *   $Id: garage.php 326 2007-01-03 17:59:25Z poyntesm $
+ *   $Id$
  *
  ***************************************************************************/
 
@@ -449,7 +449,7 @@ switch( $mode )
 
 		break;
 
-	case 'dynorun_table':
+	case 'view_dynorun':
 
 		//Let Check The User Is Allowed Perform This Action
 		if (!$auth->acl_get('u_garage_browse'))
@@ -462,23 +462,78 @@ switch( $mode )
 
 		//Set Template Files In Use For This Mode
 		$template->set_filenames(array(
-			'body' 		=> 'garage_dynorun_table.html')
+			'header' => 'garage_header.html',
+			'body'   => 'garage_view_dynorun.html')
 		);
 
+		//Pull Required Modification Data From DB
+		$data = $garage_dynorun->get_dynorun($rrid);
 
 		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $user->lang['DYNORUN'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=dynorun_table"))
+			'FORUM_NAME'	=> $data['vehicle'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=$cid"))
 		);
 
-		//Build Dynorun Table With No Pending Runs
-		$garage_dynorun->build_dynorun_table();
+		//Get All Gallery Data Required
+		$gallery_data = $garage_image->get_dynorun_gallery($cid, $rrid);
+			
+		//Process Each Image From Dynorun Gallery	
+       		for ( $i = 0; $i < count($gallery_data); $i++ )
+        	{
+               		// Do we have a thumbnail?  If so, our job is simple here :)
+			if ( (empty($gallery_data[$i]['attach_thumb_location']) == false) AND ($gallery_data[$i]['attach_thumb_location'] != $gallery_data[$i]['attach_location']) )
+			{
+				$template->assign_vars(array(
+					'S_DISPLAY_GALLERIES' 	=> true,
+				));
 
-		//Build All Required HTML, Javascript And Arrays
+				$template->assign_block_vars('dynorun_image', array(
+					'U_IMAGE' 	=> append_sid('garage.'.$phpEx.'?mode=view_image&amp;image_id='. $gallery_data[$i]['attach_id']),
+					'IMAGE_NAME'	=> $gallery_data[$i]['attach_file'],
+					'IMAGE_SOURCE'	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $gallery_data[$i]['attach_thumb_location'])
+				);
+               		} 
+	       	}
+
+		//Build The Owners Avatar Image If Any...
+		$data['avatar'] = '';
+		if ($data['user_avatar'] AND $user->optionget('viewavatars'))
+		{
+			$avatar_img = '';
+			switch( $data['user_avatar_type'] )
+			{
+				case AVATAR_UPLOAD:
+					$avatar_img = $config['avatar_path'] . '/' . $data['user_avatar'];
+				break;
+
+				case AVATAR_GALLERY:
+					$avatar_img = $config['avatar_gallery_path'] . '/' . $data['user_avatar'];
+				break;
+			}
+			$data['avatar'] = '<img src="' . $avatar_img . '" width="' . $data['user_avatar_width'] . '" height="' . $data['user_avatar_height'] . '" alt="" />';
+		}
+
 		$template->assign_vars(array(
-			'S_MODE_ACTION'	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=dynorun_table"))
-		);
+			'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $data['user_id']),
+			'YEAR' 			=> $data['made_year'],
+			'MAKE' 			=> $data['make'],
+			'MODEL' 		=> $data['model'],
+			'USERNAME' 		=> $data['username'],
+            		'AVATAR_IMG' 		=> $data['avatar'],
+            		'DYNOCENTRE' 		=> $data['title'],
+            		'BHP' 			=> $data['bhp'],
+            		'BHP_UNIT'	 	=> $data['bhp_unit'],
+            		'TORQUE' 		=> $data['torque'],
+            		'TORQUE_UNIT' 		=> $data['torque_unit'],
+            		'NITROUS' 		=> $data['nitrous'],
+            		'BOOST' 		=> $data['boost'],
+            		'BOOST_UNIT' 		=> $data['boost_unit'],
+            		'PEAKPOINT' 		=> $data['peakpoint'],
+         	));
+
+		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
+		$garage_template->sidemenu();
 
 		break;
 }

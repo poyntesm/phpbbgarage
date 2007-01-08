@@ -1,13 +1,13 @@
 <?php
 /***************************************************************************
- *                              garage.php
+ *                              garage_quartermile.php
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton
  *   email                : esmond.poynton@gmail.com
  *   description          : Provides Vehicle Garage System For phpBB
  *
- *   $Id: garage.php 326 2007-01-03 17:59:25Z poyntesm $
+ *   $Id$
  *
  ***************************************************************************/
 
@@ -475,7 +475,8 @@ switch( $mode )
 
 		break;
 
-	case 'quartermile_table':
+
+	case 'view_quartermile':
 
 		//Let Check The User Is Allowed Perform This Action
 		if (!$auth->acl_get('u_garage_browse'))
@@ -484,27 +485,82 @@ switch( $mode )
 		}
 
 		//Build Page Header ;)
-		$page_title = $user->lang['QUART'];
 		page_header($page_title);
-
-		//Build Navlinks
-		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $user->lang['QUARTERMILE'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=quartermile_table"))
-		);
 
 		//Set Template Files In Use For This Mode
 		$template->set_filenames(array(
-			'body' 		=> 'garage_quartermile_table.html')
+			'header' => 'garage_header.html',
+			'body'   => 'garage_view_quartermile.html')
 		);
 
-		//Build Actual Table With No Pending Runs
-		$garage_quartermile->build_quartermile_table();
+		//Pull Required Modification Data From DB
+		$data = $garage_quartermile->get_quartermile($qmid);
 
-		//Build Required HTML, Javascript And Arrays
+		//Build Navlinks
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $data['vehicle'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=$cid"))
+		);
+
+		//Get All Gallery Data Required
+		$gallery_data = $garage_image->get_quartermile_gallery($cid, $qmid);
+			
+		//Process Each Image From Quartermile Gallery	
+       		for ( $i = 0; $i < count($gallery_data); $i++ )
+        	{
+               		// Do we have a thumbnail?  If so, our job is simple here :)
+			if ( (empty($gallery_data[$i]['attach_thumb_location']) == false) AND ($gallery_data[$i]['attach_thumb_location'] != $gallery_data[$i]['attach_location']) )
+			{
+				$template->assign_vars(array(
+					'S_DISPLAY_GALLERIES' 	=> true,
+				));
+
+				$template->assign_block_vars('quartermile_image', array(
+					'U_IMAGE' 	=> append_sid('garage.'.$phpEx.'?mode=view_image&amp;image_id='. $gallery_data[$i]['attach_id']),
+					'IMAGE_NAME'	=> $gallery_data[$i]['attach_file'],
+					'IMAGE_SOURCE'	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $gallery_data[$i]['attach_thumb_location'])
+				);
+               		} 
+	       	}
+
+		//Build The Owners Avatar Image If Any...
+		$data['avatar'] = '';
+		if ($data['user_avatar'] AND $user->optionget('viewavatars'))
+		{
+			$avatar_img = '';
+			switch( $data['user_avatar_type'] )
+			{
+				case AVATAR_UPLOAD:
+					$avatar_img = $config['avatar_path'] . '/' . $data['user_avatar'];
+				break;
+
+				case AVATAR_GALLERY:
+					$avatar_img = $config['avatar_gallery_path'] . '/' . $data['user_avatar'];
+				break;
+			}
+			$data['avatar'] = '<img src="' . $avatar_img . '" width="' . $data['user_avatar_width'] . '" height="' . $data['user_avatar_height'] . '" alt="" />';
+		}
+
 		$template->assign_vars(array(
-			'S_MODE_ACTION'	=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=quartermile_table"))
-		);
+			'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $data['user_id']),
+			'USERNAME' 		=> $data['username'],
+			'YEAR' 			=> $data['made_year'],
+			'MAKE' 			=> $data['make'],
+			'MODEL' 		=> $data['model'],
+            		'AVATAR_IMG' 		=> $data['avatar'],
+            		'DATE_UPDATED' 		=> $user->format_date($data['date_updated']),
+            		'RT' 			=> $data['rt'],
+            		'SIXTY' 		=> $data['sixty'],
+            		'THREE'	 		=> $data['three'],
+            		'EIGHTH' 		=> $data['eighth'],
+            		'EIGHTHMPH' 		=> $data['eighthmph'],
+            		'THOU'	 		=> $data['thou'],
+			'QUART' 		=> $data['quart'],
+			'QUARTMPH' 		=> $data['quartmph'],
+		));
+
+		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
+		$garage_template->sidemenu();
 
 		break;
 }

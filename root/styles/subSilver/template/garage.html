@@ -28,7 +28,7 @@
 								<th class="thHead" height="25" align="center" colspan="2">{L_FEATURED_VEHICLE}</th>
 							</tr>
 							<tr>
-								<td class="row1" nowrap align="center"><span align="center" class="genmed">{FEATURED_DESCRIPTION}<br />{FEATURED_IMAGE}<br /><a href="{U_VIEW_VEHICLE}">{VEHICLE}</a> {L_OWNER}:<a href="{U_VIEW_PROFILE}">{USERNAME}</a></span></td>
+								<td class="row1" nowrap align="center"><span align="center" class="genmed">{FEATURED_DESCRIPTION}<br /><a href="{U_VIEW_IMAGE}" title="{IMAGE_TITLE}" target="_blank"><img hspace="5" vspace="5" src="{FEATURED_THUMB}" /></a><br /><a href="{U_VIEW_VEHICLE}">{VEHICLE}</a><br />{L_OWNER}:<a href="{U_VIEW_PROFILE}">{USERNAME}</a></span></td>
 							</tr>
 						</table>
 					</td>
@@ -67,7 +67,11 @@
 							<tr>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></span></td>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_1.row.U_COLUMN_2}">{block_1.row.COLUMN_2_TITLE}</a></span></td>
-								<td class="row1" align="center" valign="middle" nowrap><span class="gensmall">{block_1.row.COLUMN_3}</span></td>
+								<!-- IF block_1.row.U_COLUMN_3 -->
+								<td class="row1" align="center" valign="middle" nowrap><span class="gensmall"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></span></td>
+								<!-- ELSE -->
+								<td class="row1" align="center" valign="middle" nowrap><span class="gensmall">{block_1.row.COLUMN_3_TITLE}</span></td>
+								<!-- ENDIF -->
 							</tr>
 							<!-- BEGINELSE -->
 							<tr>
@@ -92,7 +96,11 @@
 							<tr>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_3.row.U_COLUMN_1}">{block_3.row.COLUMN_1_TITLE}</a></span></td>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_3.row.U_COLUMN_2}">{block_3.row.COLUMN_2_TITLE}</a></span></td>
-								<td class="row1" align="center" valign="middle" nowrap><span class="gensmall">{block_3.row.COLUMN_3}</span></td>
+								<!-- IF block_3.row.U_COLUMN_3 -->
+								<td class="row1" align="center" valign="middle" nowrap><span class="gensmall"><a href ="{block_3.row.U_COLUMN_3}">{block_3.row.COLUMN_3_TITLE}</a></span></td>
+								<!-- ELSE -->
+								<td class="row1" align="center" valign="middle" nowrap><span class="gensmall">{block_3.row.COLUMN_3_TITLE}</span></td>
+								<!-- ENDIF -->
 							</tr>
 							<!-- BEGINELSE -->
 							<tr>
@@ -117,7 +125,11 @@
 							<tr>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_5.row.U_COLUMN_1}">{block_5.row.COLUMN_1_TITLE}</a></span></td>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_5.row.U_COLUMN_2}">{block_5.row.COLUMN_2_TITLE}</a></span></td>
-								<td class="row1" align="center" valign="middle"><span class="gensmall">{block_5.row.COLUMN_3}</span></td>
+								<!-- IF block_5.row.U_COLUMN_3 -->
+								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_5.row.U_COLUMN_3}">{block_5.row.COLUMN_3_TITLE}</a></span></td>
+								<!-- ELSE -->
+								<td class="row1" align="center" valign="middle"><span class="gensmall">{block_5.row.COLUMN_3_TITLE}</span></td>
+								<!-- ENDIF -->
 							</tr>
 							<!-- BEGINELSE -->
 							<tr>
@@ -147,7 +159,11 @@
 							<tr>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_7.row.U_COLUMN_1}">{block_7.row.COLUMN_1_TITLE}</a></span></td>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_7.row.U_COLUMN_2}">{block_7.row.COLUMN_2_TITLE}</a></span></td>
-								<td class="row1" align="center" valign="middle"><span class="gensmall">{block_7.row.COLUMN_3}</span></td>
+								<!-- IF block_7.row.U_COLUMN_3 -->
+								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_7.row.U_COLUMN_3}">{block_7.row.COLUMN_3_TITLE}</a></span></td>
+								<!-- ELSE -->
+								<td class="row1" align="center" valign="middle"><span class="gensmall">{block_7.row.COLUMN_3_TITLE}</span></td>
+								<!-- ENDIF -->
 							</tr>
 							<!-- BEGINELSE -->
 							<tr>
@@ -177,7 +193,11 @@
 							<tr>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_9.row.U_COLUMN_1}">{block_9.row.COLUMN_1_TITLE}</a></span></td>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_9.row.U_COLUMN_2}">{block_9.row.COLUMN_2_TITLE}</a></span></td>
-								<td class="row1" align="center" valign="middle"><span class="gensmall">{block_9.row.COLUMN_3}</span></td>
+								<!-- IF block_9.row.U_COLUMN_3 -->
+								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_9.row.U_COLUMN_3}">{block_9.row.COLUMN_3_TITLE}</a></span></td>
+								<!-- ELSE -->
+								<td class="row1" align="center" valign="middle"><span class="gensmall">{block_9.row.COLUMN_3_TITLE}</span></td>
+								<!-- ENDIF -->
 							</tr>
 							<!-- BEGINELSE -->
 							<tr>
@@ -202,7 +222,11 @@
 							<tr>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_11.row.U_COLUMN_1}">{block_11.row.COLUMN_1_TITLE}</a></span></td>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_11.row.U_COLUMN_2}">{block_11.row.COLUMN_2_TITLE}</a></span></td>
-								<td class="row1" align="center" valign="middle"><span class="gensmall">{block_11.row.COLUMN_3}</span></td>
+								<!-- IF block_11.row.U_COLUMN_3 -->
+								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_11.row.U_COLUMN_3}">{block_11.row.COLUMN_3_TITLE}</a></span></td>
+								<!-- ELSE -->
+								<td class="row1" align="center" valign="middle"><span class="gensmall">{block_11.row.COLUMN_3_TITLE}</span></td>
+								<!-- ENDIF -->
 							</tr>
 							<!-- BEGINELSE -->
 							<tr>
@@ -236,7 +260,11 @@
 							<tr>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_2.row.U_COLUMN_1}">{block_2.row.COLUMN_1_TITLE}</a></span></td>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_2.row.U_COLUMN_2}">{block_2.row.COLUMN_2_TITLE}</a></span></td>
-								<td class="row1" align="center" valign="middle" nowrap><span class="gensmall">{block_2.row.COLUMN_3}</span></td>
+								<!-- IF block_2.row.U_COLUMN_3 -->
+								<td class="row1" align="center" valign="middle" nowrap><span class="gensmall"><a href ="{block_2.row.U_COLUMN_3}">{block_2.row.COLUMN_3_TITLE}</a></span></td>
+								<!-- ELSE -->
+								<td class="row1" align="center" valign="middle" nowrap><span class="gensmall">{block_2.row.COLUMN_3_TITLE}</span></td>
+								<!-- ENDIF -->
 							</tr>
 							<!-- BEGINELSE -->
 							<tr>
@@ -261,7 +289,11 @@
 							<tr>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_4.row.U_COLUMN_1}">{block_4.row.COLUMN_1_TITLE}</a></span></td>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_4.row.U_COLUMN_2}">{block_4.row.COLUMN_2_TITLE}</a></span></td>
-								<td class="row1" align="center" valign="middle" nowrap><span class="gensmall">{block_4.row.COLUMN_3}</span></td>
+								<!-- IF block_4.row.U_COLUMN_3 -->
+								<td class="row1" align="center" valign="middle" nowrap><span class="gensmall"><a href ="{block_4.row.U_COLUMN_3}">{block_4.row.COLUMN_3_TITLE}</a></span></td>
+								<!-- ELSE -->
+								<td class="row1" align="center" valign="middle" nowrap><span class="gensmall">{block_4.row.COLUMN_3_TITLE}</span></td>
+								<!-- ENDIF -->
 							</tr>
 							<!-- BEGINELSE -->
 							<tr>
@@ -291,7 +323,11 @@
 							<tr>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_6.row.U_COLUMN_1}">{block_6.row.COLUMN_1_TITLE}</a></span></td>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_6.row.U_COLUMN_2}">{block_6.row.COLUMN_2_TITLE}</a></span></td>
-								<td class="row1" align="center" valign="middle"><span class="gensmall">{block_6.row.COLUMN_3}</span></td>
+								<!-- IF block_6.row.U_COLUMN_3 -->
+								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_6.row.U_COLUMN_3}">{block_6.row.COLUMN_3_TITLE}</a></span></td>
+								<!-- ELSE -->
+								<td class="row1" align="center" valign="middle"><span class="gensmall">{block_6.row.COLUMN_3_TITLE}</span></td>
+								<!-- ENDIF -->
 							</tr>
 							<!-- BEGINELSE -->
 							<tr>
@@ -321,7 +357,11 @@
 							<tr>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_8.row.U_COLUMN_1}">{block_8.row.COLUMN_1_TITLE}</a></span></td>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_8.row.U_COLUMN_2}">{block_8.row.COLUMN_2_TITLE}</a></span></td>
-								<td class="row1" align="center" valign="middle" nowrap><span class="gensmall">{block_8.row.COLUMN_3}</span></td>
+								<!-- IF block_8.row.U_COLUMN_3 -->
+								<td class="row1" align="center" valign="middle" nowrap><span class="gensmall"><a href ="{block_8.row.U_COLUMN_3}">{block_8.row.COLUMN_3_TITLE}</a></span></td>
+								<!-- ELSE -->
+								<td class="row1" align="center" valign="middle" nowrap><span class="gensmall">{block_8.row.COLUMN_3_TITLE}</span></td>
+								<!-- ENDIF -->
 							</tr>
 							<!-- BEGINELSE -->
 							<tr>
@@ -346,7 +386,11 @@
 							<tr>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_10.row.U_COLUMN_1}">{block_10.row.COLUMN_1_TITLE}</a></span></td>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_10.row.U_COLUMN_2}">{block_10.row.COLUMN_2_TITLE}</a></span></td>
-								<td class="row1" align="center" valign="middle"><span class="gensmall">{block_10.row.COLUMN_3}</span></td>
+								<!-- IF block_10.row.U_COLUMN_3 -->
+								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_10.row.U_COLUMN_3}">{block_10.row.COLUMN_3_TITLE}</a></span></td>
+								<!-- ELSE -->
+								<td class="row1" align="center" valign="middle"><span class="gensmall">{block_10.row.COLUMN_3_TITLE}</span></td>
+								<!-- ENDIF -->
 							</tr>
 							<!-- BEGINELSE -->
 							<tr>

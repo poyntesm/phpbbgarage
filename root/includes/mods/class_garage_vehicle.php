@@ -665,7 +665,6 @@ class garage_vehicle
 				$db->sql_freeresult($result);
 	
 				// Do we have a hilite image?  If so, prep the HTML
-				$featured_image = '';
 				if ( (empty($vehicle_data['attach_id']) == false) AND ($vehicle_data['attach_is_image'] == 1) ) 
 	        	    	{
 	                		// Do we have a thumbnail?  If so, our job is simple here :)
@@ -678,16 +677,17 @@ class garage_vehicle
 							$thumb_image = $absolute_url . GARAGE_UPLOAD_PATH . $vehicle_data['attach_thumb_location'];
 
 						}
-						$featured_image = '<a href="'.$absolute_url.'garage.'.$phpEx.'?mode=view_image&amp;type=garage_mod&amp;image_id='. $vehicle_data['attach_id'] .'" title="' . $vehicle_data['attach_file'] .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" /></a>';
 	                		} 
 	        		}
 				$template->assign_vars(array(
-					'FEATURED_DESCRIPTION' => $garage_config['featured_vehicle_description'],
-					'FEATURED_IMAGE' => $featured_image,
-					'VEHICLE' => $vehicle_data['vehicle'],
-					'USERNAME' => $vehicle_data['username'],
-					'U_VIEW_VEHICLE' => append_sid($absolute_url."garage_vehicle.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-					'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']))
+					'FEATURED_DESCRIPTION' 	=> $garage_config['featured_vehicle_description'],
+					'FEATURED_THUMB' 	=> $thumb_image,
+					'VEHICLE' 		=> $vehicle_data['vehicle'],
+					'USERNAME' 		=> $vehicle_data['username'],
+					'IMAGE_TITLE'		=> $vehicle_data['attach_file'],
+					'U_VIEW_IMAGE'		=> append_sid($absolute_url."garage_vehicle.$phpEx?mode=view_image&amp;image_id=".$vehicle_data['attach_id']),
+					'U_VIEW_VEHICLE' 	=> append_sid($absolute_url."garage_vehicle.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
+					'U_VIEW_PROFILE' 	=> append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']))
 				);
 			}
 		}
@@ -728,11 +728,11 @@ class garage_vehicle
 		for ($i = 0; $i < count($vehicle_data); $i++)
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' 	=> append_sid("garage.$phpEx", "mode=view_vehicle&CID=" . $vehicle_data[$i]['id'], true),
+				'U_COLUMN_1' 	=> append_sid("garage_vehicle.$phpEx", "mode=view_vehicle&CID=" . $vehicle_data[$i]['id'], true),
 				'U_COLUMN_2' 	=> append_sid("profile.$phpEx", "mode=viewprofile&u=" . $vehicle_data[$i]['user_id'], true),
 				'COLUMN_1_TITLE'=> $vehicle_data[$i]['vehicle'],
 				'COLUMN_2_TITLE'=> $vehicle_data[$i]['username'],
-				'COLUMN_3' 	=> $user->format_date($vehicle_data[$i]['date_updated']))
+				'COLUMN_3_TITLE'=> $user->format_date($vehicle_data[$i]['date_updated']))
 			);
 	 	}
 	
@@ -769,11 +769,11 @@ class garage_vehicle
 		for ($i = 0; $i < count($vehicle_data); $i++)
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' 	=> append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data[$i]['id']),
+				'U_COLUMN_1' 	=> append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data[$i]['id']),
 				'U_COLUMN_2' 	=> append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data[$i]['user_id']),
 				'COLUMN_1_TITLE'=> $vehicle_data[$i]['vehicle'],
 				'COLUMN_2_TITLE'=> $vehicle_data[$i]['username'],
-				'COLUMN_3' 	=> $vehicle_data[$i]['POI'])
+				'COLUMN_3_TITLE'=> $vehicle_data[$i]['POI'])
 			);
 	 	}
 	
@@ -810,11 +810,11 @@ class garage_vehicle
 		for ($i = 0; $i < count($vehicle_data); $i++)
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' 	=> append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data[$i]['id']),
+				'U_COLUMN_1' 	=> append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data[$i]['id']),
 				'U_COLUMN_2' 	=> append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data[$i]['user_id']),
 				'COLUMN_1_TITLE'=> $vehicle_data[$i]['vehicle'],
 				'COLUMN_2_TITLE'=> $vehicle_data[$i]['username'],
-				'COLUMN_3' 	=> $vehicle_data[$i]['POI'])
+				'COLUMN_3_TITLE'=> $vehicle_data[$i]['POI'])
 			);
 	 	}
 	
@@ -851,11 +851,11 @@ class garage_vehicle
 		for ($i = 0; $i < count($vehicle_data); $i++)
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' 	=> append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data[$i]['id']),
+				'U_COLUMN_1' 	=> append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data[$i]['id']),
 				'U_COLUMN_2' 	=> append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data[$i]['user_id']),
 				'COLUMN_1_TITLE'=> $vehicle_data[$i]['vehicle'],
 				'COLUMN_2_TITLE'=> $vehicle_data[$i]['username'],
-				'COLUMN_3' 	=> $vehicle_data[$i]['weighted_rating'] . '/' . '10')
+				'COLUMN_3_TITLE'=> $vehicle_data[$i]['weighted_rating'] . '/' . '10')
 			);
 	 	}
 	
@@ -892,11 +892,11 @@ class garage_vehicle
 		for ($i = 0; $i < count($vehicle_data); $i++)
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' 	=> append_sid("garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data[$i]['id']),
+				'U_COLUMN_1' 	=> append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data[$i]['id']),
 				'U_COLUMN_2' 	=> append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data[$i]['user_id']),
 				'COLUMN_1_TITLE'=> $vehicle_data[$i]['vehicle'],
 				'COLUMN_2_TITLE'=> $vehicle_data[$i]['username'],
-				'COLUMN_3' 	=> $user->format_date($vehicle_data[$i]['POI']))
+				'COLUMN_3_TITLE'=> $user->format_date($vehicle_data[$i]['POI']))
 			);
 	 	}
 	
@@ -977,24 +977,27 @@ class garage_vehicle
 		$vehicle_images_found	= 0;	
 		$mod_images_found 	= 0;
 		$mod_images_displayed 	= null;
-		$avatar_img 		= null;
 
 		//Get Vehicle Information	
 		$vehicle = $this->get_vehicle($cid);
-	
+
+		$vehicle['avatar'] 	= null;
 		if ($owned == 'NO' && $vehicle['user_avatar_type'])
 		{
-			switch( $vehicle['user_avatar_type'] )
+			//Build The Owners Avatar Image If Any...
+			if ($vehicle['user_avatar'] AND $user->optionget('viewavatars'))
 			{
-				case USER_AVATAR_UPLOAD:
-					$avatar_img = ( $config['allow_avatar_upload'] ) ? '<img src="' . $config['avatar_path'] . '/' . $vehicle['user_avatar'] . '" alt="" border="0" />' : '';
+				switch( $vehicle['user_avatar_type'] )
+				{
+					case AVATAR_UPLOAD:
+						$avatar_img = $config['avatar_path'] . '/' . $vehicle['user_avatar'];
 					break;
-				case USER_AVATAR_REMOTE:
-					$avatar_img = ( $board_config['allow_avatar_remote'] ) ? '<img src="' . $vehicle['user_avatar'] . '" alt="" border="0" />' : '';
+	
+					case AVATAR_GALLERY:
+						$avatar_img = $config['avatar_gallery_path'] . '/' . $vehicle['user_avatar'];
 					break;
-				case USER_AVATAR_GALLERY:
-					$avatar_img = ( $board_config['allow_avatar_local'] ) ? '<img src="' . $board_config['avatar_gallery_path'] . '/' . $vehicle['user_avatar'] . '" alt="" border="0" />' : '';
-					break;
+				}
+				$vehicle['avatar'] = '<img src="' . $avatar_img . '" width="' . $vehicle['user_avatar_width'] . '" height="' . $vehicle['user_avatar_height'] . '" alt="" />';
 			}
 		}
 		
@@ -1189,6 +1192,7 @@ class garage_vehicle
 					'QUARTMPH' 	=> $quartermile_data[$i]['quartmph'],
 					'U_IMAGE'	=> ($quartermile_data[$i]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_image&amp;image_id=". $quartermile_data[$i]['attach_id']) : '',
 					'IMAGE'		=> $user->img('garage_slip_img_attached', 'SLIP_IMAGE_ATTACHED'),
+					'U_QUART'	=> append_sid("garage_quartermile.$phpEx?mode=view_quartermile&amp;QMID=".$quartermile_data[$i]['id']."&amp;CID=$cid"),
 					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage_quartermile.$phpEx?mode=edit_quartermile&amp;QMID=".$quartermile_data[$i]['id']."&amp;CID=$cid") : '',
 					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_quartermile'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_quartermile(' . $cid . ',' . $quartermile_data[$i]['id'] . ')' : '')
 				);
@@ -1216,6 +1220,7 @@ class garage_vehicle
 					'PEAKPOINT' 	=> $dynorun_data[$i]['peakpoint'],
 					'U_IMAGE'	=> ($dynorun_data[$i]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_image&amp;image_id=". $dynorun_data[$i]['attach_id']) : '',
 					'IMAGE'		=> $user->img('garage_slip_img_attached', 'SLIP_IMAGE_ATTACHED'),
+					'U_BHP'		=> append_sid("garage_dynorun.$phpEx?mode=view_dynorun&amp;RRID=".$dynorun_data[$i]['rrid']."&amp;CID=$cid"),
 					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage_dynorun.$phpEx?mode=edit_dynorun&amp;RRID=".$dynorun_data[$i]['id']."&amp;CID=$cid") : '',
 					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_dynorun'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_dynorun(' . $cid . ',' . $dynorun_data[$i]['id'] . ')' : '')
 				);
@@ -1299,7 +1304,7 @@ class garage_vehicle
             		'COLOUR' 			=> $vehicle['colour'],
             		'HILITE_IMAGE' 			=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $vehicle['attach_thumb_location'] ,
             		'HILITE_IMAGE_TITLE' 		=> $vehicle['attach_file'],
-            		'AVATAR_IMG' 			=> $avatar_img,
+            		'AVATAR_IMG' 			=> $vehicle['avatar'],
             		'DATE_UPDATED' 			=> $user->format_date($vehicle['date_updated']),
             		'MILEAGE' 			=> $vehicle['mileage'],
             		'MILEAGE_UNITS' 		=> $vehicle['mileage_units'],
@@ -1386,7 +1391,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.*, ROUND(g.weighted_rating, 2) as weighted_rating, images.*, makes.make, models.model, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id',
+			'SELECT'	=> 'g.*, ROUND(g.weighted_rating, 2) as weighted_rating, images.*, makes.make, models.model, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id, user.user_avatar_width, user.user_avatar_height',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'g',
 			),

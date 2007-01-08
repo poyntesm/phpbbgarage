@@ -1,13 +1,13 @@
 <?php
 /***************************************************************************
- *                              garage.php
+ *                              garage_modification.php
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton
  *   email                : esmond.poynton@gmail.com
  *   description          : Provides Vehicle Garage System For phpBB
  *
- *   $Id: garage.php 326 2007-01-03 17:59:25Z poyntesm $
+ *   $Id$
  *
  ***************************************************************************/
 
@@ -348,6 +348,12 @@ switch( $mode )
 		//Pull Required Modification Data From DB
 		$data = $garage_modification->get_modification($mid);
 
+		//Build Navlinks
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $data['vehicle'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=$cid"))
+		);
+
 		//Get All Gallery Data Required
 		$gallery_data = $garage_image->get_modification_gallery($cid, $mid);
 			
@@ -389,8 +395,8 @@ switch( $mode )
 
 		$template->assign_vars(array(
 			'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $data['user_id']),
-			'U_VIEW_GARAGE_BUSINESS'=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_garage_business&amp;business_id=" . $data['installer_id']),
-			'U_VIEW_SHOP_BUSINESS' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_shop_business&amp;business_id=" . $data['shop_id']),
+			'U_VIEW_GARAGE_BUSINESS'=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=garage_review&amp;business_id=" . $data['installer_id']),
+			'U_VIEW_SHOP_BUSINESS' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=shop_review&amp;business_id=" . $data['shop_id']),
 			'YEAR' 			=> $data['made_year'],
 			'MAKE' 			=> $data['make'],
 			'MODEL' 		=> $data['model'],

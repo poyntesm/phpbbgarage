@@ -326,7 +326,7 @@ class garage_quartermile
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'q.*, d.id, d.bhp, d.bhp_unit, i.*, g.made_year, mk.make, md.model, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
+			'SELECT'	=> 'q.*, d.id, d.bhp, d.bhp_unit, i.*, g.made_year, mk.make, md.model, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, u.*',
 			'FROM'		=> array(
 				GARAGE_QUARTERMILES_TABLE	=> 'q',
 			),
@@ -334,6 +334,10 @@ class garage_quartermile
 				array(
 					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
 					'ON'	=> 'q.garage_id =g.id'
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'g.user_id = u.user_id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
@@ -434,17 +438,18 @@ class garage_quartermile
 
 		for($i = 0; $i < count($times); $i++)
 		{
-			$vehicle_data = $this->get_quartermile_by_vehicle_quart($times[$i]['garage_id'], $times[$i]['quart']);
+			$data = $this->get_quartermile_by_vehicle_quart($times[$i]['garage_id'], $times[$i]['quart']);
 	
-			$mph = (empty($vehicle_data['quartmph'])) ? 'N/A' : $vehicle_data['quartmph'];
-	            	$quartermile = $vehicle_data['quart'] .' @ ' . $mph . ' '. $user->lang['QUARTERMILE_SPEED_UNIT'];
+			$mph = (empty($data['quartmph'])) ? 'N/A' : $data['quartmph'];
+	            	$quartermile = $data['quart'] .' @ ' . $mph . ' '. $user->lang['QUARTERMILE_SPEED_UNIT'];
 	
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' 	=> append_sid("{$phpbb_root_path}garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-				'U_COLUMN_2' 	=> append_sid("{$phpbb_root_path}profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']),
-				'COLUMN_1_TITLE'=> $vehicle_data['vehicle'],
-				'COLUMN_2_TITLE'=> $vehicle_data['username'],
-				'COLUMN_3' 	=> $quartermile)
+				'U_COLUMN_1' 	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=".$data['id']),
+				'U_COLUMN_2' 	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=".$data['user_id']),
+				'U_COLUMN_3' 	=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=view_quartermile&amp;CID=".$data['id']."&amp;QMID=".$data['qmid']),
+				'COLUMN_1_TITLE'=> $data['vehicle'],
+				'COLUMN_2_TITLE'=> $data['username'],
+				'COLUMN_3_TITLE'=> $quartermile)
 			);
 	 	}
 	
