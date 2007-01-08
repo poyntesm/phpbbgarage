@@ -346,6 +346,7 @@ class garage
 						'ON'	=> 'vg.image_id = i.attach_id'
 					)
 				),
+				'WHERE'		=> "v.pending = 0",
 				'GROUP_BY'	=> "v.id",
 				'ORDER_BY'	=> "$sort $order"
 			);
@@ -360,7 +361,7 @@ class garage
 
 			//Handle SQL Part
 			$sql_array = array(
-				'SELECT'	=> "m.*, v.made_year, v.id, v.currency, i.*, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.title as business_title, b2.title as install_business_title, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle",
+				'SELECT'	=> "m.*, m.id as modification_id, v.made_year, v.id as garage_id, v.currency, i.*, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.title as business_title, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, CONCAT_WS(' ', b1.title, p.title) as modification_title",
 				'FROM'		=> array(
 					GARAGE_MODIFICATIONS_TABLE	=> 'm',
 				),
@@ -372,6 +373,10 @@ class garage
 					,array(
 						'FROM'	=> array(GARAGE_CATEGORIES_TABLE => 'c'),	
 						'ON'	=> 'm.category_id = c.id'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_PRODUCTS_TABLE => 'p'),	
+						'ON'	=> 'm.product_id = p.id'
 					)
 					,array(
 						'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
@@ -397,15 +402,8 @@ class garage
 						'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b1'),
 						'ON'	=> 'm.manufacturer_id = b1.id'
 					)
-					,array(
-						'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b2'),
-						'ON'	=> 'm.shop_id = b2.id'
-					)
-					,array(
-						'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b3'),
-						'ON'	=> 'm.installer_id = b3.id'
-					)
 				),
+				'WHERE'		=> "m.id IS NOT NULL",
 				'GROUP_BY'	=> "m.id",
 				'ORDER_BY'	=> "$sort $order"
 			);
@@ -450,6 +448,7 @@ class garage
 						'ON'	=> 'p.business_id = b.id'
 					)
 				),
+				'WHERE'		=> "p.id IS NOT NULL",
 				'GROUP_BY'	=> "p.id",
 				'ORDER_BY'	=> "$sort $order"
 			);
@@ -464,7 +463,7 @@ class garage
 
 			//Handle SQL Part
 			$sql_array = array(
-				'SELECT'	=> "v.id, v.user_id, q.id as qmid, qg.image_id, u.username, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.rr_id, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous",
+				'SELECT'	=> "v.id, v.user_id, q.id as qmid, qg.image_id, i.attach_id, i.attach_file, u.username, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.rr_id, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous",
 				'FROM'		=> array(
 					GARAGE_QUARTERMILES_TABLE	=> 'q',
 				),
@@ -502,6 +501,7 @@ class garage
 						'ON'	=> 'qg.image_id = i.attach_id'
 					)
 				),
+				'WHERE'		=> "q.pending = 0",
 				'GROUP_BY'	=> "q.id",
 				'ORDER_BY'	=> "$sort $order"
 			);
@@ -516,7 +516,7 @@ class garage
 
 			//Handle SQL Part
 			$sql_array = array(
-				'SELECT'	=> "v.id, v.made_year, v.user_id, mk.make, md.model, d.dynocenter, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, d.peakpoint, i.attach_id as image_id, i.attach_file, d.id as rr_id, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle",
+				'SELECT'	=> "v.id, v.made_year, v.user_id, mk.make, md.model, b.title, d.*, i.*, d.id as rr_id, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, u.username",
 				'FROM'		=> array(
 					GARAGE_DYNORUNS_TABLE	=> 'd',
 				),
@@ -542,14 +542,19 @@ class garage
 						'ON'	=> 'v.user_id = u.user_id'
 					)
 					,array(
-						'FROM'	=> array(GARAGE_QUARTERMILE_GALLERY_TABLE => 'qg'),
-						'ON'	=> 'v.id = qg.garage_id AND qg.hilite = 1'
+						'FROM'	=> array(GARAGE_DYNORUN_GALLERY_TABLE => 'dg'),
+						'ON'	=> 'v.id = dg.garage_id AND dg.hilite = 1'
 					)
 					,array(
 						'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
-						'ON'	=> 'qg.image_id = i.attach_id'
+						'ON'	=> 'dg.image_id = i.attach_id'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b'),
+						'ON'	=> 'd.dynocentre_id = b.id'
 					)
 				),
+				'WHERE'		=> "d.pending = 0",
 				'GROUP_BY'	=> "d.id",
 				'ORDER_BY'	=> "$sort $order"
 			);
@@ -558,7 +563,7 @@ class garage
 		{
 			//Handle Sorting & Ordering
 			$sort = (empty($sort)) ? 'lap_time' : $sort;
-			$garage_template->sort_dropdown('icle', $sort);
+			$garage_template->sort_dropdown('track_time', $sort);
 			$order = (empty($order)) ? 'ASC' : $order;
 			$garage_template->order_dropdown($order);
 
@@ -569,8 +574,14 @@ class garage
 			$sql_array['ORDER_BY'] = "$sort $order";
 		}
 
-		//Now We Need To Worry...And I Mean Worry About WHERE's :-(
-		$sql_array['WHERE'] = "";
+		//Now We Need To Build All Extra Where Statements
+		$sql_array['WHERE'] .= ($search_options['search_year'] AND (!empty($search_options['made_year']))) ? " AND v.made_year = " . $search_options['made_year'] : '';
+		$sql_array['WHERE'] .= ($search_options['search_make'] AND (!empty($search_options['make_id']))) ? " AND v.make_id = " . $search_options['make_id'] : '';
+		$sql_array['WHERE'] .= ($search_options['search_model'] AND (!empty($search_options['model_id']))) ? " AND v.model_id = " . $search_options['model_id'] : '';
+		$sql_array['WHERE'] .= ($search_options['search_category'] AND (!empty($search_options['category_id']))) ? " AND m.category_id = " . $search_options['category_id'] : '';
+		$sql_array['WHERE'] .= ($search_options['search_manufacturer'] AND (!empty($search_options['manufacturer_id']))) ? " AND m.manufacturer_id = " . $search_options['manufacturer_id'] : '';
+		$sql_array['WHERE'] .= ($search_options['search_product'] AND (!empty($search_options['product_id']))) ? " AND m.product_id = " . $search_options['product_id'] : '';
+		$sql_array['WHERE'] .= ($search_options['search_username'] AND (!empty($search_options['username']))) ? " AND u.username = " . $search_options['username'] : '';
 
 		//Build Complete SQL Statement Now With All Options
 		$sql = $db->sql_build_query('SELECT', array(

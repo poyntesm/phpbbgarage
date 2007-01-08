@@ -270,7 +270,7 @@ class garage_quartermile
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id as garage_id, u.user_id, g.user_id, q.id as qmid, q.image_id, u.username, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.rr_id',
+			'SELECT'	=> 'g.id as garage_id, u.user_id, g.user_id, q.id as qmid, qg.image_id, u.username, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.rr_id',
 			'FROM'		=> array(
 				GARAGE_QUARTERMILES_TABLE	=> 'q',
 			),
@@ -450,106 +450,6 @@ class garage_quartermile
 	
 		$required_position++;
 		return ;
-	}
-
-	/*========================================================================*/
-	// Build Quartermile Table With/Without Pending Itesm
-	// Usage: build_quartermile_table();
-	/*========================================================================*/
-	function build_quartermile_table()
-	{
-		global $db, $template, $sort, $phpEx, $order, $garage_config, $garage_template, $user, $garage, $phpbb_root_path, $garage_model;
-
-		$start 	= (empty($start)) ? 0 : $start;
-		$sort 	= (empty($sort)) ? 'quart' : $sort;
-		$order 	= (empty($rder)) ? 'ASC' : $order;
-
-		//Get All Data Posted And Make It Safe To Use
-		$addtional_where = '';
-		$params = array('make_id' => '', 'model_id' => '');
-		$data = $garage->process_vars($params);
-
-		//Build Make List Now So We Can Use Selected Make Info
-		$makes = $garage_model->get_all_makes();
-		for ($i = 0, $count = sizeof($makes);$i < $count; $i++)
-		{
-			$template->assign_block_vars('make', array(
-				'ID'		=> $makes[$i]['id'],
-				'MAKE'		=> $makes[$i]['make'],
-				'S_SELECTED'	=> ($data['make_id'] == $makes[$i]['id']) ? true: false)
-			);
-		}
-
-		//Determine If We Are Filtering By Make
-		if (!empty($data['make_id']))
-		{
-			//Pull Required Data From DB
-			$data = $garage_model->get_make($data['make_id']);
-			$addtional_where .= "AND g.make_id = '$make_id'";
-			$template->assign_vars(array(
-				'MAKE_ID'	=> $data['id'])
-			);
-		}
-
-		//Determine If We Are Filtering By Model
-		if (!empty($model_id))
-		{
-			//Pull Required Data From DB
-			$data = $garage_model->get_model($data['model_id']);
-			$addtional_where .= "AND g.model_id = '$model_id'";
-			$template->assign_vars(array(
-				'MODEL_ID'	=> $data['id'])
-			);
-		}
-
-		//First Query To Return Top Time For All Or For Selected Filter...
-		$rows = $this->get_top_quartermiles($sort, $order, $start, $garage_config['cars_per_page'], $addtional_where);
-
-		//Now Process All Rows Returned And Get Rest Of Required Data	
-		for($i = 0; $i < count($rows); $i++)
-		{
-			//Second Query To Return All Other Data For Top Quartermile Run
-			$data = $this->get_quartermile_by_vehicle_quart($rows[$i]['garage_id'], $rows[$i]['quart']);
-			$template->assign_block_vars('quartermile', array(
-				'ROW_NUMBER' 	=> $i + ( $start + 1 ),
-				'QMID' 		=> $data['qmid'],
-				'U_IMAGE'	=> ($data['image_id']) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_gallery_item&amp;image_id=". $data['image_id']) : '',
-				'U_EDIT'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_quartermile&amp;QMID=" . $data['qmid'] . "&amp;CID=" . $data['id'] . "&amp;PENDING=YES"),
-				'IMAGE'		=> $user->img('garage_slip_img_attached', 'SLIP_IMAGE_ATTACHED'),
-				'USERNAME' 	=> $data['username'],
-				'VEHICLE' 	=> $data['vehicle'],
-				'RT' 		=> $data['rt'],
-				'SIXTY' 	=> $data['sixty'],
-				'THREE' 	=> $data['three'],
-				'EIGHTH' 	=> $data['eighth'],
-				'EIGHTHMPH' 	=> $data['eighthmph'],
-				'THOU' 		=> $data['thou'],
-				'QUART' 	=> $data['quart'],
-				'QUARTM' 	=> $data['quartmph'],
-				'BHP' 		=> $data['bhp'],
-				'BHP_UNIT' 	=> $data['bhp_unit'],
-				'TORQUE' 	=> $data['torque'],
-				'TORQUE_UNIT' 	=> $data['torque_unit'],
-				'BOOST' 	=> $data['boost'],
-				'BOOST_UNIT' 	=> $data['boost_unit'],
-				'NITROUS' 	=> $data['nitrous'],
-				'U_VIEWVEHICLE' => append_sid("{$phpbb_root_path}garage.$phpEx?mode=view_vehicle&amp;CID=".$data['id']),
-				'U_VIEWPROFILE' => append_sid("{$phpbb_root_path}profile.$phpEx?mode=viewprofile&amp;u=".$data['user_id']))
-			);
-		}
-
-		$count = count($this->get_top_quartermiles($sort, $order, 0, 10000000, $addtional_where));
-		$pagination = generate_pagination("garage.$phpEx?mode=dynorun&amp;order=$order", $count, $garage_config['cars_per_page'], $start);
-
-		$garage_template->sort_dropdown('quartermile', $sort);	
-		$garage_template->order_dropdown($order);
-		$template->assign_vars(array(
-            		'EDIT' 		=> ($garage_config['enable_images']) ? $user->img('garage_edit', 'EDIT') : $user->lang['EDIT'],
-			'PAGINATION' 	=> $pagination,
-			'PAGE_NUMBER' 	=> sprintf($user->lang['PAGE_OF'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count / $garage_config['cars_per_page'] )))
-		);
-
-		return $count;
 	}
 
 	/*========================================================================*/

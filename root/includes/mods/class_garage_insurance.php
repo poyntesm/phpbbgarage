@@ -99,29 +99,29 @@ class garage_insurance
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'in.*, b.title, g.made_year, mk.make, md.model, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
+			'SELECT'	=> "p.*, b.title, v.made_year, mk.make, md.model, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle",
 			'FROM'		=> array(
-				GARAGE_PREMIUMS_TABLE	=> 'in',
+				GARAGE_PREMIUMS_TABLE	=> 'p',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'g.id = in.garage_id'
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'v'),
+					'ON'	=> 'v.id = p.garage_id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
+					'ON'	=> 'v.make_id = mk.id and mk.pending = 0'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'g.model_id = md.id and md.pending = 0'
+					'ON'	=> 'v.model_id = md.id and md.pending = 0'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b'),
-					'ON'	=> 'b_id = in.business_id'
+					'ON'	=> 'b.id = p.business_id'
 				)
 			),
-			'WHERE'		=>  "in.id = $ins_id"
+			'WHERE'		=>  "p.id = $ins_id"
 		));
 
       		$result = $db->sql_query($sql);
@@ -207,7 +207,7 @@ class garage_insurance
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'g.id = in.garage_id'
+					'ON'	=> 'g.id = i.garage_id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
@@ -279,7 +279,7 @@ class garage_insurance
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'i.*, b.*',
+			'SELECT'	=> 'i.*, b.title',
 			'FROM'		=> array(
 				GARAGE_PREMIUMS_TABLE	=> 'i',
 			),

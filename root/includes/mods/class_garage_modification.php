@@ -600,7 +600,7 @@ class garage_modification
 					'ON'	=> 'g.user_id = u.user_id'
 				)
 			),
-			'WHERE'		=> "m.business_id = b.id AND b.type LIKE '%". BUSINESS_RETAIL . "%' AND b.pending = 0 AND b.id = $business_id AND mk.pending = 0 AND md.pending = 0",
+			'WHERE'		=> "m.shop_id = b.id AND b.type LIKE '%". BUSINESS_RETAIL . "%' AND b.pending = 0 AND b.id = $business_id AND mk.pending = 0 AND md.pending = 0",
 			'ORDER_BY'	=> "m.id, m.date_created DESC"
 		));
 

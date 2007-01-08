@@ -68,8 +68,8 @@ class garage_template
 			'U_GARAGE_INSURANCE_REVIEW' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_insurance_business"),
 			'U_GARAGE_SHOP_REVIEW' 			=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_shop_business"),
 			'U_GARAGE_GARAGE_REVIEW' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_garage_business"),
-			'U_GARAGE_QUARTERMILE_TABLE' 		=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=quartermile_table"),
-			'U_GARAGE_DYNORUN_TABLE' 		=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=dynorun_table"),
+			'U_GARAGE_QUARTERMILE_TABLE' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=quartermile_table"),
+			'U_GARAGE_DYNORUN_TABLE' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=dynorun_table"),
 			'U_GARAGE_CREATE_VEHICLE' 		=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_vehicle"),
 			'MAIN' 					=> ($garage_config['enable_images']) ? $user->img('garage_main_menu', 'MAIN_MENU') : $user->lang['MAIN_MENU'],
 			'BROWSE' 				=> ($garage_config['enable_images']) ? $user->img('garage_browse', 'BROWSE_GARAGE') : $user->lang['BROWSE_GARAGE'],
@@ -198,8 +198,8 @@ class garage_template
 		}
 		else if ($type == 'modification')
 		{
-			$values = array('date_created', 'date_updated', 'username', 'made_year', 'make', 'model', 'colour', 'views', 'total_mods');
-			$texts = array($user->lang['LAST_CREATED'], $user->lang['LAST_UPDATED'], $user->lang['OWNER'], $user->lang['YEAR'], $user->lang['MAKE'], $user->lang['MODEL'],  $user->lang['COLOUR'], $user->lang['TOTAL_VIEWS'], $user->lang['TOTAL_MODS']);
+			$values = array('category', 'username', 'price', 'rating');
+			$texts = array($user->lang['CATEGORY'], $user->lang['OWNER'], $user->lang['PRICE'], $user->lang['RATING']);
 		}
 		else if ($type == 'premium')
 		{

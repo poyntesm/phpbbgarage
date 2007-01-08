@@ -280,10 +280,10 @@ class garage_business
 			array(
 			'SELECT'	=> 'b.*, SUM(purchase_rating) AS rating, COUNT(*) *10 AS total_rating',
 			'FROM'		=> array(
-				GARAGE_BUSINESS_TABLE	=> 'b',
+				GARAGE_BUSINESS_TABLE		=> 'b',
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 			),
-			'WHERE'		=>  "m.business_id = b.id AND b.type LIKE '%" . BUSINESS_RETAIL . "%'  AND b.pending =0 $where",
+			'WHERE'		=>  "m.shop_id = b.id AND b.type LIKE '%" . BUSINESS_RETAIL . "%'  AND b.pending =0 $where",
 			'GROUP_BY'	=>  "b.id",
 			'ODER_BY'	=>  "rating DESC"
 		));
@@ -302,9 +302,9 @@ class garage_business
 	// Select All Insurance Business Data From DB
 	// Usage: get_insurance_business('additional where', 'row start point', 'limit')
 	/*========================================================================*/
-	function get_insurance_business($where, $start = 0,  $limit = 20)
+	function get_insurance_business($where = null, $start = 0,  $limit = 20)
 	{
-		global $db, $where;
+		global $db;
 
 		$data = null;
 
@@ -372,7 +372,7 @@ class garage_business
 				GARAGE_BUSINESS_TABLE	=> 'b',
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 			),
-			'WHERE'		=>  "m.business_id = b.id AND b.type LIKE '%" . BUSINESS_RETAIL . "%' AND b.pending =0 $additional_where"
+			'WHERE'		=>  "m.shop_id = b.id AND b.type LIKE '%" . BUSINESS_RETAIL . "%' AND b.pending =0 $additional_where"
 		));
 
 		$result = $db->sql_query($sql);

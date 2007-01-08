@@ -154,7 +154,7 @@ switch( $mode )
 		$data 	= $garage->process_vars($params);
 
 		//Checks All Required Data Is Present
-		$params = array('bhp', 'bhp_unit');
+		$params = array('dynocentre_id', 'bhp', 'bhp_unit');
 		$garage->check_required_vars($params);
 
 		//Update The Dynorun With Data Acquired
@@ -233,7 +233,7 @@ switch( $mode )
 		$garage_template->power_dropdown('bhp_unit', $data['bhp_unit']);
 		$garage_template->power_dropdown('torque_unit', $data['torque_unit']);
 		$garage_template->boost_dropdown($data['boost_unit']);
-		$garage_template->boost_dropdown($dynocentres ,$data['dynocentre_id']);
+		$garage_template->dynocentre_dropdown($dynocentres, $data['dynocentre_id']);
 		$template->assign_vars(array(
 			'L_TITLE'  		=> $user->lang['EDIT_RUN'],
 			'L_BUTTON'  		=> $user->lang['EDIT_RUN'],
@@ -271,7 +271,7 @@ switch( $mode )
 		$data 	= $garage->process_vars($params);
 
 		//Checks All Required Data Is Present
-		$params = array('bhp', 'bhp_unit');
+		$params = array('dynocentre_id', 'bhp', 'bhp_unit');
 		$garage->check_required_vars($params);
 
 		//Update The Dynorun With Data Acquired
@@ -279,36 +279,6 @@ switch( $mode )
 
 		//Update The Time Now...In Case We Get Redirected During Image Processing
 		$garage_vehicle->update_vehicle_time($cid);
-
-		//Removed The Old Image If Required By A Delete Or A New Image Existing
-		if (($data['editupload'] == 'delete') OR ($data['editupload'] == 'new'))
-		{
-			$garage_image->delete_dynorun_image($data['image_id']);
-		}
-
-		//If Any Image Variables Set Enter The Image Handling
-		if ($garage_image->image_attached())
-		{
-			//Check For Remote & Local Image Quotas
-			if ($garage_image->below_image_quotas())
-			{
-				//Create Thumbnail & DB Entry For Image
-				$image_id = $garage_image->process_image_attached('dynorun', $rrid);
-				$garage->update_single_field(GARAGE_DYNORUNS_TABLE, 'image_id', $image_id, 'id', $rrid);
-			}
-			//You Have Reached Your Image Quota..Error Nicely
-			else if ($garage_image->above_image_quotas())
-			{
-				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=4"));
-			}
-		}
-		//No Image Attached..We Need To Check If This Breaks The Site Rule
-		else if (($garage_config['enable_dynorun_image_required'] == '1') AND ($data['bhp'] >= $garage_config['dynorun_image_required_limit']))
-		{
-			//That Time Requires An Image...Delete Entered Time And Notify User
-			$garage_dynorun->delete_dynorun($rrid);
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=26"));
-		}
 
 		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
 		if ($garage_config['enable_dynorun_approval'])

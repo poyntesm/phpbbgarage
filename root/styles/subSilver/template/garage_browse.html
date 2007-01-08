@@ -28,8 +28,8 @@
 					<th nowrap="nowrap">{L_UPDATED}</th>
 				</tr>
 				<!-- BEGIN vehiclerow -->
-<!-- IF vehiclerow.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-	  				<td align="center"><span class="gen">{vehiclerow.IMAGE_ATTACHED}</span></td>
+				<!-- IF vehiclerow.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+					<td align="center"><span class="gen"><!-- IF vehiclerow.U_IMAGE --><a href="{vehiclerow.U_IMAGE}" target="_blank">{vehiclerow.IMAGE}</a><!-- ENDIF --></span></td>
 	  				<td align="center"><span class="gensmall">{vehiclerow.YEAR}</span></td>
 					<td align="center"><span class="gensmall">{vehiclerow.MAKE}</span></td>
 					<td align="center"><span class="gensmall"><a href="{vehiclerow.U_VIEW_VEHICLE}">{vehiclerow.MODEL}</a></span></td>

@@ -12,7 +12,10 @@
 
 <!-- INCLUDE garage_menu.html -->
 
-	<td width="72%" valign="top">
+<td width="72%" valign="top">
+
+
+			<!-- IF SEARCH_MESSAGE -->
 			<table width="100%" border="0" cellspacing="1" cellpadding="4" class="tablebg">
 	  			<tr>
 					<td valign="top" class="row1" align="center"><span class="gen"><b>{SEARCH_MESSAGE}</b></span><br /></td>
@@ -21,6 +24,7 @@
 			<br />
 
 			<form method="post" action="{S_MODE_ACTION}">
+			<!-- ENDIF -->
 
 			<!-- IF S_DISPLAY_VEHICLE_RESULTS -->
 			<table width="100%" cellpadding="2" cellspacing="1" border="0" class="tablebg">
@@ -37,7 +41,7 @@
 				</tr>
 				<!-- BEGIN vehicle -->
 <!-- IF vehicle.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-	  				<td align="center"><span class="gen">{vehicle.IMAGE_ATTACHED}</span></td>
+					<td align="center"><span class="gen"><!-- IF vehicle.U_IMAGE --><a href="{vehicle.U_IMAGE}" target="_blank">{vehicle.IMAGE}</a><!-- ENDIF --></span></td>
 	  				<td align="center"><span class="gensmall">{vehicle.YEAR}</span></td>
 					<td align="center"><span class="gensmall">{vehicle.MAKE}</span></td>
 					<td align="center"><span class="gensmall"><a href="{vehicle.U_VIEW_VEHICLE}">{vehicle.MODEL}</a></span></td>
@@ -61,23 +65,23 @@
 			<!-- IF S_DISPLAY_MODIFICATION_RESULTS -->
 			<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
 				<tr> 
+	  				<th></th>
 	  				<th class="thCornerL" nowrap="nowrap">{L_VEHICLE}</th>
 					<th class="thTop" nowrap="nowrap">{L_MODIFICATION}</th>
 					<th class="thTop" nowrap="nowrap">{L_CATEGORY}</th>
 					<th class="thTop" nowrap="nowrap">{L_OWNER}</th>
-					<th class="thTop" nowrap="nowrap">{L_PREMIUM}</th>
-					<th class="thTop" nowrap="nowrap">{L_COVER_TYPE}</th>
-					<th class="thCornerR" nowrap="nowrap">{L_BUSINESS_NAME}</th>
+					<th class="thTop" nowrap="nowrap">{L_PRICE}</th>
+					<th class="thTop" nowrap="nowrap">{L_RATING}</th>
 				</tr>
 				<!-- BEGIN modification -->
 <!-- IF modification.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-	  				<td align="center" valign="middle"><span class="gensmall"><a href="{vehicle.U_VIEW_VEHICLE}">{vehicle.VEHICLE}</a></span></td>
-					<td align="center" valign="middle"><span class="gensmall">{vehicle.PRICE}</span></td>
-					<td align="center" valign="middle"><span class="gensmall">{vehicle.MOD_PRICE}</span></td>
-					<td align="center" valign="middle"><span class="gensmall"><a href="{vehicle.U_VIEW_PROFILE}">{vehicle.USERNAME}</a></span></td>
-					<td align="center" valign="middle"><span class="gensmall">{vehicle.PREMIUM}</span></td>
-					<td align="center" valign="middle"><span class="gensmall">{vehicle.COVER_TYPE}</span></td>
-					<td align="center" valign="middle"><span class="gensmall"><a href="{vehicle.U_VIEW_BUSINESS}">{vehicle.BUSINESS}</a></span></td>
+					<td align="center"><span class="gen"><!-- IF modification.U_IMAGE --><a href="{modification.U_IMAGE}" target="_blank">{modification.IMAGE}</a><!-- ENDIF --></span></td>
+	  				<td align="center" valign="middle"><span class="gensmall"><a href="{modification.U_VIEW_VEHICLE}">{modification.VEHICLE}</a></span></td>
+					<td align="center" valign="middle"><span class="gensmall"><a href="{modification.U_VIEW_MODIFICATION}">{modification.MODIFICATION}</a></span></td>
+					<td align="center" valign="middle"><span class="gensmall">{modification.CATEGORY}</span></td>
+					<td align="center" valign="middle"><span class="gensmall"><a href="{modification.U_VIEW_PROFILE}">{modification.USERNAME}</a></span></td>
+					<td align="center" valign="middle"><span class="gensmall">{modification.PRICE}</span></td>
+					<td align="center" valign="middle"><span class="gensmall">{modification.RATING}</span></td>
 				</tr>
 				<!-- BEGINELSE -->
 				<tr class="row1">
@@ -99,17 +103,17 @@
 					<th class="thTop" nowrap="nowrap">{L_OWNER}</th>
 					<th class="thTop" nowrap="nowrap">{L_PREMIUM}</th>
 					<th class="thTop" nowrap="nowrap">{L_COVER_TYPE}</th>
-					<th class="thCornerR" nowrap="nowrap">{L_BUSINESS_NAME}</th>
+					<th class="thCornerR" nowrap="nowrap">{L_INSURER}</th>
 				</tr>
 				<!-- BEGIN premium -->
 <!-- IF vehicle.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-	  				<td align="center" valign="middle"><span class="gensmall"><a href="{vehicle.U_VIEW_VEHICLE}">{vehicle.VEHICLE}</a></span></td>
-					<td align="center" valign="middle"><span class="gensmall">{vehicle.PRICE}</span></td>
-					<td align="center" valign="middle"><span class="gensmall">{vehicle.MOD_PRICE}</span></td>
-					<td align="center" valign="middle"><span class="gensmall"><a href="{vehicle.U_VIEW_PROFILE}">{vehicle.USERNAME}</a></span></td>
-					<td align="center" valign="middle"><span class="gensmall">{vehicle.PREMIUM}</span></td>
-					<td align="center" valign="middle"><span class="gensmall">{vehicle.COVER_TYPE}</span></td>
-					<td align="center" valign="middle"><span class="gensmall"><a href="{vehicle.U_VIEW_BUSINESS}">{vehicle.BUSINESS}</a></span></td>
+				<td align="center" valign="middle"><span class="gensmall"><a href="{premium.U_VIEW_VEHICLE}">{premium.VEHICLE}</a></span></td>
+					<td align="center" valign="middle"><span class="gensmall">{premium.PRICE}</span></td>
+					<td align="center" valign="middle"><span class="gensmall">{premium.MOD_PRICE}</span></td>
+					<td align="center" valign="middle"><span class="gensmall"><a href="{premium.U_VIEW_PROFILE}">{premium.USERNAME}</a></span></td>
+					<td align="center" valign="middle"><span class="gensmall">{premium.PREMIUM}</span></td>
+					<td align="center" valign="middle"><span class="gensmall">{premium.COVER_TYPE}</span></td>
+					<td align="center" valign="middle"><span class="gensmall"><a href="{premium.U_VIEW_BUSINESS}">{premium.BUSINESS}</a></span></td>
 				</tr>
 				<!-- BEGINELSE -->
 				<tr class="row1">
@@ -132,10 +136,8 @@
 					<th nowrap="nowrap">{L_SIXTY}</th>
 					<th nowrap="nowrap">{L_THREE}</th>
 					<th nowrap="nowrap">{L_EIGHTH}</th>
-					<th nowrap="nowrap">{L_EIGHTHMPH}</th>
 					<th nowrap="nowrap">{L_THOU}</th>
 					<th nowrap="nowrap">{L_QUART}</th>
-					<th nowrap="nowrap">{L_QUARTMPH}</th>
 				</tr>
 				<!-- BEGIN quartermile -->
 				<!-- IF quartermile.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
@@ -145,11 +147,9 @@
 					<td align="center"><span class="gensmall">{quartermile.RT}</span></td>
 					<td align="center"><span class="gensmall">{quartermile.SIXTY}</span></td>
 					<td align="center"><span class="gensmall">{quartermile.THREE}</span></td>
-					<td align="center"><span class="gensmall">{quartermile.EIGHTH}</span></td>
-					<td align="center"><span class="gensmall">{quartermile.EIGHTHMPH}</span></td>
+					<td align="center"><span class="gensmall">{quartermile.EIGHTH}&nbsp;&#64;&nbsp;{quartermile.EIGHTHMPH}</span></td>
 					<td align="center"><span class="gensmall">{quartermile.THOU}</span></td>
-					<td align="center"><span class="gensmall">{quartermile.QUART}</span></td>
-					<td align="center"><span class="gensmall">{quartermile.QUARTMPH}</span></td>
+					<td align="center"><span class="gensmall">{quartermile.QUART}&nbsp;&#64;&nbsp;{quartermile.QUARTMPH}</span></td>
 				</tr>
 				<!-- BEGINELSE -->
 				<tr class="row1">

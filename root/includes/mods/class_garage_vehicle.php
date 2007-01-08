@@ -1205,7 +1205,7 @@ class garage_vehicle
          		for ( $i = 0; $i < count($dynorun_data); $i++ )
          		{
 				$template->assign_block_vars('dynorun.run', array(
-					'DYNOCENTER'	=> $dynorun_data[$i]['dynocenter'],
+					'DYNOCENTER'	=> $dynorun_data[$i]['title'],
 					'BHP' 		=> $dynorun_data[$i]['bhp'],
 					'BHP_UNIT' 	=> $dynorun_data[$i]['bhp_unit'],
 					'TORQUE' 	=> $dynorun_data[$i]['torque'],
@@ -1323,7 +1323,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.*, makes.make, models.model, user.username, count(mods.id) AS total_mods, count(*) as total',
+			'SELECT'	=> 'g.*, mk.make, md.model, user.username, count(mods.id) AS total_mods, count(*) as total, i.attach_id',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'g',
 			),
@@ -1333,16 +1333,24 @@ class garage_vehicle
 					'ON'	=> 'mods.garage_id = g.id'
 				)
 				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'makes'),
-					'ON'	=> 'g.make_id = makes.id'
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+					'ON'	=> 'g.make_id = mk.id'
 				)
 				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'models'),
-					'ON'	=> 'g.model_id = models.id'
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+					'ON'	=> 'g.model_id = md.id'
 				)
 				,array(
 					'FROM'	=> array(USERS_TABLE => 'user'),
 					'ON'	=> 'g.user_id = user.user_id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_VEHICLE_GALLERY_TABLE => 'vg'),
+					'ON'	=> 'g.id = vg.garage_id AND vg.hilite = 1',
+				)
+				,array(
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
+					'ON'	=> 'i.attach_id = vg.image_id'
 				)
 			),
 			'WHERE'		=> "mk.pending = 0 AND md.pending = 0 " . $additional_where,
@@ -1425,7 +1433,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'SELECT g.*, ROUND(g.weighted_rating, 2) as weighted_rating, images.*, makes.make, models.model, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id',
+			'SELECT'	=> "g.*, ROUND(g.weighted_rating, 2) as weighted_rating, images.*, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id",
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'g',
 			),
@@ -1466,7 +1474,7 @@ class garage_vehicle
 		}
 		$db->sql_freeresult($result);
 
-		return $rows;
+		return $data;
 	}
 
 	/*========================================================================*/
