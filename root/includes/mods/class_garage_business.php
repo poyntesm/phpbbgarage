@@ -251,7 +251,7 @@ class garage_business
 				GARAGE_BUSINESS_TABLE	=> 'b',
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 			),
-			'WHERE'		=>  "m.install_business_id = b.id AND b.type LIKE '%" . BUSINESS_GARAGE . "%' AND b.pending = 0 $where",
+			'WHERE'		=>  "m.installer_id = b.id AND b.type LIKE '%" . BUSINESS_GARAGE . "%' AND b.pending = 0 $where",
 			'GROUP_BY'	=>  "b.id",
 			'ODER_BY'	=>  "rating DESC"
 		));
@@ -342,10 +342,10 @@ class garage_business
 			array(
 			'SELECT'	=> 'count(DISTINCT b.title) as total',
 			'FROM'		=> array(
-				GARAGE_BUSINESS_TABLE	=> 'b',
-				GARAGE_MODSTABLE	=> 'm',
+				GARAGE_BUSINESS_TABLE		=> 'b',
+				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 			),
-			'WHERE'		=>  "m.install_business_id = b.id AND b.type LIKE '%" . BUSINESS_GARAGE . "%' AND b.pending =0 $additional_where"
+			'WHERE'		=>  "m.installer_id = b.id AND b.type LIKE '%" . BUSINESS_GARAGE . "%' AND b.pending =0 $additional_where"
 		));
 
 		$result = $db->sql_query($sql);

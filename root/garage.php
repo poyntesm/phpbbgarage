@@ -296,17 +296,41 @@ switch( $mode )
 	case 'dynorun_table':
 	case 'search_results':
 
+		//Handle Some Mode Specific Things Like Navlinks & Display Defaults
 		if ($mode == 'browse')
 		{
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'	=> $user->lang['BROWSE'],
+				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=$mode"))
+			);
 			$default_display = 'vehicles';
 		}
 		else if ($mode == 'quartermile_table')
 		{
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'	=> $user->lang['QUARTERMILE_TABLE'],
+				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=$mode"))
+			);
 			$default_display = 'quartermiles';
 		}
 		elseif ($mode == 'dynorun_table')
 		{
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'	=> $user->lang['DYNORUN_TABLE'],
+				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=$mode"))
+			);
 			$default_display = 'dynoruns';
+		}
+		else
+		{
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'	=> $user->lang['SEARCH'],
+				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=search"))
+			);
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'	=> $user->lang['RESULTS'])
+				//'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=search_results"))
+			);
 		}
 
 		$default_display = (empty($default_display)) ? '' : $default_display;
@@ -333,10 +357,7 @@ switch( $mode )
 		//Build Page Header ;)
 		page_header($page_title);
 
-		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $user->lang['SEARCH'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=search"))
-		);
+
 
 		//Lets Let The Search Function Do The Hard Work & Return Required Data
 		$results_data = $garage->perform_search($data);
@@ -864,12 +885,6 @@ switch( $mode )
 		//Get Required Shop Business Data
 		$business = $garage_business->get_shop_business($data['where'], $data['start']);
 
-		//If No Business Let The User Know..
-		if ( sizeof($business) < 1 )
-		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=1"));
-		}
-
 		//Build Page Header ;)
 		page_header($page_title);
 
@@ -882,8 +897,7 @@ switch( $mode )
 		//Display Correct Breadcrumb Links..
 		if (!empty($data['business_id']))
 		{
-			$template->assign_block_vars('navlinks', array());
-			$template->assign_vars(array(
+			$template->assign_block_vars('navlinks', array(
 				'U_VIEW_FORUM' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_shop_business&amp;business_id=" . $business[0]['id']),
 				'FORUM_NAME'	=> $business[0]['title'])
 			);

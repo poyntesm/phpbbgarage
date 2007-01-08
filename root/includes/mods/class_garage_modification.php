@@ -519,7 +519,7 @@ class garage_modification
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'SELECT m.id, m.garage_id, p.title AS mod_title, m.install_price, m.install_rating, m.install_comments, u.username, u.user_id, mk.make, md.model, g.made_year, b.id as business_id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
+			'SELECT'	=> "m.id, m.garage_id, p.title AS mod_title, m.install_price, m.install_rating, m.install_comments, u.username, u.user_id, mk.make, md.model, g.made_year, b.id as business_id, CONCAT_WS(' ', g.made_year, mk.make, md.model) AS vehicle",
 			'FROM'		=> array(
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 				GARAGE_BUSINESS_TABLE	=> 'b',
@@ -531,7 +531,7 @@ class garage_modification
 				)
 				,array(
 					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'm._garage_id = g.id'
+					'ON'	=> 'm.garage_id = g.id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
@@ -546,7 +546,7 @@ class garage_modification
 					'ON'	=> 'g.user_id = u.user_id'
 				)
 			),
-			'WHERE'		=> "m.install_business_id = b.id AND b.garage =1 AND b.pending = 0 AND b.id = $business_id AND mk.pending = 0 AND md.pending = 0",
+			'WHERE'		=> "m.installer_id = b.id AND b.type LIKE '%" . BUSINESS_GARAGE . "%' AND b.pending = 0 AND b.id = $business_id AND mk.pending = 0 AND md.pending = 0",
 			'ORDER_BY'	=> "m.id, m.date_created DESC"
 		));
 
