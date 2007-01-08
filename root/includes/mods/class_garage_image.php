@@ -981,10 +981,28 @@ class garage_image
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'i.*',
+			'SELECT'	=> "i.*, u.*, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle",
 			'FROM'		=> array(
 				GARAGE_IMAGES_TABLE	=> 'i',
 			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'v'),
+					'ON'	=> "i.garage_id = v.id"
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> "v.user_id = u.user_id"
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+					'ON'	=> "v.make_id = mk.id"
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+					'ON'	=> "v.model_id = md.id"
+				)
+			),		
 			'ORDER_BY'	=>  "i.attach_id ASC"
 		));
 

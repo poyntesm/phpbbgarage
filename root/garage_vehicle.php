@@ -237,6 +237,16 @@ switch( $mode )
 		$years	= $garage->year_list();
 		$makes 	= $garage_model->get_all_makes();
 
+		//Build Navlinks
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $data['vehicle'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"))
+		);
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $user->lang['EDIT_VEHICLE'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;CID=$cid"))
+		);
+
 		//Build All Required Javascript And Arrays
 		$garage_template->make_dropdown($makes, $data['make_id']);
 		$garage_template->engine_dropdown($data['engine_type']);
@@ -323,73 +333,6 @@ switch( $mode )
 		$garage_vehicle->delete_vehicle($cid);
 
 		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=main_menu"));
-
-		break;
-
-	//Mode To Display A List Of Vehicles..Also Used To Display Search Results For Search By Make/Model/User
-	case 'browse':
-
-		//Let Check The User Is Allowed Perform This Action
-		if (!$auth->acl_get('u_garage_browse'))
-		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=15"));
-		}
-
-		//Set Required Values To Defaults If They Are Empty
-		$start	= (empty($start)) ? '0' : $start;
-		$sort 	= (empty($sort)) ? 'date_updated' : $sort;
-		$order 	= (empty($order)) ? 'DESC' : $order;
-
-		//Set Template Files In Use For This Mode
-		$template->set_filenames(array(
-			'header' => 'garage_header.html',
-			'body'   => 'garage_browse.html')
-		);
-
-		//Build Page Header ;)
-		page_header($page_title);
-
-		//Get All Vehicle Data....
-		$data = $garage_vehicle->get_all_vehicles('', $sort, $order, $start, $garage_config['cars_per_page']);
-		for ($i = 0, $count = sizeof($data); $i < $count; $i++)
-      		{
-			$template->assign_block_vars('vehiclerow', array(
-				'U_VIEW_VEHICLE'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" . $data[$i]['id']),
-				'U_VIEW_PROFILE'	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $data[$i]['user_id']),
-				'ROW_NUMBER' 		=> $i + ( $start + 1 ),
-				'IMAGE_ATTACHED'	=> ($data[$i]['image_id']) ? $user->img('vehicle_image_attached', 'VEHICLE_IMAGE_ATTAHCED') : '',
-				'YEAR' 			=> $data[$i]['made_year'],
-				'MAKE' 			=> $data[$i]['make'],
-				'COLOUR' 		=> $data[$i]['colour'],
-				'UPDATED' 		=> $user->format_date($data[$i]['date_updated']),
-				'VIEWS' 		=> $data[$i]['views'],
-				'MODS' 			=> $data[$i]['total_mods'],
-				'MODEL' 		=> $data[$i]['model'],
-				'OWNER'			=> $data[$i]['username'])
-			);
-		}
-
-		//Count Total Returned For Pagination...Notice No $start or $end to get complete count
-		$count = $garage_vehicle->get_all_vehicles('', $sort, $order);
-
-		$pagination = generate_pagination("garage.$phpEx?mode=browse&amp;sort=$sort&amp;order=$order", $count[0]['total'], $garage_config['cars_per_page'], $start);
-
-		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $user->lang['BROWSE'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}{$phpbb_root_path}garage.$phpEx", "mode=browse"))
-		);
-
-		$garage_template->order_dropdown($order);
-		$garage_template->sort_dropdown('vehicle', $sort);
-		$template->assign_vars(array(
-			'PAGINATION' 	=> $pagination,
-			'PAGE_NUMBER' 	=> sprintf($user->lang['PAGE_OF'], ( floor( $start / $garage_config['cars_per_page'] ) + 1 ), ceil( $count[0]['total'] / $garage_config['cars_per_page'] )), 
-			'S_MODE_ACTION' => append_sid("{$phpbb_root_path}garage.$phpEx", "mode=browse"))
-		);
-	
-
-		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$garage_template->sidemenu();
 
 		break;
 
@@ -541,6 +484,19 @@ switch( $mode )
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_manage_gallery.html')
+		);
+
+		$data 	= $garage_vehicle->get_vehicle($cid);
+
+		//Build Navlinks
+		$vehicle = $garage_vehicle->get_vehicle($cid);
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $vehicle['vehicle'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"))
+		);
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $user->lang['MANAGE_GALLERY'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=manage_vehicle_gallery&amp;CID=$cid"))
 		);
 
 		//Pre Build All Side Menus

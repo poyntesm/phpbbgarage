@@ -98,6 +98,19 @@ switch( $mode )
 			'body'   => 'garage_quartermile.html')
 		);
 
+		//Get Vehicle Data For Navlinks
+		$vehicle=$garage_vehicle->get_vehicle($cid);
+
+		//Build Navlinks
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $vehicle['vehicle'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"))
+		);
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $user->lang['ADD_QUARTERMILE'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_quartermile&amp;CID=$cid"))
+		);
+
 		//If Dynoruns Exist, Allow User To Link Quartermile Times To Know Vehicle Spec..
 		if ( $garage_dynorun->count_runs($cid) > 0 )
 		{

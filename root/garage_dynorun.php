@@ -106,6 +106,19 @@ switch( $mode )
 
 		$dynocentres 	= $garage_business->get_business_by_type(BUSINESS_DYNOCENTRE);
 
+		//Get Vehicle Data For Navlinks
+		$vehicle=$garage_vehicle->get_vehicle($cid);
+
+		//Build Navlinks
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $vehicle['vehicle'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"))
+		);
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $user->lang['ADD_DYNORUN'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_dynorun&amp;CID=$cid"))
+		);
+
 		//Build Required HTML Components Like Drop Down Boxes.....
 		$garage_template->attach_image('dynorun');
 		$garage_template->nitrous_dropdown();

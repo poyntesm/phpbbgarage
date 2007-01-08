@@ -686,7 +686,7 @@ class garage_vehicle
 					'FEATURED_IMAGE' => $featured_image,
 					'VEHICLE' => $vehicle_data['vehicle'],
 					'USERNAME' => $vehicle_data['username'],
-					'U_VIEW_VEHICLE' => append_sid($absolute_url."garage.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
+					'U_VIEW_VEHICLE' => append_sid($absolute_url."garage_vehicle.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
 					'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']))
 				);
 			}
@@ -1243,7 +1243,13 @@ class garage_vehicle
 					);
                			} 
 			}
-	       	}
+		}
+
+		//Build Navlinks
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $vehicle['vehicle'])
+		);
+
 
 		$template->assign_vars(array(
 			'U_DELETE_MODIFICATION'		=> append_sid("garage_modification.$phpEx?mode=delete_modification"),
@@ -1256,7 +1262,7 @@ class garage_vehicle
             		'U_EDIT_VEHICLE' 		=> ( $owned == 'YES' ) ? append_sid("garage_vehicle.$phpEx?mode=edit_vehicle&amp;CID=$cid") : '',
             		'U_DELETE_VEHICLE' 		=> ( ($owned == 'YES' AND $auth->acl_get('u_garage_delete_vehicle')) OR ($auth->acl_get('m_garage'))) ? 'javascript:confirm_delete_car(' . $cid . ')' : '',
             		'U_ADD_MODIFICATION' 		=> ( $owned == 'YES' ) ? append_sid("garage_modification.$phpEx?mode=add_modification&amp;CID=$cid") : '',
-            		'U_ADD_INSURANCE' 		=> ( $owned == 'YES' AND $garage_config['enable_insurance'] ) ? append_sid("garage.$phpEx?mode=add_insurance&amp;CID=$cid") : '',
+            		'U_ADD_INSURANCE' 		=> ( $owned == 'YES' AND $garage_config['enable_insurance'] ) ? append_sid("garage_premium.$phpEx?mode=add_premium&amp;CID=$cid") : '',
             		'U_ADD_QUARTERMILE' 		=> ( $owned == 'YES' AND $garage_config['enable_quartermile'] ) ? append_sid("garage_quartermile.$phpEx?mode=add_quartermile&amp;CID=$cid") : '',
             		'U_ADD_DYNORUN' 		=> ( $owned == 'YES' AND $garage_config['enable_dynorun'] ) ? append_sid("garage_dynorun.$phpEx?mode=add_dynorun&amp;CID=$cid") : '',
             		'U_MANAGE_VEHICLE_GALLERY'	=> ( $owned == 'YES' ) ? append_sid("garage_vehicle.$phpEx?mode=manage_vehicle_gallery&amp;CID=$cid") : '',

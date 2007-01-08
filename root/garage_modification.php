@@ -105,6 +105,19 @@ switch( $mode )
 			'body'   => 'garage_modification.html')
 		);
 
+		//Get Vehicle Data For Navlinks
+		$vehicle=$garage_vehicle->get_vehicle($cid);
+
+		//Build Navlinks
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $vehicle['vehicle'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"))
+		);
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $user->lang['ADD_MODIFICATION'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_modification&amp;CID=$cid"))
+		);
+
 		//Get Data Incase We Are Returning From Adding A Product So Its Selected..
 		$params = array('category_id' => '', 'manufacturer_id' => '', 'product_id' => '');
 		$data = $garage->process_vars($params);
