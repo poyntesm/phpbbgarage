@@ -114,8 +114,8 @@ switch( $mode )
 		$garage_template->make_dropdown($makes);
 		$garage_template->manufacturer_dropdown($manufacturers);
 		$template->assign_vars(array(
-			'U_FIND_USERNAME'		=> append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=searchuser&amp;form=search_garage&amp;field=username'),
-			'UA_FIND_USERNAME'		=> append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=searchuser&form=search_garage&field=username', false),
+			'U_FIND_USERNAME'		=> append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=searchuser&amp;form=search_garage&amp;field=username&amp;select_single=true'),
+			'UA_FIND_USERNAME'		=> append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=searchuser&form=search_garage&field=username&select_single=true', false),
 			'S_DISPLAY_SEARCH_INSURANCE'	=> $garage_config['enable_insurance'],
 			'S_MODE_ACTION_SEARCH' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=search_results"))
 		);

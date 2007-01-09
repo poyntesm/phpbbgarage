@@ -347,7 +347,7 @@ class mcp_garage
 						'ID'		=> $data[$i]['rr_id'],
 						'USERNAME'	=> $data[$i]['username'],
 						'VEHICLE'	=> $data[$i]['vehicle'],
-						'DYNOCENTER'	=> $data[$i]['dynocenter'],
+						'DYNOCENTER'	=> $data[$i]['title'],
 						'BHP'		=> $data[$i]['bhp'],
 						'BHP_UNIT'	=> $data[$i]['bhp_unit'],
 						'TORQUE'	=> $data[$i]['torque'],

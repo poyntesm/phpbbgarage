@@ -544,11 +544,32 @@ class garage_image
 			$data['width'] 	= $this->get_image_width($data['location']);
 			$data['height'] = $this->get_image_width($data['location']);
 
-			//Check If Image Breaches Site Rules...If So Delete And Let User Know...	
+			//Check If Image Breaches Site Rules...If So Just Resize It To Required Size.
 			if ( ($data['width'] > $garage_config['max_image_resolution']) or ($data['height'] > $garage_config['max_image_resolution']) )
 			{
+				//Create Temp Filename To Make Compliant Image
+				$data['tmp_location'] = $data['location'] . "_temp";
+				//Work Out Image Resize Deminisions To Keep Ratio
+				if ($data['width'] > $data['height'])
+				{
+					$resize_width = $garage_config['max_image_resolution'];
+					$resize_height = $data['height'] / 100 * ($garage_config['max_image_resolution'] / $data['width']);
+				}
+				else
+				{
+					$resize_width =  $data['width'] / 100 * ($garage_config['max_image_resolution'] / $data['height']);
+					$resize_height = $garage_config['max_image_resolution'];
+				}
+				//Resize Images Thats Too Big To A Compliant Size
+				$this->resize_image($data['location'], $data['tmp_location'], $data['ext'], $data['width'], $data['height'], $resize_width, $resize_height);
+				//Delete Original Too Large Image
 				@unlink($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['location']);
-				redirect(append_sid("garage.$phpEx?mode=error&EID=8", true));
+				//Move Compliant Image Back To Original Name & Setup Permissions
+				$move_file($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['tmp_location'], $phpbb_root_path . GARAGE_UPLOAD_PATH . $data['location']);
+				@chmod($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['location'], 0777);
+				//Reset Width & Height Values
+				$data['width'] = $resize_width;
+				$data['height'] = $resize_height;
 			}
 
 			//Create The Thumbnail For This Image
@@ -682,6 +703,73 @@ class garage_image
 
 		//We should ALWAYS clear the RAM used by this.
 		imagedestroy($thumb);
+		imagedestroy($src);
+
+		return;
+	}
+
+	/*========================================================================*/
+	// Create Resized Image From Sourcefile 
+	// Usage: resize_image('source file', 'destination file', 'file type', 'width', 'height');
+	/*========================================================================*/
+	function resize_image($source, $destination, $ext, $src_width, $src_height, $resize_width, $resize_height)
+	{
+		global $phpbb_root_path, $garage_config;
+	
+		$gd_errored = false;
+
+		switch ($ext)
+		{
+			case '.jpg':
+				$read_function = 'imagecreatefromjpeg';
+				break;
+			case '.png':
+				$read_function = 'imagecreatefrompng';
+				break;
+			case '.gif':
+				$read_function = 'imagecreatefromgif';
+				break;
+		}
+
+		$source_file_name = $phpbb_root_path . GARAGE_UPLOAD_PATH  . $source;
+		$destination_file_name = $phpbb_root_path . GARAGE_UPLOAD_PATH  . $destination;
+
+		$src = @$read_function($source_file_name);
+	
+		if (!$src)
+		{
+			$gd_errored = true;
+			$destination_file_name = '';
+		}
+		else
+		{
+			$dest = ($garage_config['gd_version'] == 1) ? @imagecreate($resize_width, $resize_height) : @imagecreatetruecolor($resize_width, $resize_height);
+			$resize_function = ($garage_config['gd_version'] == 1) ? 'imagecopyresized' : 'imagecopyresampled';
+			@$resize_function($dest, $src, 0, 0, 0, 0, $resize_width, $resize_height, $src_width, $src_height);
+
+		}
+
+		//No Problems So Far So Lets Create The Actual Thumbnail File Next...
+		if (!$gd_errored)
+		{
+			//Different Call Based On Image Type...
+			switch ($ext)
+			{
+				case '.jpg':
+					@imagejpeg($dest, $destination_file_name, 80);
+					break;
+				case '.png':
+					@imagepng($dest, $destination_file_name);
+					break;
+				case '.gif':
+					@imagegif($dest, $destination_file_name);
+					break;
+			}
+			@chmod($detination_file_name, 0777);
+		} 
+
+		//We should ALWAYS clear the RAM used by this.
+		imagedestroy($dest);
 		imagedestroy($src);
 
 		return;
