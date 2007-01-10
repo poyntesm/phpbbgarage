@@ -47,6 +47,23 @@ class garage_track
 	}
 
 	/*========================================================================*/
+	// Inserts Track Into DB
+	// Usage: insert_track(array());
+	/*========================================================================*/
+	function insert_track($data)
+	{
+		global $cid, $db, $garage_config;
+
+		$sql = 'INSERT INTO ' . GARAGE_TRACKS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+			'pending'	=> ($garage_config['enable_tracktime_approval'] == '1') ? 1 : 0)
+		);
+
+		$db->sql_query($sql);
+
+		return $db->sql_nextid();
+	}
+
+	/*========================================================================*/
 	// Updates Lap In DB
 	// Usage: update_lap(array());
 	/*========================================================================*/
@@ -62,6 +79,28 @@ class garage_track
 		$sql = 'UPDATE ' . GARAGE_DYNORUNS_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
 			WHERE id = $lid AND garage_id = $cid";
+
+
+		$db->sql_query($sql);
+
+		return;
+	}
+
+	/*========================================================================*/
+	// Updates Track In DB
+	// Usage: update_track(array());
+	/*========================================================================*/
+	function update_track($data)
+	{
+		global $db, $tid, $cid, $garage_config;
+
+		$update_sql = array(
+			'pending'	=> ($garage_config['enable_tracktime_approval'] == '1') ? 1 : 0
+		);
+
+		$sql = 'UPDATE ' . GARAGE_DYNORUNS_TABLE . '
+			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
+			WHERE id = $tid";
 
 
 		$db->sql_query($sql);
@@ -87,8 +126,32 @@ class garage_track
 			$garage_image->delete_image($data['image_id']);
 		}
 	
-		//Time To Delete The Actual RollingRoad Run Now
+		//Time To Delete The Actual Lap Now
 		$garage->delete_rows(GARAGE_LAPS_TABLE, 'id', $id);
+	
+		return ;
+	}
+
+	/*========================================================================*/
+	// Delete Track Including All Lap Times 
+	// Usage: delete_track('track id');
+	/*========================================================================*/
+	function delete_track($id)
+	{
+		global $db, $garage_image, $garage;
+	
+		//Get All Laps
+		$data = $this->get_laps_by_track($id);
+	
+		//Lets See If There Is An Image Associated With This Run
+		for($i = 0; $i < count($data); $i++)
+		{
+			//Delete Lap
+			$this->delete_lap($data[$i]['id']);
+		}
+	
+		//Time To Delete The Actual Track Now
+		$garage->delete_rows(GARAGE_TRACKS_TABLE, 'id', $tid);
 	
 		return ;
 	}
@@ -297,6 +360,50 @@ class garage_track
 	}
 
 	/*========================================================================*/
+	// Select Lap(s) Data By Track From DB
+	// Usage: get_laps_by_track('track id');
+	/*========================================================================*/
+	function get_laps_by_track($tid)
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'l.*, l.id as lid, i.*, t.title',
+			'FROM'		=> array(
+				GARAGE_LAPS_TABLE	=> 'l',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_LAP_GALLERY_TABLE => 'lg'),
+					'ON'	=> 'l.id = lg.lap_id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
+					'ON'	=> 'i.attach_id = lg.image_id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_TRACKS_TABLE => 't'),
+					'ON'	=> 'l.track_id = t.id'
+				)
+			),
+			'WHERE'		=>	"t.track_id = $tid",
+			'ORDER_BY'	=>	'l.id'
+		));
+
+		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$data[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/*========================================================================*/
 	// Approve Laps
 	// Usage: approve_lap(array(), 'mode');
 	/*========================================================================*/
@@ -313,6 +420,22 @@ class garage_track
 	}
 
 	/*========================================================================*/
+	// Approve Track
+	// Usage: approve_track(array(), 'mode');
+	/*========================================================================*/
+	function approve_track($id_list, $mode)
+	{
+		global $phpbb_root_path, $phpEx, $garage;
+
+		for($i = 0; $i < count($id_list); $i++)
+		{
+			$garage->update_single_field(GARAGE_TRACKS_TABLE, 'pending', 0, 'id', $id_list[$i]);
+		}
+
+		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_tracks"));
+	}
+
+	/*========================================================================*/
 	// Disapprove Laps
 	// Usage: disapprove_lap(array(), 'mode');
 	/*========================================================================*/
@@ -326,6 +449,22 @@ class garage_track
 		}
 
 		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_laps"));
+	}
+
+	/*========================================================================*/
+	// Disapprove Tracks
+	// Usage: disapprove_track(array(), 'mode');
+	/*========================================================================*/
+	function disapprove_track($id_list, $mode)
+	{
+		global $phpbb_root_path, $phpEx;
+
+		for($i = 0; $i < count($id_list); $i++)
+		{
+			$this->delete_track($id_list[$i]);
+		}
+
+		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_tracks"));
 	}
 }
 
