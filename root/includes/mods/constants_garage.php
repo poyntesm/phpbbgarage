@@ -28,6 +28,7 @@ define('GARAGE_CATEGORIES_TABLE', $table_prefix.'garage_categories');
 define('GARAGE_VEHICLE_GALLERY_TABLE', $table_prefix.'garage_vehicles_gallery');
 define('GARAGE_MODIFICATION_GALLERY_TABLE', $table_prefix.'garage_modifications_gallery');
 define('GARAGE_QUARTERMILE_GALLERY_TABLE', $table_prefix.'garage_quartermiles_gallery');
+define('GARAGE_LAP_GALLERY_TABLE', $table_prefix.'garage_laps_gallery');
 define('GARAGE_DYNORUN_GALLERY_TABLE', $table_prefix.'garage_dynoruns_gallery');
 define('GARAGE_GUESTBOOKS_TABLE', $table_prefix.'garage_guestbooks');
 define('GARAGE_IMAGES_TABLE', $table_prefix.'garage_images');

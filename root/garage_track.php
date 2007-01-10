@@ -1,6 +1,6 @@
 <?php
 /***************************************************************************
- *                              garage_dynorun.php
+ *                              garage_track.php
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton
@@ -78,16 +78,16 @@ $template->assign_vars(array(
 //Decide What Mode The User Is Doing
 switch( $mode )
 {
-	case 'add_dynorun':
+	case 'add_lap':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_dynorun.$phpEx?mode=add_dynorun&amp;CID=$cid");
+			login_box("garage_track.$phpEx?mode=add_lap&amp;CID=$cid");
 		}
 
 		//Let Check That Rollingroad Runs Are Allowed...If Not Redirect
-		if (!$garage_config['enable_dynorun'] || !$auth->acl_get('u_garage_add_dynorun'))
+		if (!$garage_config['enable_tracktime'] || !$auth->acl_get('u_garage_add_lap'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=18"));
 		}
@@ -101,10 +101,8 @@ switch( $mode )
 		//Set Template Files In Use For This Mode
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
-			'body'   => 'garage_dynorun.html')
+			'body'   => 'garage_lap.html')
 		);
-
-		$dynocentres 	= $garage_business->get_business_by_type(BUSINESS_DYNOCENTRE);
 
 		//Get Vehicle Data For Navlinks
 		$vehicle=$garage_vehicle->get_vehicle($cid);
@@ -115,23 +113,18 @@ switch( $mode )
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"))
 		);
 		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $user->lang['ADD_DYNORUN'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_dynorun&amp;CID=$cid"))
+			'FORUM_NAME'	=> $user->lang['ADD_LAP'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=add_lap&amp;CID=$cid"))
 		);
 
 		//Build Required HTML Components Like Drop Down Boxes.....
-		$garage_template->attach_image('dynorun');
-		$garage_template->nitrous_dropdown();
-		$garage_template->power_dropdown('bhp_unit');
-		$garage_template->power_dropdown('torque_unit');
-		$garage_template->boost_dropdown();
-		$garage_template->dynocentre_dropdown($dynocentres);
+		$garage_template->attach_image('lap');
 		$template->assign_vars(array(
-			'L_TITLE'  			=> $user->lang['ADD_NEW_RUN'],
-			'L_BUTTON'  			=> $user->lang['ADD_NEW_RUN'],
-			'U_SUBMIT_BUSINESS_DYNOCENTRE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;CID=$cid&amp;redirect=add_dynorun&amp;BUSINESS=" . BUSINESS_DYNOCENTRE ),
-			'CID' 				=> $cid,
-			'S_MODE_ACTION' 		=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=insert_dynorun"))
+			'L_TITLE'  		=> $user->lang['ADD_LAP'],
+			'L_BUTTON'  		=> $user->lang['ADD_LAP'],
+			'U_SUBMIT_TRACK'	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=add_track&amp;CID=$cid&amp;redirect=add_lap&amp;BUSINESS=" . BUSINESS_DYNOCENTRE ),
+			'CID' 			=> $cid,
+			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=insert_lap"))
          	);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
@@ -139,12 +132,12 @@ switch( $mode )
 
 		break;
 
-	case 'insert_dynorun':
+	case 'insert_lap':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_dynorun.$phpEx?mode=add_dynorun&amp;CID=$cid");
+			login_box("garage_track.$phpEx?mode=add_lap&amp;CID=$cid");
 		}
 
 		//Let Check That Rollingroad Runs Are Allowed...If Not Redirect
@@ -154,7 +147,7 @@ switch( $mode )
 		}
 
 		//Let Check The User Is Allowed Perform This Action
-		if (!$auth->acl_get('u_garage_add_dynorun'))
+		if (!$auth->acl_get('u_garage_add_lap'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
 		}
@@ -171,7 +164,7 @@ switch( $mode )
 		$garage->check_required_vars($params);
 
 		//Update The Dynorun With Data Acquired
-		$rrid = $garage_dynorun->insert_dynorun($data);
+		$lid = $garage_track->insert_lap($data);
 
 		//Update The Time Now...In Case We Get Redirected During Image Processing
 		$garage_vehicle->update_vehicle_time($cid);
@@ -183,10 +176,10 @@ switch( $mode )
 			if ($garage_image->below_image_quotas())
 			{
 				//Create Thumbnail & DB Entry For Image
-				$image_id = $garage_image->process_image_attached('dynorun', $rrid);
-				//Insert Image Into Dynoruns Gallery
-				$hilite = $garage_dynorun->hilite_exists($cid, $rrid);
-				$garage_image->insert_dynorun_gallery_image($image_id, $hilite);
+				$image_id = $garage_image->process_image_attached('lap', $lid);
+				//Insert Image Into Lap Gallery
+				$hilite = $garage_track->hilite_exists($cid, $lid);
+				$garage_image->insert_lap_gallery_image($image_id, $hilite);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
 			else if ($garage_image->above_image_quotas())
@@ -194,30 +187,23 @@ switch( $mode )
 				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=4"));
 			}
 		}
-		//No Image Attached..We Need To Check If This Breaks The Site Rule
-		else if (($garage_config['enable_dynorun_image_required'] == '1') AND ($data['bhp'] >= $garage_config['dynorun_image_required_limit']))
-		{
-			//That Time Requires An Image...Delete Entered Time And Notify User
-			$garage_dynorun->delete_dynorun($rrid);
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=26"));
-		}
 
 		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
-		if ($garage_config['enable_dynorun_approval'])
+		if ($garage_config['enable_lap_approval'])
 		{
-			$garage->pending_notification('unapproved_dynoruns');
+			$garage->pending_notification('unapproved_laps');
 		}
 
 		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
 
 		break;
 
-	case 'edit_dynorun':
+	case 'edit_lap':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_dynorun.$phpEx?mode=edit_dynorun&amp;RRID=$rrid&amp;CID=$cid");
+			login_box("garage_track.$phpEx?mode=edit_lap&amp;LID=$lid&amp;CID=$cid");
 		}
 
 		//Check Vehicle Ownership
@@ -229,11 +215,11 @@ switch( $mode )
 		//Set Template Files In Use For This Mode
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
-			'body'   => 'garage_dynorun.html')
+			'body'   => 'garage_lap.html')
 		);
 
 		//Pull Required Dynorun Data From DB
-		$data = $garage_dynorun->get_dynorun($rrid);
+		$data = $garage_track->get_lap($lid);
 
 		//See If We Got Sent Here By Pending Page...If So We Need To Tell Update To Redirect Correctly
 		$params = array('PENDING' => '');
@@ -250,8 +236,8 @@ switch( $mode )
 		$template->assign_vars(array(
 			'L_TITLE'  		=> $user->lang['EDIT_RUN'],
 			'L_BUTTON'  		=> $user->lang['EDIT_RUN'],
-			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=edit_dynorun&amp;CID=$cid&amp;RRID=$rrid"),
-			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=manage_dynorun_gallery&amp;CID=$cid&amp;RRID=$rrid"),
+			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;CID=$cid&amp;LID=$lid"),
+			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=manage_lap_gallery&amp;CID=$cid&amp;LID=$lid"),
 			'CID' 			=> $cid,
 			'RRID' 			=> $rrid,
 			'BHP' 			=> $data['bhp'],
@@ -260,7 +246,7 @@ switch( $mode )
 			'NITROUS' 		=> $data['nitrous'],
 			'PEAKPOINT' 		=> $data['peakpoint'],
 			'PENDING_REDIRECT'	=> $redirect['PENDING'],
-			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=update_dynorun"))
+			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=update_lap"))
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
@@ -268,12 +254,12 @@ switch( $mode )
 
 		break;
 
-	case 'update_dynorun':
+	case 'update_lap':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_dynorun.$phpEx?mode=edit_dynorun&amp;RRID=$rrid&amp;CID=$cid");
+			login_box("garage_track.$phpEx?mode=edit_lap&amp;LID=$lid&amp;CID=$cid");
 		}
 
 		//Check Vehicle Ownership
@@ -288,31 +274,31 @@ switch( $mode )
 		$garage->check_required_vars($params);
 
 		//Update The Dynorun With Data Acquired
-		$garage_dynorun->update_dynorun($data);
+		$garage_track->update_lap($data);
 
 		//Update The Time Now...In Case We Get Redirected During Image Processing
 		$garage_vehicle->update_vehicle_time($cid);
 
 		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
-		if ($garage_config['enable_dynorun_approval'])
+		if ($garage_config['enable_lap_approval'])
 		{
-			$garage->pending_notification('unapproved_dynoruns');
+			$garage->pending_notification('unapproved_laps');
 		}
 
 		//If Editting From Pending Page Redirect Back To There Instead
 		if ($data['pending_redirect'] == 'MCP')
 		{
-			redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_dynoruns"));
+			redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_laps"));
 		}
 
 		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
 
 		break;
 
-	case 'delete_dynorun':
+	case 'delete_lap':
 
 		//Let Check The User Is Allowed Perform This Action
-		if (!$auth->acl_get('u_garage_delete_dynorun'))
+		if (!$auth->acl_get('u_garage_delete_lap'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
 		}
@@ -321,7 +307,7 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Delete The Dynorun
-		$garage_dynorun->delete_dynorun($rrid);
+		$garage_track->delete_lap($lid);
 
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
@@ -330,7 +316,7 @@ switch( $mode )
 
 		break;
 
-	case 'insert_dynorun_image':
+	case 'insert_lap_image':
 
 		//Let Check The User Is Allowed Perform This Action
 		if ((!$auth->acl_get('u_garage_upload_image')) OR (!$auth->acl_get('u_garage_remote_image')))
@@ -348,10 +334,10 @@ switch( $mode )
 			if ($garage_image->below_image_quotas())
 			{
 				//Create Thumbnail & DB Entry For Image
-				$image_id = $garage_image->process_image_attached('dynorun', $rrid);
-				//Insert Image Into Dynorun Gallery
-				$hilite = $garage_dynorun->hilite_exists($rrid);
-				$garage_image->insert_dynorun_gallery_image($image_id, $hilite);
+				$image_id = $garage_image->process_image_attached('lap', $lid);
+				//Insert Image Into Lap Gallery
+				$hilite = $garage_track->hilite_exists($lid);
+				$garage_image->insert_lap_gallery_image($image_id, $hilite);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
 			else if ($garage_image->above_image_quotas())
@@ -363,11 +349,11 @@ switch( $mode )
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=manage_dynorun_gallery&amp;CID=$cid&amp;RRID=$rrid"));
+		redirect(append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=manage_lap_gallery&amp;CID=$cid&amp;LID=$lid"));
 
 		break;
 
-	case 'manage_dynorun_gallery':
+	case 'manage_lap_gallery':
 
 		//Let Check The User Is Allowed Perform This Action
 		if ((!$auth->acl_get('u_garage_upload_image')) OR (!$auth->acl_get('u_garage_remote_image')))
@@ -388,10 +374,10 @@ switch( $mode )
 		);
 
 		//Pre Build All Side Menus
-		$garage_template->attach_image('dynorun');
+		$garage_template->attach_image('lap');
 
-		//Pull Dynorun Gallery Data From DB
-		$data = $garage_image->get_dynorun_gallery($cid, $rrid);
+		//Pull Lap Gallery Data From DB
+		$data = $garage_image->get_lap_gallery($cid, $lid);
 
 		//Process Each Image From Dynorun Gallery
 		for ($i = 0, $count = sizeof($data);$i < $count; $i++)
@@ -406,11 +392,11 @@ switch( $mode )
 		}
 
 		$template->assign_vars(array(
-			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=edit_dynorun&amp;CID=$cid&amp;RRID=$rrid"),
-			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=manage_dynorun_gallery&amp;CID=$cid&amp;RRID=$rrid"),
-			'RRID' => $rrid,
+			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;CID=$cid&amp;LID=$lid"),
+			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=manage_lap_gallery&amp;CID=$cid&amp;LID=$lid"),
+			'LID' => $lid,
 			'CID' => $cid,
-			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=insert_dynorun_image"))
+			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=insert_lap_image"))
          	);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
@@ -418,38 +404,38 @@ switch( $mode )
 
 		break;
 
-	case 'set_dynorun_hilite':
+	case 'set_lap_hilite':
 
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 
 		//Set All Images To Non Hilite So We Do Not End Up With Two Hilites & Then Set Hilite
-		$garage->update_single_field(GARAGE_DYNORUN_GALLERY_TABLE, 'hilite', 0, 'dynorun_id', $rrid);
-		$garage->update_single_field(GARAGE_DYNORUN_GALLERY_TABLE, 'hilite', 1, 'image_id', $image_id);
+		$garage->update_single_field(GARAGE_LAP_GALLERY_TABLE, 'hilite', 0, 'lap_id', $lid);
+		$garage->update_single_field(GARAGE_LAP_GALLERY_TABLE, 'hilite', 1, 'image_id', $image_id);
 
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=manage_dynorun_gallery&amp;CID=$cid&amp;RRID=$rrid"));
+		redirect(append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=manage_lap_gallery&amp;CID=$cid&amp;LID=$lid"));
 
 		break;
 
-	case 'remove_dynorun_image':
+	case 'remove_lap_image':
 
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 
-		//Remove Image From Dynorun Gallery & Deletes Image
-		$garage_image->delete_dynorun_image($image_id);
+		//Remove Image From Lap Gallery & Deletes Image
+		$garage_image->delete_lap_image($image_id);
 
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=manage_dynorun_gallery&amp;CID=$cid&amp;RRID=$rrid"));
+		redirect(append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=manage_lap_gallery&amp;CID=$cid&amp;LID=$lid"));
 
 		break;
 
-	case 'view_dynorun':
+	case 'view_lap':
 
 		//Let Check The User Is Allowed Perform This Action
 		if (!$auth->acl_get('u_garage_browse'))
@@ -534,6 +520,10 @@ switch( $mode )
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$garage_template->sidemenu();
+
+		break;
+
+	case 'view_track':
 
 		break;
 }
