@@ -133,7 +133,7 @@ class garage_template
 
 	/*========================================================================*/
 	// Builds the HTML for attaching a image to entries
-	// Usage: attach_image('modification'|'vehicle'|'quartermile'|'dynorun');
+	// Usage: attach_image('modification'|'vehicle'|'quartermile'|'dynorun'|'lap');
 	/*========================================================================*/
 	function attach_image($type)
 	{

@@ -58,7 +58,7 @@ while(list($var, $param) = @each($params))
 }
 
 //Get All Non-String Parameters
-$params = array('cid' => 'CID', 'mid' => 'MID', 'rrid' => 'RRID', 'qmid' => 'QMID', 'ins_id' => 'INS_ID', 'eid' => 'EID', 'image_id' => 'image_id', 'comment_id' => 'CMT_ID', 'bus_id' => 'BUS_ID');
+$params = array('cid' => 'CID', 'eid' => 'EID', 'image_id' => 'image_id', 'tid' => 'TID', 'lip' => 'LIP');
 while(list($var, $param) = @each($params))
 {
 	$$var = request_var($param, '');
@@ -86,7 +86,7 @@ switch( $mode )
 			login_box("garage_track.$phpEx?mode=add_lap&amp;CID=$cid");
 		}
 
-		//Let Check That Rollingroad Runs Are Allowed...If Not Redirect
+		//Let Check That Laps Are Allowed...If Not Redirect
 		if (!$garage_config['enable_tracktime'] || !$auth->acl_get('u_garage_add_lap'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=18"));
@@ -122,7 +122,7 @@ switch( $mode )
 		$template->assign_vars(array(
 			'L_TITLE'  		=> $user->lang['ADD_LAP'],
 			'L_BUTTON'  		=> $user->lang['ADD_LAP'],
-			'U_SUBMIT_TRACK'	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=add_track&amp;CID=$cid&amp;redirect=add_lap&amp;BUSINESS=" . BUSINESS_DYNOCENTRE ),
+			'U_SUBMIT_TRACK'	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=add_track&amp;CID=$cid&amp;redirect=add_lap"),
 			'CID' 			=> $cid,
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=insert_lap"))
          	);
@@ -140,27 +140,21 @@ switch( $mode )
 			login_box("garage_track.$phpEx?mode=add_lap&amp;CID=$cid");
 		}
 
-		//Let Check That Rollingroad Runs Are Allowed...If Not Redirect
-		if (!$garage_config['enable_dynorun'])
+		//Let Check That Laps Are Allowed...If Not Redirect
+		if (!$garage_config['enable_tracktime'] || !$auth->acl_get('u_garage_add_lap'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=18"));
-		}
-
-		//Let Check The User Is Allowed Perform This Action
-		if (!$auth->acl_get('u_garage_add_lap'))
-		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
 		}
 
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('dynocentre_id' => '', 'bhp' => '', 'bhp_unit' => '', 'torque' => '', 'torque_unit' => '', 'boost' => '', 'boost_unit' => '', 'nitrous' => '', 'peakpoint' => '');
+		$params = array('track_id' => '');
 		$data 	= $garage->process_vars($params);
 
 		//Checks All Required Data Is Present
-		$params = array('dynocentre_id', 'bhp', 'bhp_unit');
+		$params = array('track_id');
 		$garage->check_required_vars($params);
 
 		//Update The Dynorun With Data Acquired
@@ -218,33 +212,21 @@ switch( $mode )
 			'body'   => 'garage_lap.html')
 		);
 
-		//Pull Required Dynorun Data From DB
+		//Pull Required Lap Data From DB
 		$data = $garage_track->get_lap($lid);
 
 		//See If We Got Sent Here By Pending Page...If So We Need To Tell Update To Redirect Correctly
 		$params = array('PENDING' => '');
 		$redirect = $garage->process_vars($params);
 
-		$dynocentres 	= $garage_business->get_business_by_type(BUSINESS_DYNOCENTRE);
-
 		//Build All Required HTML
-		$garage_template->nitrous_dropdown($data['nitrous']);
-		$garage_template->power_dropdown('bhp_unit', $data['bhp_unit']);
-		$garage_template->power_dropdown('torque_unit', $data['torque_unit']);
-		$garage_template->boost_dropdown($data['boost_unit']);
-		$garage_template->dynocentre_dropdown($dynocentres, $data['dynocentre_id']);
 		$template->assign_vars(array(
-			'L_TITLE'  		=> $user->lang['EDIT_RUN'],
-			'L_BUTTON'  		=> $user->lang['EDIT_RUN'],
+			'L_TITLE'  		=> $user->lang['EDIT_LAP'],
+			'L_BUTTON'  		=> $user->lang['EDIT_LAP'],
 			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;CID=$cid&amp;LID=$lid"),
 			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=manage_lap_gallery&amp;CID=$cid&amp;LID=$lid"),
 			'CID' 			=> $cid,
-			'RRID' 			=> $rrid,
-			'BHP' 			=> $data['bhp'],
-			'TORQUE' 		=> $data['torque'],
-			'BOOST' 		=> $data['boost'],
-			'NITROUS' 		=> $data['nitrous'],
-			'PEAKPOINT' 		=> $data['peakpoint'],
+			'LID' 			=> $lid,
 			'PENDING_REDIRECT'	=> $redirect['PENDING'],
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=update_lap"))
 		);
@@ -266,11 +248,11 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('dynocentre_id' => '', 'bhp' => '', 'bhp_unit' => '', 'torque' => '', 'torque_unit' => '', 'boost' => '', 'boost_unit' => '', 'nitrous' => '', 'peakpoint' => '', 'editupload' => '', 'image_id' => '', 'pending_redirect' => '');
+		$params = array('track_id' => '');
 		$data 	= $garage->process_vars($params);
 
 		//Checks All Required Data Is Present
-		$params = array('dynocentre_id', 'bhp', 'bhp_unit');
+		$params = array('track_id');
 		$garage->check_required_vars($params);
 
 		//Update The Dynorun With Data Acquired
@@ -379,13 +361,13 @@ switch( $mode )
 		//Pull Lap Gallery Data From DB
 		$data = $garage_image->get_lap_gallery($cid, $lid);
 
-		//Process Each Image From Dynorun Gallery
+		//Process Each Image From Lap Gallery
 		for ($i = 0, $count = sizeof($data);$i < $count; $i++)
 		{
 			$template->assign_block_vars('pic_row', array(
 				'U_IMAGE'	=> (($data[$i]['attach_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location']))) ? append_sid("{$phpbb_root_path}garage. $phpEx", "?mode=view_image&amp;image_id=" . $data[$i]['attach_id']) : '',
-				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=remove_dynorun_image&amp;&amp;CID=$cid&amp;RRID=$rrid&amp;image_id=" . $data[$i]['attach_id']),
-				'U_SET_HILITE'	=> ($data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=set_dynorun_hilite&amp;image_id=" . $data[$i]['attach_id'] . "&amp;CID=$cid&amp;RRID=$rrid") : '',
+				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=remove_lap_image&amp;&amp;CID=$cid&amp;LID=$lid&amp;image_id=" . $data[$i]['attach_id']),
+				'U_SET_HILITE'	=> ($data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=set_lap_hilite&amp;image_id=" . $data[$i]['attach_id'] . "&amp;CID=$cid&amp;LID=$lid") : '',
 				'IMAGE' 	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'],
 				'IMAGE_TITLE' 	=> $data[$i]['attach_file'])
 			);
@@ -449,11 +431,11 @@ switch( $mode )
 		//Set Template Files In Use For This Mode
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
-			'body'   => 'garage_view_dynorun.html')
+			'body'   => 'garage_view_lap.html')
 		);
 
 		//Pull Required Modification Data From DB
-		$data = $garage_dynorun->get_dynorun($rrid);
+		$data = $garage_track->get_lap($lid);
 
 		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
@@ -462,9 +444,9 @@ switch( $mode )
 		);
 
 		//Get All Gallery Data Required
-		$gallery_data = $garage_image->get_dynorun_gallery($cid, $rrid);
+		$gallery_data = $garage_image->get_lap_gallery($cid, $lid);
 			
-		//Process Each Image From Dynorun Gallery	
+		//Process Each Image From Lap Gallery	
        		for ( $i = 0; $i < count($gallery_data); $i++ )
         	{
                		// Do we have a thumbnail?  If so, our job is simple here :)
@@ -474,7 +456,7 @@ switch( $mode )
 					'S_DISPLAY_GALLERIES' 	=> true,
 				));
 
-				$template->assign_block_vars('dynorun_image', array(
+				$template->assign_block_vars('lap_image', array(
 					'U_IMAGE' 	=> append_sid('garage.'.$phpEx.'?mode=view_image&amp;image_id='. $gallery_data[$i]['attach_id']),
 					'IMAGE_NAME'	=> $gallery_data[$i]['attach_file'],
 					'IMAGE_SOURCE'	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $gallery_data[$i]['attach_thumb_location'])
@@ -507,15 +489,6 @@ switch( $mode )
 			'MODEL' 		=> $data['model'],
 			'USERNAME' 		=> $data['username'],
             		'AVATAR_IMG' 		=> $data['avatar'],
-            		'DYNOCENTRE' 		=> $data['title'],
-            		'BHP' 			=> $data['bhp'],
-            		'BHP_UNIT'	 	=> $data['bhp_unit'],
-            		'TORQUE' 		=> $data['torque'],
-            		'TORQUE_UNIT' 		=> $data['torque_unit'],
-            		'NITROUS' 		=> $data['nitrous'],
-            		'BOOST' 		=> $data['boost'],
-            		'BOOST_UNIT' 		=> $data['boost_unit'],
-            		'PEAKPOINT' 		=> $data['peakpoint'],
          	));
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)

@@ -1249,6 +1249,42 @@ class garage_image
 	}
 
 	/*========================================================================*/
+	// Select Lap Gallery Data
+	// Usage: get_lap_gallery('vehicle id', 'lap id');
+	/*========================================================================*/
+	function get_lap_gallery($cid, $lid)
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'lg.*, i.*',
+			'FROM'		=> array(
+				GARAGE_LAP_GALLERY_TABLE	=> 'lg',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
+					'ON'	=> 'i.attach_id = lg.image_id'
+				)
+			),
+			'WHERE'		=>  "lg.garage_id = $cid AND lg.lap_id = $lid",
+			'GROUP_BY'	=>  "lg.id"
+		));
+
+      		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$data[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/*========================================================================*/
 	// Select All Uploaded Images From User
 	// Usage: get_user_upload_images('user id');
 	/*========================================================================*/

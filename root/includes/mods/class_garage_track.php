@@ -38,7 +38,7 @@ class garage_track
 
 		$sql = 'INSERT INTO ' . GARAGE_LAPS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 			'garage_id'	=> $cid,
-			'pending'	=> ($garage_config['enable_tracktime_approval'] == '1') ? 1 : 0)
+			'pending'	=> ($garage_config['enable_lap_approval'] == '1') ? 1 : 0)
 		);
 
 		$db->sql_query($sql);
@@ -55,7 +55,7 @@ class garage_track
 		global $cid, $db, $garage_config;
 
 		$sql = 'INSERT INTO ' . GARAGE_TRACKS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'pending'	=> ($garage_config['enable_tracktime_approval'] == '1') ? 1 : 0)
+			'pending'	=> ($garage_config['enable_track_approval'] == '1') ? 1 : 0)
 		);
 
 		$db->sql_query($sql);
@@ -73,7 +73,7 @@ class garage_track
 
 		$update_sql = array(
 			'garage_id'	=> $cid,
-			'pending'	=> ($garage_config['enable_tracktime_approval'] == '1') ? 1 : 0
+			'pending'	=> ($garage_config['enable_lap_approval'] == '1') ? 1 : 0
 		);
 
 		$sql = 'UPDATE ' . GARAGE_DYNORUNS_TABLE . '
@@ -95,7 +95,7 @@ class garage_track
 		global $db, $tid, $cid, $garage_config;
 
 		$update_sql = array(
-			'pending'	=> ($garage_config['enable_tracktime_approval'] == '1') ? 1 : 0
+			'pending'	=> ($garage_config['enable_track_approval'] == '1') ? 1 : 0
 		);
 
 		$sql = 'UPDATE ' . GARAGE_DYNORUNS_TABLE . '

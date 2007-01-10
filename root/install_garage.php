@@ -131,6 +131,14 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_dynoruns_gallery (
 		`hilite` tinyint(1) unsigned NOT NULL default '0',
 		PRIMARY KEY  (`id`)
 		)";
+$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_laps_gallery (
+		`id` int(10) unsigned NOT NULL auto_increment,
+		`garage_id` int(10) unsigned NOT NULL default '0',
+		`lap_id` int(10) unsigned NOT NULL default '0',
+		`image_id` int(10) unsigned NOT NULL default '0',
+		`hilite` tinyint(1) unsigned NOT NULL default '0',
+		PRIMARY KEY  (`id`)
+		)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_guestbooks (
 		`id` int(10) unsigned NOT NULL auto_increment,
 		`garage_id` int(10) unsigned NOT NULL default '0',
@@ -259,12 +267,14 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_ratings (
 		PRIMARY KEY  (`id`)
 	)";
 /*$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_tracks (
-		`id` int(10) NOT NULL auto_increment
+		`id` int(10) NOT NULL auto_increment,
+		PRIMARY KEY  (`id`)
 	)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_laps (
 		`id` int(10) NOT NULL auto_increment,
 		`garage_id` int(10) NOT NULL default '0',
 		`track_id` int(10) NOT NULL default '0'
+		PRIMARY KEY  (`id`)
 	)";*/
 //Required Configuration Options
 $params = array(
@@ -340,6 +350,7 @@ $params = array(
 	'enable_modification_images'		=> '1',
 	'enable_quartermile_images'		=> '1',
 	'enable_dynorun_images'			=> '1',
+	'enable_lap_images'			=> '1',
 	'enable_uploaded_images' 		=> '1',
 	'enable_remote_images' 			=> '1',
 	'remote_timeout' 			=> '60',	
@@ -360,6 +371,11 @@ $params = array(
 	'enable_dynorun_approval' 		=> '1',
 	'enable_dynorun_image_required' 	=> '1',
 	'dynorun_image_required_limit' 		=> '300',
+
+//Track & Lap Config Data
+	'enable_tracktime' 			=> '1',
+	'enable_track_approval' 		=> '1',
+	'enable_lap_approval' 			=> '1',
 
 //Insurance Config Data
 	'enable_insurance' 			=> '1',
@@ -1428,7 +1444,7 @@ switch( $mode )
 		//Lets Add The Required New Permissions
 		$phpbbgarage_permissions = array(
 			'local'		=> array(),
-			'global'	=> array('u_garage_browse', 'u_garage_search', 'u_garage_add_vehicle', 'u_garage_delete_vehicle', 'u_garage_add_modification', 'u_garage_delete_modification', 'u_garage_add_quartermile', 'u_garage_delete_quartermile', 'u_garage_add_dynorun', 'u_garage_delete_dynorun', 'u_garage_add_insurance', 'u_garage_delete_insurance', 'u_garage_add_business', 'u_garage_add_make_model', 'u_garage_add_product', 'u_garage_rate', 'u_garage_comment', 'u_garage_upload_image', 'u_garage_remote_image', 'u_garage_delete_image', 'u_garage_deny', 'm_garage', 'a_garage')
+			'global'	=> array('u_garage_browse', 'u_garage_search', 'u_garage_add_vehicle', 'u_garage_delete_vehicle', 'u_garage_add_modification', 'u_garage_delete_modification', 'u_garage_add_quartermile', 'u_garage_delete_quartermile', 'u_garage_add_lap', 'u_garage_add_track', 'u_garage_delete_lap', 'u_garage_delete_track', 'u_garage_add_dynorun', 'u_garage_delete_dynorun', 'u_garage_add_insurance', 'u_garage_delete_insurance', 'u_garage_add_business', 'u_garage_add_make_model', 'u_garage_add_product', 'u_garage_rate', 'u_garage_comment', 'u_garage_upload_image', 'u_garage_remote_image', 'u_garage_delete_image', 'u_garage_deny', 'm_garage', 'a_garage')
 		);
 		$auth_admin->acl_add_option($phpbbgarage_permissions);
 
