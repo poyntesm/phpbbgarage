@@ -183,6 +183,29 @@ class garage_business
 		global $db;
 
 		$data = null;
+		$field = null;
+
+		//Setup Field We Will Query Based On Constant
+		if ($type == BUSINESS_INSURANCE)
+		{
+			$field = 'insurance';
+		}
+		else if ($type == BUSINESS_GARAGE)
+		{
+			$field = 'garage';
+		}
+		else if ($type == BUSINESS_RETAIL)
+		{
+			$field = 'retail';
+		}
+		else if ($type == BUSINESS_PRODUCT)
+		{
+			$field = 'product';
+		}
+		else if ($type == BUSINESS_DYNOCENTRE)
+		{
+			$field = 'dynocentre';
+		}
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -190,7 +213,7 @@ class garage_business
 			'FROM'		=> array(
 				GARAGE_BUSINESS_TABLE	=> 'b',
 			),
-			'WHERE'		=> "b.type LIKE '%$type%'",
+			'WHERE'		=> "b.$field  = 1",
 			'ORDER_BY'	=> "b.title ASC"
 
 		));
@@ -251,7 +274,7 @@ class garage_business
 				GARAGE_BUSINESS_TABLE	=> 'b',
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 			),
-			'WHERE'		=>  "m.installer_id = b.id AND b.type LIKE '%" . BUSINESS_GARAGE . "%' AND b.pending = 0 $where",
+			'WHERE'		=>  "m.installer_id = b.id AND b.garage = 1 AND b.pending = 0 $where",
 			'GROUP_BY'	=>  "b.id",
 			'ODER_BY'	=>  "rating DESC"
 		));
@@ -283,7 +306,7 @@ class garage_business
 				GARAGE_BUSINESS_TABLE		=> 'b',
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 			),
-			'WHERE'		=>  "m.shop_id = b.id AND b.type LIKE '%" . BUSINESS_RETAIL . "%'  AND b.pending =0 $where",
+			'WHERE'		=>  "m.shop_id = b.id AND b.retail = 1  AND b.pending =0 $where",
 			'GROUP_BY'	=>  "b.id",
 			'ODER_BY'	=>  "rating DESC"
 		));
@@ -314,7 +337,7 @@ class garage_business
 			'FROM'		=> array(
 				GARAGE_BUSINESS_TABLE	=> 'b',
 			),
-			'WHERE'		=>  "b.type LIKE '%" . BUSINESS_INSURANCE . "%' AND b.pending = 0 $where",
+			'WHERE'		=>  "b.insurance = 1 AND b.pending = 0 $where",
 			'GROUP_BY'	=>  "b.id"
 		));
 
@@ -345,7 +368,7 @@ class garage_business
 				GARAGE_BUSINESS_TABLE		=> 'b',
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 			),
-			'WHERE'		=>  "m.installer_id = b.id AND b.type LIKE '%" . BUSINESS_GARAGE . "%' AND b.pending =0 $additional_where"
+			'WHERE'		=>  "m.installer_id = b.id AND b.garage = 1 AND b.pending =0 $additional_where"
 		));
 
 		$result = $db->sql_query($sql);
@@ -372,7 +395,7 @@ class garage_business
 				GARAGE_BUSINESS_TABLE	=> 'b',
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 			),
-			'WHERE'		=>  "m.shop_id = b.id AND b.type LIKE '%" . BUSINESS_RETAIL . "%' AND b.pending =0 $additional_where"
+			'WHERE'		=>  "m.shop_id = b.id AND b.retail = 1 AND b.pending =0 $additional_where"
 		));
 
 		$result = $db->sql_query($sql);

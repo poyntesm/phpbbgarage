@@ -58,7 +58,7 @@ while(list($var, $param) = @each($params))
 }
 
 //Get All Non-String Parameters
-$params = array('cid' => 'CID', 'mid' => 'MID', 'rrid' => 'RRID', 'qmid' => 'QMID', 'ins_id' => 'INS_ID', 'eid' => 'EID', 'image_id' => 'image_id', 'comment_id' => 'CMT_ID', 'bus_id' => 'BUS_ID');
+$params = array('cid' => 'CID', 'eid' => 'EID', 'image_id' => 'image_id', 'bus_id' => 'BUS_ID');
 while(list($var, $param) = @each($params))
 {
 	$$var = request_var($param, '');
@@ -169,7 +169,6 @@ switch( $mode )
 			);
 			$template->assign_block_vars('navlinks', array(
 				'FORUM_NAME'	=> $user->lang['RESULTS'])
-				//'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=search_results"))
 			);
 		}
 
@@ -238,9 +237,9 @@ switch( $mode )
 				//Provide Results To Template Engine
 				$template->assign_block_vars('modification', array(
 					'U_IMAGE'		=> ($results_data[$i]['attach_id']) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_image&amp;image_id=" . $results_data[$i]['attach_id']) : '',
-					'U_VIEW_VEHICLE'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" . $results_data[$i]['garage_id']),
+					'U_VIEW_VEHICLE'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" . $results_data[$i]['vehicle_id']),
 					'U_VIEW_PROFILE'	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $results_data[$i]['user_id']),
-					'U_VIEW_MODIFICATION'	=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=view_modification&amp;CID=" . $results_data[$i]['garage_id'] . "&amp;MID=" . $results_data[$i]['modification_id']),
+					'U_VIEW_MODIFICATION'	=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=view_modification&amp;CID=" . $results_data[$i]['vehicle_id'] . "&amp;MID=" . $results_data[$i]['modification_id']),
 					'IMAGE'			=> $user->img('garage_vehicle_img_attached', 'MODIFICATION_IMAGE_ATTACHED'),
 					'VEHICLE'		=> $results_data[$i]['vehicle'],
 					'MODIFICATION'		=> $results_data[$i]['modification_title'],
@@ -257,6 +256,8 @@ switch( $mode )
 			$template->assign_vars(array(
 				'S_DISPLAY_PREMIUM_RESULTS' 	=> true,
 			));
+			//How about Something like
+			//$garage_template->assign_premium_block($results_data);
 			for ($i = 0, $count = sizeof($results_data); $i < $count; $i++)
 			{
 				//Provide Results To Template Engine
@@ -826,7 +827,6 @@ switch( $mode )
 		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['ADD_NEW_BUSINESS'])
-			//'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business"))
 		);
 
 		//Get All Data Posted And Make It Safe To Use
@@ -885,7 +885,18 @@ switch( $mode )
 		$garage_business->insert_business($data);
 
 		//Send Them Back To Whatever Page Them Came From..Now With Their Required Business :)
-		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=" . $data['redirect'] . "&amp;CID=$cid"));
+		if ($data['redirect'] == 'add_modification' || $data['redirect'] == 'edit_modification')
+		{
+			redirect(append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=" . $data['redirect'] . "&amp;CID=$cid"));
+		}
+		else if ($data['redirect'] == 'add_dynorun' || $data['redirect'] == 'edit_dynorun')
+		{
+			redirect(append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=" . $data['redirect'] . "&amp;CID=$cid"));
+		}
+		elseif ($data['redirect'] == 'add_premium' || $data['redirect'] == 'edit_premium')
+		{
+			redirect(append_sid("{$phpbb_root_path}garage_premium.$phpEx", "mode=" . $data['redirect'] . "&amp;CID=$cid"));
+		}
 
 		break;
 
@@ -909,9 +920,7 @@ switch( $mode )
 		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['EDIT_BUSINESS'])
-			//'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business"))
 		);
-
 
 		//Pull Required Business Data From DB
 		$data = $garage_business->get_business($bus_id);
@@ -1000,7 +1009,6 @@ switch( $mode )
 		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['ADD_MAKE'])
-			//'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business"))
 		);
 
 		$template->assign_vars(array(
@@ -1047,7 +1055,7 @@ switch( $mode )
 		//Perform Any Pending Notifications Requried
 		$garage->pending_notification('unapproved_makes');
 
-		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=create_vehicle&amp;MAKE=" . $data['make']));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_vehicle&amp;MAKE=" . $data['make']));
 
 		break;
 
@@ -1088,7 +1096,6 @@ switch( $mode )
 		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['ADD_MODEL'])
-			//'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business"))
 		);
 
 		//Get All Data Posted And Make It Safe To Use
@@ -1145,7 +1152,6 @@ switch( $mode )
 		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['ADD_PRODUCT'])
-			//'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business"))
 		);
 
 		$category = $garage->get_category($data['category_id']);
@@ -1195,7 +1201,7 @@ switch( $mode )
 		//Create The Model
 		$garage_model->insert_model($data);
 
-		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=create_vehicle&amp;MAKE=" . $data['make'] . "&amp;MODEL=" . $data['model']));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_vehicle&amp;MAKE=" . $data['make'] . "&amp;MODEL=" . $data['model']));
 
 		break;
 
@@ -1231,7 +1237,7 @@ switch( $mode )
 		$data['product_id'] = $garage_modification->insert_product($data);
 
 		//Head Back To Page Updating Dropdowns With New Item ;)
-		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=add_modification&amp;CID=".$data['vehicle_id']."&amp;category_id=" . $data['category_id'] . "&amp;manufacturer_id=" . $data['manufacturer_id'] ."&amp;product_id=" . $data['product_id']));
+		redirect(append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=add_modification&amp;CID=".$data['vehicle_id']."&amp;category_id=" . $data['category_id'] . "&amp;manufacturer_id=" . $data['manufacturer_id'] ."&amp;product_id=" . $data['product_id']));
 
 		break;
 
@@ -1283,7 +1289,6 @@ switch( $mode )
 		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['ERROR'])
-			//'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business"))
 		);
 
 		$template->assign_vars(array(

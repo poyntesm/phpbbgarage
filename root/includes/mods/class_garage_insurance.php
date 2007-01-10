@@ -226,7 +226,7 @@ class garage_insurance
 					'ON'	=> 'g.user_id = u.user_id'
 				)
 			),
-			'WHERE'		=>  "i.business_id = b.id AND b.type = " . BUSINESS_INSURANCE . " AND b.pending = 0 AND b.id = $business_id AND mk.pending = 0 AND md.pending = 0",
+			'WHERE'		=>  "i.business_id = b.id AND b.insurance = 1 AND b.pending = 0 AND b.id = $business_id AND mk.pending = 0 AND md.pending = 0",
 			'GROUP_BY'	=>  "i.id"
 		));
 
@@ -257,7 +257,7 @@ class garage_insurance
 				GARAGE_BUSINESS_TABLE	=> 'b',
 				GARAGE_PREMIUMS_TABLE	=> 'i',
 			),
-			'WHERE'		=>  "i.business_id = b.id AND b.id = $business_id AND b.type = " . BUSINESS_INSURANCE . " AND i.cover_type = '".htmlspecialchars($cover_type)."' AND i.premium > 0"
+			'WHERE'		=>  "i.business_id = b.id AND b.id = $business_id AND b.insurance = 1 AND i.cover_type = '".htmlspecialchars($cover_type)."' AND i.premium > 0"
 		));
 
 		$result = $db->sql_query($sql);

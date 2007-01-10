@@ -78,7 +78,7 @@ function build_product_list()
 				<tr>
 					<td class="row1" align="center"><input type="checkbox" name="search_manufacturer" value="1" /></td>
 					<td class="row1" width="25%"><span class="gen"><b>{L_MODIFICATION}&nbsp;{L_MANUFACTURER}</b></span></td>
-					<td class="row2"><select id="manufacturer_id" name="model_id" onchange="get_product_list(this)" ><option value="">{L_SELECT_MANUFACTURER}</option><option value="">------</option><!-- BEGIN manufacturer--><option value="{manufacturer.VALUE}">{manufacturer.TEXT}</option><!-- END manufacturer --></select></td>
+					<td class="row2"><select id="manufacturer_id" name="manufacturer_id" onchange="get_product_list(this)" ><option value="">{L_SELECT_MANUFACTURER}</option><option value="">------</option><!-- BEGIN manufacturer--><option value="{manufacturer.VALUE}">{manufacturer.TEXT}</option><!-- END manufacturer --></select></td>
 				</tr>
 				<tr>
 					<td class="row1" align="center"><input type="checkbox" name="search_product" value="1" /></td>

@@ -361,7 +361,7 @@ class garage
 
 			//Handle SQL Part
 			$sql_array = array(
-				'SELECT'	=> "m.*, m.id as modification_id, v.made_year, v.id as garage_id, v.currency, i.*, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.title as business_title, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, CONCAT_WS(' ', b1.title, p.title) as modification_title",
+				'SELECT'	=> "m.*, m.id as modification_id, v.id as vehicle_id, v.made_year, v.currency, i.*, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.title as business_title, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, CONCAT_WS(' ', b1.title, p.title) as modification_title",
 				'FROM'		=> array(
 					GARAGE_MODIFICATIONS_TABLE	=> 'm',
 				),

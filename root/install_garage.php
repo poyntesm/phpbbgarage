@@ -214,7 +214,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_products (
 		`business_id` int(10) default NULL,
 		`category_id` int(10) unsigned NOT NULL default '0',
 		`title` varchar(255) NOT NULL default '',
-		PRIMARY KEY  (`id`),
+		PRIMARY KEY  (`id`)
 		)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_quartermiles (
 		`id` int(10) unsigned NOT NULL auto_increment,
@@ -236,6 +236,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_quartermiles (
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_dynoruns (
 		`id` int(10) unsigned NOT NULL auto_increment,
 		`garage_id` int(10) unsigned NOT NULL default '0',
+		`dynocentre_id` int(10) unsigned NOT NULL default '0',
 		`bhp` decimal(6,2) default NULL,
 		`bhp_unit` varchar(32) default NULL,
 		`torque` decimal(6,2) default NULL,
@@ -243,7 +244,6 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_dynoruns (
 		`boost` decimal(6,2) default NULL,
 		`boost_unit` varchar(32) default NULL,
 		`nitrous` int(10) default NULL,
-		`dynocenter` varchar(32) default NULL,
 		`peakpoint` decimal(7,3) default NULL,
 		`date_created` int(10) default NULL,
 		`date_updated` int(10) default NULL,
@@ -258,14 +258,14 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_ratings (
 		`rate_date` int(10) default NULL,
 		PRIMARY KEY  (`id`)
 	)";
-$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_tracks (
-		`id` int(10) NOT NULL auto_increment,
+/*$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_tracks (
+		`id` int(10) NOT NULL auto_increment
 	)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_laps (
 		`id` int(10) NOT NULL auto_increment,
 		`garage_id` int(10) NOT NULL default '0',
-		`track_id` int(10) NOT NULL default '0',
-	)";
+		`track_id` int(10) NOT NULL default '0'
+	)";*/
 //Required Configuration Options
 $params = array(
 //General Config Data
@@ -465,15 +465,15 @@ $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_set_ap
 $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_set_pending = '{LANG}/garage_set_pending.gif*21*34'";
 
 $categories_sql = array();
-$categories_sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (1, 'Engine', NULL, 1)";
-$categories_sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (2, 'Transmission', NULL, 2)";
-$categories_sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (3, 'Suspension', NULL, 3)";
-$categories_sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (4, 'Brakes', NULL, 4)";
-$categories_sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (5, 'Interior', NULL, 5)";
-$categories_sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (6, 'Exterior', NULL, 6)";
-$categories_sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (7, 'Audio', NULL, 7)";
-$categories_sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (8, 'Alloys &amp; Tyres', NULL, 8)";
-$categories_sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (9, 'Security', NULL, 9)";
+$categories_sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (1, 'Engine', 1)";
+$categories_sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (2, 'Transmission', 2)";
+$categories_sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (3, 'Suspension', 3)";
+$categories_sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (4, 'Brakes', 4)";
+$categories_sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (5, 'Interior', 5)";
+$categories_sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (6, 'Exterior', 6)";
+$categories_sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (7, 'Audio', 7)";
+$categories_sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (8, 'Alloys &amp; Tyres', 8)";
+$categories_sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (9, 'Security', 9)";
 
 //Setup Default Make List
 $makes_models_sql = array();

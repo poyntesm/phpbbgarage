@@ -251,7 +251,7 @@ switch( $mode )
 		$garage_template->make_dropdown($makes, $data['make_id']);
 		$garage_template->engine_dropdown($data['engine_type']);
 		$garage_template->currency_dropdown($data['currency']);
-		$garage_template->mileage_dropdown($data['mileage_units']);
+		$garage_template->mileage_dropdown($data['mileage_unit']);
 		$garage_template->year_dropdown($data['made_year']);
 		$template->assign_vars(array(
        			'L_TITLE' 		=> $user->lang['EDIT_VEHICLE'],

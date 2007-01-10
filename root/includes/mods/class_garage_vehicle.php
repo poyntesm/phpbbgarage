@@ -121,7 +121,7 @@ class garage_vehicle
 			'model_id'		=> $data['model_id'],
 			'colour'		=> $data['colour'],
 			'mileage'		=> $data['mileage'],
-			'mileage_units'		=> $data['mileage_units'],
+			'mileage_unit'		=> $data['mileage_units'],
 			'price'			=> $data['price'],
 			'currency'		=> $data['currency'],
 			'comments'		=> $data['comments'],
@@ -226,7 +226,7 @@ class garage_vehicle
 			'model_id'		=> $data['model_id'],
 			'colour'		=> $data['colour'],
 			'mileage'		=> $data['mileage'],
-			'mileage_units'		=> $data['mileage_units'],
+			'mileage_unit'		=> $data['mileage_units'],
 			'price'			=> $data['price'],
 			'currency'		=> $data['currency'],
 			'comments'		=> $data['comments'],
@@ -513,6 +513,7 @@ class garage_vehicle
 
 			//If we are using random, go fetch!
 			$featured_vehicle_id = null;
+			$total_vehicles = null;
 	       		if ( $garage_config['featured_vehicle_random'] == 'on' )
 			{
 				$sql = $db->sql_build_query('SELECT', 
@@ -630,24 +631,24 @@ class garage_vehicle
 			else
 			{
 				$featured_vehicle_id = $garage_config['featured_vehicle_id'];
+				//Make sure the vehicle exists if entered in ACP..
+				$sql = $db->sql_build_query('SELECT', 
+					array(
+					'SELECT'	=> 'COUNT(g.id) as num_vehicle',
+					'FROM'		=> array(
+						GARAGE_VEHICLES_TABLE	=> 'g',
+					),
+					'WHERE'		=> "id = ". $featured_vehicle_id,
+				));
+				$result = $db->sql_query($sql);
+				$total_vehicles = (int) $db->sql_fetchfield('num_vehicle');
+				$db->sql_freeresult($result);
+
 				$sql_array['WHERE'] = "g.id = " . $garage_config['featured_vehicle_id'];
 				$sql_array['GROUP_BY'] = "g.id";
 				$sql_array['ORDER_BY'] = "g.id DESC";
 			}
 
-			//Make sure the vehicle exists if entered in ACP..
-			$sql = $db->sql_build_query('SELECT', 
-				array(
-				'SELECT'	=> 'COUNT(g.id) as num_vehicle',
-				'FROM'		=> array(
-					GARAGE_VEHICLES_TABLE	=> 'g',
-				),
-				'WHERE'		=> "id = ". $featured_vehicle_id,
-			));
-			$result = $db->sql_query($sql);
-			$total_vehicles = (int) $db->sql_fetchfield('num_vehicle');
-			$db->sql_freeresult($result);
-	
 		        if ( $total_vehicles > 0 OR (!empty($garage_config['featured_vehicle_from_block'])) )
 	        	{
 				//Build Complete SQL Statement Now With All Options
@@ -664,9 +665,10 @@ class garage_vehicle
 	        	    	$vehicle_data = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
 	
+				$thumb_image = null;
 				// Do we have a hilite image?  If so, prep the HTML
 				if ( (empty($vehicle_data['attach_id']) == false) AND ($vehicle_data['attach_is_image'] == 1) ) 
-	        	    	{
+				{
 	                		// Do we have a thumbnail?  If so, our job is simple here :)
 			                if ( (empty($vehicle_data['attach_thumb_location']) == false) AND ($vehicle_data['attach_thumb_location'] != $vehicle_data['attach_location']) AND (@file_exists($phpbb_root_path . GARAGE_UPLOAD_PATH."/".$vehicle_data['attach_thumb_location'])) )
 	                		{
@@ -675,7 +677,6 @@ class garage_vehicle
 						if (!empty($absolute_url))
 						{
 							$thumb_image = $absolute_url . GARAGE_UPLOAD_PATH . $vehicle_data['attach_thumb_location'];
-
 						}
 	                		} 
 	        		}
@@ -1307,7 +1308,7 @@ class garage_vehicle
             		'AVATAR_IMG' 			=> $vehicle['avatar'],
             		'DATE_UPDATED' 			=> $user->format_date($vehicle['date_updated']),
             		'MILEAGE' 			=> $vehicle['mileage'],
-            		'MILEAGE_UNITS' 		=> $vehicle['mileage_units'],
+            		'MILEAGE_UNITS' 		=> $vehicle['mileage_unit'],
             		'PRICE' 			=> $vehicle['price'],
             		'CURRENCY' 			=> $vehicle['currency'],
             		'TOTAL_MODS' 			=> $vehicle['total_mods'],

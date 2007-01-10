@@ -217,7 +217,7 @@ class mcp_garage
 						'PRICE'		=> $data[$i]['price'],
 						'CURRENCY'	=> $data[$i]['currency'],
 						'MILEAGE'	=> $data[$i]['mileage'],
-						'MILEAGE_UNIT'	=> $data[$i]['mileage_units'],
+						'MILEAGE_UNIT'	=> $data[$i]['mileage_unit'],
 						'EDIT'		=> ($garage_config['enable_images']) ? $user->img('garage_edit', 'EDIT') : $user->lang['EDIT'])
 					);
 				}

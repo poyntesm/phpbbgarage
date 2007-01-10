@@ -121,7 +121,7 @@ switch( $mode )
 			'L_BUTTON' 		=> $user->lang['ADD_PREMIUM'],
 			'U_SUBMIT_BUSINESS' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;CID=$cid&amp;redirect=add_premium&amp;BUSINESS=" . BUSINESS_INSURANCE),
 			'CID' 			=> $cid,
-			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=insert_premium"))
+			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_premium.$phpEx", "mode=insert_premium"))
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
