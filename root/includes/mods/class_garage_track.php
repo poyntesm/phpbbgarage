@@ -52,9 +52,12 @@ class garage_track
 	/*========================================================================*/
 	function insert_track($data)
 	{
-		global $cid, $db, $garage_config;
+		global $db, $garage_config;
 
 		$sql = 'INSERT INTO ' . GARAGE_TRACKS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+			'title' 	=> $data['title'],
+			'length'	=> $data['length'],
+			'mileage_unit'	=> $data['mileage_unit'],
 			'pending'	=> ($garage_config['enable_track_approval'] == '1') ? 1 : 0)
 		);
 
@@ -92,9 +95,12 @@ class garage_track
 	/*========================================================================*/
 	function update_track($data)
 	{
-		global $db, $tid, $cid, $garage_config;
+		global $db, $tid, $garage_config;
 
 		$update_sql = array(
+			'title' 	=> $data['title'],
+			'length'	=> $data['length'],
+			'mileage_unit'	=> $data['mileage_unit'],
 			'pending'	=> ($garage_config['enable_track_approval'] == '1') ? 1 : 0
 		);
 
@@ -119,13 +125,9 @@ class garage_track
 		//Get All Required Data
 		$data = $this->get_lap($id);
 	
-		//Lets See If There Is An Image Associated With This Run
-		if (!empty($data['image_id']))
-		{
-			//Seems To Be An Image To Delete, Let Call The Function
-			$garage_image->delete_image($data['image_id']);
-		}
-	
+		//Seems To Be An Image To Delete, Let Call The Function
+		$garage_image->delete_image($data['image_id']);
+
 		//Time To Delete The Actual Lap Now
 		$garage->delete_rows(GARAGE_LAPS_TABLE, 'id', $id);
 	
@@ -391,6 +393,63 @@ class garage_track
 			),
 			'WHERE'		=>	"t.track_id = $tid",
 			'ORDER_BY'	=>	'l.id'
+		));
+
+		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$data[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/*========================================================================*/
+	// Select All Tracks Data From DB
+	// Usage: get_all_tracks();
+	/*========================================================================*/
+	function get_all_tracks()
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 't.*',
+			'FROM'		=> array(
+				GARAGE_TRACKS_TABLE	=> 't',
+			)
+		));
+
+		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$data[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/*========================================================================*/
+	// Select Pending Tracks Data From DB
+	// Usage: get_pending_tracks();
+	/*========================================================================*/
+	function get_pending_tracks()
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 't.*',
+			'FROM'		=> array(
+				GARAGE_TRACKS_TABLE	=> 't',
+			),
+			'WHERE'		=> 't.pending = 1'
 		));
 
 		$result = $db->sql_query($sql);

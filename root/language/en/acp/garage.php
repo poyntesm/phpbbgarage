@@ -35,6 +35,7 @@ $lang = array_merge($lang, array(
 	'ACP_GARAGE_IMAGE_CONFIG' 			=> 'Image Configuration',
 	'ACP_GARAGE_QUARTERMILE_CONFIG' 		=> 'Quartermile Configuration',
 	'ACP_GARAGE_DYNORUN_CONFIG' 			=> 'Dynorun Configuration',
+	'ACP_GARAGE_TRACK_CONFIG'			=> 'Track Time Config',
 	'ACP_GARAGE_INSURANCE_CONFIG' 			=> 'Insurance Configuration',
 	'ACP_GARAGE_BUSINESS_CONFIG' 			=> 'Business Configuration',
 	'ACP_GARAGE_VEHICLE_RATING_CONFIG'		=> 'Vehicle Rating Configuration',
@@ -78,6 +79,8 @@ $lang = array_merge($lang, array(
 	'ENABLE_QUARTERMILE_IMAGES_EXPLAIN' 		=> 'This will allow users with correct permissions to add images to quartermile times.',
 	'ENABLE_DYNORUN_IMAGES' 			=> 'Enable Dynorun Images',
 	'ENABLE_DYNORUN_IMAGES_EXPLAIN' 		=> 'This will allow users with correct permissions to add images to dynoruns.',
+	'ENABLE_LAP_IMAGES' 				=> 'Enable Lap Images',
+	'ENABLE_LAP_IMAGES_EXPLAIN' 			=> 'This will allow users with correct permissions to add images to laps.',
 	'ENABLE_UPLOADED_IMAGES' 			=> 'Enable Uploaded Images',
 	'ENABLE_UPLOADED_IMAGES_EXPLAIN' 		=> 'This will users with correct permissions to upload images to items which allow it.',
 	'ENABLE_REMOTE_IMAGES' 				=> 'Enable Remote Images',
@@ -220,6 +223,17 @@ $lang = array_merge($lang, array(
 	'ENABLE_PRODUCT_APPROVAL_EXPLAIN' 		=> 'Products require moderator approval before being listed.',
 	'ENABLE_PRODUCT_SEARCH' 			=> 'Enable Product Search',
 	'ENABLE_PRODUCT_SEARCH_EXPLAIN' 		=> 'Allow searching by product & manufacturer.',
+
+
+	'ENABLE_TRACKTIME'				=> 'Enable Tracktimes',
+	'ENABLE_TRACKTIME_EXPLAIN'			=> 'Enable Tracktimes',
+	'ENABLE_LAP_APPROVAL'				=> 'Enable Lap Approval',
+	'ENABLE_LAP_APPROVAL_EXPLAIN'			=> 'Enable Lap Approval',
+	'ENABLE_TRACK_APPROVAL'				=> 'Enable Track Approval',
+	'ENABLE_TRACK_APPROVAL_EXPLAIN'			=> 'Enable Track Approval',
+	'ENABLE_USER_ADD_LAP'				=> 'User Track Submission',
+	'ENABLE_USER_ADD_LAP_EXPLAIN' 			=> 'Enable users to submit new tracks',
+
 
 //ADMIN : Categories
 	'Any_Model' 					=> 'Any Model',

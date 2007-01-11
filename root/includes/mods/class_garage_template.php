@@ -246,6 +246,20 @@ class garage_template
 		}
 	}
 
+	function track_dropdown($tracks, $selected_id = null)
+	{
+		global $template;
+
+		for ($i = 0, $count = sizeof($tracks);$i < $count; $i++)
+		{
+			$template->assign_block_vars('track', array(
+				'VALUE'		=> $tracks[$i]['id'],
+				'TEXT'		=> $tracks[$i]['title'],
+				'S_SELECTED'	=> ($selected_id == $tracks[$i]['id']) ? true: false)
+			);
+		}
+	}
+
 	function category_dropdown($categories, $selected_id = null)
 	{
 		global $template;

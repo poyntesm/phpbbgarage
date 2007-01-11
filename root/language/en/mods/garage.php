@@ -706,12 +706,16 @@ $lang = array_merge($lang, array(
 	'NO_BUSINESS_PENDING'		=> 'There are no business\'s requiring approval currently.',
 	'NO_QUARTERMILES_PENDING'	=> 'There are no quartermiles requiring approval currently.',
 	'NO_DYNORUNS_PENDING'		=> 'There are no dynoruns requiring approval currently.',
+	'NO_LAPS_PENDING'		=> 'There are no laps requiring approval currently.',
+	'NO_TRACKS_PENDING'		=> 'There are no tracks requiring approval currently.',
 	'NO_VEHICLE_SELECTED'		=> 'You must select at least one vehicle to perform this action.',
 	'NO_MAKE_SELECTED'		=> 'You must select at least one make to perform this action.',
 	'NO_MODEL_SELECTED'		=> 'You must select at least one model to perform this action.',
 	'NO_BUSINESS_SELECTED'		=> 'You must select at least one business to perform this action.',
 	'NO_QUARTERMILE_SELECTED'	=> 'You must select at least one quartermile to perform this action.',
 	'NO_DYNORUN_SELECTED'		=> 'You must select at least one dynorun to perform this action.',
+	'NO_LAP_SELECTED'		=> 'You must select at least one lap to perform this action.',
+	'NO_TRACK_SELECTED'		=> 'You must select at least one track to perform this action.',
 	'DISAPPROVE_QUARTERMILE'	=> 'Dissaprove quartermile time.',	
 
 	//UCP LANGUAGE KEYS
@@ -720,6 +724,15 @@ $lang = array_merge($lang, array(
 	'GUESTBOOK_EMAIL_NOTIFY'	=> 'Email notification of comments to your vehicles',
 	'GUESTBOOK_PM_NOTIFY'		=> 'Private message notification of comments to your vehicles',
 	'INDEX_COLUMNS'			=> 'Number of columns on index page',
+
+	//TRACK & LAP KEYS
+	'LAP'				=> 'Lap',
+	'TRACK'				=> 'Track',
+	'ADD_NEW_LAP'			=> 'Add lap',
+	'ADD_LAP'			=> 'Add lap',
+	'ADD_TRACK'			=> 'Add Track',
+	'LENGTH'			=> 'Length',
+	'SELECT_TRACK'			=> 'Select Track',
 
 ));
 

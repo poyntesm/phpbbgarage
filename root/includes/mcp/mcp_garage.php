@@ -27,7 +27,7 @@ class mcp_garage
 	{
 		global $auth, $db, $user, $template;
 		global $config, $phpbb_root_path, $phpEx, $action;
-		global $garage_config, $garage_template, $garage_vehicle, $garage_business, $garage_guestbook;
+		global $garage_config, $garage_template, $garage_vehicle, $garage_business, $garage_guestbook, $garage_track;
 
 		$start = request_var('start', 0);
 
@@ -42,6 +42,7 @@ class mcp_garage
 		include_once($phpbb_root_path . 'includes/mods/class_garage_dynorun.' . $phpEx);
 		include_once($phpbb_root_path . 'includes/mods/class_garage_guestbook.' . $phpEx);
 		include_once($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
+		include_once($phpbb_root_path . 'includes/mods/class_garage_track.' . $phpEx);
 		include_once($phpbb_root_path . 'includes/functions_messenger.' . $phpEx);
 
 		switch ($action)
@@ -106,8 +107,8 @@ class mcp_garage
 
 				$garage_dynorun->approve_dynorun($id_list, $mode);
 			break;
-			case 'approve_guestbook_comments':
-				$id_list = request_var('comments_id_list', array(0));
+			case 'approve_guestbook_comment':
+				$id_list = request_var('comment_id_list', array(0));
 
 				if (!sizeof($id_list))
 				{
@@ -115,6 +116,26 @@ class mcp_garage
 				}
 
 				$garage_guestbook->approve_comment($id_list, $mode);
+			break;
+			case 'approve_lap':
+				$id_list = request_var('lap_id_list', array(0));
+
+				if (!sizeof($id_list))
+				{
+					trigger_error('NO_LAP_SELECTED');
+				}
+
+				$garage_track->approve_lap($id_list, $mode);
+				break;
+			case 'approve_track':
+				$id_list = request_var('track_id_list', array(0));
+
+				if (!sizeof($id_list))
+				{
+					trigger_error('NO_TRACK_SELECTED');
+				}
+
+				$garage_track->approve_track($id_list, $mode);
 			break;
 			case 'disapprove_vehicle':
 				$id_list = request_var('vehicle_id_list', array(0));
@@ -185,6 +206,26 @@ class mcp_garage
 				}
 
 				$garage_guestbook->disapprove_comment($id_list, $mode);
+			break;
+			case 'disapprove_lap':
+				$id_list = request_var('lap_id_list', array(0));
+
+				if (!sizeof($id_list))
+				{
+					trigger_error('NO_LAP_SELECTED');
+				}
+
+				$garage_track->disapprove_lap($id_list, $mode);
+			break;
+			case 'disapprove_track':
+				$id_list = request_var('track_id_list', array(0));
+
+				if (!sizeof($id_list))
+				{
+					trigger_error('NO_TRACK_SELECTED');
+				}
+
+				$garage_track->disapprove_track($id_list, $mode);
 			break;
 			case 'reassign_business':
 				$id_list = request_var('business_id_list', array(0));
@@ -366,6 +407,36 @@ class mcp_garage
 				);
 
 				$this->tpl_name = 'mcp_garage_approve_dynoruns';
+				break;
+
+			case 'unapproved_laps':
+
+				$data = $garage_track->get_pending_laps();
+
+				for ($i = 0, $count = sizeof($data);$i < $count; $i++)
+				{
+					$template->assign_block_vars('lap_row', array(
+					));
+				}
+
+				$this->tpl_name = 'mcp_garage_approve_laps';
+				break;
+
+			case 'unapproved_tracks':
+
+				$data = $garage_track->get_pending_tracks();
+
+				for ($i = 0, $count = sizeof($data);$i < $count; $i++)
+				{
+					$template->assign_block_vars('track_row', array(
+						'U_EDIT'	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_track&amp;TID=" . $data[$i]['id'].  "&amp;redirect=MCP"),
+						'ID'	=> $data[$i]['id'],
+						'TITLE'	=> $data[$i]['title'],
+						'EDIT'		=> ($garage_config['enable_images']) ? $user->img('garage_edit', 'EDIT') : $user->lang['EDIT'],
+					));
+				}
+
+				$this->tpl_name = 'mcp_garage_approve_tracks';
 				break;
 
 			case 'reassign_business':

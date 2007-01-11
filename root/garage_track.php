@@ -46,6 +46,7 @@ require($phpbb_root_path . 'includes/mods/class_garage_template.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_guestbook.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_model.' . $phpEx);
+require($phpbb_root_path . 'includes/mods/class_garage_track.' . $phpEx);
 
 //Set The Page Title
 $page_title = $user->lang['GARAGE'];
@@ -117,14 +118,72 @@ switch( $mode )
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=add_lap&amp;CID=$cid"))
 		);
 
+		//Get Required Data
+		$tracks = $garage_track->get_all_tracks();
+
 		//Build Required HTML Components Like Drop Down Boxes.....
 		$garage_template->attach_image('lap');
+		$garage_template->track_dropdown($tracks);
 		$template->assign_vars(array(
 			'L_TITLE'  		=> $user->lang['ADD_LAP'],
 			'L_BUTTON'  		=> $user->lang['ADD_LAP'],
-			'U_SUBMIT_TRACK'	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=add_track&amp;CID=$cid&amp;redirect=add_lap"),
+			'U_ADD_TRACK'		=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=add_track&amp;CID=$cid&amp;redirect=add_lap"),
 			'CID' 			=> $cid,
+			'S_DISPLAY_ADD_TRACK'	=> $garage_config['enable_user_add_track'],
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=insert_lap"))
+         	);
+
+		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
+		$garage_template->sidemenu();
+
+		break;
+
+	case 'add_track':
+
+		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
+		if ($user->data['user_id'] == ANONYMOUS)
+		{
+			login_box("garage_track.$phpEx?mode=add_track&amp;CID=$cid");
+		}
+
+		//Let Check That User Adding Tracks Are Allowed...If Not Redirect
+		if (!$garage_config['enable_tracktime'] || !$garage_config['enable_user_add_track'] || !$auth->acl_get('u_garage_add_track'))
+		{
+			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=18"));
+		}
+
+		//Check Vehicle Ownership
+		$garage_vehicle->check_ownership($cid);
+		
+		//Build Page Header ;)
+		page_header($page_title);
+
+		//Set Template Files In Use For This Mode
+		$template->set_filenames(array(
+			'header' => 'garage_header.html',
+			'body'   => 'garage_track.html')
+		);
+
+		//Get Vehicle Data For Navlinks
+		$vehicle=$garage_vehicle->get_vehicle($cid);
+
+		//Build Navlinks
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $vehicle['vehicle'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"))
+		);
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $user->lang['ADD_TRACK'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=add_track&amp;CID=$cid"))
+		);
+
+		//Build Required HTML Components Like Drop Down Boxes.....
+		$garage_template->mileage_dropdown();
+		$template->assign_vars(array(
+			'L_TITLE'  		=> $user->lang['ADD_TRACK'],
+			'L_BUTTON'  		=> $user->lang['ADD_TRACK'],
+			'CID' 			=> $cid,
+			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=insert_track"))
          	);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
@@ -189,6 +248,44 @@ switch( $mode )
 		}
 
 		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
+
+		break;
+
+	case 'insert_track':
+
+		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
+		if ($user->data['user_id'] == ANONYMOUS)
+		{
+			login_box("garage_track.$phpEx?mode=add_lap&amp;CID=$cid");
+		}
+
+		//Let Check That Laps Are Allowed...If Not Redirect
+		if (!$garage_config['enable_tracktime'] || !$auth->acl_get('u_garage_add_track'))
+		{
+			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=18"));
+		}
+
+		//Check Vehicle Ownership
+		$garage_vehicle->check_ownership($cid);
+
+		//Get All Data Posted And Make It Safe To Use
+		$params = array('title' => '', 'length' => '', 'mileage_unit' => '');
+		$data 	= $garage->process_vars($params);
+
+		//Checks All Required Data Is Present
+		$params = array('title');
+		$garage->check_required_vars($params);
+
+		//Update The Dynorun With Data Acquired
+		$tid = $garage_track->insert_track($data);
+
+		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
+		if ($garage_config['enable_track_approval'])
+		{
+			$garage->pending_notification('unapproved_tracks');
+		}
+
+		redirect(append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=add_lap&amp;CID=$cid"));
 
 		break;
 

@@ -266,16 +266,21 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_ratings (
 		`rate_date` int(10) default NULL,
 		PRIMARY KEY  (`id`)
 	)";
-/*$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_tracks (
+$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_tracks (
 		`id` int(10) NOT NULL auto_increment,
+		`title` varchar(255) NOT NULL default '',
+		`length` varchar(32) default NULL,
+		`mileage_unit` varchar(32) default NULL,
+		`pending` tinyint(1) NOT NULL default '1',
 		PRIMARY KEY  (`id`)
 	)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_laps (
 		`id` int(10) NOT NULL auto_increment,
 		`garage_id` int(10) NOT NULL default '0',
 		`track_id` int(10) NOT NULL default '0'
+		`pending` tinyint(1) NOT NULL default '1',
 		PRIMARY KEY  (`id`)
-	)";*/
+	)";
 //Required Configuration Options
 $params = array(
 //General Config Data
@@ -374,6 +379,7 @@ $params = array(
 
 //Track & Lap Config Data
 	'enable_tracktime' 			=> '1',
+	'enable_user_add_track'			=> '1',
 	'enable_track_approval' 		=> '1',
 	'enable_lap_approval' 			=> '1',
 
@@ -438,6 +444,7 @@ $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_add_insurance` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_add_dynorun` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_add_quartermile` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_add_lap` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_manage_gallery` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_edit` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_delete` text NOT NULL";
@@ -468,6 +475,7 @@ $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_mo
 $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_insurance = '{LANG}/garage_add_insurance.gif*33*130'";
 $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_dynorun = '{LANG}/garage_add_dynorun.gif*33*130'";
 $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_quartermile = '{LANG}/garage_add_quartermile.gif*33*130'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_lap = '{LANG}/garage_add_lap.gif*33*130'";
 $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_manage_gallery = '{LANG}/garage_manage_gallery.gif*33*130'";
 $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_edit = '{LANG}/garage_edit.gif*21*34'";
 $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_delete = '{LANG}/garage_delete.gif*21*34'";
