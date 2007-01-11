@@ -199,6 +199,30 @@
 			<!-- ENDIF -->
 
 			<!-- IF S_DISPLAY_LAP_RESULTS -->
+			<table width="100%" cellpadding="1" cellspacing="1" border="0" class="tablebg">
+				<tr>
+					<th colspan="11">{L_LAPS}</th>
+				</tr>
+				<tr>
+					<td class="cat" ></td>
+					<td class="cat" ><span class="gen">{L_TRACK}</span></td>
+					<td class="cat" ><span class="gen">{L_CONDITION}</span></td>
+					<td class="cat" ><span class="gen">{L_TYPE}</span></td>
+					<td class="cat" ><span class="gen">{L_TIME}</span>&nbsp;<span class="gensmall">(M:S:MS)</span></td>
+
+				</tr>
+				<!-- BEGIN lap -->
+				<!-- IF lap.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+	  				<td class="row1" align="center"><span class="gensmall"><!-- IF lap.U_IMAGE --><a href="{lap.U_IMAGE}" target="_blank">{lap.IMAGE}</a><!-- ENDIF --></span></td>
+					<td class="row1" align="center"><span class="gensmall"><a href="{lap.U_TRACK}">{lap.TRACK}</a></span></td>
+					<td class="row1" align="center"><span class="gensmall">{lap.CONDITION}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{lap.TYPE}</span></td>
+					<td class="row1" align="center"><span class="gensmall"><a href="{lap.U_LAP}">{lap.MINUTE}.{lap.SECOND}.{lap.MILLISECOND}</a></span></td>
+				</tr>
+				<!-- END lap -->
+			</table>
+			<br />
+
 			<!-- ENDIF -->
 
 			<input type="hidden" value="{SEARCH_YEAR}" name="search_year" />

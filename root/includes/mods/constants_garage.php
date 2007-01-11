@@ -19,7 +19,21 @@ define('BUSINESS_RETAIL', 4);
 define('BUSINESS_DYNOCENTRE', 5);
 
 //Define Insurance Types
-define('COMPREHENSIVE', 1);
+define('COMP', 1);
+define('CLAS', 2);
+define('COMP_RED', 3);
+define('TP', 4);
+define('TPFT', 5);
+
+//Define Track Conditions
+define('TRACK_DRY', 1);
+define('TRACK_INTERMEDIATE', 2);
+define('TRACK_WET', 3);
+
+//Define Lap Types
+define('LAP_QUALIFING', 1);
+define('LAP_RACE', 2);
+define('LAP_TRACKDAY', 3);
 
 //Define Garage Tables
 define('GARAGE_VEHICLES_TABLE', $table_prefix.'garage_vehicles');

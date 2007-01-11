@@ -967,7 +967,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function display_vehicle($owned)
 	{
-		global $user, $template, $images, $phpEx, $phpbb_root_path, $garage_config, $config, $rating_text, $rating_types, $cid, $mode, $garage, $garage_template, $garage_modification, $garage_insurance, $garage_quartermile, $garage_dynorun, $garage_image, $auth, $garage_guestbook;
+		global $user, $template, $images, $phpEx, $phpbb_root_path, $garage_config, $config, $rating_text, $rating_types, $cid, $mode, $garage, $garage_template, $garage_modification, $garage_insurance, $garage_quartermile, $garage_dynorun, $garage_image, $auth, $garage_guestbook, $garage_track;
 
 		if ($owned == 'YES' || $owned == 'MODERATE')
 		{
@@ -1224,6 +1224,32 @@ class garage_vehicle
 					'U_BHP'		=> append_sid("garage_dynorun.$phpEx?mode=view_dynorun&amp;RRID=".$dynorun_data[$i]['rrid']."&amp;CID=$cid"),
 					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage_dynorun.$phpEx?mode=edit_dynorun&amp;RRID=".$dynorun_data[$i]['id']."&amp;CID=$cid") : '',
 					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_dynorun'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_dynorun(' . $cid . ',' . $dynorun_data[$i]['id'] . ')' : '')
+				);
+			}
+		}
+
+		//Get All Dynoruns For Vehicle
+		$lap_data = $garage_track->get_laps_by_vehicle($cid);
+
+         	//If Any Laps Exist Process Them...
+		if ( count($lap_data) > 0 )
+		{
+			$template->assign_block_vars('tracktime', array());
+         		for ( $i = 0; $i < count($lap_data); $i++ )
+			{
+				$template->assign_block_vars('tracktime.lap', array(
+					'TRACK'		=> $lap_data[$i]['title'],
+					'CONDITION'	=> $garage_track->get_track_condition($lap_data[$i]['condition_id']),
+					'TYPE'		=> $garage_track->get_lap_type($lap_data[$i]['type_id']),
+					'MINUTE'	=> $lap_data[$i]['minute'],
+					'SECOND'	=> $lap_data[$i]['second'],
+					'MILLISECOND'	=> $lap_data[$i]['millisecond'],
+					'IMAGE'		=> $user->img('garage_slip_img_attached', 'SLIP_IMAGE_ATTACHED'),
+					'U_IMAGE'	=> ($lap_data[$i]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_image&amp;image_id=". $lap_data[$i]['attach_id']) : '',
+					'U_TRACK'	=> append_sid("garage_track.$phpEx?mode=view_track&amp;TID=".$lap_data[$i]['track_id']."&amp;CID=$cid"),
+					'U_LAP'		=> append_sid("garage_track.$phpEx?mode=view_lap&amp;LID=".$lap_data[$i]['lid']."&amp;CID=$cid"),
+					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage_track.$phpEx?mode=edit_lap&amp;LID=".$lap_data[$i]['lid']."&amp;CID=$cid") : '',
+					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_lap'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_lap(' . $cid . ',' . $lap_data[$i]['lid'] . ')' : '')
 				);
 			}
 		}

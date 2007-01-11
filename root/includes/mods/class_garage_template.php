@@ -392,6 +392,40 @@ class garage_template
 		}
 	}
 
+	function track_condition_dropdown($selected = null)
+	{
+		global $template, $user;
+
+		$id = array(TRACK_DRY, TRACK_INTERMEDIATE, TRACK_WET);
+		$text = array($user->lang['DRY'], $user->lang['INTERMEDIATE'], $user->lang['WET']);
+
+		for ($i = 0, $count = sizeof($id);$i < $count; $i++)
+		{
+			$template->assign_block_vars('condition', array(
+				'VALUE'		=> $id[$i],
+				'TEXT'		=> $text[$i],
+				'S_SELECTED'	=> ($selected == $id[$i]) ? true : false)
+			);
+		}
+	}
+
+	function lap_type_dropdown($selected = null)
+	{
+		global $template, $user;
+
+		$id = array(LAP_QUALIFING, LAP_RACE, LAP_TRACKDAY);
+		$text = array($user->lang['QUALIFING'], $user->lang['RACE'], $user->lang['TRACKDAY']);
+
+		for ($i = 0, $count = sizeof($id);$i < $count; $i++)
+		{
+			$template->assign_block_vars('type', array(
+				'VALUE'		=> $id[$i],
+				'TEXT'		=> $text[$i],
+				'S_SELECTED'	=> ($selected == $id[$i]) ? true : false)
+			);
+		}
+	}
+
 	function currency_dropdown($selected = null)
 	{
 		global $template;

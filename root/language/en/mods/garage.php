@@ -727,12 +727,27 @@ $lang = array_merge($lang, array(
 
 	//TRACK & LAP KEYS
 	'LAP'				=> 'Lap',
+	'LAPS'				=> 'Laps',
 	'TRACK'				=> 'Track',
+	'TRACKS'			=> 'Tracks',
+	'TRACK_CONDITION'		=> 'Track Condition',
+	'CONDITION'			=> 'Condition',
+	'LAP_TYPE'			=> 'Lap Type',
 	'ADD_NEW_LAP'			=> 'Add lap',
 	'ADD_LAP'			=> 'Add lap',
+	'EDIT_LAP'			=> 'Edit lap',
 	'ADD_TRACK'			=> 'Add Track',
 	'LENGTH'			=> 'Length',
 	'SELECT_TRACK'			=> 'Select Track',
+	'SELECT_CONDITION'		=> 'Select Condition',
+	'SELECT_TYPE'			=> 'Select Type',
+	'DRY'				=> 'Dry',
+	'INTERMEDIATE'			=> 'Intermediate',
+	'WET'				=> 'Wet',
+	'RACE'				=> 'Race',
+	'TRACKDAY'			=> 'Trackday',
+	'QUALIFING'			=> 'Qualifing',
+	'LAP_TIME'			=> 'Lap Time',
 
 ));
 

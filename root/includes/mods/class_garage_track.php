@@ -38,6 +38,12 @@ class garage_track
 
 		$sql = 'INSERT INTO ' . GARAGE_LAPS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 			'garage_id'	=> $cid,
+			'track_id'	=> $data['track_id'],
+			'condition_id'	=> $data['condition_id'],
+			'type_id'	=> $data['type_id'],
+			'minute'	=> $data['minute'],
+			'second'	=> $data['second'],
+			'millisecond'	=> $data['millisecond'],
 			'pending'	=> ($garage_config['enable_lap_approval'] == '1') ? 1 : 0)
 		);
 
@@ -76,6 +82,12 @@ class garage_track
 
 		$update_sql = array(
 			'garage_id'	=> $cid,
+			'track_id'	=> $data['track_id'],
+			'condition_id'	=> $data['condition_id'],
+			'type_id'	=> $data['type_id'],
+			'minute'	=> $data['minute'],
+			'second'	=> $data['second'],
+			'millisecond'	=> $data['millisecond'],
 			'pending'	=> ($garage_config['enable_lap_approval'] == '1') ? 1 : 0
 		);
 
@@ -236,7 +248,7 @@ class garage_track
 					'ON'	=> 'g.model_id = md.id and md.pending = 0'
 				)
 				,array(
-					'FROM'	=> array(GARAGE_LAPS_GALLERY_TABLE => 'lg'),
+					'FROM'	=> array(GARAGE_LAP_GALLERY_TABLE => 'lg'),
 					'ON'	=> 'l.id = lg.lap_id'
 				)
 				,array(
@@ -460,6 +472,50 @@ class garage_track
 		$db->sql_freeresult($result);
 
 		return $data;
+	}
+
+	/*========================================================================*/
+	// Returns Lang String For Condition
+	// Usage: get_track_condition();
+	/*========================================================================*/
+	function get_track_condition($id)
+	{
+		global $user;
+
+		if ($id == TRACK_DRY)
+		{
+			return $user->lang['DRY'];
+		}
+		else if ($id == TRACK_INTERMEDIATE)
+		{
+			return $user->lang['INTERMEDIATE'];
+		}
+		else if ($id == TRACK_WET)
+		{
+			return $user->lang['WET'];
+		}
+	}
+
+	/*========================================================================*/
+	// Returns Lang String For Condition
+	// Usage: get_lap_type();
+	/*========================================================================*/
+	function get_lap_type($id)
+	{
+		global $user;
+
+		if ($id == LAP_QUALIFING)
+		{
+			return $user->lang['QUALIFING'];
+		}
+		else if ($id == LAP_RACE)
+		{
+			return $user->lang['RACE'];
+		}
+		else if ($id == LAP_TRACKDAY)
+		{
+			return $user->lang['TRACKDAY'];
+		}
 	}
 
 	/*========================================================================*/

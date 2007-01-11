@@ -46,6 +46,7 @@ require($phpbb_root_path . 'includes/mods/class_garage_template.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_guestbook.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_model.' . $phpEx);
+require($phpbb_root_path . 'includes/mods/class_garage_track.' . $phpEx);
 
 //Set The Page Title
 $page_title = $user->lang['GARAGE'];
@@ -332,7 +333,7 @@ switch( $mode )
 				));
 			}
 		}
-		else if ($data['display_as'] == 'track_times')
+		else if ($data['display_as'] == 'laps')
 		{
 			//Display Results As Track Times
 			$template->assign_vars(array(
@@ -341,8 +342,17 @@ switch( $mode )
 			for ($i = 0, $count = sizeof($results_data); $i < $count; $i++)
 			{
 				//Provide Results To Template Engine
-				$template->assign_block_vars('laptime', array(
-					''	=> '',
+				$template->assign_block_vars('lap', array(
+					'TRACK'		=> $results_data[$i]['title'],
+					'CONDITION'	=> $garage_track->get_track_condition($results_data[$i]['condition_id']),
+					'TYPE'		=> $garage_track->get_lap_type($results_data[$i]['type_id']),
+					'MINUTE'	=> $results_data[$i]['minute'],
+					'SECOND'	=> $results_data[$i]['second'],
+					'MILLISECOND'	=> $results_data[$i]['millisecond'],
+					'IMAGE'		=> $user->img('garage_slip_img_attached', 'SLIP_IMAGE_ATTACHED'),
+					'U_IMAGE'	=> ($results_data[$i]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_image&amp;image_id=". $results_data[$i]['attach_id']) : '',
+					'U_TRACK'	=> append_sid("garage_track.$phpEx?mode=view_track&amp;TID=".$results_data[$i]['track_id']."&amp;CID=". $results_data[$i]['garage_id']),
+					'U_LAP'		=> append_sid("garage_track.$phpEx?mode=view_lap&amp;LID=".$results_data[$i]['lid']."&amp;CID=". $results_data[$i]['garage_id']),
 				));
 			}
 		}

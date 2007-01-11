@@ -559,19 +559,59 @@ class garage
 				'ORDER_BY'	=> "$sort $order"
 			);
 		}
-		else if ($search_options['display_as'] == 'track_times')
+		else if ($search_options['display_as'] == 'laps')
 		{
 			//Handle Sorting & Ordering
-			$sort = (empty($sort)) ? 'lap_time' : $sort;
+			$sort = (empty($sort)) ? 'minute, second, millisecond' : $sort;
 			$garage_template->sort_dropdown('track_time', $sort);
 			$order = (empty($order)) ? 'ASC' : $order;
 			$garage_template->order_dropdown($order);
 
 			//Handle SQL Part
-			$sql_array['SELECT'] = "";
-			$sql_array['FROM'] = array(GARAGE_LAPS_TABLE	=> 'l');
-			$sql_array['GROUP_BY'] = "l.id";
-			$sql_array['ORDER_BY'] = "$sort $order";
+			$sql_array = array(
+				'SELECT'	=> "v.id, v.made_year, v.user_id, mk.make, md.model, l.*, i.*, l.id as lid, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, u.username, t.title, v.id as garage_id",
+				'FROM'		=> array(
+					GARAGE_LAPS_TABLE	=> 'l',
+				),
+				'LEFT_JOIN'	=> array(
+					array(
+						'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'v'),	
+						'ON'	=> 'l.garage_id = v.id'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+						'ON'	=> 'v.make_id = mk.id and mk.pending = 0'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+						'ON'	=> 'v.model_id = md.id and md.pending = 0'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'm'),	
+						'ON'	=> 'v.id = m.garage_id'
+					)
+					,array(
+						'FROM'	=> array(USERS_TABLE => 'u'),
+						'ON'	=> 'v.user_id = u.user_id'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_LAP_GALLERY_TABLE => 'lg'),
+						'ON'	=> 'v.id = lg.garage_id AND lg.hilite = 1'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
+						'ON'	=> 'lg.image_id = i.attach_id'
+					)
+					,array(
+						'FROM'	=> array(GARAGE_TRACKS_TABLE => 't'),
+						'ON'	=> 'l.track_id = t.id'
+					)
+				),
+				'WHERE'		=> "l.pending = 0",
+				'GROUP_BY'	=> "l.id",
+				'ORDER_BY'	=> "$sort $order"
+			);
+
 		}
 
 		//Now We Need To Build All Extra Where Statements

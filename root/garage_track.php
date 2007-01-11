@@ -36,16 +36,9 @@ $auth->acl($user->data);
 $user->setup(array('mods/garage'));
 
 //Build All Garage Classes e.g $garage_images->
-require($phpbb_root_path . 'includes/mods/class_garage_business.' . $phpEx);
-require($phpbb_root_path . 'includes/mods/class_garage_dynorun.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_image.' . $phpEx);
-require($phpbb_root_path . 'includes/mods/class_garage_insurance.' . $phpEx);
-require($phpbb_root_path . 'includes/mods/class_garage_modification.' . $phpEx);
-require($phpbb_root_path . 'includes/mods/class_garage_quartermile.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_template.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
-require($phpbb_root_path . 'includes/mods/class_garage_guestbook.' . $phpEx);
-require($phpbb_root_path . 'includes/mods/class_garage_model.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_track.' . $phpEx);
 
 //Set The Page Title
@@ -59,7 +52,7 @@ while(list($var, $param) = @each($params))
 }
 
 //Get All Non-String Parameters
-$params = array('cid' => 'CID', 'eid' => 'EID', 'image_id' => 'image_id', 'tid' => 'TID', 'lip' => 'LIP');
+$params = array('cid' => 'CID', 'eid' => 'EID', 'image_id' => 'image_id', 'tid' => 'TID', 'lid' => 'LID');
 while(list($var, $param) = @each($params))
 {
 	$$var = request_var($param, '');
@@ -124,6 +117,8 @@ switch( $mode )
 		//Build Required HTML Components Like Drop Down Boxes.....
 		$garage_template->attach_image('lap');
 		$garage_template->track_dropdown($tracks);
+		$garage_template->track_condition_dropdown();
+		$garage_template->lap_type_dropdown();
 		$template->assign_vars(array(
 			'L_TITLE'  		=> $user->lang['ADD_LAP'],
 			'L_BUTTON'  		=> $user->lang['ADD_LAP'],
@@ -209,11 +204,11 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('track_id' => '');
+		$params = array('track_id' => '', 'condition_id' => '', 'type_id' => '', 'minute' => '', 'second' => '', 'millisecond' => '');
 		$data 	= $garage->process_vars($params);
 
 		//Checks All Required Data Is Present
-		$params = array('track_id');
+		$params = array('track_id', 'condition_id', 'type_id', 'minute', 'second', 'millisecond');
 		$garage->check_required_vars($params);
 
 		//Update The Dynorun With Data Acquired
@@ -317,11 +312,20 @@ switch( $mode )
 		$redirect = $garage->process_vars($params);
 
 		//Build All Required HTML
+		$tracks = $garage_track->get_all_tracks();
+
+		//Build Required HTML Components Like Drop Down Boxes.....
+		$garage_template->track_dropdown($tracks, $data['track_id']);
+		$garage_template->track_condition_dropdown($data['condition_id']);
+		$garage_template->lap_type_dropdown($data['type_id']);
 		$template->assign_vars(array(
 			'L_TITLE'  		=> $user->lang['EDIT_LAP'],
 			'L_BUTTON'  		=> $user->lang['EDIT_LAP'],
 			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;CID=$cid&amp;LID=$lid"),
 			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=manage_lap_gallery&amp;CID=$cid&amp;LID=$lid"),
+			'MINUTE' 		=> $data['minute'],
+			'SECOND' 		=> $data['second'],
+			'MILLISECOND' 		=> $data['millisecond'],
 			'CID' 			=> $cid,
 			'LID' 			=> $lid,
 			'PENDING_REDIRECT'	=> $redirect['PENDING'],

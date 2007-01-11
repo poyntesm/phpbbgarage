@@ -277,7 +277,12 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_tracks (
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_laps (
 		`id` int(10) NOT NULL auto_increment,
 		`garage_id` int(10) NOT NULL default '0',
-		`track_id` int(10) NOT NULL default '0'
+		`track_id` int(10) NOT NULL default '0',
+		`condition_id` int(10) NOT NULL default '0',
+		`type_id` int(10) NOT NULL default '0',
+		`minute` int(2) NOT NULL default '0',
+		`second` int(2) NOT NULL default '0',
+		`millisecond` int(2) NOT NULL default '0',
 		`pending` tinyint(1) NOT NULL default '1',
 		PRIMARY KEY  (`id`)
 	)";

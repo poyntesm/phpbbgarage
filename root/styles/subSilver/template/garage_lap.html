@@ -65,11 +65,23 @@ function build_model_list()
 				</tr>
 				<tr>
 					<td class="row1" width="30%"><span class="gen"><b>{L_TRACK}</b></span>&nbsp;<span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td>
-					<td class="row2"><select id="make_id" name="make_id" ><option value="">{L_SELECT_TRACK}</option><option value="">------</option><!-- BEGIN track --><option value="{track.VALUE}" <!-- IF track.S_SELECTED -->selected="selected"<!-- ENDIF -->>{track.TEXT}</option><!-- END track --></select>
+					<td class="row2"><select id="track_id" name="track_id" ><option value="">{L_SELECT_TRACK}</option><option value="">------</option><!-- BEGIN track --><option value="{track.VALUE}" <!-- IF track.S_SELECTED -->selected="selected"<!-- ENDIF -->>{track.TEXT}</option><!-- END track --></select>
 					<!-- IF S_DISPLAY_ADD_TRACK -->
 						&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="{U_ADD_TRACK}">{L_HERE}</a></span>
 					<!-- ENDIF -->
 					</td>
+				</tr>
+				<tr>
+					<td class="row1" width="30%"><span class="gen"><b>{L_TRACK_CONDITION}</b></span>&nbsp;<span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td>
+					<td class="row2"><select id="condition_id" name="condition_id" ><option value="">{L_SELECT_CONDITION}</option><option value="">------</option><!-- BEGIN condition --><option value="{condition.VALUE}" <!-- IF condition.S_SELECTED -->selected="selected"<!-- ENDIF -->>{condition.TEXT}</option><!-- END condition --></select></td>
+				</tr>
+				<tr>
+					<td class="row1" width="30%"><span class="gen"><b>{L_LAP_TYPE}</b></span>&nbsp;<span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td>
+					<td class="row2"><select id="type_id" name="type_id" ><option value="">{L_SELECT_TYPE}</option><option value="">------</option><!-- BEGIN type --><option value="{type.VALUE}" <!-- IF type.S_SELECTED -->selected="selected"<!-- ENDIF -->>{type.TEXT}</option><!-- END type --></select></td>
+				</tr>
+				<tr>
+					<td class="row1" width="35%"><span class="gen"><b>{L_LAP_TIME}</b></span>&nbsp;<span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td>
+					<td class="row2"><b>M</b><input name="minute" type="text" class="post" size="2" maxlength="2" value="{MINUTE}" />&nbsp;<b>S</b><input name="second" type="text" class="post" size="2" maxlength="2" value="{SECOND}" />&nbsp;<b>MS</b><input name="millisecond" type="text" class="post" size="2" maxlength="3" value="{MILLISECOND}" /></td>
 				</tr>
 
 				<!-- INCLUDE garage_image_attach.html -->

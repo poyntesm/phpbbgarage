@@ -314,6 +314,34 @@ function confirm_delete_dynorun (car_id, rr_id)
 			<br />
 			<!-- END dynorun -->
 
+			<!-- BEGIN tracktime -->
+			<table width="100%" cellpadding="1" cellspacing="1" border="0" class="tablebg">
+				<tr>
+					<th colspan="11">{L_LAPS}</th>
+				</tr>
+				<tr>
+					<td class="cat" ></td>
+					<td class="cat" ><span class="gen">{L_TRACK}</span></td>
+					<td class="cat" ><span class="gen">{L_CONDITION}</span></td>
+					<td class="cat" ><span class="gen">{L_TYPE}</span></td>
+					<td class="cat" ><span class="gen">{L_TIME}</span>&nbsp;<span class="gensmall">(M:S:MS)</span></td>
+					<!-- IF S_DISPLAY_VEHICLE_OWNER --><td class="cat" ></td><!-- ENDIF -->
+
+				</tr>
+				<!-- BEGIN lap -->
+				<tr>
+	  				<td class="row1" align="center"><span class="gensmall"><!-- IF tracktime.lap.U_IMAGE --><a href="{tracktime.lap.U_IMAGE}" target="_blank">{tracktime.lap.IMAGE}</a><!-- ENDIF --></span></td>
+					<td class="row1" align="center"><span class="gensmall"><a href="{tracktime.lap.U_TRACK}">{tracktime.lap.TRACK}</a></span></td>
+					<td class="row1" align="center"><span class="gensmall">{tracktime.lap.CONDITION}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{tracktime.lap.TYPE}</span></td>
+					<td class="row1" align="center"><span class="gensmall"><a href="{tracktime.lap.U_LAP}">{tracktime.lap.MINUTE}.{tracktime.lap.SECOND}.{tracktime.lap.MILLISECOND}</a></span></td>
+					<!-- IF S_DISPLAY_VEHICLE_OWNER--><td class="row1" align="right"><span class="gensmall"><!-- IF tracktime.lap.U_EDIT --><a href="{tracktime.lap.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF tracktime.lap.U_DELETE--><a href="{tracktime.lap.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
+				</tr>
+				<!-- END lap -->
+			</table>
+			<br />
+			<!-- END tracktime -->
+
 			<!-- BEGIN category -->
  			<table width="100%" cellpadding="1" cellspacing="1" border="0" class="tablebg">
    				<tr>

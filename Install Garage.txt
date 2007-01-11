@@ -455,51 +455,6 @@ p.*
 # 
 #-----[ OPEN ]----- 
 # 
-includes/constants.php
-
-#
-#-----[ FIND ]------------------------------------------
-#
-<?php
-
-#
-#-----[ AFTER, ADD ]------------------------------------------
-#
-//-- mod : Garage ----------------------------------------------------------------------------------------------------------
-#
-#-----[ FIND ]------------------------------------------
-#
-?>
-
-#
-#-----[ BEFORE, ADD ]------------------------------------------
-#
-//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-define('GARAGE_TABLE', $table_prefix.'garage');
-define('GARAGE_CONFIG_TABLE', $table_prefix.'garage_config');
-define('GARAGE_CATEGORIES_TABLE', $table_prefix.'garage_categories');
-define('GARAGE_GALLERY_TABLE', $table_prefix.'garage_gallery');
-define('GARAGE_GUESTBOOKS_TABLE', $table_prefix.'garage_guestbooks');
-define('GARAGE_IMAGES_TABLE', $table_prefix.'garage_images');
-define('GARAGE_MAKES_TABLE', $table_prefix.'garage_makes');
-define('GARAGE_MODELS_TABLE', $table_prefix.'garage_models');
-define('GARAGE_MODS_TABLE', $table_prefix.'garage_mods');
-define('GARAGE_QUARTERMILE_TABLE', $table_prefix.'garage_quartermile');
-define('GARAGE_DYNORUN_TABLE', $table_prefix.'garage_dynorun');
-define('GARAGE_BUSINESS_TABLE', $table_prefix.'garage_business');
-define('GARAGE_INSURANCE_TABLE', $table_prefix.'garage_insurance');
-define('GARAGE_RATING_TABLE', $table_prefix.'garage_rating');
-define('GARAGE_VEHICLE_FIELDS_TABLE', $table_prefix.'garage_vehicle_fields');
-define('GARAGE_VEHICLE_FIELDS_DATA_TABLE', $table_prefix.'garage_vehicle_fields_data');
-define('GARAGE_VEHICLE_FIELDS_LANG_TABLE', $table_prefix.'garage_vehicle_fields_lang');
-define('GARAGE_VEHICLE_LANG_TABLE', $table_prefix.'garage_vehicle_lang');
-define('GARAGE_UPLOAD_PATH', 'garage/upload/');
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-
-# 
-#-----[ OPEN ]----- 
-# 
 includes/functions.php
 
 #
@@ -548,8 +503,8 @@ $phpbb_root_path
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 		'U_GARAGE' 			=> append_sid("{$phpbb_root_path}garage.$phpEx"),
-		'U_QUARTERMILE' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=quartermile'),
-		'U_DYNORUN' 			=> append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=dynorun'),
+		'U_QUARTERMILE' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=quartermile_table'),
+		'U_DYNORUN' 			=> append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=dynorun_table'),
 		'S_DISPLAY_GARAGE'		=> ($garage_config['enable_garage_header']) ? 1 : 0,
 		'S_DISPLAY_QUARTERMILE'		=> ($garage_config['enable_quartermile_header']) ? 1 : 0,
 		'S_DISPLAY_DYNORUN'		=> ($garage_config['enable_dynorun_header']) ? 1 : 0,
@@ -572,7 +527,7 @@ includes/acp/acp_styles.php
 #-----[ AFTER, ADD ]------------------------------------------
 #
 			'garage'	=> array(
-				'garage_vehicle_img_attached', 'garage_slip_img_attached', 'garage_icon_garage', 'garage_main_menu', 'garage_browse', 'garage_search', 'garage_quartermile_table', 'garage_dynorun_table', 'garage_garage_review', 'garage_shop_review', 'garage_insurance_review', 'garage_create_vehicle', 'garage_edit_vehicle', 'garage_delete_vehicle', 'garage_view_vehicle', 'garage_add_modification', 'garage_add_insurance', 'garage_add_dynorun', 'garage_add_quartermile', 'garage_manage_gallery', 'garage_edit', 'garage_delete', 'garage_main_vehicle', 'garage_no_thumb', 'garage_show_details', 'garage_hide_details', 'garage_move_up', 'garage_move_down', 'garage_set_approved', 'garage_set_pending',
+				'garage_vehicle_img_attached', 'garage_slip_img_attached', 'garage_icon_garage', 'garage_main_menu', 'garage_browse', 'garage_search', 'garage_quartermile_table', 'garage_dynorun_table', 'garage_garage_review', 'garage_shop_review', 'garage_insurance_review', 'garage_create_vehicle', 'garage_edit_vehicle', 'garage_delete_vehicle', 'garage_view_vehicle', 'garage_add_modification', 'garage_add_insurance', 'garage_add_dynorun', 'garage_add_quartermile', 'garage_add_lap', 'garage_manage_gallery', 'garage_edit', 'garage_delete', 'garage_main_vehicle', 'garage_no_thumb', 'garage_show_details', 'garage_hide_details', 'garage_move_up', 'garage_move_down', 'garage_set_approved', 'garage_set_pending',
 			),
 # 
 #-----[ OPEN ]----- 
@@ -638,6 +593,8 @@ $lang = array_merge($lang, array(
 	'MCP_GARAGE_UNAPPROVED_BUSINESS'		=> 'Business\'s awaiting approval',
 	'MCP_GARAGE_UNAPPROVED_QUARTERMILES'		=> 'Quartermiles awaiting approval',
 	'MCP_GARAGE_UNAPPROVED_DYNORUNS'		=> 'Dynoruns awaiting approval',
+	'MCP_GARAGE_UNAPPROVED_LAPS'			=> 'Laps awaiting approval',
+	'MCP_GARAGE_UNAPPROVED_TRACKS'			=> 'Tracks awaiting approval', 
 
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
@@ -751,6 +708,7 @@ language/en/acp/styles.php
 	'IMG_GARAGE_ADD_MODIFICATION'	=> 'Add modification',
 	'IMG_GARAGE_ADD_INSURANCE'	=> 'Add insurance',
 	'IMG_GARAGE_ADD_DYNORUN'	=> 'Add dynorun',
+	'IMG_GARAGE_ADD_LAP'		=> 'Add lap',
 	'IMG_GARAGE_ADD_QUARTERMILE'	=> 'Add quartermile',
 	'IMG_GARAGE_MANAGE_GALLERY'	=> 'Manage vehicle gallery',
 	'IMG_GARAGE_EDIT'		=> 'Edit',
@@ -800,6 +758,7 @@ img_garage_add_modification	= {LANG}/garage_add_modification.gif*33*130
 img_garage_add_insurance	= {LANG}/garage_add_insurance.gif*33*130
 img_garage_add_dynorun		= {LANG}/garage_add_dynorun.gif*33*130
 img_garage_add_quartermile	= {LANG}/garage_add_quartermile.gif*33*130
+img_garage_add_lap		= {LANG}/garage_add_lap.gif*33*130
 img_garage_manage_gallery	= {LANG}/garage_manage_gallery.gif*33*130
 img_garage_edit			= {LANG}/garage_edit.gif*16*16
 img_garage_delete		= {LANG}/garage_delete.gif*16*16
