@@ -416,6 +416,23 @@ class mcp_garage
 				for ($i = 0, $count = sizeof($data);$i < $count; $i++)
 				{
 					$template->assign_block_vars('lap_row', array(
+						'ID'		=> $data[$i]['lid'],
+						'TRACK'		=> $data[$i]['title'],
+						'CONDITION'	=> $garage_track->get_track_condition($data[$i]['condition_id']),
+						'TYPE'		=> $garage_track->get_lap_type($data[$i]['type_id']),
+						'EDIT'		=> ($garage_config['enable_images']) ? $user->img('garage_edit', 'EDIT') : $user->lang['EDIT'],
+						'MINUTE'	=> $data[$i]['minute'],
+						'SECOND'	=> $data[$i]['second'],
+						'MILLISECOND'	=> $data[$i]['millisecond'],
+						'USERNAME'	=> $data[$i]['username'],
+						'VEHICLE'	=> $data[$i]['vehicle'],
+						'IMAGE'		=> $user->img('garage_slip_img_attached', 'SLIP_IMAGE_ATTACHED'),
+						'U_PROFILE'	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $data[$i]['user_id']),
+						'U_VEHICLE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=" . $data[$i]['id']),
+						'U_IMAGE'	=> ($data[$i]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_image&amp;image_id=". $data[$i]['attach_id']) : '',
+						'U_TRACK'	=> append_sid("garage_track.$phpEx?mode=view_track&amp;TID=".$data[$i]['track_id']."&amp;CID=". $data[$i]['garage_id']),
+						'U_LAP'		=> append_sid("garage_track.$phpEx?mode=view_lap&amp;LID=".$data[$i]['lid']."&amp;CID=". $data[$i]['garage_id']),
+						'U_EDIT'	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;LID=" . $data[$i]['lid'].  "&amp;redirect=MCP"),
 					));
 				}
 
@@ -430,8 +447,8 @@ class mcp_garage
 				{
 					$template->assign_block_vars('track_row', array(
 						'U_EDIT'	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_track&amp;TID=" . $data[$i]['id'].  "&amp;redirect=MCP"),
-						'ID'	=> $data[$i]['id'],
-						'TITLE'	=> $data[$i]['title'],
+						'ID'		=> $data[$i]['id'],
+						'TITLE'		=> $data[$i]['title'],
 						'EDIT'		=> ($garage_config['enable_images']) ? $user->img('garage_edit', 'EDIT') : $user->lang['EDIT'],
 					));
 				}

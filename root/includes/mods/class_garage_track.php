@@ -91,7 +91,7 @@ class garage_track
 			'pending'	=> ($garage_config['enable_lap_approval'] == '1') ? 1 : 0
 		);
 
-		$sql = 'UPDATE ' . GARAGE_DYNORUNS_TABLE . '
+		$sql = 'UPDATE ' . GARAGE_LAPS_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
 			WHERE id = $lid AND garage_id = $cid";
 
@@ -190,7 +190,7 @@ class garage_track
 	// Returns Count Of Lap Images
 	// Usage: count_lap_images('lap id');
 	/*========================================================================*/
-	function count_lap_images($rrid)
+	function count_lap_images($lid)
 	{
 		global $db;
 
@@ -282,7 +282,7 @@ class garage_track
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id, g.made_year, g.user_id, mk.make, md.model, u.username, u.user_id, t.title, l.*, i.attach_id as image_id, l.id as lid, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
+			'SELECT'	=> 'g.id, g.made_year, g.user_id, mk.make, md.model, u.username, u.user_id, t.title, l.*, i.attach_id, l.id as lid, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
 			'FROM'		=> array(
 				GARAGE_LAPS_TABLE	=> 'l',
 			),
@@ -305,7 +305,7 @@ class garage_track
 				)
 				,array(
 					'FROM'	=> array(GARAGE_LAP_GALLERY_TABLE => 'lg'),
-					'ON'	=> 'l.id = lg.dynorun_id'
+					'ON'	=> 'l.id = lg.lap_id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
@@ -404,7 +404,7 @@ class garage_track
 				)
 			),
 			'WHERE'		=>	"t.track_id = $tid",
-			'ORDER_BY'	=>	'l.id'
+			'ORDER_BY'	=>	'l.track_id, l.minute, l.second, l.millisecond'
 		));
 
 		$result = $db->sql_query($sql);

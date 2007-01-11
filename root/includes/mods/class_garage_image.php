@@ -255,6 +255,26 @@ class garage_image
 	}
 
 	/*========================================================================*/
+	// Inserts Existing Image Into Lap Gallery
+	// Usage: insert_lap_gallery_image('image id', 1|0);
+	/*========================================================================*/
+	function insert_lap_gallery_image($image_id, $hilite)
+	{
+		global $db, $cid, $lid;
+
+		$sql = 'INSERT INTO ' . GARAGE_LAP_GALLERY_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+			'garage_id'	=> $cid,
+			'lap_id'	=> $lid,
+			'image_id'	=> $image_id,
+			'hilite'	=> $hilite)
+		);
+
+		$db->sql_query($sql);
+
+		return;
+	}
+
+	/*========================================================================*/
 	// Check GD Version Available
 	// Usage: gd_version_check();
 	/*========================================================================*/

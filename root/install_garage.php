@@ -437,6 +437,7 @@ $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_browse` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_search` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_quartermile_table` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_lap_table` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_dynorun_table` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_garage_review` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_shop_review` text NOT NULL";
@@ -467,7 +468,7 @@ $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_icon_g
 $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_main_menu = '{LANG}/garage_main_menu.gif*33*130'";
 $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_browse = '{LANG}/garage_browse.gif*33*130'";
 $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_search = '{LANG}/garage_search.gif*33*130'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_quartermile_table = '{LANG}/garage_quartermile_table.gif*33*130'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_lap_table = '{LANG}/garage_lap_table.gif*33*130'";
 $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_dynorun_table = '{LANG}/garage_dynorun_table.gif*33*130'";
 $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_garage_review = '{LANG}/garage_garage_review.gif*33*130'";
 $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_shop_review = '{LANG}/garage_shop_review.gif*33*130'";

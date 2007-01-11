@@ -62,6 +62,7 @@ class acp_garage
 						'enable_shop_review_menu' 		=> array('lang' => 'ENABLE_SHOP_REVIEW_MENU', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_quartermile_menu' 		=> array('lang' => 'ENABLE_QUARTERMILE_MENU', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_dynorun_menu' 			=> array('lang' => 'ENABLE_DYNORUN_MENU', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_lap_menu' 			=> array('lang' => 'ENABLE_LAP_MENU', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_garage_header' 			=> array('lang' => 'ENABLE_GARAGE_HEADER', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_quartermile_header' 		=> array('lang' => 'ENABLE_QUARTERMILE_HEADER', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_dynorun_header'			=> array('lang' => 'ENABLE_DYNORUN_HEADER', 'type' => 'radio:yes_no', 'explain' => true),

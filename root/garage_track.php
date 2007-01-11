@@ -349,11 +349,11 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('track_id' => '');
+		$params = array('track_id' => '', 'condition_id' => '', 'type_id' => '', 'minute' => '', 'second' => '', 'millisecond' => '', 'pending_redirect' => '');
 		$data 	= $garage->process_vars($params);
 
 		//Checks All Required Data Is Present
-		$params = array('track_id');
+		$params = array('track_id', 'condition_id', 'type_id', 'minute', 'second', 'millisecond');
 		$garage->check_required_vars($params);
 
 		//Update The Dynorun With Data Acquired
@@ -585,6 +585,13 @@ switch( $mode )
 
 		$template->assign_vars(array(
 			'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $data['user_id']),
+			'U_VIEW_TRACK' 		=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=view_track&amp;TID=" . $data['track_id']),
+			'TRACK'			=> $data['title'],
+			'CONDITION'		=> $garage_track->get_track_condition($data['condition_id']),
+			'TYPE'			=> $garage_track->get_lap_type($data['type_id']),
+			'MINUTE'		=> $data['minute'],
+			'SECOND'		=> $data['second'],
+			'MILLISECOND'		=> $data['millisecond'],
 			'YEAR' 			=> $data['made_year'],
 			'MAKE' 			=> $data['make'],
 			'MODEL' 		=> $data['model'],

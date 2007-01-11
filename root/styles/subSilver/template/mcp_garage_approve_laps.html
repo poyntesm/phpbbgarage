@@ -4,24 +4,36 @@
 
 <table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
 <tr> 
-	<th>&nbsp;{L_LAP}&nbsp;</th>
+	<th>&nbsp;</th>
+	<th>&nbsp;{L_USERNAME}&nbsp;</th>
+	<th>&nbsp;{L_VEHICLE}&nbsp;</th>
+	<th>{L_TRACK}</td>
+	<th>{L_CONDITION}</td>
+	<th>{L_TYPE}</td>
+	<th>{L_TIME}&nbsp;<span class="gensmall">(M:S:MS)</span></td>
 	<th>&nbsp;{L_EDIT}&nbsp;</th>
 	<th width="5%">&nbsp;{L_SELECT}&nbsp;</th>
 </tr>
 <!-- BEGIN lap_row -->
 
 	<!-- IF lap_row.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{lap_row.TITLE}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap"><!-- IF lap_row.U_IMAGE --><a href="{lap_row.U_IMAGE}" target="_blank">{lap_row.IMAGE}</a><!-- ENDIF --></td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap"><a href="{lap_row.U_PROFILE}" class="gen">{lap_row.USERNAME}</a></td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap"><a href="{lap_row.U_VEHICLE}" class="gen">{lap_row.VEHICLE}</a></td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{lap_row.TRACK}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{lap_row.CONDITION}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{lap_row.TYPE}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{lap_row.MINUTE}.{lap_row.SECOND}.{lap_row.MILLISECOND}</td>
 		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap"><a href="{lap_row.U_EDIT}">{lap_row.EDIT}</a></td>
 		<td align="center"><input type="checkbox" class="radio" name="lap_id_list[]" value="{lap_row.ID}" /></td>
 	</tr>
 <!-- BEGINELSE -->
 	<tr>
-		<td class="row1" colspan="2" height="30" align="center" valign="middle"><span class="gen">{L_NO_LAPS_PENDING}</span></td>
+		<td class="row1" colspan="9" height="30" align="center" valign="middle"><span class="gen">{L_NO_LAPS_PENDING}</span></td>
 	</tr>
 <!-- END lap_row -->
 <tr>
-	<td class="cat" colspan="3" align="center"><input class="btnmain" type="submit" name="action[approve_lap]" value="{L_APPROVE}" />&nbsp;&nbsp;<input class="btnlite" type="submit" name="action[disapprove_lap]" value="{L_DISAPPROVE}" /></td>
+	<td class="cat" colspan="9" align="center"><input class="btnmain" type="submit" name="action[approve_lap]" value="{L_APPROVE}" />&nbsp;&nbsp;<input class="btnlite" type="submit" name="action[disapprove_lap]" value="{L_DISAPPROVE}" /></td>
 </tr>
 </table>
 

@@ -127,10 +127,11 @@ switch( $mode )
 		break;
 
 
-	//Browse, Quartermile Table And Dynorun Table Are Really Just A Search, How Cool Is That :)
+	//Browse, Quartermile Table, Dynorun Table & Lap Table Are Really Just A Search, How Cool Is That :)
 	case 'browse':
 	case 'quartermile_table':
 	case 'dynorun_table':
+	case 'lap_table':
 	case 'search_results':
 
 		//Handle Some Mode Specific Things Like Navlinks & Display Defaults
@@ -160,6 +161,15 @@ switch( $mode )
 				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=$mode"))
 			);
 			$default_display = 'dynoruns';
+		}
+		elseif ($mode == 'lap_table')
+		{
+			//Build Navlinks
+			$template->assign_block_vars('navlinks', array(
+				'FORUM_NAME'	=> $user->lang['LAP_TABLE'],
+				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=$mode"))
+			);
+			$default_display = 'laps';
 		}
 		else
 		{
@@ -350,6 +360,10 @@ switch( $mode )
 					'SECOND'	=> $results_data[$i]['second'],
 					'MILLISECOND'	=> $results_data[$i]['millisecond'],
 					'IMAGE'		=> $user->img('garage_slip_img_attached', 'SLIP_IMAGE_ATTACHED'),
+					'USERNAME'	=> $results_data[$i]['username'],
+					'VEHICLE'	=> $results_data[$i]['vehicle'],
+					'U_VIEWPROFILE'	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $results_data[$i]['user_id']),
+					'U_VIEWVEHICLE'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" . $results_data[$i]['garage_id']),
 					'U_IMAGE'	=> ($results_data[$i]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_image&amp;image_id=". $results_data[$i]['attach_id']) : '',
 					'U_TRACK'	=> append_sid("garage_track.$phpEx?mode=view_track&amp;TID=".$results_data[$i]['track_id']."&amp;CID=". $results_data[$i]['garage_id']),
 					'U_LAP'		=> append_sid("garage_track.$phpEx?mode=view_lap&amp;LID=".$results_data[$i]['lid']."&amp;CID=". $results_data[$i]['garage_id']),

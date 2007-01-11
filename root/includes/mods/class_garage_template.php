@@ -70,6 +70,7 @@ class garage_template
 			'U_GARAGE_GARAGE_REVIEW' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=garage_review"),
 			'U_GARAGE_QUARTERMILE_TABLE' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=quartermile_table"),
 			'U_GARAGE_DYNORUN_TABLE' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=dynorun_table"),
+			'U_GARAGE_LAP_TABLE' 			=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=lap_table"),
 			'U_GARAGE_CREATE_VEHICLE' 		=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_vehicle"),
 			'MAIN' 					=> ($garage_config['enable_images']) ? $user->img('garage_main_menu', 'MAIN_MENU') : $user->lang['MAIN_MENU'],
 			'BROWSE' 				=> ($garage_config['enable_images']) ? $user->img('garage_browse', 'BROWSE_GARAGE') : $user->lang['BROWSE_GARAGE'],
@@ -79,6 +80,7 @@ class garage_template
 			'GARAGE_REVIEW' 			=> ($garage_config['enable_images']) ? $user->img('garage_garage_review', 'GARAGE_REVIEW') : $user->lang['GARAGE_REVIEW'],
 			'QUARTERMILE_TABLE' 			=> ($garage_config['enable_images']) ? $user->img('garage_quartermile_table', 'QUARTERMILE_TABLE') : $user->lang['QUARTERMILE_TABLE'],
 			'DYNORUN_TABLE' 			=> ($garage_config['enable_images']) ? $user->img('garage_dynorun_table', 'DYNORUN_TABLE') : $user->lang['DYNORUN_TABLE'],
+			'LAP_TABLE' 				=> ($garage_config['enable_images']) ? $user->img('garage_lap_table', 'LAP_TABLE') : $user->lang['LAP_TABLE'],
 			'CREATE_VEHICLE' 			=> ($garage_config['enable_images']) ? $user->img('garage_create_vehicle', 'CREATE_VEHICLE') : $user->lang['CREATE_VEHICLE'],
 			'S_GARAGE_DISPLAY_MAIN' 		=> ($garage_config['enable_index_menu']) ? true : false,
 			'S_GARAGE_DISPLAY_BROWSE' 		=> ($garage_config['enable_browse_menu']) ? true : false,
@@ -88,6 +90,7 @@ class garage_template
 			'S_GARAGE_DISPLAY_GARAGE_REVIEW'	=> ($garage_config['enable_garage_review_menu']) ? true : false,
 			'S_GARAGE_DISPLAY_QUARTERMILE_TABLE' 	=> ($garage_config['enable_quartermile_menu']) ? true : false,
 			'S_GARAGE_DISPLAY_DYNORUN_TABLE' 	=> ($garage_config['enable_dynorun_menu']) ? true : false,
+			'S_GARAGE_DISPLAY_LAP_TABLE' 		=> ($garage_config['enable_lap_menu']) ? true : false,
 			'S_GARAGE_DISPLAY_UPDATED_VEHICLES' 	=> ($garage_config['enable_latest_vehicle_index']) ? true : false,
 			'S_GARAGE_DISPLAY_CREATE_VEHICLE'	=> ($auth->acl_get('u_garage_add_vehicle')) ? true : false)
 		);
