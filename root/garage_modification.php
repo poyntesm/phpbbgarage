@@ -488,7 +488,7 @@ switch( $mode )
 		for ($i = 0, $count = sizeof($data);$i < $count; $i++)
 		{
 			$template->assign_block_vars('pic_row', array(
-				'U_IMAGE'	=> (($data[$i]['attach_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location']))) ? append_sid("{$phpbb_root_path}garage. $phpEx", "?mode=view_image&amp;image_id=" . $data[$i]['attach_id']) : '',
+				'U_IMAGE'	=> (($data[$i]['attach_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location']))) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_image&amp;image_id=" . $data[$i]['attach_id']) : '',
 				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=remove_modification_image&amp;&amp;CID=$cid&amp;MID=$mid&amp;image_id=" . $data[$i]['attach_id']),
 				'U_SET_HILITE'	=> ($data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=set_modification_hilite&amp;image_id=" . $data[$i]['attach_id'] . "&amp;CID=$cid&amp;MID=$mid") : '',
 				'IMAGE' 	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'],

@@ -562,7 +562,7 @@ class garage_image
 	
 			//Lets Get Image Width & Height
 			$data['width'] 	= $this->get_image_width($data['location']);
-			$data['height'] = $this->get_image_width($data['location']);
+			$data['height'] = $this->get_image_height($data['location']);
 
 			//Check If Image Breaches Site Rules...If So Just Resize It To Required Size.
 			if ( ($data['width'] > $garage_config['max_image_resolution']) or ($data['height'] > $garage_config['max_image_resolution']) )
@@ -573,13 +573,14 @@ class garage_image
 				if ($data['width'] > $data['height'])
 				{
 					$resize_width = $garage_config['max_image_resolution'];
-					$resize_height = $data['height'] / 100 * ($garage_config['max_image_resolution'] / $data['width']);
+					$resize_height = ($garage_config['max_image_resolution'] / $data['width']) * $data['height'];
 				}
 				else
 				{
-					$resize_width =  $data['width'] / 100 * ($garage_config['max_image_resolution'] / $data['height']);
+					$resize_width =  ($garage_config['max_image_resolution'] / $data['height']) * $data['width'];
 					$resize_height = $garage_config['max_image_resolution'];
 				}
+
 				//Resize Images Thats Too Big To A Compliant Size
 				$this->resize_image($data['location'], $data['tmp_location'], $data['ext'], $data['width'], $data['height'], $resize_width, $resize_height);
 				//Delete Original Too Large Image
@@ -898,7 +899,7 @@ class garage_image
 	// Delete A Vehicle Image
 	// Usage: delete_vehicle_image('image id');
 	/*========================================================================*/
-	function delete_vehicle_gallery_image($image_id)
+	function delete_vehicle_image($image_id)
 	{
 		global $garage;
 
