@@ -328,6 +328,13 @@ viewonline.php
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 		case 'garage':
+		case 'garage_vehicle':
+		case 'garage_modification':
+		case 'garage_quartermile':
+		case 'garage_dynorun':
+		case 'garage_track':
+		case 'garage_guestbook':
+		case 'garage_premium':
 			$location = $user->lang['VIEWING_GARAGE'];
 			$location_url = append_sid("{$phpbb_root_path}garage.$phpEx");
 		break;
@@ -448,7 +455,7 @@ p.*
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 		'VEHICLE'			=> $user_cache[$poster_id]['vehicle'],
-		'U_VEHICLE'			=> (isset($user_cache[$poster_id]['garage_id'])) ? append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=view_vehicle&amp;CID=' . $user_cache[$poster_id]['garage_id']) : '',
+		'U_VEHICLE'			=> (isset($user_cache[$poster_id]['garage_id'])) ? append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", 'mode=view_vehicle&amp;CID=' . $user_cache[$poster_id]['garage_id']) : '',
 		'S_DISPLAY_GARAGE_VIEWTOPIC'	=> ($garage_config['integrate_viewtopic']) ? true : false,
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
@@ -615,6 +622,7 @@ language/en/ucp.php
 #
 #-----[ FIND ]------------------------------------------
 #
+// Common language entries
 $lang = array_merge($lang, array(
 
 #
