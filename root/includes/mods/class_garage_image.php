@@ -568,7 +568,7 @@ class garage_image
 			if ( ($data['width'] > $garage_config['max_image_resolution']) or ($data['height'] > $garage_config['max_image_resolution']) )
 			{
 				//Create Temp Filename To Make Compliant Image
-				$data['tmp_location'] = $data['location'] . "_temp";
+				$data['tmp_location'] = "temp_" . $data['location'];
 				//Work Out Image Resize Deminisions To Keep Ratio
 				if ($data['width'] > $data['height'])
 				{
@@ -581,13 +581,15 @@ class garage_image
 					$resize_height = $garage_config['max_image_resolution'];
 				}
 
-				//Resize Images Thats Too Big To A Compliant Size
+				//Resize Images Thats Too Big To A Compliant Size & Set Its Permission
 				$this->resize_image($data['location'], $data['tmp_location'], $data['ext'], $data['width'], $data['height'], $resize_width, $resize_height);
+
 				//Delete Original Too Large Image
 				@unlink($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['location']);
+
 				//Move Compliant Image Back To Original Name & Setup Permissions
-				$move_file($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['tmp_location'], $phpbb_root_path . GARAGE_UPLOAD_PATH . $data['location']);
-				@chmod($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['location'], 0777);
+				rename($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['tmp_location'], $phpbb_root_path . GARAGE_UPLOAD_PATH . $data['location']);
+
 				//Reset Width & Height Values
 				$data['width'] = $resize_width;
 				$data['height'] = $resize_height;
@@ -731,7 +733,7 @@ class garage_image
 
 	/*========================================================================*/
 	// Create Resized Image From Sourcefile 
-	// Usage: resize_image('source file', 'destination file', 'file type', 'width', 'height');
+	// Usage: resize_image('source file', 'destination file', 'file type', 'source width', 'source height', 'width', 'height');
 	/*========================================================================*/
 	function resize_image($source, $destination, $ext, $src_width, $src_height, $resize_width, $resize_height)
 	{
@@ -777,7 +779,7 @@ class garage_image
 			switch ($ext)
 			{
 				case '.jpg':
-					@imagejpeg($dest, $destination_file_name, 80);
+					@imagejpeg($dest, $destination_file_name, 100);
 					break;
 				case '.png':
 					@imagepng($dest, $destination_file_name);
@@ -786,7 +788,7 @@ class garage_image
 					@imagegif($dest, $destination_file_name);
 					break;
 			}
-			@chmod($detination_file_name, 0777);
+			@chmod($destination_file_name, 0777);
 		} 
 
 		//We should ALWAYS clear the RAM used by this.
