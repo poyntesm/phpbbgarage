@@ -63,7 +63,7 @@ class garage_dynorun
 	/*========================================================================*/
 	function update_dynorun($data)
 	{
-		global $db, $rrid, $cid, $garage_config;
+		global $db, $did, $cid, $garage_config;
 
 		$update_sql = array(
 			'garage_id'	=> $cid,
@@ -82,7 +82,7 @@ class garage_dynorun
 
 		$sql = 'UPDATE ' . GARAGE_DYNORUNS_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
-			WHERE id = $rrid AND garage_id = $cid";
+			WHERE id = $did AND garage_id = $cid";
 
 
 		$db->sql_query($sql);
@@ -109,7 +109,7 @@ class garage_dynorun
 		}
 	
 		//Update Quartermile Table For An Matched Times
-		$garage->update_single_field(GARAGE_QUARTERMILES_TABLE, 'rr_id', 'NULL', 'rr_id', $id);	
+		$garage->update_single_field(GARAGE_QUARTERMILES_TABLE, 'dynorun_id', 'NULL', 'dynorun_id', $id);	
 	
 		//Time To Delete The Actual RollingRoad Run Now
 		$garage->delete_rows(GARAGE_DYNORUNS_TABLE, 'id', $id);
@@ -149,11 +149,11 @@ class garage_dynorun
 	// Determines If Image Is Hilite Image
 	// Usage: hilite_exists('dynorun id');
 	/*========================================================================*/
-	function hilite_exists($rrid)
+	function hilite_exists($did)
 	{
 		$hilite = 1;
 
-		if ($this->count_dynorun_images($rrid) > 0)
+		if ($this->count_dynorun_images($did) > 0)
 		{
 			$hilite = 0;
 		}
@@ -165,7 +165,7 @@ class garage_dynorun
 	// Returns Count Of Dynorun Images
 	// Usage: count_dynorun_images('dynorun id');
 	/*========================================================================*/
-	function count_dynorun_images($rrid)
+	function count_dynorun_images($did)
 	{
 		global $db;
 
@@ -177,7 +177,7 @@ class garage_dynorun
 			'FROM'		=> array(
 				GARAGE_DYNORUN_GALLERY_TABLE	=> 'dg',
 			),
-			'WHERE'		=> "dg.dynorun_id = $rrid"
+			'WHERE'		=> "dg.dynorun_id = $did"
 		));
 
 		$result = $db->sql_query($sql);
@@ -192,7 +192,7 @@ class garage_dynorun
 	// Select All Dynorun Data From DB
 	// Usage: get_dynorun('dynorun id');
 	/*========================================================================*/
-	function get_dynorun($rrid)
+	function get_dynorun($did)
 	{
 		global $db;
 
@@ -200,7 +200,7 @@ class garage_dynorun
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'u.*, g.id, g.made_year, g.user_id, mk.make, md.model, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, d.peakpoint, i.attach_id as image_id, i.attach_file, d.id as rr_id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, b.title, d.dynocentre_id',
+			'SELECT'	=> 'u.*, g.id, g.made_year, g.user_id, mk.make, md.model, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, d.peakpoint, i.attach_id as image_id, i.attach_file, d.id as did, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, b.title, d.dynocentre_id',
 
 			'FROM'		=> array(
 				GARAGE_DYNORUNS_TABLE	=> 'd',
@@ -235,7 +235,7 @@ class garage_dynorun
 					'ON'	=> 'd.dynocentre_id = b.id'
 				)
 			),
-			'WHERE'		=>  "d.id = $rrid"
+			'WHERE'		=>  "d.id = $did"
 		));
 
 		$result = $db->sql_query($sql);
@@ -257,7 +257,7 @@ class garage_dynorun
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id, g.made_year, g.user_id, mk.make, md.model, u.username, u.user_id, b.title, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, round(d.peakpoint,0) as peakpoint, i.attach_id as image_id, d.id as rr_id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
+			'SELECT'	=> 'g.id, g.made_year, g.user_id, mk.make, md.model, u.username, u.user_id, b.title, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, round(d.peakpoint,0) as peakpoint, i.attach_id as image_id, d.id as did, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
 			'FROM'		=> array(
 				GARAGE_DYNORUNS_TABLE	=> 'd',
 			),
@@ -316,7 +316,7 @@ class garage_dynorun
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id, g.made_year, g.user_id, mk.make, md.model, u.username, b.title, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, round(d.peakpoint,0) as peakpoint, i.attach_id as image_id, d.id as rr_id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
+			'SELECT'	=> 'g.id, g.made_year, g.user_id, mk.make, md.model, u.username, b.title, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, round(d.peakpoint,0) as peakpoint, i.attach_id as image_id, d.id as did, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
 			'FROM'		=> array(
 				GARAGE_DYNORUNS_TABLE	=> 'd',
 			),
@@ -421,7 +421,7 @@ class garage_dynorun
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'd.*, d.id as rrid, i.*, b.title',
+			'SELECT'	=> 'd.*, d.id as did, i.*, b.title',
 			'FROM'		=> array(
 				GARAGE_DYNORUNS_TABLE	=> 'd',
 			),
@@ -486,7 +486,7 @@ class garage_dynorun
 			$template->assign_block_vars($template_block_row, array(
 				'U_COLUMN_1' 	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=".$vehicle_data['id']),
 				'U_COLUMN_2' 	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=".$vehicle_data['user_id']),
-				'U_COLUMN_3' 	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=view_dynorun&amp;CID=".$vehicle_data['id']."&amp;RRID=".$vehicle_data['rr_id']),
+				'U_COLUMN_3' 	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=view_dynorun&amp;CID=".$vehicle_data['id']."&amp;DID=".$vehicle_data['did']),
 				'COLUMN_1_TITLE'=> $vehicle_data['vehicle'],
 				'COLUMN_2_TITLE'=> $vehicle_data['username'],
 				'COLUMN_3_TITLE'=> $vehicle_data['bhp'] .' ' . $vehicle_data['bhp_unit'] . ' / ' . $vehicle_data['torque'] .' ' . $vehicle_data['torque_unit'] . ' / '. $vehicle_data['nitrous'])

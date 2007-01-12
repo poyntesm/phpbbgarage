@@ -477,8 +477,8 @@ switch( $mode )
 		$template->assign_vars(array(
 			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;CID=$cid&amp;LID=$lid"),
 			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=manage_lap_gallery&amp;CID=$cid&amp;LID=$lid"),
-			'LID' => $lid,
-			'CID' => $cid,
+			'LID' 			=> $lid,
+			'CID' 			=> $cid,
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=insert_lap_image"))
          	);
 
@@ -605,6 +605,82 @@ switch( $mode )
 		break;
 
 	case 'view_track':
+
+		//Let Check The User Is Allowed Perform This Action
+		if (!$auth->acl_get('u_garage_browse'))
+		{
+			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=15"));
+		}
+
+		//Build Page Header ;)
+		page_header($page_title);
+
+		//Set Template Files In Use For This Mode
+		$template->set_filenames(array(
+			'header' => 'garage_header.html',
+			'body'   => 'garage_view_track.html')
+		);
+
+		//Pull Required Modification Data From DB
+		$data = $garage_track->get_track($tid);
+
+		//Build Navlinks
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $data['title'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=view_track&amp;TID=$tid"))
+		);
+
+		//Get All Lap Data
+		$lap_data = $garage_track->get_laps_by_track($tid);
+
+		//Process Each Lap
+       		for ( $i = 0; $i < count($lap_data); $i++ )
+		{
+
+			$template->assign_vars(array(
+				'S_DISPLAY_LAPS' 	=> true,
+			));
+
+			$template->assign_block_vars('lap', array(
+				'CONDITION'	=> $garage_track->get_track_condition($lap_data[$i]['condition_id']),
+				'TYPE'		=> $garage_track->get_lap_type($lap_data[$i]['type_id']),
+				'MINUTE'	=> $lap_data[$i]['minute'],
+				'SECOND'	=> $lap_data[$i]['second'],
+				'MILLISECOND'	=> $lap_data[$i]['millisecond'],
+				'USERNAME'	=> $lap_data[$i]['username'],
+				'VEHICLE'	=> $lap_data[$i]['vehicle'],
+				'IMAGE'		=> $user->img('garage_slip_img_attached', 'SLIP_IMAGE_ATTACHED'),
+				'U_IMAGE'	=> ($lap_data[$i]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_image&amp;image_id=". $lap_data[$i]['attach_id']) : '',
+				'U_VIEWPROFILE'	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $lap_data[$i]['user_id']),
+				'U_VIEWVEHICLE'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" . $lap_data[$i]['garage_id']),
+				'U_LAP'		=> append_sid("garage_track.$phpEx?mode=view_lap&amp;LID=".$lap_data[$i]['lid']."&amp;CID=". $lap_data[$i]['garage_id']),
+			));
+
+               		// Do we have a thumbnail?  If so, our job is simple here :)
+			if ( (empty($lap_data[$i]['attach_thumb_location']) == false) AND ($lap_data[$i]['attach_thumb_location'] != $lap_data[$i]['attach_location']) )
+			{
+				$template->assign_vars(array(
+					'S_DISPLAY_GALLERIES' 	=> true,
+				));
+
+				$template->assign_block_vars('track_image', array(
+					'U_IMAGE' 	=> append_sid('garage.'.$phpEx.'?mode=view_image&amp;image_id='. $lap_data[$i]['attach_id']),
+					'IMAGE_NAME'	=> $lap_data[$i]['attach_file'],
+					'IMAGE_SOURCE'	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $lap_data[$i]['attach_thumb_location'])
+				);
+               		} 
+	       	}
+
+		$template->assign_vars(array(
+			'TRACK'			=> $data['title'],
+			'LENGTH'		=> $data['length'],
+			'MILEAGE_UNIT'		=> $data['mileage_unit'],
+         	));
+
+		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
+		$garage_template->sidemenu();
+
+		break;
 
 		break;
 }

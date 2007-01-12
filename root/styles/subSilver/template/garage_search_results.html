@@ -220,6 +220,10 @@
 					<td class="row1" align="center"><span class="gensmall">{lap.TYPE}</span></td>
 					<td class="row1" align="center"><span class="gensmall"><a href="{lap.U_LAP}">{lap.MINUTE}.{lap.SECOND}.{lap.MILLISECOND}</a></span></td>
 				</tr>
+				<!-- BEGINELSE -->
+				<tr class="row1">
+					<td align="center" colspan="12"><span class="gen">{L_SEARCH_PRODUCED_NO_RESULTS}</span></td>
+				</tr>
 				<!-- END lap -->
 				<tr> 
 					<td class="cat" align="center" height="28" colspan="12"><span class="genmed">{L_LAP_SORTED_BY}&nbsp;<select id="sort" name="sort"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN sort --><option value="{sort.VALUE}" <!-- IF sort.S_SELECTED -->selected="selected"<!-- ENDIF -->>{sort.TEXT}</option><!-- END sort --></select>&nbsp;&nbsp;{L_IN}&nbsp;<select id="order" name="order"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN order --><option value="{order.VALUE}" <!-- IF order.S_SELECTED -->selected="selected"<!-- ENDIF -->>{order.TEXT}</option><!-- END order --></select>&nbsp;&nbsp;<input type="submit" name="submit" value="{L_GO}" class="liteoption" /></td>

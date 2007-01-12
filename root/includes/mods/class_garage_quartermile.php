@@ -48,7 +48,7 @@ class garage_quartermile
 			'quartmph'	=> $data['quartmph'],
 			'date_created'	=> time(),
 			'date_updated'	=> time(),
-			'rr_id'		=> $data['rr_id'],
+			'dynorun_id'	=> $data['dynorun_id'],
 			'pending'	=> ($garage_config['enable_quartermile_approval'] == '1') ? 1 : 0)
 		);
 
@@ -76,7 +76,7 @@ class garage_quartermile
 			'quart'		=> $data['quart'],
 			'quartmph'	=> $data['quartmph'],
 			'date_updated'	=> time(),
-			'rr_id'		=> $data['rr_id'],
+			'dynorun_id'	=> $data['dynorun_id'],
 			'pending'	=> ($garage_config['enable_quartermile_approval'] == '1') ? 1 : 0
 		);
 
@@ -214,7 +214,7 @@ class garage_quartermile
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id, g.user_id, q.id as qmid, qg.image_id, u.username, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.rr_id, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous',
+			'SELECT'	=> 'g.id, g.user_id, q.id as qmid, qg.image_id, u.username, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.dynorun_id, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous',
 			'FROM'		=> array(
 				GARAGE_QUARTERMILES_TABLE	=> 'q',
 			),
@@ -237,7 +237,7 @@ class garage_quartermile
 				)
 				,array(
 					'FROM'	=> array(GARAGE_DYNORUNS_TABLE => 'd'),
-					'ON'	=> 'q.rr_id = d.id'
+					'ON'	=> 'q.dynorun_id = d.id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_QUARTERMILE_GALLERY_TABLE => 'qg'),
@@ -270,7 +270,7 @@ class garage_quartermile
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id as garage_id, u.user_id, g.user_id, q.id as qmid, qg.image_id, u.username, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.rr_id',
+			'SELECT'	=> 'g.id as garage_id, u.user_id, g.user_id, q.id as qmid, qg.image_id, u.username, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.dynorun_id',
 			'FROM'		=> array(
 				GARAGE_QUARTERMILES_TABLE	=> 'q',
 			),
@@ -349,7 +349,7 @@ class garage_quartermile
 				)
 				,array(
 					'FROM'	=> array(GARAGE_DYNORUNS_TABLE => 'd'),
-					'ON'	=> 'q.rr_id = d.id'
+					'ON'	=> 'q.dynorun_id = d.id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_QUARTERMILE_GALLERY_TABLE => 'qg'),

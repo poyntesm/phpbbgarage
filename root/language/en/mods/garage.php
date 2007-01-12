@@ -751,6 +751,7 @@ $lang = array_merge($lang, array(
 	'TRACKDAY'			=> 'Trackday',
 	'QUALIFING'			=> 'Qualifing',
 	'LAP_TIME'			=> 'Lap Time',
+	'TRACK_PICTURES'		=> 'Track Pictures',
 
 ));
 

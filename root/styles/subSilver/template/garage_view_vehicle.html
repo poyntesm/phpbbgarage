@@ -47,11 +47,11 @@ function confirm_delete_quartermile (car_id, qm_id)
 	}
 }
 
-function confirm_delete_dynorun (car_id, rr_id)
+function confirm_delete_dynorun (car_id, did)
 {
 	if ( confirm("{L_CONFIRM_DELETE_DYNORUN}") )
 	{
-		window.location.href = "{U_DELETE_DYNORUN}&RRID=" + rr_id + "&CID=" + car_id;
+		window.location.href = "{U_DELETE_DYNORUN}&DID=" + did + "&CID=" + car_id;
 	}
 }
 // -->

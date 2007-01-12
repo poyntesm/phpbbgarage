@@ -271,6 +271,33 @@ class garage_track
 	}
 
 	/*========================================================================*/
+	// Select Track Data From DB
+	// Usage: get_track('track id');
+	/*========================================================================*/
+	function get_track($tid)
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 't.*',
+
+			'FROM'		=> array(
+				GARAGE_TRACKS_TABLE	=> 't',
+			),
+			'WHERE'		=>  "t.id = $tid"
+		));
+
+		$result = $db->sql_query($sql);
+		$data = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/*========================================================================*/
 	// Select All Pending Laps Data From DB
 	// Usage: get_pending_laps();
 	/*========================================================================*/
@@ -385,14 +412,30 @@ class garage_track
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'l.*, l.id as lid, i.*, t.title',
+			'SELECT'	=> 'l.*, l.id as lid, i.*, t.title, u.username, u.user_id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, g.id as garage_id',
 			'FROM'		=> array(
 				GARAGE_LAPS_TABLE	=> 'l',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
+					'ON'	=> 'l.garage_id =g.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+					'ON'	=> 'g.model_id = md.id and md.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'g.user_id = u.user_id'
+				)
+				,array(
 					'FROM'	=> array(GARAGE_LAP_GALLERY_TABLE => 'lg'),
-					'ON'	=> 'l.id = lg.lap_id'
+					'ON'	=> 'l.id = lg.lap_id and lg.hilite = 1'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
@@ -403,7 +446,7 @@ class garage_track
 					'ON'	=> 'l.track_id = t.id'
 				)
 			),
-			'WHERE'		=>	"t.track_id = $tid",
+			'WHERE'		=>	"l.track_id = $tid",
 			'ORDER_BY'	=>	'l.track_id, l.minute, l.second, l.millisecond'
 		));
 

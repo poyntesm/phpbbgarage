@@ -58,7 +58,7 @@ while(list($var, $param) = @each($params))
 }
 
 //Get All Non-String Parameters
-$params = array('cid' => 'CID', 'mid' => 'MID', 'rrid' => 'RRID', 'qmid' => 'QMID', 'ins_id' => 'INS_ID', 'eid' => 'EID', 'image_id' => 'image_id', 'comment_id' => 'CMT_ID', 'bus_id' => 'BUS_ID');
+$params = array('cid' => 'CID', 'mid' => 'MID', 'did' => 'DID', 'qmid' => 'QMID', 'ins_id' => 'INS_ID', 'eid' => 'EID', 'image_id' => 'image_id', 'comment_id' => 'CMT_ID', 'bus_id' => 'BUS_ID');
 while(list($var, $param) = @each($params))
 {
 	$$var = request_var($param, '');
@@ -146,7 +146,7 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params	= array('rt' => '', 'sixty' => '', 'three' => '', 'eighth' => '', 'eighthmph' => '', 'thou' => '', 'quart' => '', 'quartmph' => '', 'rr_id' => '', 'install_comments' => '');
+		$params	= array('rt' => '', 'sixty' => '', 'three' => '', 'eighth' => '', 'eighthmph' => '', 'thou' => '', 'quart' => '', 'quartmph' => '', 'dynorun_id' => '', 'install_comments' => '');
 		$data 	= $garage->process_vars($params);
 
 		//Checks All Required Data Is Present
@@ -226,14 +226,14 @@ switch( $mode )
 		$data = $garage_quartermile->get_quartermile($qmid);
 
 		//If Dynorun Is Already Linked Display Dropdown Correctly
-		if ((!empty($data['rr_id'])) AND ($count > 0))
+		if ((!empty($data['dynorun_id'])) AND ($count > 0))
 		{
 			$bhp_statement = $data['bhp'] . ' BHP @ ' . $data['bhp_unit'];
 			$template->assign_block_vars('link_rr', array());
-			$garage_template->dynorun_dropdown($data['rr_id'], $bhp_statement, $cid);
+			$garage_template->dynorun_dropdown($data['dynorun_id'], $bhp_statement, $cid);
 		}
 		//Allow User To Link To Dynorun
-		else if ((empty($data['rr_id'])) AND ($count > 0))
+		else if ((empty($data['dynorun_id'])) AND ($count > 0))
 		{
 			$template->assign_block_vars('link_rr', array());
 			$garage_template->dynorun_dropdown(NULL, NULL, $cid);
@@ -276,7 +276,7 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('rt' => '', 'sixty' => '', 'three' => '', 'eighth' => '', 'eighthmph' => '', 'thou' => '', 'quart' => '', 'quartmph' => '', 'rr_id' => '', 'install_comments' => '', 'editupload' => '', 'image_id' => '', 'pending_redirect' => '');
+		$params = array('rt' => '', 'sixty' => '', 'three' => '', 'eighth' => '', 'eighthmph' => '', 'thou' => '', 'quart' => '', 'quartmph' => '', 'dynorun_id' => '', 'install_comments' => '', 'editupload' => '', 'image_id' => '', 'pending_redirect' => '');
 		$data = $garage->process_vars($params);
 
 		//Checks All Required Data Is Present

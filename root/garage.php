@@ -327,7 +327,7 @@ switch( $mode )
 					'U_IMAGE'		=> ($results_data[$i]['attach_id']) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_image&amp;image_id=" . $results_data[$i]['attach_id']) : '',
 					'U_VIEWPROFILE'		=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $results_data[$i]['user_id']),
 					'U_VIEWVEHICLE'		=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" . $results_data[$i]['garage_id']),
-					'U_BHP'			=> append_sid("garage_dynorun.$phpEx?mode=view_dynorun&amp;RRID=".$results_data[$i]['rr_id']."&amp;CID=".$results_data[$i]['garage_id']),
+					'U_BHP'			=> append_sid("garage_dynorun.$phpEx?mode=view_dynorun&amp;DID=".$results_data[$i]['did']."&amp;CID=".$results_data[$i]['garage_id']),
 					'IMAGE'			=> $user->img('garage_vehicle_img_attached', 'QUARTEMILE_IMAGE_ATTACHED'),
 					'USERNAME'		=> $results_data[$i]['username'],
 					'VEHICLE'		=> $results_data[$i]['vehicle'],

@@ -240,11 +240,11 @@ class garage_image
 	/*========================================================================*/
 	function insert_dynorun_gallery_image($image_id, $hilite)
 	{
-		global $db, $cid, $rrid;
+		global $db, $cid, $did;
 
 		$sql = 'INSERT INTO ' . GARAGE_DYNORUN_GALLERY_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 			'garage_id'	=> $cid,
-			'dynorun_id'	=> $rrid,
+			'dynorun_id'	=> $did,
 			'image_id'	=> $image_id,
 			'hilite'	=> $hilite)
 		);
@@ -1236,7 +1236,7 @@ class garage_image
 	// Select Dynorun Gallery Data
 	// Usage: get_dynorun_gallery('vehicle id', 'dynorun id');
 	/*========================================================================*/
-	function get_dynorun_gallery($cid, $rrid)
+	function get_dynorun_gallery($cid, $did)
 	{
 		global $db;
 
@@ -1254,7 +1254,7 @@ class garage_image
 					'ON'	=> 'i.attach_id = dg.image_id'
 				)
 			),
-			'WHERE'		=>  "dg.garage_id = $cid AND dg.dynorun_id = $rrid",
+			'WHERE'		=>  "dg.garage_id = $cid AND dg.dynorun_id = $did",
 			'GROUP_BY'	=>  "dg.id"
 		));
 

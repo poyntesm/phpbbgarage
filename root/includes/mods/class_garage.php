@@ -392,7 +392,7 @@ class garage
 					)
 					,array(
 						'FROM'	=> array(GARAGE_MODIFICATION_GALLERY_TABLE => 'mg'),
-						'ON'	=> 'v.id = mg.garage_id AND mg.hilite = 1'
+						'ON'	=> 'm.id = mg.modification_id AND mg.hilite = 1'
 					)
 					,array(
 						'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
@@ -463,7 +463,7 @@ class garage
 
 			//Handle SQL Part
 			$sql_array = array(
-				'SELECT'	=> "v.id, v.user_id, q.id as qmid, qg.image_id, i.attach_id, i.attach_file, u.username, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.rr_id, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous",
+				'SELECT'	=> "v.id, v.user_id, q.id as qmid, qg.image_id, i.attach_id, i.attach_file, u.username, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.dynorun_id, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous",
 				'FROM'		=> array(
 					GARAGE_QUARTERMILES_TABLE	=> 'q',
 				),
@@ -474,7 +474,7 @@ class garage
 					)
 					,array(
 						'FROM'	=> array(GARAGE_DYNORUNS_TABLE => 'd'),	
-						'ON'	=> 'q.rr_id = d.id'
+						'ON'	=> 'q.dynorun_id = d.id'
 					)
 					,array(
 						'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
@@ -494,7 +494,7 @@ class garage
 					)
 					,array(
 						'FROM'	=> array(GARAGE_QUARTERMILE_GALLERY_TABLE => 'qg'),
-						'ON'	=> 'v.id = qg.garage_id AND qg.hilite = 1'
+						'ON'	=> 'q.id = qg.quartermile_id AND qg.hilite = 1'
 					)
 					,array(
 						'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
@@ -516,7 +516,7 @@ class garage
 
 			//Handle SQL Part
 			$sql_array = array(
-				'SELECT'	=> "v.id, v.made_year, v.user_id, mk.make, md.model, b.title, d.*, i.*, d.id as rr_id, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, u.username",
+				'SELECT'	=> "v.id, v.made_year, v.user_id, mk.make, md.model, b.title, d.*, i.*, d.id as did, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, u.username",
 				'FROM'		=> array(
 					GARAGE_DYNORUNS_TABLE	=> 'd',
 				),
@@ -543,7 +543,7 @@ class garage
 					)
 					,array(
 						'FROM'	=> array(GARAGE_DYNORUN_GALLERY_TABLE => 'dg'),
-						'ON'	=> 'v.id = dg.garage_id AND dg.hilite = 1'
+						'ON'	=> 'd.id = dg.dynorun_id AND dg.hilite = 1'
 					)
 					,array(
 						'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
@@ -596,7 +596,7 @@ class garage
 					)
 					,array(
 						'FROM'	=> array(GARAGE_LAP_GALLERY_TABLE => 'lg'),
-						'ON'	=> 'v.id = lg.garage_id AND lg.hilite = 1'
+						'ON'	=> 'l.id = lg.lap_id AND lg.hilite = 1'
 					)
 					,array(
 						'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),

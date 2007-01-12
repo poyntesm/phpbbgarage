@@ -58,7 +58,7 @@ while(list($var, $param) = @each($params))
 }
 
 //Get All Non-String Parameters
-$params = array('cid' => 'CID', 'mid' => 'MID', 'rrid' => 'RRID', 'qmid' => 'QMID', 'ins_id' => 'INS_ID', 'eid' => 'EID', 'image_id' => 'image_id', 'comment_id' => 'CMT_ID', 'bus_id' => 'BUS_ID');
+$params = array('cid' => 'CID', 'mid' => 'MID', 'did' => 'DID', 'qmid' => 'QMID', 'ins_id' => 'INS_ID', 'eid' => 'EID', 'image_id' => 'image_id', 'comment_id' => 'CMT_ID', 'bus_id' => 'BUS_ID');
 while(list($var, $param) = @each($params))
 {
 	$$var = request_var($param, '');
@@ -171,7 +171,7 @@ switch( $mode )
 		$garage->check_required_vars($params);
 
 		//Update The Dynorun With Data Acquired
-		$rrid = $garage_dynorun->insert_dynorun($data);
+		$did = $garage_dynorun->insert_dynorun($data);
 
 		//Update The Time Now...In Case We Get Redirected During Image Processing
 		$garage_vehicle->update_vehicle_time($cid);
@@ -183,9 +183,9 @@ switch( $mode )
 			if ($garage_image->below_image_quotas())
 			{
 				//Create Thumbnail & DB Entry For Image
-				$image_id = $garage_image->process_image_attached('dynorun', $rrid);
+				$image_id = $garage_image->process_image_attached('dynorun', $did);
 				//Insert Image Into Dynoruns Gallery
-				$hilite = $garage_dynorun->hilite_exists($cid, $rrid);
+				$hilite = $garage_dynorun->hilite_exists($cid, $did);
 				$garage_image->insert_dynorun_gallery_image($image_id, $hilite);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
@@ -198,7 +198,7 @@ switch( $mode )
 		else if (($garage_config['enable_dynorun_image_required'] == '1') AND ($data['bhp'] >= $garage_config['dynorun_image_required_limit']))
 		{
 			//That Time Requires An Image...Delete Entered Time And Notify User
-			$garage_dynorun->delete_dynorun($rrid);
+			$garage_dynorun->delete_dynorun($did);
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=26"));
 		}
 
@@ -217,7 +217,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_dynorun.$phpEx?mode=edit_dynorun&amp;RRID=$rrid&amp;CID=$cid");
+			login_box("garage_dynorun.$phpEx?mode=edit_dynorun&amp;DID=$did&amp;CID=$cid");
 		}
 
 		//Check Vehicle Ownership
@@ -233,7 +233,7 @@ switch( $mode )
 		);
 
 		//Pull Required Dynorun Data From DB
-		$data = $garage_dynorun->get_dynorun($rrid);
+		$data = $garage_dynorun->get_dynorun($did);
 
 		//See If We Got Sent Here By Pending Page...If So We Need To Tell Update To Redirect Correctly
 		$params = array('PENDING' => '');
@@ -250,10 +250,10 @@ switch( $mode )
 		$template->assign_vars(array(
 			'L_TITLE'  		=> $user->lang['EDIT_RUN'],
 			'L_BUTTON'  		=> $user->lang['EDIT_RUN'],
-			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=edit_dynorun&amp;CID=$cid&amp;RRID=$rrid"),
-			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=manage_dynorun_gallery&amp;CID=$cid&amp;RRID=$rrid"),
+			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=edit_dynorun&amp;CID=$cid&amp;DID=$did"),
+			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=manage_dynorun_gallery&amp;CID=$cid&amp;DID=$did"),
 			'CID' 			=> $cid,
-			'RRID' 			=> $rrid,
+			'DID' 			=> $did,
 			'BHP' 			=> $data['bhp'],
 			'TORQUE' 		=> $data['torque'],
 			'BOOST' 		=> $data['boost'],
@@ -273,7 +273,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_dynorun.$phpEx?mode=edit_dynorun&amp;RRID=$rrid&amp;CID=$cid");
+			login_box("garage_dynorun.$phpEx?mode=edit_dynorun&amp;DID=$did&amp;CID=$cid");
 		}
 
 		//Check Vehicle Ownership
@@ -321,7 +321,7 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Delete The Dynorun
-		$garage_dynorun->delete_dynorun($rrid);
+		$garage_dynorun->delete_dynorun($did);
 
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
@@ -348,9 +348,9 @@ switch( $mode )
 			if ($garage_image->below_image_quotas())
 			{
 				//Create Thumbnail & DB Entry For Image
-				$image_id = $garage_image->process_image_attached('dynorun', $rrid);
+				$image_id = $garage_image->process_image_attached('dynorun', $did);
 				//Insert Image Into Dynorun Gallery
-				$hilite = $garage_dynorun->hilite_exists($rrid);
+				$hilite = $garage_dynorun->hilite_exists($did);
 				$garage_image->insert_dynorun_gallery_image($image_id, $hilite);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
@@ -363,7 +363,7 @@ switch( $mode )
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=manage_dynorun_gallery&amp;CID=$cid&amp;RRID=$rrid"));
+		redirect(append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=manage_dynorun_gallery&amp;CID=$cid&amp;DID=$did"));
 
 		break;
 
@@ -391,24 +391,24 @@ switch( $mode )
 		$garage_template->attach_image('dynorun');
 
 		//Pull Dynorun Gallery Data From DB
-		$data = $garage_image->get_dynorun_gallery($cid, $rrid);
+		$data = $garage_image->get_dynorun_gallery($cid, $did);
 
 		//Process Each Image From Dynorun Gallery
 		for ($i = 0, $count = sizeof($data);$i < $count; $i++)
 		{
 			$template->assign_block_vars('pic_row', array(
 				'U_IMAGE'	=> (($data[$i]['attach_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location']))) ? append_sid("{$phpbb_root_path}garage. $phpEx", "?mode=view_image&amp;image_id=" . $data[$i]['attach_id']) : '',
-				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=remove_dynorun_image&amp;&amp;CID=$cid&amp;RRID=$rrid&amp;image_id=" . $data[$i]['attach_id']),
-				'U_SET_HILITE'	=> ($data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=set_dynorun_hilite&amp;image_id=" . $data[$i]['attach_id'] . "&amp;CID=$cid&amp;RRID=$rrid") : '',
+				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=remove_dynorun_image&amp;&amp;CID=$cid&amp;DID=$did&amp;image_id=" . $data[$i]['attach_id']),
+				'U_SET_HILITE'	=> ($data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=set_dynorun_hilite&amp;image_id=" . $data[$i]['attach_id'] . "&amp;CID=$cid&amp;DID=$did") : '',
 				'IMAGE' 	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'],
 				'IMAGE_TITLE' 	=> $data[$i]['attach_file'])
 			);
 		}
 
 		$template->assign_vars(array(
-			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=edit_dynorun&amp;CID=$cid&amp;RRID=$rrid"),
-			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=manage_dynorun_gallery&amp;CID=$cid&amp;RRID=$rrid"),
-			'RRID' => $rrid,
+			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=edit_dynorun&amp;CID=$cid&amp;DID=$did"),
+			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=manage_dynorun_gallery&amp;CID=$cid&amp;DID=$did"),
+			'DID' => $did,
 			'CID' => $cid,
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=insert_dynorun_image"))
          	);
@@ -424,13 +424,13 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Set All Images To Non Hilite So We Do Not End Up With Two Hilites & Then Set Hilite
-		$garage->update_single_field(GARAGE_DYNORUN_GALLERY_TABLE, 'hilite', 0, 'dynorun_id', $rrid);
+		$garage->update_single_field(GARAGE_DYNORUN_GALLERY_TABLE, 'hilite', 0, 'dynorun_id', $did);
 		$garage->update_single_field(GARAGE_DYNORUN_GALLERY_TABLE, 'hilite', 1, 'image_id', $image_id);
 
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=manage_dynorun_gallery&amp;CID=$cid&amp;RRID=$rrid"));
+		redirect(append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=manage_dynorun_gallery&amp;CID=$cid&amp;DID=$did"));
 
 		break;
 
@@ -445,7 +445,7 @@ switch( $mode )
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=manage_dynorun_gallery&amp;CID=$cid&amp;RRID=$rrid"));
+		redirect(append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=manage_dynorun_gallery&amp;CID=$cid&amp;DID=$did"));
 
 		break;
 
@@ -467,7 +467,7 @@ switch( $mode )
 		);
 
 		//Pull Required Modification Data From DB
-		$data = $garage_dynorun->get_dynorun($rrid);
+		$data = $garage_dynorun->get_dynorun($did);
 
 		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
@@ -476,7 +476,7 @@ switch( $mode )
 		);
 
 		//Get All Gallery Data Required
-		$gallery_data = $garage_image->get_dynorun_gallery($cid, $rrid);
+		$gallery_data = $garage_image->get_dynorun_gallery($cid, $did);
 			
 		//Process Each Image From Dynorun Gallery	
        		for ( $i = 0; $i < count($gallery_data); $i++ )

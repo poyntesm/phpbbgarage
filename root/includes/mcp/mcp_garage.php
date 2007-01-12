@@ -385,8 +385,8 @@ class mcp_garage
 					$template->assign_block_vars('dynorun_row', array(
 						'U_PROFILE'	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $data[$i]['user_id']),
 						'U_VEHICLE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=" . $data[$i]['id']),
-						'U_EDIT'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_dynorun&amp;RRID=" . $data[$i]['rr_id']. "&amp;CID=" . $data[$i]['id']. "&amp;redirect=MCP"),
-						'ID'		=> $data[$i]['rr_id'],
+						'U_EDIT'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_dynorun&amp;DID=" . $data[$i]['did']. "&amp;CID=" . $data[$i]['id']. "&amp;redirect=MCP"),
+						'ID'		=> $data[$i]['did'],
 						'USERNAME'	=> $data[$i]['username'],
 						'VEHICLE'	=> $data[$i]['vehicle'],
 						'DYNOCENTER'	=> $data[$i]['title'],

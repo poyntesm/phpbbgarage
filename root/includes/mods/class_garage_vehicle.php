@@ -1221,8 +1221,8 @@ class garage_vehicle
 					'PEAKPOINT' 	=> $dynorun_data[$i]['peakpoint'],
 					'U_IMAGE'	=> ($dynorun_data[$i]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_image&amp;image_id=". $dynorun_data[$i]['attach_id']) : '',
 					'IMAGE'		=> $user->img('garage_slip_img_attached', 'SLIP_IMAGE_ATTACHED'),
-					'U_BHP'		=> append_sid("garage_dynorun.$phpEx?mode=view_dynorun&amp;RRID=".$dynorun_data[$i]['rrid']."&amp;CID=$cid"),
-					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage_dynorun.$phpEx?mode=edit_dynorun&amp;RRID=".$dynorun_data[$i]['id']."&amp;CID=$cid") : '',
+					'U_BHP'		=> append_sid("garage_dynorun.$phpEx?mode=view_dynorun&amp;DID=".$dynorun_data[$i]['did']."&amp;CID=$cid"),
+					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage_dynorun.$phpEx?mode=edit_dynorun&amp;DID=".$dynorun_data[$i]['did']."&amp;CID=$cid") : '',
 					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_dynorun'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_dynorun(' . $cid . ',' . $dynorun_data[$i]['id'] . ')' : '')
 				);
 			}
