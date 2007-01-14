@@ -1142,7 +1142,7 @@ class garage_vehicle
 				{
 					$mod_images_displayed = $mod_images_found;
 	                		//Do we have a thumbnail?  If so, our job is simple here :)
-					if ( (empty($modification_data[$i]['attach_thumb_location']) == false) AND ($modification_data[$j]['attach_thumb_location'] != $modification_data[$j]['attach_location']) )
+					if ( (empty($modification_data[$j]['attach_thumb_location']) == false) AND ($modification_data[$j]['attach_thumb_location'] != $modification_data[$j]['attach_location']) )
 					{
 						$template->assign_block_vars('modification_image', array(
 							'U_IMAGE' 	=> append_sid('garage.'.$phpEx.'?mode=view_image&amp;image_id='. $modification_data[$j]['attach_id']),
@@ -1276,6 +1276,8 @@ class garage_vehicle
                			} 
 			}
 		}
+
+		//
 
 		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
