@@ -516,11 +516,6 @@ class garage_image
 				redirect(append_sid("garage.$phpEx?mode=error&EID=6", true));
 			}
 	
-			if ($data['filesize'] / 1024 > $garage_config['max_image_kbytes'])
-			{
-				redirect(append_sid("garage.$phpEx?mode=error&EID=7", true));
-			}
-	
 			//Check File Type 
 			switch ($data['filetype'])
 			{
@@ -594,6 +589,14 @@ class garage_image
 				$data['width'] = $resize_width;
 				$data['height'] = $resize_height;
 			}
+
+			//If After Resize We Are Still Too Big Guess We Just Need To Error
+			$data['filesize'] = filesize($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['location'])
+			if ($data['filesize'] / 1024 > $garage_config['max_image_kbytes'])
+			{
+				redirect(append_sid("garage.$phpEx?mode=error&EID=7", true));
+			}
+
 
 			//Create The Thumbnail For This Image
 			if ( $garage_config['gd_version'] > 0 )
