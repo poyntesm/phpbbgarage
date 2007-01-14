@@ -591,7 +591,7 @@ class garage_image
 			}
 
 			//If After Resize We Are Still Too Big Guess We Just Need To Error
-			$data['filesize'] = filesize($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['location'])
+			$data['filesize'] = filesize($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['location']);
 			if ($data['filesize'] / 1024 > $garage_config['max_image_kbytes'])
 			{
 				redirect(append_sid("garage.$phpEx?mode=error&EID=7", true));
