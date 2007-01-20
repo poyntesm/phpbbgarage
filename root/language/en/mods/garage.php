@@ -117,6 +117,7 @@ $lang = array_merge($lang, array(
 	'MAX_IMAGES_PER_GALLERY' 	=> '<b>Max Images Per Vehicle Gallery</b><br />Enter the maximum number of images to allow in each vehicle gallery. This does not include the modification images.<br />Set to 0 to disable.<br />Set to at least 1 to allow vehicle hilite images.',
 	'MAX_IMAGE_SIZE' 		=> '<b>Maximum allowed image kbytes</b><br />Format in kilobytes, like 1024 for 1MB.',
 	'MAX_IMAGE_RESOLUTION' 		=> '<b>Maximum allowed image resolution</b><br />Single pixel count for maximum length or width, like 800 for a max 800x800.',
+
 	'THUMBNAIL_RESOLUTION' 		=> '<b>Thumbnail resolution</b><br />Single pixel count for length or width, like 100 for a max 100x100. Aspect Ratio will be maintained where possible.',
 	'GARAGE_TOOLS_TITLE' 		=> 'Garage Tool Control',
 	'GARAGE_TOOLS_EXPLAIN' 		=> 'On this screen you can run garage tools.',
@@ -752,6 +753,23 @@ $lang = array_merge($lang, array(
 	'QUALIFING'			=> 'Qualifing',
 	'LAP_TIME'			=> 'Lap Time',
 	'TRACK_PICTURES'		=> 'Track Pictures',
+
+	//SERVICE HISTORY KEYS
+	'ADD_SERVICE'			=> 'Add Service',
+	'ADD_NEW_SERVICE'		=> 'Add New Service',
+	'EDIT_SERVICE'			=> 'Edit Service',
+	'SERVICE_HISTORY'		=> 'Service History',
+	'SERVICED_BY'			=> 'Serviced By',
+	'SERVICE'			=> 'Service',
+	'SERVICE_TYPE'			=> 'Service Type',
+	'SELECT_SERVICE_TYPE'		=> 'Select Service Type',
+	'SERVICE_PRICE'			=> 'Service Price',
+	'SERVICE_RATING'		=> 'Service Rating',
+	'MILEAGE_AT_SERVICE'		=> 'Vehicle Mileage',
+	'SERVICE_MAJOR'			=> 'Major Service',
+	'SERVICE_MINOR'			=> 'Minor Service',
+
+	//BLOGGING KEYS
 
 ));
 

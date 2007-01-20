@@ -713,6 +713,14 @@ $lang = array_merge($lang, array(
 
 	'Move_Delete_Make' => 'Move all existing entries of this make to which existing make?',
 	'Move_Delete_Model' => 'Move all existing entries of this model to which existing model?',
+	'PERMANENT' 			=> 'Permanent',
+	'NON_PERMANENT'			=> 'Non Permanent',
+	'ENABLE_WATERMARK'		=> 'Enable Watermark',
+	'ENABLE_WATERMARK_EXPLAIN'	=> 'Enable Watermarking Of Images',
+	'WATERMARK_TYPE'		=> 'Watermark Type',
+	'WATERMARK_TYPE_EXPLAIN'	=> 'Permanent will save original file with watermark. Non permanent will leave file in original state.',
+	'WATERMARK_SOURCE'		=> 'Watermark Sourcefile',
+	'WATERMARK_SOURCE_EXPLAIN'	=> 'Source file to be used for watermarking.',
 ));
 
 ?>

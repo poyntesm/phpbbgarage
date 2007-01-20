@@ -7,7 +7,7 @@
  *   email                : esmond.poynton@gmail.com
  *   description          : Provides Vehicle Garage System For phpBB
  *
- *   $Id$
+ *   $Id: garage_service.php 355 2007-01-17 00:30:32Z poyntesm $
  *
  ***************************************************************************/
 
@@ -37,7 +37,6 @@ $user->setup(array('mods/garage'));
 
 //Build All Garage Classes e.g $garage_images->
 require($phpbb_root_path . 'includes/mods/class_garage_service.' . $phpEx);
-require($phpbb_root_path . 'includes/mods/class_garage_business.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_template.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
 
@@ -52,7 +51,7 @@ while(list($var, $param) = @each($params))
 }
 
 //Get All Non-String Parameters
-$params = array('cid' => 'CID', 'svid' => 'SVID', 'eid' => 'EID');
+$params = array('cid' => 'CID', 'mid' => 'MID', 'did' => 'DID', 'qmid' => 'QMID', 'ins_id' => 'INS_ID', 'eid' => 'EID', 'image_id' => 'image_id', 'comment_id' => 'CMT_ID', 'bus_id' => 'BUS_ID');
 while(list($var, $param) = @each($params))
 {
 	$$var = request_var($param, '');
@@ -93,7 +92,7 @@ switch( $mode )
 		);
 
 		//Get Vehicle Data For Navlinks
-		$vehicle = $garage_vehicle->get_vehicle($cid);
+		$vehicle=$garage_vehicle->get_vehicle($cid);
 
 		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
@@ -105,11 +104,6 @@ switch( $mode )
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_service&amp;CID=$cid"))
 		);
 
-		$garages 	= $garage_business->get_business_by_type(BUSINESS_GARAGE);
-
-		$garage_template->garage_dropdown($garages);
-		$garage_template->rating_dropdown('rating');
-		$garage_template->service_type_dropdown();
 		$template->assign_vars(array(
 			'L_TITLE'  			=> $user->lang['ADD_SERVICE'],
 			'L_BUTTON'  			=> $user->lang['ADD_SERVICE'],
@@ -134,15 +128,15 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params	= array('garage_id' => '', 'type_id' => '', 'price' => '', 'rating' => '', 'mileage' => '');
+		$params	= array('rt' => '', 'sixty' => '', 'three' => '', 'eighth' => '', 'eighthmph' => '', 'thou' => '', 'quart' => '', 'quartmph' => '', 'dynorun_id' => '', 'install_comments' => '');
 		$data 	= $garage->process_vars($params);
 
 		//Checks All Required Data Is Present
-		$params = array('garage_id', 'type_id', 'mileage');
+		$params = array('quart');
 		$garage->check_required_vars($params);
 
 		//Update Service With Data Acquired
-		$svid = $garage_service->insert_service($data);
+		$garage_service->insert_service($data);
 
 		//Update The Time Now...In Case We Get Redirected During Image Processing
 		$garage_vehicle->update_vehicle_time($cid);
@@ -156,7 +150,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_service.$phpEx?mode=edit_service&amp;SVID=$svid&amp;CID=$cid");
+			login_box("garage_service.$phpEx?mode=edit_service&amp;QMID=$qmid&amp;CID=$cid");
 		}
 
 		//Check Vehicle Ownership
@@ -171,21 +165,28 @@ switch( $mode )
 			'body'   => 'garage_service.html')
 		);
 
+		//See If We Got Sent Here By Pending Page...If So We Need To Tell Update To Redirect Correctly
+		$params = array('PENDING' => '');
+		$redirect = $garage->process_vars($params);
+
 		//Pull Required Service Data From DB
-		$data = $garage_service->get_service($svid);
-		$garages = $garage_business->get_business_by_type(BUSINESS_GARAGE);
+		$data = $garage_service->get_service($qmid);
 
 		//Build All HTML Parts
-		$garage_template->garage_dropdown($garages, $data['garage_id']);
-		$garage_template->rating_dropdown('rating', $data['rating']);
-		$garage_template->service_type_dropdown($data['type_id']);
 		$template->assign_vars(array(
 			'L_TITLE'		=> $user->lang['EDIT_SERVICE'],
 			'L_BUTTON'		=> $user->lang['EDIT_SERVICE'],
-			'PRICE'			=> $data['price'],
-			'MILEAGE'		=> $data['mileage'],
 			'CID'			=> $cid,
-			'SVID'			=> $svid,
+			'QMID'			=> $qmid,
+			'RT'			=> $data['rt'],
+			'SIXTY'			=> $data['sixty'],
+			'THREE' 		=> $data['three'],
+			'EIGHTH' 		=> $data['eighth'],
+			'EIGHTHMPH' 		=> $data['eighthmph'],
+			'THOU' 			=> $data['thou'],
+			'QUART' 		=> $data['quart'],
+			'QUARTMPH' 		=> $data['quartmph'],
+			'PENDING_REDIRECT'	=> $redirect['PENDING'],
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_service.$phpEx", "mode=update_service"))
 		);
 
@@ -199,18 +200,18 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_service.$phpEx?mode=edit_service&amp;SVID=$svid&amp;CID=$cid");
+			login_box("garage_service.$phpEx?mode=edit_service&amp;QMID=$qmid&amp;CID=$cid");
 		}
 
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params	= array('garage_id' => '', 'type_id' => '', 'price' => '', 'rating' => '', 'mileage' => '');
+		$params = array('rt' => '', 'sixty' => '', 'three' => '', 'eighth' => '', 'eighthmph' => '', 'thou' => '', 'quart' => '', 'quartmph' => '', 'dynorun_id' => '', 'install_comments' => '', 'editupload' => '', 'image_id' => '', 'pending_redirect' => '');
 		$data = $garage->process_vars($params);
 
 		//Checks All Required Data Is Present
-		$params = array('garage_id', 'type_id', 'mileage');
+		$params = array('quart');
 		$garage->check_required_vars($params);
 
 		//Update The Service With Data Acquired
@@ -235,7 +236,7 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Delete The Quartermie Time
-		$garage_service->delete_service($svid);
+		$garage_service->delete_service($qmid);
 
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);

@@ -1,33 +1,5 @@
 <!-- INCLUDE overall_header.html -->
 
-<script type="text/javascript" src="{T_TEMPLATE_PATH}/garage_ajax.js"></script>
-<script type="text/javascript">
-var ajax = new sack();
-
-function get_model_list(sel)
-{
-	var make_id = sel.options[sel.selectedIndex].value;
-	document.getElementById('model_id').options.length = 0;
-	ajax.requestFile = 'garage.php?mode=get_model_list&make_id='+make_id;
-	ajax.onCompletion = build_model_list;
-	ajax.runAJAX();
-}
-
-function update_model_list(make_id, model_id)
-{
-	document.getElementById('model_id').options.length = 0;
-	ajax.requestFile = 'garage.php?mode=get_model_list&model_id='+model_id+'&make_id='+make_id;
-	ajax.onCompletion = build_model_list;
-	ajax.runAJAX();
-}
-
-function build_model_list()
-{
-	var obj = document.getElementById('model_id');
-	eval(ajax.response);
-} 
-</script>
-
 <!-- IF U_MCP -->
 	<div id="pageheader">
 		<p class="linkmcp">[ <a href="{U_MCP}">{L_MCP}</a> ]</p>

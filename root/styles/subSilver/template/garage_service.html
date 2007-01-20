@@ -1,0 +1,53 @@
+<!-- INCLUDE overall_header.html -->
+
+<!-- IF U_MCP -->
+	<div id="pageheader">
+		<p class="linkmcp">[ <a href="{U_MCP}">{L_MCP}</a> ]</p>
+	</div>
+
+	<br clear="all" /><br />
+
+<!-- ENDIF -->
+
+<!-- INCLUDE garage_header.html -->
+
+<!-- INCLUDE garage_menu.html -->
+
+			<td width="72%" valign="top" >
+			<form id="edit_vehicle" enctype="multipart/form-data" method="post" name="edit_service" action="{S_MODE_ACTION}">
+
+			<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
+				<tr>
+					<td class="cat" align="center" height="28" colspan="2"><span class="gen">{L_TITLE}</span></td>
+				</tr>
+				<tr>
+					<td class="row1" width="30%"><span class="gen"><b>{L_SERVICED_BY}</b></span>&nbsp;<span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td>
+				  	<td class="row2" colspan="2"><select id="garage_id" name="garage_id"><option value="">{L_SELECT_GARAGE}</option><option value="">------</option><!-- BEGIN garage --><option value="{garage.VALUE}" <!-- IF garage.S_SELECTED -->selected="selected"<!-- ENDIF -->>{garage.TEXT}</option><!-- END garage --></select>&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS_GARAGE}">{L_HERE}</a></span></td>
+				</tr>
+				<tr>
+					<td class="row1" width="30%"><span class="gen"><b>{L_SERVICE_TYPE}</b></span>&nbsp;<span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td>
+				  	<td class="row2" colspan="2"><select id="type_id" name="type_id"><option value="">{L_SELECT_SERVICE_TYPE}</option><option value="">------</option><!-- BEGIN service_type --><option value="{service_type.VALUE}" <!-- IF service_type.S_SELECTED -->selected="selected"<!-- ENDIF -->>{service_type.TEXT}</option><!-- END service_type --></select></td>
+				</tr>
+				<tr>
+					<td class="row1" width="30%"><span class="gen"><b>{L_SERVICE_PRICE}</b></span></td>
+					<td class="row2" colspan="2"><input name="price" type="text" class="post" size="10" value="{PRICE}" /></td>
+				</tr>
+				<tr>
+					<td class="row1" width="30%"><span class="gen"><b>{L_SERVICE_RATING}</b></span></td>
+					<td class="row2" colspan="2"><select id="rating" name="rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN rating --><option value="{rating.VALUE}" <!-- IF rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{rating.TEXT}</option><!-- END rating --></select></td>
+				</tr>
+				<tr>
+					<td class="row1" width="30%"><span class="gen"><b>{L_MILEAGE_AT_SERVICE}</b></span>&nbsp;<span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td>
+					<td class="row2" colspan="2"><input name="mileage" type="text" class="post" size="10" value="{MILEAGE}" /></td>
+				</tr>
+				<tr>
+					<td class="cat" align="center" height="28" colspan="3"><input type="hidden" value="{CID}" name="CID" /><input type="hidden" value="{SVID}" name="SVID" /><input name="modification" type="submit" value="{L_BUTTON}" class="liteoption" /></td>
+				</tr>
+
+			</form>
+			</table>
+		</td>
+
+<!-- INCLUDE garage_footer.html -->
+
+<!-- INCLUDE overall_footer.html -->

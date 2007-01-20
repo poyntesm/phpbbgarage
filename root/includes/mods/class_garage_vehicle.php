@@ -217,7 +217,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function update_vehicle($data)
 	{
-		global $cid, $db, $garage_config;
+		global $cid, $db, $garage_config, $user;
 
 		$update_sql = array(
 			'made_year'		=> $data['made_year'],
@@ -230,9 +230,8 @@ class garage_vehicle
 			'price'			=> $data['price'],
 			'currency'		=> $data['currency'],
 			'comments'		=> $data['comments'],
-			'user_id'		=> $user->data['user_id'],
+			'user_id'		=> $this->get_vehicle_owner_id($cid),
 			'date_updated'		=> time(),
-			'main_vehicle'		=> $data['main_vehicle'],
 			'pending'		=> ($garage_config['enable_vehicle_approval']) ? 1 : 0
 		);
 
@@ -686,7 +685,7 @@ class garage_vehicle
 					'VEHICLE' 		=> $vehicle_data['vehicle'],
 					'USERNAME' 		=> $vehicle_data['username'],
 					'IMAGE_TITLE'		=> $vehicle_data['attach_file'],
-					'U_VIEW_IMAGE'		=> append_sid($absolute_url."garage_vehicle.$phpEx?mode=view_image&amp;image_id=".$vehicle_data['attach_id']),
+					'U_VIEW_IMAGE'		=> append_sid($absolute_url."garage.$phpEx?mode=view_image&amp;image_id=".$vehicle_data['attach_id']),
 					'U_VIEW_VEHICLE' 	=> append_sid($absolute_url."garage_vehicle.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
 					'U_VIEW_PROFILE' 	=> append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']))
 				);
@@ -967,7 +966,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function display_vehicle($owned)
 	{
-		global $user, $template, $images, $phpEx, $phpbb_root_path, $garage_config, $config, $rating_text, $rating_types, $cid, $mode, $garage, $garage_template, $garage_modification, $garage_insurance, $garage_quartermile, $garage_dynorun, $garage_image, $auth, $garage_guestbook, $garage_track;
+		global $user, $template, $images, $phpEx, $phpbb_root_path, $garage_config, $config, $cid, $mode, $garage, $garage_template, $garage_modification, $garage_insurance, $garage_quartermile, $garage_dynorun, $garage_image, $auth, $garage_guestbook, $garage_track, $garage_service;
 
 		if ($owned == 'YES' || $owned == 'MODERATE')
 		{
@@ -1084,20 +1083,10 @@ class garage_vehicle
 		}
 
 		//Display Guestbook
-		if ( $garage_config['enable_guestbooks'] && $owned == 'NO' )
+		if ( $garage_config['enable_guestbooks'])
 		{
-			//Get Vehicle Comments Formatted
-			$guestbook_msg = $garage_guestbook->get_vehicle_comments_profile($cid);
-
-            		for ( $i = 0; $i < count($guestbook_msg); $i++ )
-            		{
-                		$guestbook_msg[$i]['post'] = (strlen($guestbook_msg[$i]['post']) >= 75 ) ? $guestbook_msg[$i]['post'] .= '...' : $guestbook_msg[$i]['post'];
-				$template->assign_block_vars('guestbook_comments', array(
-					'U_PROFILE'	=> append_sid('profile.'.$phpEx.'?mode=viewprofile&amp;u='.$guestbook_msg[$i]['author_id']),
-					'USERNAME'	=> $guestbook_msg[$i]['username'],
-					'COMMENT'	=> $guestbook_msg[$i]['post'])
-				);
-			}
+			//Display Vehicle Guestbook
+			$garage_guestbook->display_guestbook($cid);
 		}
 	     
 		//Select Categories For Which Vehicle Has Modifications
@@ -1164,12 +1153,13 @@ class garage_vehicle
         		for ( $i = 0; $i < count($insurance_data); $i++ )
 	         	{
 				$template->assign_block_vars('insurance.premium', array(
-					'COMPANY' 	=> $insurance_data[$i]['title'],
+					'INSURER' 	=> $insurance_data[$i]['title'],
 					'PREMIUM' 	=> $insurance_data[$i]['premium'],
 					'COVER_TYPE' 	=> $insurance_data[$i]['cover_type'],
 					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage.$phpEx?mode=edit_insurance&amp;INS_ID=".$insurance_data[$i]['id']."&amp;CID=$cid") : '',
-					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_insurance'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_insurance(' . $cid . ',' . $insurance_data[$i]['id'] . ')' : '')
-				);
+					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_insurance'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_insurance(' . $cid . ',' . $insurance_data[$i]['id'] . ')' : '',
+					'U_INSURER' 	=> append_sid("garage.$phpEx", "mode=insurance_review&amp;business_id=".$insurance_data[$i]['business_id']),
+				));
 			}
 		}
 	
@@ -1253,6 +1243,28 @@ class garage_vehicle
 				);
 			}
 		}
+
+		//Get Service History For Vehicle
+		$service_data = $garage_service->get_services_by_vehicle($cid);	
+
+         	//If Any Laps Exist Process Them...
+		if ( count($service_data) > 0 )
+		{
+			$template->assign_block_vars('service_history', array());
+         		for ( $i = 0; $i < count($service_data); $i++ )
+			{
+				$template->assign_block_vars('service_history.service', array(
+					'TITLE'		=> $service_data[$i]['title'],
+					'TYPE'		=> $garage_service->get_service_type($service_data[$i]['type_id']),
+					'PRICE'		=> $service_data[$i]['price'],
+					'RATING'	=> $service_data[$i]['rating'],
+					'MILEAGE'	=> $service_data[$i]['mileage'],
+					'U_GARAGE'	=> append_sid("garage.$phpEx?mode=garage_review&amp;BUS_ID=".$service_data[$i]['garage_id']."&amp;CID=$cid"),
+					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage_service.$phpEx?mode=edit_service&amp;SVID=".$service_data[$i]['id']."&amp;CID=$cid") : '',
+					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_lap'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_service(' . $cid . ',' . $service_data[$i]['id'] . ')' : '')
+				);
+			}
+		}
 			
 		//Get All Gallery Data Required
 		$gallery_data = $garage_image->get_vehicle_gallery($cid);
@@ -1290,7 +1302,7 @@ class garage_vehicle
 			'U_DELETE_QUARTERMILE'		=> append_sid("garage_quartermile.$phpEx?mode=delete_quartermile"),
 			'U_DELETE_PREMIUM' 		=> append_sid("garage.$phpEx?mode=delete_insurance"),
 			'U_DELETE_DYNORUN' 		=> append_sid("garage_dynorun.$phpEx?mode=delete_dynorun"),
-			'U_GUESTBOOK' 			=> append_sid("garage.$phpEx?mode=view_guestbook&amp;CID=$cid"),
+			'U_GUESTBOOK' 			=> append_sid("garage_guestbook.$phpEx?mode=view_guestbook&amp;CID=$cid"),
             		'U_PROFILE' 			=> append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle['user_id']),
             		'U_VIEW_VEHICLE' 		=> ( $owned == 'YES' ) ? append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;CID=$cid") : '',
             		'U_EDIT_VEHICLE' 		=> ( $owned == 'YES' ) ? append_sid("garage_vehicle.$phpEx?mode=edit_vehicle&amp;CID=$cid") : '',
@@ -1300,16 +1312,17 @@ class garage_vehicle
             		'U_ADD_QUARTERMILE' 		=> ( $owned == 'YES' AND $garage_config['enable_quartermile'] ) ? append_sid("garage_quartermile.$phpEx?mode=add_quartermile&amp;CID=$cid") : '',
             		'U_ADD_DYNORUN' 		=> ( $owned == 'YES' AND $garage_config['enable_dynorun'] ) ? append_sid("garage_dynorun.$phpEx?mode=add_dynorun&amp;CID=$cid") : '',
             		'U_ADD_LAP' 		=> ( $owned == 'YES' AND $garage_config['enable_tracktime'] ) ? append_sid("garage_track.$phpEx?mode=add_lap&amp;CID=$cid") : '',
+            		'U_ADD_SERVICE' 		=> ( $owned == 'YES' AND $garage_config['enable_service'] ) ? append_sid("garage_service.$phpEx?mode=add_service&amp;CID=$cid") : '',
             		'U_MANAGE_VEHICLE_GALLERY'	=> ( $owned == 'YES' ) ? append_sid("garage_vehicle.$phpEx?mode=manage_vehicle_gallery&amp;CID=$cid") : '',
 			'U_SET_MAIN_VEHICLE' 		=> ( ($owned == 'YES' OR $owned == 'MODERATE') AND ($vehicle['main_vehicle'] == 0) ) ?  append_sid("garage.$phpEx?mode=set_main&amp;CID=$cid"): '' ,
 			'U_MODERATE_VEHICLE' 		=> ( $owned == 'NO' AND $auth->acl_get('m_garage')) ?  append_sid("garage_vehicle.$phpEx?mode=moderate_vehicle&amp;CID=$cid"): '' ,
 			'U_HILITE_IMAGE' 		=> ( ($vehicle['attach_id']) AND ($vehicle['attach_is_image']) AND (!empty($vehicle['attach_thumb_location'])) AND (!empty($vehicle['attach_location'])) ) ?  append_sid("garage.$phpEx?mode=view_image&amp;image_id=". $vehicle['attach_id']): '' ,
 
 			'S_DISPLAY_VEHICLE_OWNER'	=> ($owned == 'MODERATE' || $owned == 'YES') ? 1 : 0,
-			'S_DISPLAY_GUESTBOOK'		=> ($garage_config['enable_guestbooks'] && $owned == 'NO') ? 1 : 0,
-			'S_DISPLAY_GALLERIES'		=> (($vehicle_images_found > 0 || $mod_images_displayed > 0) && $owned == 'NO') ? 1 : 0,
-			'S_DISPLAY_VEHICLE_IMAGES'	=> ($vehicle_images_found > 0 && $owned == 'NO') ? 1 : 0,
-			'S_DISPLAY_MODIFICATION_IMAGES'	=> ($mod_images_displayed > 0 && $owned == 'NO') ? 1 : 0,
+			'S_DISPLAY_GUESTBOOK'		=> ($garage_config['enable_guestbooks']) ? 1 : 0,
+			'S_DISPLAY_GALLERIES'		=> ($vehicle_images_found > 0 || $mod_images_displayed > 0) ? 1 : 0,
+			'S_DISPLAY_VEHICLE_IMAGES'	=> ($vehicle_images_found > 0) ? 1 : 0,
+			'S_DISPLAY_MODIFICATION_IMAGES'	=> ($mod_images_displayed > 0) ? 1 : 0,
 
             		'EDIT' 				=> ($garage_config['enable_images']) ? $user->img('garage_edit', 'EDIT') : $user->lang['EDIT'],
             		'DELETE' 			=> ($garage_config['enable_images']) ? $user->img('garage_delete', 'DELETE') : $user->lang['DELETE'],
@@ -1320,6 +1333,7 @@ class garage_vehicle
             		'ADD_QUARTERMILE' 		=> ($garage_config['enable_images']) ? $user->img('garage_add_quartermile', 'ADD_NEW_QUARTERMILE_TIME') : $user->lang['ADD_NEW_QUARTERMILE_TIME'],
             		'ADD_DYNORUN'	 		=> ($garage_config['enable_images']) ? $user->img('garage_add_dynorun',  'ADD_NEW_DYNORUN_RUN') : $user->lang['ADD_NEW_DYNORUN_RUN'],
             		'ADD_LAP'	 		=> ($garage_config['enable_images']) ? $user->img('garage_add_lap',  'ADD_NEW_LAP') : $user->lang['ADD_NEW_LAP'],
+            		'ADD_SERVICE'	 		=> ($garage_config['enable_images']) ? $user->img('garage_add_service',  'ADD_NEW_SERVICE') : $user->lang['ADD_NEW_SERVICE'],
             		'MANAGE_VEHICLE_GALLERY'	=> ($garage_config['enable_images']) ? $user->img('garage_manage_gallery', 'MANAGE_VEHICLE_GALLERY') : $user->lang['MANAGE_VEHICLE_GALLERY'],
             		'DELETE_VEHICLE' 		=> ($garage_config['enable_images']) ? $user->img('garage_delete_vehicle', 'DELETE_VEHICLE') : $user->lang['DELETE_VEHICLE'],
 			'SET_MAIN_VEHICLE' 		=> ($garage_config['enable_images']) ? $user->img('garage_main_vehicle', 'SET_MAIN_VEHICLE') : $user->lang['SET_MAIN_VEHICLE'],

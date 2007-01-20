@@ -2,7 +2,7 @@
 /** 
 *
 * @package acp
-* @version $Id: acp_board.php,v 1.35 2006/06/16 16:54:37 acydburn Exp $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group 
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
 *
@@ -115,6 +115,9 @@ class acp_garage
 						'max_image_kbytes'			=> array('lang' => 'IMAGE_MAX_SIZE', 'type' => 'text:3:4', 'explain' => true),
 						'max_image_resolution'			=> array('lang' => 'IMAGE_MAX_RESOLUTION', 'type' => 'text:3:4', 'explain' => true),
 						'thumbnail_resolution'			=> array('lang' => 'THUMBNAIL_RESOLUTION', 'type' => 'text:3:4', 'explain' => true),
+						'enable_watermark'			=> array('lang' => 'ENABLE_WATERMARK', 'type' => 'radio:yes_no', 'explain' => true),
+						'watermark_type'			=> array('lang' => 'WATERMARK_TYPE', 'type' => 'custom', 'method' => 'watermark_type', 'explain' => true),
+						'watermark_source'			=> array('lang' => 'WATERMARK_SOURCE', 'type' => 'text:39:40', 'explain' => true),
 
 						'legend5'				=> 'ACP_GARAGE_QUARTERMILE_CONFIG',
 						'enable_quartermile'			=> array('lang' => 'ENABLE_QUARTERMILE', 'type' => 'radio:yes_no', 'explain' => true),
@@ -156,6 +159,9 @@ class acp_garage
 						'enable_user_submit_product'		=> array('lang' => 'ENABLE_USER_SUBMIT_PRODUCT', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_product_approval'		=> array('lang' => 'ENABLE_PRODUCT_APPROVAL', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_product_search'			=> array('lang' => 'ENABLE_PRODUCT_SEARCH', 'type' => 'radio:yes_no', 'explain' => true),
+
+						'legend13'				=> 'ACP_GARAGE_SERVICE_CONFIG',
+						'enable_service'			=> array('lang' => 'ENABLE_SERVICE', 'type' => 'radio:yes_no', 'explain' => true),
 					)
 				);
 
@@ -250,13 +256,23 @@ class acp_garage
 	}
 
 	/**
-	* Select captcha pixel noise
+	*
 	*/
 	function index_columns($value, $key = '')
 	{
 		global $user;
 
 		return '<select name="config[index_columns]" id="index_columns"><option value="1"' . (($value == 1) ? ' selected="selected"' : '') . '>1</option><option value="2"' . (($value == 2) ? ' selected="selected"' : '') . '>2</option><option value="3"' . (($value == 3) ? ' selected="selected"' : '') . '>3</option><option value="4"' . (($value == 4) ? ' selected="selected"' : '') . '>4</option></select>';
+	}
+
+	/**
+	*
+	*/
+	function watermark_type($value, $key = '')
+	{
+		global $user;
+
+		return '<select name="config[watermark_type]" id="watermark_type"><option value="permanent"' . (($value == 'permanent') ? ' selected="selected"' : '') . '>'.$user->lang['PERMANENT'].'</option><option value="non_permanent"' . (($value == 'non_permanent') ? ' selected="selected"' : '') . '>'.$user->lang['NON_PERMANENT'].'</option></select>';
 	}
 
 	/**

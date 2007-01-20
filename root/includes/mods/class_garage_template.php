@@ -429,6 +429,23 @@ class garage_template
 		}
 	}
 
+	function service_type_dropdown($selected = null)
+	{
+		global $template, $user;
+
+		$id = array(SERVICE_MAJOR, SERVICE_MINOR);
+		$text = array($user->lang['SERVICE_MAJOR'], $user->lang['SERVICE_MINOR']);
+
+		for ($i = 0, $count = sizeof($id);$i < $count; $i++)
+		{
+			$template->assign_block_vars('service_type', array(
+				'VALUE'		=> $id[$i],
+				'TEXT'		=> $text[$i],
+				'S_SELECTED'	=> ($selected == $id[$i]) ? true : false)
+			);
+		}
+	}
+
 	function currency_dropdown($selected = null)
 	{
 		global $template;
@@ -552,7 +569,7 @@ class garage_template
 			$template->assign_block_vars($name, array(
 				'VALUE'		=> $rating[$i],
 				'TEXT'		=> $rating[$i],
-				'S_SELECTED'	=> ($selected == $rating[$i]) ? true : false)
+				'S_SELECTED'	=> ($selected_id == $rating[$i]) ? true : false)
 			);
 		}
 	}

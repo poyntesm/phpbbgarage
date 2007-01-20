@@ -959,6 +959,21 @@ class garage_image
 
 		return;
 	}
+
+	/*========================================================================*/
+	// Delete A Lap Image
+	// Usage: delete_lap_image('image id');
+	/*========================================================================*/
+	function delete_lap_image($image_id)
+	{
+		global $garage;
+
+		$this->delete_image($image_id);
+
+		$garage->delete_rows(GARAGE_LAP_GALLERY_TABLE, 'image_id', $image_id);
+
+		return;
+	}
 	
 	/*========================================================================*/
 	// Check The Remote File Actually Exists

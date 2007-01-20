@@ -30,10 +30,6 @@ $user->session_begin();
 $auth->acl($user->data);
 $user->setup('mods/garage');
 
-//Setup $auth_admin class so we can add permission options
-include($phpbb_root_path . '/includes/acp/auth.' . $phpEx);
-$auth_admin = new auth_admin();
-
 //Get Mode Required For Page
 $mode	= request_var('mode', '');
 
@@ -102,14 +98,14 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_config (
 		)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_vehicles_gallery (
 		`id` int(10) unsigned NOT NULL auto_increment,
-		`garage_id` int(10) unsigned NOT NULL default '0',
+		`vehicle_id` int(10) unsigned NOT NULL default '0',
 		`image_id` int(10) unsigned NOT NULL default '0',
 		`hilite` tinyint(1) unsigned NOT NULL default '0',
 		PRIMARY KEY  (`id`)
 		)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_modifications_gallery (
 		`id` int(10) unsigned NOT NULL auto_increment,
-		`garage_id` int(10) unsigned NOT NULL default '0',
+		`vehicle_id` int(10) unsigned NOT NULL default '0',
 		`modification_id` int(10) unsigned NOT NULL default '0',
 		`image_id` int(10) unsigned NOT NULL default '0',
 		`hilite` tinyint(1) unsigned NOT NULL default '0',
@@ -117,7 +113,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_modifications_galler
 		)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_quartermiles_gallery (
 		`id` int(10) unsigned NOT NULL auto_increment,
-		`garage_id` int(10) unsigned NOT NULL default '0',
+		`vehicle_id` int(10) unsigned NOT NULL default '0',
 		`quartermile_id` int(10) unsigned NOT NULL default '0',
 		`image_id` int(10) unsigned NOT NULL default '0',
 		`hilite` tinyint(1) unsigned NOT NULL default '0',
@@ -125,7 +121,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_quartermiles_gallery
 		)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_dynoruns_gallery (
 		`id` int(10) unsigned NOT NULL auto_increment,
-		`garage_id` int(10) unsigned NOT NULL default '0',
+		`vehicle_id` int(10) unsigned NOT NULL default '0',
 		`dynorun_id` int(10) unsigned NOT NULL default '0',
 		`image_id` int(10) unsigned NOT NULL default '0',
 		`hilite` tinyint(1) unsigned NOT NULL default '0',
@@ -133,7 +129,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_dynoruns_gallery (
 		)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_laps_gallery (
 		`id` int(10) unsigned NOT NULL auto_increment,
-		`garage_id` int(10) unsigned NOT NULL default '0',
+		`vehicle_id` int(10) unsigned NOT NULL default '0',
 		`lap_id` int(10) unsigned NOT NULL default '0',
 		`image_id` int(10) unsigned NOT NULL default '0',
 		`hilite` tinyint(1) unsigned NOT NULL default '0',
@@ -141,19 +137,21 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_laps_gallery (
 		)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_guestbooks (
 		`id` int(10) unsigned NOT NULL auto_increment,
-		`garage_id` int(10) unsigned NOT NULL default '0',
+		`vehicle_id` int(10) unsigned NOT NULL default '0',
 		`author_id` mediumint(8) NOT NULL default '0',
 		`post_date` int(10) NOT NULL default '0',
 		`ip_address` varchar(16) NOT NULL default '',
+		`bbcode_bitfield` varchar(255) NOT NULL default '',
+		`bbcode_uid` varchar(5) NOT NULL default '',
 		`post` text,
 		PRIMARY KEY  (`id`),
-		KEY `garage_id` (`garage_id`),
+		KEY `vehicle_id` (`vehicle_id`),
 		KEY `author_id` (`author_id`),
 		KEY `post_date` (`post_date`)
 		)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_images (
 		`attach_id` int(10) unsigned NOT NULL auto_increment,
-		`garage_id` int(10) unsigned NOT NULL default '0',
+		`vehicle_id` int(10) unsigned NOT NULL default '0',
 		`attach_location` varchar(255) NOT NULL default '',
 		`attach_hits` int(10) unsigned NOT NULL default '0',
 		`attach_ext` varchar(10) NOT NULL default '',
@@ -169,7 +167,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_images (
 		)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_premiums (
 		`id` int(10) NOT NULL auto_increment,
-		`garage_id` int(10) unsigned default NULL,
+		`vehicle_id` int(10) unsigned default NULL,
 		`business_id` int(10) unsigned default NULL,
 		`premium` int(10) unsigned default NULL,
 		`cover_type` varchar(255) default NULL,
@@ -193,7 +191,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_models (
 		)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_modifications (
 		`id` int(10) unsigned NOT NULL auto_increment,
-		`garage_id` int(10) unsigned NOT NULL default '0',
+		`vehicle_id` int(10) unsigned NOT NULL default '0',
 		`user_id` int(10) NOT NULL default '0',
 		`category_id` int(10) unsigned NOT NULL default '0',
 		`manufacturer_id` int(10) unsigned NOT NULL default '0',
@@ -211,9 +209,9 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_modifications (
 		`date_updated` int(10) default NULL,
 		PRIMARY KEY  (`id`),
 		KEY `user_id` (`user_id`),
-		KEY `garage_id_2` (`garage_id`,`category_id`),
+		KEY `vehicle_id_2` (`vehicle_id`,`category_id`),
 		KEY `category_id` (`category_id`),
-		KEY `garage_id` (`garage_id`),
+		KEY `vehicle_id` (`vehicle_id`),
 		KEY `date_created` (`date_created`),
 		KEY `date_updated` (`date_updated`)
 		)";
@@ -226,7 +224,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_products (
 		)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_quartermiles (
 		`id` int(10) unsigned NOT NULL auto_increment,
-		`garage_id` int(10) unsigned NOT NULL default '0',
+		`vehicle_id` int(10) unsigned NOT NULL default '0',
 		`rt` decimal(6,3) default NULL,
 		`sixty` decimal(6,3) default NULL,
 		`three` decimal(6,3) default NULL,
@@ -243,7 +241,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_quartermiles (
 		)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_dynoruns (
 		`id` int(10) unsigned NOT NULL auto_increment,
-		`garage_id` int(10) unsigned NOT NULL default '0',
+		`vehicle_id` int(10) unsigned NOT NULL default '0',
 		`dynocentre_id` int(10) unsigned NOT NULL default '0',
 		`bhp` decimal(6,2) default NULL,
 		`bhp_unit` varchar(32) default NULL,
@@ -260,7 +258,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_dynoruns (
 		)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_ratings (
 		`id` int(10) NOT NULL auto_increment,
-		`garage_id` int(10) NOT NULL default '0',
+		`vehicle_id` int(10) NOT NULL default '0',
 		`rating` int(10) NOT NULL default '0',
 		`user_id` int(10) NOT NULL default '0',
 		`rate_date` int(10) default NULL,
@@ -276,7 +274,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_tracks (
 	)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_laps (
 		`id` int(10) NOT NULL auto_increment,
-		`garage_id` int(10) NOT NULL default '0',
+		`vehicle_id` int(10) NOT NULL default '0',
 		`track_id` int(10) NOT NULL default '0',
 		`condition_id` int(10) NOT NULL default '0',
 		`type_id` int(10) NOT NULL default '0',
@@ -284,6 +282,27 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_laps (
 		`second` int(2) NOT NULL default '0',
 		`millisecond` int(2) NOT NULL default '0',
 		`pending` tinyint(1) NOT NULL default '1',
+		PRIMARY KEY  (`id`)
+	)";
+$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_service_history (
+		`id` int(10) NOT NULL auto_increment,
+		`vehicle_id` int(10) NOT NULL default '0',
+		`garage_id` int(10) NOT NULL default '0',
+		`type_id` int(10) NOT NULL default '0',
+		`price` int(10) unsigned NOT NULL default '0',
+		`rating` int(10) NOT NULL default '0',
+		`mileage` int(10) NOT NULL default '0',
+		`date_created` int(10) default NULL,
+		`date_updated` int(10) default NULL,
+		PRIMARY KEY  (`id`)
+	)";
+$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_blog (
+		`id` int(10) NOT NULL auto_increment,
+		`vehicle_id` int(10) NOT NULL default '0',
+		`user_id` int(10) NOT NULL default '0',
+		`bbcode_bitfield` varchar(255) NOT NULL default '',
+		`bbcode_uid` varchar(5) NOT NULL default '',
+		`blog_text` medium NOT NULL default '',
 		PRIMARY KEY  (`id`)
 	)";
 //Required Configuration Options
@@ -451,6 +470,7 @@ $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_add_dynorun` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_add_quartermile` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_add_lap` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_add_service` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_manage_gallery` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_edit` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_delete` text NOT NULL";
@@ -482,6 +502,7 @@ $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_in
 $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_dynorun = '{LANG}/garage_add_dynorun.gif*33*130'";
 $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_quartermile = '{LANG}/garage_add_quartermile.gif*33*130'";
 $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_lap = '{LANG}/garage_add_lap.gif*33*130'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_service = '{LANG}/garage_add_service.gif*33*130'";
 $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_manage_gallery = '{LANG}/garage_manage_gallery.gif*33*130'";
 $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_edit = '{LANG}/garage_edit.gif*21*34'";
 $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_delete = '{LANG}/garage_delete.gif*21*34'";
@@ -1455,10 +1476,43 @@ switch( $mode )
 			}
 		}
 
+		//Setup $auth_admin class so we can add permission options
+		include($phpbb_root_path . '/includes/acp/auth.' . $phpEx);
+		$auth_admin = new auth_admin();
+
 		//Lets Add The Required New Permissions
 		$phpbbgarage_permissions = array(
 			'local'		=> array(),
-			'global'	=> array('u_garage_browse', 'u_garage_search', 'u_garage_add_vehicle', 'u_garage_delete_vehicle', 'u_garage_add_modification', 'u_garage_delete_modification', 'u_garage_add_quartermile', 'u_garage_delete_quartermile', 'u_garage_add_lap', 'u_garage_add_track', 'u_garage_delete_lap', 'u_garage_delete_track', 'u_garage_add_dynorun', 'u_garage_delete_dynorun', 'u_garage_add_insurance', 'u_garage_delete_insurance', 'u_garage_add_business', 'u_garage_add_make_model', 'u_garage_add_product', 'u_garage_rate', 'u_garage_comment', 'u_garage_upload_image', 'u_garage_remote_image', 'u_garage_delete_image', 'u_garage_deny', 'm_garage', 'a_garage')
+			'global'	=> array(
+				'u_garage_browse',
+				'u_garage_search',
+				'u_garage_add_vehicle',
+				'u_garage_delete_vehicle',
+				'u_garage_add_modification',
+				'u_garage_delete_modification',
+				'u_garage_add_quartermile',
+				'u_garage_delete_quartermile',
+				'u_garage_add_lap',
+				'u_garage_delete_lap',
+				'u_garage_add_track',
+				'u_garage_delete_track',
+				'u_garage_add_dynorun',
+				'u_garage_delete_dynorun',
+				'u_garage_add_insurance',
+				'u_garage_delete_insurance',
+				'u_garage_add_service',
+				'u_garage_delete_service',
+				'u_garage_add_business',
+				'u_garage_add_make_model',
+				'u_garage_add_product',
+				'u_garage_rate',
+				'u_garage_comment',
+				'u_garage_upload_image',
+				'u_garage_remote_image',
+				'u_garage_delete_image',
+				'u_garage_deny',
+				'm_garage',
+			       	'a_garage')
 		);
 		$auth_admin->acl_add_option($phpbbgarage_permissions);
 

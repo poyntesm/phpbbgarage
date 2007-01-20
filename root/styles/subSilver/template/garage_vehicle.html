@@ -64,20 +64,20 @@ function build_model_list()
 					<td class="cat" align="center" height="28" colspan="2"><span class="gen">{L_TITLE}</span></td>
 				</tr>
 				<tr>
-					<td class="row1" width="30%"><span class="gen"><b>{L_YEAR}</b></span></td>
-					<td class="row2"><select id="made_year" name="made_year"><option value="">{L_SELECT_YEAR}</option><option value="">------</option><!-- BEGIN year --><option value="{year.VALUE}" <!-- IF year.S_SELECTED -->selected="selected"<!-- ENDIF -->>{year.TEXT}</option><!-- END year --></select>&nbsp;<span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font></span></td>
+					<td class="row1" width="30%"><span class="gen"><b>{L_YEAR}</b></span>&nbsp;<span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td>
+					<td class="row2"><select id="made_year" name="made_year"><option value="">{L_SELECT_YEAR}</option><option value="">------</option><!-- BEGIN year --><option value="{year.VALUE}" <!-- IF year.S_SELECTED -->selected="selected"<!-- ENDIF -->>{year.TEXT}</option><!-- END year --></select></td>
 				</tr>
 				<tr>
-					<td class="row1" width="30%"><span class="gen"><b>{L_MAKE}</b></span></td>
-					<td class="row2"><select id="make_id" name="make_id" onchange="get_model_list(this)" ><option value="">{L_SELECT_MAKE}</option><option value="">------</option><!-- BEGIN make --><option value="{make.VALUE}" <!-- IF make.S_SELECTED -->selected="selected"<!-- ENDIF -->>{make.TEXT}</option><!-- END make --></select>&nbsp;<span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span>
+					<td class="row1" width="30%"><span class="gen"><b>{L_MAKE}</b></span>&nbsp;<span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td>
+					<td class="row2"><select id="make_id" name="make_id" onchange="get_model_list(this)" ><option value="">{L_SELECT_MAKE}</option><option value="">------</option><!-- BEGIN make --><option value="{make.VALUE}" <!-- IF make.S_SELECTED -->selected="selected"<!-- ENDIF -->>{make.TEXT}</option><!-- END make --></select>
 					<!-- IF S_DISPLAY_SUBMIT_MAKE -->
 						&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="{U_USER_SUBMIT_MAKE}">{L_HERE}</a></span>
 					<!-- ENDIF -->
 					</td>
 				</tr>
 				<tr>
-					<td class="row1" width="30%"><span class="gen"><b>{L_MODEL}</b></span></td>
-					<td class="row2"><select id="model_id" name="model_id"></select>&nbsp;<span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font></span>
+					<td class="row1" width="30%"><span class="gen"><b>{L_MODEL}</b></span>&nbsp;<span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td>
+					<td class="row2"><select id="model_id" name="model_id"></select>
 					<!-- IF S_DISPLAY_SUBMIT_MODEL -->
 						&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="{U_USER_SUBMIT_MODEL}">{L_HERE}</a></span>
 					<!-- ENDIF -->

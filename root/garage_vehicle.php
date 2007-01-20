@@ -47,6 +47,7 @@ require($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_guestbook.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_model.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_track.' . $phpEx);
+require($phpbb_root_path . 'includes/mods/class_garage_service.' . $phpEx);
 
 //Set The Page Title
 $page_title = $user->lang['GARAGE'];
@@ -253,7 +254,7 @@ switch( $mode )
 		$garage_template->engine_dropdown($data['engine_type']);
 		$garage_template->currency_dropdown($data['currency']);
 		$garage_template->mileage_dropdown($data['mileage_unit']);
-		$garage_template->year_dropdown($data['made_year']);
+		$garage_template->year_dropdown($years, $data['made_year']);
 		$template->assign_vars(array(
        			'L_TITLE' 		=> $user->lang['EDIT_VEHICLE'],
 			'L_BUTTON' 		=> $user->lang['EDIT_VEHICLE'],
@@ -351,7 +352,7 @@ switch( $mode )
 		//Set Template Files In Use For This Mode
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
-			'body'   => 'garage_view_vehicle.html')
+			'body'   => 'garage_view_vehicle_tabs.html')
 		);
 
 		//Display Vehicle With Owner Set to 'NO'
@@ -376,7 +377,7 @@ switch( $mode )
 		//Set Template Files In Use For This Mode
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
-			'body'   => 'garage_view_vehicle.html')
+			'body'   => 'garage_view_vehicle_tabs.html')
 		);
 
 		//Display Vehicle With Owner Set to 'YES'
@@ -404,7 +405,7 @@ switch( $mode )
 		//Set Template Files In Use For This Mode
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
-			'body'   => 'garage_view_vehicle.html')
+			'body'   => 'garage_view_vehicle_tabs.html')
 		);
 
 		//Display Vehicle With Submode Set To 'MODERATE'

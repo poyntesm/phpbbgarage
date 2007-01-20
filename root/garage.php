@@ -419,25 +419,100 @@ switch( $mode )
 		//Looks Like It's A Local Image...So Lets Display It
 		else
 		{
-	       		switch ( $data['attach_ext'] )
+			//Let Handle Watermarking... ;)
+			$watermark_ok = 0;
+			if ($garage_config['enable_watermark'] == 1 && $garage_config['watermark_type'] == 'non_permanent')
 			{
-				case '.png':
-					header('Content-type: image/png');
-					break;
-				case '.gif':
-					header('Content-type: image/gif');
-					break;
-				case '.jpg':
-					header('Content-type: image/jpeg');
-					break;
-				default:
-					trigger_error('UNSUPPORTED_FILE_TYPE');
+				$data['watermark_ext'] = strtolower( preg_replace( "/^.*\.(\S+)$/", "\\1", $garage_config['watermark_source'] ) );
+			        switch ( $data['watermark_ext'] )
+				{
+			                case 'png':
+			                        $wtr_src = imagecreatefrompng( $phpbb_root_path . GARAGE_WATERMARK_PATH . $garage_config['watermark_source']);
+			                        break;
+			                case 'gif':
+			                        $wtr_src = imagecreatefromgif( $phpbb_root_path . GARAGE_WATERMARK_PATH . $garage_config['watermark_source']);
+			                        break;
+			                case 'jpg':
+			                case 'jpeg':
+			                        $wtr_src = imagecreatefromjpeg( $phpbb_root_path . GARAGE_WATERMARK_PATH . $garage_config['watermark_source']);
+			                        break;
+			                default:
+
+			                        $wtr_src = false;
+			        }
+
+			        if ( $wtr_src )
+			        {
+					$data['width'] = $garage_image->get_image_width($data['attach_location']);
+					$data['height'] = $garage_image->get_image_height($data['attach_location']);
+			                $data['watermark_width'] = imagesx($wtr_src);
+					$data['watermark_height'] = imagesy($wtr_src);
+		
+                			switch ( $data['attach_ext'] )
+			                {
+			                        case '.png':
+			                                $img_src = imagecreatefrompng($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['attach_location']);
+			                                break;
+			                        case '.gif':
+			                                $img_src = imagecreatefromgif($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['attach_location']);
+			                                break;
+			                        case '.jpg':
+			                        case '.jpeg':
+			                                $img_src = imagecreatefromjpeg($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['attach_location']);
+			                                break;
+			                        default:
+			                                $img_src = false;
+			                }
+
+                			if ( $img_src )
+					{
+			                        imagecopymerge($img_src, $wtr_src, ($data['width'] - $data['watermark_width'] - 5), ($data['height'] - $data['watermark_height'] - 5), 0, 0, $data['watermark_height'], $data['watermark_width'], 40);
+			                        $watermark_ok = 1;
+			                }
+			        }
 			}
-			readfile($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['attach_location']);
+
+			//Lets Display The Watermarked Image
+			if ($watermark_ok)
+			{
+			        switch ( $data['attach_ext'] )
+			        {
+			                case '.gif':
+			                case '.png':
+			                        header('Content-type: image/png');
+			                        imagepng($img_src);
+						break;
+					case '.jpg':
+					case '.jpeg':
+			                        header('Content-type: image/jpeg');
+			                        imagejpeg($img_src);
+			                        break;
+			                default:
+						trigger_error('UNSUPPORTED_FILE_TYPE');
+			        }
+			}
+			//Looks Like We Need To Just Show The Original Image
+			else
+			{
+			
+			        switch ( $data['attach_ext'] )
+			        {
+			                case '.png':
+			                        header('Content-type: image/png');
+			                        break;
+			                case '.gif':
+			                        header('Content-type: image/gif');
+			                        break;
+			                case '.jpg':
+			                        header('Content-type: image/jpeg');
+			                        break;
+			                default:
+						trigger_error('UNSUPPORTED_FILE_TYPE');
+			        }
+				readfile($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['attach_location']);
+			}
         		exit;
 		}
-
-		break;
 
 	case 'view_all_images':
 
@@ -1389,6 +1464,24 @@ switch( $mode )
 		}
 
 		exit;
+
+	case 'tabs':
+
+		//Build Page Header ;)
+		page_header($page_title);
+
+		//Display Page...In Order Header->Menu->Body->Footer
+		$garage_template->sidemenu();
+
+		//Set Template Files In Use For This Mode
+		$template->set_filenames(array(
+			'header'	=> 'garage_header.html',
+			'menu' 		=> 'garage_menu.html',
+			'body' 		=> 'garage_tabs.html')
+		);
+
+		break;
+
 
 	default:
 

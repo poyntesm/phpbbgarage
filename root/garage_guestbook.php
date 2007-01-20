@@ -26,6 +26,7 @@ define('IN_PHPBB', true);
 $phpbb_root_path = './';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
+include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 include($phpbb_root_path . 'includes/bbcode.' . $phpEx);
 
 //Start Session Management
@@ -106,29 +107,29 @@ switch( $mode )
 			$username = $comment_data[$i]['username'];
 			$temp_url = append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $comment_data[$i]['user_id']);
 			$poster = '<a href="' . $temp_url . '">' . $comment_data[$i]['username'] . '</a>';
-			$poster_posts = ( $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang['Posts'] . ': ' . $comment_data[$i]['user_posts'] : '';
-			$poster_from = ( $comment_data[$i]['user_from'] && $comment_data['user_id'] != ANONYMOUS ) ? $lang['Location'] . ': ' . $comment_data[$i]['user_from'] : '';
-			$garage_id = $comment_data['garage_id'];
-			$poster_car_year = ( $comment_data[$i]['made_year'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $comment_data[$i]['made_year'] : '';
-			$poster_car_mark = ( $comment_data[$i]['make'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $comment_data[$i]['make'] : '';
-			$poster_car_model = ( $comment_data[$i]['model'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $comment_data[$i]['model'] : '';
-			$poster_joined = ( $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang['Joined'] . ': ' . $user->format_date($comment_data[$i]['user_regdate']) : '';
+			$poster_posts = ( $comment_data[$i]['user_id'] != ANONYMOUS ) ? $user->lang['POSTS'] . ': ' . $comment_data[$i]['user_posts'] : '';
+			$poster_from = ( $comment_data[$i]['user_from'] && $comment_data['user_id'] != ANONYMOUS ) ? $user->lang['Location'] . ': ' . $comment_data[$i]['user_from'] : '';
+			$garage_id = $comment_data[$i]['garage_id'];
+			$poster_car_year = ( $comment_data[$i]['made_year'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? ' ' . $comment_data[$i]['made_year'] : '';
+			$poster_car_mark = ( $comment_data[$i]['make'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ?  ' ' . $comment_data[$i]['make'] : '';
+			$poster_car_model = ( $comment_data[$i]['model'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? ' ' . $comment_data[$i]['model'] : '';
+			$poster_joined = ( $comment_data[$i]['user_id'] != ANONYMOUS ) ? $user->lang['JOINED'] . ': ' . $user->format_date($comment_data[$i]['user_regdate']) : '';
 
-			$data['avatar'] = '';
-			if ( $data['user_avatar'] AND $user->optionget('viewavatars') )
+			$poster_avatar = '';
+			if ( $comment_data[$i]['user_avatar'] AND $user->optionget('viewavatars') )
 			{
 				$avatar_img = '';
-				switch( $data['user_avatar_type'] )
+				switch( $comment_data[$i]['user_avatar_type'] )
 				{
 					case AVATAR_UPLOAD:
-						$avatar_img = $config['avatar_path'] . '/' . $data['user_avatar'];
+						$avatar_img = $config['avatar_path'] . '/' . $comment_data[$i]['user_avatar'];
 					break;
 
 					case AVATAR_GALLERY:
-						$avatar_img = $config['avatar_gallery_path'] . '/' . $data['user_avatar'];
+						$avatar_img = $config['avatar_gallery_path'] . '/' . $comment_data[$i]['user_avatar'];
 					break;
 				}
-				$data['avatar'] = '<img src="' . $avatar_img . '" width="' . $data['user_avatar_width'] . '" height="' . $data['user_avatar_height'] . '" alt="" />';
+				$poster_avatar = '<img src="' . $avatar_img . '" width="' . $comment_data[$i]['user_avatar_width'] . '" height="' . $comment_data[$i]['user_avatar_height'] . '" alt="" />';
 			}
 
 			// Handle anon users posting with usernames
@@ -137,19 +138,16 @@ switch( $mode )
 				$poster = $comment_data[$i]['post_username'];
 			}
 
-			$profile_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_profile'] . '" alt="' . $lang['Read_profile'] . '" title="' . $lang['Read_profile'] . '" border="0" /></a>';
-			$profile = '<a href="' . $temp_url . '">' . $lang['Read_profile'] . '</a>';
+			$profile = '<a href="' . $temp_url . '">' . $user->lang['READ_PROFILE'] . '</a>';
 
 			$temp_url = append_sid("{$phpbb_root_path}privmsg.$phpEx", "mode=post&amp;u=".$comment_data[$i]['user_id']);
-			$pm_img = '<a href="' . $temp_url . '"><img src="' . $images['icon_pm'] . '" alt="' . $lang['Send_private_message'] . '" title="' . $lang['Send_private_message'] . '" border="0" /></a>';
-			$pm = '<a href="' . $temp_url . '">' . $lang['Send_private_message'] . '</a>';
+			$pm = '<a href="' . $temp_url . '">' . $user->lang['SEND_PRIVATE_MESSAGE'] . '</a>';
 
-			if ( !empty($comment_data[$i]['user_viewemail']) || $is_auth['auth_mod'] )
+			if ( !empty($comment_data[$i]['user_viewemail']) || $auth->acl_get('m_') )
 			{
-				$email_uri = ( $board_config['board_email_form'] ) ? append_sid("{$phpbb_root_path}profile.$phpEx", "mode=email&amp;u=" . $comment_data[$i]['user_id']) : 'mailto:' . $comment_data['user_email'];
+				$email_uri = ( $config['board_email_form'] ) ? append_sid("{$phpbb_root_path}profile.$phpEx", "mode=email&amp;u=" . $comment_data[$i]['user_id']) : 'mailto:' . $comment_data[$i]['user_email'];
 
-				$email_img = '<a href="' . $email_uri . '"><img src="' . $images['icon_email'] . '" alt="' . $lang['Send_email'] . '" title="' . $lang['Send_email'] . '" border="0" /></a>';
-				$email = '<a href="' . $email_uri . '">' . $lang['Send_email'] . '</a>';
+				$email = '<a href="' . $email_uri . '">' . $user->lang['SEND_EMAIL'] . '</a>';
 			}
 			else
 			{
@@ -157,34 +155,30 @@ switch( $mode )
 				$email = '';
 			}
 
-			$www_img = ( $comment_data[$i]['user_website'] ) ? '<a href="' . $comment_data[$i]['user_website'] . '" target="_userwww"><img src="' . $images['icon_www'] . '" alt="' . $lang['Visit_website'] . '" title="' . $lang['Visit_website'] . '" border="0" /></a>' : '';
-			$www = ( $comment_data[$i]['user_website'] ) ? '<a href="' . $comment_data[$i]['user_website'] . '" target="_userwww">' . $lang['Visit_website'] . '</a>' : '';
+			$www_img = ( $comment_data[$i]['user_website'] ) ? '<a href="' . $comment_data[$i]['user_website'] . '" target="_userwww"><img src="' . $images['icon_www'] . '" alt="' . $user->lang['Visit_website'] . '" title="' . $user->lang['Visit_website'] . '" border="0" /></a>' : '';
+			$www = ( $comment_data[$i]['user_website'] ) ? '<a href="' . $comment_data[$i]['user_website'] . '" target="_userwww">' . $user->lang['Visit_website'] . '</a>' : '';
 
 			$posted = '<a href="' . append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=".$comment_data[$i]['user_id']) . '">' . $comment_data[$i]['username'] . '</a>';
 			$posted = $user->format_date($comment_data[$i]['post_date']);
 
 			$post = $comment_data[$i]['post'];
 
-			if ( !$board_config['allow_html'] )
-			{
-				$post = preg_replace('#(<)([\/]?.*?)(>)#is', "&lt;\\2&gt;", $post);
-			}
-
 			// Parse message and/or sig for BBCode if reqd
-			if ( $board_config['allow_bbcode'] )
+			if ( $config['allow_bbcode'] )
 			{
-				if ( $bbcode_uid != '' )
-				{
-					$post = ( $board_config['allow_bbcode'] ) ? bbencode_second_pass($post, $bbcode_uid) : preg_replace('/\:[0-9a-z\:]+\]/si', ']', $post);
-				}
+				
+				//if ( $comment_data[$i]['bbcode_uid'] != '' )
+				//{
+				//	$post = ( $config['allow_bbcode'] ) ? bbencode_second_pass($post, $bbcode_uid) : preg_replace('/\:[0-9a-z\:]+\]/si', ']', $post);
+				//}
 			}
 
 			$post = make_clickable($post);
 
 			// Parse smilies
-			if ( $board_config['allow_smilies'] )
+			if ( $config['allow_smilies'] )
 			{
-				$post = smilies_pass($post);
+				//$post = smilies_text($post);
 			}
 
 			// Replace newlines (we use this rather than nl2br because
@@ -198,10 +192,10 @@ switch( $mode )
 
 		 	if ( $auth->acl_get('m_garage') )
 			{
-				$edit_img = '<a href="'. append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']) . '"><img src="' . $images['icon_edit'] . '" alt="' . $lang['Edit_delete_post'] . '" title="' . $lang['Edit_delete_post'] . '" border="0" /></a>';
-				$edit = '<a href="'. append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']) . '">' . $lang['Edit_delete_post'] . '</a>';
-				$delpost_img = '<a href="'. append_sid("{$phpbb_root_path}garage.$phpEx", "mode=delete_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']) . '"><img src="' . $images['icon_delpost'] . '" alt="' . $lang['Delete_post'] . '" title="' . $lang['Delete_post'] . '" border="0" /></a>';
-				$delpost = '<a href="'. append_sid("{$phpbb_root_path}garage.$phpEx", "mode=delete_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']) . '">' . $lang['Delete_post'] . '</a>';
+				$edit_img = $user->img('icon_post_edit', 'EDIT_POST');
+				$edit = '<a href="'. append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']) . '">' . $user->lang['EDIT_POST'] . '</a>';
+				$delpost_img = $user->img('icon_post_delete', 'DELETE_POST');
+				$delpost = '<a href="'. append_sid("{$phpbb_root_path}garage.$phpEx", "mode=delete_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']) . '">' . $user->lang['DELETE_POST'] . '</a>';
 
 			}
 
@@ -215,11 +209,11 @@ switch( $mode )
 				'POSTER_CAR_YEAR' 	=> $poster_car_year,
 				'VIEW_POSTER_CARPROFILE'=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=$garage_id"),
 				'POSTER_AVATAR' 	=> $poster_avatar,
-				'PROFILE_IMG' 		=> $profile_img,
+				'PROFILE_IMG' 		=> $user->img('icon_user_profile', 'READ_PROFILE'),
 				'PROFILE' 		=> $profile,
-				'PM_IMG' 		=> $pm_img,
+				'PM_IMG' 		=> $user->img('icon_contact_pm', 'SEND_PRIVATE_MESSAGE'),
 				'PM'			=> $pm,
-				'EMAIL_IMG'		=> $email_img,
+				'EMAIL_IMG'		=> $user->img('icon_contact_email', 'SEND_EMAIL'),
 				'EMAIL'			=> $email,
 				'WWW_IMG'		=> $www_img,
 				'WWW'			=> $www,
@@ -234,10 +228,10 @@ switch( $mode )
 		}
 
 		$template->assign_vars(array(
-			'L_GUESTBOOK_TITLE' 	=> $vehicle_data['username'] . " - " . $vehicle_data['vehicle'] . " " . $lang['Guestbook'],
+			'L_GUESTBOOK_TITLE' 	=> $vehicle_data['username'] . " - " . $vehicle_data['vehicle'] . " " . $user->lang['GUESTBOOK'],
 			'CID' 			=> $cid,
 			'S_DISPLAY_LEAVE_COMMENT'=> $auth->acl_get('u_garage_comment'),
-			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=insert_comment&CID=$cid"))
+			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=insert_comment&CID=$cid"))
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
@@ -264,16 +258,18 @@ switch( $mode )
 		//Insert The Comment Into Vehicle Guestbook
 		$garage_guestbook->insert_vehicle_comment($data);
 
-		//Get Vehicle Data So We Can Check If We Need To PM Owner
+		//Get Data So We Can Check If We Need To PM Owner Or Email
 		$data = $garage_vehicle->get_vehicle($cid);		
 
+		$notify_data = $garage_guestbook->notify_on_comment($data['user_id']);
+
 		//If User Has Requested Notification On Comments Sent Them A PM
-		if ( $garage_guestbook->notify_on_comment($data['user_id']))
+		if ($notify_data['user_garage_guestbook_pm_notify'])
 		{
 			include_once($phpbb_root_path . 'includes/functions_privmsgs.' . $phpEx);
 			include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 
-			$data['vehicle_link'] 	= '<a href="garage.'.$phpEx.'?mode=view_guestbook&CID=$cid">' . $user->lang['HERE'] . '</a>';
+			$data['vehicle_link'] 	= '<a href="garage_guestbook.'.$phpEx.'?mode=view_guestbook&CID=$cid">' . $user->lang['HERE'] . '</a>';
 
 			$message_parser = new parse_message();
 			$message_parser->message = sprintf($user->lang['GUESTBOOK_NOTIFY_TEXT'], $data['vehicle_link']);
@@ -293,10 +289,15 @@ switch( $mode )
 				'message'			=> $message_parser->message,
 				'address_list'			=> array('u' => array($data['user_id'] => 'to')),
 			);
-
-			//Now We Have All Data Lets Send The PM!!
-			submit_pm('post', $user->lang['GUESTBOOK_NOTIFY_SUBJECT'], $pm_data, false, false);
 		}
+		//If User Has Requested Notification On Comments Sent Them A Email
+		if ($notify_data['user_garage_guestbook_email_notify'])
+		{
+			//
+		}
+
+		//Now We Have All Data Lets Send The PM!!
+		submit_pm('post', $user->lang['GUESTBOOK_NOTIFY_SUBJECT'], $pm_data, false, false);
 
 		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
 		if ( $garage_config['enable_guestbooks_comment_approval'] )
@@ -304,7 +305,7 @@ switch( $mode )
 			$garage->pending_notification('unapproved_guestbook_comments');
 		}
 
-		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_guestbook&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=view_guestbook&amp;CID=$cid"));
 
 		break;
 
@@ -364,7 +365,7 @@ switch( $mode )
 			$garage->pending_notification('unapproved_guestbook_comments');
 		}
 
-		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_guestbook&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=view_guestbook&amp;CID=$cid"));
 
 		break;
 
@@ -383,7 +384,7 @@ switch( $mode )
 		//Delete The Comment From The Guestbook
 		$garage->delete_rows(GARAGE_GUESTBOOKS_TABLE, 'id', $data['comment_id']);
 
-		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_guestbook&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=view_guestbook&amp;CID=$cid"));
 
 		break;
 }
