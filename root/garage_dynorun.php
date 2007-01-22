@@ -515,7 +515,7 @@ switch( $mode )
 		}
 
 		$template->assign_vars(array(
-			'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $data['user_id']),
+			'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $data['user_id']),
 			'YEAR' 			=> $data['made_year'],
 			'MAKE' 			=> $data['make'],
 			'MODEL' 		=> $data['model'],

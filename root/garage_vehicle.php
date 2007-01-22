@@ -48,6 +48,7 @@ require($phpbb_root_path . 'includes/mods/class_garage_guestbook.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_model.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_track.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_service.' . $phpEx);
+require($phpbb_root_path . 'includes/mods/class_garage_blog.' . $phpEx);
 
 //Set The Page Title
 $page_title = $user->lang['GARAGE'];

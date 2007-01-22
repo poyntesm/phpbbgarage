@@ -485,7 +485,7 @@ class garage_dynorun
 
 			$template->assign_block_vars($template_block_row, array(
 				'U_COLUMN_1' 	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-				'U_COLUMN_2' 	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=".$vehicle_data['user_id']),
+				'U_COLUMN_2' 	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=".$vehicle_data['user_id']),
 				'U_COLUMN_3' 	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=view_dynorun&amp;CID=".$vehicle_data['id']."&amp;DID=".$vehicle_data['did']),
 				'COLUMN_1_TITLE'=> $vehicle_data['vehicle'],
 				'COLUMN_2_TITLE'=> $vehicle_data['username'],

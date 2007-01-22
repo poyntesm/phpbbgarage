@@ -445,7 +445,7 @@ class garage_quartermile
 	
 			$template->assign_block_vars($template_block_row, array(
 				'U_COLUMN_1' 	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=".$data['id']),
-				'U_COLUMN_2' 	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=".$data['user_id']),
+				'U_COLUMN_2' 	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=".$data['user_id']),
 				'U_COLUMN_3' 	=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=view_quartermile&amp;CID=".$data['id']."&amp;QMID=".$data['qmid']),
 				'COLUMN_1_TITLE'=> $data['vehicle'],
 				'COLUMN_2_TITLE'=> $data['username'],

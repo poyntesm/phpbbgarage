@@ -688,7 +688,7 @@ class garage_modification
 	 	{
 			$template->assign_block_vars($template_block_row, array(
 				'U_COLUMN_1'	=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=view_modification&amp;MID=" . $rows[$i]['id'] . "&amp;CID=" . $rows[$i]['garage_id']),
-				'U_COLUMN_2' 	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $rows[$i]['user_id']),
+				'U_COLUMN_2' 	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $rows[$i]['user_id']),
 				'COLUMN_1_TITLE'=> $rows[$i]['mod_title'],
 				'COLUMN_2_TITLE'=> $rows[$i]['username'],
 				'COLUMN_3_TITLE'=> $user->format_date($rows[$i]['POI']))
@@ -728,7 +728,7 @@ class garage_modification
 	 	{
 			$template->assign_block_vars($template_block_row, array(
 				'U_COLUMN_1' 	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" . $rows[$i]['id']),
-				'U_COLUMN_2' 	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $rows[$i]['user_id']),
+				'U_COLUMN_2' 	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $rows[$i]['user_id']),
 				'COLUMN_1_TITLE'=> $rows[$i]['vehicle'],
 				'COLUMN_2_TITLE'=> $rows[$i]['username'],
 				'COLUMN_3_TITLE'=> $rows[$i]['POI'])
@@ -768,7 +768,7 @@ class garage_modification
 	 	{
 			$template->assign_block_vars($template_block_row, array(
 				'U_COLUMN_1' 	=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=view_modification&amp;MID=" . $rows[$i]['id'] . "&amp;CID=" . $rows[$i]['garage_id']),
-				'U_COLUMN_2' 	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $rows[$i]['user_id']),
+				'U_COLUMN_2' 	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $rows[$i]['user_id']),
 				'COLUMN_1_TITLE'=> $rows[$i]['mod_title'],
 				'COLUMN_2_TITLE'=> $rows[$i]['username'],
 				'COLUMN_3_TITLE'=> $user->format_date($rows[$i]['POI']))

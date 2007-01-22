@@ -2,15 +2,15 @@
 /** 
 *
 * @package mcp
-* @version $Id: mcp_queue.php,v 1.51 2006/08/12 13:12:18 acydburn Exp $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group 
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
 *
 */
 
 /**
-* mcp_queue
-* Handling the moderation queue
+* garage
+* Handling the garage moderation queue
 * @package mcp
 */
 class mcp_garage
@@ -107,7 +107,7 @@ class mcp_garage
 
 				$garage_dynorun->approve_dynorun($id_list, $mode);
 			break;
-			case 'approve_guestbook_comment':
+			case 'approve_comment':
 				$id_list = request_var('comment_id_list', array(0));
 
 				if (!sizeof($id_list))
@@ -197,7 +197,7 @@ class mcp_garage
 
 				$garage_dynorun->disapprove_dynorun($id_list, $mode);
 			break;
-			case 'disapprove_guestbook':
+			case 'disapprove_comment':
 				$id_list = request_var('comment_id_list', array(0));
 
 				if (!sizeof($id_list))
@@ -247,7 +247,7 @@ class mcp_garage
 				for ($i = 0, $count = sizeof($data);$i < $count; $i++)
 				{
 					$template->assign_block_vars('vehicle_row', array(
-						'U_PROFILE'	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $data[$i]['user_id']),
+						'U_PROFILE'	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $data[$i]['user_id']),
 						'U_EDIT'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_vehicle&amp;CID=" . $data[$i]['id']. "&amp;redirect=MCP"),
 						'USERNAME'	=> $data[$i]['username'],
 						'ID'		=> $data[$i]['id'],
@@ -351,7 +351,7 @@ class mcp_garage
 				for ($i = 0, $count = sizeof($data);$i < $count; $i++)
 				{
 					$template->assign_block_vars('quartermile_row', array(
-						'U_PROFILE'	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $data[$i]['user_id']),
+						'U_PROFILE'	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $data[$i]['user_id']),
 						'U_VEHICLE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=" . $data[$i]['garage_id']),
 						'U_EDIT'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_quartermile&amp;QMID=" . $data[$i]['qmid']. "&amp;CID=".$data[$i]['garage_id']."&amp;redirect=MCP"),
 						'ID'		=> $data[$i]['qmid'],
@@ -383,7 +383,7 @@ class mcp_garage
 				for ($i = 0, $count = sizeof($data);$i < $count; $i++)
 				{
 					$template->assign_block_vars('dynorun_row', array(
-						'U_PROFILE'	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $data[$i]['user_id']),
+						'U_PROFILE'	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $data[$i]['user_id']),
 						'U_VEHICLE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=" . $data[$i]['id']),
 						'U_EDIT'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_dynorun&amp;DID=" . $data[$i]['did']. "&amp;CID=" . $data[$i]['id']. "&amp;redirect=MCP"),
 						'ID'		=> $data[$i]['did'],
@@ -427,7 +427,7 @@ class mcp_garage
 						'USERNAME'	=> $data[$i]['username'],
 						'VEHICLE'	=> $data[$i]['vehicle'],
 						'IMAGE'		=> $user->img('garage_slip_img_attached', 'SLIP_IMAGE_ATTACHED'),
-						'U_PROFILE'	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $data[$i]['user_id']),
+						'U_PROFILE'	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $data[$i]['user_id']),
 						'U_VEHICLE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=" . $data[$i]['id']),
 						'U_IMAGE'	=> ($data[$i]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_image&amp;image_id=". $data[$i]['attach_id']) : '',
 						'U_TRACK'	=> append_sid("garage_track.$phpEx?mode=view_track&amp;TID=".$data[$i]['track_id']."&amp;CID=". $data[$i]['garage_id']),
@@ -454,6 +454,39 @@ class mcp_garage
 				}
 
 				$this->tpl_name = 'mcp_garage_approve_tracks';
+				break;
+
+			case 'unapproved_guestbook_comments':
+
+				$data = $garage_guestbook->get_pending_comments();
+
+				for ($i = 0, $count = sizeof($data);$i < $count; $i++)
+				{
+
+				// Process message, leave it uncensored
+				$message = $data[$i]['post_text'];
+				$message = str_replace("\n", '<br />', $message);
+				if ($post_info['bbcode_bitfield'])
+				{
+					include_once($phpbb_root_path . 'includes/bbcode.' . $phpEx);
+					$bbcode = new bbcode($data[$i]['bbcode_bitfield']);
+					$bbcode->bbcode_second_pass($message, $data[$i]['bbcode_uid'], $data[$i]['bbcode_bitfield']);
+				}
+				$message = smiley_text($message);
+
+					$template->assign_block_vars('comment_row', array(
+						'U_PROFILE'	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $data[$i]['user_id']),
+						'U_VEHICLE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=" . $data[$i]['garage_id']),
+						'U_EDIT'	=> append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=edit_comment&amp;TID=" . $data[$i]['id'].  "&amp;redirect=MCP"),
+						'USERNAME'	=> $data[$i]['username'],
+						'VEHICLE'	=> $data[$i]['vehicle'],
+						'POSTTIME'	=> $user->format_date($data[$i]['post_time']),
+						'ID'		=> $data[$i]['id'],
+						'EDIT'		=> ($garage_config['enable_images']) ? $user->img('garage_edit', 'EDIT') : $user->lang['EDIT'],
+					));
+				}
+
+				$this->tpl_name = 'mcp_garage_approve_guestbook_comments';
 				break;
 
 			case 'reassign_business':

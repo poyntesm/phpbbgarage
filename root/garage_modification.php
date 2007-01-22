@@ -394,7 +394,7 @@ switch( $mode )
 		}
 
 		$template->assign_vars(array(
-			'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $data['user_id']),
+			'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $data['user_id']),
 			'U_VIEW_GARAGE_BUSINESS'=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=garage_review&amp;business_id=" . $data['installer_id']),
 			'U_VIEW_SHOP_BUSINESS' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=shop_review&amp;business_id=" . $data['shop_id']),
 			'YEAR' 			=> $data['made_year'],

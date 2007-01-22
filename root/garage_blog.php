@@ -1,13 +1,13 @@
 <?php
 /***************************************************************************
- *                              garage_service.php
+ *                              garage_blog.php
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton
  *   email                : esmond.poynton@gmail.com
  *   description          : Provides Vehicle Garage System For phpBB
  *
- *   $Id: garage_service.php 355 2007-01-17 00:30:32Z poyntesm $
+ *   $Id$
  *
  ***************************************************************************/
 
@@ -36,7 +36,7 @@ $auth->acl($user->data);
 $user->setup(array('mods/garage'));
 
 //Build All Garage Classes e.g $garage_images->
-require($phpbb_root_path . 'includes/mods/class_garage_service.' . $phpEx);
+require($phpbb_root_path . 'includes/mods/class_garage_blog.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_template.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
 

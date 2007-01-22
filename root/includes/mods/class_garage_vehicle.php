@@ -687,7 +687,7 @@ class garage_vehicle
 					'IMAGE_TITLE'		=> $vehicle_data['attach_file'],
 					'U_VIEW_IMAGE'		=> append_sid($absolute_url."garage.$phpEx?mode=view_image&amp;image_id=".$vehicle_data['attach_id']),
 					'U_VIEW_VEHICLE' 	=> append_sid($absolute_url."garage_vehicle.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-					'U_VIEW_PROFILE' 	=> append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']))
+					'U_VIEW_PROFILE' 	=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']))
 				);
 			}
 		}
@@ -729,7 +729,7 @@ class garage_vehicle
 	 	{
 			$template->assign_block_vars($template_block_row, array(
 				'U_COLUMN_1' 	=> append_sid("garage_vehicle.$phpEx", "mode=view_vehicle&CID=" . $vehicle_data[$i]['id'], true),
-				'U_COLUMN_2' 	=> append_sid("profile.$phpEx", "mode=viewprofile&u=" . $vehicle_data[$i]['user_id'], true),
+				'U_COLUMN_2' 	=> append_sid("memberlist.$phpEx", "mode=viewprofile&u=" . $vehicle_data[$i]['user_id'], true),
 				'COLUMN_1_TITLE'=> $vehicle_data[$i]['vehicle'],
 				'COLUMN_2_TITLE'=> $vehicle_data[$i]['username'],
 				'COLUMN_3_TITLE'=> $user->format_date($vehicle_data[$i]['date_updated']))
@@ -770,7 +770,7 @@ class garage_vehicle
 	 	{
 			$template->assign_block_vars($template_block_row, array(
 				'U_COLUMN_1' 	=> append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data[$i]['id']),
-				'U_COLUMN_2' 	=> append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data[$i]['user_id']),
+				'U_COLUMN_2' 	=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$vehicle_data[$i]['user_id']),
 				'COLUMN_1_TITLE'=> $vehicle_data[$i]['vehicle'],
 				'COLUMN_2_TITLE'=> $vehicle_data[$i]['username'],
 				'COLUMN_3_TITLE'=> $vehicle_data[$i]['POI'])
@@ -811,7 +811,7 @@ class garage_vehicle
 	 	{
 			$template->assign_block_vars($template_block_row, array(
 				'U_COLUMN_1' 	=> append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data[$i]['id']),
-				'U_COLUMN_2' 	=> append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data[$i]['user_id']),
+				'U_COLUMN_2' 	=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$vehicle_data[$i]['user_id']),
 				'COLUMN_1_TITLE'=> $vehicle_data[$i]['vehicle'],
 				'COLUMN_2_TITLE'=> $vehicle_data[$i]['username'],
 				'COLUMN_3_TITLE'=> $vehicle_data[$i]['POI'])
@@ -852,7 +852,7 @@ class garage_vehicle
 	 	{
 			$template->assign_block_vars($template_block_row, array(
 				'U_COLUMN_1' 	=> append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data[$i]['id']),
-				'U_COLUMN_2' 	=> append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data[$i]['user_id']),
+				'U_COLUMN_2' 	=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$vehicle_data[$i]['user_id']),
 				'COLUMN_1_TITLE'=> $vehicle_data[$i]['vehicle'],
 				'COLUMN_2_TITLE'=> $vehicle_data[$i]['username'],
 				'COLUMN_3_TITLE'=> $vehicle_data[$i]['weighted_rating'] . '/' . '10')
@@ -893,7 +893,7 @@ class garage_vehicle
 	 	{
 			$template->assign_block_vars($template_block_row, array(
 				'U_COLUMN_1' 	=> append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data[$i]['id']),
-				'U_COLUMN_2' 	=> append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle_data[$i]['user_id']),
+				'U_COLUMN_2' 	=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$vehicle_data[$i]['user_id']),
 				'COLUMN_1_TITLE'=> $vehicle_data[$i]['vehicle'],
 				'COLUMN_2_TITLE'=> $vehicle_data[$i]['username'],
 				'COLUMN_3_TITLE'=> $user->format_date($vehicle_data[$i]['POI']))
@@ -966,7 +966,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function display_vehicle($owned)
 	{
-		global $user, $template, $images, $phpEx, $phpbb_root_path, $garage_config, $config, $cid, $mode, $garage, $garage_template, $garage_modification, $garage_insurance, $garage_quartermile, $garage_dynorun, $garage_image, $auth, $garage_guestbook, $garage_track, $garage_service;
+		global $user, $template, $images, $phpEx, $phpbb_root_path, $garage_config, $config, $cid, $mode, $garage, $garage_template, $garage_modification, $garage_insurance, $garage_quartermile, $garage_dynorun, $garage_image, $auth, $garage_guestbook, $garage_track, $garage_service, $garage_blog;
 
 		if ($owned == 'YES' || $owned == 'MODERATE')
 		{
@@ -1024,7 +1024,7 @@ class garage_vehicle
 				$rating_data[$i]['username'] 	=  ($rating_data[$i]['user_id'] < 0 ) ? $lang['Guest'] : $rating_data[$i]['username'];
 
 				$template->assign_block_vars('moderate.rating_row', array(
-					'U_PROFILE'	=> append_sid("profile.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$rating_data[$i]['user_id']) ,
+					'U_PROFILE'	=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$rating_data[$i]['user_id']) ,
 					'USERNAME' 	=> $rating_data[$i]['username'] ,
 					'RATING' 	=> $rating_data[$i]['rating'],
 					'DATE' 		=> create_date('D M d, Y G:i', $rating_data[$i]['rate_date'], $board_config['board_timezone']),
@@ -1083,12 +1083,19 @@ class garage_vehicle
 		}
 
 		//Display Guestbook
-		if ( $garage_config['enable_guestbooks'])
+		if ($garage_config['enable_guestbooks'])
 		{
 			//Display Vehicle Guestbook
 			$garage_guestbook->display_guestbook($cid);
 		}
-	     
+
+		//Display Blog
+		if ($garage_config['enable_blogs'])
+		{
+			//Display Vehicle Guestbook
+			$garage_blog->display_blog($cid);
+		}
+
 		//Select Categories For Which Vehicle Has Modifications
 		$category_data = $this->get_vehicle_modification_categories($cid);
 
@@ -1303,7 +1310,7 @@ class garage_vehicle
 			'U_DELETE_PREMIUM' 		=> append_sid("garage.$phpEx?mode=delete_insurance"),
 			'U_DELETE_DYNORUN' 		=> append_sid("garage_dynorun.$phpEx?mode=delete_dynorun"),
 			'U_GUESTBOOK' 			=> append_sid("garage_guestbook.$phpEx?mode=view_guestbook&amp;CID=$cid"),
-            		'U_PROFILE' 			=> append_sid("profile.$phpEx?mode=viewprofile&amp;u=".$vehicle['user_id']),
+            		'U_PROFILE' 			=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$vehicle['user_id']),
             		'U_VIEW_VEHICLE' 		=> ( $owned == 'YES' ) ? append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;CID=$cid") : '',
             		'U_EDIT_VEHICLE' 		=> ( $owned == 'YES' ) ? append_sid("garage_vehicle.$phpEx?mode=edit_vehicle&amp;CID=$cid") : '',
             		'U_DELETE_VEHICLE' 		=> ( ($owned == 'YES' AND $auth->acl_get('u_garage_delete_vehicle')) OR ($auth->acl_get('m_garage'))) ? 'javascript:confirm_delete_car(' . $cid . ')' : '',
@@ -1319,6 +1326,7 @@ class garage_vehicle
 			'U_HILITE_IMAGE' 		=> ( ($vehicle['attach_id']) AND ($vehicle['attach_is_image']) AND (!empty($vehicle['attach_thumb_location'])) AND (!empty($vehicle['attach_location'])) ) ?  append_sid("garage.$phpEx?mode=view_image&amp;image_id=". $vehicle['attach_id']): '' ,
 
 			'S_DISPLAY_VEHICLE_OWNER'	=> ($owned == 'MODERATE' || $owned == 'YES') ? 1 : 0,
+			'S_DISPLAY_ENTRY_BLOG'	=> ($owned == 'MODERATE' || $owned == 'YES') ? 1 : 0,
 			'S_DISPLAY_GUESTBOOK'		=> ($garage_config['enable_guestbooks']) ? 1 : 0,
 			'S_DISPLAY_GALLERIES'		=> ($vehicle_images_found > 0 || $mod_images_displayed > 0) ? 1 : 0,
 			'S_DISPLAY_VEHICLE_IMAGES'	=> ($vehicle_images_found > 0) ? 1 : 0,
@@ -1909,7 +1917,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id, g.made_year, g.user_id, g.date_updated, u.username, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle',
+			'SELECT'	=> 'g.id, g.made_year, g.user_id, g.date_updated, u.username, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'g',
 			),

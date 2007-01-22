@@ -105,7 +105,7 @@ switch( $mode )
 		for ($i = 0, $count = sizeof($comment_data);$i < $count; $i++)
 		{	
 			$username = $comment_data[$i]['username'];
-			$temp_url = append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $comment_data[$i]['user_id']);
+			$temp_url = append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $comment_data[$i]['user_id']);
 			$poster = '<a href="' . $temp_url . '">' . $comment_data[$i]['username'] . '</a>';
 			$poster_posts = ( $comment_data[$i]['user_id'] != ANONYMOUS ) ? $user->lang['POSTS'] . ': ' . $comment_data[$i]['user_posts'] : '';
 			$poster_from = ( $comment_data[$i]['user_from'] && $comment_data['user_id'] != ANONYMOUS ) ? $user->lang['Location'] . ': ' . $comment_data[$i]['user_from'] : '';
@@ -145,7 +145,7 @@ switch( $mode )
 
 			if ( !empty($comment_data[$i]['user_viewemail']) || $auth->acl_get('m_') )
 			{
-				$email_uri = ( $config['board_email_form'] ) ? append_sid("{$phpbb_root_path}profile.$phpEx", "mode=email&amp;u=" . $comment_data[$i]['user_id']) : 'mailto:' . $comment_data[$i]['user_email'];
+				$email_uri = ( $config['board_email_form'] ) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=email&amp;u=" . $comment_data[$i]['user_id']) : 'mailto:' . $comment_data[$i]['user_email'];
 
 				$email = '<a href="' . $email_uri . '">' . $user->lang['SEND_EMAIL'] . '</a>';
 			}
@@ -158,7 +158,7 @@ switch( $mode )
 			$www_img = ( $comment_data[$i]['user_website'] ) ? '<a href="' . $comment_data[$i]['user_website'] . '" target="_userwww"><img src="' . $images['icon_www'] . '" alt="' . $user->lang['Visit_website'] . '" title="' . $user->lang['Visit_website'] . '" border="0" /></a>' : '';
 			$www = ( $comment_data[$i]['user_website'] ) ? '<a href="' . $comment_data[$i]['user_website'] . '" target="_userwww">' . $user->lang['Visit_website'] . '</a>' : '';
 
-			$posted = '<a href="' . append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=".$comment_data[$i]['user_id']) . '">' . $comment_data[$i]['username'] . '</a>';
+			$posted = '<a href="' . append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=".$comment_data[$i]['user_id']) . '">' . $comment_data[$i]['username'] . '</a>';
 			$posted = $user->format_date($comment_data[$i]['post_date']);
 
 			$post = $comment_data[$i]['post'];

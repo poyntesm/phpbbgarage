@@ -174,15 +174,15 @@ function dE(n, s, type)
 		<div id="advanced00">
 			<div class="perm_cat">
 				<ul>
-					<li class="perm_preset_yes activetab" id="tab000"><a href="#" onclick="swap_options('0','0','0'); return false;"><span class="tabbg"><span class="colour"></span>{L_IMAGES}</span></a></li>	
-					<li class="perm_preset_yes" id="tab001"><a href="#" onclick="swap_options('0','0','1'); return false;"><span class="tabbg"><span class="colour"></span>{L_MODIFICATIONS}</span></a></li>	
-					<li class="perm_preset_yes" id="tab002"><a href="#" onclick="swap_options('0','0','2'); return false;"><span class="tabbg"><span class="colour"></span>&frac14; Miles</span></a></li>	
-					<li class="perm_preset_yes" id="tab003"><a href="#" onclick="swap_options('0','0','3'); return false;"><span class="tabbg"><span class="colour"></span>Dynoruns</span></a></li>	
-					<li class="perm_preset_yes" id="tab004"><a href="#" onclick="swap_options('0','0','4'); return false;"><span class="tabbg"><span class="colour"></span>Laps</span></a></li>	
-					<li class="perm_preset_yes" id="tab005"><a href="#" onclick="swap_options('0','0','5'); return false;"><span class="tabbg"><span class="colour"></span>Premiums</span></a></li>	
-					<li class="perm_preset_yes" id="tab006"><a href="#" onclick="swap_options('0','0','6'); return false;"><span class="tabbg"><span class="colour"></span>Services</span></a></li>	
-					<li class="perm_preset_yes" id="tab007"><a href="#" onclick="swap_options('0','0','7'); return false;"><span class="tabbg"><span class="colour"></span>Blog</span></a></li>	
-					<li class="perm_preset_yes" id="tab008"><a href="#" onclick="swap_options('0','0','8'); return false;"><span class="tabbg"><span class="colour"></span>Guestbook</span></a></li>	
+					<li class="perm_preset_yes activetab" id="tab000"><a href="#images" onclick="swap_options('0','0','0'); return false;"><span class="tabbg">{L_IMAGES}</span></a></li>	
+					<li class="perm_preset_yes" id="tab001"><a href="#modifications" onclick="swap_options('0','0','1'); return false;"><span class="tabbg">{L_MODIFICATIONS}</span></a></li>	
+					<li class="perm_preset_yes" id="tab002"><a href="#" onclick="swap_options('0','0','2'); return false;"><span class="tabbg">&frac14; Miles</span></a></li>	
+					<li class="perm_preset_yes" id="tab003"><a href="#dynoruns" onclick="swap_options('0','0','3'); return false;"><span class="tabbg">Dynoruns</span></a></li>	
+					<li class="perm_preset_yes" id="tab004"><a href="#" onclick="swap_options('0','0','4'); return false;"><span class="tabbg">Laps</span></a></li>	
+					<li class="perm_preset_yes" id="tab005"><a href="#" onclick="swap_options('0','0','5'); return false;"><span class="tabbg">Premiums</span></a></li>	
+					<li class="perm_preset_yes" id="tab006"><a href="#" onclick="swap_options('0','0','6'); return false;"><span class="tabbg">Services</span></a></li>	
+					<li class="perm_preset_yes" id="tab007"><a href="#" onclick="swap_options('0','0','7'); return false;"><span class="tabbg">Blog</span></a></li>	
+					<li class="perm_preset_yes" id="tab008"><a href="#" onclick="swap_options('0','0','8'); return false;"><span class="tabbg">Guestbook</span></a></li>	
 				</ul>
 			</div>
 
@@ -464,29 +464,38 @@ function dE(n, s, type)
 			<span class="corners-top"><span></span></span>
 			<div class="tablewrap">
 			<!-- BEGIN blog -->
-				<table width="100%" id="table007" cellspacing="1" class="tablebg">
+			<form method="post" name="guestbook" action="{S_MODE_BLOG_ACTION}">
+			<table width="100%" id="table008" cellspacing="1" cellpadding="3" border="0" class="tablebg">
 				<tr>
-	  				<th colspan="6">{L_SERVICE_HISTORY}</th>
+					<th height="25" nowrap="nowrap" colspan="5">{L_BLOG}</th>
+				</tr>
+				<!-- IF S_DISPLAY_ENTRY_BLOG -->
+				<tr>
+					<td class="cat" align="center" height="28" colspan="5"><span class="gen">{L_ADD_BLOG}</span></td>
 				</tr>
 				<tr>
-	  				<td class="cat" ><span class="gen">{L_GARAGE}</span></td>
-	  				<td class="cat" ><span class="gen">{L_TYPE}</span></td>
-	  				<td class="cat" ><span class="gen">{L_COST}</span></td>
-	  				<td class="cat" ><span class="gen">{L_RATING}</span></td>
-	  				<td class="cat" ><span class="gen">{L_MILEAGE}</span></td>
-	  				<!-- IF S_DISPLAY_VEHICLE_OWNER --><td class="cat" ></td><!-- ENDIF -->
+					<td class="row1" width="20%"><span class="gen">{L_BLOG_HEADER}</span></td>
+					<td class="row2" colspan="1"><input name="blog_header" type="text" class="post" size="60" value="{}" /></td>
 				</tr>
+				<tr>
+					<td class="row1" width="20%"><span class="gen">{L_ADD_BLOG}</span></td>
+					<td class="row2" colspan="1"><textarea name="blog_text" cols="70" rows="6" wrap="soft" class="post">{}</textarea></td>
+				</tr>
+				<tr>
+					<td class="cat" align="center" height="28" colspan="5"><input type="hidden" value="{CID}" name="CID" /><input name="submit" type="submit" class="liteoption" value="{L_ADD_BLOG}"/></td>
+				</tr>
+				<!-- ENDIF -->
 				<!-- BEGIN entry -->
 				<tr>
-					<td class="row1" align="center"><span class="gensmall"><a href="{service_history.service.U_GARAGE}">{service_history.service.TITLE}</a></span></td>
-	  				<td class="row1" align="center"><span class="gensmall">{service_history.service.TYPE}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{service_history.service.PRICE}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{service_history.service.RATING}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{service_history.service.MILEAGE}</span></td>
-					<!-- IF S_DISPLAY_VEHICLE_OWNER --><td class="row1" align="right"><span class="gensmall"><!-- IF service_history.service.U_EDIT --><a href="{service_history.service.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF service_history.service.U_DELETE--><a href="{service_history.service.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
+					<td class="row1" colspan="2"><b>{entry.BLOG_HEADER}</b><br />{entry.BLOG_DATE}<br /><br />{entry.BLOG}</td>
+				</tr>
+				<!-- BEGINELSE -->
+				<tr>
+					<td class="row1" align="center" height="28" colspan="5"><span class="gen">{L_ADD_FIRST_BLOG}</span></td>
 				</tr>
 				<!-- END entry -->
-				</table>
+        		</table>
+			</form>
 			<!-- END blog -->
 			</div>
 			<span class="corners-bottom"><span></span></span>
@@ -496,7 +505,7 @@ function dE(n, s, type)
 			<span class="corners-top"><span></span></span>
 			<div class="tablewrap">
 			<!-- BEGIN guestbook -->
-			<form method="post" name="guestbook" action="{S_MODE_ACTION}">
+			<form method="post" name="guestbook" action="{S_MODE_GUESTBOOK_ACTION}">
 			<table width="100%" id="table008" cellspacing="1" cellpadding="3" border="0" class="tablebg">
 				<tr>
 					<th height="25" nowrap="nowrap" colspan="5">{L_GUESTBOOK}</th>

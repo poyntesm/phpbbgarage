@@ -153,6 +153,54 @@ class garage_guestbook
 	}
 
 	/*========================================================================*/
+	// Select Pending Comments Data From DB
+	// Usage: get_vehicle_comments();
+	/*========================================================================*/
+	function get_pending_comments()
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, u.username, u.user_id, u.user_posts, u.user_from, u.user_website, u.user_email, u.user_icq, u.user_aim, u.user_yim, u.user_regdate, u.user_msnm, u.user_allow_viewemail, u.user_rank, u.user_sig, u.user_sig_bbcode_uid, u.user_avatar, u.user_avatar_type, u.user_allow_viewonline, g.made_year, g.id as garage_id, mk.make, md.model, u.user_avatar',
+			'FROM'		=> array(
+				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'gb.author_id = u.user_id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
+					'ON'	=> 'g.user_id = gb.author_id and g.main_vehicle = 1'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+					'ON'	=> 'g.model_id = md.id and md.pending = 0'
+				)
+			),
+			'WHERE'		=>  "gb.pending = 1",
+			'ORDER_BY'	=>  "gb.post_date ASC"
+		));
+
+      		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$data[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/*========================================================================*/
 	// Select Specific Vehicle Comments Data From DB
 	// Usage: get_vehicle_comments('garage id');
 	/*========================================================================*/
@@ -337,7 +385,7 @@ class garage_guestbook
 	 	{
 			$template->assign_block_vars($template_block_row, array(
 				'U_COLUMN_1' 	=> append_sid("garage.$phpEx", "mode=view_vehicle&amp;CID=" . $comment_data[$i]['id']),
-				'U_COLUMN_2' 	=> append_sid("profile.$phpEx", "mode=viewprofile&amp;u=" . $comment_data[$i]['author_id']),
+				'U_COLUMN_2' 	=> append_sid("memberlist.$phpEx", "mode=viewprofile&amp;u=" . $comment_data[$i]['author_id']),
 				'COLUMN_1_TITLE'=> $comment_data[$i]['vehicle'],
 				'COLUMN_2_TITLE'=> $comment_data[$i]['username'],
 				'COLUMN_3_TITLE'=> $user->format_date($comment_data[$i]['post_date']))
@@ -367,7 +415,7 @@ class garage_guestbook
 		for ($i = 0, $count = sizeof($comment_data);$i < $count; $i++)
 		{	
 			$username = $comment_data[$i]['username'];
-			$temp_url = append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $comment_data[$i]['user_id']);
+			$temp_url = append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $comment_data[$i]['user_id']);
 			$poster = '<a href="' . $temp_url . '">' . $comment_data[$i]['username'] . '</a>';
 			$poster_posts = ( $comment_data[$i]['user_id'] != ANONYMOUS ) ? $user->lang['POSTS'] . ': ' . $comment_data[$i]['user_posts'] : '';
 			$poster_from = ( $comment_data[$i]['user_from'] && $comment_data['user_id'] != ANONYMOUS ) ? $user->lang['Location'] . ': ' . $comment_data[$i]['user_from'] : '';
@@ -407,7 +455,7 @@ class garage_guestbook
 
 			if ( !empty($comment_data[$i]['user_viewemail']) || $auth->acl_get('m_') )
 			{
-				$email_uri = ( $config['board_email_form'] ) ? append_sid("{$phpbb_root_path}profile.$phpEx", "mode=email&amp;u=" . $comment_data[$i]['user_id']) : 'mailto:' . $comment_data[$i]['user_email'];
+				$email_uri = ( $config['board_email_form'] ) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=email&amp;u=" . $comment_data[$i]['user_id']) : 'mailto:' . $comment_data[$i]['user_email'];
 
 				$email = '<a href="' . $email_uri . '">' . $user->lang['SEND_EMAIL'] . '</a>';
 			}
@@ -420,7 +468,7 @@ class garage_guestbook
 			$www_img = ( $comment_data[$i]['user_website'] ) ? '<a href="' . $comment_data[$i]['user_website'] . '" target="_userwww"><img src="' . $images['icon_www'] . '" alt="' . $user->lang['Visit_website'] . '" title="' . $user->lang['Visit_website'] . '" border="0" /></a>' : '';
 			$www = ( $comment_data[$i]['user_website'] ) ? '<a href="' . $comment_data[$i]['user_website'] . '" target="_userwww">' . $user->lang['Visit_website'] . '</a>' : '';
 
-			$posted = '<a href="' . append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=".$comment_data[$i]['user_id']) . '">' . $comment_data[$i]['username'] . '</a>';
+			$posted = '<a href="' . append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=".$comment_data[$i]['user_id']) . '">' . $comment_data[$i]['username'] . '</a>';
 			$posted = $user->format_date($comment_data[$i]['post_date']);
 
 			$post = $comment_data[$i]['post'];
@@ -440,7 +488,7 @@ class garage_guestbook
 			// Parse smilies
 			if ( $config['allow_smilies'] )
 			{
-				//$post = smilies_text($post);
+				$post = smiley_text($post);
 			}
 
 			// Replace newlines (we use this rather than nl2br because
@@ -491,7 +539,7 @@ class garage_guestbook
 
 		$template->assign_vars(array(
 			'S_DISPLAY_LEAVE_COMMENT'=> $auth->acl_get('u_garage_comment'),
-			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=insert_comment&CID=$cid"))
+			'S_MODE_GUESTBOOK_ACTION' 	=> append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=insert_comment&CID=$cid"))
 		);
 	}
 }

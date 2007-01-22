@@ -162,6 +162,10 @@ class acp_garage
 
 						'legend13'				=> 'ACP_GARAGE_SERVICE_CONFIG',
 						'enable_service'			=> array('lang' => 'ENABLE_SERVICE', 'type' => 'radio:yes_no', 'explain' => true),
+
+						'legend14'				=> 'ACP_GARAGE_BLOG_CONFIG',
+						'enable_blogs'				=> array('lang' => 'ENABLE_BLOG', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_blogs_bbcode'			=> array('lang' => 'ENABLE_BLOG_BBCODE', 'type' => 'radio:yes_no', 'explain' => true),
 					)
 				);
 

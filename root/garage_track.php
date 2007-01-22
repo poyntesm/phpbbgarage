@@ -584,7 +584,7 @@ switch( $mode )
 		}
 
 		$template->assign_vars(array(
-			'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $data['user_id']),
+			'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $data['user_id']),
 			'U_VIEW_TRACK' 		=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=view_track&amp;TID=" . $data['track_id']),
 			'TRACK'			=> $data['title'],
 			'CONDITION'		=> $garage_track->get_track_condition($data['condition_id']),
@@ -651,7 +651,7 @@ switch( $mode )
 				'VEHICLE'	=> $lap_data[$i]['vehicle'],
 				'IMAGE'		=> $user->img('garage_slip_img_attached', 'SLIP_IMAGE_ATTACHED'),
 				'U_IMAGE'	=> ($lap_data[$i]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_image&amp;image_id=". $lap_data[$i]['attach_id']) : '',
-				'U_VIEWPROFILE'	=> append_sid("{$phpbb_root_path}profile.$phpEx", "mode=viewprofile&amp;u=" . $lap_data[$i]['user_id']),
+				'U_VIEWPROFILE'	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $lap_data[$i]['user_id']),
 				'U_VIEWVEHICLE'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" . $lap_data[$i]['garage_id']),
 				'U_LAP'		=> append_sid("garage_track.$phpEx?mode=view_lap&amp;LID=".$lap_data[$i]['lid']."&amp;CID=". $lap_data[$i]['garage_id']),
 			));

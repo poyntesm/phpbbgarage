@@ -143,6 +143,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_guestbooks (
 		`ip_address` varchar(16) NOT NULL default '',
 		`bbcode_bitfield` varchar(255) NOT NULL default '',
 		`bbcode_uid` varchar(5) NOT NULL default '',
+		`pending` tinyint(1) NOT NULL default '0',
 		`post` text,
 		PRIMARY KEY  (`id`),
 		KEY `vehicle_id` (`vehicle_id`),
@@ -302,6 +303,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_blog (
 		`user_id` int(10) NOT NULL default '0',
 		`bbcode_bitfield` varchar(255) NOT NULL default '',
 		`bbcode_uid` varchar(5) NOT NULL default '',
+		`blog_title` varchar(255) NOT NULL default '',
 		`blog_text` medium NOT NULL default '',
 		PRIMARY KEY  (`id`)
 	)";
