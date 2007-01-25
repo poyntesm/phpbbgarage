@@ -2608,7 +2608,7 @@ switch( $mode )
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('id', 'name', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
+		$params = array('id', 'title', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
 		$data = $garage->process_post_vars($params);
 		$data['pending'] = ($garage_config['enable_business_approval'] == '1') ? 1 : 0 ;
 		$data['insurance'] = ($data['insurance'] == 'on') ? 1 : 0 ;
@@ -2622,7 +2622,7 @@ switch( $mode )
 		}
 
 		//Checks All Required Data Is Present
-		$params = array('name');
+		$params = array('title');
 		$garage->check_required_vars($params);
 
 		//Update The Business With Data Acquired
