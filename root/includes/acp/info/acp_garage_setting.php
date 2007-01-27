@@ -1,7 +1,7 @@
 <?php
 
 /***************************************************************************
- *                      includes/acp/info/acp_garage.php
+ *                      includes/acp/info/acp_garage_setting.php
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton
@@ -21,21 +21,16 @@
  *
  ***************************************************************************/
 
-class acp_garage_info
+class acp_garage_setting_info
 {
 	function module()
 	{
 		return array(
-			'filename'	=> 'acp_garage',
-			'title'		=> 'ACP_GARAGE',
+			'filename'	=> 'acp_garage_setting',
+			'title'		=> 'ACP_GARAGE_SETTINGS',
 			'version'	=> '1.0.0',
 			'modes'		=> array(
-				'business'	=> array('title' => 'ACP_GARAGE_BUSINESS', 	'auth' => 'acl_a_garage', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
-				'categories'	=> array('title' => 'ACP_GARAGE_CATEGORIES', 	'auth' => 'acl_a_garage', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
-				'settings'	=> array('title' => 'ACP_GARAGE_SETTINGS', 	'auth' => 'acl_a_garage', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
-				'models'	=> array('title' => 'ACP_GARAGE_MODELS', 	'auth' => 'acl_a_garage', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
-				'quotas'	=> array('title' => 'ACP_GARAGE_QUOTAS', 	'auth' => 'acl_a_garage', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
-				'tools'		=> array('title' => 'ACP_GARAGE_TOOLS', 	'auth' => 'acl_a_garage', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
+				'settings'	=> array('title' => 'ACP_GARAGE_SETTINGS', 'auth' => 'acl_a_garage', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
 			),
 		);
 	}
