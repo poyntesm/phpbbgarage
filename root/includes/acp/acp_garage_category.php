@@ -7,7 +7,7 @@
  *   email                : esmond.poynton@gmail.com
  *   description          : Provides Vehicle Garage System For phpBB
  *
- *   $Id: admin_garage_categories.php 122 2006-05-09 16:32:31Z poyntesm $
+ *   $Id$
  *
  ***************************************************************************/
 
@@ -20,33 +20,24 @@
  *
  ***************************************************************************/
 
-define('IN_PHPBB', true);
-
-if( !empty($setmodules) )
+class acp_garage_category
 {
-	$filename = basename(__FILE__);
-	$module['Garage']['Categories'] = $filename;
-	return;
-}
+	var $u_action;
 
-// Let's set the root dir for phpBB
-$phpbb_root_path = '../';
-$phpEx = substr(strrchr(__FILE__, '.'), 1);
-require('./pagestart.' . $phpEx);
-require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage.' . $phpEx);
+	function main($id, $mode)
+	{
+		global $db, $user, $auth, $template, $cache;
+		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
 
-//Build All Garage Classes e.g $garage_images->
-require($phpbb_root_path . 'includes/class_garage.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_modification.' . $phpEx);
+		$user->add_lang('acp/garage');
+		$this->tpl_name = 'acp_garage_business';
+		$this->page_title = 'ACP_MANAGE_FORUMS';
 
-if( isset( $HTTP_POST_VARS['mode'] ) || isset( $HTTP_GET_VARS['mode'] ) )
-{
-	$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
-}
-else
-{
-	$mode = '';
-}
+		$action		= request_var('action', '');
+		$update		= (isset($_POST['update'])) ? true : false;
+
+		switch ($mode)
+		{
 
 //Lets Setup Messages We Might Need...Just Easier On The Eye Doing This Seperatly
 $missing_data_message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_categories.$phpEx?mode=confirm_delete&id=".$data['id']."") . '">'. $lang['Missing_Required_Data']. "<br /><br />" . sprintf($lang['Click_return_garage_category'], "<a href=\"" . append_sid("admin_garage_category.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
@@ -55,8 +46,6 @@ $category_updated_message = '<meta http-equiv="refresh" content="3;url=' . appen
 $category_deleted_message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_categories.$phpEx") . '">'. $lang['Category_Deleted'] . "<br /><br />" . sprintf($lang['Click_return_garage_category'], "<a href=\"" . append_sid("admin_garage_categories.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
 $category_order_message = '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_garage_categories.$phpEx") . '">'. $lang['Category_Order_Updated'] . "<br /><br />" . sprintf($lang['Click_return_garage_category'], "<a href=\"" . append_sid("admin_garage_categories.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
 
-switch ( $mode )
-{
 	case 'insert_category':
 
 		//Count Current Categories..So We Can Work Out Order

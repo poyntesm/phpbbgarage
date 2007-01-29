@@ -7,7 +7,7 @@
  *   email                : esmond.poynton@gmail.com
  *   description          : Provides Vehicle Garage System For phpBB
  *
- *   $Id: admin_garage_models.php 138 2006-06-07 15:55:46Z poyntesm $
+ *   $Id$
  *
  ***************************************************************************/
 
@@ -20,39 +20,24 @@
  *
  ***************************************************************************/
 
-define('IN_PHPBB', true);
-
-if( !empty($setmodules) )
+class acp_garage_model
 {
-	$filename = basename(__FILE__);
-	$module['Garage']['Makes & Models'] = $filename;
-	return;
-}
+	var $u_action;
 
-//
-// Let's set the root dir for phpBB
-//
-$phpbb_root_path = '../';
-$phpEx = substr(strrchr(__FILE__, '.'), 1);
-require('./pagestart.' . $phpEx);
-require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage.' . $phpEx);
+	function main($id, $mode)
+	{
+		global $db, $user, $auth, $template, $cache;
+		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
 
-//Build All Garage Classes e.g $garage_images->
-require($phpbb_root_path . 'includes/class_garage.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_business.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_template.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_guestbook.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_model.' . $phpEx);
+		$user->add_lang('acp/garage');
+		$this->tpl_name = 'acp_garage_business';
+		$this->page_title = 'ACP_MANAGE_FORUMS';
 
-if( isset( $HTTP_POST_VARS['mode'] ) || isset( $HTTP_GET_VARS['mode'] ) )
-{
-	$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
-	//message_die(GENERAL_ERROR, 'Mode Is .... ', '', __LINE__, __FILE__, $mode);
-}
-else
-{
-	$mode = '';
-}
+		$action		= request_var('action', '');
+		$update		= (isset($_POST['update'])) ? true : false;
+
+		switch ($mode)
+		{
 
 //Lets Setup Messages We Might Need...Just Easier On The Eye Doing This Seperatly
 $missing_data_message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_models.$phpEx") . '">'. $lang['Missing_Required_Data']. "<br /><br />" . sprintf($lang['Click_Return_Garage_Makes'], "<a href=\"" . append_sid("admin_garage_models.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
@@ -65,8 +50,6 @@ $model_created_message = '<meta http-equiv="refresh" content="2;url=' . append_s
 $model_updated_message = '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_garage_models.$phpEx") . '">' . $lang['Model_Updated'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Makes'], "<a href=\"" . append_sid("admin_garage_models.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
 $model_deleted_message = '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_garage_models.$phpEx") . '">' . $lang['Model_Deleted'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Makes'], "<a href=\"" . append_sid("admin_garage_models.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
 
-switch($mode)
-{
 	case 'insert_make':
 
 		//Get All Data Posted And Make It Safe To Use

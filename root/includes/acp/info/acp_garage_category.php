@@ -8,7 +8,7 @@
  *   email                : esmond.poynton@gmail.com
  *   description          : Provides Vehicle Garage System For phpBB
  *
- *   $Id: admin_garage_business.php 124 2006-05-13 14:57:36Z poyntesm $
+ *   $Id$
  *
  ***************************************************************************/
 
@@ -30,7 +30,7 @@ class acp_garage_category_info
 			'title'		=> 'ACP_GARAGE_CATEGORY_MANAGEMENT',
 			'version'	=> '1.0.0',
 			'modes'		=> array(
-				'categories'	=> array('title' => 'ACP_GARAGE_CATEGORIES', 	'auth' => 'acl_a_garage', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
+				'categories'	=> array('title' => 'ACP_GARAGE_CATEGORIES', 'auth' => 'acl_a_garage', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
 			),
 		);
 	}

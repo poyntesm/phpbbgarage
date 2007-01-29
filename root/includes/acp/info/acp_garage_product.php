@@ -1,7 +1,7 @@
 <?php
 
 /***************************************************************************
- *                      includes/acp/info/acp_garage_tool.php
+ *                      includes/acp/info/acp_garage_product.php
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton
@@ -21,16 +21,16 @@
  *
  ***************************************************************************/
 
-class acp_garage_tool_info
+class acp_garage_product_info
 {
 	function module()
 	{
 		return array(
-			'filename'	=> 'acp_garage_tool',
-			'title'		=> 'ACP_GARAGE_TOOL_MANAGEMENT',
+			'filename'	=> 'acp_garage_product',
+			'title'		=> 'ACP_GARAGE_PRODUCT_MANAGEMENT',
 			'version'	=> '1.0.0',
 			'modes'		=> array(
-				'tools'	=> array('title' => 'ACP_GARAGE_TOOLS', 'auth' => 'acl_a_garage', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
+				'products'	=> array('title' => 'ACP_GARAGE_PRODUCTS', 'auth' => 'acl_a_garage', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
 			),
 		);
 	}

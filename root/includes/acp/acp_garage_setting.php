@@ -11,7 +11,7 @@
 /**
 * @package acp
 */
-class acp_garage
+class acp_garage_setting
 {
 	var $u_action;
 	var $new_config = array();
@@ -24,7 +24,6 @@ class acp_garage
 		//Build All Garage Classes e.g $garage_images->
 		require($phpbb_root_path . 'includes/mods/class_garage_admin.' . $phpEx);
 
-
 		$user->add_lang('acp/board');
 		$user->add_lang('acp/garage');
 
@@ -33,7 +32,7 @@ class acp_garage
 
 		switch ($mode)
 		{
-			case 'settings':
+			case 'general':
 				$display_vars = array(
 					'title'	=> 'ACP_GARAGE_SETTINGS',
 					'vars'	=> array(
@@ -53,8 +52,16 @@ class acp_garage
 						'enable_pm_pending_notify_optout'	=> array('lang' => 'PENDING_PM_NOTIFY_OPTOUT', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_email_pending_notify_optout'	=> array('lang' => 'PENDING_EMAIL_NOTIFY_OPTOUT', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_vehicle_approval'		=> array('lang' => 'ENABLE_VEHICLE_APPROVAL', 'type' => 'radio:yes_no', 'explain' => true),
+					)
+				);
 
-						'legend2'				=> 'ACP_GARAGE_MENU_CONFIG',
+				break;
+
+			case 'menu':
+				$display_vars = array(
+					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'vars'	=> array(
+						'legend1'				=> 'ACP_GARAGE_MENU_CONFIG',
 						'enable_browse_menu' 			=> array('lang' => 'ENABLE_BROWSE_MENU', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_search_menu' 			=> array('lang' => 'ENABLE_SEARCH_MENU', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_insurance_review_menu' 		=> array('lang' => 'ENABLE_INSURANCE_REVIEW_MENU', 'type' => 'radio:yes_no', 'explain' => true),
@@ -68,8 +75,15 @@ class acp_garage
 						'enable_dynorun_header'			=> array('lang' => 'ENABLE_DYNORUN_HEADER', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_latest_vehicle_index'	 	=> array('lang' => 'ENABLE_LATESTMAIN_VEHICLE', 'type' => 'radio:yes_no', 'explain' => true),
 						'latest_vehicle_index_limit' 		=> array('lang' => 'LATESTMAIN_VEHCILE_LIMIT', 'type' => 'text:3:4', 'explain' => true),
+					)
+				);
 
-						'legend3'				=> 'ACP_GARAGE_INDEX_CONFIG',
+				break;
+			case 'index':
+				$display_vars = array(
+					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'vars'	=> array(
+						'legend1'				=> 'ACP_GARAGE_INDEX_CONFIG',
 						'index_columns' 			=> array('lang' => 'GARAGE_INDEX_COLUMNS', 'type' => 'custom', 'method' => 'index_columns', 'explain' => true),
 						'enable_user_index_columns' 		=> array('lang' => 'ENABLE_USER_INDEX_COLUMNS', 'type' => 'radio:yes:no', 'explain' => true),
 						'enable_featured_vehicle' 		=> array('lang' => 'ENABLE_FEATURED_VEHICLE', 'type' => 'radio:yes_no', 'explain' => true),
@@ -99,8 +113,15 @@ class acp_garage
 						'top_quartermile_limit'			=> array('lang' => 'TOP_QUARTERMILE_LIMIT', 'type' => 'text:3:4', 'explain' => true),
 						'enable_top_rating'			=> array('lang' => 'ENABLE_TOP_RATING', 'type' => 'radio:yes_no', 'explain' => true),
 						'top_rating_limit'			=> array('lang' => 'TOP_RATING_LIMIT', 'type' => 'text:3:4', 'explain' => true),
+					)
+				);
 
-						'legend4'				=> 'ACP_GARAGE_IMAGE_CONFIG',
+				break;
+			case 'images':
+				$display_vars = array(
+					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'vars'	=> array(
+						'legend1'				=> 'ACP_GARAGE_IMAGE_CONFIG',
 						'enable_images'				=> array('lang' => 'ENABLE_IMAGES', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_vehicle_images'			=> array('lang' => 'ENABLE_VEHICLE_IMAGES', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_modification_images'		=> array('lang' => 'ENABLE_MODIFICATION_IMAGES', 'type' => 'radio:yes_no', 'explain' => true),
@@ -118,145 +139,214 @@ class acp_garage
 						'enable_watermark'			=> array('lang' => 'ENABLE_WATERMARK', 'type' => 'radio:yes_no', 'explain' => true),
 						'watermark_type'			=> array('lang' => 'WATERMARK_TYPE', 'type' => 'custom', 'method' => 'watermark_type', 'explain' => true),
 						'watermark_source'			=> array('lang' => 'WATERMARK_SOURCE', 'type' => 'text:39:40', 'explain' => true),
+					)
+				);
 
-						'legend5'				=> 'ACP_GARAGE_QUARTERMILE_CONFIG',
+				break;
+			case 'quartermile':
+				$display_vars = array(
+					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'vars'	=> array(
+						'legend1'				=> 'ACP_GARAGE_QUARTERMILE_CONFIG',
 						'enable_quartermile'			=> array('lang' => 'ENABLE_QUARTERMILE', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_quartermile_approval'		=> array('lang' => 'ENABLE_QUARTERMILE_APPROVAL', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_quartermile_image_required'	=> array('lang' => 'ENABLE_QUARTERMILE_IMAGE_REQUIRED', 'type' => 'radio:yes_no', 'explain' => true),
 						'quartermile_image_required_limit'	=> array('lang' => 'QUARTERMILE_IMAGE_REQUIRED_LIMIT', 'type' => 'text:3:4', 'explain' => true),
+					)
+				);
 
-						'legend6'				=> 'ACP_GARAGE_DYNORUN_CONFIG',
+				break;
+			case 'dynorun':
+				$display_vars = array(
+					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'vars'	=> array(
+						'legend1'				=> 'ACP_GARAGE_DYNORUN_CONFIG',
 						'enable_dynorun'			=> array('lang' => 'ENABLE_DYNORUN', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_dynorun_approval'		=> array('lang' => 'ENABLE_DYNORUN_APPROVAL', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_dynorun_image_required'		=> array('lang' => 'ENABLE_DYNORUN_IMAGE_REQUIRED', 'type' => 'radio:yes_no', 'explain' => true),
 						'dynorun_image_required_limit'		=> array('lang' => 'DYNORUN_IMAGE_REQUIRED_LIMIT', 'type' => 'text:3:4', 'explain' => true),
+					)
+				);
 
-						'legend7'				=> 'ACP_GARAGE_TRACK_CONFIG',
+				break;
+			case 'track':
+				$display_vars = array(
+					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'vars'	=> array(
+						'legend1'				=> 'ACP_GARAGE_TRACK_CONFIG',
 						'enable_tracktime'			=> array('lang' => 'ENABLE_TRACKTIME', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_user_add_track'			=> array('lang' => 'ENABLE_USER_ADD_LAP', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_lap_approval'			=> array('lang' => 'ENABLE_LAP_APPROVAL', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_track_approval'			=> array('lang' => 'ENABLE_TRACK_APPROVAL', 'type' => 'radio:yes_no', 'explain' => true),
+					)
+				);
 
-						'legend8'				=> 'ACP_GARAGE_INSURANCE_CONFIG',
+				break;
+			case 'insurance':
+				$display_vars = array(
+					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'vars'	=> array(
+						'legend1'				=> 'ACP_GARAGE_INSURANCE_CONFIG',
 						'enable_insurance'			=> array('lang' => 'ENABLE_INSURANCE', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_insurance_search'		=> array('lang' => 'ENABLE_INSURANCE_SEARCH', 'type' => 'radio:yes_no', 'explain' => true),
+					)
+				);
 
-						'legend9'				=> 'ACP_GARAGE_BUSINESS_CONFIG',
+				break;
+			case 'business':
+				$display_vars = array(
+					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'vars'	=> array(
+						'legend1'				=> 'ACP_GARAGE_BUSINESS_CONFIG',
 						'enable_user_submit_business'		=> array('lang' => 'USER_SUBMIT_BUSINESS', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_business_approval'		=> array('lang' => 'BUSINESS_APPROVAL', 'type' => 'radio:yes_no', 'explain' => true),
+					)
+				);
 
-						'legend10'				=> 'ACP_GARAGE_VEHICLE_RATING_CONFIG',
+				break;
+			case 'rating':
+				$display_vars = array(
+					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'vars'	=> array(
+						'legend1'				=> 'ACP_GARAGE_VEHICLE_RATING_CONFIG',
 						'rating_permanent'			=> array('lang' => 'RATING_PERMANENT', 'type' => 'radio:yes_no', 'explain' => true),
 						'rating_always_updateable'		=> array('lang' => 'RATING_ALWAYS_UPDATEABLE', 'type' => 'radio:yes_no', 'explain' => true),
 						'minimum_ratings_required'		=> array('lang' => 'RATING_MINIMUM_REQUIRED', 'type' => 'text:3:4', 'explain' => true),
+					)
+				);
 
-						'legend11'				=> 'ACP_GARAGE_GUESTBOOK_CONFIG',
+				break;
+			case 'guestbook':
+				$display_vars = array(
+					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'vars'	=> array(
+
+						'legend1'				=> 'ACP_GARAGE_GUESTBOOK_CONFIG',
 						'enable_guestbooks'			=> array('lang' => 'ENABLE_GUESTBOOK', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_guestbooks_bbcode'		=> array('lang' => 'ENABLE_GUESTBOOK_BBCODE', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_guestbooks_comment_approval'	=> array('lang' => 'ENABLE_GUESTBOOK_COMMENT_APPROVAL', 'type' => 'radio:yes_no', 'explain' => true),
+					)
+				);
 
-						'legend12'				=> 'ACP_GARAGE_PRODUCT_CONFIG',
+				break;
+			case 'product':
+				$display_vars = array(
+					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'vars'	=> array(
+						'legend1'				=> 'ACP_GARAGE_PRODUCT_CONFIG',
 						'enable_user_submit_product'		=> array('lang' => 'ENABLE_USER_SUBMIT_PRODUCT', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_product_approval'		=> array('lang' => 'ENABLE_PRODUCT_APPROVAL', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_product_search'			=> array('lang' => 'ENABLE_PRODUCT_SEARCH', 'type' => 'radio:yes_no', 'explain' => true),
+					)
+				);
 
-						'legend13'				=> 'ACP_GARAGE_SERVICE_CONFIG',
+				break;
+			case 'service':
+				$display_vars = array(
+					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'vars'	=> array(
+						'legend1'				=> 'ACP_GARAGE_SERVICE_CONFIG',
 						'enable_service'			=> array('lang' => 'ENABLE_SERVICE', 'type' => 'radio:yes_no', 'explain' => true),
+					)
+				);
 
-						'legend14'				=> 'ACP_GARAGE_BLOG_CONFIG',
+				break;
+			case 'blog':
+				$display_vars = array(
+					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'vars'	=> array(
+						'legend1'				=> 'ACP_GARAGE_BLOG_CONFIG',
 						'enable_blogs'				=> array('lang' => 'ENABLE_BLOG', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_blogs_bbcode'			=> array('lang' => 'ENABLE_BLOG_BBCODE', 'type' => 'radio:yes_no', 'explain' => true),
 					)
 				);
-
-				if (isset($display_vars['lang']))
-				{
-					$user->add_lang($display_vars['lang']);
-				}
-
-				$this->new_config = $garage_config;
-				$cfg_array = (isset($_REQUEST['config'])) ? request_var('config', array('' => '')) : $this->new_config;
-
-				// We go through the display_vars to make sure no one is trying to set variables he/she is not allowed to...
-				foreach ($display_vars['vars'] as $config_name => $null)
-				{
-					if (!isset($cfg_array[$config_name]) || strpos($config_name, 'legend') !== false)
-					{
-						continue;
-					}
-
-					$this->new_config[$config_name] = $config_value = $cfg_array[$config_name];
-	
-					if ($submit)
-					{
-						$garage_admin->set_config($config_name, $config_value, $garage_config);
-					}
-				}
-
-				if ($submit)
-				{
-					add_log('admin', 'LOG_CONFIG_' . strtoupper($mode));
-
-					trigger_error($user->lang['CONFIG_UPDATED'] . adm_back_link($this->u_action));
-				}
-
-				$this->tpl_name = 'acp_board';
-				$this->page_title = $display_vars['title'];
-
-				$template->assign_vars(array(
-					'L_TITLE'			=> $user->lang[$display_vars['title']],
-					'L_TITLE_EXPLAIN'	=> $user->lang[$display_vars['title'] . '_EXPLAIN'],
-					'U_ACTION'			=> $this->u_action)
-				);
-
-				// Output relevant page
-				foreach ($display_vars['vars'] as $config_key => $vars)
-				{
-					if (!is_array($vars) && strpos($config_key, 'legend') === false)
-					{
-						continue;
-					}
-	
-					if (strpos($config_key, 'legend') !== false)
-					{
-						$template->assign_block_vars('options', array(
-							'S_LEGEND'	=> true,
-							'LEGEND'	=> (isset($user->lang[$vars])) ? $user->lang[$vars] : $vars)
-						);
-		
-						continue;
-					}
-	
-					$type = explode(':', $vars['type']);
-	
-					$l_explain = '';
-					if ($vars['explain'] && isset($vars['lang_explain']))
-					{
-						$l_explain = (isset($user->lang[$vars['lang_explain']])) ? $user->lang[$vars['lang_explain']] : $vars['lang_explain'];
-					}
-					else if ($vars['explain'])
-					{
-						$l_explain = (isset($user->lang[$vars['lang'] . '_EXPLAIN'])) ? $user->lang[$vars['lang'] . '_EXPLAIN'] : '';
-					}
-
-					$template->assign_block_vars('options', array(
-						'KEY'			=> $config_key,
-						'TITLE'			=> (isset($user->lang[$vars['lang']])) ? $user->lang[$vars['lang']] : $vars['lang'],
-						'S_EXPLAIN'		=> $vars['explain'],
-						'TITLE_EXPLAIN'		=> $l_explain,
-						'CONTENT'		=> build_cfg_template($type, $config_key, $this->new_config, $config_key, $vars),
-						)
-					);
-		
-					unset($display_vars['vars'][$config_key]);
-				}
-			break;
+				break;
 
 			default:
 				trigger_error('NO_MODE');
 		}
 
+		if (isset($display_vars['lang']))
+		{
+			$user->add_lang($display_vars['lang']);
+		}
 
+		$this->new_config = $garage_config;
+		$cfg_array = (isset($_REQUEST['config'])) ? request_var('config', array('' => '')) : $this->new_config;
+
+		// We go through the display_vars to make sure no one is trying to set variables he/she is not allowed to...
+		foreach ($display_vars['vars'] as $config_name => $null)
+		{
+			if (!isset($cfg_array[$config_name]) || strpos($config_name, 'legend') !== false)
+			{
+				continue;
+			}
+
+			$this->new_config[$config_name] = $config_value = $cfg_array[$config_name];
+
+			if ($submit)
+			{
+				$garage_admin->set_config($config_name, $config_value, $garage_config);
+			}
+		}
+
+		if ($submit)
+		{
+			add_log('admin', 'LOG_CONFIG_' . strtoupper($mode));
+
+			trigger_error($user->lang['CONFIG_UPDATED'] . adm_back_link($this->u_action));
+		}
+
+		$this->tpl_name = 'acp_board';
+		$this->page_title = $display_vars['title'];
+
+		$template->assign_vars(array(
+			'L_TITLE'			=> $user->lang[$display_vars['title']],
+			'L_TITLE_EXPLAIN'	=> $user->lang[$display_vars['title'] . '_EXPLAIN'],
+			'U_ACTION'			=> $this->u_action)
+		);
+
+		// Output relevant page
+		foreach ($display_vars['vars'] as $config_key => $vars)
+		{
+			if (!is_array($vars) && strpos($config_key, 'legend') === false)
+			{
+				continue;
+			}
+
+			if (strpos($config_key, 'legend') !== false)
+			{
+				$template->assign_block_vars('options', array(
+					'S_LEGEND'	=> true,
+					'LEGEND'	=> (isset($user->lang[$vars])) ? $user->lang[$vars] : $vars)
+				);
+
+				continue;
+			}
+
+			$type = explode(':', $vars['type']);
+
+			$l_explain = '';
+			if ($vars['explain'] && isset($vars['lang_explain']))
+			{
+				$l_explain = (isset($user->lang[$vars['lang_explain']])) ? $user->lang[$vars['lang_explain']] : $vars['lang_explain'];
+			}
+			else if ($vars['explain'])
+			{
+				$l_explain = (isset($user->lang[$vars['lang'] . '_EXPLAIN'])) ? $user->lang[$vars['lang'] . '_EXPLAIN'] : '';
+			}
+
+			$template->assign_block_vars('options', array(
+				'KEY'			=> $config_key,
+				'TITLE'			=> (isset($user->lang[$vars['lang']])) ? $user->lang[$vars['lang']] : $vars['lang'],
+				'S_EXPLAIN'		=> $vars['explain'],
+				'TITLE_EXPLAIN'		=> $l_explain,
+				'CONTENT'		=> build_cfg_template($type, $config_key, $this->new_config, $config_key, $vars),
+				)
+			);
+
+			unset($display_vars['vars'][$config_key]);
+		}
 	}
 
 	/**

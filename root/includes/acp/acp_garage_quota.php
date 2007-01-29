@@ -7,7 +7,7 @@
  *   email                : esmond.poynton@gmail.com
  *   description          : Provides Vehicle Garage System For phpBB
  *
- *   $Id: admin_garage_permissions.php 138 2006-06-07 15:55:46Z poyntesm $
+ *   $Id$
  *
  ***************************************************************************/
 
@@ -20,40 +20,25 @@
  *
  ***************************************************************************/
 
-define('IN_PHPBB', true);
-
-if( !empty($setmodules) )
+class acp_garage_quota
 {
-	$filename = basename(__FILE__);
-	$module['Garage']['Permissions & Quotas'] = $filename;
-	return;
-}
+	var $u_action;
 
-// Let's set the root dir for phpBB
-$phpbb_root_path = '../';
-$phpEx = substr(strrchr(__FILE__, '.'), 1);
-require('./pagestart.' . $phpEx);
-require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage.' . $phpEx);
-require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/lang_garage_error.' . $phpEx);
+	function main($id, $mode)
+	{
+		global $db, $user, $auth, $template, $cache;
+		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
 
-//Build All Required Garage Classes e.g $garage_images->
-require($phpbb_root_path . 'includes/class_garage.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_image.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_template.' . $phpEx);
-require($phpbb_root_path . 'includes/class_garage_vehicle.' . $phpEx);
+		$user->add_lang('acp/garage');
+		$this->tpl_name = 'acp_garage_business';
+		$this->page_title = 'ACP_MANAGE_FORUMS';
 
-if( isset( $HTTP_POST_VARS['mode'] ) || isset( $HTTP_GET_VARS['mode'] ) )
-{
-	$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
-}
-else
-{
-	$mode = '';
-}
+		$action		= request_var('action', '');
+		$update		= (isset($_POST['update'])) ? true : false;
 
+		switch ($mode)
+		{
 
-switch($mode)
-{
 case 'update_permissions':
 
 		//Right First Lets Handle Private Usergroups With 'DENY' Setup..
