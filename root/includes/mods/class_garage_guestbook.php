@@ -71,7 +71,7 @@ class garage_guestbook
 			'FROM'		=> array(
 				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
 			),
-			'WHERE'		=> "gb.garage_id = $cid"
+			'WHERE'		=> "gb.vehicle_id = $cid"
 		));
 
 		$result = $db->sql_query($sql);
@@ -92,7 +92,7 @@ class garage_guestbook
 		global $cid, $db, $user;
 
 		$sql = 'INSERT INTO ' . GARAGE_GUESTBOOKS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'garage_id'	=> $cid,
+			'vehicle_id'	=> $cid,
 			'author_id'	=> $user->data['user_id'],
 			'post_date'	=> time(),
 			'ip_address'	=> $user->ip,
@@ -116,7 +116,7 @@ class garage_guestbook
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, u.username, u.user_id, u.user_posts, u.user_from, u.user_website, u.user_email, u.user_icq, u.user_aim, u.user_yim, u.user_regdate, u.user_msnm, u.user_allow_viewemail, u.user_rank, u.user_sig, u.user_sig_bbcode_uid, u.user_avatar, u.user_avatar_type, u.user_allow_viewonline, g.made_year, g.id as garage_id, mk.make, md.model, u.user_avatar',
+			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, u.username, u.user_id, u.user_posts, u.user_from, u.user_website, u.user_email, u.user_icq, u.user_aim, u.user_yim, u.user_regdate, u.user_msnm, u.user_allow_viewemail, u.user_rank, u.user_sig, u.user_sig_bbcode_uid, u.user_avatar, u.user_avatar_type, u.user_allow_viewonline, g.made_year, g.id as vehicle_id, mk.make, md.model, u.user_avatar',
 			'FROM'		=> array(
 				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
 			),
@@ -138,7 +138,7 @@ class garage_guestbook
 					'ON'	=> 'g.model_id = md.id and md.pending = 0'
 				)
 			),
-			'WHERE'		=>  "gb.garage_id = $cid",
+			'WHERE'		=>  "gb.vehicle_id = $cid",
 			'ORDER_BY'	=>  "gb.post_date ASC"
 		));
 
@@ -164,7 +164,7 @@ class garage_guestbook
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, u.username, u.user_id, u.user_posts, u.user_from, u.user_website, u.user_email, u.user_icq, u.user_aim, u.user_yim, u.user_regdate, u.user_msnm, u.user_allow_viewemail, u.user_rank, u.user_sig, u.user_sig_bbcode_uid, u.user_avatar, u.user_avatar_type, u.user_allow_viewonline, g.made_year, g.id as garage_id, mk.make, md.model, u.user_avatar',
+			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, u.username, u.user_id, u.user_posts, u.user_from, u.user_website, u.user_email, u.user_icq, u.user_aim, u.user_yim, u.user_regdate, u.user_msnm, u.user_allow_viewemail, u.user_rank, u.user_sig, u.user_sig_bbcode_uid, u.user_avatar, u.user_avatar_type, u.user_allow_viewonline, g.made_year, g.id as vehicle_id, mk.make, md.model, u.user_avatar',
 			'FROM'		=> array(
 				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
 			),
@@ -222,7 +222,7 @@ class garage_guestbook
 					'ON'	=> 'gb.author_id = u.user_id'
 				)
 			),
-			'WHERE'		=>  "gb.garage_id = $cid",
+			'WHERE'		=>  "gb.vehicle_id = $cid",
 			'ORDER_BY'	=>  "gb.post_date DESC"
 		));
 
@@ -248,7 +248,7 @@ class garage_guestbook
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'gb.garage_id AS id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, gb.author_id AS author_id, gb.post_date, u.username',
+			'SELECT'	=> 'gb.vehicle_id AS id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, gb.author_id AS author_id, gb.post_date, u.username',
 			'FROM'		=> array(
 				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
 			),
@@ -296,7 +296,7 @@ class garage_guestbook
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, gb.garage_id, g.made_year, mk.make, md.model, u.username, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
+			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, gb.vehicle_id, g.made_year, mk.make, md.model, u.username, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
 			'FROM'		=> array(
 				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
 			),
@@ -417,9 +417,9 @@ class garage_guestbook
 			$username = $comment_data[$i]['username'];
 			$temp_url = append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $comment_data[$i]['user_id']);
 			$poster = '<a href="' . $temp_url . '">' . $comment_data[$i]['username'] . '</a>';
-			$poster_posts = ( $comment_data[$i]['user_id'] != ANONYMOUS ) ? $user->lang['POSTS'] . ': ' . $comment_data[$i]['user_posts'] : '';
+			$poster_posts = ( $comment_data[$i]['user_id'] != ANONYMOUS ) ? $comment_data[$i]['user_posts'] : '';
 			$poster_from = ( $comment_data[$i]['user_from'] && $comment_data['user_id'] != ANONYMOUS ) ? $user->lang['Location'] . ': ' . $comment_data[$i]['user_from'] : '';
-			$garage_id = $comment_data[$i]['garage_id'];
+			$vehicle_id = $comment_data[$i]['vehicle_id'];
 			$poster_car_year = ( $comment_data[$i]['made_year'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? ' ' . $comment_data[$i]['made_year'] : '';
 			$poster_car_mark = ( $comment_data[$i]['make'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ?  ' ' . $comment_data[$i]['make'] : '';
 			$poster_car_model = ( $comment_data[$i]['model'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? ' ' . $comment_data[$i]['model'] : '';
@@ -510,14 +510,14 @@ class garage_guestbook
 			}
 
 			$template->assign_block_vars('guestbook.comments', array(
-				'POSTER_NAME' 		=> $poster,
+				'POST_AUTHOR' 		=> $poster,
 				'POSTER_JOINED' 	=> $poster_joined,
 				'POSTER_POSTS' 		=> $poster_posts,
 				'POSTER_FROM' 		=> $poster_from,
 				'POSTER_CAR_MARK' 	=> $poster_car_mark,
 				'POSTER_CAR_MODEL' 	=> $poster_car_model,
 				'POSTER_CAR_YEAR' 	=> $poster_car_year,
-				'VIEW_POSTER_CARPROFILE'=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=$garage_id"),
+				'U_VEHICLE'		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=$vehicle_id"),
 				'POSTER_AVATAR' 	=> $poster_avatar,
 				'PROFILE_IMG' 		=> $user->img('icon_user_profile', 'READ_PROFILE'),
 				'PROFILE' 		=> $profile,
@@ -533,6 +533,8 @@ class garage_guestbook
 				'DELETE' 		=> $delpost,
 				'POSTER' 		=> $poster,
 				'POSTED' 		=> $posted,
+				'POST_DATE' 		=> $posted,
+				'MESSAGE' 		=> $post,
 				'POST' 			=> $post)
 			);
 		}

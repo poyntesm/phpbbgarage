@@ -37,7 +37,7 @@ class garage_quartermile
 		global $cid, $db, $garage_config;
 
 		$sql = 'INSERT INTO ' . GARAGE_QUARTERMILES_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'garage_id'	=> $cid,
+			'vehicle_id'	=> $cid,
 			'rt'		=> $data['rt'],
 			'sixty'		=> $data['sixty'],
 			'three'		=> $data['three'],
@@ -66,7 +66,7 @@ class garage_quartermile
 		global $db, $cid, $qmid, $garage_config;
 
 		$update_sql = array(
-			'garage_id'	=> $cid,
+			'vehicle_id'	=> $cid,
 			'rt'		=> $data['rt'],
 			'sixty'		=> $data['sixty'],
 			'three'		=> $data['three'],
@@ -82,7 +82,7 @@ class garage_quartermile
 
 		$sql = 'UPDATE ' . GARAGE_QUARTERMILES_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
-			WHERE id = $qmid AND garage_id = $cid";
+			WHERE id = $qmid AND vehicle_id = $cid";
 
 		$db->sql_query($sql);
 
@@ -164,14 +164,14 @@ class garage_quartermile
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'q.garage_id, MIN(q.quart) as quart',
+			'SELECT'	=> 'q.vehicle_id, MIN(q.quart) as quart',
 			'FROM'		=> array(
 				GARAGE_QUARTERMILES_TABLE	=> 'q',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'q.garage_id =g.id'
+					'ON'	=> 'q.vehicle_id =g.id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
@@ -187,7 +187,7 @@ class garage_quartermile
 				)
 			),
 			'WHERE'		=>  "(q.sixty IS NOT NULL OR q.three IS NOT NULL OR q.eighth IS NOT NULL OR q.eighthmph IS NOT NULL OR q.thou IS NOT NULL OR q.rt IS NOT NULL OR q.quartmph IS NOT NULL) AND ( q.pending = 0 ) AND ( mk.pending = 0 AND md.pending = 0 ) $addtional_where",
-			'GROUP_BY'	=> 'q.garage_id',
+			'GROUP_BY'	=> 'q.vehicle_id',
 			'ORDER_BY'	=> "$sort $order"
 		));
 
@@ -206,7 +206,7 @@ class garage_quartermile
 	// Select Quartermile Data From DB By Vehicle ID And Quart Value
 	// Usage: get_quartermile_by_vehicle_quart('garage id', 'quart');
 	/*========================================================================*/
-	function get_quartermile_by_vehicle_quart($garage_id, $quart)
+	function get_quartermile_by_vehicle_quart($vehicle_id, $quart)
 	{
 		global $db;
 
@@ -221,7 +221,7 @@ class garage_quartermile
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'q.garage_id =g.id'
+					'ON'	=> 'q.vehicle_id =g.id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
@@ -248,7 +248,7 @@ class garage_quartermile
 					'ON'	=> 'i.attach_id = qg.image_id'
 				)
 			),
-			'WHERE'		=>  "q.quart = $quart AND q.garage_id = $garage_id"
+			'WHERE'		=>  "q.quart = $quart AND q.vehicle_id = $vehicle_id"
 		));
 
 		$result = $db->sql_query($sql);
@@ -270,14 +270,14 @@ class garage_quartermile
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id as garage_id, u.user_id, g.user_id, q.id as qmid, qg.image_id, u.username, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.dynorun_id',
+			'SELECT'	=> 'g.id as vehicle_id, u.user_id, g.user_id, q.id as qmid, qg.image_id, u.username, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.dynorun_id',
 			'FROM'		=> array(
 				GARAGE_QUARTERMILES_TABLE	=> 'q',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'q.garage_id =g.id'
+					'ON'	=> 'q.vehicle_id =g.id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
@@ -333,7 +333,7 @@ class garage_quartermile
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'q.garage_id =g.id'
+					'ON'	=> 'q.vehicle_id =g.id'
 				)
 				,array(
 					'FROM'	=> array(USERS_TABLE => 'u'),
@@ -396,7 +396,7 @@ class garage_quartermile
 					'ON'	=> 'i.attach_id = qg.image_id'
 				)
 			),
-			'WHERE'		=> 	"q.garage_id = $cid",
+			'WHERE'		=> 	"q.vehicle_id = $cid",
 			'ORDER_BY'	=>	'q.id'
 		));
 	
@@ -438,7 +438,7 @@ class garage_quartermile
 
 		for($i = 0; $i < count($times); $i++)
 		{
-			$data = $this->get_quartermile_by_vehicle_quart($times[$i]['garage_id'], $times[$i]['quart']);
+			$data = $this->get_quartermile_by_vehicle_quart($times[$i]['vehicle_id'], $times[$i]['quart']);
 	
 			$mph = (empty($data['quartmph'])) ? 'N/A' : $data['quartmph'];
 	            	$quartermile = $data['quart'] .' @ ' . $mph . ' '. $user->lang['QUARTERMILE_SPEED_UNIT'];

@@ -176,13 +176,13 @@ function dE(n, s, type)
 				<ul>
 					<li class="perm_preset_yes activetab" id="tab000"><a href="#images" onclick="swap_options('0','0','0'); return false;"><span class="tabbg">{L_IMAGES}</span></a></li>	
 					<li class="perm_preset_yes" id="tab001"><a href="#modifications" onclick="swap_options('0','0','1'); return false;"><span class="tabbg">{L_MODIFICATIONS}</span></a></li>	
-					<li class="perm_preset_yes" id="tab002"><a href="#" onclick="swap_options('0','0','2'); return false;"><span class="tabbg">&frac14; Miles</span></a></li>	
+					<li class="perm_preset_yes" id="tab002"><a href="#quartermiles" onclick="swap_options('0','0','2'); return false;"><span class="tabbg">&frac14; Miles</span></a></li>	
 					<li class="perm_preset_yes" id="tab003"><a href="#dynoruns" onclick="swap_options('0','0','3'); return false;"><span class="tabbg">Dynoruns</span></a></li>	
-					<li class="perm_preset_yes" id="tab004"><a href="#" onclick="swap_options('0','0','4'); return false;"><span class="tabbg">Laps</span></a></li>	
-					<li class="perm_preset_yes" id="tab005"><a href="#" onclick="swap_options('0','0','5'); return false;"><span class="tabbg">Premiums</span></a></li>	
-					<li class="perm_preset_yes" id="tab006"><a href="#" onclick="swap_options('0','0','6'); return false;"><span class="tabbg">Services</span></a></li>	
-					<li class="perm_preset_yes" id="tab007"><a href="#" onclick="swap_options('0','0','7'); return false;"><span class="tabbg">Blog</span></a></li>	
-					<li class="perm_preset_yes" id="tab008"><a href="#" onclick="swap_options('0','0','8'); return false;"><span class="tabbg">Guestbook</span></a></li>	
+					<li class="perm_preset_yes" id="tab004"><a href="#laps" onclick="swap_options('0','0','4'); return false;"><span class="tabbg">Laps</span></a></li>	
+					<li class="perm_preset_yes" id="tab005"><a href="#premiums" onclick="swap_options('0','0','5'); return false;"><span class="tabbg">Premiums</span></a></li>	
+					<li class="perm_preset_yes" id="tab006"><a href="#services" onclick="swap_options('0','0','6'); return false;"><span class="tabbg">Services</span></a></li>	
+					<li class="perm_preset_yes" id="tab007"><a href="#blog" onclick="swap_options('0','0','7'); return false;"><span class="tabbg">Blog</span></a></li>	
+					<li class="perm_preset_yes" id="tab008"><a href="#guestbook" onclick="swap_options('0','0','8'); return false;"><span class="tabbg">Guestbook</span></a></li>	
 				</ul>
 			</div>
 
@@ -252,6 +252,7 @@ function dE(n, s, type)
 			<span class="corners-top"><span></span></span>
 			<div class="tablewrap">
 				<!-- BEGIN category -->
+				<a name="modifications"></a>
 				<table width="100%" id="table001" cellspacing="1" class="tablebg">
 	<tr>
 					<th height="25" colspan="8">{category.CATEGORY_TITLE}&nbsp;{L_MODIFICATIONS}</th>
@@ -475,7 +476,7 @@ function dE(n, s, type)
 				</tr>
 				<tr>
 					<td class="row1" width="20%"><span class="gen">{L_BLOG_HEADER}</span></td>
-					<td class="row2" colspan="1"><input name="blog_header" type="text" class="post" size="60" value="{}" /></td>
+					<td class="row2" colspan="1"><input name="blog_title" type="text" class="post" size="60" value="{}" /></td>
 				</tr>
 				<tr>
 					<td class="row1" width="20%"><span class="gen">{L_ADD_BLOG}</span></td>
@@ -487,7 +488,7 @@ function dE(n, s, type)
 				<!-- ENDIF -->
 				<!-- BEGIN entry -->
 				<tr>
-					<td class="row1" colspan="2"><b>{entry.BLOG_HEADER}</b><br />{entry.BLOG_DATE}<br /><br />{entry.BLOG}</td>
+					<td class="row1" colspan="2"><h3>{blog.entry.BLOG_TITLE}</h3>{blog.entry.BLOG_DATE}<br /><br />{blog.entry.BLOG_TEXT}</td>
 				</tr>
 				<!-- BEGINELSE -->
 				<tr>
@@ -507,31 +508,121 @@ function dE(n, s, type)
 			<!-- BEGIN guestbook -->
 			<form method="post" name="guestbook" action="{S_MODE_GUESTBOOK_ACTION}">
 			<table width="100%" id="table008" cellspacing="1" cellpadding="3" border="0" class="tablebg">
+			<!-- BEGIN comments -->
+			<!-- IF guestbook.comments.S_FIRST_ROW -->
 				<tr>
-					<th height="25" nowrap="nowrap" colspan="5">{L_GUESTBOOK}</th>
+					<th>{L_AUTHOR}</th>
+					<th>{L_MESSAGE}</th>
 				</tr>
-				<!-- BEGIN comments -->
-				<tr>
-					<td class="row2" align="center" height="28" ><span class="name"><a name="{guestbook.comments.U_POST_ID}"></a><b>{guestbook.comments.POSTER_NAME}</b></span><br /><span class="postdetails">{guestbook.comments.POSTER_RANK}<br />{guestbook.comments.RANK_IMAGE}<br />{guestbook.comments.POSTER_AVATAR}<br /> {guestbook.comments.POSTER_JOINED}<br />{guestbook.comments.POSTER_FROM}<br /><br /><a href="{guestbook.comments.VIEW_POSTER_CARPROFILE}" >{guestbook.comments.POSTER_CAR_YEAR} {guestbook.comments.POSTER_CAR_MARK} {guestbook.comments.POSTER_CAR_MODEL}</a><br /></span></td>
-					<td class="row2" align="left" valign="top" height="28" colspan="4" >
-						<table width="100%">
-							<tr><td align="left"><span class="gensmall"><b>{L_POSTED}:</b> <span class="gensmall">{guestbook.comments.POSTED}</span></td><td align="right">{guestbook.comments.EDIT_IMG} {guestbook.comments.DELETE_IMG}</span></tr></td>
-							<tr><td colspan="2"><span class="postbody" align="left">{guestbook.comments.POST}</span></tr></td>
-						</table>
-					</td>
+				<!-- ENDIF -->
+				<!-- IF guestbook.comments.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+
+				<!-- IF guestbook.comments.S_IGNORE_POST -->
+						<td class="gensmall" colspan="2" height="25" align="center"><!-- IF guestbook.comments.S_FIRST_UNREAD --><a name="unread"></a><!-- ENDIF --><a name="p{guestbook.comments.POST_ID}"></a>{guestbook.comments.L_IGNORE_POST}</td>
+				<!-- ELSE -->
+
+						<td align="center" valign="middle">
+							<b class="postauthor"<!-- IF guestbook.comments.POST_AUTHOR_COLOUR --> style="color: {guestbook.comments.POST_AUTHOR_COLOUR}"<!-- ENDIF -->>{guestbook.comments.POST_AUTHOR}</b>
+						</td>
+						<td width="100%" height="25">
+							<table width="100%" cellspacing="0">
+							<tr>
+							<!-- IF guestbook.comments.POST_ICON_IMG -->
+								<td><img src="{T_ICONS_PATH}{guestbook.comments.POST_ICON_IMG}" width="{guestbook.comments.POST_ICON_IMG_WIDTH}" height="{guestbook.comments.POST_ICON_IMG_HEIGHT}" alt="" title="" /></td>
+							<!-- ENDIF -->
+								<td class="gensmall" width="100%"><div style="float:right"><a href="{guestbook.comments.U_MINI_POST}">{guestbook.comments.MINI_POST_IMG}</a><b>{L_POSTED}:</b> {guestbook.comments.POST_DATE}&nbsp;</div></td>
+							</tr>
+							</table>
+						</td>
+					</tr>
+		
+					<!-- IF guestbook.comments.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+
+						<td valign="top">
+							<table cellspacing="4" align="center" width="150">
+						<!-- IF guestbook.comments.ONLINE_IMG -->
+							<tr>
+								<td>{guestbook.comments.ONLINE_IMG}</td>
 				</tr>
+			<!-- ENDIF -->
+			<!-- IF guestbook.comments.RANK_TITLE -->
 				<tr>
-					<td class="row2" align="center" height="10"> </td>
-					<td class="row2" valign="middle" height="10" colspan="1">{guestbook.comments.PROFILE_IMG} {guestbook.comments.PM_IMG} {guestbook.comments.EMAIL_IMG} {guestbook.comments.WWW_IMG} </td>
+					<td class="postdetails">{guestbook.comments.RANK_TITLE}</td>
 				</tr>
+			<!-- ENDIF -->
+			<!-- IF guestbook.comments.RANK_IMG -->
 				<tr>
-					<td class="row1" align="center" height="3" colspan="5"></td>
+					<td>{guestbook.comments.RANK_IMG}</td>
+				</tr>
+			<!-- ENDIF -->
+			<!-- IF guestbook.comments.POSTER_AVATAR -->
+				<tr>
+					<td>{guestbook.comments.POSTER_AVATAR}</td>
+				</tr>
+			<!-- ENDIF -->
+			<!-- IF guestbook.comments.U_VEHICLE -->
+				<tr>
+					<td class="postdetails"><a href={guestbook.comments.U_VEHICLE}>{guestbook.comments.POSTER_CAR_YEAR} {guestbook.comments.POSTER_CAR_MARK} {guestbook.comments.POSTER_CAR_MODEL}</a></td>
+				</tr>
+			<!-- ENDIF -->
+				</table>
+
+				<span class="postdetails">
+					<!-- IF guestbook.comments.POSTER_JOINED --><br /><b>{L_JOINED}:</b> {guestbook.comments.POSTER_JOINED}<!-- ENDIF -->
+					<!-- IF guestbook.comments.POSTER_POSTS != '' --><br /><b>{L_POSTS}:</b> {guestbook.comments.POSTER_POSTS}<!-- ENDIF -->
+					<!-- IF guestbook.comments.POSTER_FROM --><br /><b>{L_LOCATION}:</b> {guestbook.comments.POSTER_FROM}<!-- ENDIF -->
+
+					<!-- BEGIN custom_fields -->
+						<br /><b>{guestbook.comments.custom_fields.PROFILE_FIELD_NAME}:</b> {guestbook.comments.custom_fields.PROFILE_FIELD_VALUE}
+					<!-- END custom_fields -->
+				</span>
+
+			</td>
+			<td valign="top">
+				<table width="100%" cellspacing="5">
+				<tr>
+					<td>
+						<div class="postbody">{guestbook.comments.MESSAGE}</div>
+
+					<!-- IF guestbook.comments.SIGNATURE -->
+						<span class="postbody"><br />_________________<br />{guestbook.comments.SIGNATURE}</span>
+					<!-- ENDIF -->
+
+					<!-- IF not guestbook.comments.S_HAS_ATTACHMENTS --><br clear="all" /><br /><!-- ENDIF -->
+									<table width="100%" cellspacing="0">
+									<tr valign="middle">
+										<td class="gensmall" align="right">
+										<!-- IF not S_IS_BOT -->
+											<!-- IF guestbook.comments.U_INFO --><a href="{guestbook.comments.U_INFO}">{INFO_IMG}</a> <!-- ENDIF --> 
+											<!-- IF guestbook.comments.U_WARN --><a href="{guestbook.comments.U_WARN}">{WARN_IMG}</a> <!-- ENDIF --> 
+											<!-- IF guestbook.comments.U_DELETE --><a href="{guestbook.comments.U_DELETE}">{DELETE_IMG}</a> <!-- ENDIF -->
+										<!-- ENDIF -->
+										</td>
+									</tr>
+									</table>
+								</td>
+							</tr>
+							</table>
+						</td>
+					</tr>
+
+					<!-- IF guestbook.comments.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+
+						<td nowrap="nowrap">&nbsp;</td>
+						<td><div class="gensmall" style="float: left;">&nbsp;<!-- IF guestbook.comments.U_PROFILE --><a href="{guestbook.comments.U_PROFILE}">{PROFILE_IMG}</a> <!-- ENDIF --> <!-- IF guestbook.comments.U_PM --><a href="{guestbook.comments.U_PM}">{PM_IMG}</a> <!-- ENDIF --> <!-- IF guestbook.comments.U_EMAIL --><a href="{guestbook.comments.U_EMAIL}">{EMAIL_IMG}</a> <!-- ENDIF -->&nbsp;</div> <div class="gensmall" style="float:right"><!-- IF not S_IS_BOT --><!-- IF guestbook.comments.U_EDIT --><a href="{guestbook.comments.U_EDIT}">{EDIT_IMG}</a> <!-- ENDIF --> <!-- IF guestbook.comments.U_QUOTE --><a href="{guestbook.comments.U_QUOTE}">{QUOTE_IMG}</a> <!-- ENDIF --> <!-- ENDIF -->&nbsp;</div></td>
+					</tr>
+
+				<!-- ENDIF -->
+	
+				<tr>
+					<td class="spacer" colspan="2" height="1"><img src="images/spacer.gif" alt="" width="1" height="1" /></td>
 				</tr>
 				<!-- BEGINELSE -->
 				<tr>
 					<td class="row1" align="center" height="28" colspan="5"><span class="gen">{L_ADD_FIRST_COMMENT}</span></td>
 				</tr>
 				<!-- END comments -->
+
 				<!-- IF S_DISPLAY_LEAVE_COMMENT -->
 				<tr>
 					<td class="cat" align="center" height="28" colspan="5"><span class="gen">{L_ADD_COMMENT}</span></td>

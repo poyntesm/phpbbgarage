@@ -1,6 +1,6 @@
 <?php
 /***************************************************************************
- *                              admin_garage_business.php
+ *                              acp_garage_business.php
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton
@@ -32,17 +32,16 @@ class acp_garage_business
 		global $db, $user, $auth, $template, $cache;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
 
+		//Build All Garage Classes e.g $garage_images->
+		require($phpbb_root_path . 'includes/mods/class_garage_business.' . $phpEx);
+
 		$user->add_lang('acp/garage');
 		$this->tpl_name = 'acp_garage_business';
 		$this->page_title = 'ACP_MANAGE_FORUMS';
 
 		$action		= request_var('action', '');
 		$update		= (isset($_POST['update'])) ? true : false;
-//Lets Setup Messages We Might Need...Just Easier On The Eye Doing This Seperatly
-$missing_data_message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_business.$phpEx") . '">'. $lang['Missing_Required_Data']. "<br /><br />" . sprintf($lang['Click_Return_Garage_Business'], "<a href=\"" . append_sid("admin_garage_business.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-$business_created_message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_business.$phpEx") . '">' . $lang['New_Business_Created'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Business'], "<a href=\"" . append_sid("admin_garage_business.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-$business_updated_message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_business.$phpEx") . '">' . $lang['Business_Updated'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Business'], "<a href=\"" . append_sid("admin_garage_business.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-$business_deleted_message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_business.$phpEx") . '">' . $lang['Business_Deleted'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Business'], "<a href=\"" . append_sid("admin_garage_business.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
+		
 		switch ($mode)
 		{
 			case 'insert_business':
@@ -127,15 +126,15 @@ $business_deleted_message = '<meta http-equiv="refresh" content="3;url=' . appen
 					'S_GARAGE_ACTION' => append_sid("admin_garage_business.$phpEx?mode=delete_business&amp;id=".$data[0]['id']),
 					'S_TITLE' => $data[0]['title'],
 					'L_DELETE' => $lang['Delete_Business'],
-					'L_DELETE_EXPLAIN' => $lang['Delete_Business_Explain'],
-					'L_MOVE_CONTENTS' => $lang['Move_contents'],
-					'L_MOVE_DELETE' => $lang['Move_and_Delete'],
-					'L_REQUIRED' => $lang['Required'],
-					'L_REMOVE' => $lang['Remove_Business'],
-					'L_MOVE_DELETE' => $lang['Move_Delete_Business'],
-					'L_MOVE_DELETE_BUTTON' => $lang['Delete_Business_Button'],
-					'L_OR' => $lang['Or'],
-					'L_DELETE_PERMENANTLY' => $lang['Delete_Permenantly'],
+					'L_DELETE_EXPLAIN' => $user->lang['Delete_Business_Explain'],
+					'L_MOVE_CONTENTS' => $user->lang['Move_contents'],
+					'L_MOVE_DELETE' => $user->lang['Move_and_Delete'],
+					'L_REQUIRED' => $user->lang['Required'],
+					'L_REMOVE' => $user->lang['Remove_Business'],
+					'L_MOVE_DELETE' => $user->lang['Move_Delete_Business'],
+					'L_MOVE_DELETE_BUTTON' => $user->lang['Delete_Business_Button'],
+					'L_OR' => $user->lang['Or'],
+					'L_DELETE_PERMENANTLY' => $user->lang['Delete_Permenantly'],
 					'MOVE_TO_LIST' => $select_to)
 				);
 		
@@ -206,41 +205,12 @@ $business_deleted_message = '<meta http-equiv="refresh" content="3;url=' . appen
 				);
 		
 				$template->assign_vars(array(
-					'L_GARAGE_BUSINESS_TITLE' => $lang['Garage_Business_Title'],
-					'L_GARAGE_BUSINESS_EXPLAIN' => $lang['Garage_Business_Explain'],
-					'L_ADD_NEW_BUSINESS' => $lang['Add_New_Business'],
-					'L_TYPE' => $lang['Type'],
-					'L_EDIT_BUSINESS' => $lang['Edit_Business'],
-					'L_BUSINESS_NAME' => $lang['Business_Name'],
-					'L_INSURANCE' => $lang['Insurance'],
-					'L_GARAGE' => $lang['Garage'],
-					'L_RETAIL_SHOP' => $lang['Retail_Shop'],
-					'L_WEB_SHOP' => $lang['Web_Shop'],
-					'L_BUSINESS_TYPE' => $lang['Business_Type'],
-					'L_BUSINESS_OPENING_HOURS' => $lang['Business_Opening_Hours'],
-					'L_BUSINESS_EMAIL' => $lang['Business_Email'],
-					'L_BUSINESS_FAX_NO' => $lang['Business_Fax_No'],
-					'L_BUSINESS_TELEPHONE_NO' => $lang['Business_Telephone_No'],
-					'L_BUSINESS_ADDRESS' => $lang['Business_Address'],
-					'L_BUSINESS_WEBSITE' => $lang['Business_Website'],
-					'L_NAME' => $lang['Name'],
-					'L_EDIT' => $lang['Edit'],
-					'L_STATUS' => $lang['Status'],
-					'L_DELETE' => $lang['Delete'],
-					'L_CREATE_CATEGORY' => $lang['Create_category'],
-					'L_CAT_TITLE' => $lang['New_Category_Title'],
-					'L_PANEL_TITLE' => $lang['Create_category'],
-					'L_EMPTY_TITLE' => $lang['Empty_Title'],
-					'L_CLICK_TO_SHOW' => $lang['Show_Details'],
-					'L_CLICK_TO_HIDE' => $lang['Hide_Details'],
-					'SHOW' => '<img src="../' . $images['garage_show_details'] . '" alt="'.$lang['Show_Details'].'" title="'.$lang['Show_Details'].'" border="0" />',
-					'HIDE' => '<img src="../' . $images['garage_hide_details'] . '" alt="'.$lang['Hide_Details'].'" title="'.$lang['Hide_Details'].'" border="0" />',
 					'S_GARAGE_MODE_UPDATE' => append_sid("admin_garage_business.$phpEx?mode=update_business"),
 					'S_GARAGE_MODE_NEW' => append_sid("admin_garage_business.$phpEx?mode=insert_business"))
 				);
 		
 				//Get All The Business Data
-				$data = $garage_business->select_all_business_data('');
+				$data = $garage_business->get_all_business();
 		
 				for( $i = 0; $i < count($data); $i++ )
 				{
@@ -291,10 +261,7 @@ $business_deleted_message = '<meta http-equiv="refresh" content="3;url=' . appen
 					$template->assign_block_vars('business.detail', array());
 				}
 		
-				$template->pparse('body');
-		
 				break;
-		
 		}
 
 	}

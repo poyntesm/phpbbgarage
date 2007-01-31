@@ -37,7 +37,7 @@ class garage_track
 		global $cid, $db, $garage_config;
 
 		$sql = 'INSERT INTO ' . GARAGE_LAPS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'garage_id'	=> $cid,
+			'vehicle_id'	=> $cid,
 			'track_id'	=> $data['track_id'],
 			'condition_id'	=> $data['condition_id'],
 			'type_id'	=> $data['type_id'],
@@ -81,7 +81,7 @@ class garage_track
 		global $db, $lid, $cid, $garage_config;
 
 		$update_sql = array(
-			'garage_id'	=> $cid,
+			'vehicle_id'	=> $cid,
 			'track_id'	=> $data['track_id'],
 			'condition_id'	=> $data['condition_id'],
 			'type_id'	=> $data['type_id'],
@@ -93,7 +93,7 @@ class garage_track
 
 		$sql = 'UPDATE ' . GARAGE_LAPS_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
-			WHERE id = $lid AND garage_id = $cid";
+			WHERE id = $lid AND vehicle_id = $cid";
 
 
 		$db->sql_query($sql);
@@ -233,7 +233,7 @@ class garage_track
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'l.garage_id =g.id'
+					'ON'	=> 'l.vehicle_id =g.id'
 				)
 				,array(
 					'FROM'	=> array(USERS_TABLE => 'u'),
@@ -316,7 +316,7 @@ class garage_track
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'l.garage_id =g.id'
+					'ON'	=> 'l.vehicle_id =g.id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
@@ -386,7 +386,7 @@ class garage_track
 					'ON'	=> 'l.track_id = t.id'
 				)
 			),
-			'WHERE'		=>	"l.garage_id = $cid",
+			'WHERE'		=>	"l.vehicle_id = $cid",
 			'ORDER_BY'	=>	'l.id'
 		));
 
@@ -412,14 +412,14 @@ class garage_track
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'l.*, l.id as lid, i.*, t.title, u.username, u.user_id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, g.id as garage_id',
+			'SELECT'	=> 'l.*, l.id as lid, i.*, t.title, u.username, u.user_id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, g.id as vehicle_id',
 			'FROM'		=> array(
 				GARAGE_LAPS_TABLE	=> 'l',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'l.garage_id =g.id'
+					'ON'	=> 'l.vehicle_id =g.id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),

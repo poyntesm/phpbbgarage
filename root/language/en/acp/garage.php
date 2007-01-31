@@ -237,11 +237,28 @@ $lang = array_merge($lang, array(
 	'ENABLE_USER_ADD_LAP_EXPLAIN' 			=> 'Enable users to submit new tracks',
 
 
+//LOG Messages Keys
+	'LOG_GARAGE_CONFIG_GENERAL'			=> '<strong>Altered garage general settings</strong>',
+	'LOG_GARAGE_CONFIG_MENU'			=> '<strong>Altered garage menu settings</strong>',
+	'LOG_GARAGE_CONFIG_INDEX'			=> '<strong>Altered garage index page settings</strong>',
+	'LOG_GARAGE_CONFIG_IMAGES'			=> '<strong>Altered garage image settings</strong>',
+	'LOG_GARAGE_CONFIG_QUARTERMILE'			=> '<strong>Altered garage quartermile settings</strong>',
+	'LOG_GARAGE_CONFIG_DYNORUN'			=> '<strong>Altered garage dynorun settings</strong>',
+	'LOG_GARAGE_CONFIG_TRACK'			=> '<strong>Altered garage track & lap settings</strong>',
+	'LOG_GARAGE_CONFIG_INSURANCE'			=> '<strong>Altered garage insurance settings</strong>',
+	'LOG_GARAGE_CONFIG_BUSINESS'			=> '<strong>Altered garage business settings</strong>',
+	'LOG_GARAGE_CONFIG_RATING'			=> '<strong>Altered garage rating settings</strong>',
+	'LOG_GARAGE_CONFIG_GUESTBOOK'			=> '<strong>Altered garage guestbook settings</strong>',
+	'LOG_GARAGE_CONFIG_PRODUCT'			=> '<strong>Altered garage product settings</strong>',
+	'LOG_GARAGE_CONFIG_SERVICE'			=> '<strong>Altered garage service settings</strong>',
+	'LOG_GARAGE_CONFIG_BLOG'			=> '<strong>Altered garage blog settings</strong>',
+
+
+
 //ADMIN : Categories
 	'Any_Model' 					=> 'Any Model',
 	'Select_Model' 					=> 'Select Model',
-	'Garage_Categories_Title' 			=> 'Garage Categories Control',
-	'Garage_Categories_Explain' 			=> 'On this screen you can manage your categories: create, alter, delete.',
+
 	'Category_Permissions' 				=> 'Category Permissions',
 	'Category_Title' 				=> 'Category Title',
 	'Category_Desc' 				=> 'Category Description',
@@ -519,8 +536,8 @@ $lang = array_merge($lang, array(
 	'Permission_Access_Levels' => 'Permission Access Levels',
 	'Click_Return_Permissions' => 'Click %sHere%s to return to the Garage Permissions Manager',
 
-	'Name' => 'Name',
-	'Browse' => 'Browse',
+	'NAME' => 'Name',
+	'BROWSE' => 'Browse',
 	'Interact' => 'Interact',
 	'Add' => 'Add',
 	'Upload' => 'Upload',
@@ -671,8 +688,6 @@ $lang = array_merge($lang, array(
 //Added For New Category & Business Admin Pages
 	'Deny' => 'Deny',
 	'Rename' => 'Rename',
-	'Empty_Title' => 'You Have Not Entered A Category Title',
-	'Category_Order_Updated' => 'Category Order Updated',
 	'Status' => 'Status',
 	'Show_Details' => 'Show Details',
 	'Hide_Details' => 'Hide Details',
@@ -700,7 +715,6 @@ $lang = array_merge($lang, array(
 	'Bhp-Torque-Nitrous' => 'Bhp / Torque / Nitrous',
 	'Purchase_Rating' => 'Purchase Rating',
 	'Category_Updated' => 'Category Name Updated',
-	'Category_Deleted' => 'Category Deleted',
 	'No_Pending_Items' => 'No Pending Items',
 	'Enable_Quartermile_Image_Required' => '<b>Enable Quartermile Image Required?</b><br />Makes all times below a certain value require a image.',
 	'Enable_Dynorun_Image_Required' => '<b>Enable Dynorun Image Required?</b><br />Makes all runs above a certain value require a image.',
@@ -721,6 +735,27 @@ $lang = array_merge($lang, array(
 	'WATERMARK_TYPE_EXPLAIN'	=> 'Permanent will save original file with watermark. Non permanent will leave file in original state.',
 	'WATERMARK_SOURCE'		=> 'Watermark Sourcefile',
 	'WATERMARK_SOURCE_EXPLAIN'	=> 'Source file to be used for watermarking.',
+
+	//CATEGORY KEYS
+	'CREATE_CATEGORY'		=> 'Create category',
+	'CATEGORY_SETTINGS'		=> 'Category settings',
+	'CATEGORY_DELETE'		=> 'Category delete',
+	'CATEGORY_UPDATE'		=> 'Category update',
+	'CATEGORY_DELETED'		=> 'Category deleted',
+	'CATEGORY_UPDATED'		=> 'Category updated',
+	'CATEGORY_DELETE_EXPLAIN'	=> 'The form below will allow you to delete a modification category. You are able to decide where you want to put all modifications it contained.',
+	'CATEGORY_UPDATE_EXPLAIN'	=> 'The form below will allow you to update a modification category.',
+	'CATEGORY_NAME'			=> 'Category name',
+	'DELETE_ALL_MODIFICATIONS'	=> 'Delete all modifications',
+	'MOVE_MODIFICATIONS_TO'		=> 'Move modifications to',
+	'NO_DESTINATION_CATEGORY'	=> 'No destintation category selected',
+	'NO_CATEGORY'			=> 'Category does not exists',
+	'CATEGORY_NAME_EMPTY'		=> 'No category name entered',
+	'GARAGE_CAT_TITLE' 		=> 'Garage Categories Control',
+	'GARAGE_CAT_EXPLAIN' 		=> 'On this screen you can manage your categories: create, alter, delete.',
+
+
+
 ));
 
 ?>

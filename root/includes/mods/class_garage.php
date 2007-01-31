@@ -323,7 +323,7 @@ class garage
 				'LEFT_JOIN'	=> array(
 					array(
 						'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'm'),	
-						'ON'	=> 'v.id = m.garage_id'
+						'ON'	=> 'v.id = m.vehicle_id'
 					)
 					,array(
 						'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
@@ -339,7 +339,7 @@ class garage
 					)
 					,array(
 						'FROM'	=> array(GARAGE_VEHICLE_GALLERY_TABLE => 'vg'),
-						'ON'	=> 'v.id = vg.garage_id AND vg.hilite = 1'
+						'ON'	=> 'v.id = vg.vehicle_id AND vg.hilite = 1'
 					)
 					,array(
 						'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
@@ -368,7 +368,7 @@ class garage
 				'LEFT_JOIN'	=> array(
 					array(
 						'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'v'),	
-						'ON'	=> 'm.garage_id = v.id'
+						'ON'	=> 'm.vehicle_id = v.id'
 					)
 					,array(
 						'FROM'	=> array(GARAGE_CATEGORIES_TABLE => 'c'),	
@@ -425,7 +425,7 @@ class garage
 				'LEFT_JOIN'	=> array(
 					array(
 						'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'v'),	
-						'ON'	=> 'p.garage_id = v.id'
+						'ON'	=> 'p.vehicle_id = v.id'
 					)
 					,array(
 						'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
@@ -437,7 +437,7 @@ class garage
 					)
 					,array(
 						'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'm'),	
-						'ON'	=> 'v.id = m.garage_id'
+						'ON'	=> 'v.id = m.vehicle_id'
 					)
 					,array(
 						'FROM'	=> array(USERS_TABLE => 'u'),
@@ -470,7 +470,7 @@ class garage
 				'LEFT_JOIN'	=> array(
 					array(
 						'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'v'),	
-						'ON'	=> 'q.garage_id = v.id'
+						'ON'	=> 'q.vehicle_id = v.id'
 					)
 					,array(
 						'FROM'	=> array(GARAGE_DYNORUNS_TABLE => 'd'),	
@@ -486,7 +486,7 @@ class garage
 					)
 					,array(
 						'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'm'),	
-						'ON'	=> 'v.id = m.garage_id'
+						'ON'	=> 'v.id = m.vehicle_id'
 					)
 					,array(
 						'FROM'	=> array(USERS_TABLE => 'u'),
@@ -523,7 +523,7 @@ class garage
 				'LEFT_JOIN'	=> array(
 					array(
 						'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'v'),	
-						'ON'	=> 'd.garage_id = v.id'
+						'ON'	=> 'd.vehicle_id = v.id'
 					)
 					,array(
 						'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
@@ -535,7 +535,7 @@ class garage
 					)
 					,array(
 						'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'm'),	
-						'ON'	=> 'v.id = m.garage_id'
+						'ON'	=> 'v.id = m.vehicle_id'
 					)
 					,array(
 						'FROM'	=> array(USERS_TABLE => 'u'),
@@ -569,14 +569,14 @@ class garage
 
 			//Handle SQL Part
 			$sql_array = array(
-				'SELECT'	=> "v.id, v.made_year, v.user_id, mk.make, md.model, l.*, i.*, l.id as lid, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, u.username, t.title, v.id as garage_id",
+				'SELECT'	=> "v.id, v.made_year, v.user_id, mk.make, md.model, l.*, i.*, l.id as lid, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, u.username, t.title, v.id as vehicle_id",
 				'FROM'		=> array(
 					GARAGE_LAPS_TABLE	=> 'l',
 				),
 				'LEFT_JOIN'	=> array(
 					array(
 						'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'v'),	
-						'ON'	=> 'l.garage_id = v.id'
+						'ON'	=> 'l.vehicle_id = v.id'
 					)
 					,array(
 						'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
@@ -588,7 +588,7 @@ class garage
 					)
 					,array(
 						'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'm'),	
-						'ON'	=> 'v.id = m.garage_id'
+						'ON'	=> 'v.id = m.vehicle_id'
 					)
 					,array(
 						'FROM'	=> array(USERS_TABLE => 'u'),

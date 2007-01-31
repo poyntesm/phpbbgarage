@@ -78,7 +78,11 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_business (
 		`website` varchar(255) default NULL,
 		`email` varchar(32) default NULL,
 		`opening_hours` varchar(255) default NULL,
-		`type` varchar(32) default NULL,
+		`insurance` tinyint(1) NOT NULL default '0',
+		`garage` tinyint(1) NOT NULL default '0',
+		`retail` tinyint(1) NOT NULL default '0',
+		`product` tinyint(1) NOT NULL default '0',
+		`dynocentre` tinyint(1) NOT NULL default '0',
 		`pending` tinyint(1) NOT NULL default '0',
 		`comments` text,
 		PRIMARY KEY  (`id`)
@@ -301,10 +305,11 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_blog (
 		`id` int(10) NOT NULL auto_increment,
 		`vehicle_id` int(10) NOT NULL default '0',
 		`user_id` int(10) NOT NULL default '0',
+		`blog_title` varchar(60) NOT NULL default '',
+		`blog_text` mediumtext NOT NULL default '',
+		`blog_date` int(10) default NULL,
 		`bbcode_bitfield` varchar(255) NOT NULL default '',
 		`bbcode_uid` varchar(5) NOT NULL default '',
-		`blog_title` varchar(255) NOT NULL default '',
-		`blog_text` medium NOT NULL default '',
 		PRIMARY KEY  (`id`)
 	)";
 //Required Configuration Options
@@ -338,6 +343,7 @@ $params = array(
 	'enable_shop_review_menu' 		=> '1',
 	'enable_quartermile_menu' 		=> '1',
 	'enable_dynorun_menu' 			=> '1',
+	'enable_lap_menu' 			=> '1',
 	'enable_garage_header' 			=> '1',
 	'enable_quartermile_header' 		=> '1',
 	'enable_dynorun_header' 		=> '1',
@@ -390,6 +396,9 @@ $params = array(
 	'max_image_kbytes' 			=> '1024',
 	'max_image_resolution' 			=> '1024',
 	'thumbnail_resolution' 			=> '150',
+	'enable_watermark'			=> '0',
+	'watermark_type'			=> 'non_permanent',
+	'watermark_source'			=> '',
 
 //Quartermile Config Data
 	'enable_quartermile' 			=> '1',
@@ -431,6 +440,13 @@ $params = array(
 	'enable_user_submit_product'		=> '1',
 	'enable_product_approval'		=> '1',
 	'enable_product_search'			=> '1',
+
+//Service History Config Data
+	'enable_service'			=> '1',
+
+//Blog Config Data
+	'enable_blogs'				=> '1',
+	'enable_blogs_bbcode'			=> '1',
 
 //Quota Config Data
 	'max_user_cars' 			=> '1',	
@@ -1504,6 +1520,8 @@ switch( $mode )
 				'u_garage_delete_insurance',
 				'u_garage_add_service',
 				'u_garage_delete_service',
+				'u_garage_add_blog',
+				'u_garage_delete_blog',
 				'u_garage_add_business',
 				'u_garage_add_make_model',
 				'u_garage_add_product',

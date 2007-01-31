@@ -51,7 +51,7 @@ while(list($var, $param) = @each($params))
 }
 
 //Get All Non-String Parameters
-$params = array('cid' => 'CID', 'mid' => 'MID', 'did' => 'DID', 'qmid' => 'QMID', 'ins_id' => 'INS_ID', 'eid' => 'EID', 'image_id' => 'image_id', 'comment_id' => 'CMT_ID', 'bus_id' => 'BUS_ID');
+$params = array('cid' => 'CID', 'bid' => 'BID', 'eid' => 'EID');
 while(list($var, $param) = @each($params))
 {
 	$$var = request_var($param, '');
@@ -71,55 +71,10 @@ $template->assign_vars(array(
 //Decide What Mode The User Is Doing
 switch( $mode )
 {
-	case 'add_service':
+	case 'insert_blog':
 
 		//Let Check The User Is Allowed Perform This Action
-		if (!$auth->acl_get('u_garage_add_service') || $garage_config['enable_service'] == '0')
-		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
-		}
-
-		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
-
-		//Build Page Header ;)
-		page_header($page_title);
-
-		//Set Template Files In Use For This Mode
-		$template->set_filenames(array(
-			'header' => 'garage_header.html',
-			'body'   => 'garage_service.html')
-		);
-
-		//Get Vehicle Data For Navlinks
-		$vehicle=$garage_vehicle->get_vehicle($cid);
-
-		//Build Navlinks
-		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $vehicle['vehicle'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"))
-		);
-		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $user->lang['ADD_SERVICE'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_service&amp;CID=$cid"))
-		);
-
-		$template->assign_vars(array(
-			'L_TITLE'  			=> $user->lang['ADD_SERVICE'],
-			'L_BUTTON'  			=> $user->lang['ADD_SERVICE'],
-			'CID' 				=> $cid,
-			'S_MODE_ACTION' 		=> append_sid("{$phpbb_root_path}garage_service.$phpEx", "mode=insert_service"))
-         	);
-
-		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$garage_template->sidemenu();
-
-		break;
-
-	case 'insert_service':
-
-		//Let Check The User Is Allowed Perform This Action
-		if (!$auth->acl_get('u_garage_add_service') || !$garage_config['enable_service'])
+		if (!$auth->acl_get('u_garage_add_blog') || !$garage_config['enable_blogs'])
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
 		}
@@ -128,15 +83,26 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params	= array('rt' => '', 'sixty' => '', 'three' => '', 'eighth' => '', 'eighthmph' => '', 'thou' => '', 'quart' => '', 'quartmph' => '', 'dynorun_id' => '', 'install_comments' => '');
+		$params	= array('blog_title' => '', 'blog_text' => '');
 		$data 	= $garage->process_vars($params);
 
+		//Include Required Files..
+		include($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
+		include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
+
 		//Checks All Required Data Is Present
-		$params = array('quart');
+		$params = array('blog_title', 'blog_text');
 		$garage->check_required_vars($params);
 
-		//Update Service With Data Acquired
-		$garage_service->insert_service($data);
+		$message_parser = new parse_message();
+
+		$data += array(
+				'bbcode_bitfield'	=> $message_parser->bbcode_bitfield,
+				'bbcode_uid'		=> $message_parser->bbcode_uid,
+			);
+
+		//Insert Blog With Data Acquired
+		$garage_blog->insert_blog($data);
 
 		//Update The Time Now...In Case We Get Redirected During Image Processing
 		$garage_vehicle->update_vehicle_time($cid);
@@ -145,12 +111,12 @@ switch( $mode )
 
 		break;
 
-	case 'edit_service':
+	case 'edit_blog':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_service.$phpEx?mode=edit_service&amp;QMID=$qmid&amp;CID=$cid");
+			login_box("garage_blog.$phpEx?mode=edit_blog&amp;BID=$bid&amp;CID=$cid");
 		}
 
 		//Check Vehicle Ownership
@@ -162,32 +128,21 @@ switch( $mode )
 		//Set Template Files In Use For This Mode
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
-			'body'   => 'garage_service.html')
+			'body'   => 'garage_blog.html')
 		);
 
-		//See If We Got Sent Here By Pending Page...If So We Need To Tell Update To Redirect Correctly
-		$params = array('PENDING' => '');
-		$redirect = $garage->process_vars($params);
-
-		//Pull Required Service Data From DB
-		$data = $garage_service->get_service($qmid);
+		//Pull Required Blog Data From DB
+		$data = $garage_blog->get_blog($bid);
 
 		//Build All HTML Parts
 		$template->assign_vars(array(
-			'L_TITLE'		=> $user->lang['EDIT_SERVICE'],
-			'L_BUTTON'		=> $user->lang['EDIT_SERVICE'],
+			'L_TITLE'		=> $user->lang['EDIT_BLOG'],
+			'L_BUTTON'		=> $user->lang['EDIT_BLOG'],
 			'CID'			=> $cid,
-			'QMID'			=> $qmid,
-			'RT'			=> $data['rt'],
-			'SIXTY'			=> $data['sixty'],
-			'THREE' 		=> $data['three'],
-			'EIGHTH' 		=> $data['eighth'],
-			'EIGHTHMPH' 		=> $data['eighthmph'],
-			'THOU' 			=> $data['thou'],
-			'QUART' 		=> $data['quart'],
-			'QUARTMPH' 		=> $data['quartmph'],
-			'PENDING_REDIRECT'	=> $redirect['PENDING'],
-			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_service.$phpEx", "mode=update_service"))
+			'BID'			=> $bid,
+			'BLOG_TITLE'		=> $data['blog_title'],
+			'BLOG_TEXT'		=> $data['blog_text'],
+			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_blog.$phpEx", "mode=update_blog"))
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
@@ -195,27 +150,27 @@ switch( $mode )
 
 		break;
 
-	case 'update_service':
+	case 'update_blog':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_service.$phpEx?mode=edit_service&amp;QMID=$qmid&amp;CID=$cid");
+			login_box("garage_blog.$phpEx?mode=edit_blog&amp;BID=$bid&amp;CID=$cid");
 		}
 
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('rt' => '', 'sixty' => '', 'three' => '', 'eighth' => '', 'eighthmph' => '', 'thou' => '', 'quart' => '', 'quartmph' => '', 'dynorun_id' => '', 'install_comments' => '', 'editupload' => '', 'image_id' => '', 'pending_redirect' => '');
+		$params = array('blog_title' => '', 'blog_text' => '');
 		$data = $garage->process_vars($params);
 
 		//Checks All Required Data Is Present
-		$params = array('quart');
+		$params = array('blog_title', 'blog_text');
 		$garage->check_required_vars($params);
 
-		//Update The Service With Data Acquired
-		$garage_service->update_service($data);
+		//Update The Blog With Data Acquired
+		$garage_blog->update_blog($data);
 
 		//Update The Vehicle Timestamp Now...In Case We Get Redirected During Image Processing
 		$garage_vehicle->update_vehicle_time($cid);
@@ -224,10 +179,10 @@ switch( $mode )
 
 		break;
 
-	case 'delete_service':
+	case 'delete_blog':
 
 		//Let Check The User Is Allowed Perform This Action
-		if (!$auth->acl_get('u_garage_delete_service'))
+		if (!$auth->acl_get('u_garage_delete_blog'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
 		}
@@ -236,7 +191,7 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Delete The Quartermie Time
-		$garage_service->delete_service($qmid);
+		$garage_blog->delete_blog($bid);
 
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
@@ -256,5 +211,4 @@ $template->set_filenames(array(
 
 //Generate Page Footer
 page_footer();
-
 ?>

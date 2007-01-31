@@ -29,23 +29,22 @@ class garage_blog
 	var $classname = "garage_blog";
 
 	/*========================================================================*/
-	// Inserts Lap Into DB
-	// Usage: insert_lap(array());
+	// Inserts Blog Into DB
+	// Usage: insert_blog(array());
 	/*========================================================================*/
 	function insert_blog($data)
 	{
-		global $cid, $db, $garage_config;
+		global $cid, $db, $garage_config, $garage_vehicle;
 
-		$sql = 'INSERT INTO ' . GARAGE_LAPS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'garage_id'	=> $cid,
-			'track_id'	=> $data['track_id'],
-			'condition_id'	=> $data['condition_id'],
-			'type_id'	=> $data['type_id'],
-			'minute'	=> $data['minute'],
-			'second'	=> $data['second'],
-			'millisecond'	=> $data['millisecond'],
-			'pending'	=> ($garage_config['enable_lap_approval'] == '1') ? 1 : 0)
-		);
+		$sql = 'INSERT INTO ' . GARAGE_BLOGS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+			'vehicle_id'		=> $cid,
+			'user_id'		=> $garage_vehicle->get_vehicle_owner_id($cid),
+			'blog_title'		=> $data['blog_title'],
+			'blog_text'		=> $data['blog_text'],
+			'blog_date'		=> time(),
+			'bbcode_bitfield'	=> $data['bbcode_bitfield'],
+			'bbcode_uid'		=> $data['bbcode_uid'],
+		));
 
 		$db->sql_query($sql);
 
@@ -53,27 +52,24 @@ class garage_blog
 	}
 
 	/*========================================================================*/
-	// Updates Lap In DB
-	// Usage: update_lap(array());
+	// Updates Blog In DB
+	// Usage: update_blog(array());
 	/*========================================================================*/
 	function update_blog($data)
 	{
-		global $db, $lid, $cid, $garage_config;
+		global $db, $bid, $cid, $garage_config, $garage_vehicle;
 
 		$update_sql = array(
-			'garage_id'	=> $cid,
-			'track_id'	=> $data['track_id'],
-			'condition_id'	=> $data['condition_id'],
-			'type_id'	=> $data['type_id'],
-			'minute'	=> $data['minute'],
-			'second'	=> $data['second'],
-			'millisecond'	=> $data['millisecond'],
-			'pending'	=> ($garage_config['enable_lap_approval'] == '1') ? 1 : 0
+			'user_id'		=> $garage_vehicle->get_vehicle_owner_id($cid),
+			'blog_title'		=> $data['blog_title'],
+			'blog_text'		=> $data['blog_text'],
+			'bbcode_bitfield'	=> $data['bbcode_bitfield'],
+			'bbcode_uid'		=> $data['bbcode_uid'],
 		);
 
-		$sql = 'UPDATE ' . GARAGE_LAPS_TABLE . '
+		$sql = 'UPDATE ' . GARAGE_BLOGS_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
-			WHERE id = $lid AND garage_id = $cid";
+			WHERE id = $bid AND vehicle_id = $cid";
 
 
 		$db->sql_query($sql);
@@ -82,21 +78,18 @@ class garage_blog
 	}
 
 	/*========================================================================*/
-	// Delete Lap Including Image 
-	// Usage: delete_lap('lap id');
+	// Delete Blog Including Image 
+	// Usage: delete_blog('blog id');
 	/*========================================================================*/
 	function delete_blog($id)
 	{
 		global $db, $garage_image, $garage;
 	
 		//Get All Required Data
-		$data = $this->get_lap($id);
+		$data = $this->get_blog($id);
 	
-		//Seems To Be An Image To Delete, Let Call The Function
-		$garage_image->delete_image($data['image_id']);
-
 		//Time To Delete The Actual Lap Now
-		$garage->delete_rows(GARAGE_LAPS_TABLE, 'id', $id);
+		$garage->delete_rows(GARAGE_BLOGS_TABLE, 'id', $id);
 	
 		return ;
 	}
@@ -113,26 +106,18 @@ class garage_blog
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'l.*, l.id as lid, i.*, t.title',
+			'SELECT'	=> 'b.*, u.username',
 			'FROM'		=> array(
-				GARAGE_LAPS_TABLE	=> 'l',
+				GARAGE_BLOGS_TABLE	=> 'b',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_LAP_GALLERY_TABLE => 'lg'),
-					'ON'	=> 'l.id = lg.lap_id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
-					'ON'	=> 'i.attach_id = lg.image_id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_TRACKS_TABLE => 't'),
-					'ON'	=> 'l.track_id = t.id'
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'b.user_id = u.user_id'
 				)
 			),
-			'WHERE'		=>	"l.garage_id = $cid",
-			'ORDER_BY'	=>	'l.id'
+			'WHERE'		=>	"b.vehicle_id = $cid",
+			'ORDER_BY'	=>	'b.id'
 		));
 
 		$result = $db->sql_query($sql);
@@ -154,6 +139,19 @@ class garage_blog
 		global $template, $garage_vehicle, $garage, $user, $phpEx, $auth, $phpbb_root_path, $config, $owned;
 
 		$template->assign_block_vars('blog', array());
+
+		//Get Blog For Vehicle
+		$data = $this->get_blogs_by_vehicle($vehicle_id);
+
+		//Process Each Blog Entry
+		for ( $i=0; $i < count($data); $i++ )
+		{
+			$template->assign_block_vars('blog.entry', array(
+				'BLOG_TITLE' 	=> $data[$i]['blog_title'],
+				'BLOG_DATE' 	=> $user->format_date($data[$i]['blog_date']),
+				'BLOG_TEXT' 	=> $data[$i]['blog_text'],
+			));
+		}
 
 		$template->assign_vars(array(
 			'S_MODE_BLOG_ACTION' 	=> append_sid("{$phpbb_root_path}garage_blog.$phpEx", "mode=insert_blog&CID=$vehicle_id"))

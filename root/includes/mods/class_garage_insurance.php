@@ -37,7 +37,7 @@ class garage_insurance
 		global $cid, $db;
 
 		$sql = 'INSERT INTO ' . GARAGE_PREMIUMS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'garage_id'	=> $cid,
+			'vehicle_id'	=> $cid,
 			'premium'	=> $data['premium'],
 			'cover_type'	=> $data['cover_type'],
 			'comments'	=> $data['comments'],
@@ -66,7 +66,7 @@ class garage_insurance
 
 		$sql = 'UPDATE ' . GARAGE_PREMIUMS_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
-			WHERE id = $ins_id AND garage_id = $cid";
+			WHERE id = $ins_id AND vehicle_id = $cid";
 
 
 		$db->sql_query($sql);
@@ -106,7 +106,7 @@ class garage_insurance
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'v'),
-					'ON'	=> 'v.id = p.garage_id'
+					'ON'	=> 'v.id = p.vehicle_id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
@@ -150,7 +150,7 @@ class garage_insurance
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'g.id = in.garage_id'
+					'ON'	=> 'g.id = in.vehicle_id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
@@ -170,7 +170,7 @@ class garage_insurance
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'm'),
-					'ON'	=> 'i.garage_id = m.garage_id'
+					'ON'	=> 'i.vehicle_id = m.vehicle_id'
 				)
 			),
 			'WHERE'		=>  "mk.pending = 0 AND md.pending = 0 $additional_where",
@@ -207,7 +207,7 @@ class garage_insurance
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'g.id = i.garage_id'
+					'ON'	=> 'g.id = i.vehicle_id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
@@ -289,7 +289,7 @@ class garage_insurance
 					'ON'	=> 'i.business_id = b.id'
 				)
 			),
-			'WHERE'		=>  "i.garage_id = $cid"
+			'WHERE'		=>  "i.vehicle_id = $cid"
 		));
 	
 	       	$result = $db->sql_query($sql);

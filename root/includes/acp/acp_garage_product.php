@@ -1,6 +1,6 @@
 <?php
 /***************************************************************************
- *                              acp_garage_model.php
+ *                              acp_garage_product.php
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton
@@ -20,21 +20,17 @@
  *
  ***************************************************************************/
 
-class acp_garage_model
+class acp_garage_product
 {
 	var $u_action;
 
 	function main($id, $mode)
 	{
-		global $db, $user, $auth, $template, $cache, $garage, $garage_config;
+		global $db, $user, $auth, $template, $cache;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
 
-		//Build All Garage Classes e.g $garage_images->
-		require($phpbb_root_path . 'includes/mods/class_garage_model.' . $phpEx);
-
-
 		$user->add_lang('acp/garage');
-		$this->tpl_name = 'acp_garage_model';
+		$this->tpl_name = 'acp_garage_business';
 		$this->page_title = 'ACP_MANAGE_FORUMS';
 
 		$action		= request_var('action', '');
@@ -181,6 +177,8 @@ $model_deleted_message = '<meta http-equiv="refresh" content="2;url=' . append_s
 					'MOVE_TO_LIST' => $select_to)
 				);
 		
+				$template->pparse('body');
+		
 				break;
 		
 			case 'delete_make':
@@ -326,6 +324,8 @@ $model_deleted_message = '<meta http-equiv="refresh" content="2;url=' . append_s
 					'MOVE_TO_LIST' => $select_to)
 				);
 		
+				$template->pparse('body');
+		
 				break;
 		
 			case 'delete_model':
@@ -364,7 +364,7 @@ $model_deleted_message = '<meta http-equiv="refresh" content="2;url=' . append_s
 				);
 		
 				//Get All Makes & Models
-				$data = $garage_model->get_all_models('');
+				$data = $garage_model->select_all_models_data('');
 		
 				//Build An Array Of Just Makes
 				$makes = $garage->remove_duplicate($data, 'make_id');
@@ -379,10 +379,10 @@ $model_deleted_message = '<meta http-equiv="refresh" content="2;url=' . append_s
 					$add_model_url = 'javascript:add_model('.$makes[$i]['make_id'].')';
 		
 					//Set How The URL's Will Appear Since User Might Have Turned Images Off...
-					//$delete_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" />' : $lang['Delete'] ;
-					//$status_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_'.$status_mode] . '" alt="'.$lang[$status_mode].'" title="'.$lang[$status_mode].'" border="0" />' : $lang[$status_mode];
-					//$rename_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_edit'] . '" alt="'.$lang['Rename'].'" title="'.$lang['Rename'].'" border="0" />' : $lang['Rename'];
-					//$add_model_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_edit'] . '" alt="'.$lang['Add_Model_Button'].'" title="'.$lang['Add_Model_Button'].'" border="0" />' : $lang['Add_Model_Button'];
+					$delete_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" />' : $lang['Delete'] ;
+					$status_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_'.$status_mode] . '" alt="'.$lang[$status_mode].'" title="'.$lang[$status_mode].'" border="0" />' : $lang[$status_mode];
+					$rename_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_edit'] . '" alt="'.$lang['Rename'].'" title="'.$lang['Rename'].'" border="0" />' : $lang['Rename'];
+					$add_model_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_edit'] . '" alt="'.$lang['Add_Model_Button'].'" title="'.$lang['Add_Model_Button'].'" border="0" />' : $lang['Add_Model_Button'];
 		
 					$template->assign_block_vars('make', array(
 						'COLOR' => ($i % 2) ? 'row1' : 'row2',
@@ -413,9 +413,9 @@ $model_deleted_message = '<meta http-equiv="refresh" content="2;url=' . append_s
 						$rename_url = 'javascript:rename('.$data[$j]['model_id'].',2)';
 		
 						//Set How The URL's Will Appear Since User Might Have Turned Images Off...
-						//$delete_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" />' : $lang['Delete'] ;
-						//$status_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_'.$status_mode] . '" alt="'.$lang[$status_mode].'" title="'.$lang[$status_mode].'" border="0" />' : $lang[$status_mode];
-						//$rename_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_edit'] . '" alt="'.$lang['Rename'].'" title="'.$lang['Rename'].'" border="0" />' : $lang['Rename'];
+						$delete_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" />' : $lang['Delete'] ;
+						$status_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_'.$status_mode] . '" alt="'.$lang[$status_mode].'" title="'.$lang[$status_mode].'" border="0" />' : $lang[$status_mode];
+						$rename_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_edit'] . '" alt="'.$lang['Rename'].'" title="'.$lang['Rename'].'" border="0" />' : $lang['Rename'];
 		
 						$template->assign_block_vars('make.model', array(
 							'COLOR' => ($j % 2) ? 'row1' : 'row2',
@@ -432,11 +432,38 @@ $model_deleted_message = '<meta http-equiv="refresh" content="2;url=' . append_s
 				}
 		
 				$template->assign_vars(array(
+					'L_GARAGE_MODELS_TITLE' => $lang['Garage_Models_Title'],
+					'L_GARAGE_MODELS_EXPLAIN' => $lang['Garage_Models_Explain'],
+					'L_MAKE' => $lang['Make'],
+					'L_MODEL' => $lang['Model'],
+					'L_MODELS' => $lang['Models'],
+					'L_ADD_MAKE' => $lang['Add_Make'],
+					'L_ADD_MAKE_BUTTON' => $lang['Add_Make_Button'],
+					'L_MODIFY_MAKE' => $lang['Modify_Make'],
+					'L_MODIFY_MAKE_BUTTON' => $lang['Modify_Make_Button'],
+					'L_DELETE_MAKE' => $lang['Delete_Make'],
+					'L_DELETE_MAKE_BUTTON' => $lang['Delete_Make_Button'],
+					'L_ADD_MODEL' => $lang['Add_Model'],
+					'L_ADD_MODEL_BUTTON' => $lang['Add_Model_Button'],
+					'L_MODIFY_MODEL' => $lang['Modify_Model'],
+					'L_EMPTY_TITLE' => $lang['Empty_Title'],
+					'L_CHOOSE_MODIFY_MODEL_BUTTON' => $lang['Choose_Modify_Model_Button'],
+					'L_DELETE_MODEL' => $lang['Delete_Model'],
+					'L_CHOOSE_DELETE_MODEL_BUTTON' => $lang['Choose_Delete_Model_Button'],
+					'L_VEHICLE_MAKE' => $lang['Vehicle_Make'],
+					'L_VEHICLE_MODEL' => $lang['Vehicle_Model'],
+					'L_CHANGE_TO' => $lang['Change_To'],
+					'L_EDIT' => $lang['Edit'],
+					'L_STATUS' => $lang['Status'],
+					'L_DELETE' => $lang['Delete'],
+					'L_RENAME' => $lang['Rename'],
 					'S_MODE_ACTION' => append_sid('admin_garage_models.'.$phpEx),
 					'SHOW' => '<img src="../' . $images['garage_show_details'] . '" alt="'.$lang['Show_Details'].'" title="'.$lang['Show_Details'].'" border="0" />',
 					'HIDE' => '<img src="../' . $images['garage_hide_details'] . '" alt="'.$lang['Hide_Details'].'" title="'.$lang['Hide_Details'].'" border="0" />')
 				);
 		
+				$template->pparse("body");
+	
 				break;
 		}	
 	}

@@ -333,6 +333,8 @@ viewonline.php
 		case 'garage_track':
 		case 'garage_guestbook':
 		case 'garage_premium':
+		case 'garage_blog':
+		case 'garage_service':
 			$location = $user->lang['VIEWING_GARAGE'];
 			$location_url = append_sid("{$phpbb_root_path}garage.$phpEx");
 		break;
@@ -532,7 +534,7 @@ includes/acp/acp_styles.php
 #-----[ AFTER, ADD ]------------------------------------------
 #
 			'garage'	=> array(
-				'garage_vehicle_img_attached', 'garage_slip_img_attached', 'garage_icon_garage', 'garage_main_menu', 'garage_browse', 'garage_search', 'garage_quartermile_table', 'garage_dynorun_table', 'garage_lap_table', 'garage_garage_review', 'garage_shop_review', 'garage_insurance_review', 'garage_create_vehicle', 'garage_edit_vehicle', 'garage_delete_vehicle', 'garage_view_vehicle', 'garage_add_modification', 'garage_add_insurance', 'garage_add_dynorun', 'garage_add_quartermile', 'garage_add_lap', 'garage_manage_gallery', 'garage_edit', 'garage_delete', 'garage_main_vehicle', 'garage_no_thumb', 'garage_show_details', 'garage_hide_details', 'garage_move_up', 'garage_move_down', 'garage_set_approved', 'garage_set_pending',
+				'garage_vehicle_img_attached', 'garage_slip_img_attached', 'garage_icon_garage', 'garage_main_menu', 'garage_browse', 'garage_search', 'garage_quartermile_table', 'garage_dynorun_table', 'garage_lap_table', 'garage_garage_review', 'garage_shop_review', 'garage_insurance_review', 'garage_create_vehicle', 'garage_edit_vehicle', 'garage_delete_vehicle', 'garage_view_vehicle', 'garage_add_modification', 'garage_add_insurance', 'garage_add_dynorun', 'garage_add_quartermile', 'garage_add_lap', 'garage_add_service', 'garage_manage_gallery', 'garage_edit', 'garage_delete', 'garage_main_vehicle', 'garage_no_thumb', 'garage_show_details', 'garage_hide_details', 'garage_move_up', 'garage_move_down', 'garage_set_approved', 'garage_set_pending',
 			),
 # 
 #-----[ OPEN ]----- 
@@ -558,7 +560,7 @@ language/en/common.php
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 	'GARAGE'				=> 'Garage',
-	'QUARTERMILE'				=> '1/4 Mile',
+	'QUARTERMILE'				=> '&frac14; Mile',
 	'DYNORUN'				=> 'Dynorun',
 	'PENDING_GARAGE_ITEMS'			=> 'Pending Garage Items',
 	'VIEWING_GARAGE'			=> 'Viewing Garage',
@@ -653,20 +655,41 @@ language/en/acp/common.php
 #
 #-----[ FIND ]------------------------------------------
 #
-	'ACP_LOGGING'				=> 'Logging',
+$lang = array_merge($lang, array(
 
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
-	'ACP_GARAGE'			=> 'Garage',
-	'ACP_GARAGE_BUSINESS'		=> 'Business Management',
-	'ACP_GARAGE_CATEGORIES'		=> 'Category Management',
-	'ACP_GARAGE_SETTINGS'		=> 'Settings',
-	'ACP_GARAGE_MODELS'	 	=> 'Make/Model Managment',
-	'ACP_GARAGE_QUOTAS'		=> 'Quotas',
-	'ACP_GARAGE_TOOLS'		=> 'Tools',
+	'ACP_GARAGE'				=> 'Garage',
+	'ACP_GARAGE_BUSINESS'			=> 'Business\'s',
+	'ACP_GARAGE_BUSINESS_MANAGEMENT'	=> 'Garage business management',
+	'ACP_GARAGE_CATEGORIES'			=> 'Categories',
+	'ACP_GARAGE_CATEGORY_MANAGEMENT'	=> 'Garage category management',
+	'ACP_GARAGE_MODELS'	 		=> 'Makes/models',
+	'ACP_GARAGE_MODEL_MANAGEMENT'	 	=> 'Garage make/model managment',
+	'ACP_GARAGE_PRODUCTS'	 		=> 'Products',
+	'ACP_GARAGE_PRODUCT_MANAGEMENT'		=> 'Garage modification managment',
+	'ACP_GARAGE_QUOTAS'			=> 'Quotas',
+	'ACP_GARAGE_QUOTA_MANAGEMENT'		=> 'Garage quotas',
+	'ACP_GARAGE_TOOLS'			=> 'Tools',
+	'ACP_GARAGE_TOOL_MANAGEMENT'		=> 'Garage Tools',
+	'ACP_GARAGE_SETTINGS'			=> 'Garage settings',
+	'ACP_GARAGE_GENERAL_SETTINGS'		=> 'General settings',
+	'ACP_GARAGE_MENU_SETTINGS'		=> 'Menu settings',
+	'ACP_GARAGE_INDEX_SETTINGS'		=> 'Index page settings',
+	'ACP_GARAGE_IMAGES_SETTINGS'		=> 'Image settings',
+	'ACP_GARAGE_QUARTERMILE_SETTINGS'	=> 'Quartermile settings',
+	'ACP_GARAGE_DYNORUN_SETTINGS'		=> 'Dynorun settings',
+	'ACP_GARAGE_TRACK_SETTINGS'		=> 'Track/lap settings',
+	'ACP_GARAGE_INSURANCE_SETTINGS'		=> 'Insurance settings',
+	'ACP_GARAGE_BUSINESS_SETTINGS'		=> 'Business settings',
+	'ACP_GARAGE_RATING_SETTINGS'		=> 'Rating settings',
+	'ACP_GARAGE_GUESTBOOK_SETTINGS'		=> 'Guestbook settings',
+	'ACP_GARAGE_PRODUCT_SETTINGS'		=> 'Product settings',
+	'ACP_GARAGE_SERVICE_SETTINGS'		=> 'Service history settings',
+	'ACP_GARAGE_BLOG_SETTINGS'		=> 'Blog settings',
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
 # 
@@ -716,6 +739,7 @@ language/en/acp/styles.php
 	'IMG_GARAGE_ADD_INSURANCE'	=> 'Add insurance',
 	'IMG_GARAGE_ADD_DYNORUN'	=> 'Add dynorun',
 	'IMG_GARAGE_ADD_LAP'		=> 'Add lap',
+	'IMG_GARAGE_ADD_SERVICE'	=> 'Add service',
 	'IMG_GARAGE_ADD_QUARTERMILE'	=> 'Add quartermile',
 	'IMG_GARAGE_MANAGE_GALLERY'	=> 'Manage vehicle gallery',
 	'IMG_GARAGE_EDIT'		=> 'Edit',
@@ -767,6 +791,7 @@ img_garage_add_insurance	= {LANG}/garage_add_insurance.gif*33*130
 img_garage_add_dynorun		= {LANG}/garage_add_dynorun.gif*33*130
 img_garage_add_quartermile	= {LANG}/garage_add_quartermile.gif*33*130
 img_garage_add_lap		= {LANG}/garage_add_lap.gif*33*130
+img_garage_add_service		= {LANG}/garage_add_service.gif*33*130
 img_garage_manage_gallery	= {LANG}/garage_manage_gallery.gif*33*130
 img_garage_edit			= {LANG}/garage_edit.gif*16*16
 img_garage_delete		= {LANG}/garage_delete.gif*16*16

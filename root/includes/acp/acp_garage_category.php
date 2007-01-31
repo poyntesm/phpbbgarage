@@ -1,6 +1,6 @@
 <?php
 /***************************************************************************
- *                              admin_garage_categories.php
+ *                              acp_garage_category.php
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton
@@ -27,239 +27,275 @@ class acp_garage_category
 	function main($id, $mode)
 	{
 		global $db, $user, $auth, $template, $cache;
-		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
+		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx, $garage;
+
+		//Build All Garage Classes e.g $garage_images->
+		require($phpbb_root_path . 'includes/mods/class_garage_admin.' . $phpEx);
 
 		$user->add_lang('acp/garage');
-		$this->tpl_name = 'acp_garage_business';
+		$this->tpl_name = 'acp_garage_category';
 		$this->page_title = 'ACP_MANAGE_FORUMS';
 
 		$action		= request_var('action', '');
 		$update		= (isset($_POST['update'])) ? true : false;
+		$category_id	= request_var('id', 0);
 
-		switch ($mode)
+		$errors = array();
+
+		// Major routines
+		if ($update)
 		{
-
-//Lets Setup Messages We Might Need...Just Easier On The Eye Doing This Seperatly
-$missing_data_message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_categories.$phpEx?mode=confirm_delete&id=".$data['id']."") . '">'. $lang['Missing_Required_Data']. "<br /><br />" . sprintf($lang['Click_return_garage_category'], "<a href=\"" . append_sid("admin_garage_category.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-$category_created_message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_categories.$phpEx") . '">'. $lang['New_category_created'] . "<br /><br />" . sprintf($lang['Click_return_garage_category'], "<a href=\"" . append_sid("admin_garage_categories.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-$category_updated_message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_categories.$phpEx") . '">'. $lang['Category_Updated'] . "<br /><br />" . sprintf($lang['Click_return_garage_category'], "<a href=\"" . append_sid("admin_garage_categories.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-$category_deleted_message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_categories.$phpEx") . '">'. $lang['Category_Deleted'] . "<br /><br />" . sprintf($lang['Click_return_garage_category'], "<a href=\"" . append_sid("admin_garage_categories.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-$category_order_message = '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_garage_categories.$phpEx") . '">'. $lang['Category_Order_Updated'] . "<br /><br />" . sprintf($lang['Click_return_garage_category'], "<a href=\"" . append_sid("admin_garage_categories.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-
-	case 'insert_category':
-
-		//Count Current Categories..So We Can Work Out Order
-		$count = $garage_modification->count_modification_categories();
-
-		//Get posting variables
-		$params = array('title');
-		$data = $garage->process_post_vars($params);
-		$data['field_order'] = $count + 1;
-
-		//Insert New Category Into DB
-		$garage_admin->insert_category($data);
-
-		//Return a message...
-		message_die(GENERAL_MESSAGE, $category_created_message);
-
-		break;
-
-	case 'update_category':
-
-		// Get posting variables
-		$params = array('id', 'title');
-		$data = $garage->process_post_vars($params);
-
-		// Now we update this row
-		$garage->update_single_field(GARAGE_CATEGORIES_TABLE, 'title', $data['title'], 'id', $data['id']);
-
-		// Return a message...
-		message_die(GENERAL_MESSAGE, $category_updated_message);
-
-		break;
-
-	case 'confirm_delete':
-
-		//Store ID Of Category We Are Deleting For Use In Action Variable
-		$params = array('id');
-		$data = $garage->process_post_vars($params);
-		$data = $garage->select_category_data($data['id']);
-		$all_data = $garage->select_all_category_data();
-
-		//Build Dropdown Options For Where To Love Linked Items To
-		for ($i = 0; $i < count($all_data); $i++)
-		{
-			//Do Not List Category We Are Deleting..
-			if ( $data['id'] == $all_data[$i]['id'] )
+			switch ($action)
 			{
-				continue;
+				case 'edit':
+
+					$title	= request_var('title', '');
+
+					if(!$title)
+					{
+						$errors[] = $user->lang['CATEGORY_NAME_EMPTY'];
+						break;
+					}
+
+					$garage->update_single_field(GARAGE_CATEGORIES_TABLE, 'title', $title, 'id', $category_id);
+
+					trigger_error($user->lang['CATEGORY_UPDATED'] . adm_back_link($this->u_action));
+
+				break;
+
+				case 'delete':
+					$action_modifications	= request_var('action_modifications', '');
+					$modifications_to_id	= request_var('modifications_to_id', 0);
+
+					$errors = $this->delete_category($category_id, $action_modifications, $modifications_to_id);
+
+					if (sizeof($errors))
+					{
+						break;
+					}
+
+					trigger_error($user->lang['CATEGORY_DELETED'] . adm_back_link($this->u_action));
+				break;
+
 			}
-			$select_to .= '<option value="'. $all_data[$i]['id'] .'">'. $all_data[$i]['title'] .'</option>';
 		}
 
-		$template->set_filenames(array(
-			'body' => 'admin/garage_confirm_delete.tpl')
-		);
-
-		$template->assign_vars(array(
-			'S_GARAGE_ACTION' => append_sid("admin_garage_categories.$phpEx?mode=delete_category&amp;id=".$data['id']),
-			'L_DELETE' => $lang['Delete_Category'],
-			'L_DELETE_EXPLAIN' => $lang['Delete_Category_Explain'],
-			'L_TITLE' => $lang['category'],
-			'S_TITLE' => $data['title'],
-			'L_MOVE_CONTENTS' => $lang['Move_contents'],
-			'L_MOVE_DELETE' => $lang['Move_and_Delete'],
-			'L_REQUIRED' => $lang['Required'],
-			'L_REMOVE' => $lang['Remove_Category'],
-			'L_MOVE_DELETE' => $lang['Move_Delete_Category'],
-			'L_MOVE_DELETE_BUTTON' => $lang['Delete_Category'],
-			'L_OR' => $lang['Or'],
-			'L_DELETE_PERMENANTLY' => $lang['Delete_Permenantly'],
-			'MOVE_TO_LIST' => $select_to)
-		);
-
-		$template->pparse('body');
-
-		include('./page_footer_admin.'.$phpEx);
-
-		break;
-
-	case 'delete_category':
-
-		//Get All Data Posted And Make It Safe To Use
-		$params = array('id', 'target', 'permenant');
-		$data = $garage->process_post_vars($params);
-
-		//If Set Delete Permentantly
-		if ($data['permenant'] == '1')
+		switch ($action)
 		{
-			//Delete It Without Looking For Child Objects!!
-			$garage->delete_rows(GARAGE_CATEGORIES_TABLE, 'id', $data['id']);
-
-			// Return a message...
-			message_die(GENERAL_MESSAGE, $category_deleted_message);
-		}
-
-		//Checks All Required Data Is Present
-		$params = array('id', 'target');
-		$garage->check_acp_required_vars($params, $missing_data_message);
-
-		//Move All Modifications To New Category
-		$garage->update_single_field(GARAGE_MODS_TABLE, 'category_id', $data['target'], 'category_id', $data['id']);
+			case 'add':
 		
-		//This Category Is Now Emptied, We Can Delete It!
-		$garage->delete_rows(GARAGE_CATEGORIES_TABLE, 'id', $data['id']);
-
-		//Return a message...
-		message_die(GENERAL_MESSAGE, $category_deleted_message);
-
-		break;
-
-	case 'move_up':
-
-		//Get All Data Posted And Make It Safe To Use
-		$params = array('order');
-		$data = $garage->process_post_vars($params);
+				//Count Current Categories..So We Can Work Out Order
+				$count = $garage_admin->count_categories();
 		
-		$field_order = $data['order'];
-		$order_total = $field_order * 2 + (($mode == 'move_up') ? -1 : 1);
+				//Get posting variables
+				$data['title'] = request_var('category', '');
+				$data['field_order'] = $count + 1;
 
-		$sql = 'UPDATE ' . GARAGE_CATEGORIES_TABLE . "
-			SET field_order = $order_total - field_order
-			WHERE field_order IN ($field_order, " . (($mode == 'move_up') ? $field_order - 1 : $field_order + 1) . ')';
+				if(!$data['title'])
+				{
+					$errors[] = $user->lang['CATEGORY_NAME_EMPTY'];
+					break;
+				}
+		
+				//Insert New Category Into DB
+				$garage_admin->insert_category($data);
 
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Could not create new Garage Category', '', __LINE__, __FILE__, $sql);
+				add_log('admin', 'LOG_FORUM_ADD', $data['title']);
+		
+				break;
+		
+			case 'edit':
+
+				if (!$category_id)
+				{
+					trigger_error($user->lang['NO_FORUM'] . adm_back_link($this->u_action . '&amp;parent_id=' . $this->parent_id), E_USER_WARNING);
+				}
+
+				$category_data = $garage->get_category($category_id);
+
+				$template->assign_vars(array(
+					'S_EDIT_CATEGORY'		=> true,
+					'U_ACTION'			=> $this->u_action . "&amp;action=edit&amp;id=$category_id",
+					'U_BACK'			=> $this->u_action,
+					'CATEGORY_NAME'			=> $category_data['title'],
+					'S_ERROR'			=> (sizeof($errors)) ? true : false,
+					'ERROR_MSG'			=> (sizeof($errors)) ? implode('<br />', $errors) : '')
+				);
+
+				return;
+		
+			case 'delete':
+
+				if (!$category_id)
+				{
+					trigger_error($user->lang['NO_FORUM'] . adm_back_link($this->u_action . '&amp;parent_id=' . $this->parent_id), E_USER_WARNING);
+				}
+
+				$category_data = $garage->get_category($category_id);
+				$all_data = $garage->get_categories();
+
+				//Build Dropdown Options For Where To Love Linked Items To
+				$select_to = null;
+				for ($i = 0; $i < count($all_data); $i++)
+				{
+					//Do Not List Category We Are Deleting..
+					if ( $category_id == $all_data[$i]['id'] )
+					{
+						continue;
+					}
+					$select_to .= '<option value="'. $all_data[$i]['id'] .'">'. $all_data[$i]['title'] .'</option>';
+				}
+
+				$template->assign_vars(array(
+					'S_DELETE_CATEGORY'		=> true,
+					'S_MOVE_CATEGORY'		=> ($garage_admin->count_categories() > 1) ? true : false,
+					'U_ACTION'			=> $this->u_action . "&amp;action=delete&amp;id=$category_id",
+					'U_BACK'			=> $this->u_action,
+					'CATEGORY_NAME'			=> $category_data['title'],
+					'S_MOVE_CATEGORY_OPTIONS'	=> $select_to,
+					'S_ERROR'			=> (sizeof($errors)) ? true : false,
+					'ERROR_MSG'			=> (sizeof($errors)) ? implode('<br />', $errors) : '')
+				);
+
+				return;
+			break;
+		
+			case 'move_up':
+			case 'move_down':
+
+				$field_order = request_var('order', '');
+				$order_total = $field_order * 2 + (($action == 'move_up') ? -1 : 1);
+
+				//Get Category Name
+				$data = $garage->get_category($category_id);
+
+				//Get Relative Position
+				$moved_id = $field_order + (($action == 'move_up') ? -1 : 1);
+				$moved = $garage->get_category($moved_id);
+
+				$sql = 'UPDATE ' . GARAGE_CATEGORIES_TABLE . "
+					SET field_order = $order_total - field_order
+					WHERE field_order IN ($field_order, " . (($action == 'move_up') ? $field_order - 1 : $field_order + 1) . ')';
+
+				$db->sql_query($sql);
+
+				add_log('admin', 'LOG_FORUM_' . strtoupper($action), $data['title'], $moved['title']);
+
+			break;
 		}
 
-		// Return a message...
-		message_die(GENERAL_MESSAGE, $category_order_message);
-
-		break;
-
-	case 'move_down':
-
-		$params = array('order');
-		$data = $garage->process_post_vars($params);
-
-		$field_order = $data['order'];
-		$order_total = $field_order * 2 + (($mode == 'move_up') ? -1 : 1);
-
-		$sql = 'UPDATE ' . GARAGE_CATEGORIES_TABLE . "
-			SET field_order = $order_total - field_order
-			WHERE field_order IN ($field_order, " . (($mode == 'move_up') ? $field_order - 1 : $field_order + 1) . ')';
-
-		if(!$result = $db->sql_query($sql))
-		{
-			message_die(GENERAL_ERROR, 'Could not create new Garage Category', '', __LINE__, __FILE__, $sql);
-		}
-
-		//Return a message...
-		message_die(GENERAL_MESSAGE, $category_order_message);
-
-		break;
-
-	default:
-
-		$template->set_filenames(array(
-			'body' => 'admin/garage_category.tpl')
-		);
-
+		// Default management page
 		$template->assign_vars(array(
-			'L_GARAGE_CAT_TITLE' => $lang['Garage_Categories_Title'],
-			'L_GARAGE_CAT_EXPLAIN' => $lang['Garage_Categories_Explain'],
-			'L_NAME' => $lang['Name'],
-			'L_RENAME' => $lang['Rename'],
-			'L_DELETE' => $lang['Delete'],
-			'L_REORDER' => $lang['Reorder'],
-			'L_CREATE_CATEGORY' => $lang['Create_category'],
-			'L_CAT_TITLE' => $lang['New_Category_Title'],
-			'L_PANEL_TITLE' => $lang['Create_category'],
-			'L_EMPTY_TITLE' => $lang['Empty_Title'],
-			'S_GARAGE_MODE_RENAME' => append_sid("admin_garage_categories.$phpEx?mode=update_category"),
-			'S_GARAGE_MODE_NEW' => append_sid("admin_garage_categories.$phpEx?mode=insert_category"))
-		);
+			'S_ERROR'	=> (sizeof($errors)) ? true : false,
+			'ERROR_MSG'	=> (sizeof($errors)) ? implode('<br />', $errors) : '',
+			'U_ACTION'	=> $this->u_action,
+		));
 
 		//Get All Category Data...
-		$data = $garage->select_all_category_data();
+		$data = $garage->get_categories();
 
 		//Process Each Category
 		for( $i = 0; $i < count($data); $i++ )
 		{
 			$order = $i + 1;
-			//Build The Actual URL's
-			$rename_url = $data[$i]['id'];
-			$delete_url = append_sid("admin_garage_categories.$phpEx?mode=confirm_delete&amp;id=" . $data[$i]['id']);
-			$move_up_url = append_sid("admin_garage_categories.$phpEx?mode=move_up&amp;id=" . $data[$i]['id']. "&amp;order=$order");
-			$move_down_url = append_sid("admin_garage_categories.$phpEx?mode=move_down&amp;id=" . $data[$i]['id']. "&amp;order=$order");
-
-			//Build How The URL's Will Look..Users Might Have Images Turned Off
-			$rename_url_dsp = '<img src="../'.$images['garage_edit'].'" alt="'.$lang['Rename'].'" title="'.$lang['Rename'].'" border="0" />';
-			$delete_url_dsp = '<img src="../'.$images['garage_delete'].'" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" />';
-			$move_up_url_dsp = '<img src="../'.$images['garage_move_up'].'" alt="'.$lang['Move_Up'].'" title="'.$lang['Move_Up'].'" border="0" />';
-			$move_down_url_dsp = '<img src="../'.$images['garage_move_down'].'" alt="'.$lang['Move_Down'].'" title="'.$lang['Move_Down'].'" border="0" />';
+			$url = $this->u_action . "&amp;id={$data[$i]['id']}";
 
 			$template->assign_block_vars('catrow', array(
-				'COLOR' => ($i % 2) ? 'row1' : 'row2',
-				'ID' => $data[$i]['id'],
-				'TITLE' => $data[$i]['title'],
-				'RENAME' => $rename_url_dsp,
-				'DELETE' => $delete_url_dsp,
-				'MOVE_UP' => $move_up_url_dsp,
-				'MOVE_DOWN' => $move_down_url_dsp,
-				'U_RENAME' => $rename_url,
-				'U_DELETE' => $delete_url,
-				'U_MOVE_UP' => $move_up_url,
-				'U_MOVE_DOWN' => $move_down_url)
-			);
+				'ID' 		=> $data[$i]['id'],
+				'TITLE' 	=> $data[$i]['title'],
+				'U_MOVE_UP'	=> $url . '&amp;action=move_up&amp;order=' . $order,
+				'U_MOVE_DOWN'	=> $url . '&amp;action=move_down&amp;order=' . $order,
+				'U_EDIT'	=> $url . '&amp;action=edit',
+				'U_DELETE'	=> $url . '&amp;action=delete',
+			));
+		}
+		
+	}
+
+	/**
+	* Remove complete category
+	*/
+	function delete_category($category_id, $action_modifications = 'delete', $modifications_to_id = 0)
+	{
+
+		global $db, $user, $cache, $garage;
+
+		$category_data = $garage->get_category($category_id);
+
+		$errors = array();
+		$log_action_modifications = $modifications_to_name = '';
+
+		if ($action_modifications == 'delete')
+		{
+			$log_action_modifications = 'MODIFICATIONS';
+			$errors = array_merge($errors, $this->delete_category_content($category_id));
+		}
+		else if ($action_modifications == 'move')
+		{
+			if (!$modifications_to_id)
+			{
+				$errors[] = $user->lang['NO_DESTINATION_CATEGORY'];
+			}
+			else
+			{
+				$log_action_modifications = 'MOVE_MODIFICATIONS';
+
+				$row = $garage->get_category($modifications_to_id);
+
+				if (!$row)
+				{
+					$errors[] = $user->lang['NO_CATEGORY'];
+				}
+				else
+				{
+					$modifications_to_name = $row['title'];
+					$errors = array_merge($errors, $this->move_category_content($category_id, $modifications_to_id));
+					//Delete Contents Now Will Just Delete Category As Content Is Moved Already
+					$errors = array_merge($errors, $this->delete_category_content($category_id));
+				}
+			}
 		}
 
-		$template->pparse('body');
+		if (sizeof($errors))
+		{
+			return $errors;
+		}
+	}
 
-		include('./page_footer_admin.'.$phpEx);
+	/**
+	* Delete category content
+	*/
+	function delete_category_content($category_id)
+	{
+		global $db, $config, $phpbb_root_path, $phpEx, $garage;
 
-		break;
+		include_once($phpbb_root_path . 'includes/mods/class_garage_modification.' . $phpEx);
+
+		$modifications = $garage_modification->get_modifications_by_category_id($category_id);
+
+		for ($i = 0, $count = sizeof($modifications);$i < $count; $i++)
+		{
+			$garage_modification->delete_modification($modifications[$i]['id']);
+		}
+
+		//This Category Is Now Emptied, We Can Delete It!
+		$garage->delete_rows(GARAGE_CATEGORIES_TABLE, 'id', $category_id);
+
+		return array();
+	}
+
+	/**
+	* Move category content from one to another category
+	*/
+	function move_category_content($from_id, $to_id)
+	{
+		global $garage;
+
+		//Move All Modifications To New Category
+		$garage->update_single_field(GARAGE_MODIFICATIONS_TABLE, 'category_id', $to_id, 'category_id', $from_id);
+
+		return array();
+	}
+
 }
-
 ?>

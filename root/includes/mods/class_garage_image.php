@@ -184,7 +184,7 @@ class garage_image
 		global $db, $cid;
 
 		$sql = 'INSERT INTO ' . GARAGE_VEHICLE_GALLERY_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'garage_id'	=> $cid,
+			'vehicle_id'	=> $cid,
 			'image_id'	=> $image_id,
 			'hilite'	=> $hilite)
 		);
@@ -203,7 +203,7 @@ class garage_image
 		global $db, $cid, $mid;
 
 		$sql = 'INSERT INTO ' . GARAGE_MODIFICATION_GALLERY_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'garage_id'		=> $cid,
+			'vehicle_id'		=> $cid,
 			'modification_id'	=> $mid,
 			'image_id'		=> $image_id,
 			'hilite'		=> $hilite)
@@ -223,7 +223,7 @@ class garage_image
 		global $db, $cid, $qmid;
 
 		$sql = 'INSERT INTO ' . GARAGE_QUARTERMILE_GALLERY_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'garage_id'	=> $cid,
+			'vehicle_id'	=> $cid,
 			'quartermile_id'=> $qmid,
 			'image_id'	=> $image_id,
 			'hilite'	=> $hilite)
@@ -243,7 +243,7 @@ class garage_image
 		global $db, $cid, $did;
 
 		$sql = 'INSERT INTO ' . GARAGE_DYNORUN_GALLERY_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'garage_id'	=> $cid,
+			'vehicle_id'	=> $cid,
 			'dynorun_id'	=> $did,
 			'image_id'	=> $image_id,
 			'hilite'	=> $hilite)
@@ -263,7 +263,7 @@ class garage_image
 		global $db, $cid, $lid;
 
 		$sql = 'INSERT INTO ' . GARAGE_LAP_GALLERY_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'garage_id'	=> $cid,
+			'vehicle_id'	=> $cid,
 			'lap_id'	=> $lid,
 			'image_id'	=> $image_id,
 			'hilite'	=> $hilite)
@@ -469,7 +469,7 @@ class garage_image
 			//Build File Names	
 			$data['tmp_name'] 	= 'garage_' . $type . '-' . $id . '-' . $data['date'] . $data['ext'];
 			$data['thumb_location'] = 'garage_' . $type . '-' . $id . '-' . $data['date'] . '_thumb' . $data['ext'];
-			$data['garage_id'] 	= ($type == 'vehicle') ? $id : $cid;
+			$data['vehicle_id'] 	= ($type == 'vehicle') ? $id : $cid;
 	
 			//Download Remote Image To Our Temporary File
 			$this->download_remote_image($data['location'], $data['tmp_name']);
@@ -536,7 +536,7 @@ class garage_image
 			}
 	
 			//Generate Required Filename & Thumbname
-			$data['garage_id'] 	= ($type == 'vehicle') ? $id : $cid;
+			$data['vehicle_id'] 	= ($type == 'vehicle') ? $id : $cid;
 			$data['location'] 	= 'garage_' . $type . '-' . $id . '-' . $data['date'] . $data['ext'];
 			$data['thumb_location'] = 'garage_' . $type . '-' . $id . '-' . $data['date'] . '_thumb' . $data['ext'];
 	
@@ -631,7 +631,7 @@ class garage_image
 		global $db;
 
 		$sql = 'INSERT INTO ' . GARAGE_IMAGES_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'garage_id'		=> $data['garage_id'],
+			'vehicle_id'		=> $data['vehicle_id'],
 			'attach_location'	=> $data['location'],
 			'attach_hits'		=> '0',
 			'attach_ext'		=> $data['ext'],
@@ -1117,7 +1117,7 @@ class garage_image
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'v'),
-					'ON'	=> "i.garage_id = v.id"
+					'ON'	=> "i.vehicle_id = v.id"
 				)
 				,array(
 					'FROM'	=> array(USERS_TABLE => 'u'),
@@ -1167,7 +1167,7 @@ class garage_image
 					'ON'	=> 'i.attach_id = vg.image_id'
 				)
 			),
-			'WHERE'		=>  "vg.garage_id = $cid",
+			'WHERE'		=>  "vg.vehicle_id = $cid",
 			'GROUP_BY'	=>  "vg.id"
 		));
 
@@ -1203,7 +1203,7 @@ class garage_image
 					'ON'	=> 'i.attach_id = mg.image_id'
 				)
 			),
-			'WHERE'		=>  "mg.garage_id = $cid AND mg.modification_id = $mid",
+			'WHERE'		=>  "mg.vehicle_id = $cid AND mg.modification_id = $mid",
 			'GROUP_BY'	=>  "mg.id"
 		));
 
@@ -1239,7 +1239,7 @@ class garage_image
 					'ON'	=> 'i.attach_id = qg.image_id'
 				)
 			),
-			'WHERE'		=>  "qg.garage_id = $cid AND qg.quartermile_id = $qmid",
+			'WHERE'		=>  "qg.vehicle_id = $cid AND qg.quartermile_id = $qmid",
 			'GROUP_BY'	=>  "qg.id"
 		));
 
@@ -1275,7 +1275,7 @@ class garage_image
 					'ON'	=> 'i.attach_id = dg.image_id'
 				)
 			),
-			'WHERE'		=>  "dg.garage_id = $cid AND dg.dynorun_id = $did",
+			'WHERE'		=>  "dg.vehicle_id = $cid AND dg.dynorun_id = $did",
 			'GROUP_BY'	=>  "dg.id"
 		));
 
@@ -1311,7 +1311,7 @@ class garage_image
 					'ON'	=> 'i.attach_id = lg.image_id'
 				)
 			),
-			'WHERE'		=>  "lg.garage_id = $cid AND lg.lap_id = $lid",
+			'WHERE'		=>  "lg.vehicle_id = $cid AND lg.lap_id = $lid",
 			'GROUP_BY'	=>  "lg.id"
 		));
 
@@ -1344,7 +1344,7 @@ class garage_image
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'g.id = i.garage_id'
+					'ON'	=> 'g.id = i.vehicle_id'
 				)
 			),
 			'WHERE'		=>  "g.user_id = $user_id AND i.attach_location NOT LIKE 'http://%'"
@@ -1379,7 +1379,7 @@ class garage_image
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'g.id = i.garage_id'
+					'ON'	=> 'g.id = i.vehicle_id'
 				)
 			),
 			'WHERE'		=>  "g.user_id = $user_id AND i.attach_location LIKE 'http://%'"

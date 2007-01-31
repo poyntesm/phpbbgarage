@@ -292,7 +292,7 @@ class acp_garage_setting
 
 		if ($submit)
 		{
-			add_log('admin', 'LOG_CONFIG_' . strtoupper($mode));
+			add_log('admin', 'LOG_GARAGE_CONFIG_' . strtoupper($mode));
 
 			trigger_error($user->lang['CONFIG_UPDATED'] . adm_back_link($this->u_action));
 		}
@@ -301,9 +301,9 @@ class acp_garage_setting
 		$this->page_title = $display_vars['title'];
 
 		$template->assign_vars(array(
-			'L_TITLE'			=> $user->lang[$display_vars['title']],
+			'L_TITLE'		=> $user->lang[$display_vars['title']],
 			'L_TITLE_EXPLAIN'	=> $user->lang[$display_vars['title'] . '_EXPLAIN'],
-			'U_ACTION'			=> $this->u_action)
+			'U_ACTION'		=> $this->u_action)
 		);
 
 		// Output relevant page
@@ -337,11 +337,11 @@ class acp_garage_setting
 			}
 
 			$template->assign_block_vars('options', array(
-				'KEY'			=> $config_key,
-				'TITLE'			=> (isset($user->lang[$vars['lang']])) ? $user->lang[$vars['lang']] : $vars['lang'],
-				'S_EXPLAIN'		=> $vars['explain'],
-				'TITLE_EXPLAIN'		=> $l_explain,
-				'CONTENT'		=> build_cfg_template($type, $config_key, $this->new_config, $config_key, $vars),
+				'KEY'		=> $config_key,
+				'TITLE'		=> (isset($user->lang[$vars['lang']])) ? $user->lang[$vars['lang']] : $vars['lang'],
+				'S_EXPLAIN'	=> $vars['explain'],
+				'TITLE_EXPLAIN'	=> $l_explain,
+				'CONTENT'	=> build_cfg_template($type, $config_key, $this->new_config, $config_key, $vars),
 				)
 			);
 

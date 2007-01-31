@@ -69,7 +69,7 @@ define('GARAGE_PRODUCTS_TABLE', $table_prefix . 'garage_products');
 define('GARAGE_TRACKS_TABLE', $table_prefix . 'garage_tracks');
 define('GARAGE_LAPS_TABLE', $table_prefix . 'garage_laps');
 define('GARAGE_SERVICE_HISTORY_TABLE', $table_prefix . 'garage_service_history');
-define('GARAGE_BLOG_TABLE', $table_prefix . 'garage_blog');
+define('GARAGE_BLOGS_TABLE', $table_prefix . 'garage_blog');
 
 //Define Location Constants
 define('GARAGE_UPLOAD_PATH', 'garage/upload/');

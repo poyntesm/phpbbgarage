@@ -37,7 +37,7 @@ class garage_dynorun
 		global $cid, $db, $garage_config;
 
 		$sql = 'INSERT INTO ' . GARAGE_DYNORUNS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'garage_id'	=> $cid,
+			'vehicle_id'	=> $cid,
 			'dynocentre_id'	=> $data['dynocentre_id'],
 			'bhp'		=> $data['bhp'],
 			'bhp_unit'	=> $data['bhp_unit'],
@@ -66,7 +66,7 @@ class garage_dynorun
 		global $db, $did, $cid, $garage_config;
 
 		$update_sql = array(
-			'garage_id'	=> $cid,
+			'vehicle_id'	=> $cid,
 			'dynocentre_id'	=> $data['dynocentre_id'],
 			'bhp'		=> $data['bhp'],
 			'bhp_unit'	=> $data['bhp_unit'],
@@ -82,7 +82,7 @@ class garage_dynorun
 
 		$sql = 'UPDATE ' . GARAGE_DYNORUNS_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
-			WHERE id = $did AND garage_id = $cid";
+			WHERE id = $did AND vehicle_id = $cid";
 
 
 		$db->sql_query($sql);
@@ -133,7 +133,7 @@ class garage_dynorun
 			'FROM'		=> array(
 				GARAGE_DYNORUNS_TABLE	=> 'd',
 			),
-			'WHERE'		=>  "d.garage_id = $cid"
+			'WHERE'		=>  "d.vehicle_id = $cid"
 		));
 
 		$result = $db->sql_query($sql);
@@ -208,7 +208,7 @@ class garage_dynorun
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'd.garage_id =g.id'
+					'ON'	=> 'd.vehicle_id =g.id'
 				)
 				,array(
 					'FROM'	=> array(USERS_TABLE => 'u'),
@@ -264,7 +264,7 @@ class garage_dynorun
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'd.garage_id =g.id'
+					'ON'	=> 'd.vehicle_id =g.id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
@@ -308,7 +308,7 @@ class garage_dynorun
 	// Select Dynorun Data From DB By Vehicle ID And BHP Value
 	// Usage: get_dynorun_by_vehicle_bhp('garage id', 'bhp');
 	/*========================================================================*/
-	function get_dynorun_by_vehicle_bhp($garage_id, $bhp)
+	function get_dynorun_by_vehicle_bhp($vehicle_id, $bhp)
 	{
 		global $db;
 
@@ -323,7 +323,7 @@ class garage_dynorun
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'd.garage_id =g.id'
+					'ON'	=> 'd.vehicle_id =g.id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
@@ -339,7 +339,7 @@ class garage_dynorun
 				)
 				,array(
 					'FROM'	=> array(GARAGE_DYNORUN_GALLERY_TABLE => 'dg'),
-					'ON'	=> 'g.id = dg.garage_id'
+					'ON'	=> 'g.id = dg.vehicle_id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
@@ -350,7 +350,7 @@ class garage_dynorun
 					'ON'	=> 'd.dynocentre_id = b.id'
 				)
 			),
-			'WHERE'		=>  "d.bhp = $bhp AND d.garage_id = $garage_id"
+			'WHERE'		=>  "d.bhp = $bhp AND d.vehicle_id = $vehicle_id"
 		));
 
 		$result = $db->sql_query($sql);
@@ -372,14 +372,14 @@ class garage_dynorun
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'd.garage_id, MAX(d.bhp) as bhp',
+			'SELECT'	=> 'd.vehicle_id, MAX(d.bhp) as bhp',
 			'FROM'		=> array(
 				GARAGE_DYNORUNS_TABLE	=> 'd',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'd.garage_id =g.id'
+					'ON'	=> 'd.vehicle_id =g.id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
@@ -395,7 +395,7 @@ class garage_dynorun
 				)
 			),
 			'WHERE'		=> "d.pending = 0 AND mk.pending = 0 AND md.pending = 0 $addtional_where ",
-			'GROUP_BY'	=> 'd.garage_id',
+			'GROUP_BY'	=> 'd.vehicle_id',
 			'ORDER_BY'	=> "$sort $order"
 		));
 
@@ -439,7 +439,7 @@ class garage_dynorun
 					'ON'	=> 'd.dynocentre_id = b.id'
 				)
 			),
-			'WHERE'		=>	"d.garage_id = $cid",
+			'WHERE'		=>	"d.vehicle_id = $cid",
 			'ORDER_BY'	=>	'd.id'
 		));
 
@@ -481,7 +481,7 @@ class garage_dynorun
 	
 		for($i = 0; $i < count($runs); $i++)
 		{
-			$vehicle_data = $this->get_dynorun_by_vehicle_bhp($runs[$i]['garage_id'], $runs[$i]['bhp']);
+			$vehicle_data = $this->get_dynorun_by_vehicle_bhp($runs[$i]['vehicle_id'], $runs[$i]['bhp']);
 
 			$template->assign_block_vars($template_block_row, array(
 				'U_COLUMN_1' 	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=".$vehicle_data['id']),

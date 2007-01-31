@@ -58,7 +58,7 @@ class garage_admin
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'COUNT(c.*) as total',
+			'SELECT'	=> 'COUNT(c.id) as total',
 			'FROM'		=> array(
 				GARAGE_CATEGORIES_TABLE	=> 'c',
 			)

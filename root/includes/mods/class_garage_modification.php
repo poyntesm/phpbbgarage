@@ -37,7 +37,7 @@ class garage_modification
 		global $cid, $db, $garage_vehicle;
 
 		$sql = 'INSERT INTO ' . GARAGE_MODIFICATIONS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'garage_id'		=> $cid,
+			'vehicle_id'		=> $cid,
 			'user_id'		=> $garage_vehicle->get_vehicle_owner_id($cid),
 			'category_id'		=> $data['category_id'],
 			'manufacturer_id'	=> $data['manufacturer_id'],
@@ -69,7 +69,7 @@ class garage_modification
 		global $db, $cid, $mid, $garage_vehicle;
 
 		$update_sql = array(
-			'garage_id'		=> $cid,
+			'vehicle_id'		=> $cid,
 			'user_id'		=> $garage_vehicle->get_vehicle_owner_id($cid),
 			'category_id'		=> $data['category_id'],
 			'manufacturer_id'	=> $data['manufacturer_id'],
@@ -89,7 +89,7 @@ class garage_modification
 
 		$sql = 'UPDATE ' . GARAGE_MODIFICATIONS_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
-			WHERE id = $mid AND garage_id = $cid";
+			WHERE id = $mid AND vehicle_id = $cid";
 
 		$db->sql_query($sql);
 
@@ -216,7 +216,7 @@ class garage_modification
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'm.id, m.garage_id, m.user_id, p.title AS mod_title, m.date_updated AS POI, u.username',
+			'SELECT'	=> 'm.id, m.vehicle_id, m.user_id, p.title AS mod_title, m.date_updated AS POI, u.username',
 			'FROM'		=> array(
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 			),
@@ -227,7 +227,7 @@ class garage_modification
 				)
 				,array(
 					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'm.garage_id = g.id'
+					'ON'	=> 'm.vehicle_id = g.id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
@@ -307,7 +307,7 @@ class garage_modification
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'm.id, m.garage_id, m.user_id, p.title AS mod_title, m.date_created AS POI, u.username',
+			'SELECT'	=> 'm.id, m.vehicle_id, m.user_id, p.title AS mod_title, m.date_created AS POI, u.username',
 			'FROM'		=> array(
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 			),
@@ -318,7 +318,7 @@ class garage_modification
 				)
 				,array(
 					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'm.garage_id = g.id'
+					'ON'	=> 'm.vehicle_id = g.id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
@@ -378,7 +378,7 @@ class garage_modification
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'm'),
-					'ON'	=> 'g.id = m.garage_id'
+					'ON'	=> 'g.id = m.vehicle_id'
 				)
 			),
 			'WHERE'		=> "mk.pending = 0 AND md.pending = 0",
@@ -452,7 +452,7 @@ class garage_modification
 					'ON'	=> 'm.installer_id = b2.id'
 				)
 			),
-			'WHERE'		=> "m.id = $mid AND g.id = m.garage_id"
+			'WHERE'		=> "m.id = $mid AND g.id = m.vehicle_id"
 		));
 
       		$result = $db->sql_query($sql);
@@ -492,7 +492,52 @@ class garage_modification
 					'ON'	=> 'mg.image_id = i.attach_id'
 				)
 			),
-			'WHERE'		=> "m.garage_id = $cid AND m.category_id = $category_id",
+			'WHERE'		=> "m.vehicle_id = $cid AND m.category_id = $category_id",
+			'ORDER_BY'	=> "p.title ASC"
+		));
+
+      		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$data[] = $row;
+		}
+
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/*========================================================================*/
+	// Select Modifications From DB By Category
+	// Usage: get_modification_by_category('modification id');
+	/*========================================================================*/
+	function get_modifications_by_category_id($category_id)
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'm.*, i.*, p.title',
+			'FROM'		=> array(
+				GARAGE_MODIFICATIONS_TABLE	=> 'm',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_PRODUCTS_TABLE => 'p'),	
+					'ON'	=> 'm.product_id = p.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODIFICATION_GALLERY_TABLE => 'mg'),
+					'ON'	=> 'm.id = mg.modification_id AND mg.hilite = 1',
+				)
+				,array(
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
+					'ON'	=> 'mg.image_id = i.attach_id'
+				)
+			),
+			'WHERE'		=> "m.category_id = $category_id",
 			'ORDER_BY'	=> "p.title ASC"
 		));
 
@@ -519,7 +564,7 @@ class garage_modification
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> "m.id, m.garage_id, p.title AS mod_title, m.install_price, m.install_rating, m.install_comments, u.username, u.user_id, mk.make, md.model, g.made_year, b.id as business_id, CONCAT_WS(' ', g.made_year, mk.make, md.model) AS vehicle",
+			'SELECT'	=> "m.id, m.vehicle_id, p.title AS mod_title, m.install_price, m.install_rating, m.install_comments, u.username, u.user_id, mk.make, md.model, g.made_year, b.id as business_id, CONCAT_WS(' ', g.made_year, mk.make, md.model) AS vehicle",
 			'FROM'		=> array(
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 				GARAGE_BUSINESS_TABLE	=> 'b',
@@ -531,7 +576,7 @@ class garage_modification
 				)
 				,array(
 					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'm.garage_id = g.id'
+					'ON'	=> 'm.vehicle_id = g.id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
@@ -573,7 +618,7 @@ class garage_modification
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'm.id, m.garage_id, p.title AS mod_title, m.price, m.purchase_rating, m.product_rating, m.comments, u.username, u.user_id, mk.make, md.model, g.made_year, b.id as business_id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
+			'SELECT'	=> 'm.id, m.vehicle_id, p.title AS mod_title, m.price, m.purchase_rating, m.product_rating, m.comments, u.username, u.user_id, mk.make, md.model, g.made_year, b.id as business_id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
 			'FROM'		=> array(
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 				GARAGE_BUSINESS_TABLE	=> 'b',
@@ -585,7 +630,7 @@ class garage_modification
 				)
 				,array(
 					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'm.garage_id = g.id'
+					'ON'	=> 'm.vehicle_id = g.id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
@@ -645,7 +690,7 @@ class garage_modification
 					'ON'	=> 'mg.image_id = i.attach_id'
 				)
 			),
-			'WHERE'		=> "m.garage_id = $cid"
+			'WHERE'		=> "m.vehicle_id = $cid"
 		));
 
 		$result = $db->sql_query($sql);
@@ -687,7 +732,7 @@ class garage_modification
 		for($i = 0; $i < count($rows); $i++)
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1'	=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=view_modification&amp;MID=" . $rows[$i]['id'] . "&amp;CID=" . $rows[$i]['garage_id']),
+				'U_COLUMN_1'	=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=view_modification&amp;MID=" . $rows[$i]['id'] . "&amp;CID=" . $rows[$i]['vehicle_id']),
 				'U_COLUMN_2' 	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $rows[$i]['user_id']),
 				'COLUMN_1_TITLE'=> $rows[$i]['mod_title'],
 				'COLUMN_2_TITLE'=> $rows[$i]['username'],
@@ -767,7 +812,7 @@ class garage_modification
 		for($i = 0; $i < count($rows); $i++)
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' 	=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=view_modification&amp;MID=" . $rows[$i]['id'] . "&amp;CID=" . $rows[$i]['garage_id']),
+				'U_COLUMN_1' 	=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=view_modification&amp;MID=" . $rows[$i]['id'] . "&amp;CID=" . $rows[$i]['vehicle_id']),
 				'U_COLUMN_2' 	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $rows[$i]['user_id']),
 				'COLUMN_1_TITLE'=> $rows[$i]['mod_title'],
 				'COLUMN_2_TITLE'=> $rows[$i]['username'],

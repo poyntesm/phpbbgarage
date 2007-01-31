@@ -1,0 +1,128 @@
+<!-- INCLUDE overall_header.html -->
+
+<!-- IF S_EDIT_CATEGORY -->
+
+	<a href="{U_BACK}" style="float: right">&laquo; {L_BACK}</a>
+
+	<h1>{L_CATEGORY_UPDATE}</h1>
+
+	<p>{L_CATEGORY_UPDATE_EXPLAIN}</p>
+
+	<!-- IF S_ERROR -->
+		<div class="errorbox">
+			<h3>{L_WARNING}</h3>
+			<p>{ERROR_MSG}</p>
+		</div>
+	<!-- ENDIF -->
+
+	<form id="forumedit" method="post" action="{U_EDIT_ACTION}">
+
+	<fieldset>
+		<legend>{L_CATEGORY_SETTINGS}</legend>
+	<dl>
+		<dt><label for="title">{L_CATEGORY_NAME}:</label></dt>
+		<dd><input class="medium" type="text" id="title" name="title" value="{CATEGORY_NAME}" maxlength="255" /></dd>
+	</dl>
+	</fieldset>
+
+	<fieldset class="submit-buttons">
+		<legend>{L_SUBMIT}</legend>
+		<input class="button1" type="submit" id="submit" name="update" value="{L_SUBMIT}" />&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+	</fieldset>
+
+	</form>
+
+
+<!-- ELSEIF S_DELETE_CATEGORY -->
+
+	<a href="{U_BACK}" style="float: right">&laquo; {L_BACK}</a>
+
+	<h1>{L_CATEGORY_DELETE}</h1>
+
+	<p>{L_CATEGORY_DELETE_EXPLAIN}</p>
+
+	<!-- IF S_ERROR -->
+		<div class="errorbox">
+			<h3>{L_WARNING}</h3>
+			<p>{ERROR_MSG}</p>
+		</div>
+	<!-- ENDIF -->
+
+	<form id="acp_category" method="post" action="{U_ACTION}">
+
+	<fieldset>
+		<legend>{L_CATEGORY_DELETE}</legend>
+	<dl>
+		<dt><label>{L_CATEGORY_NAME}:</label></dt>
+		<dd><b>{CATEGORY_NAME}</b></dd>
+	</dl>
+	<dl>
+		<dt><label for="delete_action">{L_ACTION}:</label></dt>
+		<dd><input type="radio" class="radio" id="delete_action" name="action_modifications" value="delete" checked="checked" /> {L_DELETE_ALL_MODIFICATIONS}</dd>
+		<!-- IF S_MOVE_CATEGORY -->
+			<dd><input type="radio" class="radio" name="action_modifications" value="move" /> {L_MOVE_MODIFICATIONS_TO} <select name="modifications_to_id">{S_MOVE_CATEGORY_OPTIONS}</select></dd>
+		<!-- ENDIF -->
+	</dl>
+
+	<p class="quick">
+		<input class="button1" type="submit" name="update" value="{L_SUBMIT}" />
+	</p>
+	</fieldset>
+
+	</form>
+
+<!-- ELSE -->
+
+	<h1>{L_GARAGE_CAT_TITLE}</h1>
+
+	<p>{L_GARAGE_CAT_EXPLAIN}</p>
+
+	<!-- IF S_ERROR -->
+		<div class="errorbox">
+			<h3>{L_WARNING}</h3>
+			<p>{ERROR_MSG}</p>
+		</div>
+	<!-- ENDIF -->
+
+	<table cellspacing="1">
+			<col class="row1" /><col class="row2" />
+	<tbody>
+	<!-- BEGIN catrow -->
+	<tr>
+		<td width="90%" nowrap=nowrap><span class="gen">{catrow.TITLE}</span></td>
+		<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
+		<!-- IF catrow.S_FIRST_ROW && not catrow.S_LAST_ROW -->
+			{ICON_MOVE_UP_DISABLED}
+			<a href="{catrow.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
+		<!-- ELSEIF not catrow.S_FIRST_ROW && not catrow.S_LAST_ROW-->
+			<a href="{catrow.U_MOVE_UP}">{ICON_MOVE_UP}</a>
+			<a href="{catrow.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>
+		<!-- ELSEIF catrow.S_LAST_ROW && not catrow.S_FIRST_ROW -->
+			<a href="{catrow.U_MOVE_UP}">{ICON_MOVE_UP}</a>
+			{ICON_MOVE_DOWN_DISABLED}
+		<!-- ELSE -->
+			{ICON_MOVE_UP_DISABLED}
+			{ICON_MOVE_DOWN_DISABLED}
+		<!-- ENDIF -->
+		<a href="{catrow.U_EDIT}">{ICON_EDIT}</a>
+		<a href="{catrow.U_DELETE}">{ICON_DELETE}</a>
+		</td>
+	</tr>
+	<!-- END catrow -->
+</table>
+
+	<form id="catrow" method="post" action="{U_ACTION}">
+
+	<fieldset class="quick">
+		<input type="hidden" name="action" value="add" />
+
+		<input type="text" name="category" value="" maxlength="255" />
+		<input class="button2" name="addcategory" type="submit" value="{L_CREATE_CATEGORY}" />
+	</fieldset>
+	
+	</form>
+
+<!-- ENDIF -->
+
+<!-- INCLUDE overall_footer.html -->

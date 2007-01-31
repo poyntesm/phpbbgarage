@@ -146,7 +146,7 @@ class garage_vehicle
 		global $cid, $db;
 
 		$sql = 'INSERT INTO ' . GARAGE_RATINGS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'garage_id'		=> $cid,
+			'vehicle_id'		=> $cid,
 			'rating'		=> $data['vehicle_rating'],
 			'user_id'		=> $data['user_id'],
 			'rate_date'		=> time())
@@ -200,7 +200,7 @@ class garage_vehicle
 			'FROM'		=> array(
 				GARAGE_RATINGS_TABLE	=> 'r',
 			),
-			'WHERE'		=> "r.user_id = " . $user->data['user_id'] ." AND garage_id = $cid",
+			'WHERE'		=> "r.user_id = " . $user->data['user_id'] ." AND vehicle_id = $cid",
 			'GROUP_BY'	=> 'r.id'
 		));
 
@@ -259,7 +259,7 @@ class garage_vehicle
 
 		$sql = 'UPDATE ' . GARAGE_RATINGS_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
-			WHERE user_id = " . $data['user_id'] . " AND garage_id = $cid";
+			WHERE user_id = " . $data['user_id'] . " AND vehicle_id = $cid";
 
 		$result = $db->sql_query($sql);
 
@@ -414,7 +414,7 @@ class garage_vehicle
 			'FROM'		=> array(
 				GARAGE_VEHICLE_GALLERY_TABLE	=> 'vg',
 			),
-			'WHERE'		=> "vg.garage_id = $cid"
+			'WHERE'		=> "vg.vehicle_id = $cid"
 		));
 
 		$result = $db->sql_query($sql);
@@ -485,7 +485,7 @@ class garage_vehicle
 					)
 					,array(
 						'FROM'	=> array(GARAGE_VEHICLE_GALLERY_TABLE => 'vg'),
-						'ON'	=> 'g.id = vg.garage_id AND vg.hilite = 1',
+						'ON'	=> 'g.id = vg.vehicle_id AND vg.hilite = 1',
 					)
 					,array(
 						'FROM'	=> array(GARAGE_IMAGES_TABLE => 'images'),
@@ -497,11 +497,11 @@ class garage_vehicle
 					)
 					,array(
 						'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'mods'),
-						'ON'	=> 'g.id = mods.garage_id ',
+						'ON'	=> 'g.id = mods.vehicle_id ',
 					)
 					,array(
 						'FROM'	=> array(GARAGE_RATINGS_TABLE => 'r'),
-						'ON'	=> 'g.id = r.garage_id ',
+						'ON'	=> 'g.id = r.vehicle_id ',
 					)
 					,array(
 						'FROM'	=> array(USERS_TABLE => 'u'),
@@ -532,7 +532,7 @@ class garage_vehicle
 						)
 						,array(
 							'FROM'	=> array(GARAGE_VEHICLE_GALLERY_TABLE => 'vg'),
-						'ON'	=> 'g.id = vg.garage_id AND vg.hilite = 1',
+						'ON'	=> 'g.id = vg.vehicle_id AND vg.hilite = 1',
 						)
 					),
 					'WHERE'		=> "makes.pending = 0 and models.pending = 0 and vg.image_id IS NOT NULL",
@@ -595,7 +595,7 @@ class garage_vehicle
 			{
 				$sql_array['LEFT_JOIN'] .= array(array(
 								'FROM'	=> array(GARAGE_GUESTBOOKS_TABLE => 'gb'),	
-								'ON'	=> 'g.id = gb.garage_id'
+								'ON'	=> 'g.id = gb.vehicle_id'
 							));
 				$sql_array['WHERE'] = "makes.pending = 0 and models.pending = 0";
 				$sql_array['GROUP_BY'] = "g.id";
@@ -605,7 +605,7 @@ class garage_vehicle
 			{
 				$sql_array['LEFT_JOIN'] .= array(array(
 								'FROM'	=> array(GARAGE_QUARTERMILES_TABLE => 'qm'),	
-								'ON'	=> 'g.id = qm.garage_id'
+								'ON'	=> 'g.id = qm.vehicle_id'
 							));
 				$sql_array['WHERE'] = "makes.pending = 0 and models.pending = 0";
 				$sql_array['GROUP_BY'] = "g.id";
@@ -615,7 +615,7 @@ class garage_vehicle
 			{
 				$sql_array['LEFT_JOIN'] .= array(array(
 								'FROM'	=> array(GARAGE_DYNORUNS_TABLE => 'rr'),	
-								'ON'	=> 'g.id = rr.garage_id'
+								'ON'	=> 'g.id = rr.vehicle_id'
 							));
 				$sql_array['WHERE'] = "makes.pending = 0 and models.pending = 0";
 				$sql_array['GROUP_BY'] = "g.id";
@@ -1394,7 +1394,7 @@ class garage_vehicle
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'mods'),	
-					'ON'	=> 'mods.garage_id = g.id'
+					'ON'	=> 'mods.vehicle_id = g.id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
@@ -1410,7 +1410,7 @@ class garage_vehicle
 				)
 				,array(
 					'FROM'	=> array(GARAGE_VEHICLE_GALLERY_TABLE => 'vg'),
-					'ON'	=> 'g.id = vg.garage_id AND vg.hilite = 1',
+					'ON'	=> 'g.id = vg.vehicle_id AND vg.hilite = 1',
 				)
 				,array(
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
@@ -1451,7 +1451,7 @@ class garage_vehicle
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'mods'),	
-					'ON'	=> 'mods.garage_id = g.id'
+					'ON'	=> 'mods.vehicle_id = g.id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MAKES_TABLE => 'makes'),
@@ -1467,7 +1467,7 @@ class garage_vehicle
 				)
 				,array(
 					'FROM'	=> array(GARAGE_VEHICLE_GALLERY_TABLE => 'vg'),
-					'ON'	=> 'g.id = vg.garage_id AND vg.hilite = 1',
+					'ON'	=> 'g.id = vg.vehicle_id AND vg.hilite = 1',
 				)
 				,array(
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'images'),
@@ -1504,7 +1504,7 @@ class garage_vehicle
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'mods'),	
-					'ON'	=> 'mods.garage_id = g.id'
+					'ON'	=> 'mods.vehicle_id = g.id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MAKES_TABLE => 'makes'),
@@ -1520,7 +1520,7 @@ class garage_vehicle
 				)
 				,array(
 					'FROM'	=> array(GARAGE_VEHICLE_GALLERY_TABLE => 'vg'),
-					'ON'	=> 'g.id = vg.garage_id AND vg.hilite = 1',
+					'ON'	=> 'g.id = vg.vehicle_id AND vg.hilite = 1',
 				)
 				,array(
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'images'),
@@ -1617,7 +1617,7 @@ class garage_vehicle
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'mods'),	
-					'ON'	=> 'mods.garage_id = g.id'
+					'ON'	=> 'mods.vehicle_id = g.id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MAKES_TABLE => 'makes'),
@@ -1633,7 +1633,7 @@ class garage_vehicle
 				)
 				,array(
 					'FROM'	=> array(GARAGE_VEHICLE_GALLERY_TABLE => 'vg'),
-					'ON'	=> 'g.id = vg.garage_id AND vg.hilite = 1'
+					'ON'	=> 'g.id = vg.vehicle_id AND vg.hilite = 1'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'images'),
@@ -1673,14 +1673,14 @@ class garage_vehicle
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),	
-					'ON'	=> 'r.garage_id = g.id'
+					'ON'	=> 'r.vehicle_id = g.id'
 				)
 				,array(
 					'FROM'	=> array(USERS_TABLE => 'user'),
 					'ON'	=> 'r.user_id = u.user_id'
 				)
 			),
-			'WHERE'		=> "r.garage_id = $cid"
+			'WHERE'		=> "r.vehicle_id = $cid"
 		));
 
       		$result = $db->sql_query($sql);
@@ -1852,7 +1852,7 @@ class garage_vehicle
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'mods'),
-					'ON'	=> 'mods.garage_id = g.id'
+					'ON'	=> 'mods.vehicle_id = g.id'
 				)
 				,array(
 					'FROM'	=> array(USERS_TABLE => 'u'),
@@ -1891,7 +1891,7 @@ class garage_vehicle
 				GARAGE_CATEGORIES_TABLE		=> 'c',
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 			),
-			'WHERE'		=> "m.garage_id = $cid AND m.category_id = c.id",
+			'WHERE'		=> "m.vehicle_id = $cid AND m.category_id = c.id",
 			'ODRDER_BY'	=> 'c.field_order DESC'
 		));
 
@@ -1976,11 +1976,11 @@ class garage_vehicle
 				)
 				,array(
 					'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'mods'),
-					'ON'	=> 'g.id = mods.garage_id'
+					'ON'	=> 'g.id = mods.vehicle_id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_VEHICLE_GALLERY_TABLE => 'vg'),
-					'ON'	=> 'g.id = vg.garage_id AND vg.hilite = 1',
+					'ON'	=> 'g.id = vg.vehicle_id AND vg.hilite = 1',
 				)
 				,array(
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'images'),
