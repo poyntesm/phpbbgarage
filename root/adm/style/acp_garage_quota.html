@@ -1,53 +1,54 @@
 <!-- INCLUDE overall_header.html -->
 
-<h1>{L_GARAGE_PERMISSIONS_TITLE}</h1>
+<h1>{L_QUOTA_TITLE}</h1>
 
-<p>{L_GARAGE_PERMISSIONS_EXPLAIN}</p>
+<p>{L_QUOTA_EXPLAIN}</p>
 
-<form name='permissions' action="{S_GARAGE_ACTION}" method="post">
-<table width="100%" cellpadding="3" cellspacing="1" border="0" class="forumline">
-	<tr>
-		<th class="thHead" height="25" nowrap="nowrap" colspan="6">{L_PERMISSION_ACCESS_LEVELS}</th>
-	</tr>
-	<tr>
-		<td class="catBottom" width=25% ><span class="gen">{L_NAME}</span></td>
-		<td class="catBottom" align ="center" width=10%><span class="gen">{L_ADD}</span></td>
-		<td class="catBottom" align ="center" width=10%><span class="gen">{L_UPLOAD}</span></td>
-	</tr>
-	<tr>
-		<td class="row1" colspan="6"><span class="gen">{L_GLOBAL_ALL_MASKS}</td>
-	</tr>
-	<tr>
-		<td class="row2" width="25%" align="center" valign="middle"><div align="right" style="font-weight:bold">{L_OVERALL_QUOTA}&nbsp;</div></td>
-		<td class="row1" width="10%" align="center" valign="middle"><input name="max_user_cars" type="text" class="post" size="3" value="{MAX_USER_CARS}" /></td>
-		<td class="row1" width="10%" align="center" valign="middle">{L_LOCAL}<input name="max_upload_images" type="text" class="post" size="3" value="{MAX_UPLOAD_IMAGES}" />&nbsp;{L_REMOTE}<input name="max_remote_images" type="text" class="post" size="3" value="{MAX_REMOTE_IMAGES}" /></td>
-	</tr>
-	<tr>
-		<td class="row1" colspan="6"><span class="gen">{L_PRIVATE_PERMISSIONS}</td>
-	</tr>
+	<!-- IF S_ERROR -->
+		<div class="errorbox">
+			<h3>{L_WARNING}</h3>
+			<p>{ERROR_MSG}</p>
+		</div>
+	<!-- ENDIF -->
+
+
+<form name='quota' action="{U_ACTION}" method="post">
+
+	<fieldset>
+		<legend>{L_DEFAULT_QUOTA}</legend>
+	<dl>
+		<dt><label for="default_vehicle_quota">{L_VEHICLE_QUOTA}:</label></dt>
+		<dd><input class="tiny" type="text" id="default_vehicle_quota" name="default_vehicle_quota" value="{DEFAULT_VEHICLE_QUOTA}" maxlength="5" /></dd>
+	</dl>
+	<dl>
+		<dt><label for="default_upload_quota">{L_UPLOAD_IMAGE_QUOTA}:</label></dt>
+		<dd><input class="tiny" type="text" id="default_upload_quota" name="default_upload_quota" value="{DEFAULT_UPLOAD_QUOTA}" maxlength="5" /></dd>
+	</dl>
+	<dl>
+		<dt><label for="default_remote_quota">{L_REMOTE_IMAGE_QUOTA}:</label></dt>
+		<dd><input class="tiny" type="text" id="default_remote_quota" name="default_remote_quota" value="{DEFAULT_REMOTE_QUOTA}" maxlength="5" /></dd>
+	</dl>
+	</fieldset>
+
+	<p>{L_GROUP_QUOTA_EXPLAIN}</p>
+
+	<fieldset>
+		<legend>{L_GROUP_QUOTA}</legend>
 	<!-- BEGIN usergroup -->
-	<tr>
-		<td class="row2" width="25%" align="center" valign="middle"><div align="right" style="font-weight:bold">{usergroup.GROUP_NAME}&nbsp;</div></td>
-		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="add[]" value="{usergroup.GROUP_ID}" {usergroup.ADD_CHECKED} onclick="handleClick('add{usergroup.GROUP_ID}')" />
-			<table cellpadding="3" cellspacing="1" border="0"> 
-				<tr id="add{usergroup.GROUP_ID}" style="display:{usergroup.ADD_DISPLAY};">
-					<td align="center"><input name="add_quota_{usergroup.GROUP_ID}" type="text" class="post" size="3" value="{usergroup.ADD_QUOTA}" /></td>
-				</tr>
-			</table>
-		</td>
-		<td class="row1" width="10%" align="center" valign="middle"><input type="checkbox" name="upload[]" value="{usergroup.GROUP_ID}" {usergroup.UPLOAD_CHECKED} onclick="handleClick('upload{usergroup.GROUP_ID}')" />
-			<table cellpadding="3" cellspacing="1" border="0"> 
-				<tr id="upload{usergroup.GROUP_ID}" style="display:{usergroup.UPLOAD_DISPLAY};">
-					<td align="center">{L_LOCAL}<input name="upload_quota_{usergroup.GROUP_ID}" type="text" class="post" size="3" value="{usergroup.UPLOAD_QUOTA}" />&nbsp;{L_REMOTE}<input name="remote_quota_{usergroup.GROUP_ID}" type="text" class="post" size="3" value="{usergroup.REMOTE_QUOTA}" /> </td>
-				</tr>
-			</table>
-		</td>
-	</tr>
+	<dl>
+		<dt><label for="">{usergroup.GROUP_NAME}:</label></dt>
+		<dd>{L_ENABLE_GROUP_VEHICLE_QUOTA}&nbsp;<input type="checkbox" name="add_groups[]" value="{usergroup.GROUP_ID}" <!-- IF usergroup.S_ADD_CHECKED -->checked="checked" <!-- ENDIF --> />&nbsp;<input name="add_quota_{usergroup.GROUP_ID}" type="text" class="post" size="3" value="{usergroup.VEHICLE_QUOTA}" /><br />{L_ENABLE_GROUP_IMAGES_QUOTA}&nbsp;<input type="checkbox" name="upload_groups[]" value="{usergroup.GROUP_ID}" <!-- IF usergroup.S_UPLOAD_CHECKED -->checked="checked" <!-- ENDIF --> />&nbsp;{L_UPLOADED}&nbsp;<input name="upload_quota_{usergroup.GROUP_ID}" type="text" class="post" size="3" value="{usergroup.UPLOAD_QUOTA}" />&nbsp;{L_REMOTE}&nbsp;<input name="remote_quota_{usergroup.GROUP_ID}" type="text" class="post" size="3" value="{usergroup.REMOTE_QUOTA}" />
+		</dd>
+	</dl>
 	<!-- END usergroup -->
-	<tr>
-		<td class="catBottom" align="center" height="28" colspan="6"><input type="hidden" value="update_permissions" name="mode" /><input name="submit" type="submit" value="{L_SAVE}" class="liteoption" /></td>
-	</tr>
-</table>
+	</fieldset>
+
+	<fieldset class="submit-buttons">
+		<legend>{L_SUBMIT}</legend>
+		<input class="button1" type="submit" id="submit" name="update" value="{L_SUBMIT}" />&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+	</fieldset>
+
 </form>
 
 <!-- INCLUDE overall_footer.html -->

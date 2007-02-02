@@ -108,7 +108,7 @@ class acp_garage_category
 
 				if (!$category_id)
 				{
-					trigger_error($user->lang['NO_FORUM'] . adm_back_link($this->u_action . '&amp;parent_id=' . $this->parent_id), E_USER_WARNING);
+					trigger_error($user->lang['NO_CATEGORY'] . adm_back_link($this->u_action . '&amp;parent_id=' . $this->parent_id), E_USER_WARNING);
 				}
 
 				$category_data = $garage->get_category($category_id);

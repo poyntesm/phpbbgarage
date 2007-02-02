@@ -78,31 +78,29 @@ class garage_vehicle
 	// Gets Group Vehicle Quota - Used Only In ACP Page
 	// Usage: get_group_vehicle_quota('group id');
 	/*========================================================================*/
-	function get_group_add_quota($gid)
+	function get_group_vehicle_quota($gid)
 	{
 		global $db, $garage_config;
 
-		if (empty($garage_config['private_add_quota']))
+		if (empty($garage_config['add_groups']))
 		{
-			//Since No Specific Group Value Exists Use Default Value
-			return $garage_config['max_user_cars'];
+			return;
 		}
 		//It Appears Some Groups Have Private Permissions & Quotas We Will Need To Check Them
 		else
 		{
-			//Lets Get The Private Add Groups & Quotas
-			$private_add_groups = @explode(',', $garage_config['private_add_perms']);
-			$private_add_quota = @explode(',', $garage_config['private_add_quota']);
+			//Lets Get The Add Groups & Quotas
+			$add_groups = @explode(',', $garage_config['add_groups']);
+			$add_quota = @explode(',', $garage_config['add_groups_quotas']);
 
 			//Find The Matching Index In Second Array For The Group ID
-			if (($index = array_search($gid, $private_add_groups)) === false)
+			if (($index = array_search($gid, $add_groups)) === false)
 			{
-				//Hmmm..Group Has Currently No Private Add Permissions...So Give It The Default Incase They Turn It On
-				return $garage_config['max_user_cars'];
+				return;
 			} 
 			
 			//Return The Groups Quota
-			return $private_add_quota[$index];
+			return $add_quota[$index];
 		}
 	}
 

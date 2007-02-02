@@ -449,12 +449,15 @@ $params = array(
 	'enable_blogs_bbcode'			=> '1',
 
 //Quota Config Data
-	'max_user_cars' 			=> '1',	
-	'max_upload_images' 			=> '5',
-	'max_remote_images' 			=> '5',
-	'private_add_quota' 			=> '',
-	'private_upload_quota' 			=> '',
-	'private_remote_quota' 			=> '',
+	'default_vehicle_quota' 		=> '1',	
+	'default_upload_quota' 			=> '5',
+	'default_remote_quota' 			=> '5',
+	'add_groups'	 			=> '',
+	'add_groups_quotas' 			=> '',
+	'upload_groups' 			=> '',
+	'upload_groups_quotas' 			=> '',
+	'remote_groups' 			=> '',
+	'remote_groups_quotas' 			=> '',
 );
 while( list($config_name, $config_value) = @each($params) )
 {

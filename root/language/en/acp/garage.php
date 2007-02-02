@@ -253,24 +253,6 @@ $lang = array_merge($lang, array(
 	'LOG_GARAGE_CONFIG_SERVICE'			=> '<strong>Altered garage service settings</strong>',
 	'LOG_GARAGE_CONFIG_BLOG'			=> '<strong>Altered garage blog settings</strong>',
 
-
-
-//ADMIN : Categories
-	'Any_Model' 					=> 'Any Model',
-	'Select_Model' 					=> 'Select Model',
-
-	'Category_Permissions' 				=> 'Category Permissions',
-	'Category_Title' 				=> 'Category Title',
-	'Category_Desc' 				=> 'Category Description',
-	'New_category_created' 				=> 'New category has been created successfully',
-	'Click_return_garage_category' 			=> 'Click %sHere%s to return to the Garage Categories Manager',
-	'Category_updated' 				=> 'This category has been updated successfully',
-	'Delete_Category' 				=> 'Delete Category',
-	'Move_Delete_Category' 				=> 'Move all existing modifications in this category to which category?',
-	'Remove_Category' 				=> 'Category to remove:',
-	'Delete_Category_Explain' 			=> 'The form below will allow you to delete a category',
-	'Category_deleted' 				=> 'This category has been deleted successfully',
-
 //ADMIN : Model & Makes
 	'Garage_Models_Title' => 'Garage Model & Makes Control',
 	'Garage_Models_Explain' => 'On this screen you can manage your models & makes: add, modify, delete.',
@@ -322,17 +304,6 @@ $lang = array_merge($lang, array(
 	'Path_To_Convert' => '<b>Path to convert</b><i> (If using ImageMagick)</i><br />Set this to the path to your ImageMagicks command line tool "convert". You may execute the command "type convert" if you have shell access to your host if you do not know this path.<br /><br /><b>DEFAULT:</b> /usr/bin/convert<br /><br /><b>For Windows:</b> Use forward slashes "/" in the path, and if it contains any spaces enclose the path in double quotes "',
 	'Convert_Options' => '<b>Convert Options</b><i> (If using ImageMagick)</i><br />These are the command line options that will be passed to convert in making thumbnails.<br /><br /><b>DEFAULT:</b> -antialias +profile "*"<br /><b>WINDOWS DEFAULT:</b> -anitalias<br /><b>NOTE:</b> DO NOT include any scale, geometry, or resize options here.<br /><br /><b>For Windows:</b> Remember to remove the +profile from the options!',
 	'Thumbnail_Resolution' => '<b>Thumbnail resolution</b><br />Single pixel count for length or width, like 100 for a max 100x100. Aspect Ratio will be maintained where possible.',
-
-//ADMIN : Tools
-	'Garage_Tools_Title' => 'Garage Tool Control',
-	'Garage_Tools_Explain' => 'On this screen you can run garage tools.',
-	'Garage_Tools_Rebuild' => 'Rebuild All Thumbnails',
-	'Garage_Tools_Rebuild_All' => '<b>Rebuild All Thumbnails</b><br />If you have recently changed the thumbnail resolution, or have broken thumbnail images use this tool to rebuild all thumbnails. Depending on the size of your garage this tool can take a few minutes to run and is CPU intensive!',
-	'Garage_Tools_Create_Log' => '<b>Create Detailed Log?</b><br />If you have would like the Garage to create a detailed log of the rebuild actions please enter a filename here.<br /><br />Note that any existing file with the same name will be overwritten!<br /><br />If you do not want a detailed log to be created leave this field blank.',
-	'Garage_Tools_Orphaned_Title' => 'Find/Remove Orphans',
-	'Per_Cycle' => 'Per Cycle',
-	'Garage_Tools_Orphaned_Button' => 'Search For Orphans',
-	'Garage_Tools_Orphaned' => '<b>Find/Remove Orphans</b><br />This tool is used to locate any abondanded files that the Garage had once created. These abandoned files could be a result of doing any manual work in the database, running the rebuild tool and it failing part way through, or after substantial upgrading to the Garage. Under normal circumstances there should be no orphaned files.<br /><br />The first step of this tool is just to search for files, no action will be taken unless you confirm the findings on the next step.',
 
 //MAIN : Main Page
 	'Menu' => 'Menu',
@@ -531,22 +502,10 @@ $lang = array_merge($lang, array(
 	'Remove_Selected_Orphans' => 'Remove Selected Orphans',
 	'Garage_Business_Title' => 'Garage Business Control',
 	'Garage_Business_Explain' => 'On this screen you can manage your business\'s: create, edit, delete.',
-	'Garage_Permissions_Title' => 'Garage Access Permissions Control',
-	'Garage_Permissions_Explain' => '<b><u>Permissions & Quotas Guide</u></b> : Check box for access, uncheck to remove access. <b>\'DENY\'</b> will override any other permission. <b>\'BROWSE\'</b> dictates whether a user will be able to view the garage. <b>\'INTERACT\'</b> dictates whether the user will be able to vote and leave comments in the Garage. <b>\'ADD\'</b> dictates whether the user will be able to add, edit & delete vehicles and modifications to the Garage. <b>\'UPLOAD\'</b> dictates whether the user will be able to upload images in the Garage. The default quota will apply to all users unless group membership grants them a higher value.<br /><br /><b>NOTE:</b> Regardless of permission settings for Guests below they will not be allowed to add a new vehicle to the Garage and hence images as well.<br /><b>NOTE:</b> When a user is a member of mutliple groups, each granted quotas the highest quota will apply.',
-	'Permission_Access_Levels' => 'Permission Access Levels',
-	'Click_Return_Permissions' => 'Click %sHere%s to return to the Garage Permissions Manager',
 
 	'NAME' => 'Name',
 	'BROWSE' => 'Browse',
 	'Interact' => 'Interact',
-	'Add' => 'Add',
-	'Upload' => 'Upload',
-	'Select' => 'Select',
-	'Global_All_Masks' => 'GLOBAL PERMISSIONS & DEFAULTS QUOTAS:',
-	'Granular_Permissions' => 'USER LEVEL PERMISSIONS: ',
-	'Private_Permissions' => 'GROUP PERMISSIONS & GROUP QUOTAS:',
-	'Global_Permissions' => 'Global Permissions',
-	'Overall_Quota' => 'Default Quotas',
 	'Quartermile_Table' => '1/4 Mile Table',
 	'Search_User_Garage' => 'Vehicle Garage Of',
 
@@ -753,6 +712,40 @@ $lang = array_merge($lang, array(
 	'CATEGORY_NAME_EMPTY'		=> 'No category name entered',
 	'GARAGE_CAT_TITLE' 		=> 'Garage Categories Control',
 	'GARAGE_CAT_EXPLAIN' 		=> 'On this screen you can manage your categories: create, alter, delete.',
+
+	//QUOTA KEYS
+	'QUOTA_TITLE'			=> 'Quota management',
+	'QUOTA_EXPLAIN'			=> 'This page controls quotas for how many vehicles and images an user can have.<br /><br />Default quotas are the values given to any user that has the permissions effective by quotas, unless they are within a group granted a quota below.',
+	'GROUP_QUOTA_EXPLAIN'		=> 'Groups only get displayed here if they have been granted permissions that allow them to create items which can be controlled via quotas.If a group you want to adjust quotas for is not here you need to manage permissions first and grant them the required permissions.',
+	'REMOTE'			=> 'Remote',
+	'UPLOADED'			=> 'Uploaded',
+	'DEFAULT_QUOTA'			=> 'Default quota',
+	'GROUP_QUOTA'			=> 'Group quota',
+	'VEHICLE_QUOTA'			=> 'Vehicle quota',
+	'UPLOAD_IMAGE_QUOTA'		=> 'Uploaded image quota',
+	'REMOTE_IMAGE_QUOTA'		=> 'Remote image quota',
+	'ENABLE_GROUP_VEHICLE_QUOTA'	=> 'Enable vehicle quota',
+	'ENABLE_GROUP_IMAGES_QUOTA'	=> 'Enable image quotas',
+	'QUOTAS_UPDATED'		=> 'Quotas updated',
+	'EMPTY_DEFAULT_QUOTA'		=> 'A default quota value has not been entered for all values',
+	'EMPTY_GROUP_VEHICLE_QUOTA'	=> 'The vehicle quota value has not been entered for a group that has been selected',
+	'EMPTY_GROUP_REMOTE_QUOTA'	=> 'The remote image quota value has not been entered for a group that has been selected',
+	'EMPTY_GROUP_UPLOAD_QUOTA'	=> 'The upload image quota value has not been entered for a group that has been selected',
+
+	//TOOLS KEYS
+	'TOOLS_TITLE' 			=> 'Garage Tool Control',
+	'TOOLS_EXPLAIN' 		=> 'On this screen you can run garage tools.',
+	'TOOLS_REBUILD' 		=> 'Rebuild All Thumbnails',
+	'TOOLS_IMAGES_PER_CYCLE' 	=> 'Images per cycle',
+	'TOOLS_IMAGES_PER_CYCLE_EXPLAIN'=> 'Number of images to process each cycle to control CPU usage',
+	'TOOLS_CREATE_LOG' 		=> 'Create log',
+	'TOOLS_CREATE_LOG_EXPLAIN' 	=> 'Create a logfile detailing each action action',
+	'TOOLS_ORPHANED_TITLE' 		=> 'Find/Remove Orphan Image Files',
+	'TOOLS_ORPHANED_EXPLAIN' 	=> 'This tool is used to locate any abondanded files that the Garage had once created. These abandoned files could be a result of doing any manual work in the database, running the rebuild tool and it failing part way through, or after substantial upgrading to the Garage. Under normal circumstances there should be no orphaned files.<br /><br />The first step of this tool is just to search for files, no action will be taken unless you confirm the findings on the next step.',
+	'PER_CYCLE' 			=> 'Per Cycle',
+	'TOOLS_LOG_FILE' 		=> 'Log filename ',
+	'TOOLS_LOG_FILE_EXPLAIN' 	=> 'Filename of the detailed log being created',
+
 
 
 

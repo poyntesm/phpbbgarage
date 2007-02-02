@@ -37,16 +37,16 @@ class garage_image
 		global $user, $garage_config, $garage;
 	
 		//If No Specific Group Value Exists Use Default Value
-		if (empty($garage_config['private_upload_quota']))
+		if (empty($garage_config['upload_groups']))
 		{
-			return $garage_config['max_upload_images'];
+			return $garage_config['default_upload_quota'];
 		}
 		//It Appears Some Groups Have Private Permissions & Quotas We Will Need To Check Them
 		else
 		{
 			//Lets Get The Private Upload Groups & Quotas
-			$private_upload_groups = @explode(',', $garage_config['private_upload_perms']);
-			$private_upload_quotas = @explode(',', $garage_config['private_upload_quota']);
+			$private_upload_groups = @explode(',', $garage_config['upload_groups']);
+			$private_upload_quotas = @explode(',', $garage_config['upload_groups_quotas']);
 
 			//Process All Groups You Are Member Of To See If Any Are Granted Permission & Quota
 			for ($i = 0, $count = sizeof($groups);$i < $count; $i++)
@@ -62,7 +62,7 @@ class garage_image
 			//Your Were Not Granted Any Private Permissions..Return Default Value
 			if  (empty($quota))
 			{
-				return $garage_config['max_upload_images'];
+				return $garage_config['default_upload_quota'];
 			}
 
 			//Return The Highest Quota You Were Granted
@@ -78,16 +78,16 @@ class garage_image
 		global $user, $garage_config, $garage;
 	
 		//If No Specific Group Value Exists Use Default Value
-		if (empty($garage_config['private_remote_quota']))
+		if (empty($garage_config['remote_groups']))
 		{
-			return $garage_config['max_remote_images'];
+			return;
 		}
 		//It Appears Some Groups Have Private Permissions & Quotas We Will Need To Check Them
 		else
 		{
 			//Lets Get The Private Upload Groups & Remote Quotas
-			$private_upload_groups = @explode(',', $garage_config['private_upload_perms']);
-			$private_remote_quotas = @explode(',', $garage_config['private_remote_quota']);
+			$private_upload_groups = @explode(',', $garage_config['remote_groups']);
+			$private_remote_quotas = @explode(',', $garage_config['remote_groups_quotas']);
 
 			//Process All Groups You Are Member Of To See If Any Are Granted Permission & Quota
 			for ($i = 0, $count = sizeof($groups);$i < $count; $i++)
@@ -103,7 +103,7 @@ class garage_image
 			//Your Were Not Granted Any Private Permissions..Return Default Value
 			if  (empty($quota))
 			{
-				return $garage_config['max_remote_images'];
+				return $garage_config['default_remote_quota'];
 			}
 
 			//Return The Highest Quota You Were Granted
@@ -120,22 +120,21 @@ class garage_image
 		global $garage_config;
 
 		//If No Specific Group Value Exists Use Default Value
-		if (empty($garage_config['private_upload_quota']))
+		if (empty($garage_config['upload_groups']))
 		{
-			return $garage_config['max_upload_images'];
+			return;
 		}
 		//It Appears Some Groups Have Private Permissions & Quotas We Will Need To Check Them
 		else
 		{
 			//Lets Get The Private Upload Groups & Quotas
-			$private_upload_groups	= @explode(',', $garage_config['private_upload_perms']);
-			$private_upload_quota 	= @explode(',', $garage_config['private_upload_quota']);
+			$private_upload_groups	= @explode(',', $garage_config['upload_groups']);
+			$private_upload_quota 	= @explode(',', $garage_config['upload_groups_quotas']);
 
 			//Find The Matching Index In Second Array For The Group ID
 			if (($index = array_search($gid, $private_upload_groups)) === false)
 			{
-				//Group Has No Private Upload Permissions...So Give It The Default Incase They Turn It On
-				return $garage_config['max_upload_images'];
+				return;
 			} 
 
 			//Return The Groups Quota
@@ -152,22 +151,21 @@ class garage_image
 		global $garage_config;
 
 		//If No Specific Group Value Exists Use Default Value
-		if (empty($garage_config['private_remote_quota']))
+		if (empty($garage_config['remote_groups']))
 		{
-			return $garage_config['max_remote_images'];
+			return;
 		}
 		//It Appears Some Groups Have Private Permissions & Quotas We Will Need To Check Them
 		else
 		{
 			//Lets Get The Private Upload Groups & Quotas
-			$private_upload_groups	= @explode(',', $garage_config['private_upload_perms']);
-			$private_remote_quota 	= @explode(',', $garage_config['private_remote_quota']);
+			$private_upload_groups	= @explode(',', $garage_config['remote_groups']);
+			$private_remote_quota 	= @explode(',', $garage_config['remote_groups_quotas']);
 
 			//Find The Matching Index In Second Array For The Group ID
 			if (($index = array_search($gid, $private_upload_groups)) === false)
 			{
-				//Group Has No Private Upload Permissions...So Give It The Default Incase They Turn It On
-				return $garage_config['max_remote_images'];
+				return;
 			} 
 
 			//Return The Groups Quota
