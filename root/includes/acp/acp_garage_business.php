@@ -29,7 +29,7 @@ class acp_garage_business
 
 	function main($id, $mode)
 	{
-		global $db, $user, $auth, $template, $cache;
+		global $db, $user, $auth, $template, $cache, $garage, $garage_config;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
 
 		//Build All Garage Classes e.g $garage_images->
@@ -41,229 +41,577 @@ class acp_garage_business
 
 		$action		= request_var('action', '');
 		$update		= (isset($_POST['update'])) ? true : false;
-		
-		switch ($mode)
+		$business_id	= request_var('id', 0);
+
+		$errors = array();
+
+		// Major routines
+		if ($update)
 		{
-			case 'insert_business':
+			switch ($action)
+			{
+				case 'add':
 
-				//Get All Data Posted And Make It Safe To Use
-				$params = array('title', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
-				$data = $garage->process_post_vars($params);
-				$data['pending'] = ($garage_config['enable_business_approval'] == '1') ? 1 : 0 ;
-				$data['insurance'] = ($data['insurance'] == 'on') ? 1 : 0 ;
-				$data['garage'] = ($data['garage'] == 'on') ? 1 : 0 ;
-				$data['retail_shop'] = ($data['retail_shop'] == 'on') ? 1 : 0 ;
-				$data['web_shop'] = ($data['web_shop'] == 'on') ? 1 : 0 ;
-				//Check They Entered http:// In The Front Of The Link
-				if ( (!preg_match( "/^http:\/\//i", $data['website'])) AND (!empty($data['website'])) )
-				{
-					$data['website'] = "http://".$data['website'];
-				}
+					//Get All Data Posted And Make It Safe To Use
+					$params = array('title' => '', 'address' => '', 'telephone' => '', 'fax' => '', 'website' => '', 'email' => '', 'opening_hours' => '', 'insurance' => '', 'garage' => '', 'retail'  => '', 'product' => '', 'dynocentre'  => '', 'pending' => '0');
+					$data = $garage->process_vars($params);
 
-				//Checks All Required Data Is Present
-				$params = array('title');
-				$garage->check_acp_required_vars($params , $missing_data_message);
-		
-				//Insert New Business Into DB
-				$garage_business->insert_business($data);
-
-				//Return a message...
-				message_die(GENERAL_MESSAGE, $business_created_message);
-					
-				break;
-
-			case 'update_business':
-		
-				//Get All Data Posted And Make It Safe To Use
-				$params = array('id', 'title', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
-				$data = $garage->process_post_vars($params);
-				$data['pending'] = ($garage_config['enable_business_approval'] == '1') ? 1 : 0 ;
-				$data['insurance'] = ($data['insurance'] == 'true') ? 1 : 0 ;
-				$data['garage'] = ($data['garage'] == 'true') ? 1 : 0 ;
-				$data['retail_shop'] = ($data['retail_shop'] == 'true') ? 1 : 0 ;
-				$data['web_shop'] = ($data['web_shop'] == 'true') ? 1 : 0 ;
-		
-				//Check They Entered http:// In The Front Of The Link
-				if ( (!preg_match( "/^http:\/\//i", $data['website'])) AND (!empty($data['website'])) )
-				{
-					$data['website'] = "http://".$data['website'];
-				}
-		
-				//Update The Business With New Values
-				$garage_business->update_business($data);
-				
-				//Return a message...
-				message_die(GENERAL_MESSAGE, $business_updated_message);
-				
-				break;
-		
-			case 'confirm_delete':
-		
-				//Store Data Of Business We Are Deleting For Use In Action Variable
-				$params = array('id');
-				$data = $garage->process_post_vars($params);
-				$data = $garage_business->select_business_data($data['id']);
-		
-				//Get All Business Data To Build Dropdown Of Where To Move Linked Items To
-				$all_data = $garage_business->select_all_business_data('');
-		
-				//Build Dropdown Options For Where To Love Linked Items To
-				for ($i = 0; $i < count($all_data); $i++)
-				{
-					//Do Not List Business We Are Deleting..
-					if ( $data[0]['id'] == $all_data[$i]['id'] )
+					//Check They Entered http:// In The Front Of The Link
+					if ( (!preg_match( "/^http:\/\//i", $data['website'])) AND (!empty($data['website'])) )
 					{
-						continue;
+						$data['website'] = "http://".$data['website'];
 					}
-					$select_to .= '<option value="'. $all_data[$i]['id'] .'">'. $all_data[$i]['title'] .'</option>';
+
+					//Insert New Business Into DB
+					$garage_business->insert_business($data);
+					add_log('admin', 'LOG_GARAGE_BUSINESS_CREATED', $data['title']);
+
+					trigger_error($user->lang['BUSINESS_CREATED'] . adm_back_link($this->u_action));
+
+				break;
+
+				case 'edit':
+
+					//Get All Data Posted And Make It Safe To Use
+					$params = array('title' => '', 'address' => '', 'telephone' => '', 'fax' => '', 'website' => '', 'email' => '', 'opening_hours' => '', 'insurance' => '', 'garage' => '', 'retail'  => '', 'product' => '', 'dynocentre'  => '', 'pending' => '0');
+					$data = $garage->process_vars($params);
+					$data['id'] = $business_id;
+
+					if(!$data['title'])
+					{
+						$errors[] = $user->lang['BUSINESS_NAME_EMPTY'];
+						break;
+					}
+
+					//Check They Entered http:// In The Front Of The Link
+					if ( (!preg_match( "/^http:\/\//i", $data['website'])) AND (!empty($data['website'])) )
+					{
+						$data['website'] = "http://".$data['website'];
+					}
+		
+					$garage_business->update_business($data);
+					add_log('admin', 'LOG_GARAGE_BUSINESS_UPDATED', $data['title']);
+
+					trigger_error($user->lang['BUSINESS_UPDATED'] . adm_back_link($this->u_action));
+
+				break;
+
+				case 'delete':
+					$action_garage		= request_var('action_garage', '');
+					$action_insurance	= request_var('action_insurance', '');
+					$action_dynocentre	= request_var('action_dynocentre', '');
+					$action_retail		= request_var('action_retail', '');
+					$action_product		= request_var('action_product', '');
+					$garage_to_id		= request_var('garage_to_id', 0);
+					$insurance_to_id	= request_var('insurance_to_id', 0);
+					$dynocentre_to_id	= request_var('dynocentre_to_id', 0);
+					$retail_to_id		= request_var('retail_to_id', 0);
+					$product_to_id		= request_var('product_to_id', 0);
+
+					$errors = $this->delete_business($business_id, $action_garage, $garage_to_id, $action_insurance, $insurance_to_id, $action_dynocentre, $dynocentre_to_id, $action_retail, $retail_to_id, $action_product, $product_to_id);
+
+					if (sizeof($errors))
+					{
+						break;
+					}
+
+					trigger_error($user->lang['BUSINESS_DELETED'] . adm_back_link($this->u_action));
+				break;
+			}
+		}
+		
+		switch ($action)
+		{
+
+			case 'approve':
+
+				$data = $garage_business->get_business($business_id);
+				$garage->update_single_field(GARAGE_BUSINESS_TABLE, 'pending', 0, 'id', $business_id);
+				add_log('admin', 'LOG_GARAGE_BUSINESS_APPROVED', $data['title']);
+
+			break;
+
+			case 'disapprove':
+
+				$data = $garage_business->get_business($business_id);
+				$garage->update_single_field(GARAGE_BUSINESS_TABLE, 'pending', 1, 'id', $business_id);
+				add_log('admin', 'LOG_GARAGE_BUSINESS_DISAPPROVED', $data['title']);
+
+			break;
+
+			case 'add':
+			case 'edit':
+
+				// Show form to create/modify a business
+				if ($action == 'edit')
+				{
+					$this->page_title = 'EDIT_BUSINESS';
+					$row = $garage_business->get_business($business_id);
+
+					if (!$update)
+					{
+						$business_data = $row;
+					}
 				}
-		
-				$template->set_filenames(array(
-					'body' => 'admin/garage_confirm_delete.tpl')
-				);
-		
+				else
+				{
+					$this->page_title = 'CREATE_BUSINESS';
+
+					// Fill business data with default values
+					if (!$update)
+					{
+						$business_data = array(
+							'title'		=> request_var('title', '', true),
+							'address'	=> '',
+							'telephone'	=> '',
+							'fax'		=> '',
+							'website'	=> '',
+							'email'		=> '',
+							'opening_hours'	=> '',
+							'garage'	=> '',
+							'retail'	=> '',
+							'insurance'	=> '',
+							'product'	=> '',
+							'dynocentre'	=> '',
+						);
+					}
+				}
+
 				$template->assign_vars(array(
-					'S_GARAGE_ACTION' => append_sid("admin_garage_business.$phpEx?mode=delete_business&amp;id=".$data[0]['id']),
-					'S_TITLE' => $data[0]['title'],
-					'L_DELETE' => $lang['Delete_Business'],
-					'L_DELETE_EXPLAIN' => $user->lang['Delete_Business_Explain'],
-					'L_MOVE_CONTENTS' => $user->lang['Move_contents'],
-					'L_MOVE_DELETE' => $user->lang['Move_and_Delete'],
-					'L_REQUIRED' => $user->lang['Required'],
-					'L_REMOVE' => $user->lang['Remove_Business'],
-					'L_MOVE_DELETE' => $user->lang['Move_Delete_Business'],
-					'L_MOVE_DELETE_BUTTON' => $user->lang['Delete_Business_Button'],
-					'L_OR' => $user->lang['Or'],
-					'L_DELETE_PERMENANTLY' => $user->lang['Delete_Permenantly'],
-					'MOVE_TO_LIST' => $select_to)
+					'S_EDIT_BUSINESS'	=> true,
+					'S_BUSINESS_GARAGE'	=> ($business_data['garage']) ? true : false,
+					'S_BUSINESS_RETAIL'	=> ($business_data['retail']) ? true : false,
+					'S_BUSINESS_INSURANCE'	=> ($business_data['insurance']) ? true : false,
+					'S_BUSINESS_PRODUCT'	=> ($business_data['product']) ? true : false,
+					'S_BUSINESS_DYNOCENTRE'	=> ($business_data['dynocentre']) ? true : false,
+					'S_ERROR'		=> (sizeof($errors)) ? true : false,
+					'U_BACK'		=> $this->u_action,
+					'U_EDIT_ACTION'		=> $this->u_action . "&amp;action=$action&amp;id=$business_id",
+					'BUSINESS_NAME'		=> $business_data['title'],
+					'ADDRESS'		=> $business_data['address'],
+					'TELEPHONE'		=> $business_data['telephone'],
+					'FAX'			=> $business_data['fax'],
+					'WEBSITE'		=> $business_data['website'],
+					'EMAIL'			=> $business_data['email'],
+					'OPENING_HOURS'		=> $business_data['opening_hours'],
+					'ERROR_MSG'		=> (sizeof($errors)) ? implode('<br />', $errors) : '',
+					)
 				);
-		
-				$template->pparse('body');
-		
-				break;
-		
-			case 'delete_business':
-		
-				//Get All Data Posted And Make It Safe To Use
-				$params = array('id', 'target', 'permenant');
-				$data = $garage->process_post_vars($params);
-		
-				//If Set Delete Permentantly..And Finish
-				if ($data['permenant'] == '1')
+
+				return;
+
+			break;
+
+			//LOTS & LOTS to take into consideration here...	
+			case 'delete':
+
+				if (!$business_id)
 				{
-					$garage->delete_rows(GARAGE_BUSINESS_TABLE, 'id', $data['id']);
-		
-					message_die(GENERAL_MESSAGE, $business_deleted_message);
+					trigger_error($user->lang['NO_BUSINESS'] . adm_back_link($this->u_action), E_USER_WARNING);
 				}
-		
-				//Checks All Required Data Is Present
-				$params = array('id', 'target');
-				$garage->check_acp_required_vars($params, $missing_data_message);
-		
-				//Move Any Existing Items To New Target Then Delete Business
-				$garage->update_single_field(GARAGE_MODS_TABLE,'business_id',$data['target'],'business_id',$data['id']);
-				$garage->update_single_field(GARAGE_MODS_TABLE,'install_business_id',$data['target'],'install_business_id',$data['id']);
-				$garage->delete_rows(GARAGE_BUSINESS_TABLE,'id',$data['id']);
-		
-				//Return a message...
-				message_die(GENERAL_MESSAGE, $business_deleted_message);
-						
-				break;	
-		
-			case 'set_pending':
-		
-				//Get All Data Posted And Make It Safe To Use
-				$params = array('id');
-				$data = $garage->process_int_vars($params);
-		
-				//Set Business To Pending
-				$garage->update_single_field(GARAGE_BUSINESS_TABLE,'pending',1,'id',$data['id']);
-		
-				//Return a message...
-				message_die(GENERAL_MESSAGE, $business_updated_message);
-		
-				break;
-		
-			case 'set_approved':
-		
-				//Get All Data Posted And Make It Safe To Use
-				$params = array('id');
-				$data = $garage->process_int_vars($params);
-		
-				//Set Business To Approved
-				$garage->update_single_field(GARAGE_BUSINESS_TABLE,'pending',0,'id',$data['id']);
-		
-				//Return a message...
-				message_die(GENERAL_MESSAGE, $business_updated_message);
-		
-				break;
-		
-			default:
-		
-				$template->set_filenames(array(
-					'body' => 'admin/garage_business.tpl')
-				);
-		
+
+				$business_data = $garage_business->get_business($business_id);
+
+				if ($business_data['insurance'])
+				{
+					$insurance_data = $garage_business->get_business_by_type(BUSINESS_INSURANCE);
+					$select_to = $this->build_move_to($insurance_data, $business_id);
+					$template->assign_vars(array(
+						'S_TYPE_INSURER'		=> true,
+						'S_MOVE_INSURER'		=> (!empty($select_to)) ? true : false,
+						'S_MOVE_INSURER_OPTIONS'	=> $select_to,
+					));
+				}
+				if ($business_data['dynocentre'])
+				{
+					$dynocentre_data = $garage_business->get_business_by_type(BUSINESS_DYNOCENTRE);
+					$select_to = $this->build_move_to($dynocentre_data, $business_id);
+					$template->assign_vars(array(
+						'S_TYPE_DYNOCENTRE'		=> true,
+						'S_MOVE_DYNOCENTRE'		=> (!empty($select_to)) ? true : false ,
+						'S_MOVE_DYNOCENTRE_OPTIONS'	=> $select_to,
+					));
+				}
+				if ($business_data['retail'])
+				{
+					$retail_data = $garage_business->get_business_by_type(BUSINESS_RETAIL);
+					$select_to = $this->build_move_to($retail_data, $business_id);
+					$template->assign_vars(array(
+						'S_TYPE_RETAIL'			=> true,
+						'S_MOVE_RETAIL'			=> (!empty($select_to)) ? true : false ,
+						'S_MOVE_RETAIL_OPTIONS'	=> $select_to,
+					));
+				}
+				if ($business_data['garage'])
+				{
+					$garage_data = $garage_business->get_business_by_type(BUSINESS_GARAGE);
+					$select_to = $this->build_move_to($garage_data, $business_id);
+					$template->assign_vars(array(
+						'S_TYPE_GARAGE'			=> true,
+						'S_MOVE_GARAGE'			=> (!empty($select_to)) ? true : false ,
+						'S_MOVE_GARAGE_OPTIONS'		=> $select_to,
+					));
+				}
+				if ($business_data['product'])
+				{
+					$product_data = $garage_business->get_business_by_type(BUSINESS_PRODUCT);
+					$select_to = $this->build_move_to($product_data, $business_id);
+					$template->assign_vars(array(
+						'S_TYPE_PRODUCT'		=> true,
+						'S_MOVE_PRODUCT'		=> (!empty($select_to)) ? true : false ,
+						'S_MOVE_PRODUCT_OPTIONS'	=> $select_to,
+					));
+				}
+
 				$template->assign_vars(array(
-					'S_GARAGE_MODE_UPDATE' => append_sid("admin_garage_business.$phpEx?mode=update_business"),
-					'S_GARAGE_MODE_NEW' => append_sid("admin_garage_business.$phpEx?mode=insert_business"))
+					'S_DELETE_BUSINESS'		=> true,
+					'U_ACTION'			=> $this->u_action . "&amp;action=delete&amp;id=$business_id",
+					'U_BACK'			=> $this->u_action,
+					'BUSINESS_NAME'			=> $business_data['title'],
+					'S_ERROR'			=> (sizeof($errors)) ? true : false,
+					'ERROR_MSG'			=> (sizeof($errors)) ? implode('<br />', $errors) : '')
 				);
 		
-				//Get All The Business Data
-				$data = $garage_business->get_all_business();
+			break;	
 		
-				for( $i = 0; $i < count($data); $i++ )
+		}
+		
+		//Default Management Page	
+		$data = $garage_business->get_all_business();
+		
+		for($i = 0; $i < count($data); $i++)
+		{
+			//Work Out Type Of Business...
+			$type ='';
+			$type = ( $data[$i]['insurance'] == '1' ) ? $user->lang['Insurance']: '' ;
+			if ($data[$i]['retail'] == '1')
+			{
+				$type .= (empty($type)) ? $user->lang['Shop'] : ", " . $user->lang['Shop'] ;
+			}
+			if ( $data[$i]['garage'] == '1' )
+			{
+				$type .= (empty($type)) ? $user->lang['Garage'] : ", " . $user->lang['Garage'] ;
+			}
+
+			$url = $this->u_action . "&amp;id={$data[$i]['id']}";
+		
+			$template->assign_block_vars('business', array(
+				'ID' 			=> $data[$i]['id'],
+				'TITLE' 		=> $data[$i]['title'],
+				'ADDRESS' 		=> $data[$i]['address'],
+				'TELEPHONE' 		=> $data[$i]['telephone'],
+				'FAX' 			=> $data[$i]['fax'],
+				'WEBSITE' 		=> $data[$i]['website'],
+				'EMAIL' 		=> $data[$i]['email'],
+				'OPENING_HOURS' 	=> $data[$i]['opening_hours'],
+				'S_DISAPPROVED'		=> ($data[$i]['pending'] == 1) ? true : false,
+				'S_APPROVED'		=> ($data[$i]['pending'] == 0) ? true : false,
+				'TYPE' 			=> $type,
+				'U_APPROVE'		=> $url . '&amp;action=approve',
+				'U_DISAPPROVE'		=> $url . '&amp;action=disapprove',
+				'U_EDIT'		=> $url . '&amp;action=edit',
+				'U_DELETE'		=> $url . '&amp;action=delete',
+			));
+		}
+	}
+
+	function build_move_to($data, $exclude_id)
+	{
+		$select_to = null;
+		for ($i = 0; $i < count($data); $i++)
+		{
+			if ($exclude_id == $data[$i]['id'])
+			{
+				continue;
+			}
+			$select_to .= '<option value="'. $data[$i]['id'] .'">'. $data[$i]['title'] .'</option>';
+		}
+		return $select_to;
+	}
+
+	/**
+	* Remove complete business
+	*/
+	function delete_business($business_id, $action_garage = 'delete', $garage_to_id = 0, $action_insurance = 'delete', $insurance_to_id = 0, $action_dynocentre = 'delete', $dynocentre_to_id = 0, $action_retail = 'delete', $retail_to_id = 0, $action_product = 'delete', $product_to_id = 0)
+	{
+
+		global $db, $user, $cache, $garage, $garage_business;
+
+		$business_data = $garage_business->get_business($business_id);
+
+		$errors = array();
+
+		//Handle Items Linked To Garage Business
+		if ($action_garage == 'delete')
+		{
+			$this->delete_garage_business_content($business_id);
+			add_log('admin', 'LOG_GARAGE_DELETE_GARAGE', $business_data['title']);
+		}
+		else if ($action_garage == 'move')
+		{
+			if (!$garage_to_id)
+			{
+				$errors[] = $user->lang['NO_DESTINATION_GARAGE_BUSINESS'];
+			}
+			else
+			{
+				$row = $garage_business->get_business($garage_to_id);
+
+				if (!$row)
 				{
-					//Get Business Approval Status
-					$status_mode =  ( $data[$i]['pending'] == true ) ? 'set_approved' : 'set_pending' ;
-		
-					$delete_url = append_sid("admin_garage_business.$phpEx?mode=confirm_delete&amp;id=".$data[$i]['id']);
-					$status_url = append_sid("admin_garage_business.$phpEx?mode=$status_mode&amp;id=".$data[$i]['id']);
-		
-					$update_url = '<a href="javascript:update('.$data[$i]['id'].')"><img src="../' . $images['garage_edit'] . '" alt="'.$lang['Rename'].'" title="'.$lang['Rename'].'" border="0" /></a>';
-		
-					$delete = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" />' : $lang['Delete'] ;
-					$status = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_'.$status_mode] . '" alt="'.$lang[$status_mode].'" title="'.$lang[$status_mode].'" border="0" />' : $lang[$status_mode];
-		
-					//Work Out Type Of Business...
-					$type ='';
-					$type = ( $data[$i]['insurance'] == '1' ) ? $lang['Insurance']: '' ;
-					if ( ($data[$i]['web_shop'] == '1') OR ($data[$i]['retail_shop'] == '1') )
-					{
-						$type .= (empty($type)) ? $lang['Shop'] : ", " . $lang['Shop'] ;
-					}
-					if ( $data[$i]['garage'] == '1' )
-					{
-						$type .= (empty($type)) ? $lang['Garage'] : ", " . $lang['Garage'] ;
-					}
-		
-					$template->assign_block_vars('business', array(
-						'COLOR' => ($i % 2) ? 'row1' : 'row2',
-						'ID' => $data[$i]['id'],
-						'TITLE' => $data[$i]['title'],
-						'ADDRESS' => $data[$i]['address'],
-						'TELEPHONE' => $data[$i]['telephone'],
-						'FAX' => $data[$i]['fax'],
-						'WEBSITE' => $data[$i]['website'],
-						'EMAIL' => $data[$i]['email'],
-						'OPENING_HOURS' => $data[$i]['opening_hours'],
-						'INSURANCE_CHECKED' => ( $data[$i]['insurance'] == true ) ? 'CHECKED' : '' ,
-						'GARAGE_CHECKED' => ( $data[$i]['garage'] == true ) ? 'CHECKED' : '' ,
-						'RETAIL_CHECKED' => ( $data[$i]['retail_shop'] == true ) ? 'CHECKED' : '' ,
-						'WEB_CHECKED' => ( $data[$i]['web_shop'] == true ) ? 'CHECKED' : '' ,
-						'DELETE' => $delete,
-						'STATUS' => $status,
-						'TYPE' => $type,
-						'U_UPDATE' => $update_url,
-						'U_DELETE' => $delete_url,
-						'U_STATUS' => $status_url)
-					);
-					$template->assign_block_vars('business.detail', array());
+					$errors[] = $user->lang['NO_BUSINESS'];
 				}
-		
-				break;
+				else
+				{
+					$garage_to_name = $row['title'];
+					$this->move_category_content($business_id, $garage_to_id);
+					add_log('admin', 'LOG_GARAGE_MOVED_GARAGE', $from_name, $garage_to_name);
+				}
+			}
 		}
 
+		//Handle Items Linked To Insurance Business
+		if ($action_insurance == 'delete')
+		{
+			$this->delete_insurance_business_content($business_id);
+			add_log('admin', 'LOG_GARAGE_DELETE_GARAGE', $business_data['title']);
+		}
+		else if ($action_insurance == 'move')
+		{
+			if (!$insurance_to_id)
+			{
+				$errors[] = $user->lang['NO_DESTINATION_INSURANCE_BUSINESS'];
+			}
+			else
+			{
+				$row = $garage_business->get_business($insurance_to_id);
+
+				if (!$row)
+				{
+					$errors[] = $user->lang['NO_BUSINESS'];
+				}
+				else
+				{
+					$insurance_to_name = $row['title'];
+					$from_name = $business_data['title'];
+					$this->move_category_content($business_id, $insurance_to_id);
+					add_log('admin', 'LOG_GARAGE_MOVED_PREMIUMS', $from_name, $insurance_to_name);
+				}
+			}
+		}
+
+		//Handle Items Linked To Dynocentre Business
+		if ($action_dynocentre == 'delete')
+		{
+			$this->delete_dynocentre_business_content($business_id);
+			add_log('admin', 'LOG_GARAGE_DELETE_GARAGE', $business_data['title']);
+		}
+		else if ($action_dynocentre == 'move')
+		{
+			if (!$dynocentre_to_id)
+			{
+				$errors[] = $user->lang['NO_DESTINATION_DYNOCENTRE_BUSINESS'];
+			}
+			else
+			{
+				$row = $garage_business->get_business($garage_to_id);
+
+				if (!$row)
+				{
+					$errors[] = $user->lang['NO_BUSINESS'];
+				}
+				else
+				{
+					$dynocentre_to_name = $row['title'];
+					$from_name = $business_data['title'];
+					$this->move_category_content($business_id, $dynocentre_to_id);
+					add_log('admin', 'LOG_GARAGE_MOVED_DYNORUNS', $from_name, $dynocentre_to_name);
+				}
+			}
+		}
+		
+		//Handle Items Linked To Retail Business
+		if ($action_retail == 'delete')
+		{
+			$this->delete_retail_business_content($business_id);
+			add_log('admin', 'LOG_GARAGE_DELETE_GARAGE', $business_data['title']);
+		}
+		else if ($action_retail == 'move')
+		{
+			if (!$retail_to_id)
+			{
+				$errors[] = $user->lang['NO_DESTINATION_RETAIL_BUSINESS'];
+			}
+			else
+			{
+				$row = $garage_business->get_business($retail_to_id);
+
+				if (!$row)
+				{
+					$errors[] = $user->lang['NO_BUSINESS'];
+				}
+				else
+				{
+					$retail_to_name = $row['title'];
+					$from_name = $business_data['title'];
+					$this->move_category_content($business_id, $retail_to_id);
+					add_log('admin', 'LOG_GARAGE_MOVED_RETAIL', $from_name, $retail_to_name);
+				}
+			}
+		}
+
+		//Handle Items Linked To Product Business
+		if ($action_product == 'delete')
+		{
+			$this->delete_product_business_content($business_id);
+			add_log('admin', 'LOG_GARAGE_DELETE_GARAGE', $business_data['title']);
+		}
+		else if ($action_product == 'move')
+		{
+			if (!$product_to_id)
+			{
+				$errors[] = $user->lang['NO_DESTINATION_PRODUCT_BUSINESS'];
+			}
+			else
+			{
+				$row = $garage_business->get_business($product_to_id);
+
+				if (!$row)
+				{
+					$errors[] = $user->lang['NO_BUSINESS'];
+				}
+				else
+				{
+					$modifications_to_name = $row['title'];
+					$from_name = $business_data['title'];
+					$this->move_category_content($business_id, $product_to_id);
+					add_log('admin', 'LOG_GARAGE_MOVED_PRODUCT', $from_name, $product_to_name);
+				}
+			}
+		}
+
+		$garage->delete_rows(GARAGE_BUSINESS_TABLE, 'id', $business_id);
+		add_log('admin', 'LOG_GARAGE_BUSINESS_DELETED', $business_data['title']);
+
+		if (sizeof($errors))
+		{
+			return $errors;
+		}
+	}
+
+	function delete_garage_business_content($business_id)
+	{
+		global $db, $config, $phpbb_root_path, $phpEx, $garage;
+
+		include_once($phpbb_root_path . 'includes/mods/class_garage_modification.' . $phpEx);
+		$modifications = $garage_modification->get_modifications_by_garage_id($business_id);
+		for ($i = 0, $count = sizeof($modifications);$i < $count; $i++)
+		{
+			$garage_modification->delete_modification($modifications[$i]['id']);
+		}
+
+		return;
+	}
+
+	function delete_insurance_business_content($business_id)
+	{
+		global $db, $config, $phpbb_root_path, $phpEx, $garage;
+
+		include_once($phpbb_root_path . 'includes/mods/class_garage_insurance.' . $phpEx);
+		$premiums = $garage_insurance->get_premiums_by_insurer_id($business_id);
+		for ($i = 0, $count = sizeof($premiums);$i < $count; $i++)
+		{
+			$garage_insurance->delete_premium($premiums[$i]['id']);
+		}
+
+		return;
+	}
+
+	function delete_dynocentre_business_content($business_id)
+	{
+		global $db, $config, $phpbb_root_path, $phpEx, $garage;
+
+		include_once($phpbb_root_path . 'includes/mods/class_garage_dynorun.' . $phpEx);
+		$dynoruns = $garage_dynorun->get_dynoruns_by_dynocentre_id($business_id);
+		for ($i = 0, $count = sizeof($dynoruns);$i < $count; $i++)
+		{
+			$garage_modification->delete_modification($dynoruns[$i]['id']);
+		}
+
+		return;
+	}
+
+	function delete_retail_business_content($business_id)
+	{
+		global $db, $config, $phpbb_root_path, $phpEx, $garage;
+
+		include_once($phpbb_root_path . 'includes/mods/class_garage_modification.' . $phpEx);
+		$modifications = $garage_modification->get_modifications_by_retail_id($business_id);
+		for ($i = 0, $count = sizeof($modifications);$i < $count; $i++)
+		{
+			$garage_modification->delete_modification($modifications[$i]['id']);
+		}
+
+		return;
+	}
+
+	function delete_product_business_content($business_id)
+	{
+		global $db, $config, $phpbb_root_path, $phpEx, $garage;
+
+		include_once($phpbb_root_path . 'includes/mods/class_garage_modification.' . $phpEx);
+		$modifications = $garage_modification->get_modifications_by_manufacturer_id($business_id);
+		for ($i = 0, $count = sizeof($modifications);$i < $count; $i++)
+		{
+			$garage_modification->delete_modification($modifications[$i]['id']);
+		}
+
+		return;
+	}
+
+	function move_garage_business_content($from_id, $to_id)
+	{
+		global $garage;
+
+		$garage->update_single_field(GARAGE_MODIFICATIONS_TABLE, 'installer_id', $to_id, 'installer_id', $from_id);
+
+		return;
+	}
+
+	function move_insurance_business_content($from_id, $to_id)
+	{
+		global $garage;
+
+		$garage->update_single_field(GARAGE_PREMIUMS_TABLE, 'business_id', $to_id, 'business_id', $from_id);
+
+		return;
+	}
+
+	function move_dynocentre_business_content($from_id, $to_id)
+	{
+		global $garage;
+
+		$garage->update_single_field(GARAGE_DYNORUNS_TABLE, 'dynocentre_id', $to_id, 'dynocentre_id', $from_id);
+
+		return;
+	}
+
+	function move_retail_business_content($from_id, $to_id)
+	{
+		global $garage;
+
+		$garage->update_single_field(GARAGE_MODIFICATIONS_TABLE, 'shop_id', $to_id, 'shop_id', $from_id);
+
+		return;
+	}
+
+	function move_product_business_content($from_id, $to_id)
+	{
+		global $garage;
+
+		$garage->update_single_field(GARAGE_MODIFICATIONS_TABLE, 'manufacturer_id', $to_id, 'manufacturer_id', $from_id);
+
+		return;
 	}
 }
 ?>

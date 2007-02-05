@@ -123,12 +123,13 @@ class acp_garage_category
 				);
 
 				return;
+			break;
 		
 			case 'delete':
 
 				if (!$category_id)
 				{
-					trigger_error($user->lang['NO_FORUM'] . adm_back_link($this->u_action . '&amp;parent_id=' . $this->parent_id), E_USER_WARNING);
+					trigger_error($user->lang['NO_CATEGORY'] . adm_back_link($this->u_action), E_USER_WARNING);
 				}
 
 				$category_data = $garage->get_category($category_id);
@@ -157,7 +158,6 @@ class acp_garage_category
 					'ERROR_MSG'			=> (sizeof($errors)) ? implode('<br />', $errors) : '')
 				);
 
-				return;
 			break;
 		
 			case 'move_up':
@@ -209,7 +209,6 @@ class acp_garage_category
 				'U_DELETE'	=> $url . '&amp;action=delete',
 			));
 		}
-		
 	}
 
 	/**

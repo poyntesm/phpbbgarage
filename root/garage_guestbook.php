@@ -109,7 +109,7 @@ switch( $mode )
 			$poster = '<a href="' . $temp_url . '">' . $comment_data[$i]['username'] . '</a>';
 			$poster_posts = ( $comment_data[$i]['user_id'] != ANONYMOUS ) ? $user->lang['POSTS'] . ': ' . $comment_data[$i]['user_posts'] : '';
 			$poster_from = ( $comment_data[$i]['user_from'] && $comment_data['user_id'] != ANONYMOUS ) ? $user->lang['Location'] . ': ' . $comment_data[$i]['user_from'] : '';
-			$garage_id = $comment_data[$i]['garage_id'];
+			$garage_id = $comment_data[$i]['vehicle_id'];
 			$poster_car_year = ( $comment_data[$i]['made_year'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? ' ' . $comment_data[$i]['made_year'] : '';
 			$poster_car_mark = ( $comment_data[$i]['make'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ?  ' ' . $comment_data[$i]['make'] : '';
 			$poster_car_model = ( $comment_data[$i]['model'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? ' ' . $comment_data[$i]['model'] : '';
@@ -163,27 +163,7 @@ switch( $mode )
 
 			$post = $comment_data[$i]['post'];
 
-			// Parse message and/or sig for BBCode if reqd
-			if ( $config['allow_bbcode'] )
-			{
-				
-				//if ( $comment_data[$i]['bbcode_uid'] != '' )
-				//{
-				//	$post = ( $config['allow_bbcode'] ) ? bbencode_second_pass($post, $bbcode_uid) : preg_replace('/\:[0-9a-z\:]+\]/si', ']', $post);
-				//}
-			}
-
-			$post = make_clickable($post);
-
-			// Parse smilies
-			if ( $config['allow_smilies'] )
-			{
-				//$post = smilies_text($post);
-			}
-
-			// Replace newlines (we use this rather than nl2br because
-			// till recently it wasn't XHTML compliant)
-			$post = str_replace("\n", "\n<br />\n", $post);
+			$post = generate_text_for_display($comment_data[$i]['post'], $comment_data[$i]['bbcode_uid'], $comment_data[$i]['bbcode_bitfield'], $comment_data[$i]['bbcode_flags']);
 
 			$edit_img = '';
 			$edit = '';
@@ -247,13 +227,17 @@ switch( $mode )
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=17"));
 		}
 
-		//Get All Data Posted And Make It Safe To Use
-		$params = array('comments' => '');
-		$data = $garage->process_vars($params);
+		$text = utf8_normalize_nfc(request_var('comments', '', true));
+		$uid = $bitfield = $flags = ''; // will be modified by generate_text_for_storage
+		$allow_bbcode = $allow_urls = $allow_smilies = true;
+		generate_text_for_storage($text, $uid, $bitfield, $flags, $allow_bbcode, $allow_urls, $allow_smilies);
 
-		//Checks All Required Data Is Present
-		$params = array('comments');
-		$garage->check_required_vars($params);
+		$data = array(
+		    'post'              => $text,
+		    'bbcode_uid'        => $uid,
+		    'bbcode_bitfield'   => $bitfield,
+		    'bbcode_flags'      => $flags,
+		);
 
 		//Insert The Comment Into Vehicle Guestbook
 		$garage_guestbook->insert_vehicle_comment($data);

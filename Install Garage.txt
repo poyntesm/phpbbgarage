@@ -8,11 +8,12 @@
 ## 
 ## Installation Level:	Medium
 ## Installation Time:	20 Minutes
-## Files To Edit: (16)
+## Files To Edit: (18)
 ## 			common.php
 ## 			memberlist.php
 ## 			viewtopic.php
 ## 			viewonline.php
+## 			adm/index.php
 ## 			includes/constants.php
 ## 			includes/functions.php
 ##			includes/acp/acp_styles.php
@@ -462,6 +463,37 @@ p.*
 # 
 #-----[ OPEN ]----- 
 # 
+adm/index.php
+
+#
+#-----[ FIND ]------------------------------------------
+#
+<?php
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+
+#
+#-----[ FIND ]------------------------------------------
+#
+		'ICON_SYNC_DISABLED'		=> '<img src="' . $phpbb_admin_path . 'images/icon_sync_disabled.gif" alt="' . $user->lang['RESYNC'] . '" title="' . $user->lang['RESYNC'] . '" />',
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+		'ICON_APPROVE'		=> '<img src="' . $phpbb_admin_path . 'images/icon_garage_approve.gif" alt="' . $user->lang['APPROVE'] . '" title="' . $user->lang['APPROVE'] . '" />',
+		'ICON_APPROVE_DISABLED'		=> '<img src="' . $phpbb_admin_path . 'images/icon_garage_approve_disabled.gif" alt="' . $user->lang['APPROVE'] . '" title="' . $user->lang['APPROVE'] . '" />',
+		'ICON_DISAPPROVE'		=> '<img src="' . $phpbb_admin_path . 'images/icon_garage_disapprove.gif" alt="' . $user->lang['DISAPPROVE'] . '" title="' . $user->lang['DISAPPROVE'] . '" />',
+		'ICON_DISAPPROVE_DISABLED'		=> '<img src="' . $phpbb_admin_path . 'images/icon_garage_disapprove_disabled.gif" alt="' . $user->lang['DISAPPROVE'] . '" title="' . $user->lang['DISAPPROVE'] . '" />',
+//-- mod finish : Garage ----------------------------------------------------------------------------------------------------
+
+# 
+#-----[ OPEN ]----- 
+# 
 includes/functions.php
 
 #
@@ -690,6 +722,8 @@ $lang = array_merge($lang, array(
 	'ACP_GARAGE_PRODUCT_SETTINGS'		=> 'Product settings',
 	'ACP_GARAGE_SERVICE_SETTINGS'		=> 'Service history settings',
 	'ACP_GARAGE_BLOG_SETTINGS'		=> 'Blog settings',
+	'APPROVE'				=> 'Approve',
+	'DISAPPROVE'				=> 'Disapprove',
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
 # 

@@ -62,6 +62,9 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_vehicles (
 		`model_id` int(10) unsigned NOT NULL default '0',
 		`main_vehicle` tinyint(1) NOT NULL default '0',
 		`weighted_rating` double NOT NULL default '0',
+		`bbcode_bitfield` varchar(255) NOT NULL default '',
+		`bbcode_uid` varchar(5) NOT NULL default '',
+		`bbcode_flags` int(10) NOT NULL default '',
 		`pending` tinyint(1) NOT NULL default '0',
 		PRIMARY KEY  (`id`),
 		KEY `date_created` (`date_created`),
@@ -147,6 +150,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_guestbooks (
 		`ip_address` varchar(16) NOT NULL default '',
 		`bbcode_bitfield` varchar(255) NOT NULL default '',
 		`bbcode_uid` varchar(5) NOT NULL default '',
+		`bbcode_flags` int(10) NOT NULL default '',
 		`pending` tinyint(1) NOT NULL default '0',
 		`post` text,
 		PRIMARY KEY  (`id`),
@@ -310,6 +314,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_blog (
 		`blog_date` int(10) default NULL,
 		`bbcode_bitfield` varchar(255) NOT NULL default '',
 		`bbcode_uid` varchar(5) NOT NULL default '',
+		`bbcode_flags` int(10) NOT NULL default '',
 		PRIMARY KEY  (`id`)
 	)";
 //Required Configuration Options

@@ -92,12 +92,15 @@ class garage_guestbook
 		global $cid, $db, $user;
 
 		$sql = 'INSERT INTO ' . GARAGE_GUESTBOOKS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'vehicle_id'	=> $cid,
-			'author_id'	=> $user->data['user_id'],
-			'post_date'	=> time(),
-			'ip_address'	=> $user->ip,
-			'post'		=> $data['comments'])
-		);
+			'vehicle_id'		=> $cid,
+			'author_id'		=> $user->data['user_id'],
+			'post_date'		=> time(),
+			'ip_address'		=> $user->ip,
+			'post'			=> $data['post'],
+    			'bbcode_uid'		=> $data['bbcode_uid'],
+			'bbcode_bitfield'	=> $data['bbcode_bitfield'],
+			'bbcode_flags'		=> $data['bbcode_flags'],
+		));
 
 		$db->sql_query($sql);
 
@@ -116,7 +119,7 @@ class garage_guestbook
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, u.username, u.user_id, u.user_posts, u.user_from, u.user_website, u.user_email, u.user_icq, u.user_aim, u.user_yim, u.user_regdate, u.user_msnm, u.user_allow_viewemail, u.user_rank, u.user_sig, u.user_sig_bbcode_uid, u.user_avatar, u.user_avatar_type, u.user_allow_viewonline, g.made_year, g.id as vehicle_id, mk.make, md.model, u.user_avatar',
+			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, gb.bbcode_uid, gb.bbcode_bitfield, gb.bbcode_flags, u.username, u.user_id, u.user_posts, u.user_from, u.user_website, u.user_email, u.user_icq, u.user_aim, u.user_yim, u.user_regdate, u.user_msnm, u.user_allow_viewemail, u.user_rank, u.user_sig, u.user_sig_bbcode_uid, u.user_avatar, u.user_avatar_type, u.user_allow_viewonline, g.made_year, g.id as vehicle_id, mk.make, md.model, u.user_avatar',
 			'FROM'		=> array(
 				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
 			),

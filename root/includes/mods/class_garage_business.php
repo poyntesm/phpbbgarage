@@ -36,6 +36,8 @@ class garage_business
 	{
 		global $db, $garage_config;
 
+		$pending = ($data['pending'] == 0) ? 0 : $garage_config['enable_business_approval'];
+
 		$sql = 'INSERT INTO ' . GARAGE_BUSINESS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 			'title'		=> $data['title'],
 			'address'	=> $data['address'],
@@ -49,8 +51,8 @@ class garage_business
 			'retail'	=> $data['retail'],
 			'product'	=> $data['product'],
 			'dynocentre'	=> $data['dynocentre'],
-			'pending'	=> ($garage_config['enable_business_approval'] == '1') ? 1 : 0 )
-		);
+			'pending'	=> $pending,
+		));
 
 		$result = $db->sql_query($sql);
 
@@ -65,6 +67,8 @@ class garage_business
 	{
 		global $db, $garage_config;
 
+		$pending = ($data['pending'] == 0) ? 0 : $garage_config['enable_business_approval'];
+
 		$update_sql = array(
 			'title'		=> $data['title'],
 			'address'	=> $data['address'],
@@ -78,7 +82,7 @@ class garage_business
 			'retail'	=> $data['retail'],
 			'product'	=> $data['product'],
 			'dynocentre'	=> $data['dynocentre'],
-			'pending'	=> ($garage_config['enable_business_approval'] == '1') ? 1 : 0 
+			'pending'	=> $pending,
 		);
 
 		$sql = 'UPDATE ' . GARAGE_BUSINESS_TABLE . '
