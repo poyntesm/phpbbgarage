@@ -171,7 +171,7 @@ class garage_model
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'mk.id, mk.make',
+			'SELECT'	=> 'mk.id, mk.make, mk.pending',
 			'FROM'		=> array(
 				GARAGE_MAKES_TABLE	=> 'mk',
 			)
@@ -199,7 +199,7 @@ class garage_model
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'md.id, md.model, md.make_id',
+			'SELECT'	=> 'md.id, md.model, md.make_id, md.pending',
 			'FROM'		=> array(
 				GARAGE_MODELS_TABLE	=> 'md',
 			),

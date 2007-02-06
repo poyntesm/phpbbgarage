@@ -1,14 +1,14 @@
 <?php
 
 /***************************************************************************
- *                      includes/acp/info/acp_garage_model.php
+ *                      includes/acp/info/acp_garage_track.php
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton
  *   email                : esmond.poynton@gmail.com
  *   description          : Provides Vehicle Garage System For phpBB
  *
- *   $Id$
+ *   $Id: acp_garage_business.php 360 2007-01-29 12:12:52Z poyntesm $
  *
  ***************************************************************************/
 
@@ -21,16 +21,16 @@
  *
  ***************************************************************************/
 
-class acp_garage_model_info
+class acp_garage_track_info
 {
 	function module()
 	{
 		return array(
-			'filename'	=> 'acp_garage_model',
-			'title'		=> 'ACP_GARAGE_MODEL_MANAGEMENT',
+			'filename'	=> 'acp_garage_track',
+			'title'		=> 'ACP_GARAGE_TRACK_MANAGEMENT',
 			'version'	=> '1.0.0',
 			'modes'		=> array(
-				'makes' => array('title' => 'ACP_GARAGE_MODELS', 'auth' => 'acl_a_garage', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
+				'track'	=> array('title' => 'ACP_GARAGE_TRACK', 'auth' => 'acl_a_garage', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
 			),
 		);
 	}

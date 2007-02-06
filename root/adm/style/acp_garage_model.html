@@ -1,201 +1,237 @@
 <!-- INCLUDE overall_header.html -->
 
-<h1>{L_GARAGE_MODELS_TITLE}</h1>
+<!-- IF S_EDIT_MAKE -->
 
-<p>{L_GARAGE_MODELS_EXPLAIN}</p>
+	<a href="{U_BACK}" style="float: right">&laquo; {L_BACK}</a>
 
-<script language="JavaScript"> 
-<!-- 
+	<h1>{L_MAKE_UPDATE}</h1>
 
-	//Function To Rename Make Or Model
-	function add_model ( selected )
-	{
-		formErrors = false;    
-		
-		//Check To Make Sure A Value Has Been Entered
-		if (document.manage_makes_models.elements['add_model_'+selected+'_title'].value.length < 2)
-		{
-			formErrors = "{L_EMPTY_TITLE}";
-		}
+	<p>{L_MAKE_UPDATE_EXPLAIN}</p>
 
-		//Display If Needed Error Message Else Perform Work
-		if (formErrors) 
-		{
-			alert(formErrors);
-		} 
-		else
-		{
-			document.manage_makes_models.model.value = document.manage_makes_models.elements['add_model_'+selected+'_title'].value;
-			document.manage_makes_models.make_id.value = selected;
-			document.manage_makes_models.mode.value = "insert_model" ;
-	
-			//Submit The Form
-			document.manage_makes_models.submit() ;
-		}
-	}
+	<!-- IF S_ERROR -->
+		<div class="errorbox">
+			<h3>{L_WARNING}</h3>
+			<p>{ERROR_MSG}</p>
+		</div>
+	<!-- ENDIF -->
 
+	<form id="forumedit" method="post" action="{U_EDIT_ACTION}">
 
-	//Function To Rename Make Or Model
-	function rename ( selected, obj )
-	{
-		formErrors = false;    
-		
-		//Check To Make Sure A Value Has Been Entered
-		if (obj == '1')
-		{
-			if (document.manage_makes_models.elements['make_'+selected+'_title'].value.length < 2)
-			{
-				formErrors = "{L_EMPTY_TITLE}";
-			}
-		}
-		else if (obj == '2')
-		{
-			if (document.manage_makes_models.elements['model_'+selected+'_title'].value.length < 2)
-			{
-				formErrors = "{L_EMPTY_TITLE}";
-			}
-		}
+	<fieldset>
+		<legend>{L_MAKE_SETTINGS}</legend>
+	<dl>
+		<dt><label for="title">{L_MAKE}:</label></dt>
+		<dd><input class="medium" type="text" id="make" name="make" value="{MAKE}" maxlength="255" /></dd>
+	</dl>
+	</fieldset>
 
-		//Display If Needed Error Message Else Perform Work
-		if (formErrors) 
-		{
-			alert(formErrors);
-		} 
-		else
-		{
-			//Set The Action To Correct Type
-			if (obj == '1')
-			{
-				document.manage_makes_models.make.value = document.manage_makes_models.elements['make_'+selected+'_title'].value;
-				document.manage_makes_models.id.value = selected;
-				document.manage_makes_models.mode.value = "update_make" ;
-			}
-			else if (obj == '2' )
-			{
-				document.manage_makes_models.model.value = document.manage_makes_models.elements['model_'+selected+'_title'].value;
-				document.manage_makes_models.id.value = selected;
-				document.manage_makes_models.mode.value = "update_model" ;
-			}
-	
-			//Submit The Form
-			document.manage_makes_models.submit() ;
-		}
-	}
+	<fieldset class="submit-buttons">
+		<legend>{L_SUBMIT}</legend>
+		<input class="button1" type="submit" id="submit" name="update" value="{L_SUBMIT}" />&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+	</fieldset>
 
-	function __off(n) 
-	{ 
-		if(n && n.style) 
-		{ 
-			if('none' != n.style.display) 
-			{ 
-				n.style.display = 'none'; 
-			} 
-		} 
-	} 
+	</form>
 
-	function __on(n) 
-	{ 
-		if(n && n.style) 
-		{ 
-			if('none' == n.style.display) 
-			{ 
-				n.style.display = ''; 
-			} 
-		} 
-	} 
+<!-- ELSEIF S_EDIT_MODEL -->
 
-	function onoff(objName,bObjState) 
-	{ 
-		var sVar = ''+objName; 
-		var sOn = ''+objName+'_on'; 
-		var sOff = ''+objName+'_off'; 
-		var sOnStyle = bObjState ? ' style="display:none;" ':''; 
-		var sOffStyle = !bObjState ? ' style="display:none;" ':''; 
-		var sSymStyle = ' style="text-align: center;width: 13;height: 13;font-family: Arial,Verdana;font-size: 7pt;border-style: solid;border-width: 1;cursor: hand;color: #003344;background-color: #CACACA;" '; 
+	<a href="{U_BACK}" style="float: right">&laquo; {L_BACK}</a>
 
-		if( (navigator.userAgent.indexOf("MSIE") >= 0) && document && document.body && document.body.style) 
-		{ 
-			document.write( '<span '+sOnStyle+'onclick="__on('+sVar+');__off('+sOn+');__on('+sOff+');" id="'+sOn+'" title="Click here to show models"'+sSymStyle+'>+<\/span>' + 
-					'<span '+sOffStyle+'onclick="__off('+sVar+');__off('+sOff+');__on('+sOn+');" id="'+sOff+'" title="Click here to hide models"'+sSymStyle+'>-<\/span>' ); 
-		} 
-		else 
-		{ 
-			document.write('<span id="' + objName + '_on" onclick="__on(document.getElementById(\'' + objName + '\'));__off(document.getElementById(\'' + objName + '_on\'));__on(document.getElementById(\'' + objName + '_off\'));" title="Click here to show details" style="text-align: center;width: 13;height: 13;cursor: pointer;color: #003344;' + (bObjState ? ' display:none;' : '') + '">&nbsp;{SHOW}&nbsp;</span>'); 
-			document.write('<span id="' + objName + '_off" onclick="__off(document.getElementById(\'' + objName + '\'));__on(document.getElementById(\'' + objName + '_on\'));__off(document.getElementById(\'' + objName + '_off\'));" title="Click here to show details" style="text-align: center;width: 13;height: 13;cursor: pointer;color: #003344;' + (!bObjState ? ' display:none;' : '') + '">&nbsp;{HIDE}&nbsp;</span>'); 
-		}
-      } 
-// --> 
-</script>
-</head>
+	<h1>{L_MODEL_UPDATE}</h1>
 
-<form name="insert_make" action="{S_MODE_ACTION}" method="post">
-<table width="100%" cellpadding="3" cellspacing="1" border="0" class="forumline">
+	<p>{L_MODEL_UPDATE_EXPLAIN}</p>
+
+	<!-- IF S_ERROR -->
+		<div class="errorbox">
+			<h3>{L_WARNING}</h3>
+			<p>{ERROR_MSG}</p>
+		</div>
+	<!-- ENDIF -->
+
+	<form id="forumedit" method="post" action="{U_EDIT_ACTION}">
+
+	<fieldset>
+		<legend>{L_MODEL_SETTINGS}</legend>
+	<dl>
+		<dt><label for="title">{L_MODEL}:</label></dt>
+		<dd><input class="medium" type="text" id="model" name="model" value="{MODEL}" maxlength="255" /></dd>
+	</dl>
+	</fieldset>
+
+	<fieldset class="submit-buttons">
+		<legend>{L_SUBMIT}</legend>
+		<input class="button1" type="submit" id="submit" name="update" value="{L_SUBMIT}" />&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+	</fieldset>
+
+	</form>
+
+<!-- ELSEIF S_DELETE_MAKE -->
+
+	<a href="{U_BACK}" style="float: right">&laquo; {L_BACK}</a>
+
+	<h1>{L_MAKE_DELETE}</h1>
+
+	<p>{L_MAKE_DELETE_EXPLAIN}</p>
+
+	<!-- IF S_ERROR -->
+		<div class="errorbox">
+			<h3>{L_WARNING}</h3>
+			<p>{ERROR_MSG}</p>
+		</div>
+	<!-- ENDIF -->
+
+	<form id="acp_category" method="post" action="{U_ACTION}">
+
+	<fieldset>
+		<legend>{L_MAKE_DELETE}</legend>
+	<dl>
+		<dt><label>{L_MAKE}:</label></dt>
+		<dd><b>{MAKE}</b></dd>
+	</dl>
+	<dl>
+		<dt><label for="delete_action">{L_ACTION}:</label></dt>
+		<dd><input type="radio" class="radio" id="delete_action" name="action_vehicles" value="delete" checked="checked" /> {L_DELETE_ALL_VEHICLES}</dd>
+		<!-- IF S_MOVE -->
+			<dd><input type="radio" class="radio" name="action_vehicles" value="move" /> {L_MOVE_VEHICLES_TO} <select name="make_to_id">{S_MOVE_OPTIONS}</select></dd>
+		<!-- ENDIF -->
+	</dl>
+
+	<p class="quick">
+		<input class="button1" type="submit" name="update" value="{L_SUBMIT}" />
+	</p>
+	</fieldset>
+
+	</form>
+
+<!-- ELSEIF S_DELETE_MODEL -->
+
+	<a href="{U_BACK}" style="float: right">&laquo; {L_BACK}</a>
+
+	<h1>{L_MODEL_DELETE}</h1>
+
+	<p>{L_MODEL_DELETE_EXPLAIN}</p>
+
+	<!-- IF S_ERROR -->
+		<div class="errorbox">
+			<h3>{L_WARNING}</h3>
+			<p>{ERROR_MSG}</p>
+		</div>
+	<!-- ENDIF -->
+
+	<form id="acp_category" method="post" action="{U_ACTION}">
+
+	<fieldset>
+		<legend>{L_MODEL_DELETE}</legend>
+	<dl>
+		<dt><label>{L_MODEL}:</label></dt>
+		<dd><b>{MODEL}</b></dd>
+	</dl>
+	<dl>
+		<dt><label for="delete_action">{L_ACTION}:</label></dt>
+		<dd><input type="radio" class="radio" id="delete_action" name="action_vehicles" value="delete" checked="checked" /> {L_DELETE_ALL_VEHICLES}</dd>
+		<!-- IF S_MOVE -->
+			<dd><input type="radio" class="radio" name="action_vehicles" value="move" /> {L_MOVE_VEHICLES_TO} <select name="model_to_id">{S_MOVE_OPTIONS}</select></dd>
+		<!-- ENDIF -->
+	</dl>
+
+	<p class="quick">
+		<input class="button1" type="submit" name="update" value="{L_SUBMIT}" />
+	</p>
+	</fieldset>
+
+	</form>
+
+<!-- ELSEIF S_LIST_MODELS -->
+
+<h1>{L_MODELS_TITLE}</h1>
+
+<p>{L_MODELS_EXPLAIN}</p>
+
+	<!-- IF S_ERROR -->
+		<div class="errorbox">
+			<h3>{L_WARNING}</h3>
+			<p>{ERROR_MSG}</p>
+		</div>
+	<!-- ENDIF -->
+
+	<p><strong><a href="{U_LIST_MAKES}">{L_MAKE_INDEX}</a> -> {MAKE}</strong></p>
+	<table cellspacing="1">
+			<col class="row1" /><col class="row2" />
+	<tbody>
+	<!-- BEGIN model -->
 	<tr>
-		<th class="thHead" height="25" nowrap="nowrap" colspan="2">{L_ADD_MAKE}</th>
-	</tr>
-	<tr>
-		<td class="row1" width="20%"><span class="gen">{L_VEHICLE_MAKE}</span></td>
-		<td class="row2"><input name="make" type="text" class="post" size="35" value="" /></td>
-	</tr>
-	<tr>
-		<td class="catBottom" align="center" height="28" colspan="2"><input type="hidden" value="insert_make" name="mode" /><input name="submit" type="submit" value="{L_ADD_MAKE_BUTTON}" class="liteoption" /></td>
-	</tr>
+		<td width="90%" nowrap=nowrap><span class="gen">{model.MODEL}</a></span></td>
+		<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
+		<!-- IF model.S_DISAPPROVED -->
+			{ICON_DISAPPROVE_DISABLED}
+			<a href="{model.U_APPROVE}">{ICON_APPROVE}</a>
+		<!-- ELSEIF model.S_APPROVED  -->
+			<a href="{model.U_DISAPPROVE}">{ICON_DISAPPROVE}</a>
+			{ICON_APPROVE_DISABLED}
+		<!-- ENDIF -->
+		<a href="{model.U_EDIT}">{ICON_EDIT}</a>
+		<a href="{model.U_DELETE}">{ICON_DELETE}</a>
+		</td>
+	</tr><!-- END model --> 
 </table>
-</form>
 
-<form name="manage_makes_models" action="{S_MODE_ACTION}" method="post">
-<table width="100%" cellpadding="1" cellspacing="1" border="0" class="forumline"> 
-	<tr> 
-		<th class="thCornerL" width ="20%" valign="middle" nowrap="nowrap">{L_MAKE}</th> 
-		<th class="thTop" valign="middle" nowrap="nowrap">{L_RENAME}</th> 
-		<th class="thTop" valign="middle" nowrap="nowrap">{L_MODELS}</th> 
-		<th class="thTop" valign="middle" nowrap="nowrap">{L_STATUS}</th> 
-		<th class="thCornerR" valign="middle" nowrap="nowrap">{L_DELETE}</th> 
-	</tr> 
-<!-- BEGIN make --> 
+	<form id="make" method="post" action="{U_ACTION}">
+
+	<fieldset class="quick">
+		<input type="hidden" name="action" value="model_add" />
+
+		<input type="text" name="model" value="" maxlength="255" />
+		<input class="button2" name="addmodel" type="submit" value="{L_CREATE_MODEL}" />
+	</fieldset>
+	
+	</form>
+
+<!-- ELSE -->
+
+<h1>{L_MODELS_TITLE}</h1>
+
+<p>{L_MODELS_EXPLAIN}</p>
+
+	<!-- IF S_ERROR -->
+		<div class="errorbox">
+			<h3>{L_WARNING}</h3>
+			<p>{ERROR_MSG}</p>
+		</div>
+	<!-- ENDIF -->
+
+	<p><strong>{L_MAKE_INDEX}</strong></p>
+	<table cellspacing="1">
+			<col class="row1" /><col class="row2" />
+	<tbody>
+	<!-- BEGIN make -->
 	<tr>
-		<td class="{make.COLOR}" align="left"><span class="gen">{make.MAKE}</span></td> 
-		<td class="{make.COLOR}" align="center" nowrap=nowrap><input name="make_{make.ID}_title" type="text" class="post" size="25" value="{}" /><span class="genmed">&nbsp;&nbsp;<a href="{make.U_RENAME}">{make.RENAME}</a></span></td>
-		<td class="{make.COLOR}" align="center"><span class="genmed">
-			<script language="JavaScript" type="text/javascript"> 
-			<!-- 
-				onoff('make{make.ID}_switch',false); 
-			//--> 
-			</script>
-		</td> 
-		<td class="{make.COLOR}" align="center" ><span class="gensmall"><a href="{make.U_STATUS}">{make.STATUS}</a></span></td> 
-		<td class="{make.COLOR}" align="center" ><span class="gensmall"><a href="{make.U_DELETE}">{make.DELETE}</a></span></td> 
-	</tr> 
-	<tr id="make{make.ID}_switch" style="display:none;"> 
-		<td class="{make.COLOR}" width="100%" border="0" colspan="5"> 
-			<table class="forumline" width="100%" cellpadding="1" cellspacing="1" border="0"> 
-				<tr>
-					<th class="thTop" align="center" valign="middle" colspan="4">{L_ADD_MODEL}</td>
-				</tr>
-				<tr>
-					<td class="{make.COLOR}" align="center" colspan="4"><input name="add_model_{make.ID}_title" type="text" class="post" size="35" value="{}" /><span class="genmed">&nbsp;&nbsp;<a href="{make.U_ADD_MODEL}">{make.ADD_MODEL}</a></span></td>
-				</tr>
-				<tr>
-					<th class="thCornerL" width="20%" align="center" valign="middle" >{L_MODEL}</td>
-					<th class="thTop" align="center" valign="middle" >{L_RENAME}</td>
-					<th class="thTop" align="center" valign="middle" >{L_STATUS}</td>
-					<th class="thCornerR" align="center" valign="middle" >{L_DELETE}</td>
-				</tr>
-<!-- BEGIN model --> 
-				<tr>
-					<td class="{make.COLOR}" align="left">{make.model.MODEL}</td>
-					<td class="{make.COLOR}" align="center"><input name="model_{make.model.ID}_title" type="text" class="post" size="35" value="{}" /><span class="genmed">&nbsp;&nbsp;<a href="{make.model.U_RENAME}">{make.model.RENAME}</a></span></td>
-					<td class="{make.COLOR}" align="center"><a href="{make.model.U_STATUS}">{make.model.STATUS}</a></td>
-					<td class="{make.COLOR}" align="center"><a href="{make.model.U_DELETE}">{make.model.DELETE}</a></td>
-				</tr> 
-<!-- END model --> 
-			</table> 
-		</td> 
-	</tr> 
-<!-- END make --> 
-	<tr>
-		<td class="catBottom" height="18" align="center" valign="middle" colspan="5"><input type="hidden" value="" name="id" /><input type="hidden" value="" name="make_id" /><input type="hidden" value="" name="make" /><input type="hidden" value="" name="mode" /><input type="hidden" value="" name="model" /></td>
-	</tr>
+		<td width="90%" nowrap=nowrap><span class="gen"><a href="{make.U_LIST_MODELS}">{make.MAKE}</a></span></td>
+		<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
+		<!-- IF make.S_DISAPPROVED -->
+			{ICON_DISAPPROVE_DISABLED}
+			<a href="{make.U_APPROVE}">{ICON_APPROVE}</a>
+		<!-- ELSEIF make.S_APPROVED  -->
+			<a href="{make.U_DISAPPROVE}">{ICON_DISAPPROVE}</a>
+			{ICON_APPROVE_DISABLED}
+		<!-- ENDIF -->
+		<a href="{make.U_EDIT}">{ICON_EDIT}</a>
+		<a href="{make.U_DELETE}">{ICON_DELETE}</a>
+		</td>
+	</tr><!-- END make --> 
 </table>
+
+	<form id="make" method="post" action="{U_ACTION}">
+
+	<fieldset class="quick">
+		<input type="hidden" name="action" value="make_add" />
+
+		<input type="text" name="make" value="" maxlength="255" />
+		<input class="button2" name="addmake" type="submit" value="{L_CREATE_MAKE}" />
+	</fieldset>
+	
+	</form>
+
+<!-- ENDIF -->
 
 <!-- INCLUDE overall_footer.html -->
