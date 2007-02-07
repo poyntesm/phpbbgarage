@@ -26,446 +26,249 @@ class acp_garage_product
 
 	function main($id, $mode)
 	{
-		global $db, $user, $auth, $template, $cache;
-		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
+		global $db, $user, $auth, $template, $cache, $garage, $garage_config, $garage_template, $garage_vehicle;
+		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx, $garage_business, $garage_modification;
+
+		//Build All Garage Classes e.g $garage_images->
+		require($phpbb_root_path . 'includes/mods/class_garage_template.' . $phpEx);
+		require($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
+		require($phpbb_root_path . 'includes/mods/class_garage_business.' . $phpEx);
+		require($phpbb_root_path . 'includes/mods/class_garage_modification.' . $phpEx);
+
 
 		$user->add_lang('acp/garage');
-		$this->tpl_name = 'acp_garage_business';
+		$this->tpl_name = 'acp_garage_product';
 		$this->page_title = 'ACP_MANAGE_FORUMS';
 
 		$action		= request_var('action', '');
 		$update		= (isset($_POST['update'])) ? true : false;
 
+		$manufacturer_id	= request_var('manufacturer_id', '');
+		$product_id		= request_var('product_id', '');
 
-//Lets Setup Messages We Might Need...Just Easier On The Eye Doing This Seperatly
-$missing_data_message = '<meta http-equiv="refresh" content="3;url=' . append_sid("admin_garage_models.$phpEx") . '">'. $lang['Missing_Required_Data']. "<br /><br />" . sprintf($lang['Click_Return_Garage_Makes'], "<a href=\"" . append_sid("admin_garage_models.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-$make_created_message = '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_garage_models.$phpEx") . '">' . $lang['New_Make_Created'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Makes'], "<a href=\"" . append_sid("admin_garage_models.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-$make_updated_message = '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_garage_models.$phpEx") . '">' . $lang['Make_Updated'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Makes'], "<a href=\"" . append_sid("admin_garage_models.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-$make_updated_message = '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_garage_models.$phpEx") . '">' . $lang['Make_Updated'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Makes'], "<a href=\"" . append_sid("admin_garage_models.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-$make_deleted_message = '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_garage_models.$phpEx") . '">' . $lang['Make_Deleted'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Makes'], "<a href=\"" . append_sid("admin_garage_models.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-$make_exists_message = '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_garage_models.$phpEx") . '">' . $lang['Make_Exists'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Makes'], "<a href=\"" . append_sid("admin_garage_models.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-$model_created_message = '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_garage_models.$phpEx") . '">' . $lang['New_Model_Created'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Makes'], "<a href=\"" . append_sid("admin_garage_models.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-$model_updated_message = '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_garage_models.$phpEx") . '">' . $lang['Model_Updated'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Makes'], "<a href=\"" . append_sid("admin_garage_models.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
-$model_deleted_message = '<meta http-equiv="refresh" content="2;url=' . append_sid("admin_garage_models.$phpEx") . '">' . $lang['Model_Deleted'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Makes'], "<a href=\"" . append_sid("admin_garage_models.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
+		$errors = array();
 
-		switch ($mode)
+		// Major routines
+		if ($update)
 		{
-			case 'insert_make':
-		
-				//Get All Data Posted And Make It Safe To Use
-				$params = array('make');
-				$data = $garage->process_post_vars($params);
-		
-				//Checks All Required Data Is Present
-				$params = array('make');
-				$garage->check_acp_required_vars($params, $missing_data_message);
-		
-				//Check For Make With Same Name And Error If Exists
-				$count = $garage_model->count_make($data['make']);
-				if ( $count > 0)
-				{
-					message_die(GENERAL_MESSAGE, $make_exists_message);
-				}
-		
-				//Insert New Make Into DB
-				$garage_model->insert_make($data);
-		
-				//Return a message...
-				message_die(GENERAL_MESSAGE, $make_created_message);
-						
-				break;
-		
-			case 'update_make':
-		
-				//Get All Data Posted And Make It Safe To Use
-				$params = array('id', 'make');
-				$data = $garage->process_post_vars($params);
-		
-				//Checks All Required Data Is Present
-				$params = array('id', 'make');
-				$garage->check_acp_required_vars($params , $missing_data_message);
-		
-				//Check For Make With Same Name And Error If Exists
-				$count = $garage_model->count_make($data['make']);
-				if ( $count > 0)
-				{
-					message_die(GENERAL_MESSAGE, $make_exists_message);
-				}
-		
-				//Update Make In DB
-				$garage_model->update_make($data);
-		
-				//Return a message...
-				message_die(GENERAL_MESSAGE, $make_updated_message);
-				
-				break;
-		
-			case 'make_set_pending':
-		
-				//Get All Data Posted And Make It Safe To Use
-				$params = array('id');
-				$data = $garage->process_post_vars($params);
-		
-				//Checks All Required Data Is Present
-				$params = array('id');
-				$garage->check_acp_required_vars($params , $missing_data_message);
-		
-				//Set Make To Pending
-				$garage->update_single_field(GARAGE_MAKES_TABLE, 'pending', '1' , 'id' , $data['id']);
-		
-				//Return a message...
-				message_die(GENERAL_MESSAGE, $make_updated_message);
-				
-				break;
-		
-			case 'make_set_approved':
-		
-				//Get All Data Posted And Make It Safe To Use
-				$params = array('id');
-				$data = $garage->process_post_vars($params);
-		
-				//Checks All Required Data Is Present
-				$params = array('id');
-				$garage->check_acp_required_vars($params , $missing_data_message);
-		
-				//Set Make To Approved
-				$garage->update_single_field(GARAGE_MAKES_TABLE, 'pending', '0' , 'id' , $data['id']);
-		
-				//Return a message...
-				message_die(GENERAL_MESSAGE, $make_updated_message);
-				
-				break;
-		
-			case 'confirm_delete_make':
-		
-				//Get All Data Posted And Make It Safe To Use
-				$params = array('id');
-				$data = $garage->process_post_vars($params);
-				$data = $garage_model->select_make_data($data['id']);
-		
-				//Get All Make Data To Build Dropdown Of Where To Move Linked Items To
-				$all_data = $garage_model->select_all_make_data('');
-		
-				//Build Dropdown Options For Where To Love Linked Items To
-				for ($i = 0; $i < count($all_data); $i++)
-				{
-					//Do Not List Business We Are Deleting..
-					if ( $data['id'] == $all_data[$i]['id'] )
+			switch ($action)
+			{
+
+				case 'add_product':
+
+					$params = array('title' => '', 'category_id' => '', 'manufacturer_id' => $manufacturer_id);
+					$data = $garage->process_vars($params);
+
+					$garage_modification->insert_product($data);
+					add_log('admin', 'LOG_GARAGE_PRODUCT_CREATED', $data['title']);
+
+					trigger_error($user->lang['PRODUCT_CREATED'] . adm_back_link($this->u_action . "&amp;action=products&amp;manufacturer_id=$manufacturer_id"));
+
+				case 'delete_product':
+
+					$action_model		= request_var('action_model', '');
+					$model_to_id		= request_var('model_to_id', 0);
+
+					$garage_model->delete_model($model_id, $action_model, $model_to_id);
+
+					if (sizeof($errors))
 					{
-						continue;
+						break;
 					}
-					$select_to .= '<option value="'. $all_data[$i]['id'] .'">'. $all_data[$i]['make'] .'</option>';
-				}
-		
-				$template->set_filenames(array(
-					'body' => 'admin/garage_confirm_delete.tpl')
-				);
-		
-				$template->assign_vars(array(
-					'S_GARAGE_ACTION' => append_sid("admin_garage_models.$phpEx?mode=delete_make&amp;id=".$data['id']),
-					'S_TITLE' => $data['make'],
-					'L_DELETE' => $lang['Delete_Make'],
-					'L_DELETE_EXPLAIN' => $lang['Delete_Make_Explain'],
-					'L_MOVE_CONTENTS' => $lang['Move_contents'],
-					'L_MOVE_DELETE' => $lang['Move_and_Delete'],
-					'L_REQUIRED' => $lang['Required'],
-					'L_REMOVE' => $lang['Delete_Make'],
-					'L_MOVE_DELETE' => $lang['Move_Delete_Make'],
-					'L_MOVE_DELETE_BUTTON' => $lang['Delete_Make_Button'],
-					'L_OR' => $lang['Or'],
-					'L_DELETE_PERMENANTLY' => $lang['Delete_Permenantly'],
-					'MOVE_TO_LIST' => $select_to)
-				);
-		
-				$template->pparse('body');
-		
+
+					trigger_error($user->lang['MODEL_DELETED'] . adm_back_link($this->u_action  . "&amp;action=models&amp;make_id=$make_id"));
+
 				break;
-		
-			case 'delete_make':
-		
-				//Get All Data Posted And Make It Safe To Use
-				$params = array('id', 'target', 'permenant');
-				$data = $garage->process_post_vars($params);
-		
-				//If Set Delete Permentantly..And Finish
-				if ($data['permenant'] == '1')
-				{
-					//Delete The Model
-					$garage->delete_rows(GARAGE_MAKES_TABLE, 'id', $data['id']);
+
+				case 'edit_product':
 			
-					// Return a message...
-					message_die(GENERAL_MESSAGE, $make_deleted_message);
-				}
+					$params = array('model' => '');
+					$data = $garage->process_vars($params);
+					$data['id'] = $model_id;
 		
-				//Checks All Required Data Is Present
-				$params = array('id', 'target');
-				$garage->check_acp_required_vars($params, $missing_data_message);
+					$garage_model->update_model($data);
 		
-				//Move Any Existing Vehicles And Existing Models To New Target Make Then Delete Make
-				$garage->update_single_field(GARAGE_TABLE,'make_id',$data['target'],'make_id',$data['id']);
-				$garage->update_single_field(GARAGE_MODELS_TABLE,'make_id',$data['target'],'make_id',$data['id']);
-				$garage->delete_rows(GARAGE_MAKES_TABLE, 'id', $data['id']);
-		
-				//Return a message...
-				message_die(GENERAL_MESSAGE, $make_deleted_message);
-		
-				break;	
-		
-			case 'insert_model':
-		
-				//Get All Data Posted And Make It Safe To Use
-				$params = array('make_id', 'model');
-				$data = $garage->process_post_vars($params);
-		
-				//Checks All Required Data Is Present
-				$params = array('make_id', 'model');
-				$garage->check_acp_required_vars($params, $missing_data_message);
-		
-				//Insert Make Into DB
-				$garage_model->insert_model($data);
-		
-				//Return a message...
-				message_die(GENERAL_MESSAGE, $model_created_message);
-				
-				break;	
-		
-			case 'update_model':
-		
-				//Get All Data Posted And Make It Safe To Use
-				$params = array('id', 'model');
-				$data = $garage->process_post_vars($params);
-		
-				//Checks All Required Data Is Present
-				$params = array('id', 'model');
-				$garage->check_acp_required_vars($params , $message);
-		
-				//Update Model In DB
-				$garage_model->update_model($data);
-		
-				//Return a message...
-				message_die(GENERAL_MESSAGE, $model_updated_message);
+					trigger_error($user->lang['MODEL_UPDATED'] . adm_back_link($this->u_action  . "&amp;action=models&amp;make_id=$make_id"));
 				
 				break;
 		
-			case 'model_set_pending':
-		
-				//Get All Data Posted And Make It Safe To Use
-				$params = array('id');
-				$data = $garage->process_post_vars($params);
-		
-				//Checks All Required Data Is Present
-				$params = array('id');
-				$garage->check_acp_required_vars($params , $message);
-		
-				//Set Model To Pending
-				$garage->update_single_field(GARAGE_MODELS_TABLE, 'pending', '1' , 'id' , $data['id']);
-		
-				//Return a message...
-				message_die(GENERAL_MESSAGE, $model_updated_message);
-				
-				break;
-		
-			case 'model_set_approved':
-		
-				//Get All Data Posted And Make It Safe To Use
-				$params = array('id');
-				$data = $garage->process_post_vars($params);
-		
-				//Checks All Required Data Is Present
-				$params = array('id');
-				$garage->check_acp_required_vars($params , $message);
-		
-				//Set Model To Approved
-				$garage->update_single_field(GARAGE_MODELS_TABLE, 'pending', '0' , 'id' , $data['id']);
-		
-				//Return a message...
-				message_die(GENERAL_MESSAGE, $model_updated_message);
-				
-				break;
-		
-			case 'confirm_delete_model':
-		
-				//Get All Data Posted And Make It Safe To Use
-				$params = array('id');
-				$data = $garage->process_post_vars($params);
-				$data = $garage_model->select_model_data($data['id']);
-		
-				//Get All Models For Make Data To Build Dropdown Of Where To Move Linked Items To
-				$all_data = $garage_model->select_all_model_from_make_data($data['make_id']);
-		
-				//Build Dropdown Options For Where To Love Linked Items To
-				for ($i = 0; $i < count($all_data); $i++)
+			}
+		}
+
+		switch ($action)
+		{
+			case 'delete_product':
+
+				if (!$model_id)
 				{
-					//Do Not List Business We Are Deleting..
-					if ( $data['id'] == $all_data[$i]['id'] )
+					trigger_error($user->lang['NO_MODEL'] . adm_back_link($this->u_action), E_USER_WARNING);
+				}
+
+				$model_data = $garage_model->get_model($model_id);
+				$models_data = $garage_model->get_all_models_from_make($make_id);
+				$select_to = $this->build_move_model_to($models_data, $model_id);
+
+				$template->assign_vars(array(
+					'S_DELETE_PRODUCT'		=> true,
+					'U_ACTION'			=> $this->u_action . "&amp;action=model_delete&amp;model_id=$model_id&amp;make_id=$make_id",
+					'U_BACK'			=> $this->u_action . "&amp;action=models&amp;make_id=$make_id",
+					'S_MOVE'			=> (!empty($select_to)) ? true : false ,
+					'S_MOVE_OPTIONS'		=> $select_to,
+					'MODEL'				=> $model_data['model'],
+					'S_ERROR'			=> (sizeof($errors)) ? true : false,
+					'ERROR_MSG'			=> (sizeof($errors)) ? implode('<br />', $errors) : '')
+				);
+		
+			break;
+
+			case 'add_product':
+			case 'edit_product':
+
+				// Show form to create/modify a business
+				if ($action == 'edit_product')
+				{
+					$this->page_title = 'EDIT_PRODUCT';
+					$row = $garage_modification->get_product($product_id);
+
+					if (!$update)
 					{
-						continue;
+						$product_data = $row;
 					}
-					$select_to .= '<option value="'. $all_data[$i]['id'] .'">'. $all_data[$i]['title'] .'</option>';
 				}
-		
-				$template->set_filenames(array(
-					'body' => 'admin/garage_confirm_delete.tpl')
-				);
-		
-				$template->assign_vars(array(
-					'S_GARAGE_ACTION' => append_sid("admin_garage_models.$phpEx?mode=delete_model&amp;id=".$data[0]['id']),
-					'S_TITLE' => $data['model'],
-					'L_DELETE' => $lang['Delete_Model'],
-					'L_DELETE_EXPLAIN' => $lang['Delete_Model_Explain'],
-					'L_MOVE_CONTENTS' => $lang['Move_contents'],
-					'L_MOVE_DELETE' => $lang['Move_and_Delete'],
-					'L_REQUIRED' => $lang['Required'],
-					'L_REMOVE' => $lang['Delete_Model'],
-					'L_MOVE_DELETE' => $lang['Move_Delete_Model'],
-					'L_MOVE_DELETE_BUTTON' => $lang['Delete_Model_Button'],
-					'L_OR' => $lang['Or'],
-					'L_DELETE_PERMENANTLY' => $lang['Delete_Permenantly'],
-					'MOVE_TO_LIST' => $select_to)
-				);
-		
-				$template->pparse('body');
-		
-				break;
-		
-			case 'delete_model':
-		
-				//Get All Data Posted And Make It Safe To Use
-				$params = array('id', 'target', 'permenant');
-				$data = $garage->process_post_vars($params);
-		
-				//If Set Delete Permentantly..And Finish
-				if ($data['permenant'] == '1')
+				else
 				{
-					//Delete The Model
-					$garage->delete_rows(GARAGE_MODELS_TABLE, 'id', $data['id']);
-			
-					// Return a message...
-					message_die(GENERAL_MESSAGE, $model_deleted_message);
-				}
-		
-				//Checks All Required Data Is Present
-				$params = array('id', 'target');
-				$garage->check_acp_required_vars($params, $missing_data_message);
-		
-				//Move Any Existing Vehicles To New Target Model Then Delete Model
-				$garage->update_single_field(GARAGE_TABLE,'model_id',$data['target'],'model_id',$data['id']);
-				$garage->delete_rows(GARAGE_MODELS_TABLE, 'id', $data['id']);
-		
-				//Return a message...
-				message_die(GENERAL_MESSAGE, $model_deleted_message);
-		
-				break;	
-		
-			default:
-		
-				$template->set_filenames(array(
-					"body" => "admin/garage_makes_models.tpl")
-				);
-		
-				//Get All Makes & Models
-				$data = $garage_model->select_all_models_data('');
-		
-				//Build An Array Of Just Makes
-				$makes = $garage->remove_duplicate($data, 'make_id');
-		
-				//Process Array For Each Make
-				for( $i = 0; $i < count($makes); $i++ )
-				{
-					$status_mode =  ( $makes[$i]['make_pending'] == true ) ? 'set_approved' : 'set_pending' ;
-					$delete_url = append_sid("admin_garage_models.$phpEx?mode=confirm_delete_make&amp;id=" . $makes[$i]['make_id']);
-					$status_url = append_sid("admin_garage_models.$phpEx?mode=make_$status_mode&amp;id=" . $makes[$i]['make_id']);
-					$rename_url = 'javascript:rename('.$makes[$i]['make_id'].',1)';
-					$add_model_url = 'javascript:add_model('.$makes[$i]['make_id'].')';
-		
-					//Set How The URL's Will Appear Since User Might Have Turned Images Off...
-					$delete_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" />' : $lang['Delete'] ;
-					$status_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_'.$status_mode] . '" alt="'.$lang[$status_mode].'" title="'.$lang[$status_mode].'" border="0" />' : $lang[$status_mode];
-					$rename_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_edit'] . '" alt="'.$lang['Rename'].'" title="'.$lang['Rename'].'" border="0" />' : $lang['Rename'];
-					$add_model_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_edit'] . '" alt="'.$lang['Add_Model_Button'].'" title="'.$lang['Add_Model_Button'].'" border="0" />' : $lang['Add_Model_Button'];
-		
-					$template->assign_block_vars('make', array(
-						'COLOR' => ($i % 2) ? 'row1' : 'row2',
-						'ID' => $makes[$i]['make_id'],
-						'MAKE' => $makes[$i]['make'],
-						'DELETE' => $delete_url_dsp,
-						'STATUS' => $status_url_dsp,
-						'RENAME' => $rename_url_dsp,
-						'ADD_MODEL' => $add_model_url_dsp,
-						'U_ADD_MODEL' => $add_model_url,
-						'U_RENAME' => $rename_url,
-						'U_DELETE' => $delete_url,
-						'U_STATUS' => $status_url)
-					);
-		
-					//Process Each Model Per Make
-					for( $j = 0; $j < count($data); $j++ )
+					$this->page_title = 'CREATE_PRODUCT';
+
+					// Fill business data with default values
+					if (!$update)
 					{
-						//Skip If Not Make Or Empty Model
-						if ( ($makes[$i]['make_id'] != $data[$j]['make_id']) OR ( ($makes[$i]['make_id'] == $data[$j]['make_id']) AND (empty($data[$j]['model_id'])) ) )
-						{
-							continue;
-						}
-		
-						$status_mode =  ( $data[$j]['model_pending'] == true ) ? 'set_approved' : 'set_pending' ;
-						$delete_url = append_sid("admin_garage_models.$phpEx?mode=confirm_delete_model&amp;id=" . $data[$j]['model_id']);
-						$status_url = append_sid("admin_garage_models.$phpEx?mode=model_$status_mode&amp;id=" . $data[$j]['model_id']);
-						$rename_url = 'javascript:rename('.$data[$j]['model_id'].',2)';
-		
-						//Set How The URL's Will Appear Since User Might Have Turned Images Off...
-						$delete_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" />' : $lang['Delete'] ;
-						$status_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_'.$status_mode] . '" alt="'.$lang[$status_mode].'" title="'.$lang[$status_mode].'" border="0" />' : $lang[$status_mode];
-						$rename_url_dsp = ( $garage_config['enable_images'] ) ? '<img src="../' . $images['garage_edit'] . '" alt="'.$lang['Rename'].'" title="'.$lang['Rename'].'" border="0" />' : $lang['Rename'];
-		
-						$template->assign_block_vars('make.model', array(
-							'COLOR' => ($j % 2) ? 'row1' : 'row2',
-							'ID' => $data[$j]['model_id'],
-							'MODEL' => $data[$j]['model'],
-							'DELETE' => $delete_url_dsp,
-							'STATUS' => $status_url_dsp,
-							'RENAME' => $rename_url_dsp,
-							'U_RENAME' => $rename_url,
-							'U_DELETE' => $delete_url,
-							'U_STATUS' => $status_url)
+						$product_data = array(
+							'title'		=> request_var('product', '', true),
+							'category_id'	=> '',
 						);
 					}
 				}
-		
+
+				$categories = $garage->get_categories();
+				$garage_template->category_dropdown($categories, $product_data['category_id']);
 				$template->assign_vars(array(
-					'L_GARAGE_MODELS_TITLE' => $lang['Garage_Models_Title'],
-					'L_GARAGE_MODELS_EXPLAIN' => $lang['Garage_Models_Explain'],
-					'L_MAKE' => $lang['Make'],
-					'L_MODEL' => $lang['Model'],
-					'L_MODELS' => $lang['Models'],
-					'L_ADD_MAKE' => $lang['Add_Make'],
-					'L_ADD_MAKE_BUTTON' => $lang['Add_Make_Button'],
-					'L_MODIFY_MAKE' => $lang['Modify_Make'],
-					'L_MODIFY_MAKE_BUTTON' => $lang['Modify_Make_Button'],
-					'L_DELETE_MAKE' => $lang['Delete_Make'],
-					'L_DELETE_MAKE_BUTTON' => $lang['Delete_Make_Button'],
-					'L_ADD_MODEL' => $lang['Add_Model'],
-					'L_ADD_MODEL_BUTTON' => $lang['Add_Model_Button'],
-					'L_MODIFY_MODEL' => $lang['Modify_Model'],
-					'L_EMPTY_TITLE' => $lang['Empty_Title'],
-					'L_CHOOSE_MODIFY_MODEL_BUTTON' => $lang['Choose_Modify_Model_Button'],
-					'L_DELETE_MODEL' => $lang['Delete_Model'],
-					'L_CHOOSE_DELETE_MODEL_BUTTON' => $lang['Choose_Delete_Model_Button'],
-					'L_VEHICLE_MAKE' => $lang['Vehicle_Make'],
-					'L_VEHICLE_MODEL' => $lang['Vehicle_Model'],
-					'L_CHANGE_TO' => $lang['Change_To'],
-					'L_EDIT' => $lang['Edit'],
-					'L_STATUS' => $lang['Status'],
-					'L_DELETE' => $lang['Delete'],
-					'L_RENAME' => $lang['Rename'],
-					'S_MODE_ACTION' => append_sid('admin_garage_models.'.$phpEx),
-					'SHOW' => '<img src="../' . $images['garage_show_details'] . '" alt="'.$lang['Show_Details'].'" title="'.$lang['Show_Details'].'" border="0" />',
-					'HIDE' => '<img src="../' . $images['garage_hide_details'] . '" alt="'.$lang['Hide_Details'].'" title="'.$lang['Hide_Details'].'" border="0" />')
+					'S_EDIT_PRODUCT'	=> true,
+					'S_ERROR'		=> (sizeof($errors)) ? true : false,
+					'U_BACK'		=> $this->u_action . "&amp;action=products&amp;manufacturer_id=$manufacturer_id",
+					'U_EDIT_ACTION'		=> $this->u_action . "&amp;action=$action&amp;manufacturer_id=$manufacturer_id",
+					'PRODUCT'		=> $product_data['title'],
+					'ERROR_MSG'		=> (sizeof($errors)) ? implode('<br />', $errors) : '',
+					)
 				);
-		
-				$template->pparse("body");
+
+				return;
+
+			break;
+
+			case 'approve_product':
+			case 'disapprove_product':
+			case 'products':
+
+				if ($action == 'approve_product')
+				{
+					$data = $garage_model->get_model($model_id);
+					$garage->update_single_field(GARAGE_MODELS_TABLE, 'pending', 0, 'id', $model_id);
+					add_log('admin', 'LOG_GARAGE_MODEL_APPROVED', $data['model']);
+				}
+
+				if ($action == 'disapprove_product')
+				{
+					$data = $garage_model->get_model($model_id);
+					$garage->update_single_field(GARAGE_MODELS_TABLE, 'pending', 1, 'id', $model_id);
+					add_log('admin', 'LOG_GARAGE_MODEL_DISAPPROVED', $data['model']);
+				}
+
+				if ($action == 'add_product')
+				{
+					$params = array('model' => '', 'make_id' => '');
+					$data = $garage->process_vars($params);
 	
-				break;
-		}	
+					if(!$data['model'])
+					{
+						$errors[] = $user->lang['MODEL_NAME_EMPTY'];
+					}
+	
+					$count = $garage_model->count_model_in_make($data['model'], $data['make_id']);
+					if ( $count > 0)
+					{
+						$errors[] = $user->lang['MODEL_EXISTS'];
+					}
+						
+					if (!sizeof($errors))
+					{						
+						$garage_model->insert_model($data);
+						add_log('admin', 'LOG_FORUM_ADD_MODEL', $data['model']);
+					}
+				}
+
+				//Get Products
+				$products = $garage_modification->get_products_by_manufacturer($manufacturer_id);
+
+				$manufacturer = $garage_business->get_business($manufacturer_id);
+	
+				//Process Array For Each Model
+				for( $i = 0; $i < count($products); $i++ )
+				{
+					$url = $this->u_action . "&amp;manufacturer_id=$manufacturer_id&amp;product_id={$products[$i]['id']}";
+					$template->assign_block_vars('product', array(
+						'ID' 			=> $products[$i]['id'],
+						'PRODUCT' 		=> $products[$i]['title'],
+						'U_EDIT'		=> $url . '&amp;action=edit_product',
+						'U_DELETE'		=> $url . '&amp;action=delete_product',
+					));
+				}
+	
+				$template->assign_vars(array(
+					'S_ERROR'		=> (sizeof($errors)) ? true : false,
+					'ERROR_MSG'		=> (sizeof($errors)) ? implode('<br />', $errors) : '',
+					'MANUFACTURER'		=> $manufacturer['title'],
+					'MANUFACTURER_ID'	=> $manufacturer_id,
+					'U_LIST_MANUFACTURERS'	=> $url = $this->u_action,
+					'S_LIST_PRODUCTS'	=> true,
+				));
+		
+			break;
+
+		}
+		
+		//Default Management screen..
+		$manufacturers = $garage_business->get_business_by_type(BUSINESS_PRODUCT);
+	
+		//Process Array For Each Make
+		for( $i = 0; $i < count($manufacturers); $i++ )
+		{
+			$url = $this->u_action . "&amp;manufacturer_id={$manufacturers[$i]['id']}";
+			$template->assign_block_vars('manufacturer', array(
+				'ID' 			=> $manufacturers[$i]['id'],
+				'MANUFACTURER' 		=> $manufacturers[$i]['title'],
+				'U_LIST_PRODUCTS'	=> $url . '&amp;action=products',
+			));
+		}
+	
+		$template->assign_vars(array(
+			'S_ERROR'	=> (sizeof($errors)) ? true : false,
+			'ERROR_MSG'	=> (sizeof($errors)) ? implode('<br />', $errors) : '',
+		));
+		
+	}
+
+	function build_move_to($data, $exclude_id)
+	{
+		$select_to = null;
+		for ($i = 0; $i < count($data); $i++)
+		{
+			if ($exclude_id == $data[$i]['id'])
+			{
+				continue;
+			}
+			$select_to .= '<option value="'. $data[$i]['id'] .'">'. $data[$i]['title'] .'</option>';
+		}
+		return $select_to;
 	}
 }
 

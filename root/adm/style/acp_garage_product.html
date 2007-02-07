@@ -1,0 +1,150 @@
+<!-- INCLUDE overall_header.html -->
+
+<!-- IF S_EDIT_PRODUCT -->
+
+	<a href="{U_BACK}" style="float: right">&laquo; {L_BACK}</a>
+
+	<h1>{L_PRODUCT_UPDATE}</h1>
+
+	<p>{L_PRODUCT_UPDATE_EXPLAIN}</p>
+
+	<!-- IF S_ERROR -->
+		<div class="errorbox">
+			<h3>{L_WARNING}</h3>
+			<p>{ERROR_MSG}</p>
+		</div>
+	<!-- ENDIF -->
+
+	<form id="productedit" method="post" action="{U_EDIT_ACTION}">
+
+	<fieldset>
+		<legend>{L_PRODUCT_SETTINGS}</legend>
+	<dl>
+		<dt><label for="title">{L_PRODUCT}:</label></dt>
+		<dd><input class="medium" type="text" id="title" name="title" value="{PRODUCT}" maxlength="255" /></dd>
+	</dl>
+	<dl>
+		<dt><label for="delete_action">{L_CATEGORY}:</label></dt>
+		<dd><select name="category_id"><option value="">{L_SELECT_CATEGORY}</option><option value="">------</option><!-- BEGIN category--><option value="{category.VALUE}" <!-- IF category.S_SELECTED -->selected="selected"<!-- ENDIF -->>{category.TEXT}</option><!-- END category --></select></dd>
+	</dl>
+	</fieldset>
+
+	<fieldset class="submit-buttons">
+		<legend>{L_SUBMIT}</legend>
+		<input class="button1" type="submit" id="submit" name="update" value="{L_SUBMIT}" />&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+	</fieldset>
+
+	</form>
+
+<!-- ELSEIF S_DELETE_PRODUCT -->
+
+	<a href="{U_BACK}" style="float: right">&laquo; {L_BACK}</a>
+
+	<h1>{L_PRODUCT_DELETE}</h1>
+
+	<p>{L_PRODUCT_DELETE_EXPLAIN}</p>
+
+	<!-- IF S_ERROR -->
+		<div class="errorbox">
+			<h3>{L_WARNING}</h3>
+			<p>{ERROR_MSG}</p>
+		</div>
+	<!-- ENDIF -->
+
+	<form id="acp_product" method="post" action="{U_ACTION}">
+
+	<fieldset>
+		<legend>{L_PRODUCT_DELETE}</legend>
+	<dl>
+		<dt><label>{L_PRODUCT}:</label></dt>
+		<dd><b>{PRODUCT}</b></dd>
+	</dl>
+	<dl>
+		<dt><label for="delete_action">{L_ACTION}:</label></dt>
+		<dd><input type="radio" class="radio" id="delete_action" name="action_modifications" value="delete" checked="checked" /> {L_DELETE_ALL_MODIFICATIONS}</dd>
+		<!-- IF S_MOVE -->
+			<dd><input type="radio" class="radio" name="action_modifications" value="move" /> {L_MOVE_MODIFICATIONS_TO} <select name="product_to_id">{S_MOVE_OPTIONS}</select></dd>
+		<!-- ENDIF -->
+	</dl>
+
+	<p class="quick">
+		<input class="button1" type="submit" name="update" value="{L_SUBMIT}" />
+	</p>
+	</fieldset>
+
+	</form>
+
+<!-- ELSEIF S_LIST_PRODUCTS -->
+
+<h1>{L_PRODUCTS_TITLE}</h1>
+
+<p>{L_PRODUCT_EXPLAIN}</p>
+
+	<!-- IF S_ERROR -->
+		<div class="errorbox">
+			<h3>{L_WARNING}</h3>
+			<p>{ERROR_MSG}</p>
+		</div>
+	<!-- ENDIF -->
+
+	<p><strong><a href="{U_LIST_MANUFACTURERS}">{L_MANUFACTURER_INDEX}</a> -> {MANUFACTURER}</strong></p>
+	<table cellspacing="1">
+			<col class="row1" /><col class="row2" />
+	<tbody>
+	<!-- BEGIN product -->
+	<tr>
+		<td width="90%" nowrap=nowrap><span class="gen">{product.PRODUCT}</a></span></td>
+		<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
+		<!-- IF product.S_DISAPPROVED -->
+			{ICON_DISAPPROVE_DISABLED}
+			<a href="{product.U_APPROVE}">{ICON_APPROVE}</a>
+		<!-- ELSEIF product.S_APPROVED  -->
+			<a href="{product.U_DISAPPROVE}">{ICON_DISAPPROVE}</a>
+			{ICON_APPROVE_DISABLED}
+		<!-- ENDIF -->
+		<a href="{product.U_EDIT}">{ICON_EDIT}</a>
+		<a href="{product.U_DELETE}">{ICON_DELETE}</a>
+		</td>
+	</tr><!-- END product --> 
+</table>
+
+	<form id="product" method="post" action="{U_ACTION}">
+
+	<fieldset class="quick">
+		<input type="hidden" name="action" value="add_product" />
+		<input type="hidden" name="manufacturer_id" value="{MANUFACTURER_ID}" />
+
+		<input type="text" name="product" value="" maxlength="255" />
+		<input class="button2" name="addproduct" type="submit" value="{L_CREATE_PRODUCT}" />
+	</fieldset>
+	
+	</form>
+
+<!-- ELSE -->
+
+<h1>{L_MANUFACTURER_TITLE}</h1>
+
+<p>{L_MANUFACTURER_EXPLAIN}</p>
+
+	<!-- IF S_ERROR -->
+		<div class="errorbox">
+			<h3>{L_WARNING}</h3>
+			<p>{ERROR_MSG}</p>
+		</div>
+	<!-- ENDIF -->
+
+	<p><strong>{L_MANUFACTURER_INDEX}</strong></p>
+	<table cellspacing="1">
+			<col class="row1" /><col class="row2" />
+	<tbody>
+	<!-- BEGIN manufacturer -->
+	<tr>
+		<td width="100%" nowrap=nowrap><span class="gen"><a href="{manufacturer.U_LIST_PRODUCTS}">{manufacturer.MANUFACTURER}</a></span></td>
+	</tr>
+	<!-- END manufacturer --> 
+</table>
+
+<!-- ENDIF -->
+
+<!-- INCLUDE overall_footer.html -->

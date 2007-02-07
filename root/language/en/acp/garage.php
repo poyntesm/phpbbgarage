@@ -752,8 +752,20 @@ $lang = array_merge($lang, array(
 	'MODEL_UPDATE_EXPLAIN'		=> 'The form below will allow you to update this model',
 	'MODEL_SETTINGS'		=> 'Model settings',
 
-
-	
+	//PRODUCT KEYS
+	'MANUFACTURER_TITLE'		=> 'Garage Product Control',
+	'MANUFACTURER_EXPLAIN'		=> 'On this screen you can manage your products: add, modify, delete. Manufacturers are business\'s and are managed through business management.',
+	'MANUFACTURER_INDEX'		=> 'Manufacturer Index',
+	'CREATE_PRODUCT'		=> 'Create product',
+	'PRODUCTS_TITLE'		=> 'Garage Product Control',
+	'PRODUCT_EXPLAIN'		=> 'On this screen you can add, edit, delete, approve, disapprove products',
+	'PRODUCT_SETTINGS'		=> 'Product settings',
+	'PRODUCT'			=> 'Product',
+	'PRODUCT_CREATED'		=> 'Product created',
+	'PRODUCT_UPDATE'		=> 'Update product',
+	'PRODUCT_UPDATE_EXPLAIN'	=> 'The form below will allow you to customise this product',
+	'CATEGORY'			=> 'Category',
+	'SELECT_CATEGORY'		=> 'Select a category',
 
 
 
