@@ -81,25 +81,6 @@ class garage
 	}
 
 	/*========================================================================*/
-	// Check All Required Variables Have Data Within The ACP
-	// Usage: check_acp_required_vars(array(), message);
-	/*========================================================================*/
-	function check_acp_required_vars($params = array(), $message)
-	{
-		global $data;
-
-		while( list($var, $param) = @each($params) )
-		{
-			if (empty($data[$param]))
-			{
-				message_die(GENERAL_MESSAGE, $message);
-			}
-		}
-
-		return ;
-	}
-
-	/*========================================================================*/
 	// Count The Total Views The Garage Has Recieved
 	// Usage: count_total_views();
 	/*========================================================================*/
@@ -235,25 +216,6 @@ class garage
 		$db->sql_freeresult($result);
 
 		return $data;
-	}
-
-	/*========================================================================*/
-	// Remove Duplicate Entries In An Array
-	// Usage: remove_duplicate('vehicle id');
-	/*========================================================================*/
-	function remove_duplicate($array, $field)
-	{
-		foreach ($array as $sub)
-		{
-			$cmp[] = $sub[$field];
-		}
-		$unique = array_unique($cmp);
-		foreach ($unique as $k => $rien)
-		{
-			$new[] = $array[$k];
-		}
-
-		return $new;
 	}
 
 	/*========================================================================*/
@@ -634,6 +596,42 @@ class garage
 		));
 	
 		$result = $db->sql_query_limit($sql, $garage_config['cars_per_page'], $start);
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$data[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/*========================================================================*/
+	// Returns Groups Which Have Users With Quota Based Permissions
+	// Usage: get_groups_allowed_quotas()
+	/*========================================================================*/
+	function get_groups_allowed_quotas()
+	{
+		global $db, $auth;
+
+		$data = null;
+
+		$authd = $auth->acl_get_list(false, array('u_garage_add_vehicle', 'u_garage_upload_image', 'u_garage_remote_image'), false);
+
+		$user_ids = array_unique(array_merge($authd[0]['u_garage_add_vehicle'], $authd[0]['u_garage_upload_image'], $authd[0]['u_garage_remote_image']));
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'g.group_id, g.group_name',
+			'FROM'		=> array(
+				USERS_TABLE		=> 'u',
+				GROUPS_TABLE		=> 'g',
+				USER_GROUP_TABLE	=> 'ug',
+			),
+			'WHERE'		=> $db->sql_in_set('u.user_id', $user_ids) . " AND u.user_id = ug.user_id AND g.group_id = ug.group_id",
+			'GROUP_BY'	=> 'g.group_id'
+		));
+
+		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result) )
 		{
 			$data[] = $row;

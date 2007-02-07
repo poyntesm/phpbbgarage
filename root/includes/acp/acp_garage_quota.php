@@ -141,14 +141,7 @@ class acp_garage_quota
 		//Default management page
 		
 		// Get the list of phpBB usergroups
-		$sql = "SELECT group_id, group_name
-			FROM " . GROUPS_TABLE . "
-			ORDER BY group_name ASC";
-		$result = $db->sql_query($sql);
-		while( $row = $db->sql_fetchrow($result) )
-		{
-			$groupdata[] = $row;
-		}
+		$groupdata = $garage->get_groups_allowed_quotas();
 
 		//Get Add Permission Info For Usergruops...Bit Messy But Works!!
 		$sql = "SELECT config_value as add_groups
