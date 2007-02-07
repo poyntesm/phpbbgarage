@@ -91,9 +91,9 @@
 	</dl>
 	<dl>
 		<dt><label for="delete_action">{L_ACTION}:</label></dt>
-		<dd><input type="radio" class="radio" id="delete_action" name="action_vehicles" value="delete" checked="checked" /> {L_DELETE_ALL_VEHICLES}</dd>
+		<dd><input type="radio" class="radio" id="delete_action" name="action_make" value="delete" checked="checked" /> {L_DELETE_ALL_VEHICLES}</dd>
 		<!-- IF S_MOVE -->
-			<dd><input type="radio" class="radio" name="action_vehicles" value="move" /> {L_MOVE_VEHICLES_TO} <select name="make_to_id">{S_MOVE_OPTIONS}</select></dd>
+			<dd><input type="radio" class="radio" name="action_make" value="move" /> {L_MOVE_VEHICLES_TO} <select name="make_to_id">{S_MOVE_OPTIONS}</select></dd>
 		<!-- ENDIF -->
 	</dl>
 
@@ -129,9 +129,9 @@
 	</dl>
 	<dl>
 		<dt><label for="delete_action">{L_ACTION}:</label></dt>
-		<dd><input type="radio" class="radio" id="delete_action" name="action_vehicles" value="delete" checked="checked" /> {L_DELETE_ALL_VEHICLES}</dd>
+		<dd><input type="radio" class="radio" id="delete_action" name="action_model" value="delete" checked="checked" /> {L_DELETE_ALL_VEHICLES}</dd>
 		<!-- IF S_MOVE -->
-			<dd><input type="radio" class="radio" name="action_vehicles" value="move" /> {L_MOVE_VEHICLES_TO} <select name="model_to_id">{S_MOVE_OPTIONS}</select></dd>
+			<dd><input type="radio" class="radio" name="action_model" value="move" /> {L_MOVE_VEHICLES_TO} <select name="model_to_id">{S_MOVE_OPTIONS}</select></dd>
 		<!-- ENDIF -->
 	</dl>
 
@@ -180,6 +180,7 @@
 
 	<fieldset class="quick">
 		<input type="hidden" name="action" value="model_add" />
+		<input type="hidden" name="make_id" value="{MAKE_ID}" />
 
 		<input type="text" name="model" value="" maxlength="255" />
 		<input class="button2" name="addmodel" type="submit" value="{L_CREATE_MODEL}" />

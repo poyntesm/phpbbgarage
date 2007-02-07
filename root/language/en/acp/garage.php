@@ -732,13 +732,27 @@ $lang = array_merge($lang, array(
 	'DELETE_ALL_VEHICLES'		=> 'Delete all models & vehicles',
 	'MAKE'				=> 'Make',
 	'MAKE_DELETE'			=> 'Delete make',
+	'MAKE_DELETED'			=> 'Make deleted',
 	'MAKE_DELETE_EXPLAIN'		=> 'The form below will allow you to delete a make. You are able to decide where you want to put all items linked to it.',
 	'MOVE_VEHICLES_TO'		=> 'Move all models & vehicles to',
 	'MODEL'				=> 'Model',
 	'MODEL_DELETE'			=> 'Delete model',
+	'MODEL_DELETED'			=> 'Model deleted',
 	'MODEL_DELETE_EXPLAIN'		=> 'The form below will allow you to delete a model. You are able to decide where you want to put all items linked to it.',
+	'MAKE_EXISTS'			=> 'Make already exists',
+	'MODEL_EXISTS'			=> 'Model already exists for make',
 	'MAKE_NAME_EMPTY'		=> 'No make name entered',
 	'MODEL_NAME_EMPTY'		=> 'No model name entered',
+	'MAKE_UPDATE'			=> 'Update make',
+	'MAKE_UPDATED'			=> 'Make updated',
+	'MAKE_UPDATE_EXPLAIN'		=> 'The form below will allow you to update this make',
+	'MAKE_SETTINGS'			=> 'Make settings',
+	'MODEL_UPDATE'			=> 'Update model',
+	'MODEL_UPDATED'			=> 'Model updated',
+	'MODEL_UPDATE_EXPLAIN'		=> 'The form below will allow you to update this model',
+	'MODEL_SETTINGS'		=> 'Model settings',
+
+
 	
 
 

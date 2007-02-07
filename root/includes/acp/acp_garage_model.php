@@ -26,7 +26,7 @@ class acp_garage_model
 
 	function main($id, $mode)
 	{
-		global $db, $user, $auth, $template, $cache, $garage, $garage_config;
+		global $db, $user, $auth, $template, $cache, $garage, $garage_config, $garage_model, $garage_vehicle;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
 
 		//Build All Garage Classes e.g $garage_images->
@@ -50,155 +50,62 @@ class acp_garage_model
 		{
 			switch ($action)
 			{
-				case 'add':
+				case 'make_delete':
 
+					$action_make		= request_var('action_make', '');
+					$make_to_id		= request_var('make_to_id', 0);
 
-					break;
+					$garage_model->delete_make($make_id, $action_make, $make_to_id);
 
-			case 'insert_make':
+					if (sizeof($errors))
+					{
+						break;
+					}
+
+					trigger_error($user->lang['MAKE_DELETED'] . adm_back_link($this->u_action));
+
+				break;
+
+				case 'model_delete':
+
+					$action_model		= request_var('action_model', '');
+					$model_to_id		= request_var('model_to_id', 0);
+
+					$garage_model->delete_model($model_id, $action_model, $model_to_id);
+
+					if (sizeof($errors))
+					{
+						break;
+					}
+
+					trigger_error($user->lang['MODEL_DELETED'] . adm_back_link($this->u_action  . "&amp;action=models&amp;make_id=$make_id"));
+
+				break;
+
+				case 'make_edit':
+
+					$params = array('make' => '');
+					$data = $garage->process_vars($params);
+					$data['id'] = $make_id;
 		
-				//Get All Data Posted And Make It Safe To Use
-				$params = array('make');
-				$data = $garage->process_post_vars($params);
+					$garage_model->update_make($data);
 		
-				//Checks All Required Data Is Present
-				$params = array('make');
-				$garage->check_acp_required_vars($params, $missing_data_message);
+					trigger_error($user->lang['MAKE_UPDATED'] . adm_back_link($this->u_action));
 		
-				//Check For Make With Same Name And Error If Exists
-				$count = $garage_model->count_make($data['make']);
-				if ( $count > 0)
-				{
-					message_die(GENERAL_MESSAGE, $make_exists_message);
-				}
-		
-				//Insert New Make Into DB
-				$garage_model->insert_make($data);
-		
-				//Return a message...
-				message_die(GENERAL_MESSAGE, $make_created_message);
-						
 				break;
 		
-			case 'update_make':
-		
-				//Get All Data Posted And Make It Safe To Use
-				$params = array('id', 'make');
-				$data = $garage->process_post_vars($params);
-		
-				//Checks All Required Data Is Present
-				$params = array('id', 'make');
-				$garage->check_acp_required_vars($params , $missing_data_message);
-		
-				//Check For Make With Same Name And Error If Exists
-				$count = $garage_model->count_make($data['make']);
-				if ( $count > 0)
-				{
-					message_die(GENERAL_MESSAGE, $make_exists_message);
-				}
-		
-				//Update Make In DB
-				$garage_model->update_make($data);
-		
-				//Return a message...
-				message_die(GENERAL_MESSAGE, $make_updated_message);
-				
-				break;
-		
-			case 'delete_make':
-		
-				//Get All Data Posted And Make It Safe To Use
-				$params = array('id', 'target', 'permenant');
-				$data = $garage->process_post_vars($params);
-		
-				//If Set Delete Permentantly..And Finish
-				if ($data['permenant'] == '1')
-				{
-					//Delete The Model
-					$garage->delete_rows(GARAGE_MAKES_TABLE, 'id', $data['id']);
+				case 'model_edit':
 			
-					// Return a message...
-					message_die(GENERAL_MESSAGE, $make_deleted_message);
-				}
+					$params = array('model' => '');
+					$data = $garage->process_vars($params);
+					$data['id'] = $model_id;
 		
-				//Checks All Required Data Is Present
-				$params = array('id', 'target');
-				$garage->check_acp_required_vars($params, $missing_data_message);
+					$garage_model->update_model($data);
 		
-				//Move Any Existing Vehicles And Existing Models To New Target Make Then Delete Make
-				$garage->update_single_field(GARAGE_TABLE,'make_id',$data['target'],'make_id',$data['id']);
-				$garage->update_single_field(GARAGE_MODELS_TABLE,'make_id',$data['target'],'make_id',$data['id']);
-				$garage->delete_rows(GARAGE_MAKES_TABLE, 'id', $data['id']);
-		
-				//Return a message...
-				message_die(GENERAL_MESSAGE, $make_deleted_message);
-		
-				break;	
-		
-			case 'insert_model':
-		
-				//Get All Data Posted And Make It Safe To Use
-				$params = array('make_id', 'model');
-				$data = $garage->process_post_vars($params);
-		
-				//Checks All Required Data Is Present
-				$params = array('make_id', 'model');
-				$garage->check_acp_required_vars($params, $missing_data_message);
-		
-				//Insert Make Into DB
-				$garage_model->insert_model($data);
-		
-				//Return a message...
-				message_die(GENERAL_MESSAGE, $model_created_message);
-				
-				break;	
-		
-			case 'update_model':
-		
-				//Get All Data Posted And Make It Safe To Use
-				$params = array('id', 'model');
-				$data = $garage->process_post_vars($params);
-		
-				//Checks All Required Data Is Present
-				$params = array('id', 'model');
-				$garage->check_acp_required_vars($params , $message);
-		
-				//Update Model In DB
-				$garage_model->update_model($data);
-		
-				//Return a message...
-				message_die(GENERAL_MESSAGE, $model_updated_message);
+					trigger_error($user->lang['MODEL_UPDATED'] . adm_back_link($this->u_action  . "&amp;action=models&amp;make_id=$make_id"));
 				
 				break;
 		
-			case 'delete_model':
-		
-				//Get All Data Posted And Make It Safe To Use
-				$params = array('id', 'target', 'permenant');
-				$data = $garage->process_post_vars($params);
-		
-				//If Set Delete Permentantly..And Finish
-				if ($data['permenant'] == '1')
-				{
-					//Delete The Model
-					$garage->delete_rows(GARAGE_MODELS_TABLE, 'id', $data['id']);
-			
-					// Return a message...
-					message_die(GENERAL_MESSAGE, $model_deleted_message);
-				}
-		
-				//Checks All Required Data Is Present
-				$params = array('id', 'target');
-				$garage->check_acp_required_vars($params, $missing_data_message);
-		
-				//Move Any Existing Vehicles To New Target Model Then Delete Model
-				$garage->update_single_field(GARAGE_TABLE,'model_id',$data['target'],'model_id',$data['id']);
-				$garage->delete_rows(GARAGE_MODELS_TABLE, 'id', $data['id']);
-		
-				//Return a message...
-				message_die(GENERAL_MESSAGE, $model_deleted_message);
-
-				break;
 			}
 		}
 
@@ -207,45 +114,25 @@ class acp_garage_model
 
 			case 'make_add':
 		
-				//Count Current Categories..So We Can Work Out Order
-				$count = $garage_admin->count_categories();
-		
-				//Get posting variables
-				$data['title'] = request_var('category', '');
-				$data['field_order'] = $count + 1;
+				$params = array('make' => '');
+				$data = $garage->process_vars($params);
 
-				if(!$data['title'])
+				if(!$data['make'])
 				{
 					$errors[] = $user->lang['MAKE_NAME_EMPTY'];
 					break;
 				}
-		
-				//Insert New Category Into DB
-				$garage_admin->insert_category($data);
 
-				add_log('admin', 'LOG_FORUM_ADD', $data['title']);
-		
-				break;
-
-			case 'model_add':
-		
-				//Count Current Categories..So We Can Work Out Order
-				$count = $garage_admin->count_categories();
-		
-				//Get posting variables
-				$data['title'] = request_var('category', '');
-				$data['field_order'] = $count + 1;
-
-				if(!$data['title'])
+				$count = $garage_model->count_make($data['make']);
+				if ( $count > 0)
 				{
-					$errors[] = $user->lang['MODEL_NAME_EMPTY'];
+					$errors[] = $user->lang['MAKE_EXISTS'];
 					break;
 				}
 		
-				//Insert New Category Into DB
-				$garage_admin->insert_category($data);
+				$garage_model->insert_make($data);
 
-				add_log('admin', 'LOG_FORUM_ADD', $data['title']);
+				add_log('admin', 'LOG_FORUM_ADD_MAKE', $data['make']);
 		
 				break;
 
@@ -344,7 +231,7 @@ class acp_garage_model
 
 				$template->assign_vars(array(
 					'S_DELETE_MODEL'		=> true,
-					'U_ACTION'			=> $this->u_action . "&amp;action=model_delete&amp;model_id=$model_id",
+					'U_ACTION'			=> $this->u_action . "&amp;action=model_delete&amp;model_id=$model_id&amp;make_id=$make_id",
 					'U_BACK'			=> $this->u_action . "&amp;action=models&amp;make_id=$make_id",
 					'S_MOVE'			=> (!empty($select_to)) ? true : false ,
 					'S_MOVE_OPTIONS'		=> $select_to,
@@ -355,6 +242,7 @@ class acp_garage_model
 		
 			break;
 
+			case 'model_add':
 			case 'model_approve':
 			case 'model_disapprove':
 			case 'models':
@@ -371,6 +259,29 @@ class acp_garage_model
 					$data = $garage_model->get_model($model_id);
 					$garage->update_single_field(GARAGE_MODELS_TABLE, 'pending', 1, 'id', $model_id);
 					add_log('admin', 'LOG_GARAGE_MODEL_DISAPPROVED', $data['model']);
+				}
+
+				if ($action == 'model_add')
+				{
+					$params = array('model' => '', 'make_id' => '');
+					$data = $garage->process_vars($params);
+	
+					if(!$data['model'])
+					{
+						$errors[] = $user->lang['MODEL_NAME_EMPTY'];
+					}
+	
+					$count = $garage_model->count_model_in_make($data['model'], $data['make_id']);
+					if ( $count > 0)
+					{
+						$errors[] = $user->lang['MODEL_EXISTS'];
+					}
+						
+					if (!sizeof($errors))
+					{						
+						$garage_model->insert_model($data);
+						add_log('admin', 'LOG_FORUM_ADD_MODEL', $data['model']);
+					}
 				}
 
 				//Get Models
@@ -395,7 +306,10 @@ class acp_garage_model
 				}
 	
 				$template->assign_vars(array(
+					'S_ERROR'	=> (sizeof($errors)) ? true : false,
+					'ERROR_MSG'	=> (sizeof($errors)) ? implode('<br />', $errors) : '',
 					'MAKE'		=> $make['make'],
+					'MAKE_ID'	=> $make_id,
 					'U_LIST_MAKES'	=> $url = $this->u_action,
 					'S_LIST_MODELS'	=> true,
 					'S_MODE_ACTION' => append_sid('admin_garage_models.'.$phpEx),
@@ -426,7 +340,8 @@ class acp_garage_model
 		}
 	
 		$template->assign_vars(array(
-			'S_MODE_ACTION' => append_sid('admin_garage_models.'.$phpEx),
+			'S_ERROR'	=> (sizeof($errors)) ? true : false,
+			'ERROR_MSG'	=> (sizeof($errors)) ? implode('<br />', $errors) : '',
 		));
 		
 	}
@@ -458,6 +373,8 @@ class acp_garage_model
 		}
 		return $select_to;
 	}
+
+
 
 }
 

@@ -1540,6 +1540,64 @@ class garage_vehicle
 	}
 
 	/*========================================================================*/
+	// Select All Vehicle Data From Db
+	// Usage: get_pending_vehicles();
+	/*========================================================================*/
+	function get_vehicles_by_make_id($make_id)
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> "g.id",
+			'FROM'		=> array(
+				GARAGE_VEHICLES_TABLE	=> 'g',
+			),
+			'WHERE'		=> "g.make_id = $make_id"
+		));
+
+      		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$data[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/*========================================================================*/
+	// Select All Vehicle Data From Db
+	// Usage: get_pending_vehicles();
+	/*========================================================================*/
+	function get_vehicles_by_model_id($model_id)
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> "g.id",
+			'FROM'		=> array(
+				GARAGE_VEHICLES_TABLE	=> 'g',
+			),
+			'WHERE'		=> "g.model_id = $model_id"
+		));
+
+      		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result) )
+		{
+			$data[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/*========================================================================*/
 	// Select Vehicle Owner From Db
 	// Usage: get_vehicle_owner('vehicle id');
 	/*========================================================================*/

@@ -364,6 +364,7 @@ class acp_garage_business
 				else
 				{
 					$garage_to_name = $row['title'];
+					$from_name = $business_data['title'];
 					$this->move_category_content($business_id, $garage_to_id);
 					add_log('admin', 'LOG_GARAGE_MOVED_GARAGE', $from_name, $garage_to_name);
 				}
