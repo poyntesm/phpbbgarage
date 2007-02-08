@@ -1,0 +1,125 @@
+<!-- INCLUDE overall_header.html -->
+
+<!-- IF S_EDIT_TRACK -->
+
+	<a href="{U_BACK}" style="float: right">&laquo; {L_BACK}</a>
+
+	<h1>{L_TRACK_UPDATE}</h1>
+
+	<p>{L_TRACK_UPDATE_EXPLAIN}</p>
+
+	<!-- IF S_ERROR -->
+		<div class="errorbox">
+			<h3>{L_WARNING}</h3>
+			<p>{ERROR_MSG}</p>
+		</div>
+	<!-- ENDIF -->
+
+	<form id="trackedit" method="post" action="{U_EDIT_ACTION}">
+
+	<fieldset>
+		<legend>{L_TRACK_SETTINGS}</legend>
+	<dl>
+		<dt><label for="title">{L_TRACK_NAME}:</label></dt>
+		<dd><input class="medium" type="text" id="title" name="title" value="{TRACK_NAME}" maxlength="60" /></dd>
+	</dl>
+	<dl>
+		<dt><label for="address">{L_TRACK_LENGTH}</label></dt>
+		<dd><input class="tiny" name="length" type="text" class="post" size="15" value="{LENGTH}" />&nbsp;<select id="mileage_unit" name="mileage_unit"><option value="">{L_SELECT_MILEAGE_UNIT}</option><option value="">------</option><!-- BEGIN mileage --><option value="{mileage.VALUE}" <!-- IF mileage.S_SELECTED -->selected="selected"<!-- ENDIF -->>{mileage.TEXT}</option><!-- END mileage --></select></dd>
+	</dl>
+	</fieldset>
+
+	<fieldset class="submit-buttons">
+		<legend>{L_SUBMIT}</legend>
+		<input class="button1" type="submit" id="submit" name="update" value="{L_SUBMIT}" />&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+	</fieldset>
+
+	</form>
+
+<!-- ELSEIF S_DELETE_TRACK -->
+
+	<a href="{U_BACK}" style="float: right">&laquo; {L_BACK}</a>
+
+	<h1>{L_TRACK_DELETE}</h1>
+
+	<p>{L_TRACK_DELETE_EXPLAIN}</p>
+
+	<!-- IF S_ERROR -->
+		<div class="errorbox">
+			<h3>{L_WARNING}</h3>
+			<p>{ERROR_MSG}</p>
+		</div>
+	<!-- ENDIF -->
+
+	<form id="acp_track" method="post" action="{U_ACTION}">
+
+	<fieldset>
+		<legend>{L_TRACK_DELETE}</legend>
+	<dl>
+		<dt><label>{L_TRACK_NAME}:</label></dt>
+		<dd><b>{TRACK_NAME}</b></dd>
+	</dl>
+	<dl>
+		<dt><label for="delete_action">{L_ACTION}:</label></dt>
+		<dd><input type="radio" class="radio" id="delete_action" name="action_laps" value="delete" checked="checked" /> {L_DELETE_ALL_LAPS}</dd>
+		<!-- IF S_MOVE -->
+			<dd><input type="radio" class="radio" name="action_laps" value="move" /> {L_MOVE_LAPS_TO} <select name="garage_to_id">{S_MOVE_OPTIONS}</select></dd>
+		<!-- ENDIF -->
+	</dl>
+
+	<p class="quick">
+		<input class="button1" type="submit" name="update" value="{L_SUBMIT}" />
+	</p>
+	</fieldset>
+
+	</form>
+
+<!-- ELSE -->
+
+<h1>{L_GARAGE_TRACK_TITLE}</h1>
+
+<p>{L_GARAGE_TRACK_EXPLAIN}</p>
+
+	<!-- IF S_ERROR -->
+		<div class="errorbox">
+			<h3>{L_WARNING}</h3>
+			<p>{ERROR_MSG}</p>
+		</div>
+	<!-- ENDIF -->
+
+	<table cellspacing="1">
+			<col class="row1" /><col class="row2" />
+	<tbody>
+	<!-- BEGIN track -->
+	<tr>
+		<td width="90%" nowrap=nowrap><span class="gen">{track.TITLE}</span></td>
+		<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
+		<!-- IF track.S_DISAPPROVED -->
+			{ICON_DISAPPROVE_DISABLED}
+			<a href="{track.U_APPROVE}">{ICON_APPROVE}</a>
+		<!-- ELSEIF track.S_APPROVED  -->
+			<a href="{track.U_DISAPPROVE}">{ICON_DISAPPROVE}</a>
+			{ICON_APPROVE_DISABLED}
+		<!-- ENDIF -->
+		<a href="{track.U_EDIT}">{ICON_EDIT}</a>
+		<a href="{track.U_DELETE}">{ICON_DELETE}</a>
+		</td>
+	</tr>
+	<!-- END track -->
+</table>
+
+	<form id="track" method="post" action="{U_ACTION}">
+
+	<fieldset class="quick">
+		<input type="hidden" name="action" value="add" />
+
+		<input type="text" name="title" value="" maxlength="255" />
+		<input class="button2" name="addtrack" type="submit" value="{L_CREATE_TRACK}" />
+	</fieldset>
+	
+	</form>
+
+<!-- ENDIF -->
+
+<!-- INCLUDE overall_footer.html -->

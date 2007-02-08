@@ -127,12 +127,35 @@ class garage_modification
 		$sql = 'INSERT INTO ' . GARAGE_PRODUCTS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 			'category_id'		=> $data['category_id'],
 			'business_id'		=> $data['manufacturer_id'],
-			'title'			=> $data['title'])
-		);
+			'title'			=> $data['title'],
+		));
 
 		$db->sql_query($sql);
 	
 		return $db->sql_nextid();
+	}
+
+	/*========================================================================*/
+	// Inserts Product Into DB
+	// Usage: update_product(array());
+	/*========================================================================*/
+	function update_product($data)
+	{
+		global $db;
+
+		$update_sql = array(
+			'category_id'		=> $data['category_id'],
+			'business_id'		=> $data['manufacturer_id'],
+			'title'			=> $data['title'],
+		);
+
+		$sql = 'UPDATE ' . GARAGE_PRODUCTS_TABLE . '
+			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
+			WHERE id = " . $data['product_id'];
+
+		$db->sql_query($sql);
+	
+		return;
 	}
 
 	/*========================================================================*/
@@ -251,6 +274,32 @@ class garage_modification
 		{
 			$data[] = $row;
 		}
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/*========================================================================*/
+	// Select Modifcations Based On Manufacture. Can Be limited Also By Category ID
+	// Usage: get_product('business_id');
+	/*========================================================================*/
+	function get_product($product_id)
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'p.*',
+			'FROM'		=> array(
+				GARAGE_PRODUCTS_TABLE	=> 'p',
+			),
+			'WHERE'		=> "p.id = $product_id"
+		));
+
+	 	$result = $db->sql_query($sql);
+		$data = $db->sql_fetchrow($result);
 		$db->sql_freeresult($result);
 
 		return $data;

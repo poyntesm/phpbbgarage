@@ -281,18 +281,6 @@ class acp_garage_business
 		
 		for($i = 0; $i < count($data); $i++)
 		{
-			//Work Out Type Of Business...
-			$type ='';
-			$type = ( $data[$i]['insurance'] == '1' ) ? $user->lang['Insurance']: '' ;
-			if ($data[$i]['retail'] == '1')
-			{
-				$type .= (empty($type)) ? $user->lang['Shop'] : ", " . $user->lang['Shop'] ;
-			}
-			if ( $data[$i]['garage'] == '1' )
-			{
-				$type .= (empty($type)) ? $user->lang['Garage'] : ", " . $user->lang['Garage'] ;
-			}
-
 			$url = $this->u_action . "&amp;id={$data[$i]['id']}";
 		
 			$template->assign_block_vars('business', array(
@@ -306,7 +294,6 @@ class acp_garage_business
 				'OPENING_HOURS' 	=> $data[$i]['opening_hours'],
 				'S_DISAPPROVED'		=> ($data[$i]['pending'] == 1) ? true : false,
 				'S_APPROVED'		=> ($data[$i]['pending'] == 0) ? true : false,
-				'TYPE' 			=> $type,
 				'U_APPROVE'		=> $url . '&amp;action=approve',
 				'U_DISAPPROVE'		=> $url . '&amp;action=disapprove',
 				'U_EDIT'		=> $url . '&amp;action=edit',

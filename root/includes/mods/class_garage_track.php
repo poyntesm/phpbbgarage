@@ -116,7 +116,7 @@ class garage_track
 			'pending'	=> ($garage_config['enable_track_approval'] == '1') ? 1 : 0
 		);
 
-		$sql = 'UPDATE ' . GARAGE_DYNORUNS_TABLE . '
+		$sql = 'UPDATE ' . GARAGE_TRACKS_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
 			WHERE id = $tid";
 

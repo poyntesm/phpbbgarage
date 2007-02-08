@@ -64,12 +64,22 @@ class acp_garage_product
 
 					trigger_error($user->lang['PRODUCT_CREATED'] . adm_back_link($this->u_action . "&amp;action=products&amp;manufacturer_id=$manufacturer_id"));
 
+				case 'edit_product':
+
+					$params = array('title' => '', 'category_id' => '', 'manufacturer_id' => $manufacturer_id, 'product_id' => $product_id);
+					$data = $garage->process_vars($params);
+
+					$garage_modification->update_product($data);
+					add_log('admin', 'LOG_GARAGE_PRODUCT_UPDATED', $data['title']);
+
+					trigger_error($user->lang['PRODUCT_UPDATED'] . adm_back_link($this->u_action . "&amp;action=products&amp;manufacturer_id=$manufacturer_id"));
+
 				case 'delete_product':
 
-					$action_model		= request_var('action_model', '');
-					$model_to_id		= request_var('model_to_id', 0);
+					$action_model		= request_var('action_modifications', '');
+					$model_to_id		= request_var('modifications_to_id', 0);
 
-					$garage_model->delete_model($model_id, $action_model, $model_to_id);
+					$garage_model->delete_product($product_id, $action_modifications, $model_to_id);
 
 					if (sizeof($errors))
 					{
@@ -79,19 +89,6 @@ class acp_garage_product
 					trigger_error($user->lang['MODEL_DELETED'] . adm_back_link($this->u_action  . "&amp;action=models&amp;make_id=$make_id"));
 
 				break;
-
-				case 'edit_product':
-			
-					$params = array('model' => '');
-					$data = $garage->process_vars($params);
-					$data['id'] = $model_id;
-		
-					$garage_model->update_model($data);
-		
-					trigger_error($user->lang['MODEL_UPDATED'] . adm_back_link($this->u_action  . "&amp;action=models&amp;make_id=$make_id"));
-				
-				break;
-		
 			}
 		}
 
@@ -155,7 +152,7 @@ class acp_garage_product
 					'S_EDIT_PRODUCT'	=> true,
 					'S_ERROR'		=> (sizeof($errors)) ? true : false,
 					'U_BACK'		=> $this->u_action . "&amp;action=products&amp;manufacturer_id=$manufacturer_id",
-					'U_EDIT_ACTION'		=> $this->u_action . "&amp;action=$action&amp;manufacturer_id=$manufacturer_id",
+					'U_ACTION'		=> $this->u_action . "&amp;action=$action&amp;manufacturer_id=$manufacturer_id&amp;product_id=$product_id",
 					'PRODUCT'		=> $product_data['title'],
 					'ERROR_MSG'		=> (sizeof($errors)) ? implode('<br />', $errors) : '',
 					)
