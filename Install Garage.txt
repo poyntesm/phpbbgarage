@@ -8,7 +8,7 @@
 ## 
 ## Installation Level:	Medium
 ## Installation Time:	20 Minutes
-## Files To Edit: (18)
+## Files To Edit: (19)
 ## 			common.php
 ## 			memberlist.php
 ## 			viewtopic.php
@@ -27,6 +27,7 @@
 ##			styles/subSilver/templates/memberlist_view.html
 ## 			styles/subSilver/templates/viewtopic_body.tpl
 ##			styles/subSilver/templates/overall_header.tpl
+##			styles/subSilver/theme/stylesheet.css
 ##
 ## Included Files: (84)
 ##			Install Garage.txt
@@ -999,6 +1000,212 @@ styles/subSilver/templates/overall_header.html
 #-----[ IN-LINE AFTER, ADD ]------------------------------------------
 #
 <!-- IF S_DISPLAY_GARAGE --><a href="{U_GARAGE}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_GARAGE}" hspace="3" /> {L_GARAGE}</a>&nbsp; &nbsp;<!-- ENDIF --><!-- IF S_DISPLAY_QUARTERMILE --><a href="{U_QUARTERMILE}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_QUARTERMILE}" hspace="3" /> {L_QUARTERMILE}</a>&nbsp; &nbsp;<!-- ENDIF --><!-- IF S_DISPLAY_DYNORUN --><a href="{U_DYNORUN}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_DYNORUN}" hspace="3" /> {L_DYNORUN}</a>&nbsp; &nbsp;<!-- ENDIF -->
+
+
+# 
+#-----[ OPEN ]----- 
+# 
+styles/subSilver/theme/stylesheet.css
+
+#
+#-----[ FIND ]------------------------------------------
+#
+.nowrap {
+	white-space: nowrap;
+}
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+/* Garage Tabbed Interface
+   Based on: http://www.alistapart.com/articles/slidingdoors2/
+   Images by phpBB: http://www.phpbb.com 
+---------------------------------------- */
+
+/* Tabbed menu */
+.garage_cat {
+	line-height: normal;
+	margin: 0 0 0 7px;
+	min-width: 570px;
+	font-size: 1em;
+}
+
+.rtl .garage_cat {
+	margin: 0 7px 0 0;
+}
+
+.garage_cat ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.garage_cat li {
+	display: inline;
+	margin: 0;
+	padding: 0;
+	font-size: 1em;
+	font-weight: bold;
+}
+
+.garage_cat a {
+	float: left;
+	background: url("./images/bg_tabs1.gif") no-repeat 0% -35px;
+	margin: 0 1px 0 0;
+	padding: 0 0 0 6px;
+	text-decoration: none;
+	position: relative;
+}
+
+.rtl .garage_cat a {
+	float: right;
+	margin: 0 0 0 1px;
+	padding: 0 6px 0 0;
+}
+
+.garage_cat a span.tabbg {
+	float: left;
+	display: block;
+	background: url("./images/bg_tabs2.gif") no-repeat 100% -35px;
+	padding: 7px 12px 6px 6px;
+	color: #536482;
+	white-space: nowrap;
+}
+
+.rtl .garage_cat a span.tabbg {
+	float: left;
+	padding: 7px 6px 6px 12px;
+}
+
+/* Commented Backslash Hack hides rule from IE5-Mac \*/
+.garage_cat a span.tabbg, .rtl .garage_cat a span.tabbg { float: none;}
+/* End hack */
+
+.garage_cat a:hover span.tabbg {
+	color: #DD6900;
+}
+
+.garage_cat .activetab a {
+	background-position: 0 0px;
+}
+
+.garage_cat .activetab a span.tabbg {
+	background-position: 100% 0px;
+	padding-bottom: 7px;
+	color: #333333;
+}
+
+.garage_cat a:hover {
+	background-position: 0 -70px;
+}
+
+.garage_cat a:hover span.tabbg {
+	background-position: 100% -70px;
+}
+
+.garage_cat .activetab a:hover span.tabbg {
+	color: #333333;
+	background-position: 100% 0px;
+}
+
+.garage_cat .activetab a:hover {
+	background-position: 0 0px;
+}
+
+.garage_cat a span.colour {
+	border: 1px solid #536482;
+	display: block;
+	float: left;
+	width: 10px;
+	height: 10px;
+	margin: 0 5px 0 0;
+}
+
+.rtl .garage_cat a span.colour {
+	float: right;
+	margin: 0 0 0 5px;
+}
+
+.garage_cat .activetab span.colour {
+	border-color: #333333;
+}
+
+.garage_cat a:hover span.colour {
+	border-color: #DD6900;
+}
+
+.garage_cat .activetab a:hover span.colour {
+	border-color: #333333;
+}
+
+.garage_panel {
+	float: left;
+	background-color: #FFF;
+	width: 100%;
+	border: 1px solid #A9B8C2;
+	margin-top: -1px;
+}
+
+.rtl .garage_panel {
+	float: right;
+}
+
+.garage_panel span.corners-top {
+	background-image: url("./images/corners_left2.gif");
+}
+
+.garage_panel span.corners-top span {
+	background-image: url("./images/corners_right2.gif");
+}
+
+.garage_panel span.corners-bottom {
+	background-image: url("./images/corners_left2.gif");
+}
+
+.garage_panel span.corners-bottom span {
+	background-image: url("./images/corners_right2.gif");
+}
+
+.garage_panel span.corners-top, .garage_panel span.corners-bottom, 
+.garage_panel span.corners-top span, .garage_panel span.corners-bottom span {
+	font-size: 1px;
+	line-height: 1px;
+	display: block;
+	height: 5px;
+	background-repeat: no-repeat;
+}
+
+.garage_panel span.corners-top {
+	background-image: url("./images/corners_left2.gif");
+	background-position: 0 0;
+	margin: 0 0;
+}
+
+.garage_panel span.corners-top span {
+	background-image: url("../images/corners_right2.gif");
+	background-position: 100% 0;
+}
+
+.garage_panel span.corners-bottom {
+	background-image: url("./images/corners_left2.gif");
+	background-position: 0 100%;
+	margin: 0 0;
+	clear: both;
+}
+
+.garage_panel span.corners-bottom span {
+	background-image: url("./images/corners_right2.gif");
+	background-position: 100% 100%;
+}
+
+.garage_panel .tablewrap {
+	margin: 0 5px;
+}
+
+.garage_panel table {
+	width: 100%;
+}
+
 
 #
 #-----[ SAVE/CLOSE ALL FILES ]------------------------------------------

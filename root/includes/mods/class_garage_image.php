@@ -51,7 +51,7 @@ class garage_image
 			//Process All Groups You Are Member Of To See If Any Are Granted Permission & Quota
 			for ($i = 0, $count = sizeof($groups);$i < $count; $i++)
 			{
-				if (in_array($groupdata[$i]['group_id'], $private_upload_groups))
+				if (in_array($groups[$i]['group_id'], $private_upload_groups))
 				{
 					//Your A Member Of A Group Granted Permission - Find Array Key & Get Quota
 					$index = array_search($groups[$i]['group_id'], $private_upload_groups);

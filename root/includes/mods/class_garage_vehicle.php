@@ -964,7 +964,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function display_vehicle($owned)
 	{
-		global $user, $template, $images, $phpEx, $phpbb_root_path, $garage_config, $config, $cid, $mode, $garage, $garage_template, $garage_modification, $garage_insurance, $garage_quartermile, $garage_dynorun, $garage_image, $auth, $garage_guestbook, $garage_track, $garage_service, $garage_blog;
+		global $user, $template, $images, $phpEx, $phpbb_root_path, $garage_config, $config, $cid, $mode, $garage, $garage_template, $garage_modification, $garage_insurance, $garage_quartermile, $garage_dynorun, $garage_image, $auth, $garage_guestbook, $garage_track, $garage_service, $garage_blog, $HTTP_SERVER_VARS;;
 
 		if ($owned == 'YES' || $owned == 'MODERATE')
 		{
@@ -975,6 +975,7 @@ class garage_vehicle
 		$vehicle_images_found	= 0;	
 		$mod_images_found 	= 0;
 		$mod_images_displayed 	= null;
+		$lowest_tab		= array();
 
 		//Get Vehicle Information	
 		$vehicle = $this->get_vehicle($cid);
@@ -1085,6 +1086,10 @@ class garage_vehicle
 		{
 			//Display Vehicle Guestbook
 			$garage_guestbook->display_guestbook($cid);
+			$template->assign_vars(array(
+				'S_DISPLAY_GUESTBOOK_TAB' => true,
+			));
+			$lowest_tab[] = 8;
 		}
 
 		//Display Blog
@@ -1092,6 +1097,10 @@ class garage_vehicle
 		{
 			//Display Vehicle Guestbook
 			$garage_blog->display_blog($cid);
+			$template->assign_vars(array(
+				'S_DISPLAY_BLOG_TAB' => true,
+			));
+			$lowest_tab[] = 7;
 		}
 
 		//Select Categories For Which Vehicle Has Modifications
@@ -1100,6 +1109,10 @@ class garage_vehicle
 	      	//Loop Processing All Categoires Returned....
 	      	for ( $i = 0; $i < count($category_data); $i++ )
 		{
+			$template->assign_vars(array(
+				'S_DISPLAY_MODIFICATION_TAB' => true,
+			));
+			$lowest_tab[] = 1;
 	       		//Setup cat_row Template Varibles
 	       		$template->assign_block_vars('category', array(
 	           		'CATEGORY_TITLE' => $category_data[$i]['title'])
@@ -1115,7 +1128,11 @@ class garage_vehicle
 				//Increment Modification Image Count If Image Exists
 	           		if ($modification_data[$j]['attach_id'])
 				{
-		                        $mod_images_found++;
+					$mod_images_found++;
+					$template->assign_vars(array(
+						'S_DISPLAY_IMAGE_TAB' => true,
+					));
+					$lowest_tab[] = 0;
 				}
 
 				$template->assign_block_vars('category.modification', array(
@@ -1154,6 +1171,10 @@ class garage_vehicle
          	//If Any Premiums Exist Process Them...
 		if ( count($insurance_data) > 0 )
 		{
+			$template->assign_vars(array(
+				'S_DISPLAY_PREMIUM_TAB' => true,
+			));
+			$lowest_tab[] = 5;
 			$template->assign_block_vars('insurance', array());
         		for ( $i = 0; $i < count($insurance_data); $i++ )
 	         	{
@@ -1174,6 +1195,10 @@ class garage_vehicle
          	//If Any Quartermiles Exist Process Them...
 		if ( count($quartermile_data) > 0 )
 		{
+			$template->assign_vars(array(
+				'S_DISPLAY_QUARTERMILE_TAB' => true,
+			));
+			$lowest_tab[] = 2;
 			$template->assign_block_vars('quartermile', array());
         		for ( $i = 0; $i < count($quartermile_data); $i++ )
 	         	{
@@ -1201,6 +1226,10 @@ class garage_vehicle
          	//If Any Dynoruns Exist Process Them...
 		if ( count($dynorun_data) > 0 )
 		{
+			$template->assign_vars(array(
+				'S_DISPLAY_DYNORUN_TAB' => true,
+			));
+			$lowest_tab[] = 3;
 			$template->assign_block_vars('dynorun', array());
          		for ( $i = 0; $i < count($dynorun_data); $i++ )
          		{
@@ -1229,6 +1258,10 @@ class garage_vehicle
          	//If Any Laps Exist Process Them...
 		if ( count($lap_data) > 0 )
 		{
+			$template->assign_vars(array(
+				'S_DISPLAY_LAP_TAB' => true,
+			));
+			$lowest_tab[] = 4;
 			$template->assign_block_vars('tracktime', array());
          		for ( $i = 0; $i < count($lap_data); $i++ )
 			{
@@ -1255,6 +1288,10 @@ class garage_vehicle
          	//If Any Laps Exist Process Them...
 		if ( count($service_data) > 0 )
 		{
+			$template->assign_vars(array(
+				'S_DISPLAY_SERVICE_TAB' => true,
+			));
+			$lowest_tab[] = 6;
 			$template->assign_block_vars('service_history', array());
          		for ( $i = 0; $i < count($service_data); $i++ )
 			{
@@ -1277,6 +1314,10 @@ class garage_vehicle
 		//Process Each Image From Vehicle Gallery	
        		for ( $i = 0; $i < count($gallery_data); $i++ )
         	{
+			$template->assign_vars(array(
+				'S_DISPLAY_IMAGE_TAB' => true,
+			));
+			$lowest_tab[] = 0;
        	    		if ( $gallery_data[$i]['attach_is_image'] )
         		{
 			        $vehicle_images_found++;
@@ -1294,13 +1335,10 @@ class garage_vehicle
 			}
 		}
 
-		//
-
 		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $vehicle['vehicle'])
 		);
-
 
 		$template->assign_vars(array(
 			'U_DELETE_MODIFICATION'		=> append_sid("garage_modification.$phpEx?mode=delete_modification"),
@@ -1324,11 +1362,12 @@ class garage_vehicle
 			'U_HILITE_IMAGE' 		=> ( ($vehicle['attach_id']) AND ($vehicle['attach_is_image']) AND (!empty($vehicle['attach_thumb_location'])) AND (!empty($vehicle['attach_location'])) ) ?  append_sid("garage.$phpEx?mode=view_image&amp;image_id=". $vehicle['attach_id']): '' ,
 
 			'S_DISPLAY_VEHICLE_OWNER'	=> ($owned == 'MODERATE' || $owned == 'YES') ? 1 : 0,
-			'S_DISPLAY_ENTRY_BLOG'	=> ($owned == 'MODERATE' || $owned == 'YES') ? 1 : 0,
+			'S_DISPLAY_ENTRY_BLOG'		=> ($owned == 'MODERATE' || $owned == 'YES') ? 1 : 0,
 			'S_DISPLAY_GUESTBOOK'		=> ($garage_config['enable_guestbooks']) ? 1 : 0,
 			'S_DISPLAY_GALLERIES'		=> ($vehicle_images_found > 0 || $mod_images_displayed > 0) ? 1 : 0,
 			'S_DISPLAY_VEHICLE_IMAGES'	=> ($vehicle_images_found > 0) ? 1 : 0,
 			'S_DISPLAY_MODIFICATION_IMAGES'	=> ($mod_images_displayed > 0) ? 1 : 0,
+			'S_LOWEST_TAB_AVAILABLE'	=> min($lowest_tab),
 
             		'EDIT' 				=> ($garage_config['enable_images']) ? $user->img('garage_edit', 'EDIT') : $user->lang['EDIT'],
             		'DELETE' 			=> ($garage_config['enable_images']) ? $user->img('garage_delete', 'DELETE') : $user->lang['DELETE'],
