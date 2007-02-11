@@ -44,6 +44,7 @@ class garage_blog
 			'blog_date'		=> time(),
 			'bbcode_bitfield'	=> $data['bbcode_bitfield'],
 			'bbcode_uid'		=> $data['bbcode_uid'],
+			'bbcode_flags'		=> $data['bbcode_flags'],
 		));
 
 		$db->sql_query($sql);
@@ -65,6 +66,7 @@ class garage_blog
 			'blog_text'		=> $data['blog_text'],
 			'bbcode_bitfield'	=> $data['bbcode_bitfield'],
 			'bbcode_uid'		=> $data['bbcode_uid'],
+			'bbcode_flags'		=> $data['bbcode_flags'],
 		);
 
 		$sql = 'UPDATE ' . GARAGE_BLOGS_TABLE . '
@@ -117,7 +119,7 @@ class garage_blog
 				)
 			),
 			'WHERE'		=>	"b.vehicle_id = $cid",
-			'ORDER_BY'	=>	'b.id'
+			'ORDER_BY'	=>	'b.id DESC'
 		));
 
 		$result = $db->sql_query($sql);
@@ -146,10 +148,17 @@ class garage_blog
 		//Process Each Blog Entry
 		for ( $i=0; $i < count($data); $i++ )
 		{
+			$blog_text = generate_text_for_display($data[$i]['blog_text'], $data[$i]['bbcode_uid'], $data[$i]['bbcode_bitfield'], $data[$i]['bbcode_flags']);
+			$blog_text = make_clickable($blog_text);
+			if ( $config['allow_smilies'] )
+			{
+				$blog_text = smiley_text($blog_text);
+			}
+
 			$template->assign_block_vars('blog.entry', array(
 				'BLOG_TITLE' 	=> $data[$i]['blog_title'],
 				'BLOG_DATE' 	=> $user->format_date($data[$i]['blog_date']),
-				'BLOG_TEXT' 	=> $data[$i]['blog_text'],
+				'BLOG_TEXT' 	=> $blog_text,
 			));
 		}
 

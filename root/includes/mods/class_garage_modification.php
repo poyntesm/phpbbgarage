@@ -239,7 +239,7 @@ class garage_modification
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'm.id, m.vehicle_id, m.user_id, p.title AS mod_title, m.date_updated AS POI, u.username',
+			'SELECT'	=> 'm.id, m.vehicle_id, m.user_id, p.title AS mod_title, m.date_updated AS POI, u.username, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 			),
@@ -356,7 +356,7 @@ class garage_modification
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'm.id, m.vehicle_id, m.user_id, p.title AS mod_title, m.date_created AS POI, u.username',
+			'SELECT'	=> 'm.id, m.vehicle_id, m.user_id, p.title AS mod_title, m.date_created AS POI, u.username, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 			),
@@ -408,7 +408,7 @@ class garage_modification
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, g.user_id, COUNT(m.id) AS POI, u.username',
+			'SELECT'	=> 'g.id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, g.user_id, COUNT(m.id) AS POI, u.username, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'g',
 			),
@@ -458,7 +458,7 @@ class garage_modification
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'm.*, g.made_year, g.id, g.currency, i.*, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.title as business_title, b2.title as install_business_title, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, p.title, u.user_avatar_width, u.user_avatar_height',
+			'SELECT'	=> 'm.*, g.made_year, g.id, g.currency, i.*, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.title as business_title, b2.title as install_business_title, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, p.title, u.user_avatar_width, u.user_avatar_height, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'g',
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
@@ -781,12 +781,13 @@ class garage_modification
 		for($i = 0; $i < count($rows); $i++)
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1'	=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=view_modification&amp;MID=" . $rows[$i]['id'] . "&amp;CID=" . $rows[$i]['vehicle_id']),
-				'U_COLUMN_2' 	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $rows[$i]['user_id']),
-				'COLUMN_1_TITLE'=> $rows[$i]['mod_title'],
-				'COLUMN_2_TITLE'=> $rows[$i]['username'],
-				'COLUMN_3_TITLE'=> $user->format_date($rows[$i]['POI']))
-			);
+				'U_COLUMN_1'		=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=view_modification&amp;MID=" . $rows[$i]['id'] . "&amp;CID=" . $rows[$i]['vehicle_id']),
+				'U_COLUMN_2' 		=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $rows[$i]['user_id']),
+				'COLUMN_1_TITLE'	=> $rows[$i]['mod_title'],
+				'COLUMN_2_TITLE'	=> $rows[$i]['username'],
+				'COLUMN_3_TITLE'	=> $user->format_date($rows[$i]['POI']),
+				'USERNAME_COLOUR'	=> get_username_string('colour', $rows[$i]['user_id'], $rows[$i]['username'], $rows[$i]['user_colour']),
+			));
 		}
 
 		$required_position++;
@@ -821,12 +822,13 @@ class garage_modification
 		for($i = 0; $i < count($rows); $i++)
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' 	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" . $rows[$i]['id']),
-				'U_COLUMN_2' 	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $rows[$i]['user_id']),
-				'COLUMN_1_TITLE'=> $rows[$i]['vehicle'],
-				'COLUMN_2_TITLE'=> $rows[$i]['username'],
-				'COLUMN_3_TITLE'=> $rows[$i]['POI'])
-			);
+				'U_COLUMN_1' 		=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" . $rows[$i]['id']),
+				'U_COLUMN_2' 		=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $rows[$i]['user_id']),
+				'COLUMN_1_TITLE'	=> $rows[$i]['vehicle'],
+				'COLUMN_2_TITLE'	=> $rows[$i]['username'],
+				'COLUMN_3_TITLE'	=> $rows[$i]['POI'],
+				'USERNAME_COLOUR'	=> get_username_string('colour', $rows[$i]['user_id'], $rows[$i]['username'], $rows[$i]['user_colour']),
+			));
 	 	}
 	
 		$required_position++;
@@ -861,12 +863,13 @@ class garage_modification
 		for($i = 0; $i < count($rows); $i++)
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' 	=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=view_modification&amp;MID=" . $rows[$i]['id'] . "&amp;CID=" . $rows[$i]['vehicle_id']),
-				'U_COLUMN_2' 	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $rows[$i]['user_id']),
-				'COLUMN_1_TITLE'=> $rows[$i]['mod_title'],
-				'COLUMN_2_TITLE'=> $rows[$i]['username'],
-				'COLUMN_3_TITLE'=> $user->format_date($rows[$i]['POI']))
-			);
+				'U_COLUMN_1' 		=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=view_modification&amp;MID=" . $rows[$i]['id'] . "&amp;CID=" . $rows[$i]['vehicle_id']),
+				'U_COLUMN_2' 		=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $rows[$i]['user_id']),
+				'COLUMN_1_TITLE'	=> $rows[$i]['mod_title'],
+				'COLUMN_2_TITLE'	=> $rows[$i]['username'],
+				'COLUMN_3_TITLE'	=> $user->format_date($rows[$i]['POI']),
+				'USERNAME_COLOUR'	=> get_username_string('colour', $rows[$i]['user_id'], $rows[$i]['username'], $rows[$i]['user_colour']),
+			));
 	 	}
 	
 		$required_position++;

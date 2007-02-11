@@ -233,7 +233,7 @@ switch( $mode )
 					'VIEWS'		=> $results_data[$i]['views'],
 					'MODS'		=> $results_data[$i]['total_mods'],
 					'MODEL'		=> $results_data[$i]['model'],
-					'OWNER'		=> $results_data[$i]['username'],
+					'USERNAME'	=> $results_data[$i]['username'],
 				));
 			}
 		}

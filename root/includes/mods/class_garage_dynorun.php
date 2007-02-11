@@ -484,13 +484,14 @@ class garage_dynorun
 			$vehicle_data = $this->get_dynorun_by_vehicle_bhp($runs[$i]['vehicle_id'], $runs[$i]['bhp']);
 
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' 	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-				'U_COLUMN_2' 	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=".$vehicle_data['user_id']),
-				'U_COLUMN_3' 	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=view_dynorun&amp;CID=".$vehicle_data['id']."&amp;DID=".$vehicle_data['did']),
-				'COLUMN_1_TITLE'=> $vehicle_data['vehicle'],
-				'COLUMN_2_TITLE'=> $vehicle_data['username'],
-				'COLUMN_3_TITLE'=> $vehicle_data['bhp'] .' ' . $vehicle_data['bhp_unit'] . ' / ' . $vehicle_data['torque'] .' ' . $vehicle_data['torque_unit'] . ' / '. $vehicle_data['nitrous'])
-			);
+				'U_COLUMN_1' 		=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=".$vehicle_data['id']),
+				'U_COLUMN_2' 		=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=".$vehicle_data['user_id']),
+				'U_COLUMN_3' 		=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=view_dynorun&amp;CID=".$vehicle_data['id']."&amp;DID=".$vehicle_data['did']),
+				'COLUMN_1_TITLE'	=> $vehicle_data['vehicle'],
+				'COLUMN_2_TITLE'	=> $vehicle_data['username'],
+				'COLUMN_3_TITLE'	=> $vehicle_data['bhp'] .' ' . $vehicle_data['bhp_unit'] . ' / ' . $vehicle_data['torque'] .' ' . $vehicle_data['torque_unit'] . ' / '. $vehicle_data['nitrous'],
+				'USERNAME_COLOUR'	=> get_username_string('colour', $vehicle_data['user_id'], $vehicle_data['username'], $vehicle_data['user_colour']),
+			));
 	 	}
 	
 		$required_position++;

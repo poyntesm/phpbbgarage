@@ -161,8 +161,6 @@ switch( $mode )
 			$posted = '<a href="' . append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=".$comment_data[$i]['user_id']) . '">' . $comment_data[$i]['username'] . '</a>';
 			$posted = $user->format_date($comment_data[$i]['post_date']);
 
-			$post = $comment_data[$i]['post'];
-
 			$post = generate_text_for_display($comment_data[$i]['post'], $comment_data[$i]['bbcode_uid'], $comment_data[$i]['bbcode_bitfield'], $comment_data[$i]['bbcode_flags']);
 
 			$edit_img = '';

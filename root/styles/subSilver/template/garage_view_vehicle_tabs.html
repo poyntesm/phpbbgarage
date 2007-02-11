@@ -623,54 +623,65 @@
 	{
 		active_cat = lowest_tab;
 		dE('options00' + lowest_tab , 0)
+		var active_tab = document.getElementById("tab00" + lowest_tab);
 	}
 	else if (document.location.hash == "#images")
 	{
 		active_cat = '0';
 		dE('options000', 0)
+		var active_tab = document.getElementById("tab000");
 	}
 	else if (document.location.hash == "#modifications")
 	{
 		active_cat = '1';
 		dE('options001', 0)
+		var active_tab = document.getElementById("tab001");
 	}
 	else if (document.location.hash == "#quartermiles")
 	{
 		active_cat = '2';
 		dE('options002', 0)	
+		var active_tab = document.getElementById("tab002");
 	}
 	else if (document.location.hash == "#dynoruns")
 	{
 		active_cat = '3';
 		dE('options003', 0)
+		var active_tab = document.getElementById("tab003");
 	}
 	else if (document.location.hash == "#laps")
 	{
 		active_cat = '4';
 		dE('options004', 0)
+		var active_tab = document.getElementById("tab004");
 	}
 	else if (document.location.hash == "#premiums")
 	{
 		active_cat = '5';
 		dE('options005', 0)
+		var active_tab = document.getElementById("tab005");
 	}
 	else if (document.location.hash == "#services")
 	{
 		active_cat = '6';
 		dE('options006', 0)
+		var active_tab = document.getElementById("tab006");
 	}
 	else if (document.location.hash == "#blog")
 	{
 		active_cat = '7',
 		dE('options007', 0)
+		var active_tab = document.getElementById("tab007");
 	}
 	else if (document.location.hash == "#guestbook")
 	{
 		active_cat = '8';
 		dE('options008', 0)
+		var active_tab = document.getElementById("tab008");
 	}
 
 	var id = '000';
+	active_tab.setAttribute("class", "garage_preset_yes activetab");
 
 //-->
 </script>

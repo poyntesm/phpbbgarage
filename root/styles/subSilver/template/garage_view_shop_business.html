@@ -40,7 +40,7 @@
  				<!-- END customers -->
 				<!-- BEGIN mod_row -->
 				<tr>
-					<td class="row1" align="center" nowrap><span class="gensmall"><a href="{business_row.mod_row.U_VIEW_PROFILE}">{business_row.mod_row.USERNAME}</a></span></td>
+					<td class="row1" align="center" nowrap><span class="gensmall"><a href="{business_row.mod_row.U_VIEW_PROFILE}" <!-- IF business_row.mod_row.USERNAME_COLOUR --> style="color: {business_row.mod_row.USERNAME_COLOUR}"<!-- ENDIF -->>{business_row.mod_row.USERNAME}</a></span></td>
 					<td class="row1" align="center" nowrap><span class="gensmall"><a href="{business_row.mod_row.U_VIEW_VEHICLE}">{business_row.mod_row.VEHICLE}</a></span></td>
 					<td class="row1" align="center" nowrap><span class="gensmall"><a href="{business_row.mod_row.U_VIEW_MODIFICATION}">{business_row.mod_row.MODIFICATION}</a></span></td>
 					<td class="row1" align="center" nowrap><span class="gensmall">{business_row.mod_row.PURCHASE_RATING}</span></td>

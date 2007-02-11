@@ -28,7 +28,7 @@
 								<th class="thHead" height="25" align="center" colspan="2">{L_FEATURED_VEHICLE}</th>
 							</tr>
 							<tr>
-								<td class="row1" nowrap align="center"><span align="center" class="genmed">{FEATURED_DESCRIPTION}<br /><a href="{U_VIEW_IMAGE}" title="{IMAGE_TITLE}" target="_blank"><img hspace="5" vspace="5" src="{FEATURED_THUMB}" /></a><br /><a href="{U_VIEW_VEHICLE}">{VEHICLE}</a><br />{L_OWNER}:<a href="{U_VIEW_PROFILE}" <!-- IF OWNER_COLOUR --> style="color: {OWNER_COLOUR}"<!-- ENDIF -->>{USERNAME}</a></span></td>
+								<td class="row1" nowrap align="center"><span align="center" class="genmed">{FEATURED_DESCRIPTION}<br /><a href="{U_VIEW_IMAGE}" title="{IMAGE_TITLE}" target="_blank"><img hspace="5" vspace="5" src="{FEATURED_THUMB}" /></a><br /><a href="{U_VIEW_VEHICLE}">{VEHICLE}</a><br />{L_OWNER}:<b><a href="{U_VIEW_PROFILE}" <!-- IF USERNAME_COLOUR --> style="color: {USERNAME_COLOUR}"<!-- ENDIF -->>{USERNAME}</a></b></span></td>
 							</tr>
 						</table>
 					</td>
@@ -66,7 +66,7 @@
 							<!-- BEGIN row -->
 							<tr>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></span></td>
-								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.COLOUR --> style="color: {block_1.row.COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></span></td>
+								<td class="row1" align="center" valign="middle"><span class="gensmall"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></span></td>
 								<!-- IF block_1.row.U_COLUMN_3 -->
 								<td class="row1" align="center" valign="middle" nowrap><span class="gensmall"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></span></td>
 								<!-- ELSE -->
@@ -95,7 +95,7 @@
 							<!-- BEGIN row -->
 							<tr>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_3.row.U_COLUMN_1}">{block_3.row.COLUMN_1_TITLE}</a></span></td>
-								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_3.row.U_COLUMN_2}" <!-- IF block_3.row.COLOUR --> style="color: {block_3.row.COLOUR}"<!-- ENDIF -->>{block_3.row.COLUMN_2_TITLE}</a></span></td>
+								<td class="row1" align="center" valign="middle"><span class="gensmall"><b><a href ="{block_3.row.U_COLUMN_2}" <!-- IF block_3.row.USERNAME_COLOUR --> style="color: {block_3.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_3.row.COLUMN_2_TITLE}</a></b></span></td>
 								<!-- IF block_3.row.U_COLUMN_3 -->
 								<td class="row1" align="center" valign="middle" nowrap><span class="gensmall"><a href ="{block_3.row.U_COLUMN_3}">{block_3.row.COLUMN_3_TITLE}</a></span></td>
 								<!-- ELSE -->
@@ -124,7 +124,7 @@
 							<!-- BEGIN row -->
 							<tr>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_5.row.U_COLUMN_1}">{block_5.row.COLUMN_1_TITLE}</a></span></td>
-								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_5.row.U_COLUMN_2}" <!-- IF block_5.row.COLOUR --> style="color: {block_5.row.COLOUR}"<!-- ENDIF -->>{block_5.row.COLUMN_2_TITLE}</a></span></td>
+								<td class="row1" align="center" valign="middle"><span class="gensmall"><b><a href ="{block_5.row.U_COLUMN_2}" <!-- IF block_5.row.USERNAME_COLOUR --> style="color: {block_5.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_5.row.COLUMN_2_TITLE}</a></b></span></td>
 								<!-- IF block_5.row.U_COLUMN_3 -->
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_5.row.U_COLUMN_3}">{block_5.row.COLUMN_3_TITLE}</a></span></td>
 								<!-- ELSE -->
@@ -158,7 +158,7 @@
 							<!-- BEGIN row -->
 							<tr>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_7.row.U_COLUMN_1}">{block_7.row.COLUMN_1_TITLE}</a></span></td>
-								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_7.row.U_COLUMN_2}" <!-- IF block_7.row.COLOUR --> style="color: {block_7.row.COLOUR}"<!-- ENDIF -->>{block_7.row.COLUMN_2_TITLE}</a></span></td>
+								<td class="row1" align="center" valign="middle"><span class="gensmall"><b><a href ="{block_7.row.U_COLUMN_2}" <!-- IF block_7.row.USERNAME_COLOUR --> style="color: {block_7.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_7.row.COLUMN_2_TITLE}</a></b></span></td>
 								<!-- IF block_7.row.U_COLUMN_3 -->
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_7.row.U_COLUMN_3}">{block_7.row.COLUMN_3_TITLE}</a></span></td>
 								<!-- ELSE -->
@@ -192,7 +192,7 @@
 							<!-- BEGIN row -->
 							<tr>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_9.row.U_COLUMN_1}">{block_9.row.COLUMN_1_TITLE}</a></span></td>
-								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_9.row.U_COLUMN_2}" <!-- IF block_9.row.COLOUR --> style="color: {block_9.row.COLOUR}"<!-- ENDIF -->>{block_9.row.COLUMN_2_TITLE}</a></span></td>
+								<td class="row1" align="center" valign="middle"><span class="gensmall"><b><a href ="{block_9.row.U_COLUMN_2}" <!-- IF block_9.row.USERNAME_COLOUR --> style="color: {block_9.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_9.row.COLUMN_2_TITLE}</a></b></span></td>
 								<!-- IF block_9.row.U_COLUMN_3 -->
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_9.row.U_COLUMN_3}">{block_9.row.COLUMN_3_TITLE}</a></span></td>
 								<!-- ELSE -->
@@ -221,7 +221,7 @@
 							<!-- BEGIN row -->
 							<tr>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_11.row.U_COLUMN_1}">{block_11.row.COLUMN_1_TITLE}</a></span></td>
-								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_11.row.U_COLUMN_2}" <!-- IF block_11.row.COLOUR --> style="color: {block_11.row.COLOUR}"<!-- ENDIF -->>{block_11.row.COLUMN_2_TITLE}</a></span></td>
+								<td class="row1" align="center" valign="middle"><span class="gensmall"><b><a href ="{block_11.row.U_COLUMN_2}" <!-- IF block_11.row.USERNAME_COLOUR --> style="color: {block_11.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_11.row.COLUMN_2_TITLE}</a></b></span></td>
 								<!-- IF block_11.row.U_COLUMN_3 -->
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_11.row.U_COLUMN_3}">{block_11.row.COLUMN_3_TITLE}</a></span></td>
 								<!-- ELSE -->
@@ -259,7 +259,7 @@
 							<!-- BEGIN row -->
 							<tr>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_2.row.U_COLUMN_1}">{block_2.row.COLUMN_1_TITLE}</a></span></td>
-								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_2.row.U_COLUMN_2}" <!-- IF block_2.row.COLOUR --> style="color: {block_2.row.COLOUR}"<!-- ENDIF -->>{block_2.row.COLUMN_2_TITLE}</a></span></td>
+								<td class="row1" align="center" valign="middle"><span class="gensmall"><b><a href ="{block_2.row.U_COLUMN_2}" <!-- IF block_2.row.USERNAME_COLOUR --> style="color: {block_2.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_2.row.COLUMN_2_TITLE}</a></b></span></td>
 								<!-- IF block_2.row.U_COLUMN_3 -->
 								<td class="row1" align="center" valign="middle" nowrap><span class="gensmall"><a href ="{block_2.row.U_COLUMN_3}">{block_2.row.COLUMN_3_TITLE}</a></span></td>
 								<!-- ELSE -->
@@ -288,7 +288,7 @@
 							<!-- BEGIN row -->
 							<tr>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_4.row.U_COLUMN_1}">{block_4.row.COLUMN_1_TITLE}</a></span></td>
-								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_4.row.U_COLUMN_2}" <!-- IF block_4.row.COLOUR --> style="color: {block_4.row.COLOUR}"<!-- ENDIF -->>{block_4.row.COLUMN_2_TITLE}</a></span></td>
+								<td class="row1" align="center" valign="middle"><span class="gensmall"><b><a href ="{block_4.row.U_COLUMN_2}" <!-- IF block_4.row.USERNAME_COLOUR --> style="color: {block_4.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_4.row.COLUMN_2_TITLE}</a></b></span></td>
 								<!-- IF block_4.row.U_COLUMN_3 -->
 								<td class="row1" align="center" valign="middle" nowrap><span class="gensmall"><a href ="{block_4.row.U_COLUMN_3}">{block_4.row.COLUMN_3_TITLE}</a></span></td>
 								<!-- ELSE -->
@@ -322,7 +322,7 @@
 							<!-- BEGIN row -->
 							<tr>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_6.row.U_COLUMN_1}">{block_6.row.COLUMN_1_TITLE}</a></span></td>
-								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_6.row.U_COLUMN_2}" <!-- IF block_6.row.COLOUR --> style="color: {block_6.row.COLOUR}"<!-- ENDIF -->>{block_6.row.COLUMN_2_TITLE}</a></span></td>
+								<td class="row1" align="center" valign="middle"><span class="gensmall"><b><a href ="{block_6.row.U_COLUMN_2}" <!-- IF block_6.row.USERNAME_COLOUR --> style="color: {block_6.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_6.row.COLUMN_2_TITLE}</a></b></span></td>
 								<!-- IF block_6.row.U_COLUMN_3 -->
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_6.row.U_COLUMN_3}">{block_6.row.COLUMN_3_TITLE}</a></span></td>
 								<!-- ELSE -->
@@ -356,7 +356,7 @@
 							<!-- BEGIN row -->
 							<tr>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_8.row.U_COLUMN_1}">{block_8.row.COLUMN_1_TITLE}</a></span></td>
-								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_8.row.U_COLUMN_2}" <!-- IF block_8.row.COLOUR --> style="color: {block_8.row.COLOUR}"<!-- ENDIF -->>{block_8.row.COLUMN_2_TITLE}</a></span></td>
+								<td class="row1" align="center" valign="middle"><span class="gensmall"><b><a href ="{block_8.row.U_COLUMN_2}" <!-- IF block_8.row.USERNAME_COLOUR --> style="color: {block_8.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_8.row.COLUMN_2_TITLE}</a></b></span></td>
 								<!-- IF block_8.row.U_COLUMN_3 -->
 								<td class="row1" align="center" valign="middle" nowrap><span class="gensmall"><a href ="{block_8.row.U_COLUMN_3}">{block_8.row.COLUMN_3_TITLE}</a></span></td>
 								<!-- ELSE -->
@@ -385,7 +385,7 @@
 							<!-- BEGIN row -->
 							<tr>
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_10.row.U_COLUMN_1}">{block_10.row.COLUMN_1_TITLE}</a></span></td>
-								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_10.row.U_COLUMN_2}" <!-- IF block_10.row.COLOUR --> style="color: {block_10.row.COLOUR}"<!-- ENDIF -->>{block_10.row.COLUMN_2_TITLE}</a></span></td>
+								<td class="row1" align="center" valign="middle"><span class="gensmall"><b><a href ="{block_10.row.U_COLUMN_2}" <!-- IF block_10.row.USERNAME_COLOUR --> style="color: {block_10.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_10.row.COLUMN_2_TITLE}</a></b></span></td>
 								<!-- IF block_10.row.U_COLUMN_3 -->
 								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_10.row.U_COLUMN_3}">{block_10.row.COLUMN_3_TITLE}</a></span></td>
 								<!-- ELSE -->

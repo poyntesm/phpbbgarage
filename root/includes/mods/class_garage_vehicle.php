@@ -472,7 +472,7 @@ class garage_vehicle
 
 			//Start To Build SQl For Selecting Featured Vehicle..We Will Extend This Array Based On User Options
 			$sql_array = array(
-				'SELECT'	=> 'g.id, g.made_year, vg.image_id, g.user_id, makes.make, models.model, images.attach_id, images.attach_hits, images.attach_thumb_location, u.username, images.attach_is_image, images.attach_location, COUNT(mods.id) AS mod_count, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, images.attach_file, (SUM(mods.install_price) + SUM(mods.price)) AS money_spent, sum( r.rating ) AS rating',
+				'SELECT'	=> 'g.id, g.made_year, vg.image_id, g.user_id, makes.make, models.model, images.attach_id, images.attach_hits, images.attach_thumb_location, u.username, images.attach_is_image, images.attach_location, COUNT(mods.id) AS mod_count, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, images.attach_file, (SUM(mods.install_price) + SUM(mods.price)) AS money_spent, sum( r.rating ) AS rating, u.user_colour',
 				'FROM'		=> array(
 					GARAGE_VEHICLES_TABLE	=> 'g',
 				),
@@ -685,8 +685,9 @@ class garage_vehicle
 					'IMAGE_TITLE'		=> $vehicle_data['attach_file'],
 					'U_VIEW_IMAGE'		=> append_sid($absolute_url."garage.$phpEx?mode=view_image&amp;image_id=".$vehicle_data['attach_id']),
 					'U_VIEW_VEHICLE' 	=> append_sid($absolute_url."garage_vehicle.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data['id']),
-					'U_VIEW_PROFILE' 	=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']))
-				);
+					'U_VIEW_PROFILE' 	=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']),
+					'USERNAME_COLOUR'	=> get_username_string('colour', $vehicle_data['user_id'], $vehicle_data['username'], $vehicle_data['user_colour']),
+				));
 			}
 		}
 		else
@@ -726,12 +727,13 @@ class garage_vehicle
 		for ($i = 0; $i < count($vehicle_data); $i++)
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' 	=> append_sid("garage_vehicle.$phpEx", "mode=view_vehicle&CID=" . $vehicle_data[$i]['id'], true),
-				'U_COLUMN_2' 	=> append_sid("memberlist.$phpEx", "mode=viewprofile&u=" . $vehicle_data[$i]['user_id'], true),
-				'COLUMN_1_TITLE'=> $vehicle_data[$i]['vehicle'],
-				'COLUMN_2_TITLE'=> $vehicle_data[$i]['username'],
-				'COLUMN_3_TITLE'=> $user->format_date($vehicle_data[$i]['date_updated']))
-			);
+				'U_COLUMN_1' 		=> append_sid("garage_vehicle.$phpEx", "mode=view_vehicle&CID=" . $vehicle_data[$i]['id'], true),
+				'U_COLUMN_2' 		=> append_sid("memberlist.$phpEx", "mode=viewprofile&u=" . $vehicle_data[$i]['user_id'], true),
+				'COLUMN_1_TITLE'	=> $vehicle_data[$i]['vehicle'],
+				'COLUMN_2_TITLE'	=> $vehicle_data[$i]['username'],
+				'COLUMN_3_TITLE'	=> $user->format_date($vehicle_data[$i]['date_updated']),
+				'USERNAME_COLOUR'	=> get_username_string('colour', $vehicle_data[$i]['user_id'], $vehicle_data[$i]['username'], $vehicle_data[$i]['user_colour']),
+			));
 	 	}
 	
 		$required_position++;
@@ -767,12 +769,13 @@ class garage_vehicle
 		for ($i = 0; $i < count($vehicle_data); $i++)
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' 	=> append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data[$i]['id']),
-				'U_COLUMN_2' 	=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$vehicle_data[$i]['user_id']),
-				'COLUMN_1_TITLE'=> $vehicle_data[$i]['vehicle'],
-				'COLUMN_2_TITLE'=> $vehicle_data[$i]['username'],
-				'COLUMN_3_TITLE'=> $vehicle_data[$i]['POI'])
-			);
+				'U_COLUMN_1' 		=> append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data[$i]['id']),
+				'U_COLUMN_2' 		=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$vehicle_data[$i]['user_id']),
+				'COLUMN_1_TITLE'	=> $vehicle_data[$i]['vehicle'],
+				'COLUMN_2_TITLE'	=> $vehicle_data[$i]['username'],
+				'COLUMN_3_TITLE'	=> $vehicle_data[$i]['POI'],
+				'USERNAME_COLOUR'	=> get_username_string('colour', $vehicle_data[$i]['user_id'], $vehicle_data[$i]['username'], $vehicle_data[$i]['user_colour']),
+			));
 	 	}
 	
 		$required_position++;
@@ -808,12 +811,13 @@ class garage_vehicle
 		for ($i = 0; $i < count($vehicle_data); $i++)
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' 	=> append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data[$i]['id']),
-				'U_COLUMN_2' 	=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$vehicle_data[$i]['user_id']),
-				'COLUMN_1_TITLE'=> $vehicle_data[$i]['vehicle'],
-				'COLUMN_2_TITLE'=> $vehicle_data[$i]['username'],
-				'COLUMN_3_TITLE'=> $vehicle_data[$i]['POI'])
-			);
+				'U_COLUMN_1' 		=> append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data[$i]['id']),
+				'U_COLUMN_2' 		=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$vehicle_data[$i]['user_id']),
+				'COLUMN_1_TITLE'	=> $vehicle_data[$i]['vehicle'],
+				'COLUMN_2_TITLE'	=> $vehicle_data[$i]['username'],
+				'COLUMN_3_TITLE'	=> $vehicle_data[$i]['POI'],
+				'USERNAME_COLOUR'	=> get_username_string('colour', $vehicle_data[$i]['user_id'], $vehicle_data[$i]['username'], $vehicle_data[$i]['user_colour']),
+			));
 	 	}
 	
 		$required_position++;
@@ -849,12 +853,13 @@ class garage_vehicle
 		for ($i = 0; $i < count($vehicle_data); $i++)
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' 	=> append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data[$i]['id']),
-				'U_COLUMN_2' 	=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$vehicle_data[$i]['user_id']),
-				'COLUMN_1_TITLE'=> $vehicle_data[$i]['vehicle'],
-				'COLUMN_2_TITLE'=> $vehicle_data[$i]['username'],
-				'COLUMN_3_TITLE'=> $vehicle_data[$i]['weighted_rating'] . '/' . '10')
-			);
+				'U_COLUMN_1' 		=> append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data[$i]['id']),
+				'U_COLUMN_2' 		=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$vehicle_data[$i]['user_id']),
+				'COLUMN_1_TITLE'	=> $vehicle_data[$i]['vehicle'],
+				'COLUMN_2_TITLE'	=> $vehicle_data[$i]['username'],
+				'COLUMN_3_TITLE'	=> $vehicle_data[$i]['weighted_rating'] . '/' . '10',
+				'USERNAME_COLOUR'	=> get_username_string('colour', $vehicle_data[$i]['user_id'], $vehicle_data[$i]['username'], $vehicle_data[$i]['user_colour']),
+			));
 	 	}
 	
 		$required_position++;
@@ -890,12 +895,13 @@ class garage_vehicle
 		for ($i = 0; $i < count($vehicle_data); $i++)
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' 	=> append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data[$i]['id']),
-				'U_COLUMN_2' 	=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$vehicle_data[$i]['user_id']),
-				'COLUMN_1_TITLE'=> $vehicle_data[$i]['vehicle'],
-				'COLUMN_2_TITLE'=> $vehicle_data[$i]['username'],
-				'COLUMN_3_TITLE'=> $user->format_date($vehicle_data[$i]['POI']))
-			);
+				'U_COLUMN_1' 		=> append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;CID=".$vehicle_data[$i]['id']),
+				'U_COLUMN_2' 		=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$vehicle_data[$i]['user_id']),
+				'COLUMN_1_TITLE'	=> $vehicle_data[$i]['vehicle'],
+				'COLUMN_2_TITLE'	=> $vehicle_data[$i]['username'],
+				'COLUMN_3_TITLE'	=> $user->format_date($vehicle_data[$i]['POI']),
+				'USERNAME_COLOUR'	=> get_username_string('colour', $vehicle_data[$i]['user_id'], $vehicle_data[$i]['username'], $vehicle_data[$i]['user_colour']),
+			));
 	 	}
 	
 		$required_position++;
@@ -1424,7 +1430,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.*, mk.make, md.model, user.username, count(mods.id) AS total_mods, count(*) as total, i.attach_id',
+			'SELECT'	=> 'g.*, mk.make, md.model, user.username, u.user_colour, u.user_id, count(mods.id) AS total_mods, count(*) as total, i.attach_id',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'g',
 			),
@@ -1481,7 +1487,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.*, ROUND(g.weighted_rating, 2) as weighted_rating, images.*, makes.make, models.model, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id, user.user_avatar_width, user.user_avatar_height',
+			'SELECT'	=> 'g.*, ROUND(g.weighted_rating, 2) as weighted_rating, images.*, makes.make, models.model, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id, user.user_avatar_width, user.user_avatar_height, u.user_colour, u.user_id',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'g',
 			),
@@ -1534,7 +1540,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> "g.*, ROUND(g.weighted_rating, 2) as weighted_rating, images.*, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id",
+			'SELECT'	=> "g.*, ROUND(g.weighted_rating, 2) as weighted_rating, images.*, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id, u.user_colour, u.user_id",
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'g',
 			),
@@ -1705,7 +1711,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.*, ROUND(g.weighted_rating, 2) as weighted_rating, images.*, makes.make, models.model, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id',
+			'SELECT'	=> 'g.*, ROUND(g.weighted_rating, 2) as weighted_rating, images.*, makes.make, models.model, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id, user.user_colour',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'g',
 			),
@@ -1761,7 +1767,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'r.*, u.username',
+			'SELECT'	=> 'r.*, u.username, u.user_colour, u.user_id',
 			'FROM'		=> array(
 				GARAGE_RATINGS_TABLE	=> 'r',
 			),
@@ -1800,7 +1806,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, g.user_id, g.date_created AS POI, u.username',
+			'SELECT'	=> 'g.id, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, g.user_id, g.date_created AS POI, u.username, u.user_colour, u.user_id',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'g',
 			),
@@ -1844,7 +1850,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id, g.user_id, ROUND(g.weighted_rating, 2) as weighted_rating, u.username, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle',
+			'SELECT'	=> 'g.id, g.user_id, ROUND(g.weighted_rating, 2) as weighted_rating, u.username, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, u.user_colour, u.user_id',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'g',
 			),
@@ -1888,7 +1894,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle,  g.user_id, g.views AS POI, u.username',
+			'SELECT'	=> 'g.id, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle,  g.user_id, g.views AS POI, u.username, u.user_colour, u.user_id',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'g',
 			),
@@ -1932,7 +1938,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, g.user_id, (SUM(mods.install_price) + SUM(mods.price)) AS POI, u.username, g.currency',
+			'SELECT'	=> 'g.id, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, g.user_id, (SUM(mods.install_price) + SUM(mods.price)) AS POI, u.username, g.currency, u.user_colour, u.user_id',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'g',
 			),
@@ -2056,7 +2062,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.*, images.*, makes.make, models.model, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id',
+			'SELECT'	=> 'g.*, images.*, makes.make, models.model, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'g',
 			),

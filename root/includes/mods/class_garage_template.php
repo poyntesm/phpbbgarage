@@ -122,12 +122,12 @@ class garage_template
 			for ($i = 0; $i < count($vehicles); $i++)
 			{
        				$template->assign_block_vars('updated_vehicles', array(
-       					'U_VIEW_VEHICLE'=> append_sid("garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" . $vehicles[$i]['id'], true),
-					'U_VIEW_PROFILE'=> append_sid("memberlist.$phpEx", "mode=viewprofile&amp;u=".$vehicles[$i]['user_id'], true),
-					'OWNER_COLOUR'	=> get_username_string('colour', $vehicles[$i]['user_id'], $vehicles[$i]['username'], $vehicles[$i]['user_colour'], $vehicles[$i]['post_username']),
-       					'VEHICLE' 	=> $vehicles[$i]['vehicle'],
-       					'UPDATED_TIME' 	=> $user->format_date($vehicles[$i]['date_updated']),
-		       			'USERNAME' 	=> $vehicles[$i]['username'])
+       					'U_VIEW_VEHICLE'	=> append_sid("garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" . $vehicles[$i]['id'], true),
+					'U_VIEW_PROFILE'	=> append_sid("memberlist.$phpEx", "mode=viewprofile&amp;u=".$vehicles[$i]['user_id'], true),
+					'USERNAME_COLOUR'	=> get_username_string('colour', $vehicles[$i]['user_id'], $vehicles[$i]['username'], $vehicles[$i]['user_colour']),
+       					'VEHICLE' 		=> $vehicles[$i]['vehicle'],
+       					'UPDATED_TIME' 		=> $user->format_date($vehicles[$i]['date_updated']),
+		       			'USERNAME' 		=> $vehicles[$i]['username'])
       				);
 			}
 		}

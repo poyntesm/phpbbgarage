@@ -82,24 +82,18 @@ switch( $mode )
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 
-		//Get All Data Posted And Make It Safe To Use
-		$params	= array('blog_title' => '', 'blog_text' => '');
-		$data 	= $garage->process_vars($params);
+		$text = utf8_normalize_nfc(request_var('blog_text', '', true));
+		$uid = $bitfield = $flags = ''; // will be modified by generate_text_for_storage
+		$allow_bbcode = $allow_urls = $allow_smilies = true;
+		generate_text_for_storage($text, $uid, $bitfield, $flags, $allow_bbcode, $allow_urls, $allow_smilies);
 
-		//Include Required Files..
-		include($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
-		include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
-
-		//Checks All Required Data Is Present
-		$params = array('blog_title', 'blog_text');
-		$garage->check_required_vars($params);
-
-		$message_parser = new parse_message();
-
-		$data += array(
-				'bbcode_bitfield'	=> $message_parser->bbcode_bitfield,
-				'bbcode_uid'		=> $message_parser->bbcode_uid,
-			);
+		$data = array(
+			'blog_title'		=> request_var('blog_title', ''),
+			'blog_text'		=> $text,
+			'bbcode_uid'        	=> $uid,
+		    	'bbcode_bitfield'   	=> $bitfield,
+		    	'bbcode_flags'      	=> $flags,
+		);
 
 		//Insert Blog With Data Acquired
 		$garage_blog->insert_blog($data);

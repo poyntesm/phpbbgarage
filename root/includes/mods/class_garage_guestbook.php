@@ -119,7 +119,7 @@ class garage_guestbook
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, gb.bbcode_uid, gb.bbcode_bitfield, gb.bbcode_flags, u.username, u.user_id, u.user_posts, u.user_from, u.user_website, u.user_email, u.user_icq, u.user_aim, u.user_yim, u.user_regdate, u.user_msnm, u.user_allow_viewemail, u.user_rank, u.user_sig, u.user_sig_bbcode_uid, u.user_avatar, u.user_avatar_type, u.user_allow_viewonline, g.made_year, g.id as vehicle_id, mk.make, md.model, u.user_avatar',
+			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, gb.bbcode_uid, gb.bbcode_bitfield, gb.bbcode_flags, u.username, u.user_id, u.user_posts, u.user_from, u.user_website, u.user_email, u.user_icq, u.user_aim, u.user_yim, u.user_regdate, u.user_msnm, u.user_allow_viewemail, u.user_rank, u.user_sig, u.user_sig_bbcode_uid, u.user_avatar, u.user_avatar_type, u.user_allow_viewonline, g.made_year, g.id as vehicle_id, mk.make, md.model, u.user_avatar, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
 			),
@@ -251,7 +251,7 @@ class garage_guestbook
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'gb.vehicle_id AS id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, gb.author_id AS author_id, gb.post_date, u.username',
+			'SELECT'	=> 'gb.vehicle_id AS id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, gb.author_id AS author_id, gb.post_date, u.username, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
 			),
@@ -387,12 +387,13 @@ class garage_guestbook
 		for($i = 0; $i < count($comment_data); $i++)
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' 	=> append_sid("garage.$phpEx", "mode=view_vehicle&amp;CID=" . $comment_data[$i]['id']),
-				'U_COLUMN_2' 	=> append_sid("memberlist.$phpEx", "mode=viewprofile&amp;u=" . $comment_data[$i]['author_id']),
-				'COLUMN_1_TITLE'=> $comment_data[$i]['vehicle'],
-				'COLUMN_2_TITLE'=> $comment_data[$i]['username'],
-				'COLUMN_3_TITLE'=> $user->format_date($comment_data[$i]['post_date']))
-			);
+				'U_COLUMN_1' 		=> append_sid("garage.$phpEx", "mode=view_vehicle&amp;CID=" . $comment_data[$i]['id']),
+				'U_COLUMN_2' 		=> append_sid("memberlist.$phpEx", "mode=viewprofile&amp;u=" . $comment_data[$i]['author_id']),
+				'COLUMN_1_TITLE'	=> $comment_data[$i]['vehicle'],
+				'COLUMN_2_TITLE'	=> $comment_data[$i]['username'],
+				'COLUMN_3_TITLE'	=> $user->format_date($comment_data[$i]['post_date']),
+				'USERNAME_COLOUR'	=> get_username_string('colour', $comment_data[$i]['author_id'], $comment_data[$i]['username'], $comment_data[$i]['user_colour']),
+			));
 	 	}
 	
 		$required_position++;
@@ -473,18 +474,8 @@ class garage_guestbook
 
 			$posted = '<a href="' . append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=".$comment_data[$i]['user_id']) . '">' . $comment_data[$i]['username'] . '</a>';
 			$posted = $user->format_date($comment_data[$i]['post_date']);
-
-			$post = $comment_data[$i]['post'];
-
-			// Parse message and/or sig for BBCode if reqd
-			if ( $config['allow_bbcode'] )
-			{
-				
-				//if ( $comment_data[$i]['bbcode_uid'] != '' )
-				//{
-				//	$post = ( $config['allow_bbcode'] ) ? bbencode_second_pass($post, $bbcode_uid) : preg_replace('/\:[0-9a-z\:]+\]/si', ']', $post);
-				//}
-			}
+	
+			$post = generate_text_for_display($comment_data[$i]['post'], $comment_data[$i]['bbcode_uid'], $comment_data[$i]['bbcode_bitfield'], $comment_data[$i]['bbcode_flags']);
 
 			$post = make_clickable($post);
 
