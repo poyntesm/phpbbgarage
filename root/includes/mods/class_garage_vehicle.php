@@ -1487,7 +1487,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.*, ROUND(g.weighted_rating, 2) as weighted_rating, images.*, makes.make, models.model, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id, user.user_avatar_width, user.user_avatar_height, u.user_colour, u.user_id',
+			'SELECT'	=> 'g.*, ROUND(g.weighted_rating, 2) as weighted_rating, images.*, makes.make, models.model, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id, user.user_avatar_width, user.user_avatar_height, user.user_colour, user.user_id',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'g',
 			),
