@@ -34,22 +34,23 @@ class garage_vehicle
 	/*========================================================================*/
 	function get_user_add_quota()
 	{
-		global $db, $user, $garage_config, $garage;
+		global $db, $user, $garage_config, $garage, $phpEx, $phpbb_root_path;
 
-		if (empty($garage_config['private_add_quota']))
+		if (empty($garage_config['add_groups']))
 		{
 			//Since No Specific Group Value Exists Use Default Value
-			return $garage_config['max_user_cars'];
+			return $garage_config['default_vehicle_quota'];
 		}
 		//It Appears Some Groups Have Private Permissions & Quotas We Will Need To Check Them
 		else
 		{
 			//Get All Group Memberships
+			include_once($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 			$groups = group_memberships(false, array($user->data['user_id']), false);
 			
 			//Lets Get The Private Upload Groups & Quotas
-			$private_add_groups = @explode(',', $garage_config['private_add_perms']);
-			$private_add_quotas = @explode(',', $garage_config['private_add_quota']);
+			$private_add_groups = @explode(',', $garage_config['add_groups']);
+			$private_add_quotas = @explode(',', $garage_config['add_groups_quotas']);
 
 			//Process All Groups You Are Member Of To See If Any Are Granted Permission & Quota
 			for ($i = 0; $i < count($groups); $i++)
@@ -66,7 +67,7 @@ class garage_vehicle
 			//Your Were Not Granted Any Private Permissions..Return Default Value
 			if  (empty($quota))
 			{
-				return $garage_config['max_user_cars'];
+				return $garage_config['default_vehicle_quota'];
 			}
 
 			//Return The Highest Quota You Were Granted
@@ -1188,7 +1189,7 @@ class garage_vehicle
 					'INSURER' 	=> $insurance_data[$i]['title'],
 					'PREMIUM' 	=> $insurance_data[$i]['premium'],
 					'COVER_TYPE' 	=> $insurance_data[$i]['cover_type'],
-					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage.$phpEx?mode=edit_insurance&amp;INS_ID=".$insurance_data[$i]['id']."&amp;CID=$cid") : '',
+					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage_premium.$phpEx?mode=edit_premium&amp;INS_ID=".$insurance_data[$i]['id']."&amp;CID=$cid") : '',
 					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_insurance'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_insurance(' . $cid . ',' . $insurance_data[$i]['id'] . ')' : '',
 					'U_INSURER' 	=> append_sid("garage.$phpEx", "mode=insurance_review&amp;business_id=".$insurance_data[$i]['business_id']),
 				));
@@ -1307,7 +1308,7 @@ class garage_vehicle
 					'PRICE'		=> $service_data[$i]['price'],
 					'RATING'	=> $service_data[$i]['rating'],
 					'MILEAGE'	=> $service_data[$i]['mileage'],
-					'U_GARAGE'	=> append_sid("garage.$phpEx?mode=garage_review&amp;BUS_ID=".$service_data[$i]['garage_id']."&amp;CID=$cid"),
+					'U_GARAGE'	=> append_sid("garage.$phpEx?mode=garage_review&amp;BID=".$service_data[$i]['garage_id']."&amp;CID=$cid"),
 					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage_service.$phpEx?mode=edit_service&amp;SVID=".$service_data[$i]['id']."&amp;CID=$cid") : '',
 					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_lap'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_service(' . $cid . ',' . $service_data[$i]['id'] . ')' : '')
 				);
@@ -1411,6 +1412,7 @@ class garage_vehicle
             		'TOTAL_VIEWS' 			=> $vehicle['views'],
 			'TOTAL_IMAGE_VIEWS' 		=> $vehicle['attach_hits'],
 			'USERNAME'			=> $vehicle['username'],
+			'USERNAME_COLOUR'		=> get_username_string('colour', $vehicle['user_id'], $vehicle['username'], $vehicle['user_colour']),
 			'RATING' 			=> ( $vehicle['weighted_rating'] == '0' ) ? $user->lang['NOT_RATED_YET'] : $vehicle['weighted_rating'] . ' / 10',
             		'DESCRIPTION' 			=> str_replace("\n", "\n<br />\n", $vehicle['comments']))
          	);
@@ -1540,7 +1542,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> "g.*, ROUND(g.weighted_rating, 2) as weighted_rating, images.*, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id, u.user_colour, u.user_id",
+			'SELECT'	=> "g.*, ROUND(g.weighted_rating, 2) as weighted_rating, images.*, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id, user.user_colour, user.user_id",
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'g',
 			),
@@ -2062,7 +2064,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.*, images.*, makes.make, models.model, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id, u.user_colour',
+			'SELECT'	=> 'g.*, images.*, makes.make, models.model, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, u.username, u.user_avatar_type, u.user_avatar, u.user_id, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'g',
 			),
@@ -2109,21 +2111,27 @@ class garage_vehicle
 	/*========================================================================*/
 	function profile_integration($user_id)
 	{
-		global $images, $template, $profiledata, $lang, $phpEx;
+		global $images, $template, $member, $lang, $phpbb_root_path, $phpEx, $garage_config, $user;
+
+		include_once($phpbb_root_path . 'includes/mods/class_garage_image.' . $phpEx);
+		include_once($phpbb_root_path . 'includes/mods/class_garage_modification.' . $phpEx);
 
 		$vehicle_data = $this->get_user_main_vehicle($user_id);
 
+		$user->setup(array('mods/garage'));
+
+		$vehicle_images_found = null;
+		$hilite_image = null;
+
 		if ( count($vehicle_data) > 0 )
 		{
-			$template->assign_block_vars('garage_vehicle', array());
 			$total_spent = $vehicle_data['total_spent'] ? $vehicle_data['total_spent'] : 0;
 
 			//Display Just Thumbnails Of All Images Or Just One Main Image
 			if ( $garage_config['profile_thumbs'] == 1 )
 			{
-
 				//Build List Of Gallery Images For Vehicle
-				$gallery_data = $garage_image->get_gallery($vehicle_data['id']);
+				$gallery_data = $garage_image->get_vehicle_gallery($vehicle_data['id']);
         			for ( $i=0; $i < count($gallery_data); $i++ )
 	       			{
 		            		if ( $gallery_data[$i]['attach_is_image'] )
@@ -2162,43 +2170,34 @@ class garage_vehicle
 					// Check to see if this is a remote image
 					if ( preg_match( "/^http:\/\//i", $vehicle_data['attach_location']) )
 					{
-						$image = $vehicle_data['attach_location'];
-						$id = $vehicle_data['attach_id'];
-						$title = $vehicle_data['attach_file'];
-						$total_image_views = $vehicle_data['attach_hits'];
-						$hilite_image = '<a href=garage.'.$phpEx.'?mode=view_image&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
+						$hilite_image = '<a href=garage.'.$phpEx.'?mode=view_image&amp;type=garage_mod&amp;image_id='. $vehicle_data['attach_id'] .' title=' . $vehicle_data['attach_file'] .' target="_blank"><img hspace="5" vspace="5" src="' . $vehicle_data['attach_location'] .'" class="attach"  /></a>';
 					}
 					else
 					{
-						$image = GARAGE_UPLOAD_PATH . $vehicle_data['attach_location'];
-						$id = $vehicle_data['attach_id'];
-						$title = $vehicle_data['attach_file'];
-						$total_image_views = $vehicle_data['attach_hits'];
-						$hilite_image = '<a href=garage.'.$phpEx.'?mode=view_image&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
+						$hilite_image = '<a href=garage.'.$phpEx.'?mode=view_image&amp;type=garage_mod&amp;image_id='. $vehicle_data['attach_id'] .' title=' . $vehicle_data['attach_file'] .' target="_blank"><img hspace="5" vspace="5" src="' . GARAGE_UPLOAD_PATH . $vehicle_data['attach_location'] .'" class="attach"  /></a>';
 					}
 				}
 			}
 
-			$garage_img ='<a href="' . append_sid("garage.$phpEx?mode=browse&search=yes&user=".urlencode($profiledata['username'])."") . '"><img src="' . $images['icon_garage'] . '" alt="'.$lang['Garage'].'" title="'.$lang['Garage'].'" border="0" /></a>';
-
 			$template->assign_vars(array(
-				'L_PRICE' => $lang['Purchased_Price'],
-				'L_SEARCH_USER_GARAGE' => $lang['Search_User_Garage'],
-				'YEAR' => $vehicle_data['year'],
-				'MAKE' => $vehicle_data['make'],
-				'MODEL' => $vehicle_data['model'],
-		       		'COLOUR' => $vehicle_data['colour'],
-			       	'HILITE_IMAGE' => $hilite_image,
-		        	'MILEAGE' => $vehicle_data['mileage'],
-			        'MILEAGE_UNITS' => $vehicle_data['mileage_unit'],
-		        	'PRICE' => $vehicle_data['price'],
-			        'CURRENCY' => $vehicle_data['currency'],
-		        	'TOTAL_MODS' => $vehicle_data['total_mods'],
-			        'TOTAL_SPENT' => $total_spent,
-		        	'TOTAL_VIEWS' => $vehicle_data['views'],
-			        'DESCRIPTION' => $vehicle_data['comments'],
-			        'GARAGE_IMG' => $garage_img,
-				'U_SEARCH_USER_GARAGE' => append_sid("garage.$phpEx?mode=browse"))
+				'GARAGE_IMG'			=> $user->img('icon_garage', $user->lang['GARAGE']),
+				'S_DISPLAY_GARAGE_PROFILE'	=> ($garage_config['integrate_profile']) ? true : false,
+				'VEHICLE'			=> true,
+				'YEAR' 				=> $vehicle_data['made_year'],
+				'MAKE' 				=> $vehicle_data['make'],
+				'MODEL' 			=> $vehicle_data['model'],
+		       		'COLOUR' 			=> $vehicle_data['colour'],
+			       	'HILITE_IMAGE' 			=> $hilite_image,
+		        	'MILEAGE' 			=> $vehicle_data['mileage'],
+			        'MILEAGE_UNITS' 		=> $vehicle_data['mileage_unit'],
+		        	'PRICE' 			=> $vehicle_data['price'],
+			        'CURRENCY' 			=> $vehicle_data['currency'],
+		        	'TOTAL_MODS' 			=> $vehicle_data['total_mods'],
+			        'TOTAL_SPENT' 			=> $total_spent,
+		        	'TOTAL_VIEWS' 			=> $vehicle_data['views'],
+			        'DESCRIPTION' 			=> $vehicle_data['comments'],
+			        'GARAGE_IMG' 			=> $user->img('ICON_GARAGE', ''),
+				'U_GARAGE_USER_SEARCH' 		=> append_sid("garage.$phpEx?mode=search_results&amp;search_username=1;username={$member['username']}"))
 			);
 
 		}

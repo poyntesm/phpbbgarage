@@ -201,7 +201,7 @@ memberlist.php
 #
 #-----[ IN-LINE AFTER, ADD ]------------------------------------------
 #
-,'o' => $user->lang['GARAGE']
+, 'o' => $user->lang['GARAGE']
 
 #
 #-----[ FIND ]------------------------------------------
@@ -221,7 +221,7 @@ memberlist.php
 #
 #-----[ FIND ]------------------------------------------
 #
-			'SELECT'	=> 'u.user_id, u.group_id as default_group, u.username, u.user_colour, u.user_rank, u.user_posts, u.user_allow_pm, g.group_id, g.group_name, g.group_colour, g.group_type, ug.user_id as ug_user_id',
+			'SELECT'	=> 'u.user_id, u.group_id as default_group, u.username, u.username_clean, u.user_colour, u.user_rank, u.user_posts, u.user_allow_pm, g.group_id, g.group_name, g.group_colour, g.group_type, ug.user_id as ug_user_id',
 
 #
 #-----[ IN-LINE FIND ]------------------------------------------
@@ -236,55 +236,33 @@ ug.user_id as ug_user_id
 #
 #-----[ FIND ]------------------------------------------
 #
+			),
 			'WHERE'		=> $db->sql_in_set('u.user_id', array_unique(array_merge($admin_id_ary, $mod_id_ary))) . '
 
 #
 #-----[ BEFORE, ADD ]------------------------------------------
 #
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_TABLE => 'g'),
+				,array(
+					'FROM'	=> array(GARAGE__VEHICLES_TABLE => 'g'),
 					'ON'	=> 'g.user_id = u.user_id AND g.main_vehicle = 1'
 				)
-			),
-
 
 #
 #-----[ FIND ]------------------------------------------
 #
-			'SEARCH_IMG'	=> $user->img('icon_user_search', $user->lang['SEARCH']),
-
-#
-#-----[ AFTER, ADD ]------------------------------------------
-#
-//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-			'GARAGE_IMG'		=> $user->img('icon_garage', $user->lang['GARAGE']),
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-#
-#-----[ FIND ]------------------------------------------
-#
-			'S_PROFILE_ACTION'	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=group'),
+		// Custom Profile Fields
+		$profile_fields = array();
 
 #
 #-----[ BEFORE, ADD ]------------------------------------------
 #
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
-			'S_DISPLAY_GARAGE_PROFILE'	=> ($garage_config['integrate_profile']) ? true : false,
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-
-#
-#-----[ FIND ]------------------------------------------
-#
-			'U_LIST_CHAR'			=> $pagination_url . '&amp;sk=a&amp;sd=' . (($sort_key == 'l' && $sort_dir == 'a') ? 'd' : 'a'),
-
-#
-#-----[ AFTER, ADD ]------------------------------------------
-#
-//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-			'U_SORT_GARAGE'			=> $pagination_url . '&amp;sk=o&amp;sd=' . (($sort_key == 'o' && $sort_dir == 'a') ? 'd' : 'a'),
+		if ($garage_config['integrate_profile'])
+		{
+			include_once($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
+			$garage_vehicle->profile_integration($member['user_id']);
+		}
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
 #
@@ -297,6 +275,7 @@ ug.user_id as ug_user_id
 #
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
+			'U_SORT_GARAGE'			=> $pagination_url . '&amp;sk=o&amp;sd=' . (($sort_key == 'o' && $sort_dir == 'a') ? 'd' : 'a'),
 			'S_DISPLAY_GARAGE_MEMBERLIST'	=> ($garage_config['integrate_memberlist']) ? true : false,
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
@@ -328,15 +307,15 @@ viewonline.php
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 		case 'garage':
-		case 'garage_vehicle':
-		case 'garage_modification':
-		case 'garage_quartermile':
-		case 'garage_dynorun':
-		case 'garage_track':
-		case 'garage_guestbook':
-		case 'garage_premium':
 		case 'garage_blog':
+		case 'garage_dynorun':
+		case 'garage_guestbook':
+		case 'garage_modification':
+		case 'garage_premium':
+		case 'garage_quartermile':
 		case 'garage_service':
+		case 'garage_track':
+		case 'garage_vehicle':
 			$location = $user->lang['VIEWING_GARAGE'];
 			$location_url = append_sid("{$phpbb_root_path}garage.$phpEx");
 		break;
@@ -363,9 +342,10 @@ viewtopic.php
 $sql = $db->sql_build_query('SELECT', array(
 
 #
-#-----[ AFTER, ADD ]------------------------------------------
+#-----[ BEFORE, ADD ]------------------------------------------
 #
-A
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- modify
 
 #
 #-----[ FIND ]------------------------------------------
@@ -392,7 +372,7 @@ p.*
 #-----[ AFTER, ADD ]------------------------------------------
 #
 		,array(
-			'FROM'	=> array(GARAGE_TABLE => 'g'),
+			'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
 			'ON'	=> 'g.user_id = p.poster_id and g.main_vehicle = 1'
 		)
 		,array(
@@ -479,17 +459,17 @@ adm/index.php
 #
 #-----[ FIND ]------------------------------------------
 #
-		'ICON_SYNC_DISABLED'		=> '<img src="' . $phpbb_admin_path . 'images/icon_sync_disabled.gif" alt="' . $user->lang['RESYNC'] . '" title="' . $user->lang['RESYNC'] . '" />',
+		'ICON_DISAPPROVE_DISABLED'		=> '<img src="' . $phpbb_admin_path . 'images/icon_garage_disapprove_disabled.gif" alt="' . $user->lang['DISAPPROVE'] . '" title="' . $user->lang['DISAPPROVE'] . '" />',
 
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
-		'ICON_APPROVE'		=> '<img src="' . $phpbb_admin_path . 'images/icon_garage_approve.gif" alt="' . $user->lang['APPROVE'] . '" title="' . $user->lang['APPROVE'] . '" />',
+		'ICON_APPROVE'			=> '<img src="' . $phpbb_admin_path . 'images/icon_garage_approve.gif" alt="' . $user->lang['APPROVE'] . '" title="' . $user->lang['APPROVE'] . '" />',
 		'ICON_APPROVE_DISABLED'		=> '<img src="' . $phpbb_admin_path . 'images/icon_garage_approve_disabled.gif" alt="' . $user->lang['APPROVE'] . '" title="' . $user->lang['APPROVE'] . '" />',
 		'ICON_DISAPPROVE'		=> '<img src="' . $phpbb_admin_path . 'images/icon_garage_disapprove.gif" alt="' . $user->lang['DISAPPROVE'] . '" title="' . $user->lang['DISAPPROVE'] . '" />',
-		'ICON_DISAPPROVE_DISABLED'		=> '<img src="' . $phpbb_admin_path . 'images/icon_garage_disapprove_disabled.gif" alt="' . $user->lang['DISAPPROVE'] . '" title="' . $user->lang['DISAPPROVE'] . '" />',
+		'ICON_DISAPPROVE_DISABLED'	=> '<img src="' . $phpbb_admin_path . 'images/icon_garage_disapprove_disabled.gif" alt="' . $user->lang['DISAPPROVE'] . '" title="' . $user->lang['DISAPPROVE'] . '" />',
 //-- mod finish : Garage ----------------------------------------------------------------------------------------------------
 
 # 
@@ -512,24 +492,11 @@ includes/functions.php
 #
 	global $db, $config, $template, $SID, $_SID, $user, $auth, $phpEx, $phpbb_root_path;
 #
-#-----[ BEFORE, ADD ]------------------------------------------
-#
-//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- modify/add : , $garage_config
-
-#
-#-----[ IN-LINE FIND ]------------------------------------------
-#
-$phpbb_root_path
-
-#
-#-----[ IN-LINE AFTER, ADD ]------------------------------------------
-#
-, $garage_config
-
-#
 #-----[ AFTER, ADD ]------------------------------------------
 #
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+	global $garage_config;
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
 #
@@ -558,17 +525,30 @@ includes/acp/acp_styles.php
 #
 #-----[ FIND ]------------------------------------------
 #
-			'polls'		=> array(
-				'poll_left', 'poll_center', 'poll_right',
-			),
-
+<?php
 
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
+//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+
+#
+#-----[ FIND ]------------------------------------------
+#
+			'polls'		=> array(
+				'poll_left', 'poll_center', 'poll_right',
+			),
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
 			'garage'	=> array(
 				'garage_vehicle_img_attached', 'garage_slip_img_attached', 'garage_icon_garage', 'garage_main_menu', 'garage_browse', 'garage_search', 'garage_quartermile_table', 'garage_dynorun_table', 'garage_lap_table', 'garage_garage_review', 'garage_shop_review', 'garage_insurance_review', 'garage_create_vehicle', 'garage_edit_vehicle', 'garage_delete_vehicle', 'garage_view_vehicle', 'garage_add_modification', 'garage_add_insurance', 'garage_add_dynorun', 'garage_add_quartermile', 'garage_add_lap', 'garage_add_service', 'garage_manage_gallery', 'garage_edit', 'garage_delete', 'garage_main_vehicle', 'garage_no_thumb', 'garage_show_details', 'garage_hide_details', 'garage_move_up', 'garage_move_down', 'garage_set_approved', 'garage_set_pending',
 			),
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
 # 
 #-----[ OPEN ]----- 
 # 
@@ -585,10 +565,10 @@ language/en/common.php
 #
 #-----[ FIND ]------------------------------------------
 #
-	'FAQ'					=> 'FAQ',
+$lang = array_merge($lang, array(
 
 #
-#-----[ BEFORE, ADD ]------------------------------------------
+#-----[ AFTER, ADD ]------------------------------------------
 #
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
@@ -622,7 +602,6 @@ $lang = array_merge($lang, array(
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
-
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 	'MCP_GARAGE'					=> 'Garage',
@@ -631,11 +610,10 @@ $lang = array_merge($lang, array(
 	'MCP_GARAGE_UNAPPROVED_MAKES'			=> 'Makes awaiting approval',
 	'MCP_GARAGE_UNAPPROVED_MODELS'			=> 'Models awaiting approval',
 	'MCP_GARAGE_UNAPPROVED_BUSINESS'		=> 'Business\'s awaiting approval',
-	'MCP_GARAGE_UNAPPROVED_QUARTERMILES'		=> 'Quartermiles awaiting approval',
+	'MCP_GARAGE_UNAPPROVED_QUARTERMILES'		=> '&frac14; miles awaiting approval',
 	'MCP_GARAGE_UNAPPROVED_DYNORUNS'		=> 'Dynoruns awaiting approval',
 	'MCP_GARAGE_UNAPPROVED_LAPS'			=> 'Laps awaiting approval',
 	'MCP_GARAGE_UNAPPROVED_TRACKS'			=> 'Tracks awaiting approval', 
-
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
 # 
@@ -661,7 +639,6 @@ $lang = array_merge($lang, array(
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
-
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 	'UCP_GARAGE'				=> 'Garage',
@@ -715,7 +692,7 @@ $lang = array_merge($lang, array(
 	'ACP_GARAGE_MENU_SETTINGS'		=> 'Menu settings',
 	'ACP_GARAGE_INDEX_SETTINGS'		=> 'Index page settings',
 	'ACP_GARAGE_IMAGES_SETTINGS'		=> 'Image settings',
-	'ACP_GARAGE_QUARTERMILE_SETTINGS'	=> 'Quartermile settings',
+	'ACP_GARAGE_QUARTERMILE_SETTINGS'	=> '&frac14; mile settings',
 	'ACP_GARAGE_DYNORUN_SETTINGS'		=> 'Dynorun settings',
 	'ACP_GARAGE_TRACK_SETTINGS'		=> 'Track/lap settings',
 	'ACP_GARAGE_INSURANCE_SETTINGS'		=> 'Insurance settings',
@@ -762,7 +739,7 @@ language/en/acp/styles.php
 	'IMG_GARAGE_MAIN_MENU'		=> 'Index menu',
 	'IMG_GARAGE_BROWSE'		=> 'Browse menu',
 	'IMG_GARAGE_SEARCH'		=> 'Search menu',
-	'IMG_GARAGE_QUARTERMILE_TABLE'	=> 'Quartermile table',
+	'IMG_GARAGE_QUARTERMILE_TABLE'	=> '&frac14; mile table',
 	'IMG_GARAGE_DYNORUN_TABLE'	=> 'Dynorun table',
 	'IMG_GARAGE_LAP_TABLE'		=> 'Lap table',
 	'IMG_GARAGE_GARAGE_REVIEW'	=> 'Garage review',
@@ -777,7 +754,7 @@ language/en/acp/styles.php
 	'IMG_GARAGE_ADD_DYNORUN'	=> 'Add dynorun',
 	'IMG_GARAGE_ADD_LAP'		=> 'Add lap',
 	'IMG_GARAGE_ADD_SERVICE'	=> 'Add service',
-	'IMG_GARAGE_ADD_QUARTERMILE'	=> 'Add quartermile',
+	'IMG_GARAGE_ADD_QUARTERMILE'	=> 'Add &frac14; mile',
 	'IMG_GARAGE_MANAGE_GALLERY'	=> 'Manage vehicle gallery',
 	'IMG_GARAGE_EDIT'		=> 'Edit',
 	'IMG_GARAGE_DELETE'		=> 'Delete',
@@ -860,7 +837,7 @@ styles/subSilver/templates/memberlist_body.html
 #
 #-----[ FIND ]------------------------------------------
 #
-		<td class="gen" align="center">&nbsp;<!-- IF memberrow.U_WWW --><a href="{memberrow.U_WWW}" target="_blank">{WWW_IMG}</a><!-- ENDIF -->&nbsp;</td>
+		<td class="gen" align="center">&nbsp;<!-- IF memberrow.U_WWW --><a href="{memberrow.U_WWW}">{WWW_IMG}</a><!-- ENDIF -->&nbsp;</td>
 
 #
 #-----[ AFTER, ADD ]------------------------------------------
@@ -915,49 +892,22 @@ styles/subSilver/templates/memberlist_view.html
 			<!-- IF S_DISPLAY_GARAGE_PROFILE -->
 			<tr>
 				<td class="gen" align="right" nowrap="nowrap">{L_GARAGE}: </td>
-				<td><a class="genmed" href="{U_GARAGE_USER_SEARCH}" >{L_SEARCH_USERS_GARAGE}</a></td>
+				<td><a class="genmed" href="{U_GARAGE_USER_SEARCH}" >{L_VIEW_USERS_GARAGE}</a></td>
 			</tr>
 			<!-- ENDIF -->
 
 #
 #-----[ FIND ]------------------------------------------
 #
-		<td class="row1" colspan="2"><div class="postbody" style="padding: 10px;">{SIGNATURE}</div></td>
+			<td class="row1" colspan="2"><div class="postbody" style="padding: 10px;">{SIGNATURE}</div></td>
 		</tr>
 	<!-- ENDIF -->
 
 #
 #-----[ AFTER, ADD ]------------------------------------------
 #
-	<!-- IF S_DISPLAY_GARAGE_PROFILE and VEHICLE -->
-		<tr>
-			<td class="cat" colspan="2" align="center"><h4>{USERNAME}'s {L_MAIN_VEHICLE}</h4></td>
-		</tr>
-		<tr>
-			<td class="row1" colspan="2"><div class="postbody" style="padding: 10px;"><b>{L_VEHICLE}</b> : {VEHICLE}</div></td>
-		</tr>
-		<tr>
-			<td class="row1" colspan="2"><div class="postbody" style="padding: 10px;"><b>{L_COLOUR} </b> : {COLOUR} </div></td>
-		</tr>
-		<tr>
-			<td class="row1" colspan="2"><div class="postbody" style="padding: 10px;"><b>{L_MILEAGE}</b> : {MILEAGE} {MILEAGE_UNITS}</div></td>
-		</tr>
-		<tr>
-			<td class="row1" colspan="2"><div class="postbody" style="padding: 10px;"><b>{L_PRICE}</b> : {PRICE} {CURRENCY}</div></td>
-		</tr>
-		<tr>
-			<td class="row1" colspan="2"><div class="postbody" style="padding: 10px;"><b>{L_TOTAL_MODS}</b> : {TOTAL_MODS}</div></td>
-		</tr>
-		<tr>
-			<td class="row1" colspan="2"><div class="postbody" style="padding: 10px;"><b>{L_TOTAL_SPENT}</b> : {TOTAL_SPENT} {CURRENCY}</div></td>
-		</tr>
-		<tr>
-			<td class="row1" colspan="2"><div class="postbody" style="padding: 10px;"><b>{L_DESCRIPTION}</b> : {DESCRIPTION}</div></td>
-		</tr>
-		<tr> 
-			<td class="row1" valign="middle" align="left" colspan="2"><div class="postbody" style="padding: 10px;">{HILITE_IMAGE}</div></td>
-		</tr>
-	<!-- ENDIF -->
+
+	<!-- INCLUDE garage_profile_integration.html -->
 
 # 
 #-----[ OPEN ]----- 
@@ -979,8 +929,6 @@ styles/subSilver/templates/viewtopic_body.html
 					<td class="postdetails"><a href={postrow.U_VEHICLE}>{postrow.VEHICLE}</a></td>
 				</tr>
 			<!-- ENDIF -->
-
-
 # 
 #-----[ OPEN ]----- 
 # 
@@ -1211,7 +1159,8 @@ styles/subSilver/theme/stylesheet.css
 #-----[ SAVE/CLOSE ALL FILES ]------------------------------------------
 #
 # EoM
-
 TODO: Map new permissions to roles in phpbb_acl_roles_data so on install admins & global moderators get permissions required & regiestered users too!!
-TODO: Make profilepage display vehicle - template side done
 TODO: Make memberlist display garage button - template side done
+TODO: Events system
+TODO: Add vehicle status
+TODO: Make viewonline know exactly what you are doing..not just view garage

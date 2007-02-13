@@ -179,6 +179,7 @@ switch( $mode )
 
 			$template->assign_block_vars('comments', array(
 				'POSTER_NAME' 		=> $poster,
+				'POST_AUTHOR_COLOUR'	=> get_username_string('colour', $comment_data[$i]['user_id'], $comment_data[$i]['username'], $comment_data[$i]['user_colour']),
 				'POSTER_JOINED' 	=> $poster_joined,
 				'POSTER_POSTS' 		=> $poster_posts,
 				'POSTER_FROM' 		=> $poster_from,

@@ -304,6 +304,17 @@ switch( $mode )
 			'body'   => 'garage_lap.html')
 		);
 
+		//Build Navlinks
+		$vehicle_data 	= $garage_vehicle->get_vehicle($cid);
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $vehicle_data['vehicle'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"))
+		);
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $user->lang['EDIT_LAP'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_lap&amp;CID=$cid&amp;LID=$lid"))
+		);
+
 		//Pull Required Lap Data From DB
 		$data = $garage_track->get_lap($lid);
 
@@ -322,16 +333,41 @@ switch( $mode )
 			'L_TITLE'  		=> $user->lang['EDIT_LAP'],
 			'L_BUTTON'  		=> $user->lang['EDIT_LAP'],
 			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;CID=$cid&amp;LID=$lid"),
-			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=manage_lap_gallery&amp;CID=$cid&amp;LID=$lid"),
+			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;CID=$cid&amp;LID=$lid#images"),
 			'MINUTE' 		=> $data['minute'],
 			'SECOND' 		=> $data['second'],
 			'MILLISECOND' 		=> $data['millisecond'],
 			'CID' 			=> $cid,
 			'LID' 			=> $lid,
 			'PENDING_REDIRECT'	=> $redirect['PENDING'],
-			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=update_lap"))
-		);
+			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=update_lap"),
+			'S_IMAGE_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=insert_lap_image"),
+		));
 
+		//Let Check The User Is Allowed Perform This Action
+		if ((!$auth->acl_get('u_garage_upload_image')) OR (!$auth->acl_get('u_garage_remote_image')))
+		{
+			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=16"));
+		}
+
+		//Pre Build All Side Menus
+		$garage_template->attach_image('lap');
+
+		//Pull Lap Gallery Data From DB
+		$data = $garage_image->get_lap_gallery($cid, $lid);
+
+		//Process Each Image From Lap Gallery
+		for ($i = 0, $count = sizeof($data);$i < $count; $i++)
+		{
+			$template->assign_block_vars('pic_row', array(
+				'U_IMAGE'	=> (($data[$i]['attach_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location']))) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_image&amp;image_id=" . $data[$i]['attach_id']) : '',
+				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=remove_lap_image&amp;&amp;CID=$cid&amp;LID=$lid&amp;image_id=" . $data[$i]['attach_id']),
+				'U_SET_HILITE'	=> ($data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=set_lap_hilite&amp;image_id=" . $data[$i]['attach_id'] . "&amp;CID=$cid&amp;LID=$lid") : '',
+				'IMAGE' 	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'],
+				'IMAGE_TITLE' 	=> $data[$i]['attach_file'])
+			);
+		}
+		
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$garage_template->sidemenu();
 
@@ -432,58 +468,7 @@ switch( $mode )
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=manage_lap_gallery&amp;CID=$cid&amp;LID=$lid"));
-
-		break;
-
-	case 'manage_lap_gallery':
-
-		//Let Check The User Is Allowed Perform This Action
-		if ((!$auth->acl_get('u_garage_upload_image')) OR (!$auth->acl_get('u_garage_remote_image')))
-		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=16"));
-		}
-
-		//Check Vehicle Ownership		
-		$garage_vehicle->check_ownership($cid);
-
-		//Build Page Header ;)
-		page_header($page_title);
-		
-		//Set Template Files In Use For This Mode
-		$template->set_filenames(array(
-			'header' => 'garage_header.html',
-			'body'   => 'garage_manage_gallery.html')
-		);
-
-		//Pre Build All Side Menus
-		$garage_template->attach_image('lap');
-
-		//Pull Lap Gallery Data From DB
-		$data = $garage_image->get_lap_gallery($cid, $lid);
-
-		//Process Each Image From Lap Gallery
-		for ($i = 0, $count = sizeof($data);$i < $count; $i++)
-		{
-			$template->assign_block_vars('pic_row', array(
-				'U_IMAGE'	=> (($data[$i]['attach_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location']))) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_image&amp;image_id=" . $data[$i]['attach_id']) : '',
-				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=remove_lap_image&amp;&amp;CID=$cid&amp;LID=$lid&amp;image_id=" . $data[$i]['attach_id']),
-				'U_SET_HILITE'	=> ($data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=set_lap_hilite&amp;image_id=" . $data[$i]['attach_id'] . "&amp;CID=$cid&amp;LID=$lid") : '',
-				'IMAGE' 	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'],
-				'IMAGE_TITLE' 	=> $data[$i]['attach_file'])
-			);
-		}
-
-		$template->assign_vars(array(
-			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;CID=$cid&amp;LID=$lid"),
-			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=manage_lap_gallery&amp;CID=$cid&amp;LID=$lid"),
-			'LID' 			=> $lid,
-			'CID' 			=> $cid,
-			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=insert_lap_image"))
-         	);
-
-		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$garage_template->sidemenu();		
+		redirect(append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;CID=$cid&amp;LID=$lid#images"));
 
 		break;
 
@@ -499,7 +484,7 @@ switch( $mode )
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=manage_lap_gallery&amp;CID=$cid&amp;LID=$lid"));
+		redirect(append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;CID=$cid&amp;LID=$lid#images"));
 
 		break;
 
@@ -514,7 +499,7 @@ switch( $mode )
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=manage_lap_gallery&amp;CID=$cid&amp;LID=$lid"));
+		redirect(append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;CID=$cid&amp;LID=$lid#images"));
 
 		break;
 
@@ -596,6 +581,7 @@ switch( $mode )
 			'MAKE' 			=> $data['make'],
 			'MODEL' 		=> $data['model'],
 			'USERNAME' 		=> $data['username'],
+			'USERNAME_COLOUR'	=> get_username_string('colour', $data['user_id'], $data['username'], $data['user_colour']),
             		'AVATAR_IMG' 		=> $data['avatar'],
          	));
 
@@ -648,12 +634,13 @@ switch( $mode )
 				'SECOND'	=> $lap_data[$i]['second'],
 				'MILLISECOND'	=> $lap_data[$i]['millisecond'],
 				'USERNAME'	=> $lap_data[$i]['username'],
+				'USERNAME_COLOUR'	=> get_username_string('colour', $lap_data[$i]['user_id'], $lap_data[$i]['username'], $lap_data[$i]['user_colour']),
 				'VEHICLE'	=> $lap_data[$i]['vehicle'],
 				'IMAGE'		=> $user->img('garage_slip_img_attached', 'SLIP_IMAGE_ATTACHED'),
 				'U_IMAGE'	=> ($lap_data[$i]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_image&amp;image_id=". $lap_data[$i]['attach_id']) : '',
 				'U_VIEWPROFILE'	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $lap_data[$i]['user_id']),
-				'U_VIEWVEHICLE'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" . $lap_data[$i]['garage_id']),
-				'U_LAP'		=> append_sid("garage_track.$phpEx?mode=view_lap&amp;LID=".$lap_data[$i]['lid']."&amp;CID=". $lap_data[$i]['garage_id']),
+				'U_VIEWVEHICLE'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" . $lap_data[$i]['vehicle_id']),
+				'U_LAP'		=> append_sid("garage_track.$phpEx?mode=view_lap&amp;LID=".$lap_data[$i]['lid']."&amp;CID=". $lap_data[$i]['vehicle_id']),
 			));
 
                		// Do we have a thumbnail?  If so, our job is simple here :)

@@ -232,6 +232,17 @@ switch( $mode )
 			'body'   => 'garage_dynorun.html')
 		);
 
+		//Build Navlinks
+		$vehicle_data 	= $garage_vehicle->get_vehicle($cid);
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $vehicle_data['vehicle'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"))
+		);
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $user->lang['EDIT_DYNORUN'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;CID=$cid&amp;DID=$did"))
+		);
+
 		//Pull Required Dynorun Data From DB
 		$data = $garage_dynorun->get_dynorun($did);
 
@@ -251,7 +262,7 @@ switch( $mode )
 			'L_TITLE'  		=> $user->lang['EDIT_RUN'],
 			'L_BUTTON'  		=> $user->lang['EDIT_RUN'],
 			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=edit_dynorun&amp;CID=$cid&amp;DID=$did"),
-			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=manage_dynorun_gallery&amp;CID=$cid&amp;DID=$did"),
+			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=edit_dynorun&amp;CID=$cid&amp;DID=$did#images"),
 			'CID' 			=> $cid,
 			'DID' 			=> $did,
 			'BHP' 			=> $data['bhp'],
@@ -260,8 +271,33 @@ switch( $mode )
 			'NITROUS' 		=> $data['nitrous'],
 			'PEAKPOINT' 		=> $data['peakpoint'],
 			'PENDING_REDIRECT'	=> $redirect['PENDING'],
-			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=update_dynorun"))
-		);
+			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=update_dynorun"),
+			'S_IMAGE_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=insert_dynorun_image"),
+		));
+
+		//Let Check The User Is Allowed Perform This Action
+		if ((!$auth->acl_get('u_garage_upload_image')) OR (!$auth->acl_get('u_garage_remote_image')))
+		{
+			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=16"));
+		}
+
+		//Pre Build All Side Menus
+		$garage_template->attach_image('dynorun');
+
+		//Pull Dynorun Gallery Data From DB
+		$data = $garage_image->get_dynorun_gallery($cid, $did);
+
+		//Process Each Image From Dynorun Gallery
+		for ($i = 0, $count = sizeof($data);$i < $count; $i++)
+		{
+			$template->assign_block_vars('pic_row', array(
+				'U_IMAGE'	=> (($data[$i]['attach_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location']))) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_image&amp;image_id=" . $data[$i]['attach_id']) : '',
+				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=remove_dynorun_image&amp;&amp;CID=$cid&amp;DID=$did&amp;image_id=" . $data[$i]['attach_id']),
+				'U_SET_HILITE'	=> ($data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=set_dynorun_hilite&amp;image_id=" . $data[$i]['attach_id'] . "&amp;CID=$cid&amp;DID=$did") : '',
+				'IMAGE' 	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'],
+				'IMAGE_TITLE' 	=> $data[$i]['attach_file'])
+			);
+		}
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$garage_template->sidemenu();
@@ -363,58 +399,7 @@ switch( $mode )
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=manage_dynorun_gallery&amp;CID=$cid&amp;DID=$did"));
-
-		break;
-
-	case 'manage_dynorun_gallery':
-
-		//Let Check The User Is Allowed Perform This Action
-		if ((!$auth->acl_get('u_garage_upload_image')) OR (!$auth->acl_get('u_garage_remote_image')))
-		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=16"));
-		}
-
-		//Check Vehicle Ownership		
-		$garage_vehicle->check_ownership($cid);
-
-		//Build Page Header ;)
-		page_header($page_title);
-		
-		//Set Template Files In Use For This Mode
-		$template->set_filenames(array(
-			'header' => 'garage_header.html',
-			'body'   => 'garage_manage_gallery.html')
-		);
-
-		//Pre Build All Side Menus
-		$garage_template->attach_image('dynorun');
-
-		//Pull Dynorun Gallery Data From DB
-		$data = $garage_image->get_dynorun_gallery($cid, $did);
-
-		//Process Each Image From Dynorun Gallery
-		for ($i = 0, $count = sizeof($data);$i < $count; $i++)
-		{
-			$template->assign_block_vars('pic_row', array(
-				'U_IMAGE'	=> (($data[$i]['attach_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location']))) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_image&amp;image_id=" . $data[$i]['attach_id']) : '',
-				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=remove_dynorun_image&amp;&amp;CID=$cid&amp;DID=$did&amp;image_id=" . $data[$i]['attach_id']),
-				'U_SET_HILITE'	=> ($data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=set_dynorun_hilite&amp;image_id=" . $data[$i]['attach_id'] . "&amp;CID=$cid&amp;DID=$did") : '',
-				'IMAGE' 	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'],
-				'IMAGE_TITLE' 	=> $data[$i]['attach_file'])
-			);
-		}
-
-		$template->assign_vars(array(
-			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=edit_dynorun&amp;CID=$cid&amp;DID=$did"),
-			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=manage_dynorun_gallery&amp;CID=$cid&amp;DID=$did"),
-			'DID' => $did,
-			'CID' => $cid,
-			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=insert_dynorun_image"))
-         	);
-
-		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$garage_template->sidemenu();		
+		redirect(append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=edit_dynorun&amp;CID=$cid&amp;DID=$did#images"));
 
 		break;
 
@@ -430,7 +415,7 @@ switch( $mode )
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=manage_dynorun_gallery&amp;CID=$cid&amp;DID=$did"));
+		redirect(append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=edit_dynorun&amp;CID=$cid&amp;DID=$did#images"));
 
 		break;
 
@@ -445,7 +430,7 @@ switch( $mode )
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=manage_dynorun_gallery&amp;CID=$cid&amp;DID=$did"));
+		redirect(append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=edit_dynorun&amp;CID=$cid&amp;DID=$did#images"));
 
 		break;
 
@@ -520,6 +505,7 @@ switch( $mode )
 			'MAKE' 			=> $data['make'],
 			'MODEL' 		=> $data['model'],
 			'USERNAME' 		=> $data['username'],
+			'USERNAME_COLOUR'	=> get_username_string('colour', $data['user_id'], $data['username'], $data['user_colour']),
             		'AVATAR_IMG' 		=> $data['avatar'],
             		'DYNOCENTRE' 		=> $data['title'],
             		'BHP' 			=> $data['bhp'],

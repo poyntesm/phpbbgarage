@@ -171,6 +171,17 @@ switch( $mode )
 			'body'   => 'garage_service.html')
 		);
 
+		//Build Navlinks
+		$vehicle_data 	= $garage_vehicle->get_vehicle($cid);
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $vehicle_data['vehicle'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"))
+		);
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $user->lang['EDIT_SERVICE'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;CID=$cid&amp;SVID=$svid"))
+		);
+
 		//Pull Required Service Data From DB
 		$data = $garage_service->get_service($svid);
 		$garages = $garage_business->get_business_by_type(BUSINESS_GARAGE);

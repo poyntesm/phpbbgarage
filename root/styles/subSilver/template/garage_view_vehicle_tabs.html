@@ -35,7 +35,7 @@
    								<td class="row1"><span class="gen"><b>{L_OWNER}</b></span></td>
 		    					</tr>
                     					<tr>
-								<td align="center">{AVATAR_IMG}<br /><span class="gen"><a href="{U_PROFILE}">{USERNAME}</a></span></td>
+								<td align="center">{AVATAR_IMG}<br /><span class="gen"><a href="{U_PROFILE}" <!-- IF USERNAME_COLOUR --> style="color: {USERNAME_COLOUR}"<!-- ENDIF -->>{USERNAME}</a></span></td>
 		   					</tr>
 							<!-- IF U_HILITE_IMAGE -->
 							<tr>
@@ -73,7 +73,6 @@
 									<!-- IF U_ADD_DYNORUN --><a href="{U_ADD_DYNORUN}">{ADD_DYNORUN}</a>&nbsp;<!-- ENDIF -->
 									<!-- IF U_ADD_LAP --><a href="{U_ADD_LAP}">{ADD_LAP}</a>&nbsp;<!-- ENDIF -->
 									<!-- IF U_ADD_SERVICE --><a href="{U_ADD_SERVICE}">{ADD_SERVICE}</a>&nbsp;<!-- ENDIF -->
-									<!-- IF U_MANAGE_VEHICLE_GALLERY --><a href="{U_MANAGE_VEHICLE_GALLERY}">{MANAGE_VEHICLE_GALLERY}</a>&nbsp;<!-- ENDIF -->
 									<!-- IF U_SET_MAIN_VEHICLE --><a href="{U_SET_MAIN_VEHICLE}">{SET_MAIN_VEHICLE}</a>&nbsp;<!-- ENDIF -->
 									<br />
 									<!-- IF U_HILITE_IMAGE -->
@@ -492,7 +491,7 @@
 				<!-- ELSE -->
 
 						<td align="center" valign="middle">
-							<b class="postauthor"<!-- IF guestbook.comments.POST_AUTHOR_COLOUR --> style="color: {guestbook.comments.POST_AUTHOR_COLOUR}"<!-- ENDIF -->>{guestbook.comments.POST_AUTHOR}</b>
+							<b class="postauthor" <!-- IF guestbook.comments.POST_AUTHOR_COLOUR -->style="color: {guestbook.comments.POST_AUTHOR_COLOUR}"<!-- ENDIF -->>{guestbook.comments.POST_AUTHOR}</b>
 						</td>
 						<td width="100%" height="25">
 							<table width="100%" cellspacing="0">

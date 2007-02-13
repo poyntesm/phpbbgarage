@@ -215,6 +215,17 @@ switch( $mode )
 			'body'   => 'garage_quartermile.html')
 		);
 
+		//Build Navlinks
+		$vehicle_data 	= $garage_vehicle->get_vehicle($cid);
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $vehicle_data['vehicle'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"))
+		);
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $user->lang['EDIT_QUARTERMILE'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;CID=$cid&amp;QMID=$qmid"))
+		);
+
 		//Count Dynoruns For Vehicle
 		$count = $garage_dynorun->count_runs($cid);	
 
@@ -244,7 +255,7 @@ switch( $mode )
 			'L_TITLE'		=> $user->lang['EDIT_TIME'],
 			'L_BUTTON'		=> $user->lang['EDIT_TIME'],
 			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=edit_quartermile&amp;CID=$cid&amp;QMID=$qmid"),
-			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=manage_quartermile_gallery&amp;CID=$cid&amp;QMID=$qmid"),
+			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=edit_quartermile&amp;CID=$cid&amp;QMID=$qmid#images"),
 			'CID'			=> $cid,
 			'QMID'			=> $qmid,
 			'RT'			=> $data['rt'],
@@ -256,8 +267,33 @@ switch( $mode )
 			'QUART' 		=> $data['quart'],
 			'QUARTMPH' 		=> $data['quartmph'],
 			'PENDING_REDIRECT'	=> $redirect['PENDING'],
-			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=update_quartermile"))
-		);
+			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=update_quartermile"),
+			'S_IMAGE_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=insert_quartermile_image"),
+		));
+
+		//Let Check The User Is Allowed Perform This Action
+		if ((!$auth->acl_get('u_garage_upload_image')) OR (!$auth->acl_get('u_garage_remote_image')))
+		{
+			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=16"));
+		}
+
+		//Pre Build All Side Menus
+		$garage_template->attach_image('quartermile');
+
+		//Pull Quartermile Gallery Data From DB
+		$data = $garage_image->get_quartermile_gallery($cid, $qmid);
+
+		//Process Each Image From Quartermile Gallery
+		for ($i = 0, $count = sizeof($data);$i < $count; $i++)
+		{
+			$template->assign_block_vars('pic_row', array(
+				'U_IMAGE'	=> (($data[$i]['attach_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location']))) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_image&amp;image_id=" . $data[$i]['attach_id']) : '',
+				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=remove_quartermile_image&amp;CID=$cid&amp;QMID=$qmid&amp;image_id=" . $data[$i]['attach_id']),
+				'U_SET_HILITE'	=> ($data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=set_quartermile_hilite&amp;image_id=" . $data[$i]['attach_id'] . "&amp;CID=$cid&amp;QMID=$qmid") : '',
+				'IMAGE' 	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'],
+				'IMAGE_TITLE' 	=> $data[$i]['attach_file'])
+			);
+		}
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$garage_template->sidemenu();
@@ -389,58 +425,7 @@ switch( $mode )
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=manage_quartermile_gallery&amp;CID=$cid&amp;QMID=$qmid"));
-
-		break;
-
-	case 'manage_quartermile_gallery':
-
-		//Let Check The User Is Allowed Perform This Action
-		if ((!$auth->acl_get('u_garage_upload_image')) OR (!$auth->acl_get('u_garage_remote_image')))
-		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=16"));
-		}
-
-		//Check Vehicle Ownership		
-		$garage_vehicle->check_ownership($cid);
-
-		//Build Page Header ;)
-		page_header($page_title);
-		
-		//Set Template Files In Use For This Mode
-		$template->set_filenames(array(
-			'header' => 'garage_header.html',
-			'body'   => 'garage_manage_gallery.html')
-		);
-
-		//Pre Build All Side Menus
-		$garage_template->attach_image('quartermile');
-
-		//Pull Quartermile Gallery Data From DB
-		$data = $garage_image->get_quartermile_gallery($cid, $qmid);
-
-		//Process Each Image From Quartermile Gallery
-		for ($i = 0, $count = sizeof($data);$i < $count; $i++)
-		{
-			$template->assign_block_vars('pic_row', array(
-				'U_IMAGE'	=> (($data[$i]['attach_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location']))) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_image&amp;image_id=" . $data[$i]['attach_id']) : '',
-				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=remove_quartermile_image&amp;CID=$cid&amp;QMID=$qmid&amp;image_id=" . $data[$i]['attach_id']),
-				'U_SET_HILITE'	=> ($data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=set_quartermile_hilite&amp;image_id=" . $data[$i]['attach_id'] . "&amp;CID=$cid&amp;QMID=$qmid") : '',
-				'IMAGE' 	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'],
-				'IMAGE_TITLE' 	=> $data[$i]['attach_file'])
-			);
-		}
-
-		$template->assign_vars(array(
-			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=edit_quartermile&amp;CID=$cid&amp;QMID=$qmid"),
-			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=manage_quartermile_gallery&amp;CID=$cid&amp;QMID=$qmid"),
-			'QMID' => $qmid,
-			'CID' => $cid,
-			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=insert_quartermile_image"))
-         	);
-
-		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$garage_template->sidemenu();		
+		redirect(append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=edit_quartermile&amp;CID=$cid&amp;QMID=$qmid#images"));
 
 		break;
 
@@ -456,7 +441,7 @@ switch( $mode )
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=manage_quartermile_gallery&amp;CID=$cid&amp;QMID=$qmid"));
+		redirect(append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=edit_quartermile&amp;CID=$cid&amp;QMID=$qmid#images"));
 
 		break;
 
@@ -471,10 +456,9 @@ switch( $mode )
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=manage_quartermile_gallery&amp;CID=$cid&amp;QMID=$qmid"));
+		redirect(append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=edit_quartermile&amp;CID=$cid&amp;QMID=$qmid#images"));
 
 		break;
-
 
 	case 'view_quartermile':
 
@@ -544,6 +528,7 @@ switch( $mode )
 		$template->assign_vars(array(
 			'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $data['user_id']),
 			'USERNAME' 		=> $data['username'],
+			'USERNAME_COLOUR'	=> get_username_string('colour', $data['user_id'], $data['username'], $data['user_colour']),
 			'YEAR' 			=> $data['made_year'],
 			'MAKE' 			=> $data['make'],
 			'MODEL' 		=> $data['model'],

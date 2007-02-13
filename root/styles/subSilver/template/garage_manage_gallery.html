@@ -1,31 +1,4 @@
-<!-- INCLUDE overall_header.html -->
-
-<!-- IF U_MCP -->
-	<div id="pageheader">
-		<p class="linkmcp">[ <a href="{U_MCP}">{L_MCP}</a> ]</p>
-	</div>
-
-	<br clear="all" /><br />
-<!-- ENDIF -->
-
-<!-- INCLUDE garage_header.html -->
-
-<!-- INCLUDE garage_menu.html -->
-
-		<td width="72%" valign="top">
-			<form enctype="multipart/form-data" method="post" name="manage_gallery" action="{S_MODE_ACTION}">
-			<table>
-				<tr>
-					<td>
-					<div id="tabs">
-						<ul>
-							<li><a href="{U_EDIT_DATA}"><span>Data</span></a></li>
-							<li id="activetab"><a href="{U_MANAGE_GALLERY}"><span>Images</span></a></li>
-						</ul>
-					</div>
-					</td>
-				</tr>
-			</table>
+			<form enctype="multipart/form-data" method="post" name="manage_gallery" action="{S_IMAGE_MODE_ACTION}">
 			<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
 			
 				<!-- INCLUDE garage_image_attach.html -->
@@ -55,9 +28,3 @@
 			  	<!-- END pic_row -->
 			</form>
 			</table>
-		</td>
-
-<!-- INCLUDE garage_footer.html -->
-
-<!-- INCLUDE overall_footer.html -->
-

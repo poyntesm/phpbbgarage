@@ -176,6 +176,17 @@ switch( $mode )
 			'body'   => 'garage_insurance.html')
 		);
 
+		//Build Navlinks
+		$vehicle_data 	= $garage_vehicle->get_vehicle($cid);
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $vehicle_data['vehicle'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"))
+		);
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $user->lang['EDIT_PREMIUM'],
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;CID=$cid&amp;INS_ID=$ins_id"))
+		);
+
 		//Pull Required Insurance Premium Data From DB
 		$data = $garage_insurance->get_premium($ins_id);
 		$insurance_business = $garage_business->get_business_by_type(BUSINESS_INSURANCE);

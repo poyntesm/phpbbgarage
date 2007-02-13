@@ -32,16 +32,16 @@
 				<tr>
 					<td class="cat" align="center" height="28" ><span class="gen">{L_OWNER}</span></td>
 					<td class="cat" align="center" height="28" ><span class="gen">{L_VEHICLE}</span></td>
-					<td class="cat" align="center" height="28" ><span class="gen">{L_MODIFICATION}</span></td>
-					<td class="cat" align="center" height="28" ><span class="gen">{L_INSTALL_RATING}</span></td>
+					<td class="cat" align="center" height="28" ><span class="gen">{L_MODIFICATION}&nbsp;/&nbsp;{L_SERVICE}</span></td>
+					<td class="cat" align="center" height="28" ><span class="gen">{L_RATING}</span></td>
 				</tr>
  				<!-- END customers -->
 				<!-- BEGIN mod_row -->
 				<tr>
 					<td class="row1" align="center" nowrap><span class="gensmall"><a href="{business_row.mod_row.U_VIEW_PROFILE}" <!-- IF business_row.mod_row.USERNAME_COLOUR --> style="color: {business_row.mod_row.USERNAME_COLOUR}"<!-- ENDIF -->>{business_row.mod_row.USERNAME}</a></span></td>
 					<td class="row1" align="center" nowrap><span class="gensmall"><a href="{business_row.mod_row.U_VIEW_VEHICLE}">{business_row.mod_row.VEHICLE}</a></span></td>
-					<td class="row1" align="center" nowrap><span class="gensmall"><a href="{business_row.mod_row.U_VIEW_MODIFICATION}">{business_row.mod_row.MODIFICATION}</a></span></td>
-					<td class="row1" align="center" nowrap><span class="gensmall">{business_row.mod_row.INSTALL_RATING}</span></td>
+					<td class="row1" align="center" nowrap><span class="gensmall"><!-- IF business_row.mod_row.U_VIEW_ITEM --><a href="{business_row.mod_row.U_VIEW_ITEM}">{business_row.mod_row.ITEM}</a><!-- ELSE -->{business_row.mod_row.ITEM}<!-- ENDIF --></span></td>
+					<td class="row1" align="center" nowrap><span class="gensmall">{business_row.mod_row.RATING}</span></td>
 				</tr>
 				<!-- END mod_row -->
  				<!-- BEGIN comments -->

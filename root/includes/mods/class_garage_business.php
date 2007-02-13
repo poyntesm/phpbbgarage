@@ -276,9 +276,14 @@ class garage_business
 			'SELECT'	=> 'b.*, SUM(install_rating) AS rating, COUNT(*) *10 AS total_rating',
 			'FROM'		=> array(
 				GARAGE_BUSINESS_TABLE	=> 'b',
-				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 			),
-			'WHERE'		=>  "m.installer_id = b.id AND b.garage = 1 AND b.pending = 0 $where",
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'm'),
+					'ON'	=> 'b.id = m.installer_id'
+				)		
+			),
+			'WHERE'		=>  "b.garage = 1 AND b.pending = 0 $where",
 			'GROUP_BY'	=>  "b.id",
 			'ODER_BY'	=>  "rating DESC"
 		));
@@ -308,9 +313,14 @@ class garage_business
 			'SELECT'	=> 'b.*, SUM(purchase_rating) AS rating, COUNT(*) *10 AS total_rating',
 			'FROM'		=> array(
 				GARAGE_BUSINESS_TABLE		=> 'b',
-				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 			),
-			'WHERE'		=>  "m.shop_id = b.id AND b.retail = 1  AND b.pending =0 $where",
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'm'),
+					'ON'	=> 'b.id = m.shop_id'
+				)		
+			),
+			'WHERE'		=>  "b.retail = 1  AND b.pending =0 $where",
 			'GROUP_BY'	=>  "b.id",
 			'ODER_BY'	=>  "rating DESC"
 		));

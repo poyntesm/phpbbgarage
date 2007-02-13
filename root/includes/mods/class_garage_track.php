@@ -387,6 +387,7 @@ class garage_track
 				)
 			),
 			'WHERE'		=>	"l.vehicle_id = $cid",
+			'GROUP_BY'	=>	'l.id',
 			'ORDER_BY'	=>	'l.id'
 		));
 
@@ -412,7 +413,7 @@ class garage_track
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'l.*, l.id as lid, i.*, t.title, u.username, u.user_id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, g.id as vehicle_id',
+			'SELECT'	=> 'l.*, l.id as lid, i.*, t.title, u.username, u.user_id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, g.id as vehicle_id, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_LAPS_TABLE	=> 'l',
 			),

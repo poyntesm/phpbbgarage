@@ -177,6 +177,56 @@ class garage_service
 			return $user->lang['SERVICE_MINOR'];
 		}
 	}
+
+	/*========================================================================*/
+	// Select Services By Buisness From DB
+	// Usage: get_services_by_business('business id', 'start row', 'end row');
+	/*========================================================================*/
+	function get_services_by_business($business_id, $start = 0 , $limit = 20)
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> "s.*, u.username, u.user_id, u.user_colour, mk.make, md.model, g.made_year, b.id as business_id, CONCAT_WS(' ', g.made_year, mk.make, md.model) AS vehicle",
+			'FROM'		=> array(
+				GARAGE_SERVICE_HISTORY_TABLE	=> 's',
+				GARAGE_BUSINESS_TABLE	=> 'b',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
+					'ON'	=> 's.vehicle_id = g.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
+					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
+					'ON'	=> 'g.model_id = md.id and md.pending = 0'
+				)
+				,array(
+					'FROM'	=> array(USERS_TABLE => 'u'),
+					'ON'	=> 'g.user_id = u.user_id'
+				)
+			),
+			'WHERE'		=> "s.garage_id = b.id AND b.garage = 1 AND b.pending = 0 AND b.id = $business_id AND mk.pending = 0 AND md.pending = 0",
+			'ORDER_BY'	=> "s.id, s.date_created DESC"
+		));
+
+      		$result = $db->sql_query_limit($sql, $limit, $start);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$data[] = $row;
+		}
+
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
 }
 
 $garage_service = new garage_service();

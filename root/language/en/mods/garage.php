@@ -27,6 +27,12 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
+	'EDIT_MODIFICATION'		=> 'Edit modification',
+	'EDIT_QUARTERMILE'		=> 'Edit &frac14; mile',
+	'EDIT_DYNORUN'			=> 'Edit dynorun',
+	'EDIT_LAP'			=> 'Edit lap',
+	'EDIT_PREMIUM'			=> 'Edit premium',
+	'MAIN_VEHICLE'			=> 'Main Vehicle',
 	'NO_ITEM_TO_LIST'		=> 'No Items To List Yet',
 	'ANY_MODEL' 			=> 'Any Model',
 	'SELECT_MODEL' 			=> 'Select Model',

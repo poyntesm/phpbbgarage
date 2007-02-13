@@ -278,7 +278,7 @@ class garage
 
 			//Handle SQL Part
 			$sql_array = array(
-				'SELECT'	=> 'v.*, i.*, mk.make, md.model, u.username, count(m.id) AS total_mods',
+				'SELECT'	=> 'v.*, i.*, mk.make, md.model, u.username, u.user_colour, count(m.id) AS total_mods',
 				'FROM'		=> array(
 					GARAGE_VEHICLES_TABLE	=> 'v',
 				),
@@ -323,7 +323,7 @@ class garage
 
 			//Handle SQL Part
 			$sql_array = array(
-				'SELECT'	=> "m.*, m.id as modification_id, v.id as vehicle_id, v.made_year, v.currency, i.*, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.title as business_title, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, CONCAT_WS(' ', b1.title, p.title) as modification_title",
+				'SELECT'	=> "m.*, m.id as modification_id, v.id as vehicle_id, v.made_year, v.currency, i.*, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.title as business_title, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, CONCAT_WS(' ', b1.title, p.title) as modification_title, u.user_colour",
 				'FROM'		=> array(
 					GARAGE_MODIFICATIONS_TABLE	=> 'm',
 				),
@@ -380,7 +380,7 @@ class garage
 
 			//Handle SQL Part
 			$sql_array = array(
-				'SELECT'	=> "p.*, v.*, b.title, b.id as business_id, mk.make, md.model, u.username, u.user_id, ( SUM(m.price) + SUM(m.install_price) ) AS total_spent, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle",
+				'SELECT'	=> "p.*, v.*, b.title, b.id as business_id, mk.make, md.model, u.username, u.user_id, ( SUM(m.price) + SUM(m.install_price) ) AS total_spent, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, u.user_colour",
 				'FROM'		=> array(
 					GARAGE_PREMIUMS_TABLE	=> 'p',
 				),
@@ -425,7 +425,7 @@ class garage
 
 			//Handle SQL Part
 			$sql_array = array(
-				'SELECT'	=> "v.id, v.user_id, q.id as qmid, qg.image_id, i.attach_id, i.attach_file, u.username, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.dynorun_id, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous",
+				'SELECT'	=> "v.id, v.user_id, q.id as qmid, qg.image_id, i.attach_id, i.attach_file, u.username, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.dynorun_id, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, d.vehicle_id, u.user_colour",
 				'FROM'		=> array(
 					GARAGE_QUARTERMILES_TABLE	=> 'q',
 				),
@@ -478,7 +478,7 @@ class garage
 
 			//Handle SQL Part
 			$sql_array = array(
-				'SELECT'	=> "v.id, v.made_year, v.user_id, mk.make, md.model, b.title, d.*, i.*, d.id as did, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, u.username",
+				'SELECT'	=> "v.id, v.made_year, v.user_id, mk.make, md.model, b.title, d.*, i.*, d.id as did, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, u.username, d.vehicle_id, u.user_colour",
 				'FROM'		=> array(
 					GARAGE_DYNORUNS_TABLE	=> 'd',
 				),
@@ -531,7 +531,7 @@ class garage
 
 			//Handle SQL Part
 			$sql_array = array(
-				'SELECT'	=> "v.id, v.made_year, v.user_id, mk.make, md.model, l.*, i.*, l.id as lid, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, u.username, t.title, v.id as vehicle_id",
+				'SELECT'	=> "v.id, v.made_year, v.user_id, mk.make, md.model, l.*, i.*, l.id as lid, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, u.username, t.title, v.id as vehicle_id, u.user_colour",
 				'FROM'		=> array(
 					GARAGE_LAPS_TABLE	=> 'l',
 				),
