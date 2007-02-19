@@ -135,8 +135,8 @@ switch($mode)
 		);
 
 		$template->assign_vars(array(
-			'S_GARAGE_ACTION' => append_sid("admin_garage_business.$phpEx?mode=delete_business&amp;id=".$data[0]['id']),
-			'S_TITLE' => $data[0]['title'],
+			'S_GARAGE_ACTION' => append_sid("admin_garage_business.$phpEx?mode=delete_business&amp;id=".$data['id']),
+			'S_TITLE' => $data['title'],
 			'L_DELETE' => $lang['Delete_Business'],
 			'L_DELETE_EXPLAIN' => $lang['Delete_Business_Explain'],
 			'L_MOVE_CONTENTS' => $lang['Move_contents'],

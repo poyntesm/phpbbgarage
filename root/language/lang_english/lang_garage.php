@@ -529,7 +529,7 @@ $lang['Quartermile_Speed_Unit'] = 'MPH';
 
 //Added For RC2
 $lang['Reassign_Business'] = 'Reassign Business';
-$lang['Business_Deleted'] = 'Business Deleted : ';
+$lang['Business_Deleted'] = 'Business Deleted';
 $lang['Reassign_To'] = 'Business To Reassign Items To : ';
 $lang['Reassign_Button'] = 'Reassign';
 $lang['Translation_Link'] = '';

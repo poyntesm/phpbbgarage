@@ -23,4 +23,4 @@ So for example to upgrade 1.0.0 -> 1.0.2 the files will be named as follows.
 upgrade_garage-1.0.0.txt
 upgrade_garage-1.0.0.php
 
-All these files can be found at http://forums.phpbbgarage.com/dload.php?action=category&cat_id=10
+All these files can be found at http://forums.phpbbgarage.com/viewforum.php?f=3
