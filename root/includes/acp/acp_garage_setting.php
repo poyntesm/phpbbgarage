@@ -24,8 +24,7 @@ class acp_garage_setting
 		//Build All Garage Classes e.g $garage_images->
 		require($phpbb_root_path . 'includes/mods/class_garage_admin.' . $phpEx);
 
-		$user->add_lang('acp/board');
-		$user->add_lang('acp/garage');
+		$user->add_lang(array('acp/board', 'mods/garage', 'acp/garage'));
 
 		$action	= request_var('action', '');
 		$submit = (isset($_POST['submit'])) ? true : false;
@@ -86,10 +85,9 @@ class acp_garage_setting
 						'legend1'				=> 'ACP_GARAGE_INDEX_CONFIG',
 						'index_columns' 			=> array('lang' => 'GARAGE_INDEX_COLUMNS', 'type' => 'custom', 'method' => 'index_columns', 'explain' => true),
 						'enable_user_index_columns' 		=> array('lang' => 'ENABLE_USER_INDEX_COLUMNS', 'type' => 'radio:yes:no', 'explain' => true),
-						'enable_featured_vehicle' 		=> array('lang' => 'ENABLE_FEATURED_VEHICLE', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_featured_vehicle' 		=> array('lang' => 'ENABLE_FEATURED_VEHICLE', 'type' => 'custom', 'method' => 'select_featured_vehicle', 'explain' => true),
 						'featured_vehicle_id'			=> array('lang' => 'FEATURED_VEHICLE_ID', 'type' => 'text:3:4', 'explain' => true),
-						'featured_vehicle_random' 		=> array('lang' => 'FEATURED_VEHICLE_RANDOM', 'type' => 'radio:yes_no', 'explain' => true),
-						'featured_vehicle_from_block'		=> array('lang' => 'FEATURED_FROM_BLOCK', 'type' => 'select', 'function' => 'style_select', 'params' => array('{CONFIG_VALUE}', true), 'explain' => true),
+						'featured_vehicle_from_block'		=> array('lang' => 'FEATURED_FROM_BLOCK', 'type' => 'custom', 'method' => 'featured_block', 'explain' => true),
 						'featured_vehicle_description'		=> array('lang' => 'FEATURED_VEHICLE_DESCRIPTION', 'type' => 'text:39:40', 'explain' => true),
 						'enable_newest_vehicle' 		=> array('lang' => 'ENABLE_NEWEST_VEHCILE', 'type' => 'radio:yes_no', 'explain' => true),
 						'newest_vehicle_limit'			=> array('lang' => 'NEWEST_VEHICLE_LIMIT', 'type' => 'text:3:4', 'explain' => true),
@@ -350,6 +348,18 @@ class acp_garage_setting
 	}
 
 	/**
+	* 
+	*/
+	function select_featured_vehicle($value, $key = '')
+	{
+		global $user, $config;
+
+		$radio_ary = array('0' => 'DISABLED', '1' => 'BY_VEHICLE_ID', '2' => 'RANDOM', '4' => 'FROM_BLOCK');
+
+		return h_radio('config[enable_featured_vehicle]', $radio_ary, $value, $key);
+	}
+
+	/**
 	*
 	*/
 	function index_columns($value, $key = '')
@@ -357,6 +367,26 @@ class acp_garage_setting
 		global $user;
 
 		return '<select name="config[index_columns]" id="index_columns"><option value="1"' . (($value == 1) ? ' selected="selected"' : '') . '>1</option><option value="2"' . (($value == 2) ? ' selected="selected"' : '') . '>2</option><option value="3"' . (($value == 3) ? ' selected="selected"' : '') . '>3</option><option value="4"' . (($value == 4) ? ' selected="selected"' : '') . '>4</option></select>';
+
+	}
+
+	function featured_block($value, $key = '')
+	{
+		global $user;
+
+		return '<select name="config[featured_vehicle_from_block]" id="featured_vehicle_from_block">
+				<option value="1"' . (($value == 1) ? ' selected="selected"' : '') . '>'.$user->lang['NEWEST_VEHICLES'].'</option>
+				<option value="2"' . (($value == 2) ? ' selected="selected"' : '') . '>'.$user->lang['LAST_UPDATED_VEHICLES'].'</option>
+				<option value="3"' . (($value == 3) ? ' selected="selected"' : '') . '>'.$user->lang['NEWEST_MODIFICATIONS'].'</option>
+				<option value="4"' . (($value == 4) ? ' selected="selected"' : '') . '>'.$user->lang['LAST_UPDATED_MODIFICATIONS'].'</option>
+				<option value="5"' . (($value == 5) ? ' selected="selected"' : '') . '>'.$user->lang['MOST_MODIFIED_VEHICLE'].'</option>
+				<option value="6"' . (($value == 6) ? ' selected="selected"' : '') . '>'.$user->lang['MOST_MONEY_SPENT'].'</option>
+				<option value="7"' . (($value == 7) ? ' selected="selected"' : '') . '>'.$user->lang['MOST_VIEWED_VEHICLE'].'</option>
+				<option value="8"' . (($value == 8) ? ' selected="selected"' : '') . '>'.$user->lang['LATEST_VEHICLE_COMMENTS'].'</option>
+				<option value="9"' . (($value == 9) ? ' selected="selected"' : '') . '>'.$user->lang['TOP_QUARTERMILE_RUNS'].'</option>
+				<option value="10"' . (($value == 10) ? ' selected="selected"' : '') . '>'.$user->lang['TOP_DYNO_RUNS'].'</option>
+				<option value="11"' . (($value == 11) ? ' selected="selected"' : '') . '>'.$user->lang['TOP_RATED_VEHICLES'].'</option>
+			</select>';
 	}
 
 	/**

@@ -548,7 +548,7 @@ class garage_vehicle
 				$sql_array['GROUP_BY'] = "g.id";
 				$sql_array['ORDER_BY'] = "g.id ASC";
 	 	 	}
-			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Newest_Vehicles'] )
+			else if ( $garage_config['featured_vehicle_from_block'] == $lang['NEWEST_vEHICLES'] )
 			{
 				$sql_array['WHERE'] = "makes.pending = 0 and models.pending = 0";
 				$sql_array['GROUP_BY'] = "g.id";

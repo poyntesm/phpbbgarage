@@ -697,7 +697,7 @@ $lang = array_merge($lang, array(
 	'INSTALL_STEP3_SUCCESS_EXPLAIN'	=> 'The default makes & models have been created<br /><br />To complete the install please select the button below.<form name="" action="%s" method="post"><table><tr><td class="row1" align="center"><input type="submit" name="confirm" value="Finish Install" class="btnmain" /></td></tr></table></form>',
 	'INSTALL_STEP3_FAILED'		=> 'phpBB Garage v2 Install Step 3 Failed',
 	'INSTALL_COMPLETE'		=> 'phpBB Garage v2 Install Complete',
-	'INSTALL_COMPLETE_EXPLAIN'	=> 'This DB installation is completed.<br />This file can now be deleted.< br/>Please now edit all files as outlined in the MOD file.',
+	'INSTALL_COMPLETE_EXPLAIN'	=> 'This DB installation is completed.<br />This file can now be deleted.<br />Please now edit all files as outlined in the MOD file.',
 	'INSTALL_PHPBBGARAGE'		=> 'Welcome To the phpBB Garage v2 Install',
 	'INSTALL_PHPBBGARAGE_EXPLAIN'	=> 'This installation is broken into sections. Each section is listed below.<br /><br />1)Table Creation & Configuration Data [Required] <br />2)Modification Category Creation [Optional] <br />3)Default Vehicle Make & Model Data [Optional] <br /><br />To proceed and start step 1 of installtion please click the \'Proceed\' button below. <form name="" action="%s" method="post"><table><tr><td class="row1" align="center"><input type="submit" name="confirm" value="Proceed" class="btnmain" /></td></tr></table></form>',
 
