@@ -64,7 +64,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_vehicles (
 		`weighted_rating` double NOT NULL default '0',
 		`bbcode_bitfield` varchar(255) NOT NULL default '',
 		`bbcode_uid` varchar(5) NOT NULL default '',
-		`bbcode_flags` int(10) NOT NULL default '',
+		`bbcode_flags` int(10) default NULL,
 		`pending` tinyint(1) NOT NULL default '0',
 		PRIMARY KEY  (`id`),
 		KEY `date_created` (`date_created`),
@@ -150,7 +150,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_guestbooks (
 		`ip_address` varchar(16) NOT NULL default '',
 		`bbcode_bitfield` varchar(255) NOT NULL default '',
 		`bbcode_uid` varchar(5) NOT NULL default '',
-		`bbcode_flags` int(10) NOT NULL default '',
+		`bbcode_flags` int(10) default NULL,
 		`pending` tinyint(1) NOT NULL default '0',
 		`post` text,
 		PRIMARY KEY  (`id`),
@@ -314,7 +314,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_blog (
 		`blog_date` int(10) default NULL,
 		`bbcode_bitfield` varchar(255) NOT NULL default '',
 		`bbcode_uid` varchar(5) NOT NULL default '',
-		`bbcode_flags` int(10) NOT NULL default '',
+		`bbcode_flags` int(10) default NULL,
 		PRIMARY KEY  (`id`)
 	)";
 //Required Configuration Options
@@ -1544,49 +1544,49 @@ switch( $mode )
 		$auth_admin->acl_add_option($phpbbgarage_permissions);
 
 		//Standard Admin Role
-		$role = get_role_by_name('ROLE_ADMIN_STANDARD')
+		$role = get_role_by_name('ROLE_ADMIN_STANDARD');
 		if ($role)
 		{
 			acl_update_role($role['role_id'], array('a_garage'));
 		}
 
 		//Full Admin Role
-		$role = get_role_by_name('ROLE_ADMIN_FULL')
+		$role = get_role_by_name('ROLE_ADMIN_FULL');
 		if ($role)
 		{
 			acl_update_role($role['role_id'], array('a_garage'));
 		}
 
 		//Queue Moderator Role
-		$role = get_role_by_name('ROLE_MOD_QUEUE')
+		$role = get_role_by_name('ROLE_MOD_QUEUE');
 		if ($role)
 		{
 			acl_update_role($role['role_id'], array('m_garage'));
 		}
 
 		//Standard Moderator Role
-		$role = get_role_by_name('ROLE_MOD_STANDARD')
+		$role = get_role_by_name('ROLE_MOD_STANDARD');
 		if ($role)
 		{
 			acl_update_role($role['role_id'], array('m_garage'));
 		}
 	
 		//Full Moderator Role
-		$role = get_role_by_name('ROLE_MOD_FULL')
+		$role = get_role_by_name('ROLE_MOD_FULL');
 		if ($role)
 		{
-			acl_update_role($role['role_id'], array('u_garage_browse', 'u_garage_search', 'u_garage_add_vehicle', 'u_garage_delete_vehicle', 'u_garage_add_modification', 'u_garage_delete_modification', 'u_garage_add_quartermile', 'u_garage_delete_quartermile', 'u_garage_add_lap', 'u_garage_delete_lap', 'u_garage_add_track', 'u_garage_delete_track', 'u_garage_add_dynorun', 'u_garage_delete_dynorun', 'u_garage_add_insurance', 'u_garage_delete_insurance', 'u_garage_add_service', 'u_garage_delete_service', 'u_garage_add_blog', 'u_garage_delete_blog', 'u_garage_add_business', 'u_garage_add_make_model', 'u_garage_add_product', 'u_garage_rate', 'u_garage_comment', 'u_garage_upload_image', 'u_garage_remote_image', 'u_garage_delete_image', 'u_garage_deny'));
+			acl_update_role($role['role_id'], array('m_garage'));
 		}
 
 		//Standard Features User Role
-		$role = get_role_by_name('ROLE_USER_STANDARD')
+		$role = get_role_by_name('ROLE_USER_STANDARD');
 		if ($role)
 		{
 			acl_update_role($role['role_id'], array('u_garage_browse', 'u_garage_search', 'u_garage_add_vehicle', 'u_garage_delete_vehicle', 'u_garage_add_modification', 'u_garage_delete_modification', 'u_garage_add_quartermile', 'u_garage_delete_quartermile', 'u_garage_add_lap', 'u_garage_delete_lap', 'u_garage_add_track', 'u_garage_delete_track', 'u_garage_add_dynorun', 'u_garage_delete_dynorun', 'u_garage_add_insurance', 'u_garage_delete_insurance', 'u_garage_add_service', 'u_garage_delete_service', 'u_garage_add_blog', 'u_garage_delete_blog', 'u_garage_add_business', 'u_garage_add_make_model', 'u_garage_add_product', 'u_garage_rate', 'u_garage_comment', 'u_garage_upload_image', 'u_garage_remote_image', 'u_garage_delete_image', 'u_garage_deny'));
 		}
 
 		//All Features User Role
-		$role = get_role_by_name('ROLE_USER_FULL')
+		$role = get_role_by_name('ROLE_USER_FULL');
 		if ($role)
 		{
 			acl_update_role($role['role_id'], array('u_garage_browse', 'u_garage_search', 'u_garage_add_vehicle', 'u_garage_delete_vehicle', 'u_garage_add_modification', 'u_garage_delete_modification', 'u_garage_add_quartermile', 'u_garage_delete_quartermile', 'u_garage_add_lap', 'u_garage_delete_lap', 'u_garage_add_track', 'u_garage_delete_track', 'u_garage_add_dynorun', 'u_garage_delete_dynorun', 'u_garage_add_insurance', 'u_garage_delete_insurance', 'u_garage_add_service', 'u_garage_delete_service', 'u_garage_add_blog', 'u_garage_delete_blog', 'u_garage_add_business', 'u_garage_add_make_model', 'u_garage_add_product', 'u_garage_rate', 'u_garage_comment', 'u_garage_upload_image', 'u_garage_remote_image', 'u_garage_delete_image', 'u_garage_deny'));
@@ -1885,7 +1885,7 @@ function get_role_by_name($name)
 {
 	global $db;
 
-	$data = null
+	$data = null;
 
 	$sql = "SELECT *
 		FROM " . ACL_ROLES_TABLE . "
@@ -1925,7 +1925,7 @@ function get_acl_options($options)
 
 	$sql = "SELECT *
 		FROM " . ACL_OPTIONS_TABLE . "
-		WHERE " . $db->sql_in_set('auth_option', $options) . ";
+		WHERE " . $db->sql_in_set('auth_option', $options) . "
 		GROUP BY auth_option_id";
 	$result = $db->sql_query($sql);
 	while ($row = $db->sql_fetchrow($result))
@@ -1938,3 +1938,4 @@ function get_acl_options($options)
 }
 
 ?>
+
