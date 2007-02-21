@@ -688,6 +688,7 @@ $lang = array_merge($lang, array(
 	'ACP_GARAGE_TRACK'			=> 'Tracks',
 	'ACP_GARAGE_TRACK_MANAGEMENT'		=> 'Garage track managment',
 	'ACP_GARAGE_SETTINGS'			=> 'Garage settings',
+	'ACP_GARAGE_MANAGEMENT'			=> 'Garage management',
 	'ACP_GARAGE_GENERAL_SETTINGS'		=> 'General settings',
 	'ACP_GARAGE_MENU_SETTINGS'		=> 'Menu settings',
 	'ACP_GARAGE_INDEX_SETTINGS'		=> 'Index page settings',
@@ -1159,7 +1160,6 @@ styles/subSilver/theme/stylesheet.css
 #-----[ SAVE/CLOSE ALL FILES ]------------------------------------------
 #
 # EoM
-TODO: Map new permissions to roles in phpbb_acl_roles_data so on install admins & global moderators get permissions required & regiestered users too!!
 TODO: Make memberlist display garage button - template side done
 TODO: Events system
 TODO: Add vehicle status
