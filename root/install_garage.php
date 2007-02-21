@@ -1486,7 +1486,6 @@ $u_garage = append_sid("{$phpbb_root_path}garage.$phpEx");
 //Decide What Mode The User Is Doing
 switch( $mode )
 {
-
 	//Try Create Tables & Default Configuration Data, If Succesfull Allow User To Proceed To Step2
 	case 'step1':
 
@@ -1543,6 +1542,122 @@ switch( $mode )
 			       	'a_garage')
 		);
 		$auth_admin->acl_add_option($phpbbgarage_permissions);
+
+		//Standard Admin Role
+		$role = get_role_by_name('ROLE_ADMIN_STANDARD')
+		if ($role)
+		{
+			acl_update_role($role['role_id'], array('a_garage'));
+		}
+
+		//Full Admin Role
+		$role = get_role_by_name('ROLE_ADMIN_FULL')
+		if ($role)
+		{
+			acl_update_role($role['role_id'], array('a_garage'));
+		}
+
+		//Queue Moderator Role
+		$role = get_role_by_name('ROLE_MOD_QUEUE')
+		if ($role)
+		{
+			acl_update_role($role['role_id'], array('m_garage'));
+		}
+
+		//Standard Moderator Role
+		$role = get_role_by_name('ROLE_MOD_STANDARD')
+		if ($role)
+		{
+			acl_update_role($role['role_id'], array('m_garage'));
+		}
+	
+		//Full Moderator Role
+		$role = get_role_by_name('ROLE_MOD_FULL')
+		if ($role)
+		{
+			acl_update_role($role['role_id'], array('u_garage_browse', 'u_garage_search', 'u_garage_add_vehicle', 'u_garage_delete_vehicle', 'u_garage_add_modification', 'u_garage_delete_modification', 'u_garage_add_quartermile', 'u_garage_delete_quartermile', 'u_garage_add_lap', 'u_garage_delete_lap', 'u_garage_add_track', 'u_garage_delete_track', 'u_garage_add_dynorun', 'u_garage_delete_dynorun', 'u_garage_add_insurance', 'u_garage_delete_insurance', 'u_garage_add_service', 'u_garage_delete_service', 'u_garage_add_blog', 'u_garage_delete_blog', 'u_garage_add_business', 'u_garage_add_make_model', 'u_garage_add_product', 'u_garage_rate', 'u_garage_comment', 'u_garage_upload_image', 'u_garage_remote_image', 'u_garage_delete_image', 'u_garage_deny'));
+		}
+
+		//Standard Features User Role
+		$role = get_role_by_name('ROLE_USER_STANDARD')
+		if ($role)
+		{
+			acl_update_role($role['role_id'], array('u_garage_browse', 'u_garage_search', 'u_garage_add_vehicle', 'u_garage_delete_vehicle', 'u_garage_add_modification', 'u_garage_delete_modification', 'u_garage_add_quartermile', 'u_garage_delete_quartermile', 'u_garage_add_lap', 'u_garage_delete_lap', 'u_garage_add_track', 'u_garage_delete_track', 'u_garage_add_dynorun', 'u_garage_delete_dynorun', 'u_garage_add_insurance', 'u_garage_delete_insurance', 'u_garage_add_service', 'u_garage_delete_service', 'u_garage_add_blog', 'u_garage_delete_blog', 'u_garage_add_business', 'u_garage_add_make_model', 'u_garage_add_product', 'u_garage_rate', 'u_garage_comment', 'u_garage_upload_image', 'u_garage_remote_image', 'u_garage_delete_image', 'u_garage_deny'));
+		}
+
+		//All Features User Role
+		$role = get_role_by_name('ROLE_USER_FULL')
+		if ($role)
+		{
+			acl_update_role($role['role_id'], array('u_garage_browse', 'u_garage_search', 'u_garage_add_vehicle', 'u_garage_delete_vehicle', 'u_garage_add_modification', 'u_garage_delete_modification', 'u_garage_add_quartermile', 'u_garage_delete_quartermile', 'u_garage_add_lap', 'u_garage_delete_lap', 'u_garage_add_track', 'u_garage_delete_track', 'u_garage_add_dynorun', 'u_garage_delete_dynorun', 'u_garage_add_insurance', 'u_garage_delete_insurance', 'u_garage_add_service', 'u_garage_delete_service', 'u_garage_add_blog', 'u_garage_delete_blog', 'u_garage_add_business', 'u_garage_add_make_model', 'u_garage_add_product', 'u_garage_rate', 'u_garage_comment', 'u_garage_upload_image', 'u_garage_remote_image', 'u_garage_delete_image', 'u_garage_deny'));
+		}
+
+		//Lets Add Automatically The Modules
+		require($phpbb_root_path . 'includes/acp/acp_modules.' . $phpEx);
+		$modules = new acp_modules();
+		$module_data = $errors = array();
+
+		//Define ACP Garage Module Categories
+		$module_data[] = array('module_basename' => '', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => '24', 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_SETTINGS', 'module_mode' => '', 'module_auth' => '' );
+		$module_data[] = array('module_basename' => '', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => '24', 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_MANAGEMENT', 'module_mode' => '', 'module_auth' => '' );
+
+		//Define MCP Garage Module Categories
+		$module_data[] = array('module_basename' => '', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => '0', 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE', 'module_mode' => '', 'module_auth' => '' );
+
+		//Define UCP Garage Module Categories
+		$module_data[] = array('module_basename' => '', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => '0', 'module_class' => 'ucp', 'module_langname' => 'UCP_GARAGE', 'module_mode' => '', 'module_auth' => '' );
+
+		//Create All Required Module Categories & Reset
+		create_modules($module_data);
+		$module_data = null;
+		$module_data = array();
+
+		$acp_settings_parent = get_module_id('acp', 'ACP_GARAGE_SETTINGS');
+		$acp_management_parent = get_module_id('acp', 'ACP_GARAGE_MANAGEMENT');
+		$mcp_parent = get_module_id('mcp', 'MCP_GARAGE');
+		$ucp_parent = get_module_id('ucp', 'UCP_GARAGE');
+
+		//Define ACP Settings Modules
+		$module_data[] = array('module_basename' => 'garage_setting', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_settings_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_GENERAL_SETTINGS', 'module_mode' => 'general', 'module_auth' => 'acl_a_garage');
+		$module_data[] = array('module_basename' => 'garage_setting', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_settings_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_MENU_SETTINGS', 'module_mode' => 'menu', 'module_auth' => 'acl_a_garage');
+		$module_data[] = array('module_basename' => 'garage_setting', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_settings_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_INDEX_SETTINGS', 'module_mode' => 'index', 'module_auth' => 'acl_a_garage');
+		$module_data[] = array('module_basename' => 'garage_setting', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_settings_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_IMAGES_SETTINGS', 'module_mode' => 'images', 'module_auth' => 'acl_a_garage');
+		$module_data[] = array('module_basename' => 'garage_setting', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_settings_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_QUARTERMILE_SETTINGS', 'module_mode' => 'quartermile', 'module_auth' => 'acl_a_garage');
+		$module_data[] = array('module_basename' => 'garage_setting', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_settings_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_DYNORUN_SETTINGS', 'module_mode' => 'dynorun', 'module_auth' => 'acl_a_garage');
+		$module_data[] = array('module_basename' => 'garage_setting', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_settings_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_TRACK_SETTINGS', 'module_mode' => 'track', 'module_auth' => 'acl_a_garage');
+		$module_data[] = array('module_basename' => 'garage_setting', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_settings_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_INSURANCE_SETTINGS', 'module_mode' => 'insurance', 'module_auth' => 'acl_a_garage');
+		$module_data[] = array('module_basename' => 'garage_setting', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_settings_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_BUSINESS_SETTINGS', 'module_mode' => 'business', 'module_auth' => 'acl_a_garage');
+		$module_data[] = array('module_basename' => 'garage_setting', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_settings_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_RATING_SETTINGS', 'module_mode' => 'rating', 'module_auth' => 'acl_a_garage');
+		$module_data[] = array('module_basename' => 'garage_setting', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_settings_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_GUESTBOOK_SETTINGS', 'module_mode' => 'guestbook', 'module_auth' => 'acl_a_garage');
+		$module_data[] = array('module_basename' => 'garage_setting', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_settings_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_PRODUCT_SETTINGS', 'module_mode' => 'product', 'module_auth' => 'acl_a_garage');
+		$module_data[] = array('module_basename' => 'garage_setting', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_settings_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_SERVICE_SETTINGS', 'module_mode' => 'service', 'module_auth' => 'acl_a_garage');
+		$module_data[] = array('module_basename' => 'garage_setting', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_settings_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_BLOG_SETTINGS', 'module_mode' => 'blog', 'module_auth' => 'acl_a_garage');
+
+		//Define ACP Management Modules
+		$module_data[] = array('module_basename' => 'garage_business', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_management_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_BUSINESS', 'module_mode' => 'business', 'module_auth' => 'acl_a_garage');
+		$module_data[] = array('module_basename' => 'garage_category', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_management_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_CATEGORIES', 'module_mode' => 'categories', 'module_auth' => 'acl_a_garage');
+		$module_data[] = array('module_basename' => 'garage_model', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_management_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_MODELS', 'module_mode' => 'makes', 'module_auth' => 'acl_a_garage');
+		$module_data[] = array('module_basename' => 'garage_product', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_management_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_PRODUCTS', 'module_mode' => 'products', 'module_auth' => 'acl_a_garage');
+		$module_data[] = array('module_basename' => 'garage_quota', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_management_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_QUOTAS', 'module_mode' => 'quotas', 'module_auth' => 'acl_a_garage');
+		$module_data[] = array('module_basename' => 'garage_tool', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_management_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_TOOLS', 'module_mode' => 'tools', 'module_auth' => 'acl_a_garage');
+		$module_data[] = array('module_basename' => 'garage_track', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_management_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_TRACK', 'module_mode' => 'track', 'module_auth' => 'acl_a_garage');
+
+		//Define MCP Modules
+		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_VEHICLES', 'module_mode' => 'unapproved_vehicles', 'module_auth' => 'acl_m_garage');
+		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_MAKES', 'module_mode' => 'unapproved_makes', 'module_auth' => 'acl_m_garage');
+		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_MODELS', 'module_mode' => 'unapproved_models', 'module_auth' => 'acl_m_garage');
+		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_BUSINESS', 'module_mode' => 'unapproved_business', 'module_auth' => 'acl_m_garage');
+		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_QUARTERMILES', 'module_mode' => 'unapproved_quartermiles', 'module_auth' => 'acl_m_garage');
+		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_DYNORUNS', 'module_mode' => 'unapproved_dynoruns', 'module_auth' => 'acl_m_garage');
+		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_GUESTBOOK_COMMENTS', 'module_mode' => 'unapproved_guestbook_comments', 'module_auth' => 'acl_m_garage');
+		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_LAPS', 'module_mode' => 'unapproved_laps', 'module_auth' => 'acl_m_garage');
+		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_TRACKS', 'module_mode' => 'unapproved_tracks', 'module_auth' => 'acl_m_garage');
+
+		//Define UCP Modules
+		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $ucp_parent, 'module_class' => 'ucp', 'module_langname' => 'UCP_GARAGE_OPTIONS', 'module_mode' => 'options', 'module_auth' => '');
+		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $ucp_parent, 'module_class' => 'ucp', 'module_langname' => 'UCP_GARAGE_NOTIFY', 'module_mode' => 'notify', 'module_auth' => '');
+
+		create_modules($module_data);
 
 		//If Any Errors During Table Creation Step1 Display Error Message
 		if ($errored)
@@ -1725,5 +1840,101 @@ $sql[] = "INSERT INTO `phpbb_garage_vehicle_lang` VALUES (4, 1, 'textarea', 'tex
 $sql[] = "INSERT INTO `phpbb_garage_vehicle_lang` VALUES (5, 1, 'date', 'date', '')";*/
 
 page_footer();
+
+function create_modules($module_data)
+{
+	global $modules;
+
+	for ($i = 0, $count = sizeof($module_data);$i < $count; $i++)
+	{
+		if ($module_data[$i]['module_class'] == 'acp')
+		{
+			$modules->module_class = 'acp';
+		}
+		if ($module_data[$i]['module_class'] == 'mcp')
+		{
+			$modules->module_class = 'mcp';
+		}
+		if ($module_data[$i]['module_class'] == 'ucp')
+		{
+			$modules->module_class = 'ucp';
+		}
+		$errors = $modules->update_module_data($module_data[$i]);
+		if (!sizeof($errors))
+		{
+			$modules->remove_cache_file();
+		}
+	}
+}
+
+function get_module_id($type, $module)
+{
+	global $db;
+
+	$sql = "SELECT m.module_id
+		FROM " . MODULES_TABLE . " m
+		WHERE m.module_class = '".$type."'
+			AND m.module_langname = '".$module."'";
+	$result = $db->sql_query($sql);
+	$row = $db->sql_fetchrow($result);
+
+	return $row['module_id'];
+}
+
+function get_role_by_name($name)
+{
+	global $db;
+
+	$data = null
+
+	$sql = "SELECT *
+		FROM " . ACL_ROLES_TABLE . "
+		WHERE role_name = '$name'";
+	$result = $db->sql_query($sql);
+	$data = $db->sql_fetchrow($result);
+	$db->sql_freeresult($result);
+
+	return $data;
+}
+
+function acl_update_role($role_id, $options)
+{
+	global $db, $auth_admin;
+
+	$acl_options = get_acl_options($options);
+
+	$sql_ary = array();
+	for ($i = 0, $count = sizeof($acl_options);$i < $count; $i++)
+	{
+		$sql_ary[] = array(
+			'role_id'		=> (int) $role_id,
+			'auth_option_id'	=> (int) $acl_options[$i]['auth_option_id'],
+			'auth_setting'		=> '1'
+		);
+	}
+
+	$db->sql_multi_insert(ACL_ROLES_DATA_TABLE, $sql_ary);
+	$auth_admin->acl_clear_prefetch();
+}
+
+function get_acl_options($options)
+{
+	global $db;
+
+	$data = null;
+
+	$sql = "SELECT *
+		FROM " . ACL_OPTIONS_TABLE . "
+		WHERE " . $db->sql_in_set('auth_option', $options) . ";
+		GROUP BY auth_option_id";
+	$result = $db->sql_query($sql);
+	while ($row = $db->sql_fetchrow($result))
+	{
+		$data[] = $row;
+	}
+	$db->sql_freeresult($result);
+
+	return $data;
+}
 
 ?>

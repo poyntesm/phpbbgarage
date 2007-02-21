@@ -177,9 +177,9 @@ class acp_garage_quota
 		$template->assign_vars(array(
 			'U_ACTION'		=> $this->u_action ."&amp;action=update",
 			'U_BACK'		=> $this->u_action,
-			'DEFAULT_VEHICLE_QUOTA' => $garage_config['max_user_cars'],
-			'DEFAULT_UPLOAD_QUOTA' 	=> $garage_config['max_upload_images'],
-			'DEFAULT_REMOTE_QUOTA' 	=> $garage_config['max_remote_images'],
+			'DEFAULT_VEHICLE_QUOTA' => $garage_config['default_vehicle_quota'],
+			'DEFAULT_UPLOAD_QUOTA' 	=> $garage_config['default_upload_quota'],
+			'DEFAULT_REMOTE_QUOTA' 	=> $garage_config['default_remote_quota'],
 			'S_ERROR'		=> (sizeof($errors)) ? true : false,
 			'ERROR_MSG'		=> (sizeof($errors)) ? implode('<br />', $errors) : '',
 		));
