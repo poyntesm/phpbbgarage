@@ -261,43 +261,56 @@ class garage
 	// Returns List Of Moderators To Notify Of Pending Items By Email & Jabber
 	// Usage: perform_search(array());
 	/*========================================================================*/
-	function perform_search($search_options)
+	function perform_search($search_options, &$total, &$pagination_url)
 	{
-		global $db, $garage_config, $garage_template, $sort, $order, $start;
+		global $db, $garage_config, $garage_template, $sort, $order, $start, $mode;
 
 		$data = null;
 
 		//Lets Build The Main Parts For The Query & Some Template Stuff..We Will Add Conditions Later..
 		if ($search_options['display_as'] == 'vehicles')
 		{
+			//Update Display As Unless We Are In A Mode Which Defaults To this, We Try Hide This Fact
+			if ($mode != 'browse')
+			{
+				$pagination_url .= "&amp;display_as=vehicles";
+			}
+
 			//Handle Sorting & Ordering
-			$sort = (empty($sort)) ? 'date_created' : $sort;
+			if (empty($sort))
+			{
+				$sort = 'date_created';
+			}
+			else
+			{
+				$pagination_url .= "&amp;sort=$sort";
+			}
 			$garage_template->sort_dropdown('vehicle', $sort);
-			$order = (empty($order)) ? 'ASC' : $order;
+
+			if (empty($order))
+			{
+				$order = 'ASC';
+			}
+			else
+			{
+				$pagination_url .= "&amp;order=$order";
+			}
 			$garage_template->order_dropdown($order);
 
 			//Handle SQL Part
 			$sql_array = array(
 				'SELECT'	=> 'v.*, i.*, mk.make, md.model, u.username, u.user_colour, count(m.id) AS total_mods',
+				'SELECT_COUNT'	=> "count(DISTINCT v.id) as total",
 				'FROM'		=> array(
 					GARAGE_VEHICLES_TABLE	=> 'v',
+					GARAGE_MAKES_TABLE	=> 'mk',
+					GARAGE_MODELS_TABLE	=> 'md',
+					USERS_TABLE		=> 'u',
 				),
 				'LEFT_JOIN'	=> array(
 					array(
-						'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'm'),	
+						'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'm'),
 						'ON'	=> 'v.id = m.vehicle_id'
-					)
-					,array(
-						'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-						'ON'	=> 'v.make_id = mk.id and mk.pending = 0'
-					)
-					,array(
-						'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-						'ON'	=> 'v.model_id = md.id and md.pending = 0'
-					)
-					,array(
-						'FROM'	=> array(USERS_TABLE => 'u'),
-						'ON'	=> 'v.user_id = u.user_id'
 					)
 					,array(
 						'FROM'	=> array(GARAGE_VEHICLE_GALLERY_TABLE => 'vg'),
@@ -308,49 +321,58 @@ class garage
 						'ON'	=> 'vg.image_id = i.attach_id'
 					)
 				),
-				'WHERE'		=> "v.pending = 0",
+				'WHERE'		=> "v.pending = 0 
+							AND (v.make_id = mk.id and mk.pending = 0) 
+							AND (v.model_id = md.id and md.pending = 0) 
+							AND v.user_id = u.user_id",
 				'GROUP_BY'	=> "v.id",
 				'ORDER_BY'	=> "$sort $order"
 			);
 		}
 		else if ($search_options['display_as'] == 'modifications')
 		{
+			$pagination_url .= "&amp;display_as=modifications";
+
 			//Handle Sorting & Ordering
-			$sort = (empty($sort)) ? 'date_created' : $sort;
+			if (empty($sort))
+			{
+				$sort = 'category_id';
+			}
+			else
+			{
+				$pagination_url .= "&amp;sort=$sort";
+			}
 			$garage_template->sort_dropdown('modification', $sort);
-			$order = (empty($order)) ? 'ASC' : $order;
+
+			if (empty($order))
+			{
+				$order = 'ASC';
+			}
+			else
+			{
+				$pagination_url .= "&amp;order=$order";
+			}
 			$garage_template->order_dropdown($order);
 
 			//Handle SQL Part
 			$sql_array = array(
 				'SELECT'	=> "m.*, m.id as modification_id, v.id as vehicle_id, v.made_year, v.currency, i.*, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.title as business_title, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, CONCAT_WS(' ', b1.title, p.title) as modification_title, u.user_colour",
+				'SELECT_COUNT'	=> "COUNT(m.id) AS total",
 				'FROM'		=> array(
 					GARAGE_MODIFICATIONS_TABLE	=> 'm',
+					GARAGE_VEHICLES_TABLE		=> 'v',
+					GARAGE_MAKES_TABLE		=> 'mk',
+					GARAGE_MODELS_TABLE		=> 'md',
+					USERS_TABLE			=> 'u',
 				),
 				'LEFT_JOIN'	=> array(
 					array(
-						'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'v'),	
-						'ON'	=> 'm.vehicle_id = v.id'
-					)
-					,array(
 						'FROM'	=> array(GARAGE_CATEGORIES_TABLE => 'c'),	
 						'ON'	=> 'm.category_id = c.id'
 					)
 					,array(
 						'FROM'	=> array(GARAGE_PRODUCTS_TABLE => 'p'),	
 						'ON'	=> 'm.product_id = p.id'
-					)
-					,array(
-						'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-						'ON'	=> 'v.make_id = mk.id and mk.pending = 0'
-					)
-					,array(
-						'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-						'ON'	=> 'v.model_id = md.id and md.pending = 0'
-					)
-					,array(
-						'FROM'	=> array(USERS_TABLE => 'u'),
-						'ON'	=> 'v.user_id = u.user_id'
 					)
 					,array(
 						'FROM'	=> array(GARAGE_MODIFICATION_GALLERY_TABLE => 'mg'),
@@ -365,94 +387,108 @@ class garage
 						'ON'	=> 'm.manufacturer_id = b1.id'
 					)
 				),
-				'WHERE'		=> "m.id IS NOT NULL",
+				'WHERE'		=> "m.id IS NOT NULL AND m.vehicle_id = v.id AND (v.make_id = mk.id and mk.pending = 0) AND (v.model_id = md.id and md.pending = 0) AND v.user_id = u.user_id",
 				'GROUP_BY'	=> "m.id",
 				'ORDER_BY'	=> "$sort $order"
 			);
+
+		
 		}
 		else if ($search_options['display_as'] == 'premiums')
 		{
+			$pagination_url .= "&amp;display_as=premiums";
+			
 			//Handle Sorting & Ordering
-			$sort = (empty($sort)) ? 'premium' : $sort;
+			if (empty($sort))
+			{
+				$sort = 'premium';
+			}
+			else
+			{
+				$pagination_url .= "&amp;sort=$sort";
+			}
 			$garage_template->sort_dropdown('premium', $sort);
-			$order = (empty($order)) ? 'ASC' : $order;
+
+			if (empty($order))
+			{
+				$order = 'ASC';
+			}
+			else
+			{
+				$pagination_url .= "&amp;order=$order";
+			}
 			$garage_template->order_dropdown($order);
 
 			//Handle SQL Part
 			$sql_array = array(
 				'SELECT'	=> "p.*, v.*, b.title, b.id as business_id, mk.make, md.model, u.username, u.user_id, ( SUM(m.price) + SUM(m.install_price) ) AS total_spent, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, u.user_colour",
+				'SELECT_COUNT'	=> "COUNT(DISTINCT p.id) AS total",
 				'FROM'		=> array(
 					GARAGE_PREMIUMS_TABLE	=> 'p',
+					GARAGE_VEHICLES_TABLE	=> 'v',
+					GARAGE_MAKES_TABLE	=> 'mk',
+					GARAGE_MODELS_TABLE	=> 'md',
+					USERS_TABLE		=> 'u',
 				),
 				'LEFT_JOIN'	=> array(
 					array(
-						'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'v'),	
-						'ON'	=> 'p.vehicle_id = v.id'
-					)
-					,array(
-						'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-						'ON'	=> 'v.make_id = mk.id and mk.pending = 0'
-					)
-					,array(
-						'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-						'ON'	=> 'v.model_id = md.id and md.pending = 0'
-					)
-					,array(
 						'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'm'),	
 						'ON'	=> 'v.id = m.vehicle_id'
-					)
-					,array(
-						'FROM'	=> array(USERS_TABLE => 'u'),
-						'ON'	=> 'v.user_id = u.user_id'
 					)
 					,array(
 						'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b'),
 						'ON'	=> 'p.business_id = b.id'
 					)
 				),
-				'WHERE'		=> "p.id IS NOT NULL",
+				'WHERE'		=> "p.id IS NOT NULL AND p.vehicle_id = v.id  AND (v.make_id = mk.id and mk.pending = 0) AND (v.model_id = md.id and md.pending = 0) AND v.user_id = u.user_id",
 				'GROUP_BY'	=> "p.id",
 				'ORDER_BY'	=> "$sort $order"
 			);
 		}
 		else if ($search_options['display_as'] == 'quartermiles')
 		{
+			//Update Display As Unless We Are In A Mode Which Defaults To this, We Try Hide This Fact
+			if ($mode != 'quartermile_table')
+			{
+				$pagination_url .= "&amp;display_as=quartermiles";
+			}
+
 			//Handle Sorting & Ordering
-			$sort = (empty($sort)) ? 'quart' : $sort;
+			if (empty($sort))
+			{
+				$sort = 'quart';
+			}
+			else
+			{
+				$pagination_url .= "&amp;sort=$sort";
+			}
 			$garage_template->sort_dropdown('quartermile', $sort);
-			$order = (empty($order)) ? 'ASC' : $order;
+
+			if (empty($order))
+			{
+				$order = 'ASC';
+			}
+			else
+			{
+				$pagination_url .= "&amp;order=$order";
+			}
 			$garage_template->order_dropdown($order);
 
 			//Handle SQL Part
 			$sql_array = array(
 				'SELECT'	=> "v.id, v.user_id, q.id as qmid, qg.image_id, i.attach_id, i.attach_file, u.username, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.dynorun_id, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, d.vehicle_id, u.user_colour",
+				'SELECT_COUNT'	=> "COUNT(q.id) AS total",
 				'FROM'		=> array(
 					GARAGE_QUARTERMILES_TABLE	=> 'q',
+					GARAGE_VEHICLES_TABLE		=> 'v',
+					GARAGE_MAKES_TABLE		=> 'mk',
+					GARAGE_MODELS_TABLE		=> 'md',
+					USERS_TABLE			=> 'u',
 				),
 				'LEFT_JOIN'	=> array(
 					array(
-						'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'v'),	
-						'ON'	=> 'q.vehicle_id = v.id'
-					)
-					,array(
 						'FROM'	=> array(GARAGE_DYNORUNS_TABLE => 'd'),	
 						'ON'	=> 'q.dynorun_id = d.id'
-					)
-					,array(
-						'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-						'ON'	=> 'v.make_id = mk.id and mk.pending = 0'
-					)
-					,array(
-						'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-						'ON'	=> 'v.model_id = md.id and md.pending = 0'
-					)
-					,array(
-						'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'm'),	
-						'ON'	=> 'v.id = m.vehicle_id'
-					)
-					,array(
-						'FROM'	=> array(USERS_TABLE => 'u'),
-						'ON'	=> 'v.user_id = u.user_id'
 					)
 					,array(
 						'FROM'	=> array(GARAGE_QUARTERMILE_GALLERY_TABLE => 'qg'),
@@ -463,47 +499,53 @@ class garage
 						'ON'	=> 'qg.image_id = i.attach_id'
 					)
 				),
-				'WHERE'		=> "q.pending = 0",
+				'WHERE'		=> "q.pending = 0 AND q.vehicle_id = v.id  AND (v.make_id = mk.id and mk.pending = 0) AND (v.model_id = md.id and md.pending = 0) AND v.user_id = u.user_id",
 				'GROUP_BY'	=> "q.id",
 				'ORDER_BY'	=> "$sort $order"
 			);
 		}
 		else if ($search_options['display_as'] == 'dynoruns')
 		{
+			//Update Display As Unless We Are In A Mode Which Defaults To this, We Try Hide This Fact
+			if ($mode != 'dynorun_table')
+			{
+				$pagination_url .= "&amp;display_as=dynoruns";
+			}
+
 			//Handle Sorting & Ordering
-			$sort = (empty($sort)) ? 'bhp' : $sort;
+			if (empty($sort))
+			{
+				$sort = 'bhp';
+			}
+			else
+			{
+				$pagination_url .= "&amp;sort=$sort";
+			}
 			$garage_template->sort_dropdown('dynorun', $sort);
-			$order = (empty($order)) ? 'ASC' : $order;
+
+			if (empty($order))
+			{
+				$order = 'DESC';
+			}
+			else
+			{
+				$pagination_url .= "&amp;order=$order";
+			}
 			$garage_template->order_dropdown($order);
 
 			//Handle SQL Part
 			$sql_array = array(
 				'SELECT'	=> "v.id, v.made_year, v.user_id, mk.make, md.model, b.title, d.*, i.*, d.id as did, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, u.username, d.vehicle_id, u.user_colour",
+				'SELECT_COUNT'	=> "COUNT(d.id) AS total",
 				'FROM'		=> array(
 					GARAGE_DYNORUNS_TABLE	=> 'd',
+					GARAGE_VEHICLES_TABLE	=> 'v',
+					GARAGE_MAKES_TABLE	=> 'mk',
+					GARAGE_MODELS_TABLE	=> 'md',
+					USERS_TABLE		=> 'u',
 				),
 				'LEFT_JOIN'	=> array(
 					array(
-						'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'v'),	
-						'ON'	=> 'd.vehicle_id = v.id'
-					)
-					,array(
-						'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-						'ON'	=> 'v.make_id = mk.id and mk.pending = 0'
-					)
-					,array(
-						'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-						'ON'	=> 'v.model_id = md.id and md.pending = 0'
-					)
-					,array(
-						'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'm'),	
-						'ON'	=> 'v.id = m.vehicle_id'
-					)
-					,array(
-						'FROM'	=> array(USERS_TABLE => 'u'),
-						'ON'	=> 'v.user_id = u.user_id'
-					)
-					,array(
 						'FROM'	=> array(GARAGE_DYNORUN_GALLERY_TABLE => 'dg'),
 						'ON'	=> 'd.id = dg.dynorun_id AND dg.hilite = 1'
 					)
@@ -516,47 +558,53 @@ class garage
 						'ON'	=> 'd.dynocentre_id = b.id'
 					)
 				),
-				'WHERE'		=> "d.pending = 0",
+				'WHERE'		=> "d.pending = 0 AND d.vehicle_id = v.id  AND (v.make_id = mk.id and mk.pending = 0) AND (v.model_id = md.id and md.pending = 0) AND v.user_id = u.user_id",
 				'GROUP_BY'	=> "d.id",
 				'ORDER_BY'	=> "$sort $order"
 			);
 		}
 		else if ($search_options['display_as'] == 'laps')
 		{
+			//Update Display As Unless We Are In A Mode Which Defaults To this, We Try Hide This Fact
+			if ($mode != 'lap_table')
+			{
+				$pagination_url .= "&amp;display_as=laps";
+			}
+
 			//Handle Sorting & Ordering
-			$sort = (empty($sort)) ? 'minute, second, millisecond' : $sort;
+			if (empty($sort))
+			{
+				$sort = 'minute, second, millisecond';
+			}
+			else
+			{
+				$pagination_url .= "&amp;sort=$sort";
+			}
 			$garage_template->sort_dropdown('track_time', $sort);
-			$order = (empty($order)) ? 'ASC' : $order;
+
+			if (empty($order))
+			{
+				$order = 'ASC';
+			}
+			else
+			{
+				$pagination_url .= "&amp;order=$order";
+			}
 			$garage_template->order_dropdown($order);
 
 			//Handle SQL Part
 			$sql_array = array(
 				'SELECT'	=> "v.id, v.made_year, v.user_id, mk.make, md.model, l.*, i.*, l.id as lid, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, u.username, t.title, v.id as vehicle_id, u.user_colour",
+				'SELECT_COUNT'	=> "COUNT(l.id) AS total",
 				'FROM'		=> array(
 					GARAGE_LAPS_TABLE	=> 'l',
+					GARAGE_VEHICLES_TABLE	=> 'v',
+					GARAGE_MAKES_TABLE	=> 'mk',
+					GARAGE_MODELS_TABLE	=> 'md',
+					USERS_TABLE		=> 'u',
 				),
 				'LEFT_JOIN'	=> array(
 					array(
-						'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'v'),	
-						'ON'	=> 'l.vehicle_id = v.id'
-					)
-					,array(
-						'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-						'ON'	=> 'v.make_id = mk.id and mk.pending = 0'
-					)
-					,array(
-						'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-						'ON'	=> 'v.model_id = md.id and md.pending = 0'
-					)
-					,array(
-						'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'm'),	
-						'ON'	=> 'v.id = m.vehicle_id'
-					)
-					,array(
-						'FROM'	=> array(USERS_TABLE => 'u'),
-						'ON'	=> 'v.user_id = u.user_id'
-					)
-					,array(
 						'FROM'	=> array(GARAGE_LAP_GALLERY_TABLE => 'lg'),
 						'ON'	=> 'l.id = lg.lap_id AND lg.hilite = 1'
 					)
@@ -569,21 +617,56 @@ class garage
 						'ON'	=> 'l.track_id = t.id'
 					)
 				),
-				'WHERE'		=> "l.pending = 0",
+				'WHERE'		=> "l.pending = 0  AND l.vehicle_id = v.id  AND (v.make_id = mk.id and mk.pending = 0) AND (v.model_id = md.id and md.pending = 0) AND v.user_id = u.user_id",
 				'GROUP_BY'	=> "l.id",
 				'ORDER_BY'	=> "$sort $order"
 			);
 
 		}
 
-		//Now We Need To Build All Extra Where Statements
-		$sql_array['WHERE'] .= ($search_options['search_year'] AND (!empty($search_options['made_year']))) ? " AND v.made_year = " . $search_options['made_year'] : '';
-		$sql_array['WHERE'] .= ($search_options['search_make'] AND (!empty($search_options['make_id']))) ? " AND v.make_id = " . $search_options['make_id'] : '';
-		$sql_array['WHERE'] .= ($search_options['search_model'] AND (!empty($search_options['model_id']))) ? " AND v.model_id = " . $search_options['model_id'] : '';
-		$sql_array['WHERE'] .= ($search_options['search_category'] AND (!empty($search_options['category_id']))) ? " AND m.category_id = " . $search_options['category_id'] : '';
-		$sql_array['WHERE'] .= ($search_options['search_manufacturer'] AND (!empty($search_options['manufacturer_id']))) ? " AND m.manufacturer_id = " . $search_options['manufacturer_id'] : '';
-		$sql_array['WHERE'] .= ($search_options['search_product'] AND (!empty($search_options['product_id']))) ? " AND m.product_id = " . $search_options['product_id'] : '';
-		$sql_array['WHERE'] .= ($search_options['search_username'] AND (!empty($search_options['username']))) ? " AND u.username = " . $search_options['username'] : '';
+		//Add Modifications Tabe To Query So We Can Do Where Statement On It Only If Needed..Else It Produces Too Many Rows Since Its A Left Join
+		if (($search_options['search_category'] OR $search_options['search_manufacturer'] OR $search_options['search_product']) AND !($search_options['display_as'] == 'vehicles' OR $search_options['display_as'] == 'premiums'))
+		{
+			//Add Modifications Tabe To Query So We Can Do Where Statement On It
+			array_push($sql_array['LEFT_JOIN'], array('FROM' => array(GARAGE_MODIFICATIONS_TABLE => 'm'), 'ON' => 'v.id = m.vehicle_id'));
+		}
+
+		//Now We Need To Build All Extra Where Statements & Update Pagination If Needed
+		if ($search_options['search_year'] AND (!empty($search_options['made_year'])))
+		{
+			$sql_array['WHERE'] .= " AND v.made_year = " . $search_options['made_year'];
+			$pagination_url .= "&amp;search_year=1&amp;made_year=" . $search_options['made_year'];
+		}
+		if ($search_options['search_make'] AND (!empty($search_options['make_id'])))
+		{
+			$sql_array['WHERE'] .= " AND v.make_id = " . $search_options['make_id'];
+			$pagination_url .= "&amp;search_make=1&amp;make_id=" . $search_options['make_id'];
+		}
+		if ($search_options['search_model'] AND (!empty($search_options['model_id'])))
+		{
+			$sql_array['WHERE'] .= " AND v.model_id = " . $search_options['model_id'];
+			$pagination_url .= "&amp;search_model=1&amp;model_id=" . $search_options['model_id'];
+		}
+		if ($search_options['search_category'] AND (!empty($search_options['category_id'])))
+		{
+			$sql_array['WHERE'] .= " AND m.category_id = " . $search_options['category_id'];
+			$pagination_url .= "&amp;search_category=1&amp;category_id=" . $search_options['category_id'];
+		}
+		if ($search_options['search_manufacturer'] AND (!empty($search_options['manufacturer_id'])))
+		{
+			$sql_array['WHERE'] .= " AND m.manufacturer_id = " . $search_options['manufacturer_id'];
+			$pagination_url .= "&amp;search_manufacturer=1&amp;manufacturer_id=" . $search_options['manufacturer_id'];
+		}
+		if ($search_options['search_product'] AND (!empty($search_options['product_id'])))
+		{
+			$sql_array['WHERE'] .= " AND m.product_id = " . $search_options['product_id'];
+			$pagination_url .= "&amp;search_product=1&amp;product_id=" . $search_options['product_id'];
+		}
+		if ($search_options['search_username'] AND (!empty($search_options['username'])))
+		{
+			$sql_array['WHERE'] .= " AND u.username = '" . $search_options['username']."'";
+			$pagination_url .= "&amp;search_username=1&amp;username=" . $search_options['username'];
+		}
 
 		//Build Complete SQL Statement Now With All Options
 		$sql = $db->sql_build_query('SELECT', array(
@@ -600,6 +683,19 @@ class garage
 		{
 			$data[] = $row;
 		}
+		$db->sql_freeresult($result);
+
+
+		//We Need To Also Get Total Number Of Items
+		$sql = $db->sql_build_query('SELECT', array(
+			'SELECT'	=> $sql_array['SELECT_COUNT'],
+			'FROM'		=> $sql_array['FROM'],
+			'LEFT_JOIN'	=> $sql_array['LEFT_JOIN'],
+			'WHERE'		=> $sql_array['WHERE'],
+		));
+
+		$result = $db->sql_query($sql);
+		$total = (int) $db->sql_fetchfield('total');
 		$db->sql_freeresult($result);
 
 		return $data;

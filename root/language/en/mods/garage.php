@@ -27,6 +27,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
+	'MODERATE_VEHICLE'		=> 'Moderate Vehicle',
 	'EDIT_MODIFICATION'		=> 'Edit modification',
 	'EDIT_QUARTERMILE'		=> 'Edit &frac14; mile',
 	'EDIT_DYNORUN'			=> 'Edit dynorun',
@@ -470,6 +471,9 @@ $lang = array_merge($lang, array(
 	'SEARCH_RESULTS_FOR_MEMBER' 	=> 'Search Results for Member Name ',
 	'SEARCH_RESULTS_FOR_MAKE' 	=> 'Search Results for Make ',
 	'SEARCH_RESULTS_FOR_MODEL' 	=> 'Search Results for Model ',
+	'SEARCH_LOGIC'			=> 'Search Logic',
+	'MATCH_ANY'			=> 'Match any',
+	'MATCH_ALL'			=> 'Match all',
 	'LAST_CUSTOMERS' 		=> 'Latest Customers To Use This Business',
 	'CLICK_FOR_MORE_DETAIL' 	=> 'Click For More Detail',
 	'INSTALL_COMMENTS' 		=> 'Install Comments',
@@ -774,6 +778,26 @@ $lang = array_merge($lang, array(
 	'ADD_BLOG'	 		=> 'Add Blog Entry',
 	'BLOG_HEADER'	 		=> 'Blog Header',
 	'EDIT_BLOG'		 	=> 'Edit Blog',
+
+	//PAGINATION KEYS
+	'VIEW_VEHICLE'			=> '1 vehicle',
+	'VIEW_VEHICLES'			=> '%d vehicles',
+	'VIEW_MODIFICATION'		=> '1 modification',
+	'VIEW_MODIFICATIONS'		=> '%d modifications',
+	'VIEW_PREMIUM'			=> '1 premium',
+	'VIEW_PREMIUMS'			=> '%d premiums',
+	'VIEW_QUARTERMILE'		=> '1 &frac14; mile',
+	'VIEW_QUARTERMILES'		=> '%d &frac14; miles',
+	'VIEW_DYNORUN'			=> '1 dynorun',
+	'VIEW_DYNORUNS'			=> '%d dynoruns',
+	'VIEW_LAP'			=> '1 lap',
+	'VIEW_LAPS'			=> '%d laps',
+	'VIEW_BUSINESS'			=> '1 business',
+	'VIEW_BUSINESS\'S'		=> '%d business\'s',
+	'VIEW_BLOG'			=> '1 blog',
+	'VIEW_BLOGS'			=> '%d blogs',
+	'VIEW_COMMENT'			=> '1 comment',
+	'VIEW_COMMENTS'			=> '%d comments',
 
 ));
 

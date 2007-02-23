@@ -23,8 +23,8 @@
 			</table>
 			<br />
 
-			<form method="post" action="{S_MODE_ACTION}">
 			<!-- ENDIF -->
+			<form method="post" action="{S_MODE_ACTION}">
 
 			<!-- IF S_DISPLAY_VEHICLE_RESULTS -->
 			<table width="100%" cellpadding="2" cellspacing="1" border="0" class="tablebg">
@@ -60,6 +60,17 @@
 					<td class="cat" align="center" height="28" colspan="9"><span class="genmed">{L_SORTED_BY}&nbsp;<select id="sort" name="sort"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN sort --><option value="{sort.VALUE}" <!-- IF sort.S_SELECTED -->selected="selected"<!-- ENDIF -->>{sort.TEXT}</option><!-- END sort --></select>&nbsp;&nbsp;{L_IN}&nbsp;<select id="order" name="order"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN order --><option value="{order.VALUE}" <!-- IF order.S_SELECTED -->selected="selected"<!-- ENDIF -->>{order.TEXT}</option><!-- END order --></select>&nbsp;&nbsp;<input type="submit" name="submit" value="{L_GO}" class="liteoption" /></td>
 				</tr>
 			</table>
+
+			<table width="100%" cellspacing="1">
+			<tr>
+				<!-- IF TOTAL_VEHICLES -->
+					<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
+					<td class="gensmall" nowrap="nowrap">&nbsp;[ {TOTAL_VEHICLES} ]&nbsp;</td>
+					<td class="gensmall" width="100%" align="right" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
+				<!-- ENDIF -->
+			</tr>
+			</table>
+
 			<!-- ENDIF -->
 
 			<!-- IF S_DISPLAY_MODIFICATION_RESULTS -->
@@ -92,6 +103,17 @@
 					<td class="cat" align="center" height="28" colspan="9"><span class="genmed">{L_MODIFICATIONS_SORTED_BY}&nbsp;<select id="sort" name="sort"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN sort --><option value="{sort.VALUE}" <!-- IF sort.S_SELECTED -->selected="selected"<!-- ENDIF -->>{sort.TEXT}</option><!-- END sort --></select>&nbsp;&nbsp;{L_IN}&nbsp;<select id="order" name="order"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN order --><option value="{order.VALUE}" <!-- IF order.S_SELECTED -->selected="selected"<!-- ENDIF -->>{order.TEXT}</option><!-- END order --></select>&nbsp;&nbsp;<input type="submit" name="submit" value="{L_GO}" class="liteoption" /></td>
 				</tr>
 			</table>
+
+			<table width="100%" cellspacing="1">
+			<tr>
+				<!-- IF TOTAL_MODIFICATIONS -->
+					<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
+					<td class="gensmall" nowrap="nowrap">&nbsp;[ {TOTAL_MODIFICATIONS} ]&nbsp;</td>
+					<td class="gensmall" width="100%" align="right" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
+				<!-- ENDIF -->
+			</tr>
+			</table>
+
 			<!-- ENDIF -->
 
 			<!-- IF S_DISPLAY_PREMIUM_RESULTS -->
@@ -124,6 +146,17 @@
 					<td class="cat" align="center" height="28" colspan="9"><span class="genmed">{L_INSURANCE_SORTED_BY}&nbsp;<select id="sort" name="sort"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN sort --><option value="{sort.VALUE}" <!-- IF sort.S_SELECTED -->selected="selected"<!-- ENDIF -->>{sort.TEXT}</option><!-- END sort --></select>&nbsp;&nbsp;{L_IN}&nbsp;<select id="order" name="order"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN order --><option value="{order.VALUE}" <!-- IF order.S_SELECTED -->selected="selected"<!-- ENDIF -->>{order.TEXT}</option><!-- END order --></select>&nbsp;&nbsp;<input type="submit" name="submit" value="{L_GO}" class="liteoption" /></td>
 				</tr>
 			</table>
+
+			<table width="100%" cellspacing="1">
+			<tr>
+				<!-- IF TOTAL_PREMIUMS -->
+					<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
+					<td class="gensmall" nowrap="nowrap">&nbsp;[ {TOTAL_PREMIUMS} ]&nbsp;</td>
+					<td class="gensmall" width="100%" align="right" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
+				<!-- ENDIF -->
+			</tr>
+			</table>
+
 			<!-- ENDIF -->
 
 			<!-- IF S_DISPLAY_QUARTERMILE_RESULTS -->
@@ -160,6 +193,17 @@
 					<td class="cat" align="center" height="28" colspan="12"><span class="genmed">{L_QUARTERMILE_SORTED_BY}&nbsp;<select id="sort" name="sort"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN sort --><option value="{sort.VALUE}" <!-- IF sort.S_SELECTED -->selected="selected"<!-- ENDIF -->>{sort.TEXT}</option><!-- END sort --></select>&nbsp;&nbsp;{L_IN}&nbsp;<select id="order" name="order"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN order --><option value="{order.VALUE}" <!-- IF order.S_SELECTED -->selected="selected"<!-- ENDIF -->>{order.TEXT}</option><!-- END order --></select>&nbsp;&nbsp;<input type="submit" name="submit" value="{L_GO}" class="liteoption" /></td>
 				</tr>
 			</table>
+
+			<table width="100%" cellspacing="1">
+			<tr>
+				<!-- IF TOTAL_QUARTERMILES -->
+					<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
+					<td class="gensmall" nowrap="nowrap">&nbsp;[ {TOTAL_QUARTERMILES} ]&nbsp;</td>
+					<td class="gensmall" width="100%" align="right" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
+				<!-- ENDIF -->
+			</tr>
+			</table>
+
 			<!-- ENDIF -->
 
 			<!-- IF S_DISPLAY_DYNORUN_RESULTS -->
@@ -196,6 +240,17 @@
 					<td class="cat" align="center" height="28" colspan="12"><span class="genmed">{L_DYNORUN_SORTED_BY}&nbsp;<select id="sort" name="sort"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN sort --><option value="{sort.VALUE}" <!-- IF sort.S_SELECTED -->selected="selected"<!-- ENDIF -->>{sort.TEXT}</option><!-- END sort --></select>&nbsp;&nbsp;{L_IN}&nbsp;<select id="order" name="order"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN order --><option value="{order.VALUE}" <!-- IF order.S_SELECTED -->selected="selected"<!-- ENDIF -->>{order.TEXT}</option><!-- END order --></select>&nbsp;&nbsp;<input type="submit" name="submit" value="{L_GO}" class="liteoption" /></td>
 				</tr>
 			</table>
+
+			<table width="100%" cellspacing="1">
+			<tr>
+				<!-- IF TOTAL_DYNORUNS -->
+					<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
+					<td class="gensmall" nowrap="nowrap">&nbsp;[ {TOTAL_DYNORUNS} ]&nbsp;</td>
+					<td class="gensmall" width="100%" align="right" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
+				<!-- ENDIF -->
+			</tr>
+			</table>
+
 			<!-- ENDIF -->
 
 			<!-- IF S_DISPLAY_LAP_RESULTS -->
@@ -230,6 +285,17 @@
 				</tr>
 			</table>
 			<br />
+
+			<table width="100%" cellspacing="1">
+			<tr>
+				<!-- IF TOTAL_LAPS -->
+					<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
+					<td class="gensmall" nowrap="nowrap">&nbsp;[ {TOTAL_LAPS} ]&nbsp;</td>
+					<td class="gensmall" width="100%" align="right" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
+				<!-- ENDIF -->
+			</tr>
+			</table>
+
 
 			<!-- ENDIF -->
 

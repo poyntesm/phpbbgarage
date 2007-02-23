@@ -52,7 +52,18 @@
 					<td class="cat" align="center" height="28" colspan="5"><input type="hidden" value="insert_comment" name="mode" /><input type="hidden" value="{CID}" name="CID" /><input name="submit" type="submit" value="{L_POST_COMMENT}" class="liteoption" /></td>
 				</tr>
 				<!-- ENDIF -->
-        		</table>
+			</table>
+
+			<table width="100%" cellspacing="1">
+			<tr>
+				<!-- IF TOTAL_COMMENTS -->
+					<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
+					<td class="gensmall" nowrap="nowrap">&nbsp;[ {TOTAL_COMMENTS} ]&nbsp;</td>
+					<td class="gensmall" width="100%" align="right" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
+				<!-- ENDIF -->
+			</tr>
+			</table>
+
 			</form>
 		</td>
 

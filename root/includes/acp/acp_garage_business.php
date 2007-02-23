@@ -30,7 +30,7 @@ class acp_garage_business
 	function main($id, $mode)
 	{
 		global $db, $user, $auth, $template, $cache, $garage, $garage_config;
-		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
+		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx, $garage_business;
 
 		//Build All Garage Classes e.g $garage_images->
 		require($phpbb_root_path . 'includes/mods/class_garage_business.' . $phpEx);
@@ -352,7 +352,7 @@ class acp_garage_business
 				{
 					$garage_to_name = $row['title'];
 					$from_name = $business_data['title'];
-					$this->move_category_content($business_id, $garage_to_id);
+					$this->move_garage_business_content($business_id, $garage_to_id);
 					add_log('admin', 'LOG_GARAGE_MOVED_GARAGE', $from_name, $garage_to_name);
 				}
 			}
@@ -382,7 +382,7 @@ class acp_garage_business
 				{
 					$insurance_to_name = $row['title'];
 					$from_name = $business_data['title'];
-					$this->move_category_content($business_id, $insurance_to_id);
+					$this->move_insurance_business_content($business_id, $insurance_to_id);
 					add_log('admin', 'LOG_GARAGE_MOVED_PREMIUMS', $from_name, $insurance_to_name);
 				}
 			}
@@ -412,7 +412,7 @@ class acp_garage_business
 				{
 					$dynocentre_to_name = $row['title'];
 					$from_name = $business_data['title'];
-					$this->move_category_content($business_id, $dynocentre_to_id);
+					$this->move_dynocentre_business_content($business_id, $dynocentre_to_id);
 					add_log('admin', 'LOG_GARAGE_MOVED_DYNORUNS', $from_name, $dynocentre_to_name);
 				}
 			}
@@ -442,7 +442,7 @@ class acp_garage_business
 				{
 					$retail_to_name = $row['title'];
 					$from_name = $business_data['title'];
-					$this->move_category_content($business_id, $retail_to_id);
+					$this->move_retail_business_content($business_id, $retail_to_id);
 					add_log('admin', 'LOG_GARAGE_MOVED_RETAIL', $from_name, $retail_to_name);
 				}
 			}
@@ -472,7 +472,7 @@ class acp_garage_business
 				{
 					$modifications_to_name = $row['title'];
 					$from_name = $business_data['title'];
-					$this->move_category_content($business_id, $product_to_id);
+					$this->move_product_business_content($business_id, $product_to_id);
 					add_log('admin', 'LOG_GARAGE_MOVED_PRODUCT', $from_name, $product_to_name);
 				}
 			}

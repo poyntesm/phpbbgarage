@@ -202,28 +202,28 @@ class garage_template
 		}
 		else if ($type == 'modification')
 		{
-			$values = array('category', 'username', 'price', 'rating');
+			$values = array('category_id', 'u.username', 'm.price', 'm.product_rating');
 			$texts = array($user->lang['CATEGORY'], $user->lang['OWNER'], $user->lang['PRICE'], $user->lang['RATING']);
 		}
 		else if ($type == 'premium')
 		{
-			$values = array('cover_type', 'premium', 'company');
+			$values = array('cover_type', 'premium', 'p.business_id');
 			$texts = array($user->lang['COVER_TYPE'], $user->lang['PREMIUM'], $user->lang['INSURER']);
 		}
 		else if ($type == 'quartermile')
 		{
-			$values = array('qm.rt', 'qm.sixty', 'qm.three', 'qm.eighth', 'qm.eighthmph', 'qm.thou', 'quart', 'qm.quartmph');
+			$values = array('q.rt', 'q.sixty', 'q.three', 'q.eighth', 'q.eighthmph', 'q.thou', 'quart', 'q.quartmph');
 			$texts = array($user->lang['RT'], $user->lang['SIXTY'], $user->lang['THREE'], $user->lang['EIGHTH'], $user->lang['EIGHTHMPH'], $user->lang['THOU'],  $user->lang['QUART'], $user->lang['QUARTMPH']);
 		}
 		else if ($type == 'dynorun')
 		{
-			$values = array('rr.dynocentre_id', 'bhp', 'rr.bhp_unit, bhp', 'rr.torque', 'rr.torque_unit, rr.torque', 'rr.boost', 'rr.boost_unit, rr.boost', 'rr.nitrous', 'rr.peakpoint');
+			$values = array('d.dynocentre_id', 'bhp', 'd.bhp_unit, bhp', 'd.torque', 'd.torque_unit, d.torque', 'd.boost', 'd.boost_unit, d.boost', 'd.nitrous', 'd.peakpoint');
 			$texts = array($user->lang['DYNOCENTRE'], $user->lang['BHP'], $user->lang['BHP_UNIT'], $user->lang['TORQUE'], $user->lang['TORQUE_UNIT'], $user->lang['BOOST'], $user->lang['BOOST_UNIT'], $user->lang['NITROUS'], $user->lang['PEAKPOINT']);
 		}
 		else if ($type == 'track_time')
 		{
-			$values = array('date_created', 'date_updated', 'username', 'made_year', 'make', 'model', 'colour', 'views', 'total_mods');
-			$texts = array($user->lang['LAST_CREATED'], $user->lang['LAST_UPDATED'], $user->lang['OWNER'], $user->lang['YEAR'], $user->lang['MAKE'], $user->lang['MODEL'],  $user->lang['COLOUR'], $user->lang['TOTAL_VIEWS'], $user->lang['TOTAL_MODS']);
+			$values = array('track_id', 'condition_id', 'type_id', 'minute, second, millisecond', 'username');
+			$texts = array($user->lang['TRACK'], $user->lang['CONDITION'], $user->lang['TYPE'], $user->lang['TIME'], $user->lang['OWNER']);
 		}
 
 		for ($i = 0, $count = sizeof($values);$i < $count; $i++)
@@ -574,6 +574,84 @@ class garage_template
 			);
 		}
 	}
+
+function generate_pagination($base_url, $hash_location, $num_items, $per_page, $start_item, $add_prevnext_text = false, $tpl_prefix = '')
+{
+	global $template, $user;
+
+	// Make sure $per_page is a valid value
+	$per_page = ($per_page <= 0) ? 1 : $per_page;
+
+	$seperator = '<span class="page-sep">' . $user->lang['COMMA_SEPARATOR'] . '</span>';
+	$total_pages = ceil($num_items / $per_page);
+
+	if ($total_pages == 1 || !$num_items)
+	{
+		return false;
+	}
+
+	$on_page = floor($start_item / $per_page) + 1;
+	$page_string = ($on_page == 1) ? '<strong>1</strong>' : '<a href="' . $base_url . '#'. $hash_location .'">1</a>';
+
+	if ($total_pages > 5)
+	{
+		$start_cnt = min(max(1, $on_page - 4), $total_pages - 5);
+		$end_cnt = max(min($total_pages, $on_page + 4), 6);
+
+		$page_string .= ($start_cnt > 1) ? ' ... ' : $seperator;
+
+		for ($i = $start_cnt + 1; $i < $end_cnt; $i++)
+		{
+			$page_string .= ($i == $on_page) ? '<strong>' . $i . '</strong>' : '<a href="' . $base_url . "&amp;start=" . (($i - 1) * $per_page) . '#'. $hash_location .'">' . $i . '</a>';
+			if ($i < $end_cnt - 1)
+			{
+				$page_string .= $seperator;
+			}
+		}
+
+		$page_string .= ($end_cnt < $total_pages) ? ' ... ' : $seperator;
+	}
+	else
+	{
+		$page_string .= $seperator;
+
+		for ($i = 2; $i < $total_pages; $i++)
+		{
+			$page_string .= ($i == $on_page) ? '<strong>' . $i . '</strong>' : '<a href="' . $base_url . "&amp;start=" . (($i - 1) * $per_page) . '#'. $hash_location .'">' . $i . '</a>';
+			if ($i < $total_pages)
+			{
+				$page_string .= $seperator;
+			}
+		}
+	}
+
+	$page_string .= ($on_page == $total_pages) ? '<strong>' . $total_pages . '</strong>' : '<a href="' . $base_url . '&amp;start=' . (($total_pages - 1) * $per_page) . '#'. $hash_location .'">' . $total_pages . '</a>';
+
+	if ($add_prevnext_text)
+	{
+		if ($on_page != 1) 
+		{
+			$page_string = '<a href="' . $base_url . '&amp;start=' . (($on_page - 2) * $per_page) . '#'. $hash_location .'">' . $user->lang['PREVIOUS'] . '</a>&nbsp;&nbsp;' . $page_string;
+		}
+
+		if ($on_page != $total_pages)
+		{
+			$page_string .= '&nbsp;&nbsp;<a href="' . $base_url . '&amp;start=' . ($on_page * $per_page) . '#'. $hash_location .'">' . $user->lang['NEXT'] . '</a>';
+		}
+	}
+
+	$template->assign_vars(array(
+		$tpl_prefix . 'BASE_URL'	=> $base_url,
+		$tpl_prefix . 'HASH_LOCATION'	=> $hash_location,
+		$tpl_prefix . 'PER_PAGE'	=> $per_page,
+
+		$tpl_prefix . 'PREVIOUS_PAGE'	=> ($on_page == 1) ? '' : $base_url . '&amp;start=' . (($on_page - 2) * $per_page). '#'. $hash_location,
+		$tpl_prefix . 'NEXT_PAGE'	=> ($on_page == $total_pages) ? '' : $base_url . '&amp;start=' . ($on_page * $per_page) .'#'. $hash_location,
+	));
+
+	return $page_string;
+}
+
 
 }
 

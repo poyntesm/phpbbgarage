@@ -111,9 +111,9 @@ class garage_guestbook
 	// Select Specific Vehicle Comments Data From DB
 	// Usage: get_vehicle_comments('garage id');
 	/*========================================================================*/
-	function get_vehicle_comments($cid)
+	function get_vehicle_comments($cid, $start = 0, $limit = 25 )
 	{
-		global $db;
+		global $db, $garage_config;
 
 		$data = null;
 
@@ -145,7 +145,7 @@ class garage_guestbook
 			'ORDER_BY'	=>  "gb.post_date ASC"
 		));
 
-      		$result = $db->sql_query($sql);
+	 	$result = $db->sql_query_limit($sql, $limit, $start);
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$data[] = $row;
@@ -406,7 +406,10 @@ class garage_guestbook
 	/*========================================================================*/
 	function display_guestbook($cid)
 	{
-		global $template, $garage_vehicle, $garage, $user, $phpEx, $auth, $phpbb_root_path, $config;
+		global $template, $garage_vehicle, $garage, $user, $phpEx, $auth, $phpbb_root_path, $config, $start, $garage_config, $mode, $garage_template;
+
+		//Set Required Values To Defaults If They Are Empty
+		$start	= (empty($start)) ? '0' : $start;
 
 		$template->assign_block_vars('guestbook', array());
 
@@ -414,7 +417,7 @@ class garage_guestbook
 		$vehicle_data = $garage_vehicle->get_vehicle($cid);
 
 		//Get All Comments Data
-		$comment_data = $this->get_vehicle_comments($cid);
+		$comment_data = $this->get_vehicle_comments($cid, $start, $garage_config['cars_per_page']);
 
 		for ($i = 0, $count = sizeof($comment_data);$i < $count; $i++)
 		{	
@@ -534,8 +537,13 @@ class garage_guestbook
 			);
 		}
 
+		$count = $this->count_vehicle_comments($cid);
+		$pagination = $garage_template->generate_pagination(append_sid("{$phpbb_root_path}garage_vehicle.php", "mode={$mode}&amp;CID=$cid"), 'guestbook', $count, $garage_config['cars_per_page'], $start);
 		$template->assign_vars(array(
-			'S_DISPLAY_LEAVE_COMMENT'=> $auth->acl_get('u_garage_comment'),
+			'PAGINATION' 			=> $pagination,
+			'PAGE_NUMBER' 			=> on_page($count, $garage_config['cars_per_page'], $start),
+			'TOTAL_COMMENTS'		=> ($count == 1) ? $user->lang['VIEW_COMMENT'] : sprintf($user->lang['VIEW_COMMENTS'], $count),
+			'S_DISPLAY_LEAVE_COMMENT'	=> $auth->acl_get('u_garage_comment'),
 			'S_MODE_GUESTBOOK_ACTION' 	=> append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=insert_comment&CID=$cid"))
 		);
 	}

@@ -369,6 +369,33 @@ class garage_business
 	// Count Garage Business Data In DB
 	// Usage: count_garage_business_data('additional where');
 	/*========================================================================*/
+	function count_insurance_business_data($additional_where)
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'count(DISTINCT b.title) as total',
+			'FROM'		=> array(
+				GARAGE_BUSINESS_TABLE		=> 'b',
+			),
+			'WHERE'		=>  "b.insurance = 1 AND b.pending =0 $additional_where"
+		));
+
+		$result = $db->sql_query($sql);
+		$data = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $data['total'];
+	}
+
+
+	/*========================================================================*/
+	// Count Garage Business Data In DB
+	// Usage: count_garage_business_data('additional where');
+	/*========================================================================*/
 	function count_garage_business_data($additional_where)
 	{
 		global $db;

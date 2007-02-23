@@ -774,7 +774,7 @@ class garage_vehicle
 				'U_COLUMN_2' 		=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$vehicle_data[$i]['user_id']),
 				'COLUMN_1_TITLE'	=> $vehicle_data[$i]['vehicle'],
 				'COLUMN_2_TITLE'	=> $vehicle_data[$i]['username'],
-				'COLUMN_3_TITLE'	=> $vehicle_data[$i]['POI'],
+				'COLUMN_3_TITLE'	=> (empty($vehicle_data[$i]['POI'])) ? '0' : $vehicle_data[$i]['POI'],
 				'USERNAME_COLOUR'	=> get_username_string('colour', $vehicle_data[$i]['user_id'], $vehicle_data[$i]['username'], $vehicle_data[$i]['user_colour']),
 			));
 	 	}
@@ -971,7 +971,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function display_vehicle($owned)
 	{
-		global $user, $template, $images, $phpEx, $phpbb_root_path, $garage_config, $config, $cid, $mode, $garage, $garage_template, $garage_modification, $garage_insurance, $garage_quartermile, $garage_dynorun, $garage_image, $auth, $garage_guestbook, $garage_track, $garage_service, $garage_blog, $HTTP_SERVER_VARS;;
+		global $user, $template, $images, $phpEx, $phpbb_root_path, $garage_config, $config, $cid, $mode, $garage, $garage_template, $garage_modification, $garage_insurance, $garage_quartermile, $garage_dynorun, $garage_image, $auth, $garage_guestbook, $garage_track, $garage_service, $garage_blog, $HTTP_SERVER_VARS, $start;
 
 		if ($owned == 'YES' || $owned == 'MODERATE')
 		{
@@ -979,9 +979,8 @@ class garage_vehicle
 		}
 
 		//Setup Variables
-		$vehicle_images_found	= 0;	
-		$mod_images_found 	= 0;
-		$mod_images_displayed 	= null;
+		$vehicle_images_found = $mod_images_found = $quartermile_images_found = $dynorun_images_found = $lap_images_found = 0;
+		$mod_images_displayed = $quartermile_images_displayed = $dynorun_images_displayed = $lap_images_displayed = null;
 		$lowest_tab		= array();
 
 		//Get Vehicle Information	
@@ -1132,16 +1131,6 @@ class garage_vehicle
 			$gallery_modification_images = null;
         		for ( $j = 0; $j < count($modification_data); $j++ )
 			{
-				//Increment Modification Image Count If Image Exists
-	           		if ($modification_data[$j]['attach_id'])
-				{
-					$mod_images_found++;
-					$template->assign_vars(array(
-						'S_DISPLAY_IMAGE_TAB' => true,
-					));
-					$lowest_tab[] = 0;
-				}
-
 				$template->assign_block_vars('category.modification', array(
 					'U_IMAGE'	=> ($modification_data[$j]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_image&amp;image_id=". $modification_data[$j]['attach_id']) : '',
 					'IMAGE'		=> $user->img('garage_vehicle_img_attached', 'MODIFICATION_IMAGE_ATTACHED'),
@@ -1153,7 +1142,18 @@ class garage_vehicle
 	               			'MODIFICATION' 	=> '<a href="' . append_sid("garage_modification.$phpEx?mode=view_modification&amp;CID=$cid&amp;MID=" . $modification_data[$j]['id']) . '">' . $modification_data[$j]['title'] . '</a>',
 					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage_modification.$phpEx?mode=edit_modification&amp;MID=". $modification_data[$j]['id'] . "&amp;CID=$cid") : '',
 					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_modification'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_mod(' . $cid . ',' . $modification_data[$j]['id'] . ')' : '')
-	            		);
+				);
+
+				//Increment Modification Image Count If Image Exists
+	           		if ($modification_data[$j]['attach_id'])
+				{
+					$mod_images_found++;
+					$template->assign_vars(array(
+						'S_DISPLAY_MODIFICATION_IMAGES'	=> true,
+						'S_DISPLAY_IMAGE_TAB' 		=> true,
+					));
+					$lowest_tab[] = 0;
+				}
 	
 				//See If Mod Has An Image Attached And Display Gallery If Enabled & Below Limits
 				if ( (($garage_config['enable_mod_gallery'] == 1) AND ( $modification_data[$j]['attach_is_image'] )) AND ($garage_config['mod_gallery_limit'] >= $mod_images_found OR !$garage_config['mod_gallery_limit']) )
@@ -1224,6 +1224,32 @@ class garage_vehicle
 					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage_quartermile.$phpEx?mode=edit_quartermile&amp;QMID=".$quartermile_data[$i]['id']."&amp;CID=$cid") : '',
 					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_quartermile'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_quartermile(' . $cid . ',' . $quartermile_data[$i]['id'] . ')' : '')
 				);
+
+				//Increment Modification Image Count If Image Exists
+	           		if ($quartermile_data[$i]['attach_id'])
+				{
+					$quartermile_images_found++;
+					$template->assign_vars(array(
+						'S_DISPLAY_IMAGE_TAB' 		=> true,
+						'S_DISPLAY_QUARTERMILE_IMAGES'	=> true,
+					));
+					$lowest_tab[] = 0;
+				}
+	
+				//See If Mod Has An Image Attached And Display Gallery If Enabled & Below Limits
+				if ( (($garage_config['enable_quartermile_gallery'] == 1) AND ( $quartermile_data[$i]['attach_is_image'] )) AND ($garage_config['mod_gallery_limit'] >= $quartermile_images_found OR !$garage_config['mod_gallery_limit']) )
+				{
+					$quartermile_images_displayed = $quartermile_images_found;
+	                		//Do we have a thumbnail?  If so, our job is simple here :)
+					if ( (empty($quartermile_data[$i]['attach_thumb_location']) == false) AND ($quartermile_data[$i]['attach_thumb_location'] != $quartermile_data[$i]['attach_location']) )
+					{
+						$template->assign_block_vars('quartermile_image', array(
+							'U_IMAGE' 	=> append_sid('garage.'.$phpEx.'?mode=view_image&amp;image_id='. $quartermile_data[$i]['attach_id']),
+							'IMAGE_NAME'	=> $quartermile_data[$i]['attach_file'],
+							'IMAGE_SOURCE'	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $quartermile_data[$i]['attach_thumb_location'])
+						);
+	               			} 
+				}
 			}
 		}
 
@@ -1256,6 +1282,32 @@ class garage_vehicle
 					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage_dynorun.$phpEx?mode=edit_dynorun&amp;DID=".$dynorun_data[$i]['did']."&amp;CID=$cid") : '',
 					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_dynorun'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_dynorun(' . $cid . ',' . $dynorun_data[$i]['id'] . ')' : '')
 				);
+
+				//Increment Modification Image Count If Image Exists
+	           		if ($dynorun_data[$i]['attach_id'])
+				{
+					$dynorun_images_found++;
+					$template->assign_vars(array(
+						'S_DISPLAY_IMAGE_TAB'	 	=> true,
+						'S_DISPLAY_DYNORUN_IMAGES'	=> true,
+					));
+					$lowest_tab[] = 0;
+				}
+	
+				//See If Mod Has An Image Attached And Display Gallery If Enabled & Below Limits
+				if ( (($garage_config['enable_dynorun_gallery'] == 1) AND ( $dynorun_data[$i]['attach_is_image'] )) AND ($garage_config['mod_gallery_limit'] >= $dynorun_images_found OR !$garage_config['mod_gallery_limit']) )
+				{
+					$dynorun_images_displayed = $dynorun_images_found;
+	                		//Do we have a thumbnail?  If so, our job is simple here :)
+					if ( (empty($dynorun_data[$i]['attach_thumb_location']) == false) AND ($dynorun_data[$i]['attach_thumb_location'] != $dynorun_data[$i]['attach_location']) )
+					{
+						$template->assign_block_vars('dynorun_image', array(
+							'U_IMAGE' 	=> append_sid('garage.'.$phpEx.'?mode=view_image&amp;image_id='. $dynorun_data[$i]['attach_id']),
+							'IMAGE_NAME'	=> $dynorun_data[$i]['attach_file'],
+							'IMAGE_SOURCE'	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $dynorun_data[$i]['attach_thumb_location'])
+						);
+	               			} 
+				}
 			}
 		}
 
@@ -1286,6 +1338,32 @@ class garage_vehicle
 					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage_track.$phpEx?mode=edit_lap&amp;LID=".$lap_data[$i]['lid']."&amp;CID=$cid") : '',
 					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_lap'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_lap(' . $cid . ',' . $lap_data[$i]['lid'] . ')' : '')
 				);
+
+				//Increment Modification Image Count If Image Exists
+	           		if ($lap_data[$i]['attach_id'])
+				{
+					$lap_images_found++;
+					$template->assign_vars(array(
+						'S_DISPLAY_IMAGE_TAB' 	=> true,
+						'S_DISPLAY_LAP_IMAGES'	=> true,
+					));
+					$lowest_tab[] = 0;
+				}
+	
+				//See If Mod Has An Image Attached And Display Gallery If Enabled & Below Limits
+				if ( (($garage_config['enable_lap_gallery'] == 1) AND ( $lap_data[$i]['attach_is_image'] )) AND ($garage_config['mod_gallery_limit'] >= $lap_images_found OR !$garage_config['mod_gallery_limit']) )
+				{
+					$lap_images_displayed = $lap_images_found;
+	                		//Do we have a thumbnail?  If so, our job is simple here :)
+					if ( (empty($lap_data[$i]['attach_thumb_location']) == false) AND ($lap_data[$i]['attach_thumb_location'] != $lap_data[$i]['attach_location']) )
+					{
+						$template->assign_block_vars('lap_image', array(
+							'U_IMAGE' 	=> append_sid('garage.'.$phpEx.'?mode=view_image&amp;image_id='. $lap_data[$i]['attach_id']),
+							'IMAGE_NAME'	=> $lap_data[$i]['attach_file'],
+							'IMAGE_SOURCE'	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $lap_data[$i]['attach_thumb_location'])
+						);
+	               			} 
+				}
 			}
 		}
 
@@ -1322,7 +1400,8 @@ class garage_vehicle
        		for ( $i = 0; $i < count($gallery_data); $i++ )
         	{
 			$template->assign_vars(array(
-				'S_DISPLAY_IMAGE_TAB' => true,
+				'S_DISPLAY_IMAGE_TAB' 		=> true,
+				'S_DISPLAY_VEHICLE_IMAGES'	=> true,
 			));
 			$lowest_tab[] = 0;
        	    		if ( $gallery_data[$i]['attach_is_image'] )
@@ -1364,16 +1443,14 @@ class garage_vehicle
             		'U_ADD_LAP' 		=> ( $owned == 'YES' AND $garage_config['enable_tracktime'] ) ? append_sid("garage_track.$phpEx?mode=add_lap&amp;CID=$cid") : '',
             		'U_ADD_SERVICE' 		=> ( $owned == 'YES' AND $garage_config['enable_service'] ) ? append_sid("garage_service.$phpEx?mode=add_service&amp;CID=$cid") : '',
             		'U_MANAGE_VEHICLE_GALLERY'	=> ( $owned == 'YES' ) ? append_sid("garage_vehicle.$phpEx?mode=manage_vehicle_gallery&amp;CID=$cid") : '',
-			'U_SET_MAIN_VEHICLE' 		=> ( ($owned == 'YES' OR $owned == 'MODERATE') AND ($vehicle['main_vehicle'] == 0) ) ?  append_sid("garage.$phpEx?mode=set_main&amp;CID=$cid"): '' ,
+			'U_SET_MAIN_VEHICLE' 		=> ( ($owned == 'YES' OR $owned == 'MODERATE') AND ($vehicle['main_vehicle'] == 0) ) ?  append_sid("garage_vehicle.$phpEx?mode=set_main_vehicle&amp;CID=$cid"): '' ,
 			'U_MODERATE_VEHICLE' 		=> ( $owned == 'NO' AND $auth->acl_get('m_garage')) ?  append_sid("garage_vehicle.$phpEx?mode=moderate_vehicle&amp;CID=$cid"): '' ,
 			'U_HILITE_IMAGE' 		=> ( ($vehicle['attach_id']) AND ($vehicle['attach_is_image']) AND (!empty($vehicle['attach_thumb_location'])) AND (!empty($vehicle['attach_location'])) ) ?  append_sid("garage.$phpEx?mode=view_image&amp;image_id=". $vehicle['attach_id']): '' ,
 
 			'S_DISPLAY_VEHICLE_OWNER'	=> ($owned == 'MODERATE' || $owned == 'YES') ? 1 : 0,
 			'S_DISPLAY_ENTRY_BLOG'		=> ($owned == 'MODERATE' || $owned == 'YES') ? 1 : 0,
 			'S_DISPLAY_GUESTBOOK'		=> ($garage_config['enable_guestbooks']) ? 1 : 0,
-			'S_DISPLAY_GALLERIES'		=> ($vehicle_images_found > 0 || $mod_images_displayed > 0) ? 1 : 0,
-			'S_DISPLAY_VEHICLE_IMAGES'	=> ($vehicle_images_found > 0) ? 1 : 0,
-			'S_DISPLAY_MODIFICATION_IMAGES'	=> ($mod_images_displayed > 0) ? 1 : 0,
+			'S_DISPLAY_GALLERIES'		=> ($vehicle_images_found > 0 || $mod_images_displayed > 0 || $quartermile_images_displayed > 0 || $dynorun_images_displayed > 0 || $lap_images_displayed > 0) ? 1 : 0,
 			'S_LOWEST_TAB_AVAILABLE'	=> min($lowest_tab),
 
             		'EDIT' 				=> ($garage_config['enable_images']) ? $user->img('garage_edit', 'EDIT') : $user->lang['EDIT'],
@@ -1393,6 +1470,12 @@ class garage_vehicle
 			'COMMENT_COUNT' 		=> $garage_guestbook->count_vehicle_comments($cid),
 	       		'TOTAL_MOD_IMAGES' 		=> $mod_images_found,
             		'SHOWING_MOD_IMAGES' 		=> $mod_images_displayed,
+	       		'TOTAL_QUARTERMILE_IMAGES' 	=> $quartermile_images_found,
+            		'SHOWING_QUARTERMILE_IMAGES'	=> $quartermile_images_displayed,
+	       		'TOTAL_DYNORUN_IMAGES' 		=> $dynorun_images_found,
+            		'SHOWING_DYNORUN_IMAGES' 	=> $dynorun_images_displayed,
+	       		'TOTAL_LAP_IMAGES' 		=> $lap_images_found,
+            		'SHOWING_LAP_IMAGES' 		=> $lap_images_displayed,
 			'CID' 				=> $vehicle['id'],
 			'YEAR' 				=> $vehicle['made_year'],
 			'ENGINE_TYPE' 			=> $vehicle['engine_type'],

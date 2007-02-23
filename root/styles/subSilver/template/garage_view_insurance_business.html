@@ -61,12 +61,16 @@
  			</table>
 			<br /> 
 			<!-- BEGINELSE -->
- 			<!-- END business_row -->
-			<table width="100%" cellspacing="0" cellpadding="0" border="0">
-				<tr> 
-					<td><span class="nav">{PAGE_NUMBER}</span></td>
-					<td align="right"><span class="gensmall">{S_TIMEZONE}</span><br /><span class="nav">{PAGINATION}</span></td>
-  				</tr>
+			<!-- END business_row -->
+
+			<table width="100%" cellspacing="1">
+			<tr>
+				<!-- IF TOTAL_BUSINESS -->
+					<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
+					<td class="gensmall" nowrap="nowrap">&nbsp;[ {TOTAL_BUSINESS} ]&nbsp;</td>
+					<td class="gensmall" width="100%" align="right" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
+				<!-- ENDIF -->
+			</tr>
 			</table>
 		</td>
 
