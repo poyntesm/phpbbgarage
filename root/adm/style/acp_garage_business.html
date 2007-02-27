@@ -132,6 +132,20 @@
 
 <!-- ELSE -->
 
+<script type="text/javascript">
+<!--
+	var active_pmask = '0';
+	var active_fmask = '0';
+	var active_cat = '0';
+
+	var id = '000';
+
+	var role_options = new Array();
+//-->
+</script>
+
+<script type="text/javascript" src="style/permissions.js"></script>
+
 <h1>{L_GARAGE_BUSINESS_TITLE}</h1>
 
 <p>{L_GARAGE_BUSINESS_EXPLAIN}</p>
@@ -143,27 +157,56 @@
 		</div>
 	<!-- ENDIF -->
 
-	<span style="text-align:right;">All::Garage::Insurance::Retail::Dynocentre::Manufacturer</span>
-	<table cellspacing="1">
-			<col class="row1" /><col class="row2" />
-	<tbody>
-	<!-- BEGIN business -->
-	<tr>
-		<td width="90%" nowrap=nowrap><span class="gen">{business.TITLE}</span></td>
-		<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
-		<!-- IF business.S_DISAPPROVED -->
-			{ICON_DISAPPROVE_DISABLED}
-			<a href="{business.U_APPROVE}">{ICON_APPROVE}</a>
-		<!-- ELSEIF business.S_APPROVED  -->
-			<a href="{business.U_DISAPPROVE}">{ICON_DISAPPROVE}</a>
-			{ICON_APPROVE_DISABLED}
-		<!-- ENDIF -->
-		<a href="{business.U_EDIT}">{ICON_EDIT}</a>
-		<a href="{business.U_DELETE}">{ICON_DELETE}</a>
-		</td>
-	</tr>
-	<!-- END business -->
-</table>
+
+
+	<fieldset class="perm nolegend">
+
+		<div id="advanced00">
+			<div class="perm_cat">
+				<ul>
+				<!-- BEGIN type -->
+					<li class="perm_preset_yes<!-- IF type.S_FIRST_ROW --> activetab<!-- ENDIF -->" id="tab00{type.S_ROW_COUNT}">
+					<a href="#" onclick="swap_options('0','0','{type.S_ROW_COUNT}'); return false;"><span class="tabbg"><span class="colour"></span>{type.TYPE}</span></a></li>	
+				<!-- END type -->
+				</ul>
+			</div>
+			<!-- BEGIN type -->
+			<div class="perm_panel" id="options00{type.S_ROW_COUNT}"<!-- IF type.S_FIRST_ROW --><!-- ELSE --> style="display: none;"<!-- ENDIF -->>
+				<span class="corners-top"><span></span></span>
+				<div class="tablewrap">
+					<table id="table00{type.S_ROW_COUNT}" cellspacing="1">
+					<colgroup>
+						<col class="permissions_name" />
+						<col class="permissions_yes" />
+						<col class="permissions_no" />
+						<col class="permissions_never" />
+					</colgroup>
+					<tbody>
+					<!-- BEGIN business -->
+					<tr class="row1">
+						<td width="90%" nowrap=nowrap><span class="gen">{business.TITLE}</span></td>
+						<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
+						<!-- IF business.S_DISAPPROVED -->
+							{ICON_DISAPPROVE_DISABLED}
+							<a href="{business.U_APPROVE}">{ICON_APPROVE}</a>
+						<!-- ELSEIF business.S_APPROVED  -->
+							<a href="{business.U_DISAPPROVE}">{ICON_DISAPPROVE}</a>
+							{ICON_APPROVE_DISABLED}
+						<!-- ENDIF -->
+							<a href="{business.U_EDIT}">{ICON_EDIT}</a>
+							<a href="{business.U_DELETE}">{ICON_DELETE}</a>
+						</td>
+					</tr>
+					<!-- END business -->
+					</tbody>
+					</table>
+				</div>
+				<span class="corners-bottom"><span></span></span>
+			</div>
+			<!-- END type -->
+		</div>
+
+	</fieldset>
 
 	<form id="business" method="post" action="{U_ACTION}">
 

@@ -876,6 +876,40 @@ class garage_modification
 		$required_position++;
 		return ;
 	}
+
+	/*========================================================================*/
+	// Selects Lastest Updated Vehicle
+	// Usage: get_latest_updatest_vehicles('No. To Return');
+	/*========================================================================*/
+	function get_manufacturer_modification_categories($bid)
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT_DISTINCT', 
+			array(
+			'SELECT'	=> 'c.title, c.id',
+			'FROM'		=> array(
+				GARAGE_CATEGORIES_TABLE		=> 'c',
+				GARAGE_BUSINESS_TABLE		=> 'b',
+				GARAGE_PRODUCTS_TABLE		=> 'p',
+			),
+			'WHERE'		=> "b.id = $bid 
+						AND b.id = p.business_id
+						AND c.id = p.category_id",
+			'ODRDER_BY'	=> 'c.field_order DESC'
+		));
+
+	      	$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$data[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
 }
 
 $garage_modification = new garage_modification();

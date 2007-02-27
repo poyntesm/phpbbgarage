@@ -203,21 +203,27 @@ class acp_garage_product
 					}
 				}
 
-				//Get Products
-				$products = $garage_modification->get_products_by_manufacturer($manufacturer_id);
-
+				$categories = $garage_modification->get_manufacturer_modification_categories($manufacturer_id);
 				$manufacturer = $garage_business->get_business($manufacturer_id);
-	
-				//Process Array For Each Model
-				for( $i = 0; $i < count($products); $i++ )
+
+				for ( $i = 0; $i < count($categories); $i++ )
 				{
-					$url = $this->u_action . "&amp;manufacturer_id=$manufacturer_id&amp;product_id={$products[$i]['id']}";
-					$template->assign_block_vars('product', array(
-						'ID' 			=> $products[$i]['id'],
-						'PRODUCT' 		=> $products[$i]['title'],
-						'U_EDIT'		=> $url . '&amp;action=edit_product',
-						'U_DELETE'		=> $url . '&amp;action=delete_product',
-					));
+
+	       				$template->assign_block_vars('category', array(
+			           		'CATEGORY_TITLE' => $categories[$i]['title'])
+	       				);
+					$products = $garage_modification->get_products_by_manufacturer($manufacturer_id, $categories[$i]['id']);
+					//Process Array For Each Model
+					for ( $j = 0; $j < count($products); $j++ )
+					{
+						$url = $this->u_action . "&amp;manufacturer_id=$manufacturer_id&amp;product_id={$products[$j]['id']}";
+						$template->assign_block_vars('category.product', array(
+							'ID' 			=> $products[$j]['id'],
+							'PRODUCT' 		=> $products[$j]['title'],
+							'U_EDIT'		=> $url . '&amp;action=edit_product',
+							'U_DELETE'		=> $url . '&amp;action=delete_product',
+						));
+					}
 				}
 	
 				$template->assign_vars(array(

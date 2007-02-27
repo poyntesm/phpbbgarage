@@ -275,30 +275,37 @@ class acp_garage_business
 			break;	
 		
 		}
-		
+
 		//Default Management Page	
-		$data = $garage_business->get_all_business();
-		
-		for($i = 0; $i < count($data); $i++)
+		$types = array($user->lang['GARAGE'], $user->lang['INSURANCE'], $user->lang['RETAIL'], $user->lang['DYNOCENTRE'], $user->lang['MANUFACTURER']);
+		$type = array(BUSINESS_GARAGE, BUSINESS_INSURANCE, BUSINESS_RETAIL, BUSINESS_DYNOCENTRE, BUSINESS_PRODUCT);
+		for($i = 0; $i < count($types); $i++)
 		{
-			$url = $this->u_action . "&amp;id={$data[$i]['id']}";
-		
-			$template->assign_block_vars('business', array(
-				'ID' 			=> $data[$i]['id'],
-				'TITLE' 		=> $data[$i]['title'],
-				'ADDRESS' 		=> $data[$i]['address'],
-				'TELEPHONE' 		=> $data[$i]['telephone'],
-				'FAX' 			=> $data[$i]['fax'],
-				'WEBSITE' 		=> $data[$i]['website'],
-				'EMAIL' 		=> $data[$i]['email'],
-				'OPENING_HOURS' 	=> $data[$i]['opening_hours'],
-				'S_DISAPPROVED'		=> ($data[$i]['pending'] == 1) ? true : false,
-				'S_APPROVED'		=> ($data[$i]['pending'] == 0) ? true : false,
-				'U_APPROVE'		=> $url . '&amp;action=approve',
-				'U_DISAPPROVE'		=> $url . '&amp;action=disapprove',
-				'U_EDIT'		=> $url . '&amp;action=edit',
-				'U_DELETE'		=> $url . '&amp;action=delete',
+			$template->assign_block_vars('type', array(
+				'TYPE' 	=> $types[$i],
 			));
+
+			$data = $garage_business->get_business_by_type($type[$i]);
+			for($j = 0; $j < count($data); $j++)
+			{
+				$url = $this->u_action . "&amp;id={$data[$j]['id']}";
+				$template->assign_block_vars('type.business', array(
+					'ID' 			=> $data[$j]['id'],
+					'TITLE' 		=> $data[$j]['title'],
+					'ADDRESS' 		=> $data[$j]['address'],
+					'TELEPHONE' 		=> $data[$j]['telephone'],
+					'FAX' 			=> $data[$j]['fax'],
+					'WEBSITE' 		=> $data[$j]['website'],
+					'EMAIL' 		=> $data[$j]['email'],
+					'OPENING_HOURS' 	=> $data[$j]['opening_hours'],
+					'S_DISAPPROVED'		=> ($data[$j]['pending'] == 1) ? true : false,
+					'S_APPROVED'		=> ($data[$j]['pending'] == 0) ? true : false,
+					'U_APPROVE'		=> $url . '&amp;action=approve',
+					'U_DISAPPROVE'		=> $url . '&amp;action=disapprove',
+					'U_EDIT'		=> $url . '&amp;action=edit',
+					'U_DELETE'		=> $url . '&amp;action=delete',
+				));
+			}
 		}
 	}
 
@@ -470,7 +477,7 @@ class acp_garage_business
 				}
 				else
 				{
-					$modifications_to_name = $row['title'];
+					$product_to_name = $row['title'];
 					$from_name = $business_data['title'];
 					$this->move_product_business_content($business_id, $product_to_id);
 					add_log('admin', 'LOG_GARAGE_MOVED_PRODUCT', $from_name, $product_to_name);

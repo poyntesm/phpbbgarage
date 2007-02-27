@@ -90,7 +90,7 @@
 	  				<td align="center" valign="middle"><span class="gensmall"><a href="{modification.U_VIEW_VEHICLE}">{modification.VEHICLE}</a></span></td>
 					<td align="center" valign="middle"><span class="gensmall"><a href="{modification.U_VIEW_MODIFICATION}">{modification.MODIFICATION}</a></span></td>
 					<td align="center" valign="middle"><span class="gensmall">{modification.CATEGORY}</span></td>
-					<td align="center" valign="middle"><span class="gensmall"><a href="{modification.U_VIEW_PROFILE}" <!-- IF modification.USERNAME_COLOUR --> style="color: {modification.USERNAME_COLOUR}"<!-- ENDIF -->>{modification.USERNAME}</a></span></td>
+					<td align="center" valign="middle"><span class="gensmall"><b><a href="{modification.U_VIEW_PROFILE}" <!-- IF modification.USERNAME_COLOUR --> style="color: {modification.USERNAME_COLOUR}"<!-- ENDIF -->>{modification.USERNAME}</a></b></span></td>
 					<td align="center" valign="middle"><span class="gensmall">{modification.PRICE}</span></td>
 					<td align="center" valign="middle"><span class="gensmall">{modification.RATING}</span></td>
 				</tr>
@@ -132,7 +132,7 @@
 				<td align="center" valign="middle"><span class="gensmall"><a href="{premium.U_VIEW_VEHICLE}">{premium.VEHICLE}</a></span></td>
 					<td align="center" valign="middle"><span class="gensmall">{premium.PRICE}</span></td>
 					<td align="center" valign="middle"><span class="gensmall">{premium.MOD_PRICE}</span></td>
-					<td align="center" valign="middle"><span class="gensmall"><a href="{premium.U_VIEW_PROFILE}" <!-- IF premium.USERNAME_COLOUR --> style="color: {premium.USERNAME_COLOUR}"<!-- ENDIF -->>{premium.USERNAME}</a></span></td>
+					<td align="center" valign="middle"><span class="gensmall"><b><a href="{premium.U_VIEW_PROFILE}" <!-- IF premium.USERNAME_COLOUR --> style="color: {premium.USERNAME_COLOUR}"<!-- ENDIF -->>{premium.USERNAME}</a></b></span></td>
 					<td align="center" valign="middle"><span class="gensmall">{premium.PREMIUM}</span></td>
 					<td align="center" valign="middle"><span class="gensmall">{premium.COVER_TYPE}</span></td>
 					<td align="center" valign="middle"><span class="gensmall"><a href="{premium.U_VIEW_BUSINESS}">{premium.BUSINESS}</a></span></td>
@@ -175,7 +175,7 @@
 				<!-- BEGIN quartermile -->
 				<!-- IF quartermile.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
 					<td align="center"><span class="gen"><!-- IF quartermile.U_IMAGE --><a href="{quartermile.U_IMAGE}" target="_blank">{quartermile.IMAGE}</a><!-- ENDIF --></span></td>
-					<td align="center"><span class="gen"><a href="{quartermile.U_VIEWPROFILE}" <!-- IF quartermile.USERNAME_COLOUR --> style="color: {quartermile.USERNAME_COLOUR}"<!-- ENDIF -->>{quartermile.USERNAME}</a></span></td>
+					<td align="center"><span class="gen"><b><a href="{quartermile.U_VIEWPROFILE}" <!-- IF quartermile.USERNAME_COLOUR --> style="color: {quartermile.USERNAME_COLOUR}"<!-- ENDIF -->>{quartermile.USERNAME}</a></b></span></td>
 					<td align="center"><span class="gen"><a href="{quartermile.U_VIEWVEHICLE}">{quartermile.VEHICLE}</a></span></td>
 					<td align="center"><span class="gensmall">{quartermile.RT}</span></td>
 					<td align="center"><span class="gensmall">{quartermile.SIXTY}</span></td>
@@ -222,7 +222,7 @@
 				<!-- BEGIN dynorun -->
 				<!-- IF dynorun.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
 					<td align="center"><span class="gen"><!-- IF dynorun.U_IMAGE --><a href="{dynorun.U_IMAGE}" target="_blank">{dynorun.IMAGE}</a><!-- ENDIF --></span></td>
-					<td align="center"><span class="gen"><a href="{dynorun.U_VIEWPROFILE}" <!-- IF dynorun.USERNAME_COLOUR --> style="color: {dynorun.USERNAME_COLOUR}"<!-- ENDIF -->>{dynorun.USERNAME}</a></span></td>
+					<td align="center"><span class="gen"><b><a href="{dynorun.U_VIEWPROFILE}" <!-- IF dynorun.USERNAME_COLOUR --> style="color: {dynorun.USERNAME_COLOUR}"<!-- ENDIF -->>{dynorun.USERNAME}</a></b></span></td>
 					<td align="center"><span class="gen"><a href="{dynorun.U_VIEWVEHICLE}" >{dynorun.VEHICLE}</a></span></td>
 					<td align="center"><span class="gensmall">{dynorun.DYNOCENTRE}</span></td>
 					<td align="center"><span class="gensmall"><a href="{dynorun.U_BHP}">{dynorun.BHP}&nbsp;{dynorun.BHP_UNIT}</a></span></td>
@@ -268,7 +268,7 @@
 				<!-- BEGIN lap -->
 				<!-- IF lap.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
 	  				<td class="row1" align="center"><span class="gensmall"><!-- IF lap.U_IMAGE --><a href="{lap.U_IMAGE}" target="_blank">{lap.IMAGE}</a><!-- ENDIF --></span></td>
-					<td align="center"><span class="gen"><a href="{lap.U_VIEWPROFILE}" <!-- IF lap.USERNAME_COLOUR --> style="color: {lap.USERNAME_COLOUR}"<!-- ENDIF -->>{lap.USERNAME}</a></span></td>
+					<td align="center"><span class="gen"><b><a href="{lap.U_VIEWPROFILE}" <!-- IF lap.USERNAME_COLOUR --> style="color: {lap.USERNAME_COLOUR}"<!-- ENDIF -->>{lap.USERNAME}</a></b></span></td>
 					<td align="center"><span class="gen"><a href="{lap.U_VIEWVEHICLE}">{lap.VEHICLE}</a></span></td>
 					<td class="row1" align="center"><span class="gensmall"><a href="{lap.U_TRACK}">{lap.TRACK}</a></span></td>
 					<td class="row1" align="center"><span class="gensmall">{lap.CONDITION}</span></td>

@@ -17,7 +17,7 @@
 
 	<!-- IF vehicle_row.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
 		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap"><!-- IF vehicle_row.U_IMAGE --><a href="{vehicle_row.U_IMAGE}" target="_blank">{vehicle_row.IMAGE}</a><!-- ENDIF --></td>
-		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap"><a href="{vehicle_row.U_PROFILE}" <!-- IF vehicle_row.USERNAME_COLOUR --> style="color: {vehicle_row.USERNAME_COLOUR}"<!-- ENDIF -->>{vehicle_row.USERNAME}</a></td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap"><b><a href="{vehicle_row.U_PROFILE}" <!-- IF vehicle_row.USERNAME_COLOUR --> style="color: {vehicle_row.USERNAME_COLOUR}"<!-- ENDIF -->>{vehicle_row.USERNAME}</a></b></td>
 		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{vehicle_row.MAKE}&nbsp;{vehicle_row.MODEL}&nbsp;{vehicle_row.ENGINE_TYPE}</td>
 		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{vehicle_row.COLOUR}</td>
 		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{vehicle_row.PRICE}&nbsp;{vehicle_row.CURRENCY}</td>

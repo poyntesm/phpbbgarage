@@ -375,6 +375,7 @@ $lang = array_merge($lang, array(
 	'GARAGE'			=> 'Garage',
 	'RETAIL'			=> 'Shop',
 	'PRODUCT_MANUFACTURER'		=> 'Product Manufacturer',
+	'MANUFACTURER'			=> 'Manufacturer',
 	'DYNOCENTRE'			=> 'Dynocentre',
 	'DELETE_ALL_PREMIUMS'		=> 'Delete all premiums',
 	'MOVE_PREMIUMS_TO'		=> 'Move premiums to',
