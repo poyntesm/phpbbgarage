@@ -58,7 +58,7 @@ while(list($var, $param) = @each($params))
 }
 
 //Get All Non-String Parameters
-$params = array('cid' => 'CID', 'mid' => 'MID', 'did' => 'DID', 'qmid' => 'QMID', 'ins_id' => 'INS_ID', 'eid' => 'EID', 'image_id' => 'image_id', 'comment_id' => 'CMT_ID', 'bus_id' => 'BUS_ID');
+$params = array('vid' => 'VID', 'mid' => 'MID', 'did' => 'DID', 'qmid' => 'QMID', 'ins_id' => 'INS_ID', 'eid' => 'EID', 'image_id' => 'image_id', 'comment_id' => 'CMT_ID', 'bus_id' => 'BUS_ID');
 while(list($var, $param) = @each($params))
 {
 	$$var = request_var($param, '');
@@ -87,7 +87,7 @@ switch( $mode )
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Build Page Header ;)
 		page_header($page_title);
@@ -99,25 +99,25 @@ switch( $mode )
 		);
 
 		//Get Vehicle Data For Navlinks
-		$vehicle=$garage_vehicle->get_vehicle($cid);
+		$vehicle=$garage_vehicle->get_vehicle($vid);
 
 		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $vehicle['vehicle'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"))
 		);
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['ADD_QUARTERMILE'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_quartermile&amp;CID=$cid"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_quartermile&amp;VID=$vid"))
 		);
 
 		//If Dynoruns Exist, Allow User To Link Quartermile Times To Know Vehicle Spec..
-		if ( $garage_dynorun->count_runs($cid) > 0 )
+		if ( $garage_dynorun->count_runs($vid) > 0 )
 		{
 			$template->assign_vars(array(
 				'S_DISPLAY_DYNORUNS' => true)
 			);
-			$dynoruns = $garage_dynorun->get_dynoruns_by_vehicle($cid);
+			$dynoruns = $garage_dynorun->get_dynoruns_by_vehicle($vid);
 			$garage_template->dynorun_dropdown($dynoruns);
 		}
 
@@ -125,7 +125,7 @@ switch( $mode )
 		$template->assign_vars(array(
 			'L_TITLE'  			=> $user->lang['ADD_NEW_TIME'],
 			'L_BUTTON'  			=> $user->lang['ADD_NEW_TIME'],
-			'CID' 				=> $cid,
+			'VID' 				=> $vid,
 			'S_MODE_ACTION' 		=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=insert_quartermile"))
          	);
 
@@ -143,7 +143,7 @@ switch( $mode )
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Get All Data Posted And Make It Safe To Use
 		$params	= array('rt' => '', 'sixty' => '', 'three' => '', 'eighth' => '', 'eighthmph' => '', 'thou' => '', 'quart' => '', 'quartmph' => '', 'dynorun_id' => '', 'install_comments' => '');
@@ -157,7 +157,7 @@ switch( $mode )
 		$qmid = $garage_quartermile->insert_quartermile($data);
 
 		//Update The Time Now...In Case We Get Redirected During Image Processing
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
 		//If Any Image Variables Set Enter The Image Handling
 		if ($garage_image->image_attached() )
@@ -168,7 +168,7 @@ switch( $mode )
 				//Create Thumbnail & DB Entry For Image + Link To Item
 				$image_id = $garage_image->process_image_attached('quartermile', $qmid);
 				//Insert Image Into Quartermiles Gallery
-				$hilite = $garage_quartermile->hilite_exists($cid, $qmid);
+				$hilite = $garage_quartermile->hilite_exists($vid, $qmid);
 				$garage_image->insert_quartermile_gallery_image($image_id, $hilite);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
@@ -191,7 +191,7 @@ switch( $mode )
 			$garage->pending_notification('unapproved_quartermiles');
 		}
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
 
 		break;
 
@@ -200,11 +200,11 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_quartermile.$phpEx?mode=edit_quartermile&amp;QMID=$qmid&amp;CID=$cid");
+			login_box("garage_quartermile.$phpEx?mode=edit_quartermile&amp;QMID=$qmid&amp;VID=$vid");
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Build Page Header ;)
 		page_header($page_title);
@@ -216,18 +216,18 @@ switch( $mode )
 		);
 
 		//Build Navlinks
-		$vehicle_data 	= $garage_vehicle->get_vehicle($cid);
+		$vehicle_data 	= $garage_vehicle->get_vehicle($vid);
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $vehicle_data['vehicle'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"))
 		);
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['EDIT_QUARTERMILE'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;CID=$cid&amp;QMID=$qmid"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;VID=$vid&amp;QMID=$qmid"))
 		);
 
 		//Count Dynoruns For Vehicle
-		$count = $garage_dynorun->count_runs($cid);	
+		$count = $garage_dynorun->count_runs($vid);	
 
 		//See If We Got Sent Here By Pending Page...If So We Need To Tell Update To Redirect Correctly
 		$params = array('PENDING' => '');
@@ -241,22 +241,22 @@ switch( $mode )
 		{
 			$bhp_statement = $data['bhp'] . ' BHP @ ' . $data['bhp_unit'];
 			$template->assign_block_vars('link_rr', array());
-			$garage_template->dynorun_dropdown($data['dynorun_id'], $bhp_statement, $cid);
+			$garage_template->dynorun_dropdown($data['dynorun_id'], $bhp_statement, $vid);
 		}
 		//Allow User To Link To Dynorun
 		else if ((empty($data['dynorun_id'])) AND ($count > 0))
 		{
 			$template->assign_block_vars('link_rr', array());
-			$garage_template->dynorun_dropdown(NULL, NULL, $cid);
+			$garage_template->dynorun_dropdown(NULL, NULL, $vid);
 		}
 
 		//Build All HTML Parts
 		$template->assign_vars(array(
 			'L_TITLE'		=> $user->lang['EDIT_TIME'],
 			'L_BUTTON'		=> $user->lang['EDIT_TIME'],
-			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=edit_quartermile&amp;CID=$cid&amp;QMID=$qmid"),
-			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=edit_quartermile&amp;CID=$cid&amp;QMID=$qmid#images"),
-			'CID'			=> $cid,
+			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=edit_quartermile&amp;VID=$vid&amp;QMID=$qmid"),
+			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=edit_quartermile&amp;VID=$vid&amp;QMID=$qmid#images"),
+			'VID'			=> $vid,
 			'QMID'			=> $qmid,
 			'RT'			=> $data['rt'],
 			'SIXTY'			=> $data['sixty'],
@@ -281,15 +281,15 @@ switch( $mode )
 		$garage_template->attach_image('quartermile');
 
 		//Pull Quartermile Gallery Data From DB
-		$data = $garage_image->get_quartermile_gallery($cid, $qmid);
+		$data = $garage_image->get_quartermile_gallery($vid, $qmid);
 
 		//Process Each Image From Quartermile Gallery
 		for ($i = 0, $count = sizeof($data);$i < $count; $i++)
 		{
 			$template->assign_block_vars('pic_row', array(
 				'U_IMAGE'	=> (($data[$i]['attach_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location']))) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_image&amp;image_id=" . $data[$i]['attach_id']) : '',
-				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=remove_quartermile_image&amp;CID=$cid&amp;QMID=$qmid&amp;image_id=" . $data[$i]['attach_id']),
-				'U_SET_HILITE'	=> ($data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=set_quartermile_hilite&amp;image_id=" . $data[$i]['attach_id'] . "&amp;CID=$cid&amp;QMID=$qmid") : '',
+				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=remove_quartermile_image&amp;VID=$vid&amp;QMID=$qmid&amp;image_id=" . $data[$i]['attach_id']),
+				'U_SET_HILITE'	=> ($data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=set_quartermile_hilite&amp;image_id=" . $data[$i]['attach_id'] . "&amp;VID=$vid&amp;QMID=$qmid") : '',
 				'IMAGE' 	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'],
 				'IMAGE_TITLE' 	=> $data[$i]['attach_file'])
 			);
@@ -305,11 +305,11 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_quartermile.$phpEx?mode=edit_quartermile&amp;QMID=$qmid&amp;CID=$cid");
+			login_box("garage_quartermile.$phpEx?mode=edit_quartermile&amp;QMID=$qmid&amp;VID=$vid");
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('rt' => '', 'sixty' => '', 'three' => '', 'eighth' => '', 'eighthmph' => '', 'thou' => '', 'quart' => '', 'quartmph' => '', 'dynorun_id' => '', 'install_comments' => '', 'editupload' => '', 'image_id' => '', 'pending_redirect' => '');
@@ -323,7 +323,7 @@ switch( $mode )
 		$garage_quartermile->update_quartermile($data);
 
 		//Update The Vehicle Timestamp Now...In Case We Get Redirected During Image Processing
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
 		//Removed The Old Image If Required By A Delete Or A New Image Existing
 		if (($data['editupload'] == 'delete') OR ($data['editupload'] == 'new'))
@@ -367,7 +367,7 @@ switch( $mode )
 			redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_quartermiles"));
 		}
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
 
 		break;
 
@@ -380,15 +380,15 @@ switch( $mode )
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Delete The Quartermie Time
 		$garage_quartermile->delete_quartermile($qmid);
 
 		//Update Timestamp For Vehicle
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
 
 		break;
 	
@@ -401,7 +401,7 @@ switch( $mode )
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//If Any Image Variables Set Enter The Image Handling
 		if ($garage_image->image_attached())
@@ -423,40 +423,40 @@ switch( $mode )
 		}
 
 		//Update Timestamp For Vehicle
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=edit_quartermile&amp;CID=$cid&amp;QMID=$qmid#images"));
+		redirect(append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=edit_quartermile&amp;VID=$vid&amp;QMID=$qmid#images"));
 
 		break;
 
 	case 'set_quartermile_hilite':
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Set All Images To Non Hilite So We Do Not End Up With Two Hilites & Then Set Hilite
 		$garage->update_single_field(GARAGE_QUARTERMILE_GALLERY_TABLE, 'hilite', 0, 'quartermile_id', $qmid);
 		$garage->update_single_field(GARAGE_QUARTERMILE_GALLERY_TABLE, 'hilite', 1, 'image_id', $image_id);
 
 		//Update Timestamp For Vehicle
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=edit_quartermile&amp;CID=$cid&amp;QMID=$qmid#images"));
+		redirect(append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=edit_quartermile&amp;VID=$vid&amp;QMID=$qmid#images"));
 
 		break;
 
 	case 'remove_quartermile_image':
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Remove Image From Quartermile Gallery & Deletes Image
 		$garage_image->delete_quartermile_image($image_id);
 
 		//Update Timestamp For Vehicle
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=edit_quartermile&amp;CID=$cid&amp;QMID=$qmid#images"));
+		redirect(append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=edit_quartermile&amp;VID=$vid&amp;QMID=$qmid#images"));
 
 		break;
 
@@ -483,11 +483,11 @@ switch( $mode )
 		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $data['vehicle'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=$cid"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=$vid"))
 		);
 
 		//Get All Gallery Data Required
-		$gallery_data = $garage_image->get_quartermile_gallery($cid, $qmid);
+		$gallery_data = $garage_image->get_quartermile_gallery($vid, $qmid);
 			
 		//Process Each Image From Quartermile Gallery	
        		for ( $i = 0; $i < count($gallery_data); $i++ )

@@ -58,7 +58,7 @@ while(list($var, $param) = @each($params))
 }
 
 //Get All Non-String Parameters
-$params = array('cid' => 'CID', 'mid' => 'MID', 'did' => 'DID', 'qmid' => 'QMID', 'ins_id' => 'INS_ID', 'eid' => 'EID', 'image_id' => 'image_id', 'comment_id' => 'CMT_ID', 'bus_id' => 'BUS_ID');
+$params = array('vid' => 'VID', 'mid' => 'MID', 'did' => 'DID', 'qmid' => 'QMID', 'ins_id' => 'INS_ID', 'eid' => 'EID', 'image_id' => 'image_id', 'comment_id' => 'CMT_ID', 'bus_id' => 'BUS_ID');
 while(list($var, $param) = @each($params))
 {
 	$$var = request_var($param, '');
@@ -84,7 +84,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_modification.$phpEx?mode=add_modification&amp;CID=$cid");
+			login_box("garage_modification.$phpEx?mode=add_modification&amp;VID=$vid");
 		}
 
 		//Let Check The User Is Allowed Perform This Action
@@ -94,7 +94,7 @@ switch( $mode )
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Build Page Header ;)
 		page_header($page_title);
@@ -106,16 +106,16 @@ switch( $mode )
 		);
 
 		//Get Vehicle Data For Navlinks
-		$vehicle=$garage_vehicle->get_vehicle($cid);
+		$vehicle=$garage_vehicle->get_vehicle($vid);
 
 		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $vehicle['vehicle'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"))
 		);
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['ADD_MODIFICATION'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_modification&amp;CID=$cid"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_modification&amp;VID=$vid"))
 		);
 
 		//Get Data Incase We Are Returning From Adding A Product So Its Selected..
@@ -141,16 +141,16 @@ switch( $mode )
 			'L_BUTTON' 			=> $user->lang['ADD_MODIFICATION'],
 			'L_TITLE' 			=> $user->lang['ADD_MODIFICATION'],
 			'U_SUBMIT_PRODUCT'		=> "javascript:add_product('add_modification')",
-			'U_SUBMIT_BUSINESS_SHOP'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;CID=$cid&amp;redirect=add_modification&amp;BUSINESS=" . BUSINESS_RETAIL ),
-			'U_SUBMIT_BUSINESS_GARAGE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;CID=$cid&amp;redirect=add_modification&amp;BUSINESS=". BUSINESS_GARAGE),
-			'U_SUBMIT_BUSINESS_PRODUCT'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;CID=$cid&amp;redirect=add_modification&amp;BUSINESS=". BUSINESS_PRODUCT),
-			'CID' 				=> $cid,
+			'U_SUBMIT_BUSINESS_SHOP'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;VID=$vid&amp;redirect=add_modification&amp;BUSINESS=" . BUSINESS_RETAIL ),
+			'U_SUBMIT_BUSINESS_GARAGE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;VID=$vid&amp;redirect=add_modification&amp;BUSINESS=". BUSINESS_GARAGE),
+			'U_SUBMIT_BUSINESS_PRODUCT'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;VID=$vid&amp;redirect=add_modification&amp;BUSINESS=". BUSINESS_PRODUCT),
+			'VID' 				=> $vid,
 			'CATEGORY_ID' 			=> $data['category_id'],
 			'MANUFACTURER_ID' 		=> $data['manufacturer_id'],
 			'PRODUCT_ID' 			=> $data['product_id'],
 			'S_DISPLAY_SUBMIT_BUSINESS'	=> ($garage_config['enable_user_submit_business'] && $auth->acl_get('u_garage_add_business')) ? true : false,
 			'S_MODE_ACTION_PRODUCT' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_product"),
-			'S_MODE_ACTION'			=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=insert_modification&amp;CID=$cid"))
+			'S_MODE_ACTION'			=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=insert_modification&amp;VID=$vid"))
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
@@ -163,7 +163,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_modification.$phpEx?mode=add_modification&amp;CID=$cid");
+			login_box("garage_modification.$phpEx?mode=add_modification&amp;VID=$vid");
 		}
 
 		//Let Check The User Is Allowed Perform This Action
@@ -173,7 +173,7 @@ switch( $mode )
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('category_id' => '' , 'manufacturer_id' => '', 'product_id' =>'', 'price' => '', 'shop_id' => '', 'installer_id' => '', 'install_price' => '', 'install_rating' => '', 'product_rating' => '', 'comments' => '', 'install_comments' => '', 'purchase_rating' => '');
@@ -187,7 +187,7 @@ switch( $mode )
 		$mid = $garage_modification->insert_modification($data);
 
 		//Update The Time Now...In Case We Get Redirected During Image Processing
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
 		//If Any Image Variables Set Enter The Image Handling
 		if ($garage_image->image_attached())
@@ -198,7 +198,7 @@ switch( $mode )
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('modification', $mid);
 				//Insert Image Into Modifications Gallery
-				$hilite = $garage_modification->hilite_exists($cid, $mid);
+				$hilite = $garage_modification->hilite_exists($vid, $mid);
 				$garage_image->insert_modification_gallery_image($image_id, $hilite);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
@@ -208,7 +208,7 @@ switch( $mode )
 			}
 		}
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
 
 		break;
 
@@ -217,11 +217,11 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_modification.$phpEx?mode=edit_modification&amp;MID=$mid&amp;CID=$cid");
+			login_box("garage_modification.$phpEx?mode=edit_modification&amp;MID=$mid&amp;VID=$vid");
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Build Page Header ;)
 		page_header($page_title);
@@ -233,14 +233,14 @@ switch( $mode )
 		);
 
 		//Build Navlinks
-		$vehicle_data 	= $garage_vehicle->get_vehicle($cid);
+		$vehicle_data 	= $garage_vehicle->get_vehicle($vid);
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $vehicle_data['vehicle'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"))
 		);
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['EDIT_MODIFICATION'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;CID=$cid&amp;MID=$mid"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;VID=$vid&amp;MID=$mid"))
 		);
 		
 		//Get Required Data
@@ -261,13 +261,13 @@ switch( $mode )
 		$template->assign_vars(array(
        			'L_TITLE' 		=> $user->lang['MODIFY_MOD'],
 			'L_BUTTON' 		=> $user->lang['MODIFY_MOD'],
-			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=edit_modification&amp;CID=$cid&amp;MID=$mid"),
-			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=manage_modification_gallery&amp;CID=$cid&amp;MID=$mid"),
+			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=edit_modification&amp;VID=$vid&amp;MID=$mid"),
+			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=manage_modification_gallery&amp;VID=$vid&amp;MID=$mid"),
 			'U_SUBMIT_PRODUCT'	=> "javascript:add_product('edit_modification')",
-			'U_SUBMIT_SHOP'		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;CID=$cid&amp;redirect=add_modification&amp;BUSINESS=" . BUSINESS_RETAIL),
-			'U_SUBMIT_GARAGE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;CID=$cid&amp;redirect=add_modification&amp;BUSINESS=" . BUSINESS_GARAGE),
+			'U_SUBMIT_SHOP'		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;VID=$vid&amp;redirect=add_modification&amp;BUSINESS=" . BUSINESS_RETAIL),
+			'U_SUBMIT_GARAGE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;VID=$vid&amp;redirect=add_modification&amp;BUSINESS=" . BUSINESS_GARAGE),
 			'MID' 			=> $mid,
-			'CID' 			=> $cid,
+			'VID' 			=> $vid,
 			'TITLE' 		=> $data['title'],
 			'MAKE' 			=> $data['make'],
 			'MODEL' 		=> $data['model'],
@@ -295,15 +295,15 @@ switch( $mode )
 		$garage_template->attach_image('modification');
 
 		//Pull Modification Gallery Data From DB
-		$data = $garage_image->get_modification_gallery($cid, $mid);
+		$data = $garage_image->get_modification_gallery($vid, $mid);
 
 		//Process Each Image From Modification Gallery
 		for ($i = 0, $count = sizeof($data);$i < $count; $i++)
 		{
 			$template->assign_block_vars('pic_row', array(
 				'U_IMAGE'	=> (($data[$i]['attach_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location']))) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_image&amp;image_id=" . $data[$i]['attach_id']) : '',
-				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=remove_modification_image&amp;CID=$cid&amp;MID=$mid&amp;image_id=" . $data[$i]['attach_id']),
-				'U_SET_HILITE'	=> ($data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=set_modification_hilite&amp;image_id=" . $data[$i]['attach_id'] . "&amp;CID=$cid&amp;MID=$mid") : '',
+				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=remove_modification_image&amp;VID=$vid&amp;MID=$mid&amp;image_id=" . $data[$i]['attach_id']),
+				'U_SET_HILITE'	=> ($data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=set_modification_hilite&amp;image_id=" . $data[$i]['attach_id'] . "&amp;VID=$vid&amp;MID=$mid") : '',
 				'IMAGE' 	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'],
 				'IMAGE_TITLE' 	=> $data[$i]['attach_file'])
 			);
@@ -319,11 +319,11 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ( $user->data['user_id'] == ANONYMOUS )
 		{
-			login_box("garage_modification.$phpEx?mode=edit_modification&amp;MID=$mid&amp;CID=$cid");
+			login_box("garage_modification.$phpEx?mode=edit_modification&amp;MID=$mid&amp;VID=$vid");
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('category_id' => '', 'manufacturer_id' => '', 'product_id' => '', 'price' => '', 'shop_id' => '', 'installer_id' => '', 'install_price' => '', 'install_rating' => '', 'product_rating' => '', 'comments' => '', 'install_comments' => '', 'editupload' => '', 'image_id' => '', 'purchase_rating' => '');
@@ -337,9 +337,9 @@ switch( $mode )
 		$garage_modification->update_modification($data);
 
 		//Update Timestamp For Vehicle
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
 
 		break;
 
@@ -352,15 +352,15 @@ switch( $mode )
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Delete The Modification
 		$garage_modification->delete_modification($mid);
 
 		//Update Timestamp For Vehicle
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
 
 		break;
 
@@ -387,11 +387,11 @@ switch( $mode )
 		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $data['vehicle'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=$cid"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=$vid"))
 		);
 
 		//Get All Gallery Data Required
-		$gallery_data = $garage_image->get_modification_gallery($cid, $mid);
+		$gallery_data = $garage_image->get_modification_gallery($vid, $mid);
 			
 		//Process Each Image From Modification Gallery	
        		for ( $i = 0; $i < count($gallery_data); $i++ )
@@ -467,7 +467,7 @@ switch( $mode )
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//If Any Image Variables Set Enter The Image Handling
 		if ($garage_image->image_attached())
@@ -489,40 +489,40 @@ switch( $mode )
 		}
 
 		//Update Timestamp For Vehicle
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=edit_modification&amp;CID=$cid&amp;MID=$mid#images"));
+		redirect(append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=edit_modification&amp;VID=$vid&amp;MID=$mid#images"));
 
 		break;
 
 	case 'set_modification_hilite':
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Set All Images To Non Hilite So We Do Not End Up With Two Hilites & Then Set Hilite
 		$garage->update_single_field(GARAGE_MODIFICATION_GALLERY_TABLE, 'hilite', 0, 'modification_id', $mid);
 		$garage->update_single_field(GARAGE_MODIFICATION_GALLERY_TABLE, 'hilite', 1, 'image_id', $image_id);
 
 		//Update Timestamp For Vehicle
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=edit_modification&amp;CID=$cid&amp;MID=$mid#images"));
+		redirect(append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=edit_modification&amp;VID=$vid&amp;MID=$mid#images"));
 
 		break;
 
 	case 'remove_modification_image':
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Remove Image From Modification Gallery & Deletes Image
 		$garage_image->delete_modification_image($image_id);
 
 		//Update Timestamp For Vehicle
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=edit_modification&amp;CID=$cid&amp;MID=$mid#images"));
+		redirect(append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=edit_modification&amp;VID=$vid&amp;MID=$mid#images"));
 
 		break;
 }

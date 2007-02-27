@@ -14,7 +14,6 @@
 ## 			viewtopic.php
 ## 			viewonline.php
 ## 			adm/index.php
-## 			includes/constants.php
 ## 			includes/functions.php
 ##			includes/acp/acp_styles.php
 ##			language/en/common.php
@@ -437,7 +436,7 @@ p.*
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 		'VEHICLE'			=> $user_cache[$poster_id]['vehicle'],
-		'U_VEHICLE'			=> (isset($user_cache[$poster_id]['garage_id'])) ? append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", 'mode=view_vehicle&amp;CID=' . $user_cache[$poster_id]['garage_id']) : '',
+		'U_VEHICLE'			=> (isset($user_cache[$poster_id]['garage_id'])) ? append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", 'mode=view_vehicle&amp;VID=' . $user_cache[$poster_id]['garage_id']) : '',
 		'S_DISPLAY_GARAGE_VIEWTOPIC'	=> ($garage_config['integrate_viewtopic']) ? true : false,
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
@@ -459,7 +458,7 @@ adm/index.php
 #
 #-----[ FIND ]------------------------------------------
 #
-		'ICON_DISAPPROVE_DISABLED'		=> '<img src="' . $phpbb_admin_path . 'images/icon_garage_disapprove_disabled.gif" alt="' . $user->lang['DISAPPROVE'] . '" title="' . $user->lang['DISAPPROVE'] . '" />',
+		'ICON_SYNC_DISABLED'		=> '<img src="' . $phpbb_admin_path . 'images/icon_sync_disabled.gif" alt="' . $user->lang['RESYNC'] . '" title="' . $user->lang['RESYNC'] . '" />',
 
 #
 #-----[ AFTER, ADD ]------------------------------------------
@@ -703,6 +702,8 @@ $lang = array_merge($lang, array(
 	'ACP_GARAGE_PRODUCT_SETTINGS'		=> 'Product settings',
 	'ACP_GARAGE_SERVICE_SETTINGS'		=> 'Service history settings',
 	'ACP_GARAGE_BLOG_SETTINGS'		=> 'Blog settings',
+	'ACP_GARAGE_FIELDS_MANAGEMENT'		=> 'Garage Custom fields management',
+	'ACP_GARAGE_FIELDS'			=> 'Custom Fields',
 	'APPROVE'				=> 'Approve',
 	'DISAPPROVE'				=> 'Disapprove',
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
@@ -884,7 +885,7 @@ styles/subSilver/templates/memberlist_view.html
 #
 #-----[ FIND ]------------------------------------------
 #
-				<td><!-- IF U_WWW --><b><a class="genmed" href="{U_WWW}" target="_userwww">{U_WWW}</a></b><!-- ENDIF --></td>
+				<td><!-- IF U_WWW --><b><a class="genmed" href="{U_WWW}">{U_WWW}</a></b><!-- ENDIF --></td>
 			</tr>
 
 #

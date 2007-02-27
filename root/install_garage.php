@@ -317,6 +317,50 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_blog (
 		`bbcode_flags` int(10) default NULL,
 		PRIMARY KEY  (`id`)
 	)";
+$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_custom_fields (
+  field_id mediumint(8) unsigned NOT NULL auto_increment,
+  field_name varchar(255) collate utf8_bin NOT NULL default '',
+  field_type tinyint(4) NOT NULL default '0',
+  field_ident varchar(20) collate utf8_bin NOT NULL default '',
+  field_length varchar(20) collate utf8_bin NOT NULL default '',
+  field_minlen varchar(255) collate utf8_bin NOT NULL default '',
+  field_maxlen varchar(255) collate utf8_bin NOT NULL default '',
+  field_novalue varchar(255) collate utf8_bin NOT NULL default '',
+  field_default_value varchar(255) collate utf8_bin NOT NULL default '',
+  field_validation varchar(20) collate utf8_bin NOT NULL default '',
+  field_required tinyint(1) unsigned NOT NULL default '0',
+  field_show_on_reg tinyint(1) unsigned NOT NULL default '0',
+  field_hide tinyint(1) unsigned NOT NULL default '0',
+  field_no_view tinyint(1) unsigned NOT NULL default '0',
+  field_active tinyint(1) unsigned NOT NULL default '0',
+  field_order mediumint(8) unsigned NOT NULL default '0',
+  PRIMARY KEY  (field_id),
+  KEY fld_type (field_type),
+  KEY fld_ordr (field_order)
+)";
+$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_custom_fields_data (
+  user_id mediumint(8) unsigned NOT NULL default '0',
+  gf_number bigint(20) default NULL,
+  gf_text varchar(255) collate utf8_bin default NULL,
+  PRIMARY KEY  (user_id)
+)";
+$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_custom_fields_lang (
+  field_id mediumint(8) unsigned NOT NULL default '0',
+  lang_id mediumint(8) unsigned NOT NULL default '0',
+  option_id mediumint(8) unsigned NOT NULL default '0',
+  field_type tinyint(4) NOT NULL default '0',
+  lang_value varchar(255) collate utf8_bin NOT NULL default '',
+  PRIMARY KEY  (field_id,lang_id,option_id)
+)";
+$required_sql[] = "CREATE TABLE " . $table_prefix . "garage_fields_lang (
+  `field_id` mediumint(8) unsigned NOT NULL default '0',
+  `lang_id` mediumint(8) unsigned NOT NULL default '0',
+  `lang_name` varchar(255) collate utf8_bin NOT NULL default '',
+  `lang_explain` text collate utf8_bin NOT NULL,
+  `lang_default_value` varchar(255) collate utf8_bin NOT NULL default '',
+  PRIMARY KEY  (`field_id`,`lang_id`)
+)";
+
 //Required Configuration Options
 $params = array(
 //General Config Data
@@ -327,8 +371,8 @@ $params = array(
 	'enable_user_submit_model' 		=> '1',
 	'dateformat' 				=> 'd M Y H:i',
 	'version' 				=> '2.0.0',
-	'default_make' 				=> '',
-       	'default_model' 			=> '',
+	'default_make_id'			=> '',
+       	'default_model_id' 			=> '',
        	'integrate_memberlist' 			=> '1',
        	'integrate_viewtopic' 			=> '1',
 	'integrate_profile' 			=> '1',
@@ -1496,12 +1540,7 @@ switch( $mode )
 		$errored = false;
 		for( $i = 0; $i < count($required_sql); $i++ )
 		{
-			if( !$result = $db->sql_query ($required_sql[$i]) )
-			{
-				$errored = true;
-				$error = $db->sql_error();
-				$error_message .= '<li>' . $required_sql[$i] . '<br /> +++ <font color="#FF0000"><b>Error:</b></font> ' . $error['message'] . '</li><br />';
-			}
+			$db->sql_query($required_sql[$i]);
 		}
 
 		//Setup $auth_admin class so we can add permission options
@@ -1687,12 +1726,7 @@ switch( $mode )
 		$errored = false;
 		for( $i = 0; $i < count($categories_sql); $i++ )
 		{
-			if( !$result = $db->sql_query ($categories_sql[$i]) )
-			{
-				$errored = true;
-				$error = $db->sql_error();
-				$error_message .= '<li>' . $categories_sql[$i] . '<br /> +++ <font color="#FF0000"><b>Error:</b></font> ' . $error['message'] . '</li><br />';
-			}
+			$db->sql_query($categories_sql[$i]);
 		}
 
 		//If Any Errors During Step2 Display Error Message
@@ -1720,12 +1754,7 @@ switch( $mode )
 		$errored = false;
 		for( $i = 0; $i < count($makes_models_sql); $i++ )
 		{
-			if( !$result = $db->sql_query ($makes_models_sql[$i]) )
-			{
-				$errored = true;
-				$error = $db->sql_error();
-				$error_message .= '<li>' . $makes_models_sql[$i] . '<br /> +++ <font color="#FF0000"><b>Error:</b></font> ' . $error['message'] . '</li><br />';
-			}
+			$db->sql_query($makes_models_sql[$i]);
 		}
 
 		//If Any Errors During Step3 Display Error Message
@@ -1766,81 +1795,6 @@ switch( $mode )
 
 		break;
 }
-
-
-/*$sql[] = "CREATE TABLE `phpbb_garage_vehicle_fields` (
-  `field_id` mediumint(8) unsigned NOT NULL auto_increment,
-  `field_name` varchar(50) NOT NULL default '',
-  `field_desc` varchar(255) NOT NULL default '',
-  `field_type` mediumint(8) unsigned NOT NULL default '0',
-  `field_ident` varchar(20) NOT NULL default '',
-  `field_length` varchar(20) NOT NULL default '',
-  `field_minlen` varchar(255) NOT NULL default '',
-  `field_maxlen` varchar(255) NOT NULL default '',
-  `field_novalue` varchar(255) NOT NULL default '',
-  `field_default_value` varchar(255) NOT NULL default '0',
-  `field_validation` varchar(20) NOT NULL default '',
-  `field_required` tinyint(1) unsigned NOT NULL default '0',
-  `field_show_on_reg` tinyint(1) unsigned NOT NULL default '0',
-  `field_hide` tinyint(1) unsigned NOT NULL default '0',
-  `field_no_view` tinyint(1) unsigned NOT NULL default '0',
-  `field_active` tinyint(1) unsigned NOT NULL default '0',
-  `field_order` tinyint(4) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`field_id`),
-  KEY `field_type` (`field_type`),
-  KEY `field_order` (`field_order`)
-)";
-
-$sql[] = "INSERT INTO `phpbb_garage_vehicle_fields` VALUES (1, '', '', 5, 'dropdown', '0', '0', '6', '1', '1', '', 1, 0, 0, 0, 1, 1)";
-$sql[] = "INSERT INTO `phpbb_garage_vehicle_fields` VALUES (2, '', '', 2, 'textfield', '10', '0', '20', '', '', '.*', 0, 0, 0, 0, 1, 2)";
-$sql[] = "INSERT INTO `phpbb_garage_vehicle_fields` VALUES (3, '', '', 1, 'numbers', '5', '0', '100', '0', '0', '', 0, 0, 0, 0, 1, 3)";
-$sql[] = "INSERT INTO `phpbb_garage_vehicle_fields` VALUES (4, '', '', 3, 'textarea', '5|80', '0', '1000', '', '', '.*', 0, 0, 0, 0, 1, 4)";
-$sql[] = "INSERT INTO `phpbb_garage_vehicle_fields` VALUES (5, '', '', 6, 'date', '10', '10', '10', ' 0- 0-   0', ' 0- 0-   0', '', 0, 0, 0, 0, 1, 5)";
-
-$sql[] = "CREATE TABLE `phpbb_garage_vehicle_fields_data` (
-  `user_id` mediumint(8) unsigned NOT NULL default '0',
-  `rating` mediumint(8) default NULL,
-  `textfield` varchar(255) default NULL,
-  `numbers` bigint(20) default NULL,
-  `textarea` text,
-  `textarea_bbcode_uid` varchar(5) NOT NULL default '',
-  `textarea_bbcode_bitfield` int(11) unsigned default NULL,
-  `date` varchar(10) default NULL,
-  `sdfs_bbcode_uid` varchar(5) NOT NULL default '',
-  `sdfs_bbcode_bitfield` int(11) unsigned default NULL,
-  PRIMARY KEY  (`user_id`)
-)";
-
-$sql[] = "CREATE TABLE `phpbb_garage_vehicle_fields_lang` (
-  `field_id` mediumint(8) unsigned NOT NULL default '0',
-  `lang_id` mediumint(8) unsigned NOT NULL default '0',
-  `option_id` mediumint(8) unsigned NOT NULL default '0',
-  `field_type` tinyint(4) NOT NULL default '0',
-  `value` varchar(255) NOT NULL default '',
-  PRIMARY KEY  (`field_id`,`lang_id`,`option_id`)
-)";
-
-$sql[] = "INSERT INTO `phpbb_garage_vehicle_fields_lang` VALUES (1, 1, 5, 5, '5')";
-$sql[] = "INSERT INTO `phpbb_garage_vehicle_fields_lang` VALUES (1, 1, 4, 5, '4')";
-$sql[] = "INSERT INTO `phpbb_garage_vehicle_fields_lang` VALUES (1, 1, 3, 5, '3')";
-$sql[] = "INSERT INTO `phpbb_garage_vehicle_fields_lang` VALUES (1, 1, 2, 5, '2')";
-$sql[] = "INSERT INTO `phpbb_garage_vehicle_fields_lang` VALUES (1, 1, 1, 5, '1')";
-$sql[] = "INSERT INTO `phpbb_garage_vehicle_fields_lang` VALUES (1, 1, 0, 5, '0')";
-
-$sql[] = "CREATE TABLE `phpbb_garage_vehicle_lang` (
-  `field_id` mediumint(8) unsigned NOT NULL default '0',
-  `lang_id` tinyint(4) unsigned NOT NULL default '0',
-  `lang_name` varchar(255) NOT NULL default '',
-  `lang_explain` text NOT NULL,
-  `lang_default_value` varchar(255) NOT NULL default '',
-  PRIMARY KEY  (`field_id`,`lang_id`)
-)";
-
-$sql[] = "INSERT INTO `phpbb_garage_vehicle_lang` VALUES (1, 1, 'dropdown', 'dropdown', '')";
-$sql[] = "INSERT INTO `phpbb_garage_vehicle_lang` VALUES (2, 1, 'textfield', 'This is just a simple textfield2', 'text')";
-$sql[] = "INSERT INTO `phpbb_garage_vehicle_lang` VALUES (3, 1, 'numbers', 'numbers', '')";
-$sql[] = "INSERT INTO `phpbb_garage_vehicle_lang` VALUES (4, 1, 'textarea', 'textarea', 'textarea')";
-$sql[] = "INSERT INTO `phpbb_garage_vehicle_lang` VALUES (5, 1, 'date', 'date', '')";*/
 
 page_footer();
 

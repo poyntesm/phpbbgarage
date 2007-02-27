@@ -25,7 +25,7 @@
 				<!-- ENDIF -->
 				<tr>
 					<td class="row1" width="20%"><span class="gen"><b>{L_BUSINESS_NAME}</b></span></td>
-					<td class="row2"><input name="title" type="text" class="post" size="35" value="{TITLE}" /> <span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</span></td>
+					<td class="row2"><input name="title" type="text" class="post" size="35" value="{TITLE}" /> <span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td>
 				</tr>
 				<tr>
 					<td class="row1" width="35%"><span class="gen"><b>{L_ADDRESS}</b></span></td>
@@ -56,7 +56,7 @@
 					<td class="row2">{L_INSURANCE}&nbsp;:&nbsp;<input type="checkbox" name="insurance" value="1" <!-- IF S_BUSINESS_INSURANCE -->checked="checked"<!-- ENDIF --> /><br />{L_GARAGE}&nbsp;:&nbsp;<input type="checkbox" name="garage" value="1" <!-- IF S_BUSINESS_GARAGE-->checked="checked"<!-- ENDIF --> /><br />{L_RETAIL}&nbsp;:&nbsp;<input type="checkbox" name="retail" value="1" <!-- IF S_BUSINESS_RETAIL -->checked="checked"<!-- ENDIF --> /><br />{L_PRODUCT_MANUFACTURER}&nbsp;:&nbsp;<input type="checkbox" name="product" value="1" <!-- IF S_BUSINESS_PRODUCT -->checked="checked"<!-- ENDIF --> /><br />{L_DYNOCENTRE}&nbsp;:&nbsp;<input type="checkbox" name="dynocentre" value="1" <!-- IF S_BUSINESS_DYNOCENTRE -->checked="checked"<!-- ENDIF --> /></td>
 				</tr>
 				<tr>
-					<td class="cat" align="center" height="28" colspan="2"><input type="hidden" value="{CID}" name="CID" /><input type="hidden" value="{BUSINESS_ID}" name="id" /><input type="hidden" value="{REDIRECT}" name="redirect" /><input name="submit" type="submit" value="{L_BUTTON}" class="liteoption" /></td>
+					<td class="cat" align="center" height="28" colspan="2"><input type="hidden" value="{VID}" name="VID" /><input type="hidden" value="{BUSINESS_ID}" name="id" /><input type="hidden" value="{REDIRECT}" name="redirect" /><input name="submit" type="submit" value="{L_BUTTON}" class="liteoption" /></td>
 				</tr>
 			</table>
 			</form>

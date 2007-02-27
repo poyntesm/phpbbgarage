@@ -57,7 +57,7 @@ while(list($var, $param) = @each($params))
 }
 
 //Get All Non-String Parameters
-$params = array('cid' => 'CID', 'mid' => 'MID', 'did' => 'DID', 'qmid' => 'QMID', 'ins_id' => 'INS_ID', 'eid' => 'EID', 'image_id' => 'image_id', 'comment_id' => 'CMT_ID', 'bus_id' => 'BUS_ID');
+$params = array('vid' => 'VID', 'mid' => 'MID', 'did' => 'DID', 'qmid' => 'QMID', 'ins_id' => 'INS_ID', 'eid' => 'EID', 'image_id' => 'image_id', 'comment_id' => 'CMT_ID', 'bus_id' => 'BUS_ID');
 while(list($var, $param) = @each($params))
 {
 	$$var = request_var($param, '');
@@ -86,7 +86,7 @@ switch( $mode )
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Build Page Header ;)
 		page_header($page_title);
@@ -101,16 +101,16 @@ switch( $mode )
 		$insurance_business 	= $garage_business->get_business_by_type(BUSINESS_INSURANCE);
 
 		//Get Vehicle Data For Navlinks
-		$vehicle=$garage_vehicle->get_vehicle($cid);
+		$vehicle=$garage_vehicle->get_vehicle($vid);
 
 		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $vehicle['vehicle'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"))
 		);
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['ADD_PREMIUM'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_premium&amp;CID=$cid"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_premium&amp;VID=$vid"))
 		);
 
 		//Build All Required HTML Components
@@ -119,8 +119,8 @@ switch( $mode )
 		$template->assign_vars(array(
 			'L_TITLE' 		=> $user->lang['ADD_PREMIUM'],
 			'L_BUTTON' 		=> $user->lang['ADD_PREMIUM'],
-			'U_SUBMIT_BUSINESS' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;CID=$cid&amp;redirect=add_premium&amp;BUSINESS=" . BUSINESS_INSURANCE),
-			'CID' 			=> $cid,
+			'U_SUBMIT_BUSINESS' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;VID=$vid&amp;redirect=add_premium&amp;BUSINESS=" . BUSINESS_INSURANCE),
+			'VID' 			=> $vid,
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_premium.$phpEx", "mode=insert_premium"))
 		);
 
@@ -138,7 +138,7 @@ switch( $mode )
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('business_id' => '', 'premium' => '', 'cover_type' => '', 'comments' => '');
@@ -152,20 +152,20 @@ switch( $mode )
 		$garage_insurance->insert_premium($data);
 
 		//Update Timestamp For Vehicle
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
 
 	case 'edit_premium':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_premium.$phpEx?mode=edit_premium&amp;INS_ID=$ins_id&amp;CID=$cid");
+			login_box("garage_premium.$phpEx?mode=edit_premium&amp;INS_ID=$ins_id&amp;VID=$vid");
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Build Page Header ;)
 		page_header($page_title);
@@ -177,14 +177,14 @@ switch( $mode )
 		);
 
 		//Build Navlinks
-		$vehicle_data 	= $garage_vehicle->get_vehicle($cid);
+		$vehicle_data 	= $garage_vehicle->get_vehicle($vid);
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $vehicle_data['vehicle'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"))
 		);
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['EDIT_PREMIUM'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;CID=$cid&amp;INS_ID=$ins_id"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;VID=$vid&amp;INS_ID=$ins_id"))
 		);
 
 		//Pull Required Insurance Premium Data From DB
@@ -198,7 +198,7 @@ switch( $mode )
 			'L_TITLE' 		=> $user->lang['EDIT_PREMIUM'],
 			'L_BUTTON' 		=> $user->lang['EDIT_PREMIUM'],
 			'INS_ID' 		=> $ins_id,
-			'CID' 			=> $cid,
+			'VID' 			=> $vid,
 			'PREMIUM' 		=> $data['premium'],
 			'COMMENTS' 		=> $data['comments'],
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_premium.$phpEx", "mode=update_premium"))
@@ -212,7 +212,7 @@ switch( $mode )
 	case 'update_premium':
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('business_id' => '', 'premium' => '', 'cover_type' => '', 'comments' => '');
@@ -226,9 +226,9 @@ switch( $mode )
 		$garage_insurnace->update_premium($data);
 
 		//Update Timestamp For Vehicle
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
 
 		break;
 	
@@ -241,15 +241,15 @@ switch( $mode )
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Delete Insurance Premium
 		$garage_insurance->delete_premium($ins_id);
 
 		//Update Timestamp For Vehicle
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
 
 		break;
 

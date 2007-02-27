@@ -52,7 +52,7 @@ while(list($var, $param) = @each($params))
 }
 
 //Get All Non-String Parameters
-$params = array('cid' => 'CID', 'svid' => 'SVID', 'eid' => 'EID');
+$params = array('vid' => 'VID', 'svid' => 'SVID', 'eid' => 'EID');
 while(list($var, $param) = @each($params))
 {
 	$$var = request_var($param, '');
@@ -81,7 +81,7 @@ switch( $mode )
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Build Page Header ;)
 		page_header($page_title);
@@ -93,16 +93,16 @@ switch( $mode )
 		);
 
 		//Get Vehicle Data For Navlinks
-		$vehicle = $garage_vehicle->get_vehicle($cid);
+		$vehicle = $garage_vehicle->get_vehicle($vid);
 
 		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $vehicle['vehicle'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"))
 		);
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['ADD_SERVICE'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_service&amp;CID=$cid"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_service&amp;VID=$vid"))
 		);
 
 		$garages 	= $garage_business->get_business_by_type(BUSINESS_GARAGE);
@@ -113,7 +113,7 @@ switch( $mode )
 		$template->assign_vars(array(
 			'L_TITLE'  			=> $user->lang['ADD_SERVICE'],
 			'L_BUTTON'  			=> $user->lang['ADD_SERVICE'],
-			'CID' 				=> $cid,
+			'VID' 				=> $vid,
 			'S_MODE_ACTION' 		=> append_sid("{$phpbb_root_path}garage_service.$phpEx", "mode=insert_service"))
          	);
 
@@ -131,7 +131,7 @@ switch( $mode )
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Get All Data Posted And Make It Safe To Use
 		$params	= array('garage_id' => '', 'type_id' => '', 'price' => '', 'rating' => '', 'mileage' => '');
@@ -145,9 +145,9 @@ switch( $mode )
 		$svid = $garage_service->insert_service($data);
 
 		//Update The Time Now...In Case We Get Redirected During Image Processing
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
 
 		break;
 
@@ -156,11 +156,11 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_service.$phpEx?mode=edit_service&amp;SVID=$svid&amp;CID=$cid");
+			login_box("garage_service.$phpEx?mode=edit_service&amp;SVID=$svid&amp;VID=$vid");
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Build Page Header ;)
 		page_header($page_title);
@@ -172,14 +172,14 @@ switch( $mode )
 		);
 
 		//Build Navlinks
-		$vehicle_data 	= $garage_vehicle->get_vehicle($cid);
+		$vehicle_data 	= $garage_vehicle->get_vehicle($vid);
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $vehicle_data['vehicle'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"))
 		);
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['EDIT_SERVICE'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;CID=$cid&amp;SVID=$svid"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;VID=$vid&amp;SVID=$svid"))
 		);
 
 		//Pull Required Service Data From DB
@@ -195,7 +195,7 @@ switch( $mode )
 			'L_BUTTON'		=> $user->lang['EDIT_SERVICE'],
 			'PRICE'			=> $data['price'],
 			'MILEAGE'		=> $data['mileage'],
-			'CID'			=> $cid,
+			'VID'			=> $vid,
 			'SVID'			=> $svid,
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_service.$phpEx", "mode=update_service"))
 		);
@@ -210,11 +210,11 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_service.$phpEx?mode=edit_service&amp;SVID=$svid&amp;CID=$cid");
+			login_box("garage_service.$phpEx?mode=edit_service&amp;SVID=$svid&amp;VID=$vid");
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Get All Data Posted And Make It Safe To Use
 		$params	= array('garage_id' => '', 'type_id' => '', 'price' => '', 'rating' => '', 'mileage' => '');
@@ -228,9 +228,9 @@ switch( $mode )
 		$garage_service->update_service($data);
 
 		//Update The Vehicle Timestamp Now...In Case We Get Redirected During Image Processing
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
 
 		break;
 
@@ -243,15 +243,15 @@ switch( $mode )
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Delete The Quartermie Time
 		$garage_service->delete_service($svid);
 
 		//Update Timestamp For Vehicle
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
 
 		break;
 	

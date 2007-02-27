@@ -52,7 +52,7 @@ while(list($var, $param) = @each($params))
 }
 
 //Get All Non-String Parameters
-$params = array('cid' => 'CID', 'eid' => 'EID', 'image_id' => 'image_id', 'tid' => 'TID', 'lid' => 'LID');
+$params = array('vid' => 'VID', 'eid' => 'EID', 'image_id' => 'image_id', 'tid' => 'TID', 'lid' => 'LID');
 while(list($var, $param) = @each($params))
 {
 	$$var = request_var($param, '');
@@ -77,7 +77,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_track.$phpEx?mode=add_lap&amp;CID=$cid");
+			login_box("garage_track.$phpEx?mode=add_lap&amp;VID=$vid");
 		}
 
 		//Let Check That Laps Are Allowed...If Not Redirect
@@ -87,7 +87,7 @@ switch( $mode )
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 		
 		//Build Page Header ;)
 		page_header($page_title);
@@ -99,16 +99,16 @@ switch( $mode )
 		);
 
 		//Get Vehicle Data For Navlinks
-		$vehicle=$garage_vehicle->get_vehicle($cid);
+		$vehicle=$garage_vehicle->get_vehicle($vid);
 
 		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $vehicle['vehicle'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"))
 		);
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['ADD_LAP'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=add_lap&amp;CID=$cid"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=add_lap&amp;VID=$vid"))
 		);
 
 		//Get Required Data
@@ -122,8 +122,8 @@ switch( $mode )
 		$template->assign_vars(array(
 			'L_TITLE'  		=> $user->lang['ADD_LAP'],
 			'L_BUTTON'  		=> $user->lang['ADD_LAP'],
-			'U_ADD_TRACK'		=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=add_track&amp;CID=$cid&amp;redirect=add_lap"),
-			'CID' 			=> $cid,
+			'U_ADD_TRACK'		=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=add_track&amp;VID=$vid&amp;redirect=add_lap"),
+			'VID' 			=> $vid,
 			'S_DISPLAY_ADD_TRACK'	=> $garage_config['enable_user_add_track'],
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=insert_lap"))
          	);
@@ -138,7 +138,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_track.$phpEx?mode=add_track&amp;CID=$cid");
+			login_box("garage_track.$phpEx?mode=add_track&amp;VID=$vid");
 		}
 
 		//Let Check That User Adding Tracks Are Allowed...If Not Redirect
@@ -148,7 +148,7 @@ switch( $mode )
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 		
 		//Build Page Header ;)
 		page_header($page_title);
@@ -160,16 +160,16 @@ switch( $mode )
 		);
 
 		//Get Vehicle Data For Navlinks
-		$vehicle=$garage_vehicle->get_vehicle($cid);
+		$vehicle=$garage_vehicle->get_vehicle($vid);
 
 		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $vehicle['vehicle'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"))
 		);
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['ADD_TRACK'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=add_track&amp;CID=$cid"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=add_track&amp;VID=$vid"))
 		);
 
 		//Build Required HTML Components Like Drop Down Boxes.....
@@ -177,7 +177,7 @@ switch( $mode )
 		$template->assign_vars(array(
 			'L_TITLE'  		=> $user->lang['ADD_TRACK'],
 			'L_BUTTON'  		=> $user->lang['ADD_TRACK'],
-			'CID' 			=> $cid,
+			'VID' 			=> $vid,
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=insert_track"))
          	);
 
@@ -191,7 +191,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_track.$phpEx?mode=add_lap&amp;CID=$cid");
+			login_box("garage_track.$phpEx?mode=add_lap&amp;VID=$vid");
 		}
 
 		//Let Check That Laps Are Allowed...If Not Redirect
@@ -201,7 +201,7 @@ switch( $mode )
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('track_id' => '', 'condition_id' => '', 'type_id' => '', 'minute' => '', 'second' => '', 'millisecond' => '');
@@ -215,7 +215,7 @@ switch( $mode )
 		$lid = $garage_track->insert_lap($data);
 
 		//Update The Time Now...In Case We Get Redirected During Image Processing
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
 		//If Any Image Variables Set Enter The Image Handling
 		if ($garage_image->image_attached())
@@ -226,7 +226,7 @@ switch( $mode )
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('lap', $lid);
 				//Insert Image Into Lap Gallery
-				$hilite = $garage_track->hilite_exists($cid, $lid);
+				$hilite = $garage_track->hilite_exists($vid, $lid);
 				$garage_image->insert_lap_gallery_image($image_id, $hilite);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
@@ -242,7 +242,7 @@ switch( $mode )
 			$garage->pending_notification('unapproved_laps');
 		}
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
 
 		break;
 
@@ -251,7 +251,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_track.$phpEx?mode=add_lap&amp;CID=$cid");
+			login_box("garage_track.$phpEx?mode=add_lap&amp;VID=$vid");
 		}
 
 		//Let Check That Laps Are Allowed...If Not Redirect
@@ -261,7 +261,7 @@ switch( $mode )
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('title' => '', 'length' => '', 'mileage_unit' => '');
@@ -280,7 +280,7 @@ switch( $mode )
 			$garage->pending_notification('unapproved_tracks');
 		}
 
-		redirect(append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=add_lap&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=add_lap&amp;VID=$vid"));
 
 		break;
 
@@ -289,11 +289,11 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_track.$phpEx?mode=edit_lap&amp;LID=$lid&amp;CID=$cid");
+			login_box("garage_track.$phpEx?mode=edit_lap&amp;LID=$lid&amp;VID=$vid");
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Build Page Header ;)
 		page_header($page_title);
@@ -305,14 +305,14 @@ switch( $mode )
 		);
 
 		//Build Navlinks
-		$vehicle_data 	= $garage_vehicle->get_vehicle($cid);
+		$vehicle_data 	= $garage_vehicle->get_vehicle($vid);
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $vehicle_data['vehicle'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"))
 		);
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['EDIT_LAP'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_lap&amp;CID=$cid&amp;LID=$lid"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_lap&amp;VID=$vid&amp;LID=$lid"))
 		);
 
 		//Pull Required Lap Data From DB
@@ -332,12 +332,12 @@ switch( $mode )
 		$template->assign_vars(array(
 			'L_TITLE'  		=> $user->lang['EDIT_LAP'],
 			'L_BUTTON'  		=> $user->lang['EDIT_LAP'],
-			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;CID=$cid&amp;LID=$lid"),
-			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;CID=$cid&amp;LID=$lid#images"),
+			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;VID=$vid&amp;LID=$lid"),
+			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;VID=$vid&amp;LID=$lid#images"),
 			'MINUTE' 		=> $data['minute'],
 			'SECOND' 		=> $data['second'],
 			'MILLISECOND' 		=> $data['millisecond'],
-			'CID' 			=> $cid,
+			'VID' 			=> $vid,
 			'LID' 			=> $lid,
 			'PENDING_REDIRECT'	=> $redirect['PENDING'],
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=update_lap"),
@@ -354,15 +354,15 @@ switch( $mode )
 		$garage_template->attach_image('lap');
 
 		//Pull Lap Gallery Data From DB
-		$data = $garage_image->get_lap_gallery($cid, $lid);
+		$data = $garage_image->get_lap_gallery($vid, $lid);
 
 		//Process Each Image From Lap Gallery
 		for ($i = 0, $count = sizeof($data);$i < $count; $i++)
 		{
 			$template->assign_block_vars('pic_row', array(
 				'U_IMAGE'	=> (($data[$i]['attach_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location']))) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_image&amp;image_id=" . $data[$i]['attach_id']) : '',
-				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=remove_lap_image&amp;&amp;CID=$cid&amp;LID=$lid&amp;image_id=" . $data[$i]['attach_id']),
-				'U_SET_HILITE'	=> ($data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=set_lap_hilite&amp;image_id=" . $data[$i]['attach_id'] . "&amp;CID=$cid&amp;LID=$lid") : '',
+				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=remove_lap_image&amp;&amp;VID=$vid&amp;LID=$lid&amp;image_id=" . $data[$i]['attach_id']),
+				'U_SET_HILITE'	=> ($data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=set_lap_hilite&amp;image_id=" . $data[$i]['attach_id'] . "&amp;VID=$vid&amp;LID=$lid") : '',
 				'IMAGE' 	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'],
 				'IMAGE_TITLE' 	=> $data[$i]['attach_file'])
 			);
@@ -378,11 +378,11 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_track.$phpEx?mode=edit_lap&amp;LID=$lid&amp;CID=$cid");
+			login_box("garage_track.$phpEx?mode=edit_lap&amp;LID=$lid&amp;VID=$vid");
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('track_id' => '', 'condition_id' => '', 'type_id' => '', 'minute' => '', 'second' => '', 'millisecond' => '', 'pending_redirect' => '');
@@ -396,7 +396,7 @@ switch( $mode )
 		$garage_track->update_lap($data);
 
 		//Update The Time Now...In Case We Get Redirected During Image Processing
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
 		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
 		if ($garage_config['enable_lap_approval'])
@@ -410,7 +410,7 @@ switch( $mode )
 			redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_laps"));
 		}
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
 
 		break;
 
@@ -423,15 +423,15 @@ switch( $mode )
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Delete The Dynorun
 		$garage_track->delete_lap($lid);
 
 		//Update Timestamp For Vehicle
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
 
 		break;
 
@@ -444,7 +444,7 @@ switch( $mode )
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//If Any Image Variables Set Enter The Image Handling
 		if ($garage_image->image_attached())
@@ -466,40 +466,40 @@ switch( $mode )
 		}
 
 		//Update Timestamp For Vehicle
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;CID=$cid&amp;LID=$lid#images"));
+		redirect(append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;VID=$vid&amp;LID=$lid#images"));
 
 		break;
 
 	case 'set_lap_hilite':
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Set All Images To Non Hilite So We Do Not End Up With Two Hilites & Then Set Hilite
 		$garage->update_single_field(GARAGE_LAP_GALLERY_TABLE, 'hilite', 0, 'lap_id', $lid);
 		$garage->update_single_field(GARAGE_LAP_GALLERY_TABLE, 'hilite', 1, 'image_id', $image_id);
 
 		//Update Timestamp For Vehicle
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;CID=$cid&amp;LID=$lid#images"));
+		redirect(append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;VID=$vid&amp;LID=$lid#images"));
 
 		break;
 
 	case 'remove_lap_image':
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Remove Image From Lap Gallery & Deletes Image
 		$garage_image->delete_lap_image($image_id);
 
 		//Update Timestamp For Vehicle
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;CID=$cid&amp;LID=$lid#images"));
+		redirect(append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;VID=$vid&amp;LID=$lid#images"));
 
 		break;
 
@@ -526,11 +526,11 @@ switch( $mode )
 		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $data['vehicle'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=$cid"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=$vid"))
 		);
 
 		//Get All Gallery Data Required
-		$gallery_data = $garage_image->get_lap_gallery($cid, $lid);
+		$gallery_data = $garage_image->get_lap_gallery($vid, $lid);
 			
 		//Process Each Image From Lap Gallery	
        		for ( $i = 0; $i < count($gallery_data); $i++ )
@@ -639,8 +639,8 @@ switch( $mode )
 				'IMAGE'		=> $user->img('garage_slip_img_attached', 'SLIP_IMAGE_ATTACHED'),
 				'U_IMAGE'	=> ($lap_data[$i]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_image&amp;image_id=". $lap_data[$i]['attach_id']) : '',
 				'U_VIEWPROFILE'	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $lap_data[$i]['user_id']),
-				'U_VIEWVEHICLE'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" . $lap_data[$i]['vehicle_id']),
-				'U_LAP'		=> append_sid("garage_track.$phpEx?mode=view_lap&amp;LID=".$lap_data[$i]['lid']."&amp;CID=". $lap_data[$i]['vehicle_id']),
+				'U_VIEWVEHICLE'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=" . $lap_data[$i]['vehicle_id']),
+				'U_LAP'		=> append_sid("garage_track.$phpEx?mode=view_lap&amp;LID=".$lap_data[$i]['lid']."&amp;VID=". $lap_data[$i]['vehicle_id']),
 			));
 
                		// Do we have a thumbnail?  If so, our job is simple here :)

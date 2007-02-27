@@ -64,7 +64,7 @@ define('GARAGE_RATINGS_TABLE', $table_prefix . 'garage_ratings');
 define('GARAGE_CUSTOM_FIELDS_TABLE', $table_prefix . 'garage_custom_fields');
 define('GARAGE_CUSTOM_FIELDS_DATA_TABLE', $table_prefix . 'garage_custom_fields_data');
 define('GARAGE_CUSTOM_FIELDS_LANG_TABLE', $table_prefix . 'garage_custom_fields_lang');
-define('GARAGE_CUSTOM_LANG_TABLE', $table_prefix . 'garage_custom_lang');
+define('GARAGE_FIELDS_LANG_TABLE', $table_prefix . 'garage_fields_lang');
 define('GARAGE_PRODUCTS_TABLE', $table_prefix . 'garage_products');
 define('GARAGE_TRACKS_TABLE', $table_prefix . 'garage_tracks');
 define('GARAGE_LAPS_TABLE', $table_prefix . 'garage_laps');

@@ -59,7 +59,7 @@ class garage_guestbook
 	// Count The Total Commnets Vehciles Have Recieved
 	// Usage: count_total_comments();
 	/*========================================================================*/
-	function count_vehicle_comments($cid)
+	function count_vehicle_comments($vid)
 	{
 		global $db;
 
@@ -71,7 +71,7 @@ class garage_guestbook
 			'FROM'		=> array(
 				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
 			),
-			'WHERE'		=> "gb.vehicle_id = $cid"
+			'WHERE'		=> "gb.vehicle_id = $vid"
 		));
 
 		$result = $db->sql_query($sql);
@@ -89,10 +89,10 @@ class garage_guestbook
 	/*========================================================================*/
 	function insert_vehicle_comment($data)
 	{
-		global $cid, $db, $user;
+		global $vid, $db, $user;
 
 		$sql = 'INSERT INTO ' . GARAGE_GUESTBOOKS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'vehicle_id'		=> $cid,
+			'vehicle_id'		=> $vid,
 			'author_id'		=> $user->data['user_id'],
 			'post_date'		=> time(),
 			'ip_address'		=> $user->ip,
@@ -111,7 +111,7 @@ class garage_guestbook
 	// Select Specific Vehicle Comments Data From DB
 	// Usage: get_vehicle_comments('garage id');
 	/*========================================================================*/
-	function get_vehicle_comments($cid, $start = 0, $limit = 25 )
+	function get_vehicle_comments($vid, $start = 0, $limit = 25 )
 	{
 		global $db, $garage_config;
 
@@ -141,11 +141,41 @@ class garage_guestbook
 					'ON'	=> 'g.model_id = md.id and md.pending = 0'
 				)
 			),
-			'WHERE'		=>  "gb.vehicle_id = $cid",
+			'WHERE'		=>  "gb.vehicle_id = $vid",
 			'ORDER_BY'	=>  "gb.post_date ASC"
 		));
 
 	 	$result = $db->sql_query_limit($sql, $limit, $start);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$data[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/*========================================================================*/
+	// Select Specific Vehicle Comments Data From DB
+	// Usage: get_vehicle_comments('garage id');
+	/*========================================================================*/
+	function get_comments_by_vehicle($vid)
+	{
+		global $db, $garage_config;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'gb.*',
+			'FROM'		=> array(
+				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
+			),
+			'WHERE'		=>  "gb.vehicle_id = $vid",
+			'ORDER_BY'	=>  "gb.post_date ASC"
+		));
+
+	 	$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$data[] = $row;
@@ -207,7 +237,7 @@ class garage_guestbook
 	// Select Specific Vehicle Comments Data From DB
 	// Usage: get_vehicle_comments('garage id');
 	/*========================================================================*/
-	function get_vehicle_comments_profile($cid, $limit = 5)
+	function get_vehicle_comments_profile($vid, $limit = 5)
 	{
 		global $db;
 
@@ -225,7 +255,7 @@ class garage_guestbook
 					'ON'	=> 'gb.author_id = u.user_id'
 				)
 			),
-			'WHERE'		=>  "gb.vehicle_id = $cid",
+			'WHERE'		=>  "gb.vehicle_id = $vid",
 			'ORDER_BY'	=>  "gb.post_date DESC"
 		));
 
@@ -387,7 +417,7 @@ class garage_guestbook
 		for($i = 0; $i < count($comment_data); $i++)
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' 		=> append_sid("garage.$phpEx", "mode=view_vehicle&amp;CID=" . $comment_data[$i]['id']),
+				'U_COLUMN_1' 		=> append_sid("garage.$phpEx", "mode=view_vehicle&amp;VID=" . $comment_data[$i]['id']),
 				'U_COLUMN_2' 		=> append_sid("memberlist.$phpEx", "mode=viewprofile&amp;u=" . $comment_data[$i]['author_id']),
 				'COLUMN_1_TITLE'	=> $comment_data[$i]['vehicle'],
 				'COLUMN_2_TITLE'	=> $comment_data[$i]['username'],
@@ -404,7 +434,7 @@ class garage_guestbook
 	// Display Guestbook
 	// Usage: display_guestbook('vehicle id');
 	/*========================================================================*/
-	function display_guestbook($cid)
+	function display_guestbook($vid)
 	{
 		global $template, $garage_vehicle, $garage, $user, $phpEx, $auth, $phpbb_root_path, $config, $start, $garage_config, $mode, $garage_template;
 
@@ -414,10 +444,10 @@ class garage_guestbook
 		$template->assign_block_vars('guestbook', array());
 
 		//Get Vehicle Data
-		$vehicle_data = $garage_vehicle->get_vehicle($cid);
+		$vehicle_data = $garage_vehicle->get_vehicle($vid);
 
 		//Get All Comments Data
-		$comment_data = $this->get_vehicle_comments($cid, $start, $garage_config['cars_per_page']);
+		$comment_data = $this->get_vehicle_comments($vid, $start, $garage_config['cars_per_page']);
 
 		for ($i = 0, $count = sizeof($comment_data);$i < $count; $i++)
 		{	
@@ -500,9 +530,9 @@ class garage_guestbook
 		 	if ( $auth->acl_get('m_garage') )
 			{
 				$edit_img = $user->img('icon_post_edit', 'EDIT_POST');
-				$edit = '<a href="'. append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']) . '">' . $user->lang['EDIT_POST'] . '</a>';
+				$edit = '<a href="'. append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_comment&amp;VID=$vid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']) . '">' . $user->lang['EDIT_POST'] . '</a>';
 				$delpost_img = $user->img('icon_post_delete', 'DELETE_POST');
-				$delpost = '<a href="'. append_sid("{$phpbb_root_path}garage.$phpEx", "mode=delete_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']) . '">' . $user->lang['DELETE_POST'] . '</a>';
+				$delpost = '<a href="'. append_sid("{$phpbb_root_path}garage.$phpEx", "mode=delete_comment&amp;VID=$vid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']) . '">' . $user->lang['DELETE_POST'] . '</a>';
 
 			}
 
@@ -514,7 +544,7 @@ class garage_guestbook
 				'POSTER_CAR_MARK' 	=> $poster_car_mark,
 				'POSTER_CAR_MODEL' 	=> $poster_car_model,
 				'POSTER_CAR_YEAR' 	=> $poster_car_year,
-				'U_VEHICLE'		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=$vehicle_id"),
+				'U_VEHICLE'		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;VID=$vehicle_id"),
 				'POSTER_AVATAR' 	=> $poster_avatar,
 				'POST_AUTHOR_COLOUR'	=> get_username_string('colour', $comment_data[$i]['user_id'], $comment_data[$i]['username'], $comment_data[$i]['user_colour']),
 				'PROFILE_IMG' 		=> $user->img('icon_user_profile', 'READ_PROFILE'),
@@ -537,14 +567,14 @@ class garage_guestbook
 			);
 		}
 
-		$count = $this->count_vehicle_comments($cid);
-		$pagination = $garage_template->generate_pagination(append_sid("{$phpbb_root_path}garage_vehicle.php", "mode={$mode}&amp;CID=$cid"), 'guestbook', $count, $garage_config['cars_per_page'], $start);
+		$count = $this->count_vehicle_comments($vid);
+		$pagination = $garage_template->generate_pagination(append_sid("{$phpbb_root_path}garage_vehicle.php", "mode={$mode}&amp;VID=$vid"), 'guestbook', $count, $garage_config['cars_per_page'], $start);
 		$template->assign_vars(array(
 			'PAGINATION' 			=> $pagination,
 			'PAGE_NUMBER' 			=> on_page($count, $garage_config['cars_per_page'], $start),
 			'TOTAL_COMMENTS'		=> ($count == 1) ? $user->lang['VIEW_COMMENT'] : sprintf($user->lang['VIEW_COMMENTS'], $count),
 			'S_DISPLAY_LEAVE_COMMENT'	=> $auth->acl_get('u_garage_comment'),
-			'S_MODE_GUESTBOOK_ACTION' 	=> append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=insert_comment&CID=$cid"))
+			'S_MODE_GUESTBOOK_ACTION' 	=> append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=insert_comment&VID=$vid"))
 		);
 	}
 }

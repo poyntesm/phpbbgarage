@@ -37,6 +37,8 @@ class acp_garage_setting
 					'vars'	=> array(
 						'legend1'				=> 'ACP_GARAGE_GENERAL_CONFIG',
 						'cars_per_page'				=> array('lang' => 'VEHICLES_PER_PAGE', 'type' => 'text:3:4', 'explain' => true),
+						'default_make_id'			=> array('lang' => 'DEFAULT_MAKE', 'type' => 'text:3:4', 'explain' => true),
+						'default_model_id'			=> array('lang' => 'DEFAULT_MODEL', 'type' => 'text:3:4', 'explain' => true),
 						'year_start'				=> array('lang' => 'YEAR_RANGE_BEGINNING', 'type' => 'text:3:4', 'explain' => true),
 						'year_end'				=> array('lang' => 'YEAR_RANGE_END', 'type' => 'text:3:4', 'explain' => true),
 						'enable_user_submit_make'		=> array('lang' => 'USER_SUBMIT_MAKE', 'type' => 'radio:yes_no', 'explain' => true),

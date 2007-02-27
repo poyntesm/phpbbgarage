@@ -179,10 +179,10 @@ class garage_image
 	/*========================================================================*/
 	function insert_vehicle_gallery_image($image_id, $hilite)
 	{
-		global $db, $cid;
+		global $db, $vid;
 
 		$sql = 'INSERT INTO ' . GARAGE_VEHICLE_GALLERY_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'vehicle_id'	=> $cid,
+			'vehicle_id'	=> $vid,
 			'image_id'	=> $image_id,
 			'hilite'	=> $hilite)
 		);
@@ -198,10 +198,10 @@ class garage_image
 	/*========================================================================*/
 	function insert_modification_gallery_image($image_id, $hilite)
 	{
-		global $db, $cid, $mid;
+		global $db, $vid, $mid;
 
 		$sql = 'INSERT INTO ' . GARAGE_MODIFICATION_GALLERY_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'vehicle_id'		=> $cid,
+			'vehicle_id'		=> $vid,
 			'modification_id'	=> $mid,
 			'image_id'		=> $image_id,
 			'hilite'		=> $hilite)
@@ -218,10 +218,10 @@ class garage_image
 	/*========================================================================*/
 	function insert_quartermile_gallery_image($image_id, $hilite)
 	{
-		global $db, $cid, $qmid;
+		global $db, $vid, $qmid;
 
 		$sql = 'INSERT INTO ' . GARAGE_QUARTERMILE_GALLERY_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'vehicle_id'	=> $cid,
+			'vehicle_id'	=> $vid,
 			'quartermile_id'=> $qmid,
 			'image_id'	=> $image_id,
 			'hilite'	=> $hilite)
@@ -238,10 +238,10 @@ class garage_image
 	/*========================================================================*/
 	function insert_dynorun_gallery_image($image_id, $hilite)
 	{
-		global $db, $cid, $did;
+		global $db, $vid, $did;
 
 		$sql = 'INSERT INTO ' . GARAGE_DYNORUN_GALLERY_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'vehicle_id'	=> $cid,
+			'vehicle_id'	=> $vid,
 			'dynorun_id'	=> $did,
 			'image_id'	=> $image_id,
 			'hilite'	=> $hilite)
@@ -258,10 +258,10 @@ class garage_image
 	/*========================================================================*/
 	function insert_lap_gallery_image($image_id, $hilite)
 	{
-		global $db, $cid, $lid;
+		global $db, $vid, $lid;
 
 		$sql = 'INSERT INTO ' . GARAGE_LAP_GALLERY_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'vehicle_id'	=> $cid,
+			'vehicle_id'	=> $vid,
 			'lap_id'	=> $lid,
 			'image_id'	=> $image_id,
 			'hilite'	=> $hilite)
@@ -388,7 +388,7 @@ class garage_image
 	/*========================================================================*/
 	function process_image_attached($type, $id)
 	{
-		global $user, $images, $phpEx, $phpbb_root_path, $garage_config, $HTTP_POST_FILES, $HTTP_POST_VARS, $garage, $cid, $auth;
+		global $user, $images, $phpEx, $phpbb_root_path, $garage_config, $HTTP_POST_FILES, $HTTP_POST_VARS, $garage, $vid, $auth;
 
 		if ( (!$auth->acl_get('u_garage_upload_image')) OR (!$auth->acl_get('u_garage_remote_image')) )
 		{
@@ -467,7 +467,7 @@ class garage_image
 			//Build File Names	
 			$data['tmp_name'] 	= 'garage_' . $type . '-' . $id . '-' . $data['date'] . $data['ext'];
 			$data['thumb_location'] = 'garage_' . $type . '-' . $id . '-' . $data['date'] . '_thumb' . $data['ext'];
-			$data['vehicle_id'] 	= ($type == 'vehicle') ? $id : $cid;
+			$data['vehicle_id'] 	= ($type == 'vehicle') ? $id : $vid;
 	
 			//Download Remote Image To Our Temporary File
 			$this->download_remote_image($data['location'], $data['tmp_name']);
@@ -534,7 +534,7 @@ class garage_image
 			}
 	
 			//Generate Required Filename & Thumbname
-			$data['vehicle_id'] 	= ($type == 'vehicle') ? $id : $cid;
+			$data['vehicle_id'] 	= ($type == 'vehicle') ? $id : $vid;
 			$data['location'] 	= 'garage_' . $type . '-' . $id . '-' . $data['date'] . $data['ext'];
 			$data['thumb_location'] = 'garage_' . $type . '-' . $id . '-' . $data['date'] . '_thumb' . $data['ext'];
 	
@@ -1147,7 +1147,7 @@ class garage_image
 	// Select Vehicle Gallery Data
 	// Usage: get_vehicle_gallery('vehicle id');
 	/*========================================================================*/
-	function get_vehicle_gallery($cid)
+	function get_vehicle_gallery($vid)
 	{
 		global $db;
 
@@ -1165,7 +1165,7 @@ class garage_image
 					'ON'	=> 'i.attach_id = vg.image_id'
 				)
 			),
-			'WHERE'		=>  "vg.vehicle_id = $cid",
+			'WHERE'		=>  "vg.vehicle_id = $vid",
 			'GROUP_BY'	=>  "vg.id"
 		));
 
@@ -1183,7 +1183,7 @@ class garage_image
 	// Select Modification Gallery Data
 	// Usage: get_modification_gallery('vehicle id', 'modification id');
 	/*========================================================================*/
-	function get_modification_gallery($cid, $mid)
+	function get_modification_gallery($vid, $mid)
 	{
 		global $db;
 
@@ -1201,7 +1201,7 @@ class garage_image
 					'ON'	=> 'i.attach_id = mg.image_id'
 				)
 			),
-			'WHERE'		=>  "mg.vehicle_id = $cid AND mg.modification_id = $mid",
+			'WHERE'		=>  "mg.vehicle_id = $vid AND mg.modification_id = $mid",
 			'GROUP_BY'	=>  "mg.id"
 		));
 
@@ -1219,7 +1219,7 @@ class garage_image
 	// Select Quartermile Gallery Data
 	// Usage: get_quartermile_gallery('vehicle id', 'quartermile id');
 	/*========================================================================*/
-	function get_quartermile_gallery($cid, $qmid)
+	function get_quartermile_gallery($vid, $qmid)
 	{
 		global $db;
 
@@ -1237,7 +1237,7 @@ class garage_image
 					'ON'	=> 'i.attach_id = qg.image_id'
 				)
 			),
-			'WHERE'		=>  "qg.vehicle_id = $cid AND qg.quartermile_id = $qmid",
+			'WHERE'		=>  "qg.vehicle_id = $vid AND qg.quartermile_id = $qmid",
 			'GROUP_BY'	=>  "qg.id"
 		));
 
@@ -1255,7 +1255,7 @@ class garage_image
 	// Select Dynorun Gallery Data
 	// Usage: get_dynorun_gallery('vehicle id', 'dynorun id');
 	/*========================================================================*/
-	function get_dynorun_gallery($cid, $did)
+	function get_dynorun_gallery($vid, $did)
 	{
 		global $db;
 
@@ -1273,7 +1273,7 @@ class garage_image
 					'ON'	=> 'i.attach_id = dg.image_id'
 				)
 			),
-			'WHERE'		=>  "dg.vehicle_id = $cid AND dg.dynorun_id = $did",
+			'WHERE'		=>  "dg.vehicle_id = $vid AND dg.dynorun_id = $did",
 			'GROUP_BY'	=>  "dg.id"
 		));
 
@@ -1291,7 +1291,7 @@ class garage_image
 	// Select Lap Gallery Data
 	// Usage: get_lap_gallery('vehicle id', 'lap id');
 	/*========================================================================*/
-	function get_lap_gallery($cid, $lid)
+	function get_lap_gallery($vid, $lid)
 	{
 		global $db;
 
@@ -1309,7 +1309,7 @@ class garage_image
 					'ON'	=> 'i.attach_id = lg.image_id'
 				)
 			),
-			'WHERE'		=>  "lg.vehicle_id = $cid AND lg.lap_id = $lid",
+			'WHERE'		=>  "lg.vehicle_id = $vid AND lg.lap_id = $lid",
 			'GROUP_BY'	=>  "lg.id"
 		));
 
@@ -1608,7 +1608,7 @@ class garage_image
 				else
 				{
 	                        	// Tell them that the remote file doesn't exists
-	                        	$output[] = "<b><font color='red'>ERROR</font></b>".$lang['File_Does_Not_Exist']."(".$image_row['attach_file'].")";
+	                        	$output[] = '<b><span class="gensmall" style="color:#FF0000">ERROR</span></b>'.$lang['File_Does_Not_Exist']."(".$image_row['attach_file'].")";
 	                        	$garage->write_logfile($log_file, $log_type, $lang['File_Does_Not_Exist'], 1);
 	                    	}
 	                }

@@ -34,10 +34,10 @@ class garage_service
 	/*========================================================================*/
 	function insert_service($data)
 	{
-		global $cid, $db;
+		global $vid, $db;
 
 		$sql = 'INSERT INTO ' . GARAGE_SERVICE_HISTORY_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'vehicle_id'	=> $cid,
+			'vehicle_id'	=> $vid,
 			'garage_id'	=> $data['garage_id'],
 			'type_id' 	=> $data['type_id'],
 			'price' 	=> $data['price'],
@@ -58,10 +58,10 @@ class garage_service
 	/*========================================================================*/
 	function update_service($data)
 	{
-		global $db, $cid, $svid;
+		global $db, $vid, $svid;
 
 		$update_sql = array(
-			'vehicle_id'	=> $cid,
+			'vehicle_id'	=> $vid,
 			'garage_id'	=> $data['garage_id'],
 			'type_id' 	=> $data['type_id'],
 			'price' 	=> $data['price'],
@@ -72,7 +72,7 @@ class garage_service
 
 		$sql = 'UPDATE ' . GARAGE_SERVICE_HISTORY_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
-			WHERE id = $svid AND vehicle_id = $cid";
+			WHERE id = $svid AND vehicle_id = $vid";
 
 		$db->sql_query($sql);
 
@@ -83,7 +83,7 @@ class garage_service
 	// Delete Service Entry Including Image 
 	// Usage: delete_service('service id');
 	/*========================================================================*/
-	function delete_service($qmid)
+	function delete_service($svid)
 	{
 		global $garage, $garage_image;
 	
@@ -128,7 +128,7 @@ class garage_service
 	// Select Service Data By Vehicle ID
 	// Usage: get_services_by_vehicle('garage id');
 	/*========================================================================*/
-	function get_services_by_vehicle($cid)
+	function get_services_by_vehicle($vid)
 	{
 		global $db;
 
@@ -146,7 +146,7 @@ class garage_service
 					'ON'	=> 's.garage_id = b.id'
 				)
 			),
-			'WHERE'		=> 	"s.vehicle_id = $cid",
+			'WHERE'		=> 	"s.vehicle_id = $vid",
 			'ORDER_BY'	=>	's.mileage DESC'
 		));
 	

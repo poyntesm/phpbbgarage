@@ -60,7 +60,7 @@ while(list($var, $param) = @each($params))
 }
 
 //Get All Non-String Parameters
-$params = array('cid' => 'CID', 'eid' => 'EID', 'image_id' => 'image_id', 'bid' => 'BID');
+$params = array('vid' => 'VID', 'eid' => 'EID', 'image_id' => 'image_id', 'bid' => 'BID');
 while(list($var, $param) = @each($params))
 {
 	$$var = request_var($param, '');
@@ -225,7 +225,7 @@ switch( $mode )
 				//Provide Results To Template Engine
 				$template->assign_block_vars('vehicle', array(
 					'U_IMAGE'	=> ($results_data[$i]['attach_id']) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_image&amp;image_id=" . $results_data[$i]['attach_id']) : '',
-					'U_VIEW_VEHICLE'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" . $results_data[$i]['id']),
+					'U_VIEW_VEHICLE'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=" . $results_data[$i]['id']),
 					'U_VIEW_PROFILE'	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $results_data[$i]['user_id']),
 					'ROW_NUMBER' 		=> $i + ( $start + 1 ),
 					'IMAGE'			=> $user->img('garage_vehicle_img_attached', 'VEHICLE_IMAGE_ATTACHED'),
@@ -258,9 +258,9 @@ switch( $mode )
 				//Provide Results To Template Engine
 				$template->assign_block_vars('modification', array(
 					'U_IMAGE'		=> ($results_data[$i]['attach_id']) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_image&amp;image_id=" . $results_data[$i]['attach_id']) : '',
-					'U_VIEW_VEHICLE'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" . $results_data[$i]['vehicle_id']),
+					'U_VIEW_VEHICLE'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=" . $results_data[$i]['vehicle_id']),
 					'U_VIEW_PROFILE'	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $results_data[$i]['user_id']),
-					'U_VIEW_MODIFICATION'	=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=view_modification&amp;CID=" . $results_data[$i]['vehicle_id'] . "&amp;MID=" . $results_data[$i]['modification_id']),
+					'U_VIEW_MODIFICATION'	=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=view_modification&amp;VID=" . $results_data[$i]['vehicle_id'] . "&amp;MID=" . $results_data[$i]['modification_id']),
 					'IMAGE'			=> $user->img('garage_vehicle_img_attached', 'MODIFICATION_IMAGE_ATTACHED'),
 					'VEHICLE'		=> $results_data[$i]['vehicle'],
 					'MODIFICATION'		=> $results_data[$i]['modification_title'],
@@ -290,7 +290,7 @@ switch( $mode )
 			{
 				//Provide Results To Template Engine
 				$template->assign_block_vars('premium', array(
-					'U_VIEW_VEHICLE'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" . $results_data[$i]['id']),
+					'U_VIEW_VEHICLE'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=" . $results_data[$i]['id']),
 					'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $results_data[$i]['user_id']),
 					'U_VIEW_BUSINESS' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_insurance_business&amp;BID=" . $results_data[$i]['business_id']),
 					'VEHICLE' 		=> $results_data[$i]['vehicle'],
@@ -322,8 +322,8 @@ switch( $mode )
 				$template->assign_block_vars('quartermile', array(
 					'U_IMAGE'		=> ($results_data[$i]['attach_id']) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_image&amp;image_id=" . $results_data[$i]['attach_id']) : '',
 					'U_VIEWPROFILE'		=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $results_data[$i]['user_id']),
-					'U_VIEWVEHICLE'		=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" . $results_data[$i]['id']),
-					'U_QUART'		=> append_sid("garage_quartermile.$phpEx?mode=view_quartermile&amp;QMID=".$results_data[$i]['qmid']."&amp;CID=".$results_data[$i]['id']),
+					'U_VIEWVEHICLE'		=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=" . $results_data[$i]['id']),
+					'U_QUART'		=> append_sid("garage_quartermile.$phpEx?mode=view_quartermile&amp;QMID=".$results_data[$i]['qmid']."&amp;VID=".$results_data[$i]['id']),
 					'VEHICLE'		=> $results_data[$i]['vehicle'],
 					'USERNAME'		=> $results_data[$i]['username'],
 					'IMAGE'			=> $user->img('garage_vehicle_img_attached', 'QUARTEMILE_IMAGE_ATTACHED'),
@@ -357,8 +357,8 @@ switch( $mode )
 				$template->assign_block_vars('dynorun', array(
 					'U_IMAGE'		=> ($results_data[$i]['attach_id']) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_image&amp;image_id=" . $results_data[$i]['attach_id']) : '',
 					'U_VIEWPROFILE'		=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $results_data[$i]['user_id']),
-					'U_VIEWVEHICLE'		=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" . $results_data[$i]['vehicle_id']),
-					'U_BHP'			=> append_sid("garage_dynorun.$phpEx?mode=view_dynorun&amp;DID=".$results_data[$i]['did']."&amp;CID=".$results_data[$i]['vehicle_id']),
+					'U_VIEWVEHICLE'		=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=" . $results_data[$i]['vehicle_id']),
+					'U_BHP'			=> append_sid("garage_dynorun.$phpEx?mode=view_dynorun&amp;DID=".$results_data[$i]['did']."&amp;VID=".$results_data[$i]['vehicle_id']),
 					'IMAGE'			=> $user->img('garage_vehicle_img_attached', 'QUARTEMILE_IMAGE_ATTACHED'),
 					'USERNAME'		=> $results_data[$i]['username'],
 					'VEHICLE'		=> $results_data[$i]['vehicle'],
@@ -401,10 +401,10 @@ switch( $mode )
 					'USERNAME'		=> $results_data[$i]['username'],
 					'VEHICLE'		=> $results_data[$i]['vehicle'],
 					'U_VIEWPROFILE'		=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $results_data[$i]['user_id']),
-					'U_VIEWVEHICLE'		=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" . $results_data[$i]['vehicle_id']),
+					'U_VIEWVEHICLE'		=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=" . $results_data[$i]['vehicle_id']),
 					'U_IMAGE'		=> ($results_data[$i]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_image&amp;image_id=". $results_data[$i]['attach_id']) : '',
-					'U_TRACK'		=> append_sid("garage_track.$phpEx?mode=view_track&amp;TID=".$results_data[$i]['track_id']."&amp;CID=". $results_data[$i]['vehicle_id']),
-					'U_LAP'			=> append_sid("garage_track.$phpEx?mode=view_lap&amp;LID=".$results_data[$i]['lid']."&amp;CID=". $results_data[$i]['vehicle_id']),
+					'U_TRACK'		=> append_sid("garage_track.$phpEx?mode=view_track&amp;TID=".$results_data[$i]['track_id']."&amp;VID=". $results_data[$i]['vehicle_id']),
+					'U_LAP'			=> append_sid("garage_track.$phpEx?mode=view_lap&amp;LID=".$results_data[$i]['lid']."&amp;VID=". $results_data[$i]['vehicle_id']),
 					'USERNAME_COLOUR'	=> get_username_string('colour', $results_data[$i]['user_id'], $results_data[$i]['username'], $results_data[$i]['user_colour']),
 				));
 			}
@@ -590,7 +590,7 @@ switch( $mode )
 			{
 				$template->assign_block_vars('pic_row', array(
 					'U_VIEW_PROFILE'	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" .$data[$i]['user_id']),
-					'U_VIEW_VEHICLE'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" .$data[$i]['garage_id']),
+					'U_VIEW_VEHICLE'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=" .$data[$i]['garage_id']),
 					'U_IMAGE'		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_image&amp;image_id=" . $data[$i]['attach_id']),
 					'IMAGE_TITLE'		=> $data[$i]['attach_file'],
 					'IMAGE'			=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'],
@@ -694,7 +694,7 @@ switch( $mode )
 				{
 					$template->assign_block_vars('business_row.insurance_detail.premiums', array(
 						'U_VIEW_PROFILE'	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $insurance_data[$k]['user_id']),
-						'U_VIEW_VEHICLE'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" . $insurance_data[$k]['vehicle_id']),
+						'U_VIEW_VEHICLE'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=" . $insurance_data[$k]['vehicle_id']),
 						'USERNAME'		=> $insurance_data[$k]['username'],
 						'USERNAME_COLOUR'	=> get_username_string('colour', $insurance_data[$i]['user_id'], $insurance_data[$i]['username'], $insurance_data[$i]['user_colour']),
 						'VEHICLE' 		=> $insurance_data[$k]['vehicle'],
@@ -794,8 +794,8 @@ switch( $mode )
 			{
 				$template->assign_block_vars('business_row.mod_row', array(
 					'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $bus_mod_data[$j]['user_id']),
-					'U_VIEW_VEHICLE' 	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" . $bus_mod_data[$j]['vehicle_id']),
-					'U_VIEW_ITEM'		=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=view_modification&amp;CID=" . $bus_mod_data[$j]['vehicle_id'] . "&amp;MID=" . $bus_mod_data[$j]['id']),
+					'U_VIEW_VEHICLE' 	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=" . $bus_mod_data[$j]['vehicle_id']),
+					'U_VIEW_ITEM'		=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=view_modification&amp;VID=" . $bus_mod_data[$j]['vehicle_id'] . "&amp;MID=" . $bus_mod_data[$j]['id']),
 					'USERNAME' 		=> $bus_mod_data[$j]['username'],
 					'USERNAME_COLOUR'	=> get_username_string('colour', $bus_mod_data[$j]['user_id'], $bus_mod_data[$j]['username'], $bus_mod_data[$j]['user_colour']),
 					'VEHICLE' 		=> $bus_mod_data[$j]['vehicle'],
@@ -820,7 +820,7 @@ switch( $mode )
 			{
 				$template->assign_block_vars('business_row.mod_row', array(
 					'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $bus_srv_data[$j]['user_id']),
-					'U_VIEW_VEHICLE' 	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" . $bus_srv_data[$j]['vehicle_id']),
+					'U_VIEW_VEHICLE' 	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=" . $bus_srv_data[$j]['vehicle_id']),
 					'USERNAME' 		=> $bus_srv_data[$j]['username'],
 					'USERNAME_COLOUR'	=> get_username_string('colour', $bus_srv_data[$j]['user_id'], $bus_srv_data[$j]['username'], $bus_srv_data[$j]['user_colour']),
 					'VEHICLE' 		=> $bus_srv_data[$j]['vehicle'],
@@ -920,8 +920,8 @@ switch( $mode )
 			{
 				$template->assign_block_vars('business_row.mod_row', array(
 					'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $bus_mod_data[$j]['user_id']),
-					'U_VIEW_VEHICLE' 	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=" . $bus_mod_data[$j]['vehicle_id']),
-					'U_VIEW_MODIFICATION'	=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=view_modification&amp;CID=" . $bus_mod_data[$j]['vehicle_id'] . "&amp;MID=" . $bus_mod_data[$j]['id']),
+					'U_VIEW_VEHICLE' 	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=" . $bus_mod_data[$j]['vehicle_id']),
+					'U_VIEW_MODIFICATION'	=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=view_modification&amp;VID=" . $bus_mod_data[$j]['vehicle_id'] . "&amp;MID=" . $bus_mod_data[$j]['id']),
 					'USERNAME' 		=> $bus_mod_data[$j]['username'],
 					'USERNAME_COLOUR'	=> get_username_string('colour', $bus_mod_data[$j]['user_id'], $bus_mod_data[$j]['username'], $bus_mod_data[$j]['user_colour']),
 					'VEHICLE' 		=> $bus_mod_data[$j]['vehicle'],
@@ -1000,7 +1000,7 @@ switch( $mode )
 		$template->assign_vars(array(
 			'L_TITLE'		=> $user->lang['ADD_NEW_BUSINESS'],
 			'L_BUTTON'		=> $user->lang['ADD_NEW_BUSINESS'],
-			'CID' 			=> $cid,
+			'VID' 			=> $vid,
 			'REDIRECT'		=> $data['redirect'],
 			'S_DISPLAY_PENDING' 	=> $garage_config['enable_business_approval'],
 			'S_BUSINESS_INSURANCE' 	=> ($data['BUSINESS'] == BUSINESS_INSURANCE) ? true : false,
@@ -1051,15 +1051,15 @@ switch( $mode )
 		//Send Them Back To Whatever Page Them Came From..Now With Their Required Business :)
 		if ($data['redirect'] == 'add_modification' || $data['redirect'] == 'edit_modification')
 		{
-			redirect(append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=" . $data['redirect'] . "&amp;CID=$cid"));
+			redirect(append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=" . $data['redirect'] . "&amp;VID=$vid"));
 		}
 		else if ($data['redirect'] == 'add_dynorun' || $data['redirect'] == 'edit_dynorun')
 		{
-			redirect(append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=" . $data['redirect'] . "&amp;CID=$cid"));
+			redirect(append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=" . $data['redirect'] . "&amp;VID=$vid"));
 		}
 		elseif ($data['redirect'] == 'add_premium' || $data['redirect'] == 'edit_premium')
 		{
-			redirect(append_sid("{$phpbb_root_path}garage_premium.$phpEx", "mode=" . $data['redirect'] . "&amp;CID=$cid"));
+			redirect(append_sid("{$phpbb_root_path}garage_premium.$phpEx", "mode=" . $data['redirect'] . "&amp;VID=$vid"));
 		}
 
 		break;
@@ -1176,7 +1176,7 @@ switch( $mode )
 		);
 
 		$template->assign_vars(array(
-			'YEAR' 			 => $data['year'],
+			'YEAR' 			 => $data['made_year'],
 			'S_GARAGE_MODELS_ACTION' => append_sid("{$phpbb_root_path}admin_garage_models.$phpEx"))
 		);
 
@@ -1214,12 +1214,12 @@ switch( $mode )
 		}
 
 		//Create The Make
-		$garage_model->insert_make($data);
+		$make_id = $garage_model->insert_make($data);
 
 		//Perform Any Pending Notifications Requried
 		$garage->pending_notification('unapproved_makes');
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_vehicle&amp;MAKE=" . $data['make']));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_vehicle&amp;MAKE_ID=$make_id&amp;YEAR=" . $data['made_year']));
 
 		break;
 
@@ -1295,9 +1295,9 @@ switch( $mode )
 		}
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('category_id' => '', 'manufacturer_id' => '', 'CID' => '');
+		$params = array('category_id' => '', 'manufacturer_id' => '', 'VID' => '');
 		$data = $garage->process_vars($params);
-		$params = array('category_id', 'manufacturer_id', 'CID');
+		$params = array('category_id', 'manufacturer_id', 'VID');
 		$garage->check_required_vars($params);
 
 		//Build Page Header ;)
@@ -1318,7 +1318,7 @@ switch( $mode )
 		$manufacturer = $garage_business->get_business($data['manufacturer_id']);
 
 		$template->assign_vars(array(
-			'CID' 			=> $data['CID'],
+			'VID' 			=> $data['VID'],
 			'CATEGORY_ID' 		=> $data['category_id'],
 			'MANUFACTURER_ID'	=> $data['manufacturer_id'],
 			'CATEGORY' 		=> $category['title'],
@@ -1345,7 +1345,7 @@ switch( $mode )
 		}
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('make' => '', 'make_id' => '', 'model' => '', 'year' => '');
+		$params = array('make' => '', 'make_id' => '', 'model' => '', 'made_year' => '');
 		$data = $garage->process_vars($params);
 
 		//Checks All Required Data Is Present
@@ -1353,15 +1353,12 @@ switch( $mode )
 		$garage->check_required_vars($params);
 
 		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
-		if ( $data['pending'] == 1 )
-		{
-			$garage->pending_notification('unapproved_models');
-		}
+		$garage->pending_notification('unapproved_models');
 
 		//Create The Model
-		$garage_model->insert_model($data);
+		$model_id = $garage_model->insert_model($data);
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_vehicle&amp;MAKE=" . $data['make'] . "&amp;MODEL=" . $data['model']));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_vehicle&amp;MAKE_ID=" . $data['make_id'] . "&amp;MODEL_ID=$model_id&amp;YEAR=" . $data['made_year']));
 
 		break;
 
@@ -1397,7 +1394,7 @@ switch( $mode )
 		$data['product_id'] = $garage_modification->insert_product($data);
 
 		//Head Back To Page Updating Dropdowns With New Item ;)
-		redirect(append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=add_modification&amp;CID=".$data['vehicle_id']."&amp;category_id=" . $data['category_id'] . "&amp;manufacturer_id=" . $data['manufacturer_id'] ."&amp;product_id=" . $data['product_id']));
+		redirect(append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=add_modification&amp;VID=".$data['vehicle_id']."&amp;category_id=" . $data['category_id'] . "&amp;manufacturer_id=" . $data['manufacturer_id'] ."&amp;product_id=" . $data['product_id']));
 
 		break;
 

@@ -61,11 +61,13 @@ while(list($var, $param) = @each($params))
 }
 
 //Get All Non-String Parameters
-$params = array('cid' => 'CID', 'mid' => 'MID', 'did' => 'DID', 'qmid' => 'QMID', 'ins_id' => 'INS_ID', 'eid' => 'EID', 'image_id' => 'image_id', 'comment_id' => 'CMT_ID', 'bus_id' => 'BUS_ID');
+$params = array( 'cid' => 'CID', 'vid' => 'VID', 'mid' => 'MID', 'did' => 'DID', 'qmid' => 'QMID', 'ins_id' => 'INS_ID', 'eid' => 'EID', 'image_id' => 'image_id', 'comment_id' => 'CMT_ID', 'bus_id' => 'BUS_ID');
 while(list($var, $param) = @each($params))
 {
 	$$var = request_var($param, '');
 }
+
+$vid = (!empty($cid)) ? $cid : $vid; 
 
 //Build Inital Navlink...Yes Forum Name!! We Use phpBB3 Standard Navlink Process!!
 $template->assign_block_vars('navlinks', array(
@@ -112,10 +114,10 @@ switch( $mode )
 		}
 
 		//Set Make & Model If User Added Them...Else Use Default Values
-		$params 	= array('MAKE' => '', 'MODEL' => '', 'YEAR' => '');
+		$params 	= array('MAKE_ID' => '', 'MODEL_ID' => '', 'YEAR' => '');
 		$data 		= $garage->process_vars($params);
-		$data['MAKE']	= (empty($data['MAKE'])) ? $garage_config['default_make'] : $data['MAKE'];
-		$data['MODEL']	= (empty($data['MODEL'])) ? $garage_config['default_model'] : $data['MODEL'];
+		$data['make_id'] = (empty($data['MAKE_ID'])) ? $garage_config['default_make_id'] : $data['MAKE_ID'];
+		$data['model_id'] = (empty($data['MODEL_ID'])) ? $garage_config['default_model_id'] : $data['MODEL_ID'];
 
 		//Get Required Data
 		$years = $garage->year_list();
@@ -123,7 +125,7 @@ switch( $mode )
 
 		//Build All Required Javascript, Arrays & HTML
 		$garage_template->attach_image('vehicle');
-		$garage_template->make_dropdown($makes);
+		$garage_template->make_dropdown($makes, $data['make_id']);
 		$garage_template->engine_dropdown();
 		$garage_template->currency_dropdown();
 		$garage_template->mileage_dropdown();
@@ -133,8 +135,8 @@ switch( $mode )
 			'L_BUTTON' 		=> $user->lang['CREATE_NEW_VEHICLE'],
 			'U_USER_SUBMIT_MAKE' 	=> "javascript:add_make()",
 			'U_USER_SUBMIT_MODEL' 	=> "javascript:add_model()",
-			'MAKE' 			=> $data['MAKE'],
-			'MODEL'			=> $data['MODEL'],
+			'MAKE_ID' 		=> $data['make_id'],
+			'MODEL_ID'		=> $data['model_id'],
 			'S_DISPLAY_SUBMIT_MAKE'	=> $garage_config['enable_user_submit_make'],
 			'S_DISPLAY_SUBMIT_MODEL'=> $garage_config['enable_user_submit_make'],
 			'S_MODE_ACTION_MAKE' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_make"),
@@ -182,8 +184,8 @@ switch( $mode )
 		$params = array('made_year', 'make_id', 'model_id');
 		$garage->check_required_vars($params);
 
-		//Insert The Vehicle Into The DB And Get The CID
-		$cid = $garage_vehicle->insert_vehicle($data);
+		//Insert The Vehicle Into The DB And Get The VID
+		$vid = $garage_vehicle->insert_vehicle($data);
 
 		//If Any Image Variables Set Enter The Image Handling
 		if ($garage_image->image_attached())
@@ -192,9 +194,9 @@ switch( $mode )
 			if ($garage_image->below_image_quotas())
 			{
 				//Create Thumbnail & DB Entry For Image
-				$image_id = $garage_image->process_image_attached('vehicle', $cid);
+				$image_id = $garage_image->process_image_attached('vehicle', $vid);
 				//Insert Image Into Vehicles Gallery
-				$hilite = $garage_vehicle->hilite_exists($cid);
+				$hilite = $garage_vehicle->hilite_exists($vid);
 				$garage_image->insert_vehicle_gallery_image($image_id, $hilite);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
@@ -210,7 +212,7 @@ switch( $mode )
 			$garage->pending_notification('unapproved_vehicles');
 		}
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
 
 		break;
 
@@ -220,11 +222,11 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_vehicle.$phpEx?mode=edit_vehicle&amp;CID=$cid");
+			login_box("garage_vehicle.$phpEx?mode=edit_vehicle&amp;VID=$vid");
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Build Page Header ;)
 		page_header($page_title);
@@ -236,18 +238,18 @@ switch( $mode )
 		);
 
 		//Pull Required Vehicle Data From DB
-		$data 	= $garage_vehicle->get_vehicle($cid);
+		$data 	= $garage_vehicle->get_vehicle($vid);
 		$years	= $garage->year_list();
 		$makes 	= $garage_model->get_all_makes();
 
 		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $data['vehicle'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"))
 		);
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['EDIT_VEHICLE'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;CID=$cid"))
+			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;VID=$vid"))
 		);
 
 		//Build All Required Javascript And Arrays
@@ -259,11 +261,11 @@ switch( $mode )
 		$template->assign_vars(array(
        			'L_TITLE' 		=> $user->lang['EDIT_VEHICLE'],
 			'L_BUTTON' 		=> $user->lang['EDIT_VEHICLE'],
-			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;CID=$cid"),
-			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=manage_vehicle_gallery&amp;CID=$cid"),
+			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;VID=$vid"),
+			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=manage_vehicle_gallery&amp;VID=$vid"),
 			'U_USER_SUBMIT_MAKE' 	=> "javascript:add_make()",
 			'U_USER_SUBMIT_MODEL' 	=> "javascript:add_model()",
-			'CID' 			=> $cid,
+			'VID' 			=> $vid,
 			'MAKE' 			=> $data['make'],
 			'MAKE_ID' 		=> $data['make_id'],
 			'MODEL' 		=> $data['model'],
@@ -290,15 +292,15 @@ switch( $mode )
 		$garage_template->attach_image('vehicle');
 
 		//Pull Vehicle Gallery Data From DB
-		$data = $garage_image->get_vehicle_gallery($cid);
+		$data = $garage_image->get_vehicle_gallery($vid);
 
 		//Process Each Image From Vehicle Gallery
 		for ($i = 0, $count = sizeof($data);$i < $count; $i++)
 		{
 			$template->assign_block_vars('pic_row', array(
 				'U_IMAGE'	=> (($data[$i]['attach_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location']))) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_image&amp;image_id=" . $data[$i]['attach_id']) : '',
-				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=remove_vehicle_image&amp;&amp;CID=$cid&amp;image_id=" . $data[$i]['attach_id']),
-				'U_SET_HILITE'	=> ($data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=set_vehicle_hilite&amp;image_id=" . $data[$i]['attach_id'] . "&amp;CID=$cid") : '',
+				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=remove_vehicle_image&amp;&amp;VID=$vid&amp;image_id=" . $data[$i]['attach_id']),
+				'U_SET_HILITE'	=> ($data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=set_vehicle_hilite&amp;image_id=" . $data[$i]['attach_id'] . "&amp;VID=$vid") : '',
 				'IMAGE' 	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'],
 				'IMAGE_TITLE' 	=> $data[$i]['attach_file'])
 			);
@@ -315,11 +317,11 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_vehicle.$phpEx?mode=edit_vehicle&amp;CID=$cid");
+			login_box("garage_vehicle.$phpEx?mode=edit_vehicle&amp;VID=$vid");
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('made_year' => '', 'make_id' => '', 'model_id' => '', 'colour' => '', 'mileage' => '', 'mileage_units' => '', 'price' => '', 'currency' => '', 'comments' => '', 'engine_type' => '');
@@ -333,7 +335,7 @@ switch( $mode )
 		$garage_vehicle->update_vehicle($data);
 	
 		//Update Timestamp For Vehicle	
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
 		//If Needed perform Notifications If Configured
 		if ($garage_config['enable_vehicle_approval'])
@@ -341,7 +343,7 @@ switch( $mode )
 			$garage->pending_notification('unapproved_vehicles');
 		}
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
 
 		break;
 
@@ -355,10 +357,10 @@ switch( $mode )
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Actually Delete The Vehicle..This Will Delete All Related Items!!
-		$garage_vehicle->delete_vehicle($cid);
+		$garage_vehicle->delete_vehicle($vid);
 
 		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=main_menu"));
 
@@ -388,14 +390,14 @@ switch( $mode )
 		$garage_template->sidemenu();
 
 		//Update View Count For Vehicle
-		$garage->update_view_count(GARAGE_VEHICLES_TABLE, 'views', 'id', $cid);
+		$garage->update_view_count(GARAGE_VEHICLES_TABLE, 'views', 'id', $vid);
 
 		break;
 
 	case 'view_own_vehicle':
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Build Page Header ;)
 		page_header($page_title);
@@ -423,7 +425,7 @@ switch( $mode )
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Build Page Header ;)
 		page_header($page_title);
@@ -445,15 +447,15 @@ switch( $mode )
 	case 'set_main_vehicle':
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Update All Vehicles They Own To Not Main Vehicle
-		$garage->update_single_field(GARAGE_VEHICLES_TABLE, 'main_vehicle', 0 ,'user_id', $garage_vehicle->get_vehicle_owner_id($cid));
+		$garage->update_single_field(GARAGE_VEHICLES_TABLE, 'main_vehicle', 0 ,'user_id', $garage_vehicle->get_vehicle_owner_id($vid));
 
 		//Now We Update This Vehicle To The Main Vehicle
-		$garage->update_single_field(GARAGE_VEHICLES_TABLE, 'main_vehicle', 1, 'id', $cid);
+		$garage->update_single_field(GARAGE_VEHICLES_TABLE, 'main_vehicle', 1, 'id', $vid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
 
 		break;
 
@@ -466,7 +468,7 @@ switch( $mode )
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//If Any Image Variables Set Enter The Image Handling
 		if ($garage_image->image_attached())
@@ -475,9 +477,9 @@ switch( $mode )
 			if ($garage_image->below_image_quotas())
 			{
 				//Create Thumbnail & DB Entry For Image
-				$image_id = $garage_image->process_image_attached('vehicle', $cid);
+				$image_id = $garage_image->process_image_attached('vehicle', $vid);
 				//Insert Image Into Vehicles Gallery
-				$hilite = $garage_vehicle->hilite_exists($cid);
+				$hilite = $garage_vehicle->hilite_exists($vid);
 				$garage_image->insert_vehicle_gallery_image($image_id, $hilite);
 			}
 			//You Have Reached Your Image Quota..Error Nicely
@@ -488,40 +490,40 @@ switch( $mode )
 		}
 
 		//Update Timestamp For Vehicle
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;CID=$cid#images"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;VID=$vid#images"));
 
 		break;
 
 	case 'set_vehicle_hilite':
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Set All Images To Non Hilite So We Do Not End Up With Two Hilites & Then Set Hilite
-		$garage->update_single_field(GARAGE_VEHICLE_GALLERY_TABLE, 'hilite', 0, 'garage_id', $cid);
+		$garage->update_single_field(GARAGE_VEHICLE_GALLERY_TABLE, 'hilite', 0, 'garage_id', $vid);
 		$garage->update_single_field(GARAGE_VEHICLE_GALLERY_TABLE, 'hilite', 1, 'image_id', $image_id);
 
 		//Update Timestamp For Vehicle
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;CID=$cid#images"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;VID=$vid#images"));
 
 		break;
 
 	case 'remove_vehicle_image':
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Remove Image From Vehicle Gallery & Deletes Image
 		$garage_image->delete_vehicle_image($image_id);
 
 		//Update Timestamp For Vehicle
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;CID=$cid#images"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;VID=$vid#images"));
 
 		break;
 
@@ -544,7 +546,7 @@ switch( $mode )
 		$garage->check_required_vars($params);
 
 		//Pull Required Data From DB
-	        $vehicle_data = $garage_vehicle->get_vehicle($cid);
+	        $vehicle_data = $garage_vehicle->get_vehicle($vid);
 
 		//If User Is Guest Generate Unique Number For User ID....
 		srand($garage->make_seed());
@@ -570,10 +572,10 @@ switch( $mode )
 		}
 
 		//Update The Weighted Rating Of This Vehicle
-		$weighted_rating = $garage_vehicle->calculate_weighted_rating($cid);
-		$garage_vehicle->update_weighted_rating($cid, $weighted_rating);
+		$weighted_rating = $garage_vehicle->calculate_weighted_rating($vid);
+		$garage_vehicle->update_weighted_rating($vid, $weighted_rating);
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=$vid"));
 
 		break;
 
@@ -597,10 +599,10 @@ switch( $mode )
 		$garage->delete_rows(GARAGE_RATING_TABLE, 'id', $data['RTID']);
 
 		//Update The Weighted Rating Of This Vehicle
-		$weighted_rating = $garage_vehicle->calculate_weighted_rating($cid);
-		$garage_vehicle->update_weighted_rating($cid, $weighted_rating);
+		$weighted_rating = $garage_vehicle->calculate_weighted_rating($vid);
+		$garage_vehicle->update_weighted_rating($vid, $weighted_rating);
 
-		redirect(append_sid("garage_vehicle.$phpEx", "mode=moderate_vehicle&amp;CID=$cid", true));
+		redirect(append_sid("garage_vehicle.$phpEx", "mode=moderate_vehicle&amp;VID=$vid", true));
 
 		break;
 
@@ -613,17 +615,17 @@ switch( $mode )
 		}
 
 		//Let Get Vehicle Rating & Delete Them
-		$data = $garage_vehicle->get_vehicle_rating($cid);
+		$data = $garage_vehicle->get_vehicle_rating($vid);
 		for ($i = 0, $count = sizeof($data);$i < $count; $i++)
 		{
 			$garage->delete_rows(GARAGE_RATING_TABLE, 'id', $data['id']);
 		}
 
 		//Update The Weighted Rating Of This Vehicle
-		$weighted_rating = $garage_vehicle->calculate_weighted_rating($cid);
-		$garage_vehicle->update_weighted_rating($cid, $weighted_rating);
+		$weighted_rating = $garage_vehicle->calculate_weighted_rating($vid);
+		$garage_vehicle->update_weighted_rating($vid, $weighted_rating);
 
-		redirect(append_sid("garage_vehicle.$phpEx", "mode=moderate_vehicle&amp;CID=$cid", true));
+		redirect(append_sid("garage_vehicle.$phpEx", "mode=moderate_vehicle&amp;VID=$vid", true));
 
 		break;
 

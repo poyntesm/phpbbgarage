@@ -33,11 +33,11 @@
 					</tr>
 					<tr>
 						<td class="row1" width="35%"><span class="gen"><b>{L_DYNOCENTRE}</b></span></td>
-						<td class="row2"><select id="dynocentre_id" name="dynocentre_id"><option value="">{L_SELECT_DYNOCENTRE}</option><option value="">------</option><!-- BEGIN dynocentre--><option value="{dynocentre.VALUE}" <!-- IF dynocentre.S_SELECTED -->selected="selected"<!-- ENDIF -->>{dynocentre.TEXT}</option><!-- END dynocentre --></select>&nbsp;<span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font></span>&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS_DYNOCENTRE}">{L_HERE}</a></span></td>
+						<td class="row2"><select id="dynocentre_id" name="dynocentre_id"><option value="">{L_SELECT_DYNOCENTRE}</option><option value="">------</option><!-- BEGIN dynocentre--><option value="{dynocentre.VALUE}" <!-- IF dynocentre.S_SELECTED -->selected="selected"<!-- ENDIF -->>{dynocentre.TEXT}</option><!-- END dynocentre --></select>&nbsp;<span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span>&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS_DYNOCENTRE}">{L_HERE}</a></span></td>
 					</tr>
 					<tr>
 						<td class="row1" width="35%"><span class="gen">{L_BHP_EXPLAIN}</span></td>
-						<td class="row2"><input name="bhp" type="text" class="post" size="15" value ="{BHP}" />&nbsp;<select id="bhp_unit" name="bhp_unit"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN bhp_unit --><option value="{bhp_unit.VALUE}" <!-- IF bhp_unit.S_SELECTED -->selected="selected"<!-- ENDIF -->>{bhp_unit.TEXT}</option><!-- END bhp_unit --></select>&nbsp;<span class="gensmall"><font color="#FF0000">[{L_REQUIRED}]</font></span</td>
+						<td class="row2"><input name="bhp" type="text" class="post" size="15" value ="{BHP}" />&nbsp;<select id="bhp_unit" name="bhp_unit"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN bhp_unit --><option value="{bhp_unit.VALUE}" <!-- IF bhp_unit.S_SELECTED -->selected="selected"<!-- ENDIF -->>{bhp_unit.TEXT}</option><!-- END bhp_unit --></select>&nbsp;<span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span</td>
 					</tr>
 					<tr>
 						<td class="row1" width="35%"><span class="gen">{L_TORQUE_EXPLAIN}</span></td>
@@ -61,7 +61,7 @@
 					<!-- ENDIF -->
 
 					<tr>
-						<td class="cat" align="center" height="28" colspan="2"><input type="hidden" value="{CID}" name="CID" /><input type="hidden" value="{DID}" name="DID" /><input type="hidden" value="{PENDING_REDIRECT}" name="pending_redirect" /><input name="submit" type="submit" value="{L_BUTTON}" class="liteoption" /></td>
+						<td class="cat" align="center" height="28" colspan="2"><input type="hidden" value="{VID}" name="VID" /><input type="hidden" value="{DID}" name="DID" /><input type="hidden" value="{PENDING_REDIRECT}" name="pending_redirect" /><input name="submit" type="submit" value="{L_BUTTON}" class="liteoption" /></td>
 					</tr>
 				</form>
 				</table>

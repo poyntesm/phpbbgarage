@@ -42,7 +42,7 @@ class garage_model
 
 		$db->sql_query($sql);
 
-		return;
+		return $db->sql_nextid();
 	}
 
 	/*========================================================================*/
@@ -136,7 +136,7 @@ class garage_model
 
 		$db->sql_query($sql);
 
-		return;
+		return $db->sql_nextid();
 	}
 
 	/*========================================================================*/
@@ -177,6 +177,32 @@ class garage_model
 				GARAGE_MAKES_TABLE	=> 'mk',
 			),
 			'WHERE'		=>  "mk.id = $make_id"
+		));
+
+		$result = $db->sql_query($sql);
+		$data = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/*========================================================================*/
+	// Select Make Data From DB
+	// Usage: get_make_by_name('make');
+	/*========================================================================*/
+	function get_make_by_name($make)
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'mk.id, mk.make',
+			'FROM'		=> array(
+				GARAGE_MAKES_TABLE	=> 'mk',
+			),
+			'WHERE'		=>  "mk.make = '$make'"
 		));
 
 		$result = $db->sql_query($sql);

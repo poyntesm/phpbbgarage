@@ -34,10 +34,10 @@ class garage_insurance
 	/*========================================================================*/
 	function insert_premium($data)
 	{
-		global $cid, $db;
+		global $vid, $db;
 
 		$sql = 'INSERT INTO ' . GARAGE_PREMIUMS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'vehicle_id'	=> $cid,
+			'vehicle_id'	=> $vid,
 			'premium'	=> $data['premium'],
 			'cover_type'	=> $data['cover_type'],
 			'comments'	=> $data['comments'],
@@ -55,7 +55,7 @@ class garage_insurance
 	/*========================================================================*/
 	function update_premium($data)
 	{
-		global $db, $cid, $ins_id;
+		global $db, $vid, $ins_id;
 
 		$update_sql = array(
 			'premium'	=> $data['premium'],
@@ -66,7 +66,7 @@ class garage_insurance
 
 		$sql = 'UPDATE ' . GARAGE_PREMIUMS_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
-			WHERE id = $ins_id AND vehicle_id = $cid";
+			WHERE id = $ins_id AND vehicle_id = $vid";
 
 
 		$db->sql_query($sql);
@@ -271,7 +271,7 @@ class garage_insurance
 	// Select Insurance Premiums By Vehicle From DB
 	// Usage: get_premiums_by_vehicle('vehicle id');
 	/*========================================================================*/
-	function get_premiums_by_vehicle($cid)
+	function get_premiums_by_vehicle($vid)
 	{
 		global $db;
 
@@ -289,7 +289,7 @@ class garage_insurance
 					'ON'	=> 'i.business_id = b.id'
 				)
 			),
-			'WHERE'		=>  "i.vehicle_id = $cid"
+			'WHERE'		=>  "i.vehicle_id = $vid"
 		));
 	
 	       	$result = $db->sql_query($sql);

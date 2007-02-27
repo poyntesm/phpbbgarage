@@ -36,7 +36,7 @@ class garage_business
 	{
 		global $db, $garage_config;
 
-		$pending = ($data['pending'] == 0) ? 0 : $garage_config['enable_business_approval'];
+		$pending = ($garage_config['enable_business_approval']) ? 1 : 0;
 
 		$sql = 'INSERT INTO ' . GARAGE_BUSINESS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 			'title'		=> $data['title'],

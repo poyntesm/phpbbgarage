@@ -59,7 +59,7 @@ while(list($var, $param) = @each($params))
 }
 
 //Get All Non-String Parameters
-$params = array('cid' => 'CID', 'mid' => 'MID', 'did' => 'DID', 'qmid' => 'QMID', 'ins_id' => 'INS_ID', 'eid' => 'EID', 'image_id' => 'image_id', 'comment_id' => 'CMT_ID', 'bus_id' => 'BUS_ID');
+$params = array('vid' => 'VID', 'mid' => 'MID', 'did' => 'DID', 'qmid' => 'QMID', 'ins_id' => 'INS_ID', 'eid' => 'EID', 'image_id' => 'image_id', 'comment_id' => 'CMT_ID', 'bus_id' => 'BUS_ID');
 while(list($var, $param) = @each($params))
 {
 	$$var = request_var($param, '');
@@ -97,10 +97,10 @@ switch( $mode )
 		);
 
 		//Get Vehicle Data
-		$vehicle_data = $garage_vehicle->get_vehicle($cid);
+		$vehicle_data = $garage_vehicle->get_vehicle($vid);
 
 		//Get All Comments Data
-		$comment_data = $garage_guestbook->get_vehicle_comments($cid);
+		$comment_data = $garage_guestbook->get_vehicle_comments($vid);
 
 		for ($i = 0, $count = sizeof($comment_data);$i < $count; $i++)
 		{	
@@ -171,9 +171,9 @@ switch( $mode )
 		 	if ( $auth->acl_get('m_garage') )
 			{
 				$edit_img = $user->img('icon_post_edit', 'EDIT_POST');
-				$edit = '<a href="'. append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']) . '">' . $user->lang['EDIT_POST'] . '</a>';
+				$edit = '<a href="'. append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_comment&amp;VID=$vid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']) . '">' . $user->lang['EDIT_POST'] . '</a>';
 				$delpost_img = $user->img('icon_post_delete', 'DELETE_POST');
-				$delpost = '<a href="'. append_sid("{$phpbb_root_path}garage.$phpEx", "mode=delete_comment&amp;CID=$cid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']) . '">' . $user->lang['DELETE_POST'] . '</a>';
+				$delpost = '<a href="'. append_sid("{$phpbb_root_path}garage.$phpEx", "mode=delete_comment&amp;VID=$vid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']) . '">' . $user->lang['DELETE_POST'] . '</a>';
 
 			}
 
@@ -186,7 +186,7 @@ switch( $mode )
 				'POSTER_CAR_MARK' 	=> $poster_car_mark,
 				'POSTER_CAR_MODEL' 	=> $poster_car_model,
 				'POSTER_CAR_YEAR' 	=> $poster_car_year,
-				'VIEW_POSTER_CARPROFILE'=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=$garage_id"),
+				'VIEW_POSTER_CARPROFILE'=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;VID=$garage_id"),
 				'POSTER_AVATAR' 	=> $poster_avatar,
 				'PROFILE_IMG' 		=> $user->img('icon_user_profile', 'READ_PROFILE'),
 				'PROFILE' 		=> $profile,
@@ -208,9 +208,9 @@ switch( $mode )
 
 		$template->assign_vars(array(
 			'L_GUESTBOOK_TITLE' 	=> $vehicle_data['username'] . " - " . $vehicle_data['vehicle'] . " " . $user->lang['GUESTBOOK'],
-			'CID' 			=> $cid,
+			'VID' 			=> $vid,
 			'S_DISPLAY_LEAVE_COMMENT'=> $auth->acl_get('u_garage_comment'),
-			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=insert_comment&CID=$cid"))
+			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=insert_comment&VID=$vid"))
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
@@ -242,7 +242,7 @@ switch( $mode )
 		$garage_guestbook->insert_vehicle_comment($data);
 
 		//Get Data So We Can Check If We Need To PM Owner Or Email
-		$data = $garage_vehicle->get_vehicle($cid);		
+		$data = $garage_vehicle->get_vehicle($vid);		
 
 		$notify_data = $garage_guestbook->notify_on_comment($data['user_id']);
 
@@ -252,7 +252,7 @@ switch( $mode )
 			include_once($phpbb_root_path . 'includes/functions_privmsgs.' . $phpEx);
 			include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 
-			$data['vehicle_link'] 	= '<a href="garage_guestbook.'.$phpEx.'?mode=view_guestbook&CID=$cid">' . $user->lang['HERE'] . '</a>';
+			$data['vehicle_link'] 	= '<a href="garage_guestbook.'.$phpEx.'?mode=view_guestbook&VID=$vid">' . $user->lang['HERE'] . '</a>';
 
 			$message_parser = new parse_message();
 			$message_parser->message = sprintf($user->lang['GUESTBOOK_NOTIFY_TEXT'], $data['vehicle_link']);
@@ -288,7 +288,7 @@ switch( $mode )
 			$garage->pending_notification('unapproved_guestbook_comments');
 		}
 
-		redirect(append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=view_guestbook&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=view_guestbook&amp;VID=$vid"));
 
 		break;
 
@@ -304,7 +304,7 @@ switch( $mode )
 		$data = $garage_guestbook->get_comment($comment_id);	
 		
 		$template->assign_vars(array(
-			'CID' 		 => $cid,
+			'VID' 		 => $vid,
 			'COMMENT_ID' 	 => $data['comment_id'],
 			'COMMENTS' 	 => $data['post'])
 		);
@@ -348,7 +348,7 @@ switch( $mode )
 			$garage->pending_notification('unapproved_guestbook_comments');
 		}
 
-		redirect(append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=view_guestbook&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=view_guestbook&amp;VID=$vid"));
 
 		break;
 
@@ -367,7 +367,7 @@ switch( $mode )
 		//Delete The Comment From The Guestbook
 		$garage->delete_rows(GARAGE_GUESTBOOKS_TABLE, 'id', $data['comment_id']);
 
-		redirect(append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=view_guestbook&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=view_guestbook&amp;VID=$vid"));
 
 		break;
 }

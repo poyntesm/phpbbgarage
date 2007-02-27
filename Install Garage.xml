@@ -240,7 +240,7 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 		'VEHICLE'			=> $user_cache[$poster_id]['vehicle'],
-		'U_VEHICLE'			=> (isset($user_cache[$poster_id]['garage_id'])) ? append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", 'mode=view_vehicle&amp;CID=' . $user_cache[$poster_id]['garage_id']) : '',
+		'U_VEHICLE'			=> (isset($user_cache[$poster_id]['garage_id'])) ? append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", 'mode=view_vehicle&amp;VID=' . $user_cache[$poster_id]['garage_id']) : '',
 		'S_DISPLAY_GARAGE_VIEWTOPIC'	=> ($garage_config['integrate_viewtopic']) ? true : false,
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 ]]></action>

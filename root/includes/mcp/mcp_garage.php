@@ -248,7 +248,7 @@ class mcp_garage
 				{
 					$template->assign_block_vars('vehicle_row', array(
 						'U_PROFILE'	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $data[$i]['user_id']),
-						'U_EDIT'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_vehicle&amp;CID=" . $data[$i]['id']. "&amp;redirect=MCP"),
+						'U_EDIT'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_vehicle&amp;VID=" . $data[$i]['id']. "&amp;redirect=MCP"),
 						'USERNAME'	=> $data[$i]['username'],
 						'ID'		=> $data[$i]['id'],
 						'MAKE'		=> $data[$i]['make'],
@@ -352,8 +352,8 @@ class mcp_garage
 				{
 					$template->assign_block_vars('quartermile_row', array(
 						'U_PROFILE'	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $data[$i]['user_id']),
-						'U_VEHICLE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=" . $data[$i]['vehicle_id']),
-						'U_EDIT'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_quartermile&amp;QMID=" . $data[$i]['qmid']. "&amp;CID=".$data[$i]['vehicle_id']."&amp;redirect=MCP"),
+						'U_VEHICLE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;VID=" . $data[$i]['vehicle_id']),
+						'U_EDIT'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_quartermile&amp;QMID=" . $data[$i]['qmid']. "&amp;VID=".$data[$i]['vehicle_id']."&amp;redirect=MCP"),
 						'ID'		=> $data[$i]['qmid'],
 						'USERNAME'	=> $data[$i]['username'],
 						'VEHICLE'	=> $data[$i]['vehicle'],
@@ -384,8 +384,8 @@ class mcp_garage
 				{
 					$template->assign_block_vars('dynorun_row', array(
 						'U_PROFILE'	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $data[$i]['user_id']),
-						'U_VEHICLE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=" . $data[$i]['id']),
-						'U_EDIT'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_dynorun&amp;DID=" . $data[$i]['did']. "&amp;CID=" . $data[$i]['id']. "&amp;redirect=MCP"),
+						'U_VEHICLE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;VID=" . $data[$i]['id']),
+						'U_EDIT'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_dynorun&amp;DID=" . $data[$i]['did']. "&amp;VID=" . $data[$i]['id']. "&amp;redirect=MCP"),
 						'ID'		=> $data[$i]['did'],
 						'USERNAME'	=> $data[$i]['username'],
 						'VEHICLE'	=> $data[$i]['vehicle'],
@@ -428,10 +428,10 @@ class mcp_garage
 						'VEHICLE'	=> $data[$i]['vehicle'],
 						'IMAGE'		=> $user->img('garage_slip_img_attached', 'SLIP_IMAGE_ATTACHED'),
 						'U_PROFILE'	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $data[$i]['user_id']),
-						'U_VEHICLE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=" . $data[$i]['id']),
+						'U_VEHICLE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;VID=" . $data[$i]['id']),
 						'U_IMAGE'	=> ($data[$i]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_image&amp;image_id=". $data[$i]['attach_id']) : '',
-						'U_TRACK'	=> append_sid("garage_track.$phpEx?mode=view_track&amp;TID=".$data[$i]['track_id']."&amp;CID=". $data[$i]['vehicle_id']),
-						'U_LAP'		=> append_sid("garage_track.$phpEx?mode=view_lap&amp;LID=".$data[$i]['lid']."&amp;CID=". $data[$i]['vehicle_id']),
+						'U_TRACK'	=> append_sid("garage_track.$phpEx?mode=view_track&amp;TID=".$data[$i]['track_id']."&amp;VID=". $data[$i]['vehicle_id']),
+						'U_LAP'		=> append_sid("garage_track.$phpEx?mode=view_lap&amp;LID=".$data[$i]['lid']."&amp;VID=". $data[$i]['vehicle_id']),
 						'U_EDIT'	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;LID=" . $data[$i]['lid'].  "&amp;redirect=MCP"),
 					));
 				}
@@ -476,7 +476,7 @@ class mcp_garage
 
 					$template->assign_block_vars('comment_row', array(
 						'U_PROFILE'	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $data[$i]['user_id']),
-						'U_VEHICLE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;CID=" . $data[$i]['vehicle_id']),
+						'U_VEHICLE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;VID=" . $data[$i]['vehicle_id']),
 						'U_EDIT'	=> append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=edit_comment&amp;TID=" . $data[$i]['id'].  "&amp;redirect=MCP"),
 						'USERNAME'	=> $data[$i]['username'],
 						'VEHICLE'	=> $data[$i]['vehicle'],

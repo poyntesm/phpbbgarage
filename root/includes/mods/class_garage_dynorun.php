@@ -34,10 +34,10 @@ class garage_dynorun
 	/*========================================================================*/
 	function insert_dynorun($data)
 	{
-		global $cid, $db, $garage_config;
+		global $vid, $db, $garage_config;
 
 		$sql = 'INSERT INTO ' . GARAGE_DYNORUNS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'vehicle_id'	=> $cid,
+			'vehicle_id'	=> $vid,
 			'dynocentre_id'	=> $data['dynocentre_id'],
 			'bhp'		=> $data['bhp'],
 			'bhp_unit'	=> $data['bhp_unit'],
@@ -63,10 +63,10 @@ class garage_dynorun
 	/*========================================================================*/
 	function update_dynorun($data)
 	{
-		global $db, $did, $cid, $garage_config;
+		global $db, $did, $vid, $garage_config;
 
 		$update_sql = array(
-			'vehicle_id'	=> $cid,
+			'vehicle_id'	=> $vid,
 			'dynocentre_id'	=> $data['dynocentre_id'],
 			'bhp'		=> $data['bhp'],
 			'bhp_unit'	=> $data['bhp_unit'],
@@ -82,7 +82,7 @@ class garage_dynorun
 
 		$sql = 'UPDATE ' . GARAGE_DYNORUNS_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
-			WHERE id = $did AND vehicle_id = $cid";
+			WHERE id = $did AND vehicle_id = $vid";
 
 
 		$db->sql_query($sql);
@@ -94,25 +94,23 @@ class garage_dynorun
 	// Delete Dynorun Including Image 
 	// Usage: delete_dynorun('dynorun id');
 	/*========================================================================*/
-	function delete_dynorun($id)
+	function delete_dynorun($did)
 	{
-		global $db, $garage_image, $garage;
+		global $vid, $garage_image, $garage;
 	
-		//Get All Required Data
-		$data = $this->get_dynorun($id);
+		//Lets See If There Are Any Images Associated With This Run
+		$images	= $garage_image->get_dynorun_gallery($vid, $did);
 	
-		//Lets See If There Is An Image Associated With This Run
-		if (!empty($data['image_id']))
+		for ($i = 0, $count = sizeof($images);$i < $count; $i++)
 		{
-			//Seems To Be An Image To Delete, Let Call The Function
-			$garage_image->delete_image($data['image_id']);
+			$garage_image->delete_dynorun_image($images[$i]['id']);
 		}
 	
 		//Update Quartermile Table For An Matched Times
-		$garage->update_single_field(GARAGE_QUARTERMILES_TABLE, 'dynorun_id', 'NULL', 'dynorun_id', $id);	
+		$garage->update_single_field(GARAGE_QUARTERMILES_TABLE, 'dynorun_id', 'NULL', 'dynorun_id', $did);	
 	
 		//Time To Delete The Actual RollingRoad Run Now
-		$garage->delete_rows(GARAGE_DYNORUNS_TABLE, 'id', $id);
+		$garage->delete_rows(GARAGE_DYNORUNS_TABLE, 'id', $did);
 	
 		return ;
 	}
@@ -121,7 +119,7 @@ class garage_dynorun
 	// Returns Count Of Dynoruns Performed By Vehicle
 	// Usage: count_runs('garage id');
 	/*========================================================================*/
-	function count_runs($cid)
+	function count_runs($vid)
 	{
 		global $db;
 
@@ -133,7 +131,7 @@ class garage_dynorun
 			'FROM'		=> array(
 				GARAGE_DYNORUNS_TABLE	=> 'd',
 			),
-			'WHERE'		=>  "d.vehicle_id = $cid"
+			'WHERE'		=>  "d.vehicle_id = $vid"
 		));
 
 		$result = $db->sql_query($sql);
@@ -413,7 +411,7 @@ class garage_dynorun
 	// Select Dynorun(s) Data By Vehicle From DB
 	// Usage: get_dynoruns_by_vehicle('vehicle id');
 	/*========================================================================*/
-	function get_dynoruns_by_vehicle($cid)
+	function get_dynoruns_by_vehicle($vid)
 	{
 		global $db;
 
@@ -439,7 +437,7 @@ class garage_dynorun
 					'ON'	=> 'd.dynocentre_id = b.id'
 				)
 			),
-			'WHERE'		=>	"d.vehicle_id = $cid",
+			'WHERE'		=>	"d.vehicle_id = $vid",
 			'GROUP_BY'	=>	'd.id',
 			'ORDER_BY'	=>	'd.id'
 		));
@@ -485,9 +483,9 @@ class garage_dynorun
 			$vehicle_data = $this->get_dynorun_by_vehicle_bhp($runs[$i]['vehicle_id'], $runs[$i]['bhp']);
 
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' 		=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=".$vehicle_data['id']),
+				'U_COLUMN_1' 		=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=".$vehicle_data['id']),
 				'U_COLUMN_2' 		=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=".$vehicle_data['user_id']),
-				'U_COLUMN_3' 		=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=view_dynorun&amp;CID=".$vehicle_data['id']."&amp;DID=".$vehicle_data['did']),
+				'U_COLUMN_3' 		=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=view_dynorun&amp;VID=".$vehicle_data['id']."&amp;DID=".$vehicle_data['did']),
 				'COLUMN_1_TITLE'	=> $vehicle_data['vehicle'],
 				'COLUMN_2_TITLE'	=> $vehicle_data['username'],
 				'COLUMN_3_TITLE'	=> $vehicle_data['bhp'] .' ' . $vehicle_data['bhp_unit'] . ' / ' . $vehicle_data['torque'] .' ' . $vehicle_data['torque_unit'] . ' / '. $vehicle_data['nitrous'],

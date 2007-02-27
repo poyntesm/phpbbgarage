@@ -34,10 +34,10 @@ class garage_quartermile
 	/*========================================================================*/
 	function insert_quartermile($data)
 	{
-		global $cid, $db, $garage_config;
+		global $vid, $db, $garage_config;
 
 		$sql = 'INSERT INTO ' . GARAGE_QUARTERMILES_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'vehicle_id'	=> $cid,
+			'vehicle_id'	=> $vid,
 			'rt'		=> $data['rt'],
 			'sixty'		=> $data['sixty'],
 			'three'		=> $data['three'],
@@ -63,10 +63,10 @@ class garage_quartermile
 	/*========================================================================*/
 	function update_quartermile($data)
 	{
-		global $db, $cid, $qmid, $garage_config;
+		global $db, $vid, $qmid, $garage_config;
 
 		$update_sql = array(
-			'vehicle_id'	=> $cid,
+			'vehicle_id'	=> $vid,
 			'rt'		=> $data['rt'],
 			'sixty'		=> $data['sixty'],
 			'three'		=> $data['three'],
@@ -82,7 +82,7 @@ class garage_quartermile
 
 		$sql = 'UPDATE ' . GARAGE_QUARTERMILES_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
-			WHERE id = $qmid AND vehicle_id = $cid";
+			WHERE id = $qmid AND vehicle_id = $vid";
 
 		$db->sql_query($sql);
 
@@ -95,13 +95,14 @@ class garage_quartermile
 	/*========================================================================*/
 	function delete_quartermile($qmid)
 	{
-		global $garage, $garage_image;
+		global $vid, $garage, $garage_image;
 	
-		$data = $this->get_quartermile($qmid);
+		//Lets See If There Are Any Images Associated With This Time
+		$images	= $garage_image->get_quartermile_gallery($vid, $qmid);
 	
-		if (!empty($data['image_id']))
+		for ($i = 0, $count = sizeof($images);$i < $count; $i++)
 		{
-			$garage_image->delete_image($data['image_id']);
+			$garage_image->delete_quartermile_image($images[$i]['id']);
 		}
 
 		$garage->delete_rows(GARAGE_QUARTERMILES_TABLE, 'id', $qmid);
@@ -372,9 +373,9 @@ class garage_quartermile
 
 	/*========================================================================*/
 	// Select Quartermile Data By Vehicle ID
-	// Usage: get_quartermile_by_vehicle('garage id');
+	// Usage: get_quartermiles_by_vehicle('garage id');
 	/*========================================================================*/
-	function get_quartermile_by_vehicle($cid)
+	function get_quartermiles_by_vehicle($vid)
 	{
 		global $db;
 
@@ -396,7 +397,7 @@ class garage_quartermile
 					'ON'	=> 'i.attach_id = qg.image_id'
 				)
 			),
-			'WHERE'		=> 	"q.vehicle_id = $cid",
+			'WHERE'		=> 	"q.vehicle_id = $vid",
 			'GROUP_BY'	=>	'q.id',
 			'ORDER_BY'	=>	'q.id'
 		));
@@ -445,9 +446,9 @@ class garage_quartermile
 	            	$quartermile = $data['quart'] .' @ ' . $mph . ' '. $user->lang['QUARTERMILE_SPEED_UNIT'];
 	
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' 		=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;CID=".$data['id']),
+				'U_COLUMN_1' 		=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=".$data['id']),
 				'U_COLUMN_2' 		=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=".$data['user_id']),
-				'U_COLUMN_3' 		=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=view_quartermile&amp;CID=".$data['id']."&amp;QMID=".$data['qmid']),
+				'U_COLUMN_3' 		=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=view_quartermile&amp;VID=".$data['id']."&amp;QMID=".$data['qmid']),
 				'COLUMN_1_TITLE'	=> $data['vehicle'],
 				'COLUMN_2_TITLE'	=> $data['username'],
 				'COLUMN_3_TITLE'	=> $quartermile,

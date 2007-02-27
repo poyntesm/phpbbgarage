@@ -34,11 +34,11 @@ class garage_blog
 	/*========================================================================*/
 	function insert_blog($data)
 	{
-		global $cid, $db, $garage_config, $garage_vehicle;
+		global $vid, $db, $garage_config, $garage_vehicle;
 
 		$sql = 'INSERT INTO ' . GARAGE_BLOGS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'vehicle_id'		=> $cid,
-			'user_id'		=> $garage_vehicle->get_vehicle_owner_id($cid),
+			'vehicle_id'		=> $vid,
+			'user_id'		=> $garage_vehicle->get_vehicle_owner_id($vid),
 			'blog_title'		=> $data['blog_title'],
 			'blog_text'		=> $data['blog_text'],
 			'blog_date'		=> time(),
@@ -58,10 +58,10 @@ class garage_blog
 	/*========================================================================*/
 	function update_blog($data)
 	{
-		global $db, $bid, $cid, $garage_config, $garage_vehicle;
+		global $db, $bid, $vid, $garage_config, $garage_vehicle;
 
 		$update_sql = array(
-			'user_id'		=> $garage_vehicle->get_vehicle_owner_id($cid),
+			'user_id'		=> $garage_vehicle->get_vehicle_owner_id($vid),
 			'blog_title'		=> $data['blog_title'],
 			'blog_text'		=> $data['blog_text'],
 			'bbcode_bitfield'	=> $data['bbcode_bitfield'],
@@ -71,7 +71,7 @@ class garage_blog
 
 		$sql = 'UPDATE ' . GARAGE_BLOGS_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
-			WHERE id = $bid AND vehicle_id = $cid";
+			WHERE id = $bid AND vehicle_id = $vid";
 
 
 		$db->sql_query($sql);
@@ -100,7 +100,7 @@ class garage_blog
 	// Select Blog(s) Data By Vehicle From DB
 	// Usage: get_blogs_by_vehicle('vehicle id');
 	/*========================================================================*/
-	function get_blogs_by_vehicle($cid)
+	function get_blogs_by_vehicle($vid)
 	{
 		global $db;
 
@@ -118,7 +118,7 @@ class garage_blog
 					'ON'	=> 'b.user_id = u.user_id'
 				)
 			),
-			'WHERE'		=>	"b.vehicle_id = $cid",
+			'WHERE'		=>	"b.vehicle_id = $vid",
 			'ORDER_BY'	=>	'b.id DESC'
 		));
 
@@ -163,7 +163,7 @@ class garage_blog
 		}
 
 		$template->assign_vars(array(
-			'S_MODE_BLOG_ACTION' 	=> append_sid("{$phpbb_root_path}garage_blog.$phpEx", "mode=insert_blog&CID=$vehicle_id"))
+			'S_MODE_BLOG_ACTION' 	=> append_sid("{$phpbb_root_path}garage_blog.$phpEx", "mode=insert_blog&VID=$vehicle_id"))
 		);
 	}
 }

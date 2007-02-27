@@ -51,7 +51,7 @@ while(list($var, $param) = @each($params))
 }
 
 //Get All Non-String Parameters
-$params = array('cid' => 'CID', 'bid' => 'BID', 'eid' => 'EID');
+$params = array('vid' => 'VID', 'bid' => 'BID', 'eid' => 'EID');
 while(list($var, $param) = @each($params))
 {
 	$$var = request_var($param, '');
@@ -80,7 +80,7 @@ switch( $mode )
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		$text = utf8_normalize_nfc(request_var('blog_text', '', true));
 		$uid = $bitfield = $flags = ''; // will be modified by generate_text_for_storage
@@ -99,9 +99,9 @@ switch( $mode )
 		$garage_blog->insert_blog($data);
 
 		//Update The Time Now...In Case We Get Redirected During Image Processing
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
 
 		break;
 
@@ -110,11 +110,11 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_blog.$phpEx?mode=edit_blog&amp;BID=$bid&amp;CID=$cid");
+			login_box("garage_blog.$phpEx?mode=edit_blog&amp;BID=$bid&amp;VID=$vid");
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Build Page Header ;)
 		page_header($page_title);
@@ -132,7 +132,7 @@ switch( $mode )
 		$template->assign_vars(array(
 			'L_TITLE'		=> $user->lang['EDIT_BLOG'],
 			'L_BUTTON'		=> $user->lang['EDIT_BLOG'],
-			'CID'			=> $cid,
+			'VID'			=> $vid,
 			'BID'			=> $bid,
 			'BLOG_TITLE'		=> $data['blog_title'],
 			'BLOG_TEXT'		=> $data['blog_text'],
@@ -149,11 +149,11 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
-			login_box("garage_blog.$phpEx?mode=edit_blog&amp;BID=$bid&amp;CID=$cid");
+			login_box("garage_blog.$phpEx?mode=edit_blog&amp;BID=$bid&amp;VID=$vid");
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('blog_title' => '', 'blog_text' => '');
@@ -167,9 +167,9 @@ switch( $mode )
 		$garage_blog->update_blog($data);
 
 		//Update The Vehicle Timestamp Now...In Case We Get Redirected During Image Processing
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
 
 		break;
 
@@ -182,15 +182,15 @@ switch( $mode )
 		}
 
 		//Check Vehicle Ownership
-		$garage_vehicle->check_ownership($cid);
+		$garage_vehicle->check_ownership($vid);
 
 		//Delete The Quartermie Time
 		$garage_blog->delete_blog($bid);
 
 		//Update Timestamp For Vehicle
-		$garage_vehicle->update_vehicle_time($cid);
+		$garage_vehicle->update_vehicle_time($vid);
 
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;CID=$cid"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
 
 		break;
 	

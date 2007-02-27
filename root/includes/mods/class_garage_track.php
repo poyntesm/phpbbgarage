@@ -34,10 +34,10 @@ class garage_track
 	/*========================================================================*/
 	function insert_lap($data)
 	{
-		global $cid, $db, $garage_config;
+		global $vid, $db, $garage_config;
 
 		$sql = 'INSERT INTO ' . GARAGE_LAPS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'vehicle_id'	=> $cid,
+			'vehicle_id'	=> $vid,
 			'track_id'	=> $data['track_id'],
 			'condition_id'	=> $data['condition_id'],
 			'type_id'	=> $data['type_id'],
@@ -78,10 +78,10 @@ class garage_track
 	/*========================================================================*/
 	function update_lap($data)
 	{
-		global $db, $lid, $cid, $garage_config;
+		global $db, $lid, $vid, $garage_config;
 
 		$update_sql = array(
-			'vehicle_id'	=> $cid,
+			'vehicle_id'	=> $vid,
 			'track_id'	=> $data['track_id'],
 			'condition_id'	=> $data['condition_id'],
 			'type_id'	=> $data['type_id'],
@@ -93,7 +93,7 @@ class garage_track
 
 		$sql = 'UPDATE ' . GARAGE_LAPS_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
-			WHERE id = $lid AND vehicle_id = $cid";
+			WHERE id = $lid AND vehicle_id = $vid";
 
 
 		$db->sql_query($sql);
@@ -130,18 +130,20 @@ class garage_track
 	// Delete Lap Including Image 
 	// Usage: delete_lap('lap id');
 	/*========================================================================*/
-	function delete_lap($id)
+	function delete_lap($lid)
 	{
-		global $db, $garage_image, $garage;
+		global $vid, $garage_image, $garage;
 	
-		//Get All Required Data
-		$data = $this->get_lap($id);
+		//Lets See If There Are Any Images Associated With This Lap
+		$images	= $garage_image->get_lap_gallery($vid, $lid);
 	
-		//Seems To Be An Image To Delete, Let Call The Function
-		$garage_image->delete_image($data['image_id']);
+		for ($i = 0, $count = sizeof($images);$i < $count; $i++)
+		{
+			$garage_image->delete_lap_image($images[$i]['id']);
+		}
 
 		//Time To Delete The Actual Lap Now
-		$garage->delete_rows(GARAGE_LAPS_TABLE, 'id', $id);
+		$garage->delete_rows(GARAGE_LAPS_TABLE, 'id', $lid);
 	
 		return ;
 	}
@@ -360,7 +362,7 @@ class garage_track
 	// Select Lap(s) Data By Vehicle From DB
 	// Usage: get_laps_by_vehicle('vehicle id');
 	/*========================================================================*/
-	function get_laps_by_vehicle($cid)
+	function get_laps_by_vehicle($vid)
 	{
 		global $db;
 
@@ -386,7 +388,7 @@ class garage_track
 					'ON'	=> 'l.track_id = t.id'
 				)
 			),
-			'WHERE'		=>	"l.vehicle_id = $cid",
+			'WHERE'		=>	"l.vehicle_id = $vid",
 			'GROUP_BY'	=>	'l.id',
 			'ORDER_BY'	=>	'l.id'
 		));

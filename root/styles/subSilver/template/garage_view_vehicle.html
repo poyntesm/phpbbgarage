@@ -19,7 +19,7 @@ function confirm_delete_car(car_id)
 	if ( confirm("{L_CONFIRM_DELETE_VEHICLE}") )
 	{
 
-		window.location.href = "{U_DELETE_VEHICLE}&CID=" + car_id;
+		window.location.href = "{U_DELETE_VEHICLE}&VID=" + car_id;
 	}
 }
 
@@ -27,7 +27,7 @@ function confirm_delete_mod (car_id, mod_id)
 {
 	if ( confirm("{L_CONFIRM_DELETE_MODIFICATION}") )
 	{
-		window.location.href = "{U_DELETE_MODIFICATION}&MID=" + mod_id + "&CID=" + car_id;
+		window.location.href = "{U_DELETE_MODIFICATION}&MID=" + mod_id + "&VID=" + car_id;
 	}
 }
 
@@ -35,7 +35,7 @@ function confirm_delete_insurance (car_id, ins_id)
 {
 	if ( confirm("{L_CONFIRM_DELETE_PREMIUM}") )
 	{
-		window.location.href = "{U_DELETE_PREMIUM}&INS_ID=" + ins_id + "&CID=" + car_id;
+		window.location.href = "{U_DELETE_PREMIUM}&INS_ID=" + ins_id + "&VID=" + car_id;
 	}
 }
 
@@ -43,7 +43,7 @@ function confirm_delete_quartermile (car_id, qm_id)
 {
 	if ( confirm("{L_CONFIRM_DELETE_QUARTERMILE}") )
 	{
-		window.location.href = "{U_DELETE_QUARTERMILE}&QMID=" + qm_id + "&CID=" + car_id;
+		window.location.href = "{U_DELETE_QUARTERMILE}&QMID=" + qm_id + "&VID=" + car_id;
 	}
 }
 
@@ -51,7 +51,7 @@ function confirm_delete_dynorun (car_id, did)
 {
 	if ( confirm("{L_CONFIRM_DELETE_DYNORUN}") )
 	{
-		window.location.href = "{U_DELETE_DYNORUN}&DID=" + did + "&CID=" + car_id;
+		window.location.href = "{U_DELETE_DYNORUN}&DID=" + did + "&VID=" + car_id;
 	}
 }
 
@@ -59,7 +59,7 @@ function confirm_delete_lap (car_id, lid)
 {
 	if ( confirm("{L_CONFIRM_DELETE_LAP}") )
 	{
-		window.location.href = "{U_DELETE_LAP}&LID=" + lid + "&CID=" + car_id;
+		window.location.href = "{U_DELETE_LAP}&LID=" + lid + "&VID=" + car_id;
 	}
 }
 
@@ -67,7 +67,7 @@ function confirm_delete_service (car_id, svid)
 {
 	if ( confirm("{L_CONFIRM_DELETE_SERVICE}") )
 	{
-		window.location.href = "{U_DELETE_LAP}&SVID=" + svid + "&CID=" + car_id;
+		window.location.href = "{U_DELETE_LAP}&SVID=" + svid + "&VID=" + car_id;
 	}
 }
 // -->
@@ -176,7 +176,7 @@ function confirm_delete_service (car_id, svid)
 							<!-- IF ! S_DISPLAY_VEHICLE_OWNER -->
             	    					<tr>
                         					<td class="row1"  valign="top" ><span class="gen"><b>{L_PLEASE_RATE}</b></span></td>
-                        					<td width="85%"><select id="vehicle_rating" name="vehicle_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN rating --><option value="{rating.VALUE}" <!-- IF rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{rating.TEXT}</option><!-- END rating --></select>&nbsp;<input type="hidden" value="rate_vehicle" name="mode" /><input type="hidden" value="{CID}" name="CID" />
+                        					<td width="85%"><select id="vehicle_rating" name="vehicle_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN rating --><option value="{rating.VALUE}" <!-- IF rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{rating.TEXT}</option><!-- END rating --></select>&nbsp;<input type="hidden" value="rate_vehicle" name="mode" /><input type="hidden" value="{VID}" name="VID" />
 								<!-- IF S_DISPLAY_RATE -->
 								<input name="submit" type="submit" value="{L_RATE}" class="liteoption" />
 								<!-- ENDIF rate -->
