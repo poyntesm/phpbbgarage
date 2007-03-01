@@ -2,7 +2,8 @@
 /** 
 *
 * @package acp
-* @version $Id: acp_garage_fields.php,v 1.43 2007/01/04 16:07:38 acydburn Exp $
+* @version $Id$
+* @copyright (c) 2006 phpBB Garage
 * @copyright (c) 2005 phpBB Group 
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
 *

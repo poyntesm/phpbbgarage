@@ -3,7 +3,7 @@
 *
 * @package acp
 * @version $Id$
-* @copyright (c) 2005 phpBB Group 
+* @copyright (c) 2005 phpBB Garage
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
 *
 */
