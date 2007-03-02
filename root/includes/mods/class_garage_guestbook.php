@@ -2,17 +2,23 @@
 /** 
 *
 * @package garage
-* @version $Id: memberlist.php,v 1.207 2007/01/26 16:05:14 acydburn Exp $
+* @version $Id$
 * @copyright (c) 2005 phpBB Garage
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
 *
 */
 
+/**
+*/
 if (!defined('IN_PHPBB'))
 {
 	die('Hacking attempt');
 }
 
+/**
+* phpBB Garage Guestbook Class
+* @package garage
+*/
 class garage_guestbook
 {
 	var $classname = "garage_guestbook";

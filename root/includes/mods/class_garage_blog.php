@@ -8,11 +8,17 @@
 *
 */
 
+/**
+*/
 if (!defined('IN_PHPBB'))
 {
 	die('Hacking attempt');
 }
 
+/**
+* phpBB Garage Blog Class
+* @package garage
+*/
 class garage_blog
 {
 	var $classname = "garage_blog";

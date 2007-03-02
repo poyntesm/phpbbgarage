@@ -13,6 +13,10 @@ if (!defined('IN_PHPBB'))
 	die('Hacking attempt');
 }
 
+/**
+* phpBB Garage Vehicle Class
+* @package garage
+*/
 class garage_vehicle
 {
 	var $classname = "garage_vehicle";

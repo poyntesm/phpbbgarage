@@ -13,6 +13,10 @@ if (!defined('IN_PHPBB'))
 	die('Hacking attempt');
 }
 
+/**
+* phpBB Garage Quartermile Class
+* @package garage
+*/
 class garage_quartermile
 {
 	var $classname = "garage_quartermile";

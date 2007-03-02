@@ -9,6 +9,10 @@
 */
 
 /**
+* @ignore
+*/
+
+/**
 *  If you want to add new constants of any type DO NOT delete the original ones.
 *  If you do not want some constants available in dropdowns etc..edit the array in
 *  the function that produces them in class_garage_template.
