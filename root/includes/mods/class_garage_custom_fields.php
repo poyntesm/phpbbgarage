@@ -2,7 +2,7 @@
 /** 
 *
 * @package garage
-* @version $Id: class_garage_custom_fields.php 115 2006-04-21 09:49:32Z poyntesm $
+* @version $Id$
 * @copyright (c) 2005 phpBB Garage
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
 *
