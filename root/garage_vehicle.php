@@ -8,6 +8,9 @@
 *
 */
 
+/**
+* @ignore
+*/
 define('IN_PHPBB', true);
 
 //Let's Set The Root Dir For phpBB And Load Normal phpBB Required Files

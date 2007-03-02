@@ -8,6 +8,9 @@
 *
 */
 
+/**
+* @ignore
+*/
 define('IN_PHPBB', true);
 $phpbb_root_path = './';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
