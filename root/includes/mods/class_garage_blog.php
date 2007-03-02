@@ -23,10 +23,12 @@ class garage_blog
 {
 	var $classname = "garage_blog";
 
-	/*========================================================================*/
-	// Inserts Blog Into DB
-	// Usage: insert_blog(array());
-	/*========================================================================*/
+	/**
+	* Insert blog entry
+	*
+	* @param array $data single-dimension array holding the data to create blog entry
+	*
+	*/
 	function insert_blog($data)
 	{
 		global $vid, $db, $garage_config, $garage_vehicle;
@@ -47,10 +49,12 @@ class garage_blog
 		return $db->sql_nextid();
 	}
 
-	/*========================================================================*/
-	// Updates Blog In DB
-	// Usage: update_blog(array());
-	/*========================================================================*/
+	/**
+	* Update existing blog entry
+	*
+	* @param array $data single-dimension array holding the data to update the blog entry
+	*
+	*/
 	function update_blog($data)
 	{
 		global $db, $bid, $vid, $garage_config, $garage_vehicle;
@@ -74,10 +78,12 @@ class garage_blog
 		return;
 	}
 
-	/*========================================================================*/
-	// Delete Blog Including Image 
-	// Usage: delete_blog('blog id');
-	/*========================================================================*/
+	/**
+	* Delete existing blog entry
+	*
+	* @param int $id id of blog entry to delete
+	*
+	*/
 	function delete_blog($id)
 	{
 		global $db, $garage_image, $garage;
@@ -91,10 +97,12 @@ class garage_blog
 		return ;
 	}
 
-	/*========================================================================*/
-	// Select Blog(s) Data By Vehicle From DB
-	// Usage: get_blogs_by_vehicle('vehicle id');
-	/*========================================================================*/
+	/**
+	* Return array of blog entries filterd by vehicle
+	*
+	* @param int $vid vehicle id to filter on
+	*
+	*/
 	function get_blogs_by_vehicle($vid)
 	{
 		global $db;
@@ -127,10 +135,12 @@ class garage_blog
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Display Blog
-	// Usage: display_blog('vehicle id')
-	/*========================================================================*/
+	/**
+	* Assign template vars required to display a vehicle blog
+	*
+	* @param int $vehicle_id vehicle id to display blog for
+	*
+	*/
 	function display_blog($vehicle_id)
 	{
 		global $template, $garage_vehicle, $garage, $user, $phpEx, $auth, $phpbb_root_path, $config, $owned;

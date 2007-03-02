@@ -23,10 +23,12 @@ class garage_admin
 {
 	var $classname = "garage_admin";
 
-	/*========================================================================*/
-	// Inserts Category Into DB
-	// Usage: insert_category(array());
-	/*========================================================================*/
+	/**
+	* Insert new modification category
+	*
+	* @param array $data sinlge-dimension array holding data to insert
+	*
+	*/
 	function insert_category($data)
 	{
 		global $db;
@@ -41,10 +43,9 @@ class garage_admin
 		return;
 	}
 
-	/*========================================================================*/
-	// Count The Modification Categories Within The Garage
-	// Usage: count_categories();
-	/*========================================================================*/
+	/**
+	* Count existing modification categories
+	*/
 	function count_categories()
 	{
 		global $db;
@@ -68,11 +69,15 @@ class garage_admin
 		return $data['total'];
 	}
 
-	/*========================================================================*/
-	// Set Config Values Within The Garage
-	// Taken from phpBB3 Standard Code
-	// Usage: set_config();
-	/*========================================================================*/
+	/**
+	* Update/Create configuration setting
+	* Taken from phpBB3 standard code and table changed 
+	*
+	* @param string $config_name config option to create or update
+	* @param string $config_value value to use for creation or update
+	* @param array $garage_config  single-dimensional array holding current garage configuratin
+	*
+	*/
 	function set_config($config_name, $config_value, $garage_config)
 	{
 		global $db ;
@@ -92,10 +97,10 @@ class garage_admin
 
 		$garage_config[$config_name] = $config_value;
 	}
-	/*========================================================================*/
-	// Sync Config Values Within The Garage
-	// Usage: sync_config();
-	/*========================================================================*/
+
+	/**
+	* Re-reading garage configuration option
+	*/
 	function sync_config()
 	{
 		global $db;

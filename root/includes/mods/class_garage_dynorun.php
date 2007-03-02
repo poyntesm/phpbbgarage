@@ -23,10 +23,12 @@ class garage_dynorun
 {
 	var $classname = "garage_dynorun";
 
-	/*========================================================================*/
-	// Inserts Dynorun Into DB
-	// Usage: insert_dynorun(array());
-	/*========================================================================*/
+	/**
+	* Insert new dynorun
+	*
+	* @param array $data single-dimension array holding the data for the new dynorun
+	*
+	*/
 	function insert_dynorun($data)
 	{
 		global $vid, $db, $garage_config;
@@ -52,10 +54,12 @@ class garage_dynorun
 		return $db->sql_nextid();
 	}
 
-	/*========================================================================*/
-	// Updates Dynorun In DB
-	// Usage:  update_dynorun(array());
-	/*========================================================================*/
+	/**
+	* Updates a existing dynorun
+	*
+	* @param array $data single-dimension array holding the data to update the dynorun with
+	*
+	*/
 	function update_dynorun($data)
 	{
 		global $db, $did, $vid, $garage_config;
@@ -85,10 +89,12 @@ class garage_dynorun
 		return;
 	}
 
-	/*========================================================================*/
-	// Delete Dynorun Including Image 
-	// Usage: delete_dynorun('dynorun id');
-	/*========================================================================*/
+	/**
+	* Delete dynorun and all images linked to it
+	*
+	* @param int $did dynorun id to delete
+	*
+	*/
 	function delete_dynorun($did)
 	{
 		global $vid, $garage_image, $garage;
@@ -110,10 +116,12 @@ class garage_dynorun
 		return ;
 	}
 
-	/*========================================================================*/
-	// Returns Count Of Dynoruns Performed By Vehicle
-	// Usage: count_runs('garage id');
-	/*========================================================================*/
+	/**
+	* Return count of dynoruns filtered by vehicle id
+	*
+	* @param int $vid vehicle id to count dynoruns for
+	*
+	*/
 	function count_runs($vid)
 	{
 		global $db;
@@ -138,10 +146,12 @@ class garage_dynorun
 		return $data['total'];
 	}
 
-	/*========================================================================*/
-	// Determines If Image Is Hilite Image
-	// Usage: hilite_exists('dynorun id');
-	/*========================================================================*/
+	/**
+	* Check if an image is marked as highlight image for dynorun
+	*
+	* @param int $did dynorun id to check
+	*
+	*/
 	function hilite_exists($did)
 	{
 		$hilite = 1;
@@ -154,10 +164,12 @@ class garage_dynorun
 		return $hilite;
 	}
 
-	/*========================================================================*/
-	// Returns Count Of Dynorun Images
-	// Usage: count_dynorun_images('dynorun id');
-	/*========================================================================*/
+	/**
+	* Count images linked to a dynorun
+	*
+	* @param int $did dynorun id to count images for
+	*
+	*/
 	function count_dynorun_images($did)
 	{
 		global $db;
@@ -181,10 +193,12 @@ class garage_dynorun
 		return $data['total'];
 	}
 
-	/*========================================================================*/
-	// Select All Dynorun Data From DB
-	// Usage: get_dynorun('dynorun id');
-	/*========================================================================*/
+	/**
+	* Return data for a specific dynorun
+	*
+	* @param int $did dynorun id to return data for
+	*
+	*/
 	function get_dynorun($did)
 	{
 		global $db;
@@ -238,10 +252,9 @@ class garage_dynorun
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select All Dynorun Data From DB
-	// Usage: get_pending_dynoruns();
-	/*========================================================================*/
+	/**
+	* Return array for all pending dynoruns
+	*/
 	function get_pending_dynoruns()
 	{
 		global $db;
@@ -297,10 +310,13 @@ class garage_dynorun
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Dynorun Data From DB By Vehicle ID And BHP Value
-	// Usage: get_dynorun_by_vehicle_bhp('garage id', 'bhp');
-	/*========================================================================*/
+	/**
+	* Return data for dynorun filtered by vehicle id and a BHP value
+	*
+	* @param int $vehicle_id vehicle id to filter on
+	* @param string $bhp bhp value to filter on
+	*
+	*/
 	function get_dynorun_by_vehicle_bhp($vehicle_id, $bhp)
 	{
 		global $db;
@@ -353,11 +369,13 @@ class garage_dynorun
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Dynorun(s) Data By Vehicle From DB
-	// Usage: get_top_dynoruns('vehicle id');
-	/*========================================================================*/
-	function get_top_dynoruns($sort, $order, $start = 0, $limit = 30, $addtional_where = NULL)
+	/**
+	* Return array of top dynoruns
+	*
+	* @param int $limit number of rows to return
+	*
+	*/
+	function get_top_dynoruns($limit = 30)
 	{
 		global $db, $garage;
 
@@ -387,9 +405,9 @@ class garage_dynorun
 					'ON'	=> 'g.user_id = u.user_id'
 				)
 			),
-			'WHERE'		=> "d.pending = 0 AND mk.pending = 0 AND md.pending = 0 $addtional_where ",
+			'WHERE'		=> "d.pending = 0 AND mk.pending = 0 AND md.pending = 0",
 			'GROUP_BY'	=> 'd.vehicle_id',
-			'ORDER_BY'	=> "$sort $order"
+			'ORDER_BY'	=> "bhp DESC"
 		));
 
 		$result = $db->sql_query_limit($sql, $limit, $start);
@@ -402,10 +420,12 @@ class garage_dynorun
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Dynorun(s) Data By Vehicle From DB
-	// Usage: get_dynoruns_by_vehicle('vehicle id');
-	/*========================================================================*/
+	/**
+	* Return array of dynoruns filtered by vehicle id
+	*
+	* @param int $vid vehicle id to filter on
+	*
+	*/
 	function get_dynoruns_by_vehicle($vid)
 	{
 		global $db;
@@ -447,10 +467,9 @@ class garage_dynorun
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Build Top Dyno Runs HTML If Required 
-	// Usage: show_topdynorun();
-	/*========================================================================*/
+	/**
+	* Assign template variables to display top dynoruns
+	*/
 	function show_topdynorun()
 	{
 		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
@@ -492,11 +511,13 @@ class garage_dynorun
 		return ;
 	}	
 
-	/*========================================================================*/
-	// Approve Dynoruns
-	// Usage: approve_dynorun(array(), 'mode');
-	/*========================================================================*/
-	function approve_dynorun($id_list, $mode)
+	/**
+	* Approve dynoruns
+	*
+	* @param array $id_list single-dimension array holding the dynorun ids to approve
+	*
+	*/
+	function approve_dynorun($id_list)
 	{
 		global $phpbb_root_path, $phpEx, $garage;
 
@@ -508,11 +529,13 @@ class garage_dynorun
 		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_dynoruns"));
 	}
 
-	/*========================================================================*/
-	// Approve Dynoruns
-	// Usage: approve_quartermile(array(), 'mode');
-	/*========================================================================*/
-	function disapprove_dynorun($id_list, $mode)
+	/**
+	* Disapprove dynoruns
+	*
+	* @param array $id_list sigle-dimension array holding the dynorun ids to disapprove
+	*
+	*/
+	function disapprove_dynorun($id_list)
 	{
 		global $phpbb_root_path, $phpEx;
 

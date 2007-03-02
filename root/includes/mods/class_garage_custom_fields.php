@@ -4,6 +4,7 @@
 * @package garage
 * @version $Id$
 * @copyright (c) 2005 phpBB Garage
+* Based totally on @version Id: functions_profile_fields.php,v 1.48 2006/12/03 18:03:33 naderman Exp -(c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
 *
 */

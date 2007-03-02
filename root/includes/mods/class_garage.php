@@ -36,10 +36,12 @@ class garage
 {
 	var $classname = "garage";
 
-	/*========================================================================*/
-	// Makes Safe Any User Input
-	// Usage: process_vars(array());
-	/*========================================================================*/
+	/**
+	* Wrapper for request_var()
+	*
+	* @param array $params multi-dimensional array holding the requested vars & defaults.
+	*
+	*/
 	function process_vars($params = array())
 	{
 		while(list($var, $param) = @each($params) )
@@ -50,10 +52,12 @@ class garage
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Check All Required Variables Have Data
-	// Usage: check_required_vars(array());
-	/*========================================================================*/
+	/**
+	* Checks all required data is present
+	*
+	* @param array $params multi-dimensional array holding the required variables.
+	*
+	*/
 	function check_required_vars($params = array())
 	{
 		global $phpEx, $data;
@@ -69,10 +73,9 @@ class garage
 		return ;
 	}
 
-	/*========================================================================*/
-	// Count The Total Views The Garage Has Recieved
-	// Usage: count_total_views();
-	/*========================================================================*/
+	/**
+	* Count the total views the garage has recieved
+	*/
 	function count_total_views()
 	{
 		global $db;
@@ -96,10 +99,16 @@ class garage
 		return $data['total'];
 	}
 
-	/*========================================================================*/
-	// Update A Single Field For A Single Entry
-	// Usage:  update_single_field('table name', 'set field' 'set value', 'where field', 'where value');
-	/*========================================================================*/
+	/**
+	* Run more than one insert statement.
+	*
+	* @param string $table table name to run the statements on
+	* @param string $set_field column name to set
+	* @param string $set_value column value to set
+	* @param string $where_field column name used in where
+	* @param string $where_value column value used in where
+	*
+	*/
 	function update_single_field($table, $set_field, $set_value, $where_field, $where_value)
 	{
 		global $db;
@@ -117,10 +126,15 @@ class garage
 		return;
 	}
 
-	/*========================================================================*/
-	// Increment A Count Field In DB
-	// Usage:  build_selection_box('table name', 'field to increment', 'where field' ,'where value');
-	/*========================================================================*/
+	/**
+	* Increment a field by 1
+	*
+	* @param string $table table name to run the statements on
+	* @param string $set_field column name to increment
+	* @param string $where_field column name used in where
+	* @param string $where_value column value used in where
+	*
+	*/
 	function update_view_count($table, $set_field, $where_field, $where_value)
 	{
 		global $db;
@@ -134,10 +148,14 @@ class garage
 		return;
 	}
 
-	/*========================================================================*/
-	// Delete Row/Rows From DB
-	// Usage:  build_selection_box('table name', 'where field', 'where value');
-	/*========================================================================*/
+	/**
+	* Delete one or more rows
+	*
+	* @param string $table table name to run the statements on
+	* @param string $where_field column name used in where
+	* @param string $where_value column value used in where
+	*
+	*/
 	function delete_rows($table, $where_field, $where_value)
 	{
 		global $db;
@@ -151,10 +169,9 @@ class garage
 		return;
 	}
 
-	/*========================================================================*/
-	// Select All Category Data
-	// Usage: get_categories();
-	/*========================================================================*/
+	/**
+	* Get all modification categories available
+	*/
 	function get_categories()
 	{
 		global $db;
@@ -180,10 +197,11 @@ class garage
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Specific Category Data
-	// Usage: get_category('category id');
-	/*========================================================================*/
+	/**
+	* Return data for single modification category
+	*
+	* @param int $category_id category id to get data for
+	*/
 	function get_category($category_id)
 	{
 		global $db;
@@ -207,20 +225,18 @@ class garage
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Seed Random Number Generator
-	// Usage: make_seed();
-	/*========================================================================*/
+	/**
+	* Seed random number generator
+	*/
 	function make_seed()
 	{
 		list($usec, $sec) = explode(' ', microtime());
 		return (float) $sec + ((float) $usec * 100000);
 	}
 
-	/*========================================================================*/
-	// Seed Random Number Generator
-	// Usage: make_seed();
-	/*========================================================================*/
+	/**
+	* Return year list based on ACP configuration options
+	*/
 	function year_list()
 	{
 		global $garage_config;
@@ -246,10 +262,14 @@ class garage
 		return $years;
 	}
 
-	/*========================================================================*/
-	// Returns List Of Moderators To Notify Of Pending Items By Email & Jabber
-	// Usage: perform_search(array());
-	/*========================================================================*/
+	/**
+	* Perform seach
+	*
+	* @param array $search_options multi-dimensional array holding the search data
+	* @param int &$total used to return total for pagination
+	* @param string &$pagination_url  used to return for pagination
+	*
+	*/
 	function perform_search($search_options, &$total, &$pagination_url)
 	{
 		global $db, $garage_config, $garage_template, $sort, $order, $start, $mode;
@@ -690,10 +710,9 @@ class garage
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Returns Groups Which Have Users With Quota Based Permissions
-	// Usage: get_groups_allowed_quotas()
-	/*========================================================================*/
+	/**
+	* Return groups which have users with a quota based permission
+	*/
 	function get_groups_allowed_quotas()
 	{
 		global $db, $auth;
@@ -726,10 +745,12 @@ class garage
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Returns List Of Moderators To Notify Of Pending Items By Email & Jabber
-	// Usage: moderators_requiring_email($moder);
-	/*========================================================================*/
+	/**
+	* Return list of moderators to notify of pending items by email & jaber
+	*
+	* @param array $moderators multi-dimensional array holding all garage moderators
+	*
+	*/
 	function moderators_requiring_email($moderators)
 	{
 		global $db;
@@ -755,10 +776,12 @@ class garage
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Returns List Of Moderators To Notify Of Pending Items By Private Message
-	// Usage: moderators_requiring_pm($moderators);
-	/*========================================================================*/
+	/**
+	* Return list of moderators to notify of pending items by private message
+	*
+	* @param array $moderators multi-dimensional array holding all garage moderators
+	*
+	*/
 	function moderators_requiring_pm($moderators)
 	{
 		global $db;
@@ -784,11 +807,12 @@ class garage
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Send All Admins & Moderators A PM Notifing Them Of Pending Items
-	// Takes Into Account Moderators That Optout If Allowed
-	// Usage: pending_notification(MCP mode to approve);
-	/*========================================================================*/
+	/**
+	* Notify moderators of pending items. Notification is via options configured in ACP ie. Email/Jabber/Private message
+	*
+	* @param string &$mcp_mode_to_approve mode used in URL sent to notify of pending item
+	*
+	*/
 	function pending_notification($mcp_mode_to_approve)
 	{
 		global $user, $phpEx, $auth, $garage_config, $config, $garage, $phpbb_root_path;
@@ -864,10 +888,15 @@ class garage
 		return;
 	}
 
-	/*========================================================================*/
-	// Write A Message To A Logfile
-	// Usage: write_logfile('file name', 'wb|ab'), 'message', 'no. tabs required';
-	/*========================================================================*/
+	/**
+	* Write a message to a logfile
+	*
+	* @param string $log_file name of file to be written to
+	* @param wb|ab $log_type defines wether a new file is create to an existing file appeneded to
+	* @param string $message text of message written to file
+	* @param int $level number of tabs before text
+	*
+	*/
 	function write_logfile ($log_file, $log_type, $message, $level=0)
 	{
         	// Open that log up!

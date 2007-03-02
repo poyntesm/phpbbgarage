@@ -23,10 +23,12 @@ class garage_business
 {
 	var $classname = "garage_business";
 
-	/*========================================================================*/
-	// Inserts Business Into DB
-	// Usage: insert_business(array());
-	/*========================================================================*/
+	/**
+	* Insert a new business
+	*
+	* @param array $data single-dimension array holding the data for new business
+	*
+	*/
 	function insert_business($data)
 	{
 		global $db, $garage_config;
@@ -54,10 +56,12 @@ class garage_business
 		return;
 	}
 
-	/*========================================================================*/
-	// Update Single Business
-	// Usage: update_business(array());
-	/*========================================================================*/
+	/**
+	* Update a single business
+	*
+	* @param array $data single-dimension array holding the data to update business
+	*
+	*/
 	function update_business($data)
 	{
 		global $db, $garage_config;
@@ -89,10 +93,12 @@ class garage_business
 		return;
 	}
 
-	/*========================================================================*/
-	// Select Single Business Data From DB
-	// Usage: get_business('business id');
-	/*========================================================================*/
+	/**
+	* Return data for single business
+	*
+	* @param int $bus_id business id to return data for
+	*
+	*/
 	function get_business($bus_id)
 	{
 		global $db;
@@ -115,10 +121,9 @@ class garage_business
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select All Business Data From DB
-	// Usage: get_all_business();
-	/*========================================================================*/
+	/**
+	* Return array with data for all business's
+	*/
 	function get_all_business()
 	{
 		global $db;
@@ -143,11 +148,13 @@ class garage_business
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select All Business Data From DB
-	// Usage: get_all_business();
-	/*========================================================================*/
-	function get_reassign_business()
+	/**
+	* Return business list excluding a single business
+	*
+	* @param int $exclude_id business id to exclude from returned data
+	*
+	*/
+	function get_reassign_business($exclude_id)
 	{
 		global $db;
 
@@ -173,10 +180,12 @@ class garage_business
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select All Business Data From DB
-	// Usage: get_all_business();
-	/*========================================================================*/
+	/**
+	* Return array with data business's filtered by business type
+	*
+	* @param BUSINESS_GARAGE|BUSINESS_INSURANCE|BUSINESS_RETAIL|BUSINESS_DYNOCENTRE|BUSINESS_PRODUCT $type business type to filter by
+	*
+	*/
 	function get_business_by_type($type)
 	{
 		global $db;
@@ -227,10 +236,9 @@ class garage_business
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select All Pending Business Data From DB
-	// Usage: get_pending_business();
-	/*========================================================================*/
+	/**
+	* Return array of pending business's
+	*/
 	function get_pending_business()
 	{
 		global $db;
@@ -256,10 +264,14 @@ class garage_business
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select All Garage Business Data From DB
-	// Usage: get_all_garage_business('additional where', 'row start point', 'limit');
-	/*========================================================================*/
+	/**
+	* Returns array with limited number of garage business's
+	*
+	* @param string $where additional where statement
+	* @param int $start starting row for data selection
+	* @param int $limit number to limit rows returned
+	*
+	*/
 	function get_garage_business($where, $start = 0, $limit = 20)
 	{
 		global $db;
@@ -293,10 +305,14 @@ class garage_business
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select All Shop Business Data From DB
-	// Usage: get_shop_business('additional where', 'row start point', 'limit');
-	/*========================================================================*/
+	/**
+	* Returns array with limited number of retail business's
+	*
+	* @param string $where additional where statement
+	* @param int $start starting row for data selection
+	* @param int $limit number to limit rows returned
+	*
+	*/
 	function get_shop_business($where, $start = 0, $limit = 20)
 	{
 		global $db;
@@ -330,10 +346,14 @@ class garage_business
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select All Insurance Business Data From DB
-	// Usage: get_insurance_business('additional where', 'row start point', 'limit')
-	/*========================================================================*/
+	/**
+	* Returns array with limited number of insurance business's
+	*
+	* @param string $where additional where statement
+	* @param int $start starting row for data selection
+	* @param int $limit number to limit rows returned
+	*
+	*/
 	function get_insurance_business($where = null, $start = 0,  $limit = 20)
 	{
 		global $db;
@@ -360,10 +380,12 @@ class garage_business
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Count Garage Business Data In DB
-	// Usage: count_garage_business_data('additional where');
-	/*========================================================================*/
+	/**
+	* Return count of insurance business's with possible fitler
+	*
+	* @param string $where additional where statement
+	*
+	*/
 	function count_insurance_business_data($additional_where)
 	{
 		global $db;
@@ -387,10 +409,12 @@ class garage_business
 	}
 
 
-	/*========================================================================*/
-	// Count Garage Business Data In DB
-	// Usage: count_garage_business_data('additional where');
-	/*========================================================================*/
+	/**
+	* Return count of garage business's with possible fitler
+	*
+	* @param string $where additional where statement
+	*
+	*/
 	function count_garage_business_data($additional_where)
 	{
 		global $db;
@@ -414,10 +438,12 @@ class garage_business
 		return $data['total'];
 	}
 
-	/*========================================================================*/
-	// Count Shop Business Data In DB
-	// Usage: count_shop_business_data('additional where');
-	/*========================================================================*/
+	/**
+	* Return count of retail business's with possible fitler
+	*
+	* @param string $where additional where statement
+	*
+	*/
 	function count_shop_business_data($additional_where)
 	{
 		global $db;
@@ -441,10 +467,10 @@ class garage_business
 		return $data['total'];
 	}
 
-	/*========================================================================*/
-	// Count Shop Business Data In DB
-	// Usage: count_shop_business_data('additional where');
-	/*========================================================================*/
+	/**
+	* TODO : Move / Replace ???
+	* Build complete page to reassign business
+	*/
 	function reassign_business($id_list)
 	{
 		global $template, $garage_template, $page_title, $phpbb_root_path, $phpEx;
@@ -500,10 +526,13 @@ class garage_business
 		page_footer();
 	}
 
-	/*========================================================================*/
-	// Delete Quartermile Entry Including Image 
-	// Usage: delete_quartermile('quartermile id');
-	/*========================================================================*/
+	/**
+	* TODO: Expanded to handle linked items??
+	* Delete a business
+	*
+	* @param int $id sbusiness id to delete
+	*
+	*/
 	function delete_business($id)
 	{
 		global $garage, $garage_image;
@@ -514,11 +543,13 @@ class garage_business
 		return ;
 	}
 
-	/*========================================================================*/
-	// Approve Dynoruns
-	// Usage: approve_dynorun(array(), 'mode');
-	/*========================================================================*/
-	function approve_business($id_list, $mode)
+	/**
+	* Approve business's
+	*
+	* @param array $id_list single-dimension array with business ids to approve
+	*
+	*/
+	function approve_business($id_list)
 	{
 		global $phpbb_root_path, $phpEx, $garage;
 
@@ -530,11 +561,14 @@ class garage_business
 		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_business"));
 	}
 
-	/*========================================================================*/
-	// Approve Dynoruns
-	// Usage: approve_quartermile(array(), 'mode');
-	/*========================================================================*/
-	function disapprove_business($id_list, $mode)
+	/**
+	* TODO: Perhaps pass a parameter to delete_business with explicit delete of all linked items
+	* Disapprove business's
+	*
+	* @param array $id_list single-dimension array with business ids to disapprove
+	*
+	*/
+	function disapprove_business($id_list)
 	{
 		global $phpbb_root_path, $phpEx;
 

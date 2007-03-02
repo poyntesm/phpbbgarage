@@ -23,10 +23,9 @@ class garage_guestbook
 {
 	var $classname = "garage_guestbook";
 
-	/*========================================================================*/
-	// Count The Total Commnets Vehciles Have Recieved
-	// Usage: count_total_comments();
-	/*========================================================================*/
+	/**
+	* Return count of total comments all vehicles have recieved
+	*/
 	function count_total_comments()
 	{
 		global $db;
@@ -50,10 +49,12 @@ class garage_guestbook
 		return $data['total'];
 	}
 
-	/*========================================================================*/
-	// Count The Total Commnets Vehciles Have Recieved
-	// Usage: count_total_comments();
-	/*========================================================================*/
+	/**
+	* Return count of comments for specific vehicle
+	*
+	* @param int $vid vehicle id to count comments for
+	*
+	*/
 	function count_vehicle_comments($vid)
 	{
 		global $db;
@@ -78,10 +79,12 @@ class garage_guestbook
 		return $data['total'];
 	}
 
-	/*========================================================================*/
-	// Insert Comment Into DB
-	// Usage: insert_vehicle_comment(array());
-	/*========================================================================*/
+	/**
+	* Insert vehicle comment
+	*
+	* @param array $data single-dimensionl array holding the data for new comment
+	*
+	*/
 	function insert_vehicle_comment($data)
 	{
 		global $vid, $db, $user;
@@ -102,10 +105,14 @@ class garage_guestbook
 		return;
 	}
 
-	/*========================================================================*/
-	// Select Specific Vehicle Comments Data From DB
-	// Usage: get_vehicle_comments('garage id');
-	/*========================================================================*/
+	/**
+	* Return limited array of vehicle comments
+	*
+	* @param int $vid vehicle id to filter comments for
+	* @param int $start row to start data selection from
+	* @param int $limit number of rows to return
+	*
+	*/
 	function get_vehicle_comments($vid, $start = 0, $limit = 25 )
 	{
 		global $db, $garage_config;
@@ -150,10 +157,12 @@ class garage_guestbook
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Specific Vehicle Comments Data From DB
-	// Usage: get_vehicle_comments('garage id');
-	/*========================================================================*/
+	/**
+	* Return array with all comments for specifc vehicle
+	*
+	* @param int $vid vehicle id to filter comments for
+	*
+	*/
 	function get_comments_by_vehicle($vid)
 	{
 		global $db, $garage_config;
@@ -180,10 +189,9 @@ class garage_guestbook
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Pending Comments Data From DB
-	// Usage: get_vehicle_comments();
-	/*========================================================================*/
+	/**
+	* Return array of all pending vehicle comments
+	*/
 	function get_pending_comments()
 	{
 		global $db;
@@ -228,10 +236,14 @@ class garage_guestbook
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Specific Vehicle Comments Data From DB
-	// Usage: get_vehicle_comments('garage id');
-	/*========================================================================*/
+	/**
+	* TODO: Should this get drop along with old guestbook view???
+	* Return limited array of vehicle comments with text truncated for display
+	*
+	* @param int $vid vehicle id to filter comments for
+	* @param int $limit number of rows to return
+	*
+	*/
 	function get_vehicle_comments_profile($vid, $limit = 5)
 	{
 		global $db;
@@ -264,10 +276,12 @@ class garage_guestbook
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Specific Vehicle Comments Data From DB
-	// Usage: get_vehicle_comments('garage id');
-	/*========================================================================*/
+	/**
+	* Return limited array of most recent comments
+	*
+	* @param int $limit number of rows to return
+	*
+	*/
 	function get_comments($limit)
 	{
 		global $db;
@@ -312,10 +326,12 @@ class garage_guestbook
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Guestbook Comment Data From DB
-	// Usage: get_comment('comment id');
-	/*========================================================================*/
+	/**
+	* Return specific comment data. Used to build edit page
+	*
+	* @param int $comment_id comment id to filter on
+	*
+	*/
 	function get_comment($comment_id)
 	{
 		global $db;
@@ -357,10 +373,12 @@ class garage_guestbook
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Notify On Comment?
-	// Usage: notify_on_comment();
-	/*========================================================================*/
+	/**
+	* Return users notification options
+	*
+	* @param int $user_id user id to filer on
+	*
+	*/
 	function notify_on_comment($user_id)
 	{
 		global  $db;
@@ -383,10 +401,9 @@ class garage_guestbook
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Build Last Commented Vehicle Table
-	// Usage: show_lastcommented();
-	/*========================================================================*/
+	/**
+	* Assign template variables to display most recent comments
+	*/
 	function show_lastcommented()
 	{
 		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
@@ -425,10 +442,12 @@ class garage_guestbook
 		return ;
 	}
 
-	/*========================================================================*/
-	// Display Guestbook
-	// Usage: display_guestbook('vehicle id');
-	/*========================================================================*/
+	/**
+	* Assign template variables to display a vehicles comments
+	*
+	* @param int $vid vehicle id to fitler on
+	*
+	*/
 	function display_guestbook($vid)
 	{
 		global $template, $garage_vehicle, $garage, $user, $phpEx, $auth, $phpbb_root_path, $config, $start, $garage_config, $mode, $garage_template;
