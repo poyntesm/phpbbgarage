@@ -166,7 +166,7 @@
 				<ul>
 				<!-- BEGIN type -->
 					<li class="perm_preset_yes<!-- IF type.S_FIRST_ROW --> activetab<!-- ENDIF -->" id="tab00{type.S_ROW_COUNT}">
-					<a href="#" onclick="swap_options('0','0','{type.S_ROW_COUNT}'); return false;"><span class="tabbg"><span class="colour"></span>{type.TYPE}</span></a></li>	
+					<a href="#" onclick="swap_options('0','0','{type.S_ROW_COUNT}'); return false;"><span class="tabbg">{type.TYPE}</span></a></li>	
 				<!-- END type -->
 				</ul>
 			</div>
@@ -175,16 +175,10 @@
 				<span class="corners-top"><span></span></span>
 				<div class="tablewrap">
 					<table id="table00{type.S_ROW_COUNT}" cellspacing="1">
-					<colgroup>
-						<col class="permissions_name" />
-						<col class="permissions_yes" />
-						<col class="permissions_no" />
-						<col class="permissions_never" />
-					</colgroup>
 					<tbody>
 					<!-- BEGIN business -->
 					<tr class="row1">
-						<td width="90%" nowrap=nowrap><span class="gen">{business.TITLE}</span></td>
+						<td class="permission_name<!-- IF auth.mask.S_ROW_COUNT is even --> row4<!-- ELSE --> row3<!-- ENDIF -->" style="text-align: left;">{business.TITLE}</td>
 						<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
 						<!-- IF business.S_DISAPPROVED -->
 							{ICON_DISAPPROVE_DISABLED}

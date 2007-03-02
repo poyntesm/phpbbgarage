@@ -1,32 +1,34 @@
 <?php
-/***************************************************************************
- *                              language/en/acp/permissions_garage.php [English]
- *                            -------------------
- *   begin                : Friday, 06 May 2005
- *   copyright            : (C) Esmond Poynton
- *   email                : esmond.poynton@gmail.com
- *   description          : Provides Vehicle Garage System For phpBB
- *
- *   $Id$
- *
- ***************************************************************************/
+/** 
+*
+* acp_garage_permissions (phpBB Garage Permission Set) [English]
+*
+* @package language
+* @version $Id$
+* @copyright (c) 2005 phpBB Garage
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License 
+*
+*/
 
-/***************************************************************************
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
- *
- ***************************************************************************/
-
+/**
+* DO NOT CHANGE
+*/
 if (empty($lang) || !is_array($lang))
 {
 	$lang = array();
 }
 
-//Adding New Category
-$lang['permission_cat']['garage'] = 'Garage';
+//Adding New Category & Type
+$lang = array_merge($lang, array(
+	'permission_cat'	=> array(
+		'garage'	=> 'Garage'
+	),
+	'permission_type'	=> array(
+		'ug_'			=> 'Garage user permissions',
+		'ag_'			=> 'Garage admin permissions',
+		'mg_'			=> 'Garage moderator permissions',
+	),
+));
 
 //Adding The Garage Permissions
 $lang = array_merge($lang, array(

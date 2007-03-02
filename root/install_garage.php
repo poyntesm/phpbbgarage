@@ -1,24 +1,12 @@
 <?php
-/***************************************************************************
- *                              install_garage.php
- *                            -------------------
- *   begin                : Friday, 06 May 2005
- *   copyright            : (C) Esmond Poynton
- *   email                : esmond.poynton@gmail.com
- *   description          : Provides Vehicle Garage System For phpBB
- *
- *   $Id$
- *
- ***************************************************************************/
-
-/***************************************************************************
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
- *
- ***************************************************************************/
+/** 
+*
+* @package install
+* @version $Id$
+* @copyright (c) 2005 phpBB Garage
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License 
+*
+*/
 
 define('IN_PHPBB', true);
 $phpbb_root_path = './';
@@ -1854,35 +1842,64 @@ function get_role_by_name($name)
 	return $data;
 }
 
-function acl_update_role($role_id, $options)
+/**
+* Set role-specific ACL options without deleting enter existing options. If option already set it will NOT be updated.
+* 
+* @param int $role_id role id to update (a role_id has to be specified)
+* @param mixed $auth_options auth_options to grant (a auth_option has to be specified)
+* @param ACL_YES|ACL_NO|ACL_NEVER $auth_setting defines the mode acl_options are getting set with
+ *
+*/
+function acl_update_role($role_id, $auth_options, $auth_setting = ACL_YES)
 {
-	global $db, $auth_admin;
+	global $db;
 
-	$acl_options = get_acl_options($options);
+	$acl_options_ids = $this->get_acl_option_ids($auth_options);
+
+	$role_options = array();
+	$sql = "SELECT auth_option_id
+		FROM " . ACL_ROLES_DATA_TABLE . "
+		WHERE role_id = " . (int) $role_id . "
+		GROUP BY auth_option_id";
+	$result = $db->sql_query($sql);
+	while ($row = $db->sql_fetchrow($result))
+	{
+		$role_options[] = $row;
+	}
+	$db->sql_freeresult($result);
 
 	$sql_ary = array();
-	for ($i = 0, $count = sizeof($acl_options);$i < $count; $i++)
+	for ($i = 0, $count = sizeof($acl_options_ids);$i < $count; $i++)
 	{
+		if (in_array($acl_options_id[$i]['auth_options_id'], $role_options))
+		{
+			continue;
+		}
 		$sql_ary[] = array(
 			'role_id'		=> (int) $role_id,
-			'auth_option_id'	=> (int) $acl_options[$i]['auth_option_id'],
-			'auth_setting'		=> '1'
+			'auth_option_id'	=> (int) $acl_options_ids[$i]['auth_option_id'],
+			'auth_setting'		=> $auth_setting, 
 		);
 	}
 
 	$db->sql_multi_insert(ACL_ROLES_DATA_TABLE, $sql_ary);
-	$auth_admin->acl_clear_prefetch();
+
+	$this->acl_clear_prefetch();
 }
 
-function get_acl_options($options)
+/**
+* Get ACL option ids
+*
+* @param mixed $auth_options auth_options to grant (a auth_option has to be specified)
+*/
+function get_acl_option_ids($auth_options)
 {
 	global $db;
 
-	$data = null;
-
-	$sql = "SELECT *
+	$data = array();
+	$sql = "SELECT auth_option_id
 		FROM " . ACL_OPTIONS_TABLE . "
-		WHERE " . $db->sql_in_set('auth_option', $options) . "
+		WHERE " . $db->sql_in_set('auth_option', $auth_options) . "
 		GROUP BY auth_option_id";
 	$result = $db->sql_query($sql);
 	while ($row = $db->sql_fetchrow($result))

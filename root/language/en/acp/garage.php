@@ -1,26 +1,18 @@
 <?php
-/***************************************************************************
- *                              language/en/acp/garage.php [English]
- *                            -------------------
- *   begin                : Friday, 06 May 2005
- *   copyright            : (C) Esmond Poynton
- *   email                : esmond.poynton@gmail.com
- *   description          : Provides Vehicle Garage System For phpBB
- *
- *   $Id$
- *
- ***************************************************************************/
+/** 
+*
+* acp_garage [English]
+*
+* @package language
+* @version $Id$
+* @copyright (c) 2005 phpBB Garage
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License 
+*
+*/
 
-/***************************************************************************
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
- *
- ***************************************************************************/
-
-//DO NOT CHANGE
+/**
+* DO NOT CHANGE
+*/
 if (empty($lang) || !is_array($lang))
 {
 	$lang = array();
@@ -331,8 +323,7 @@ $lang = array_merge($lang, array(
 	'QUOTAS_UPDATED'		=> 'Quotas updated',
 	'EMPTY_DEFAULT_QUOTA'		=> 'A default quota value has not been entered for all values',
 	'EMPTY_GROUP_VEHICLE_QUOTA'	=> 'The vehicle quota value has not been entered for a group that has been selected',
-	'EMPTY_GROUP_REMOTE_QUOTA'	=> 'The remote image quota value has not been entered for a group that has been selected',
-	'EMPTY_GROUP_UPLOAD_QUOTA'	=> 'The upload image quota value has not been entered for a group that has been selected',
+	'EMPTY_GROUP_IMAGE_QUOTA'	=> 'An image quota value has not been entered for a group that has been selected',
 
 	//TOOLS KEYS
 	'TOOLS_TITLE' 			=> 'Garage Tool Control',

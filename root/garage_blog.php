@@ -1,24 +1,12 @@
 <?php
-/***************************************************************************
- *                              garage_blog.php
- *                            -------------------
- *   begin                : Friday, 06 May 2005
- *   copyright            : (C) Esmond Poynton
- *   email                : esmond.poynton@gmail.com
- *   description          : Provides Vehicle Garage System For phpBB
- *
- *   $Id$
- *
- ***************************************************************************/
-
-/***************************************************************************
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
- *
- ***************************************************************************/
+/** 
+*
+* @package garage
+* @version $Id$
+* @copyright (c) 2005 phpBB Garage
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License 
+*
+*/
 
 define('IN_PHPBB', true);
 

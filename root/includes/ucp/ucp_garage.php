@@ -2,15 +2,15 @@
 /** 
 *
 * @package ucp
-* @version $Id: ucp_prefs.php,v 1.45 2006/11/27 16:05:23 acydburn Exp $
-* @copyright (c) 2005 phpBB Group 
+* @version $Id$
+* @copyright (c) 2005 phpBB Garage
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
 *
 */
 
 /**
-* ucp_prefs
-* Changing user preferences
+* ucp_garage
+* Changing user garage preferences
 * @package ucp
 */
 class ucp_garage

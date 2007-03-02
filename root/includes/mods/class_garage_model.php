@@ -1,24 +1,13 @@
 <?php
-/***************************************************************************
- *                              class_garage_model.php
- *                            -------------------
- *   begin                : Friday, 06 May 2005
- *   copyright            : (C) Esmond Poynton
- *   email                : esmond.poynton@gmail.com
- *   description          : Provides Vehicle Garage System For phpBB
- *
- *   $Id: class_garage_model.php 137 2006-06-07 09:53:18Z poyntesm $
- *
- ***************************************************************************/
+/** 
+*
+* @package garage
+* @version $Id: memberlist.php,v 1.207 2007/01/26 16:05:14 acydburn Exp $
+* @copyright (c) 2005 phpBB Garage
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License 
+*
+*/
 
-/***************************************************************************
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
- *
- ***************************************************************************/
 if (!defined('IN_PHPBB'))
 {
 	die('Hacking attempt');

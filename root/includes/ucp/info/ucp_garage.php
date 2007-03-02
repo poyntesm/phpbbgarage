@@ -2,8 +2,8 @@
 /** 
 *
 * @package ucp
-* @version $Id: ucp_garage.php,v 1.2 2006/05/01 19:45:42 grahamje Exp $
-* @copyright (c) 2005 phpBB Group 
+* @version $Id$
+* @copyright (c) 2005 phpBB Garage
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
 *
 */
