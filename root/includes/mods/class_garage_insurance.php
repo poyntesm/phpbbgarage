@@ -23,10 +23,12 @@ class garage_insurance
 {
 	var $classname = "garage_insurance";
 
-	/*========================================================================*/
-	// Insurance Insurance Into DB
-	// Usage: insert_premium(array());
-	/*========================================================================*/
+	/**
+	* Insert new insurance premium
+	*
+	* @param array $data single-deminsion array holding the data for the new premium
+	*
+	*/
 	function insert_premium($data)
 	{
 		global $vid, $db;
@@ -44,10 +46,12 @@ class garage_insurance
 		return;
 	}
 
-	/*========================================================================*/
-	// Updates Insurance In DB
-	// Usage: update_insurance(array());
-	/*========================================================================*/
+	/**
+	* Updates a existing premium
+	*
+	* @param array $data single-deminsion array holding the data to update the premium with
+	*
+	*/
 	function update_premium($data)
 	{
 		global $db, $vid, $ins_id;
@@ -69,10 +73,12 @@ class garage_insurance
 		return;
 	}
 
-	/*========================================================================*/
-	// Delete Insurance Premium
-	// Usage: delete_premium('insurance id');
-	/*========================================================================*/
+	/**
+	* Delete insurance premium
+	*
+	* @param int $ins_id premium id to delete
+	*
+	*/
 	function delete_premium($ins_id)
 	{
 		global $garage;
@@ -82,10 +88,12 @@ class garage_insurance
 		return ;
 	}
 
-	/*========================================================================*/
-	// Select Specific Insurance Premium Data From DB
-	// Usage: get_premium('insurance id');
-	/*========================================================================*/
+	/**
+	* Return data for specific insurance premium
+	*
+	* @param int $ins_id premium id to get data for
+	*
+	*/
 	function get_premium($ins_id)
 	{
 		global $db;
@@ -126,67 +134,12 @@ class garage_insurance
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select All Insurance Premiums Data From DB
-	// Usage: get_all_premiums('additional where', 'order', 'ASC|DESC', 'start', 'end');
-	/*========================================================================*/
-	function get_all_premiums($additional_where = NULL, $order_by, $sort_order, $start = 0, $limit = 10000)
-	{
-		global $db;
-
-		$data = null;
-
-		$sql = $db->sql_build_query('SELECT', 
-			array(
-			'SELECT'	=> 'i.*, g.*, b.title, b.id as business_id, mk.make, md.model, u.username, u.user_id, ( SUM(m.price) + SUM(m.install_price) ) AS total_spent, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
-			'FROM'		=> array(
-				GARAGE_PREMIUMS_TABLE	=> 'i',
-			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'g.id = in.vehicle_id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'g.model_id = md.id and md.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b'),
-					'ON'	=> 'i.business_id = b.id'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'g.user_id = u.user_id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'm'),
-					'ON'	=> 'i.vehicle_id = m.vehicle_id'
-				)
-			),
-			'WHERE'		=>  "mk.pending = 0 AND md.pending = 0 $additional_where",
-			'GROUP_BY'	=>  "i.id",
-			'ORDER_BY'	=>  "$order_by $sort_order"
-		));
-
-      		$result = $db->sql_query_limit($sql, $limit, $start);
-		while ($row = $db->sql_fetchrow($result))
-		{
-			$data[] = $row;
-		}
-		$db->sql_freeresult($result);
-
-		return $data;
-	}
-
-	/*========================================================================*/
-	// Select All Insurance Premiums Data From Specific Insurance Company From DB
-	// Usage: get_all_premium_by_business_data('business id');
-	/*========================================================================*/
+	/**
+	* Return array of premiums for specific business
+	*
+	* @param int $business_id business id to get premiums for
+	*
+	*/
 	function get_all_premiums_by_business($business_id)
 	{
 		global $db;
@@ -235,10 +188,13 @@ class garage_insurance
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Premiums Statistics By Business And Covertype From DB
-	// Usage: get_premiums_stats_by_business_and_covertype('business id', 'cover type');
-	/*========================================================================*/
+	/**
+	* Return maximum, minimum & average premiums for specific insurer & cover type
+	*
+	* @param int $business_id business id to get premiums for
+	* @param string $cover_type cover type to get premiums for
+	*
+	*/
 	function get_premiums_stats_by_business_and_covertype($business_id, $cover_type)
 	{
 		global $db;
@@ -262,10 +218,12 @@ class garage_insurance
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Insurance Premiums By Vehicle From DB
-	// Usage: get_premiums_by_vehicle('vehicle id');
-	/*========================================================================*/
+	/**
+	* Return array of specific vehicle insurance premiums
+	*
+	* @param int $vid vehicle id to get premiums for
+	*
+	*/
 	function get_premiums_by_vehicle($vid)
 	{
 		global $db;

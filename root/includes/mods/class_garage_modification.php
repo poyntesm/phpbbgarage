@@ -23,10 +23,12 @@ class garage_modification
 {
 	var $classname = "garage_modification";
 
-	/*========================================================================*/
-	// Inserts Modification Into DB
-	// Usage: insert_modification(array('', '', '', '', ''));
-	/*========================================================================*/
+	/**
+	* Insert new modification
+	*
+	* @param array $data single-dimension array holding the data for the new modification
+	*
+	*/
 	function insert_modification($data)
 	{
 		global $vid, $db, $garage_vehicle;
@@ -55,10 +57,12 @@ class garage_modification
 		return $db->sql_nextid();
 	}
 
-	/*========================================================================*/
-	// Updates Modification In DB
-	// Usage:  update_modification(array());
-	/*========================================================================*/
+	/**
+	* Updates a existing modification
+	*
+	* @param array $data single-dimension array holding the data to update the modification with
+	*
+	*/
 	function update_modification($data)
 	{
 		global $db, $vid, $mid, $garage_vehicle;
@@ -91,10 +95,12 @@ class garage_modification
 		return;
 	}
 
-	/*========================================================================*/
-	// Delete Modification Entry Including image 
-	// Usage: delete_modification('modification id');
-	/*========================================================================*/
+	/**
+	* Delete modification and all images linked to it
+	*
+	* @param int $mid modification id to delete
+	*
+	*/
 	function delete_modification($mid)
 	{
 		global $vid, $garage, $garage_image;
@@ -112,10 +118,12 @@ class garage_modification
 		return ;
 	}
 
-	/*========================================================================*/
-	// Inserts Product Into DB
-	// Usage: insert_product(array());
-	/*========================================================================*/
+	/**
+	* Insert new product
+	*
+	* @param array $data single-dimension array holding the data for the new product
+	*
+	*/
 	function insert_product($data)
 	{
 		global $vid, $db, $garage_vehicle;
@@ -131,10 +139,12 @@ class garage_modification
 		return $db->sql_nextid();
 	}
 
-	/*========================================================================*/
-	// Inserts Product Into DB
-	// Usage: update_product(array());
-	/*========================================================================*/
+	/**
+	* Updates a existing product
+	*
+	* @param array $data single-dimension array holding the data to update the product with
+	*
+	*/
 	function update_product($data)
 	{
 		global $db;
@@ -154,10 +164,12 @@ class garage_modification
 		return;
 	}
 
-	/*========================================================================*/
-	// Determines If Image Is Hilite Image
-	// Usage: hilite_exists('vehicle id', 'modification id');
-	/*========================================================================*/
+	/**
+	* Check if an image is marked as highlight image for modification
+	*
+	* @param int $mid modification id to check
+	*
+	*/
 	function hilite_exists($mid)
 	{
 		$hilite = 1;
@@ -170,10 +182,12 @@ class garage_modification
 		return $hilite;
 	}
 
-	/*========================================================================*/
-	// Returns Count Of Modiciation Images
-	// Usage: count_modification_images('modification id');
-	/*========================================================================*/
+	/**
+	* Count images linked to a modification
+	*
+	* @param int $mid modification id to count images for
+	*
+	*/
 	function count_modification_images($mid)
 	{
 		global $db;
@@ -197,10 +211,9 @@ class garage_modification
 		return $data['total'];
 	}
 
-	/*========================================================================*/
-	// Count The Total Modifications Within The Garage
-	// Usage: count_total_modifications();
-	/*========================================================================*/
+	/**
+	* Return count of all modifications
+	*/
 	function count_total_modifications()
 	{
 		global $db;
@@ -223,10 +236,12 @@ class garage_modification
 		return $data['total'];
 	}
 
-	/*========================================================================*/
-	// Select Modifcations Based On Updated Time
-	// Usage: get_updated_modifications('limit');
-	/*========================================================================*/
+	/**
+	* Return array of latest updated modifications
+	*
+	* @param int $limit number of rows to return
+	*
+	*/
 	function get_updated_modifications($limit)
 	{
 		global $db;
@@ -275,10 +290,12 @@ class garage_modification
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Modifcations Based On Manufacture. Can Be limited Also By Category ID
-	// Usage: get_product('business_id');
-	/*========================================================================*/
+	/**
+	* Return data for specific product
+	*
+	* @param int $product_id product id to return data for
+	*
+	*/
 	function get_product($product_id)
 	{
 		global $db;
@@ -301,10 +318,13 @@ class garage_modification
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Modifcations Based On Manufacture. Can Be limited Also By Category ID
-	// Usage: get_products_by_manufacturer('business_id', category_id);
-	/*========================================================================*/
+	/**
+	* Return array of products by manufacturer and category if required
+	*
+	* @param int $business_id business id to filter on
+	* @param int $category_id category id to filter on (optional)
+	*
+	*/
 	function get_products_by_manufacturer($business_id, $category_id = null)
 	{
 		global $db;
@@ -340,10 +360,12 @@ class garage_modification
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Modifcations Based On Created Time
-	// Usage: get_newest_modifications('limit');
-	/*========================================================================*/
+	/**
+	* Return array of newest modifications
+	*
+	* @param int $limit number of rows to return
+	*
+	*/
 	function get_newest_modifications($limit)
 	{
 		global $db;
@@ -392,10 +414,12 @@ class garage_modification
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Vehicles Based On Modification Count
-	// Usage: get_most_modified('limit');
-	/*========================================================================*/
+	/**
+	* Return array of most modified vehicles
+	*
+	* @param int $limit number of rows to return
+	*
+	*/
 	function get_most_modified($limit)
 	{
 		global $db;
@@ -442,10 +466,12 @@ class garage_modification
 	}
 
 	
-	/*========================================================================*/
-	// Select Modification Data From DB
-	// Usage: get_modification('modification id');
-	/*========================================================================*/
+	/**
+	* Return data for specific modification
+	*
+	* @param int $mid modification id to return data for
+	*
+	*/
 	function get_modification($mid)
 	{
 		global $db;
@@ -507,10 +533,13 @@ class garage_modification
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Modifications From DB By Category
-	// Usage: get_modification_by_category('modification id');
-	/*========================================================================*/
+	/**
+	* Return array for specific vehicle & specific category
+	*
+	* @param int $vid vehicle id to return data for
+	* @param int $category_id category id to return data for
+	*
+	*/
 	function get_modifications_by_category($vid, $category_id)
 	{
 		global $db;
@@ -552,10 +581,12 @@ class garage_modification
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Modifications From DB By Category
-	// Usage: get_modification_by_category('modification id');
-	/*========================================================================*/
+	/**
+	* Return data for specific category
+	*
+	* @param int $category_id category id to return data for
+	*
+	*/
 	function get_modifications_by_category_id($category_id)
 	{
 		global $db;
@@ -597,10 +628,14 @@ class garage_modification
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Modifications By Install Buisness From DB
-	// Usage: get_modifications_by_install_business('business id', 'start row', 'end row');
-	/*========================================================================*/
+	/**
+	* Return limited modification data for specific installation business
+	*
+	* @param int $business_id business id to return modification data for
+	* @param int $start row to start data selection from
+	* @param int $limit number of rows to return
+	*
+	*/
 	function get_modifications_by_install_business($business_id, $start = 0 , $limit = 20)
 	{
 		global $db;
@@ -651,10 +686,14 @@ class garage_modification
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Modifications By Business From DB
-	// Usage: get_modifications_by_business('business id', 'start row', 'end row');
-	/*========================================================================*/
+	/**
+	* Return limited modification data for specific business
+	*
+	* @param int $business_id business id to return modification data for
+	* @param int $start row to start data selection from
+	* @param int $limit number of rows to return
+	*
+	*/
 	function get_modifications_by_business($business_id, $start = 0, $limit = 20)
 	{
 		global $db;
@@ -705,10 +744,12 @@ class garage_modification
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Modifications By Vehicle From DB
-	// Usage: get_modifications_by_vehicle('garage id');
-	/*========================================================================*/
+	/**
+	* Return modification data for specific vehicle
+	*
+	* @param int $vid vehicle id to return data for
+	*
+	*/
 	function get_modifications_by_vehicle($vid)
 	{
 		global $db;
@@ -749,10 +790,9 @@ class garage_modification
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Build Updated Modifications Template Variables If Required 
-	// Usage: show_updated_modifications();
-	/*========================================================================*/
+	/**
+	* Assign template variables to display lastest updated modifications
+	*/
 	function show_updated_modifications()
 	{
 		global $required_position, $template, $phpEx, $garage_config, $user, $phpbb_root_path;
@@ -790,10 +830,9 @@ class garage_modification
 		return ;
 	}
 	
-	/*========================================================================*/
-	// Build Most Modified Template Variables If Required 
-	// Usage: show_most_modified();
-	/*========================================================================*/
+	/**
+	* Assign template variables to display most modified vehicles
+	*/
 	function show_most_modified()
 	{
 		global $required_position, $user, $template, $phpEx, $garage_config, $phpbb_root_path;
@@ -831,10 +870,9 @@ class garage_modification
 		return ;
 	}
 	
-	/*========================================================================*/
-	// Build Newest Modifications Template Variables If Required 
-	// Usage:  show_newest_modifications()
-	/*========================================================================*/
+	/**
+	* Assign template variables to display newest modifications
+	*/
 	function show_newest_modifications()
 	{
 		global $required_position, $template, $phpEx, $garage_config, $user, $phpbb_root_path;
@@ -872,10 +910,12 @@ class garage_modification
 		return ;
 	}
 
-	/*========================================================================*/
-	// Selects Lastest Updated Vehicle
-	// Usage: get_latest_updatest_vehicles('No. To Return');
-	/*========================================================================*/
+	/**
+	* Return modification categories for specific product manufacturer
+	*
+	* @param int $bid business id to return data for
+	*
+	*/
 	function get_manufacturer_modification_categories($bid)
 	{
 		global $db;

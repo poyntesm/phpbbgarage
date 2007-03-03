@@ -23,10 +23,12 @@ class garage_model
 {
 	var $classname = "garage_model";
 
-	/*========================================================================*/
-	// Inserts Make Into DB
-	// Usage: insert_make(array());
-	/*========================================================================*/
+	/**
+	* Insert new vehicle make
+	*
+	* @param array $data single-dimension array holding the data for new make
+	*
+	*/
 	function insert_make($data)
 	{
 		global $db;
@@ -40,10 +42,12 @@ class garage_model
 		return $db->sql_nextid();
 	}
 
-	/*========================================================================*/
-	// Update Model Into DB
-	// Usage: update_make(array());
-	/*========================================================================*/
+	/**
+	* Updates a existing make
+	*
+	* @param array $data single-deminsion array holding the data to update the make with
+	*
+	*/
 	function update_make($data)
 	{
 		global $db;
@@ -62,10 +66,9 @@ class garage_model
 		return;
 	}
 
-	/*========================================================================*/
-	// Count Makes With Certain Name
-	// Usage: count_make('make');
-	/*========================================================================*/
+	/**
+	* Return count of make. Used to make sure makes are unique
+	*/
 	function count_make($make)
 	{
 		global $db;
@@ -89,10 +92,13 @@ class garage_model
 		return $data['total'];
 	}
 
-	/*========================================================================*/
-	// Count Makes With Certain Name
-	// Usage: count_make('make');
-	/*========================================================================*/
+	/**
+	* Return count of model associated with a make. Used to make sure models unique
+	*
+	* @param string $model model name
+	* @param int $make_id make id for models
+	*
+	*/
 	function count_model_in_make($model, $make_id)
 	{
 		global $db;
@@ -116,10 +122,12 @@ class garage_model
 		return $data['total'];
 	}
 
-	/*========================================================================*/
-	// Inserts Model Into DB
-	// Usage: insert_model(array());
-	/*========================================================================*/
+	/**
+	* Insert new vehicle model
+	*
+	* @param array $data single-dimension array holding the data for new model
+	*
+	*/
 	function insert_model($data)
 	{
 		global $db;
@@ -134,10 +142,12 @@ class garage_model
 		return $db->sql_nextid();
 	}
 
-	/*========================================================================*/
-	// Update Model Into DB
-	// Usage: update_model(array());
-	/*========================================================================*/
+	/**
+	* Updates a existing model
+	*
+	* @param array $data single-deminsion array holding the data to update the model with
+	*
+	*/
 	function update_model($data)
 	{
 		global $db;
@@ -155,10 +165,12 @@ class garage_model
 		return;
 	}
 
-	/*========================================================================*/
-	// Select Make Data From DB
-	// Usage: get_make('make id');
-	/*========================================================================*/
+	/**
+	* Return data for specific make by id
+	*
+	* @param int $make_id make id to get data for
+	*
+	*/
 	function get_make($make_id)
 	{
 		global $db;
@@ -181,10 +193,12 @@ class garage_model
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Make Data From DB
-	// Usage: get_make_by_name('make');
-	/*========================================================================*/
+	/**
+	* Return data for specif make by name
+	*
+	* @param int $make name to get data for
+	*
+	*/
 	function get_make_by_name($make)
 	{
 		global $db;
@@ -207,10 +221,9 @@ class garage_model
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select All Make Data From DB
-	// Usage: get_all_makes();
-	/*========================================================================*/
+	/**
+	* Return array of all makes
+	*/
 	function get_all_makes()
 	{
 		global $db;
@@ -236,10 +249,12 @@ class garage_model
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select All Model From One Make Data From DB
-	// Usage: get_all_models_from_make();
-	/*========================================================================*/
+	/**
+	* Return array of models from specific make
+	*
+	* @param int $make_id make id to get models for
+	*
+	*/
 	function get_all_models_from_make($make_id)
 	{
 		global $db;
@@ -265,45 +280,12 @@ class garage_model
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select All Model Data From DB
-	// Usage: get_all_models();
-	/*========================================================================*/
-	function get_all_models()
-	{
-		global $db;
-
-		$data = null;
-
-		$sql = $db->sql_build_query('SELECT', 
-			array(
-			'SELECT'	=> 'md.id as model_id, md.model, mk.id as make_id, mk.make, md.pending as model_pending, mk.pending as make_pending',
-			'FROM'		=> array(
-				GARAGE_MAKES_TABLE	=> 'mk',
-			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'mk.id = md.make_id'
-				)
-			),
-			'ORDER_BY'	=>	'mk.make, md.model'
-		));
-
-		$result = $db->sql_query($sql);
-		while ($row = $db->sql_fetchrow($result))
-		{
-			$data[] = $row;
-		}
-		$db->sql_freeresult($result);
-
-		return $data;
-	}
-
-	/*========================================================================*/
-	// Select Model Data From DB
-	// Usage: get_model('model id');
-	/*========================================================================*/
+	/**
+	* Get data for specific model
+	*
+	* @param int $model_id model id to get data for
+	*
+	*/
 	function get_model($model_id)
 	{
 		global $db;
@@ -326,10 +308,12 @@ class garage_model
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Model Data From DB
-	// Usage: get_models_by_make('make');
-	/*========================================================================*/
+	/**
+	* Return array of models from specific make
+	*
+	* @param int $make_id make id to get models for
+	*
+	*/
 	function get_models_by_make($make_id)
 	{
 		global $db;
@@ -352,10 +336,9 @@ class garage_model
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Build Pending Make Table
-	// Usage: get_pending_makes();
-	/*========================================================================*/
+	/**
+	* Return array of all pending makes
+	*/
 	function get_pending_makes()
 	{
 		global $db;
@@ -381,10 +364,9 @@ class garage_model
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Build Pending Model Table
-	// Usage: get_pending_models();
-	/*========================================================================*/
+	/**
+	* Return array of all pending models
+	*/
 	function get_pending_models()
 	{
 		global $db;
@@ -417,6 +399,14 @@ class garage_model
 	}
 
 
+	/**
+	* Delete a make
+	*
+	* @param int $make_id make id to delete
+	* @param string $action_make delete|move linked vehicles
+	* @param int $make_to_id move to make id
+	*
+	*/
 	function delete_make($make_id, $action_make = 'delete', $make_to_id = 0)
 	{
 		global $db, $user, $cache, $garage;
@@ -463,6 +453,12 @@ class garage_model
 		}
 	}
 
+	/**
+	* Delete make & linked vehicles
+	*
+	* @param int $make_id make id to delete all vehicles
+	*
+	*/
 	function delete_make_content($make_id)
 	{
 		global $db, $config, $phpbb_root_path, $phpEx, $garage, $garage_vehicle;
@@ -477,6 +473,13 @@ class garage_model
 		return;
 	}
 
+	/**
+	* Move vehicles to new make
+	*
+	* @param int $from_id make id to move from
+	* @param int $to_id make id to move to
+	*
+	*/
 	function move_make_content($from_id, $to_id)
 	{
 		global $garage;
@@ -487,6 +490,14 @@ class garage_model
 		return;
 	}
 
+	/**
+	* Delete a model
+	*
+	* @param int $model_id model id to delete
+	* @param string $action_model delete|move linked vehicles
+	* @param int $model_to_id move to model id
+	*
+	*/
 	function delete_model($model_id, $action_model = 'delete', $model_to_id = 0)
 	{
 		global $db, $user, $cache, $garage;
@@ -533,9 +544,15 @@ class garage_model
 		}
 	}
 
+	/**
+	* Delete model & linked vehicles
+	*
+	* @param int $model_id model id to delete all vehicles
+	*
+	*/
 	function delete_model_content($model_id)
 	{
-		global $db, $config, $garage, $garage_vehicle;
+		global $garage, $garage_vehicle;
 
 		$vehicles = $garage_vehicle->get_vehicles_by_model_id($model_id);
 		for ($i = 0, $count = sizeof($vehicles);$i < $count; $i++)
@@ -547,6 +564,13 @@ class garage_model
 		return;
 	}
 
+	/**
+	* Move vehicles to new model
+	*
+	* @param int $from_id model id to move from
+	* @param int $to_id model id to move to
+	*
+	*/
 	function move_model_content($from_id, $to_id)
 	{
 		global $garage;

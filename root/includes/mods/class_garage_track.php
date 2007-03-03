@@ -23,10 +23,12 @@ class garage_track
 {
 	var $classname = "garage_track";
 
-	/*========================================================================*/
-	// Inserts Lap Into DB
-	// Usage: insert_lap(array());
-	/*========================================================================*/
+	/**
+	* Insert new lap
+	*
+	* @param array $data single-dimension array holding the data for the new lap
+	*
+	*/
 	function insert_lap($data)
 	{
 		global $vid, $db, $garage_config;
@@ -47,10 +49,12 @@ class garage_track
 		return $db->sql_nextid();
 	}
 
-	/*========================================================================*/
-	// Inserts Track Into DB
-	// Usage: insert_track(array());
-	/*========================================================================*/
+	/**
+	* Insert new track
+	*
+	* @param array $data single-dimension array holding the data for the new track
+	*
+	*/
 	function insert_track($data)
 	{
 		global $db, $garage_config;
@@ -67,10 +71,12 @@ class garage_track
 		return $db->sql_nextid();
 	}
 
-	/*========================================================================*/
-	// Updates Lap In DB
-	// Usage: update_lap(array());
-	/*========================================================================*/
+	/**
+	* Updates a existing lap
+	*
+	* @param array $data single-dimension array holding the data to update the lap with
+	*
+	*/
 	function update_lap($data)
 	{
 		global $db, $lid, $vid, $garage_config;
@@ -96,10 +102,12 @@ class garage_track
 		return;
 	}
 
-	/*========================================================================*/
-	// Updates Track In DB
-	// Usage: update_track(array());
-	/*========================================================================*/
+	/**
+	* Updates a existing track
+	*
+	* @param array $data single-dimension array holding the data to update the track with
+	*
+	*/
 	function update_track($data)
 	{
 		global $db, $tid, $garage_config;
@@ -121,10 +129,12 @@ class garage_track
 		return;
 	}
 
-	/*========================================================================*/
-	// Delete Lap Including Image 
-	// Usage: delete_lap('lap id');
-	/*========================================================================*/
+	/**
+	* Delete lap and all images linked to it
+	*
+	* @param int $lid lap id to delete
+	*
+	*/
 	function delete_lap($lid)
 	{
 		global $vid, $garage_image, $garage;
@@ -143,16 +153,18 @@ class garage_track
 		return ;
 	}
 
-	/*========================================================================*/
-	// Delete Track Including All Lap Times 
-	// Usage: delete_track('track id');
-	/*========================================================================*/
-	function delete_track($id)
+	/**
+	* Delete track and all laps linked to it
+	*
+	* @param int $tid track id to delete
+	*
+	*/	
+	function delete_track($tid)
 	{
 		global $db, $garage_image, $garage;
 	
 		//Get All Laps
-		$data = $this->get_laps_by_track($id);
+		$data = $this->get_laps_by_track($tid);
 	
 		//Lets See If There Is An Image Associated With This Run
 		for($i = 0; $i < count($data); $i++)
@@ -167,10 +179,12 @@ class garage_track
 		return ;
 	}
 
-	/*========================================================================*/
-	// Determines If Image Is Hilite Image
-	// Usage: hilite_exists('lap id');
-	/*========================================================================*/
+	/**
+	* Check if an image is marked as highlight image for lap
+	*
+	* @param int $lid lap id to check
+	*
+	*/
 	function hilite_exists($lid)
 	{
 		$hilite = 1;
@@ -183,10 +197,12 @@ class garage_track
 		return $hilite;
 	}
 
-	/*========================================================================*/
-	// Returns Count Of Lap Images
-	// Usage: count_lap_images('lap id');
-	/*========================================================================*/
+	/**
+	* Count images linked to a lap
+	*
+	* @param int $lid lap id to count images for
+	*
+	*/
 	function count_lap_images($lid)
 	{
 		global $db;
@@ -210,10 +226,12 @@ class garage_track
 		return $data['total'];
 	}
 
-	/*========================================================================*/
-	// Select All Lap Data From DB
-	// Usage: get_lap('lap id');
-	/*========================================================================*/
+	/**
+	* Return data for a specific lap
+	*
+	* @param int $lid lap id to return data for
+	*
+	*/
 	function get_lap($lid)
 	{
 		global $db;
@@ -267,10 +285,12 @@ class garage_track
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Track Data From DB
-	// Usage: get_track('track id');
-	/*========================================================================*/
+	/**
+	* Return data for a specific track
+	*
+	* @param int $tid track id to return data for
+	*
+	*/	
 	function get_track($tid)
 	{
 		global $db;
@@ -294,10 +314,9 @@ class garage_track
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select All Pending Laps Data From DB
-	// Usage: get_pending_laps();
-	/*========================================================================*/
+	/**
+	* Return array for all pending laps
+	*/
 	function get_pending_laps()
 	{
 		global $db;
@@ -353,10 +372,12 @@ class garage_track
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Lap(s) Data By Vehicle From DB
-	// Usage: get_laps_by_vehicle('vehicle id');
-	/*========================================================================*/
+	/**
+	* Return array holding all laps for a specific vehicle
+	*
+	* @param int $vid vehicle id to return laps for
+	*
+	*/
 	function get_laps_by_vehicle($vid)
 	{
 		global $db;
@@ -398,10 +419,12 @@ class garage_track
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Lap(s) Data By Track From DB
-	// Usage: get_laps_by_track('track id');
-	/*========================================================================*/
+	/**
+	* Return array holding all laps for a specific track
+	*
+	* @param int $tid track id to return laps for
+	*
+	*/
 	function get_laps_by_track($tid)
 	{
 		global $db;
@@ -458,10 +481,9 @@ class garage_track
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select All Tracks Data From DB
-	// Usage: get_all_tracks();
-	/*========================================================================*/
+	/**
+	* Return array holding data for all tracks
+	*/
 	function get_all_tracks()
 	{
 		global $db;
@@ -486,10 +508,9 @@ class garage_track
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Pending Tracks Data From DB
-	// Usage: get_pending_tracks();
-	/*========================================================================*/
+	/**
+	* Return array for all pending tracks
+	*/
 	function get_pending_tracks()
 	{
 		global $db;
@@ -515,10 +536,12 @@ class garage_track
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Returns Lang String For Condition
-	// Usage: get_track_condition();
-	/*========================================================================*/
+	/**
+	* Return language string for track condition id
+	*
+	* @param TRACK_DRY|TRACK_INTERMEDIATE|TRACK_WET
+	*
+	*/
 	function get_track_condition($id)
 	{
 		global $user;
@@ -537,10 +560,12 @@ class garage_track
 		}
 	}
 
-	/*========================================================================*/
-	// Returns Lang String For Condition
-	// Usage: get_lap_type();
-	/*========================================================================*/
+	/**
+	* Return language string for lap type id
+	*
+	* @param LAP_QUALIFING|LAP_RACE|LAP_TRACKDAY
+	*
+	*/
 	function get_lap_type($id)
 	{
 		global $user;
@@ -559,11 +584,13 @@ class garage_track
 		}
 	}
 
-	/*========================================================================*/
-	// Approve Laps
-	// Usage: approve_lap(array(), 'mode');
-	/*========================================================================*/
-	function approve_lap($id_list, $mode)
+	/**
+	* Approve laps
+	*
+	* @param array $id_list sigle-dimension array holding the lap ids to disapprove
+	*
+	*/
+	function approve_lap($id_list)
 	{
 		global $phpbb_root_path, $phpEx, $garage;
 
@@ -575,11 +602,13 @@ class garage_track
 		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_laps"));
 	}
 
-	/*========================================================================*/
-	// Approve Track
-	// Usage: approve_track(array(), 'mode');
-	/*========================================================================*/
-	function approve_track($id_list, $mode)
+	/**
+	* Approve tracks
+	*
+	* @param array $id_list sigle-dimension array holding the track ids to disapprove
+	*
+	*/
+	function approve_track($id_list)
 	{
 		global $phpbb_root_path, $phpEx, $garage;
 
@@ -591,11 +620,13 @@ class garage_track
 		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_tracks"));
 	}
 
-	/*========================================================================*/
-	// Disapprove Laps
-	// Usage: disapprove_lap(array(), 'mode');
-	/*========================================================================*/
-	function disapprove_lap($id_list, $mode)
+	/**
+	* Disapprove laps
+	*
+	* @param array $id_list sigle-dimension array holding the lap ids to disapprove
+	*
+	*/
+	function disapprove_lap($id_list)
 	{
 		global $phpbb_root_path, $phpEx;
 
@@ -607,11 +638,13 @@ class garage_track
 		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_laps"));
 	}
 
-	/*========================================================================*/
-	// Disapprove Tracks
-	// Usage: disapprove_track(array(), 'mode');
-	/*========================================================================*/
-	function disapprove_track($id_list, $mode)
+	/**
+	* Disapprove tracks
+	*
+	* @param array $id_list sigle-dimension array holding the track ids to disapprove
+	*
+	*/
+	function disapprove_track($id_list)
 	{
 		global $phpbb_root_path, $phpEx;
 

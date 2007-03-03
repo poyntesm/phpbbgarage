@@ -21,10 +21,12 @@ class garage_quartermile
 {
 	var $classname = "garage_quartermile";
 
-	/*========================================================================*/
-	// Inserts Quartermile Into DB
-	// Usage: insert_quartermile(array());
-	/*========================================================================*/
+	/**
+	* Insert new quartermile
+	*
+	* @param array $data single-dimension array holding the data for the new quartermile
+	*
+	*/
 	function insert_quartermile($data)
 	{
 		global $vid, $db, $garage_config;
@@ -50,10 +52,12 @@ class garage_quartermile
 		return $db->sql_nextid();
 	}
 
-	/*========================================================================*/
-	// Updates Quartermile In DB
-	// Usage: update_quartermile(array());
-	/*========================================================================*/
+	/**
+	* Updates a existing quartermile
+	*
+	* @param array $data single-dimension array holding the data to update the quartermile with
+	*
+	*/
 	function update_quartermile($data)
 	{
 		global $db, $vid, $qmid, $garage_config;
@@ -82,10 +86,12 @@ class garage_quartermile
 		return;
 	}
 
-	/*========================================================================*/
-	// Delete Quartermile Entry Including Image 
-	// Usage: delete_quartermile('quartermile id');
-	/*========================================================================*/
+	/**
+	* Delete quartermile and all images linked to it
+	*
+	* @param int $qmid quartermile id to delete
+	*
+	*/
 	function delete_quartermile($qmid)
 	{
 		global $vid, $garage, $garage_image;
@@ -103,10 +109,12 @@ class garage_quartermile
 		return ;
 	}
 
-	/*========================================================================*/
-	// Determines If Image Is Hilite Image
-	// Usage: hilite_exists('quartermile id');
-	/*========================================================================*/
+	/**
+	* Check if an image is marked as highlight image for quartermile
+	*
+	* @param int $qmid quartermile id to check
+	*
+	*/
 	function hilite_exists($qmid)
 	{
 		$hilite = 1;
@@ -119,10 +127,12 @@ class garage_quartermile
 		return $hilite;
 	}
 
-	/*========================================================================*/
-	// Returns Count Of Quartermile Images
-	// Usage: count_quartermile_images('quartermile id');
-	/*========================================================================*/
+	/**
+	* Count images linked to a quartermile
+	*
+	* @param int $qmid quartermile id to count images for
+	*
+	*/
 	function count_quartermile_images($qmid)
 	{
 		global $db;
@@ -146,11 +156,13 @@ class garage_quartermile
 		return $data['total'];
 	}
 
-	/*========================================================================*/
-	// Select Top Quartermiles Data By Vehicle From DB
-	// Usage: get_top_quartermiles('vehicle id');
-	/*========================================================================*/
-	function get_top_quartermiles($sort, $order, $start = 0, $limit = 30, $addtional_where = NULL)
+	/**
+	* Return array of top dynoruns
+	*
+	* @param int $limit number of rows to return
+	*
+	*/
+	function get_top_quartermiles($limit = 30)
 	{
 		global $db;
 
@@ -182,10 +194,10 @@ class garage_quartermile
 			),
 			'WHERE'		=>  "(q.sixty IS NOT NULL OR q.three IS NOT NULL OR q.eighth IS NOT NULL OR q.eighthmph IS NOT NULL OR q.thou IS NOT NULL OR q.rt IS NOT NULL OR q.quartmph IS NOT NULL) AND ( q.pending = 0 ) AND ( mk.pending = 0 AND md.pending = 0 ) $addtional_where",
 			'GROUP_BY'	=> 'q.vehicle_id',
-			'ORDER_BY'	=> "$sort $order"
+			'ORDER_BY'	=> "quart DESC"
 		));
 
-		$result = $db->sql_query_limit($sql, $limit, $start);
+		$result = $db->sql_query_limit($sql, $limit, 0);
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$data[] = $row;
@@ -196,10 +208,13 @@ class garage_quartermile
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Quartermile Data From DB By Vehicle ID And Quart Value
-	// Usage: get_quartermile_by_vehicle_quart('garage id', 'quart');
-	/*========================================================================*/
+	/**
+	* Return data for quartermile filtered by vehicle id and a quart value
+	*
+	* @param int $vehicle_id vehicle id to filter on
+	* @param string $quart quart value to filter on
+	*
+	*/
 	function get_quartermile_by_vehicle_quart($vehicle_id, $quart)
 	{
 		global $db;
@@ -252,10 +267,9 @@ class garage_quartermile
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Quartermile Data From DB By Vehicle ID And Quart Value
-	// Usage: get_quartermile_by_vehicle_quart('garage id', 'quart');
-	/*========================================================================*/
+	/**
+	* Return array for all pending quartermiles
+	*/
 	function get_pending_quartermiles()
 	{
 		global $db;
@@ -308,10 +322,12 @@ class garage_quartermile
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Quartermile Data By Quartermile ID
-	// Usage: get_quartermile('quartermile id');
-	/*========================================================================*/
+	/**
+	* Return data for a specific quartermile
+	*
+	* @param int $qmid quartermile id to return data for
+	*
+	*/
 	function get_quartermile($qmid)
 	{
 		global $db;
@@ -364,10 +380,12 @@ class garage_quartermile
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Quartermile Data By Vehicle ID
-	// Usage: get_quartermiles_by_vehicle('garage id');
-	/*========================================================================*/
+	/**
+	* Return array of quartermiles filtered by vehicle id
+	*
+	* @param int $vid vehicle id to filter on
+	*
+	*/
 	function get_quartermiles_by_vehicle($vid)
 	{
 		global $db;
@@ -405,10 +423,9 @@ class garage_quartermile
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Build Top Quartermile Runs HTML If Required 
-	// Usage: show_topquartermile();
-	/*========================================================================*/
+	/**
+	* Assign template variables to display top quartermiles
+	*/
 	function show_topquartermile()
 	{
 		global $required_position, $user, $template, $db, $SID, $phpEx, $phpbb_root_path, $garage_config, $board_config;
@@ -429,7 +446,7 @@ class garage_quartermile
 	
 		$limit = $garage_config['top_quartermile_limit'] ? $garage_config['top_quartermile_limit'] : 10;
 
-		$times = $this->get_top_quartermiles('quart', 'DESC', 0, $limit);
+		$times = $this->get_top_quartermiles($limit);
 
 		for($i = 0; $i < count($times); $i++)
 		{
@@ -453,11 +470,13 @@ class garage_quartermile
 		return ;
 	}
 
-	/*========================================================================*/
-	// Approve Quartermile Times
-	// Usage: approve_quartermile(array(), 'mode');
-	/*========================================================================*/
-	function approve_quartermile($id_list, $mode)
+	/**
+	* Approve quartermiles
+	*
+	* @param array $id_list single-dimension array holding the quartermile ids to approve
+	*
+	*/
+	function approve_quartermile($id_list)
 	{
 		global $phpbb_root_path, $phpEx, $garage;
 
@@ -469,11 +488,13 @@ class garage_quartermile
 		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_quartermiles"));
 	}
 
-	/*========================================================================*/
-	// Approve Quartermile Times
-	// Usage: approve_quartermile(array(), 'mode');
-	/*========================================================================*/
-	function disapprove_quartermile($id_list, $mode)
+	/**
+	* Disapprove quartermiles
+	*
+	* @param array $id_list sigle-dimension array holding the quartermile ids to disapprove
+	*
+	*/
+	function disapprove_quartermile($id_list)
 	{
 		global $phpbb_root_path, $phpEx;
 

@@ -23,11 +23,9 @@ class garage_template
 {
 	var $classname = "garage_template";
 
-	/*========================================================================*/
-	// Builds HTML Variables For Version & Copywrite Notice
-	// Remove This Notice & No Support Is Given
-	// Usage: version_notice();
-	/*========================================================================*/
+	/**
+	* Assign version number & copywright notice. Remove and no support
+	*/
 	function version_notice()
 	{
 		global $template, $user, $garage_config, $phpEx, $phpbb_root_path;
@@ -44,10 +42,9 @@ class garage_template
 		return;
 	}
 
-	/*========================================================================*/
-	// Builds all required side menus
-	// Usage: sidemenu();
-	/*========================================================================*/
+	/**
+	* Assign all sidemenu template variables
+	*/
 	function sidemenu()
 	{
 		global $user, $template, $phpEx, $phpbb_root_path, $garage_config, $garage, $garage_vehicle, $auth;
@@ -130,10 +127,12 @@ class garage_template
 		return ;
 	}
 
-	/*========================================================================*/
-	// Builds the HTML for attaching a image to entries
-	// Usage: attach_image('modification'|'vehicle'|'quartermile'|'dynorun'|'lap');
-	/*========================================================================*/
+	/**
+	* Assign template variables for attaching images
+	*
+	* @param string $type 
+	*
+	*/
 	function attach_image($type)
 	{
 		global $template, $garage_config, $auth;
@@ -168,7 +167,13 @@ class garage_template
 	
 		return;
 	}
-	
+
+	/**
+	* Assign template variables for order selection
+	*
+	* @param string $selected ASC|DESC
+	*
+	*/
 	function order_dropdown($selected = null)
 	{
 		global $template, $user;
@@ -186,6 +191,13 @@ class garage_template
 		}
 	}
 
+	/**
+	* Assign template variables for sort selection
+	*
+	* @param string $type vehicle|modification|premium|quartermile|dynorun|track_time
+	* @param string $selected 
+	*
+	*/
 	function sort_dropdown($type, $selected = null)
 	{
 		global $template, $user;
@@ -231,6 +243,13 @@ class garage_template
 		}
 	}
 
+	/**
+	* Assign template variables for make selection
+	*
+	* @param array $makes single-dimension array holding all makes data
+	* @param int $selected_id id of selected option
+	*
+	*/
 	function make_dropdown($makes, $selected_id = null)
 	{
 		global $template;
@@ -245,6 +264,13 @@ class garage_template
 		}
 	}
 
+	/**
+	* Assign template variables for track selection
+	*
+	* @param array $tracks single-dimension array holding all tracks data
+	* @param int $selected_id id of selected option
+	*
+	*/
 	function track_dropdown($tracks, $selected_id = null)
 	{
 		global $template;
@@ -259,6 +285,13 @@ class garage_template
 		}
 	}
 
+	/**
+	* Assign template variables for category selection
+	*
+	* @param array $categories single-dimension array holding all categories data
+	* @param int $selected_id id of selected option
+	*
+	*/
 	function category_dropdown($categories, $selected_id = null)
 	{
 		global $template;
@@ -274,6 +307,13 @@ class garage_template
 
 	}
 
+	/**
+	* Assign template variables for manufacturer selection
+	*
+	* @param array $manufacturers single-dimension array holding all manufacturers data
+	* @param int $selected_id id of selected option
+	*
+	*/
 	function manufacturer_dropdown($manufacturers, $selected_id = null)
 	{
 		global $template;
@@ -289,6 +329,13 @@ class garage_template
 
 	}
 
+	/**
+	* Assign template variables for retail selection
+	*
+	* @param array $shops single-dimension array holding all shops data
+	* @param int $selected_id id of selected option
+	*
+	*/
 	function retail_dropdown($shops, $selected_id = null)
 	{
 		global $template;
@@ -303,6 +350,13 @@ class garage_template
 		}
 	}
 
+	/**
+	* Assign template variables for garage selection
+	*
+	* @param array $garages single-dimension array holding all garages data
+	* @param int $selected_id id of selected option
+	*
+	*/
 	function garage_dropdown($garages, $selected_id = null)
 	{
 		global $template;
@@ -317,6 +371,13 @@ class garage_template
 		}
 	}
 
+	/**
+	* Assign template variables for dynocentre selection
+	*
+	* @param array $dynocentres single-dimension array holding all dynocentres data
+	* @param int $selected_id id of selected option
+	*
+	*/
 	function dynocentre_dropdown($dynocentres, $selected_id = null)
 	{
 		global $template;
@@ -331,6 +392,13 @@ class garage_template
 		}
 	}
 
+	/**
+	* Assign template variables for insurer selection
+	*
+	* @param array $insurers single-dimension array holding all insurers data
+	* @param int $selected_id id of selected option
+	*
+	*/
 	function insurance_dropdown($insurers, $selected_id = null)
 	{
 		global $template;
@@ -346,6 +414,13 @@ class garage_template
 
 	}
 
+	/**
+	* Assign template variables for reassign business selection
+	*
+	* @param array $business single-dimension array holding all business data
+	* @param int $selected_id id of selected option
+	*
+	*/
 	function reassign_business_dropdown($business, $selected_id = null)
 	{
 		global $template;
@@ -361,6 +436,13 @@ class garage_template
 
 	}
 
+	/**
+	* Assign template variables for year selection
+	*
+	* @param array $years single-dimension array holding all years data
+	* @param int $selected value of selected year
+	*
+	*/
 	function year_dropdown($years, $selected = null)
 	{
 		global $template;
@@ -375,6 +457,12 @@ class garage_template
 		}
 	}
 
+	/**
+	* Assign template variables for engine selection
+	*
+	* @param string $selected selected engine string
+	*
+	*/
 	function engine_dropdown($selected = null)
 	{
 		global $template, $user;
@@ -391,6 +479,12 @@ class garage_template
 		}
 	}
 
+	/**
+	* Assign template variables for track condition selection
+	*
+	* @param string $selected selected option string
+	*
+	*/
 	function track_condition_dropdown($selected = null)
 	{
 		global $template, $user;
@@ -408,6 +502,12 @@ class garage_template
 		}
 	}
 
+	/**
+	* Assign template variables for lap type selection
+	*
+	* @param int $selected selected option LAP_QUALIFING|LAP_RACE|LAP_TRACKDAY
+	*
+	*/
 	function lap_type_dropdown($selected = null)
 	{
 		global $template, $user;
@@ -425,6 +525,12 @@ class garage_template
 		}
 	}
 
+	/**
+	* Assign template variables for service history type selection
+	*
+	* @param int $selected selected option SERVICE_MAJOR|SERVICE_MINOR
+	*
+	*/
 	function service_type_dropdown($selected = null)
 	{
 		global $template, $user;
@@ -442,6 +548,12 @@ class garage_template
 		}
 	}
 
+	/**
+	* Assign template variables for currency selection
+	*
+	* @param string $selected selected option 
+	*
+	*/
 	function currency_dropdown($selected = null)
 	{
 		global $template;
@@ -458,6 +570,12 @@ class garage_template
 		}
 	}
 
+	/**
+	* Assign template variables for mileage type selection
+	*
+	* @param string $selected selected option
+	*
+	*/
 	function mileage_dropdown($selected = null)
 	{
 		global $template, $user;
@@ -474,6 +592,13 @@ class garage_template
 		}
 	}
 
+	/**
+	* Assign template variables for dynorun selection
+	*
+	* @param array $dynoruns single-dimension array holding all dynoruns data
+	* @param int $selected_id id of selected option
+	*
+	*/
 	function dynorun_dropdown($dynoruns, $selected_id = null)
 	{
 		global $template; 
@@ -489,6 +614,12 @@ class garage_template
 	
 	}
 
+	/**
+	* Assign template variables for boost type selection
+	*
+	* @param string $selected selected option
+	*
+	*/
 	function boost_dropdown($selected = null)
 	{
 		global $template;
@@ -505,6 +636,12 @@ class garage_template
 		}
 	}
 
+	/**
+	* Assign template variables for nitrous selection
+	*
+	* @param int $selected selected option
+	*
+	*/
 	function nitrous_dropdown($selected = null)
 	{
 		global $template, $user;
@@ -522,6 +659,13 @@ class garage_template
 		}
 	}
 
+	/**
+	* Assign template variables for power type selection
+	*
+	* @param string $name template block var name
+	* @param int $selected_id id of selected option
+	*
+	*/
 	function power_dropdown($name = null, $selected = null)
 	{
 		global $template, $user;
@@ -538,6 +682,12 @@ class garage_template
 		}
 	}
 
+	/**
+	* Assign template variables for insurance premium type selection
+	*
+	* @param string $selected id of selected option
+	*
+	*/
 	function cover_dropdown($selected = null)
 	{
 		global $template, $user;
@@ -554,6 +704,13 @@ class garage_template
 		}
 	}
 
+	/**
+	* Assign template variables for rating selection
+	*
+	* @param string $name template block var name
+	* @param int $selected_id id of selected option
+	*
+	*/
 	function rating_dropdown($name = null, $selected_id = null)
 	{
 		global $template;
@@ -570,84 +727,95 @@ class garage_template
 		}
 	}
 
-function generate_pagination($base_url, $hash_location, $num_items, $per_page, $start_item, $add_prevnext_text = false, $tpl_prefix = '')
-{
-	global $template, $user;
-
-	// Make sure $per_page is a valid value
-	$per_page = ($per_page <= 0) ? 1 : $per_page;
-
-	$seperator = '<span class="page-sep">' . $user->lang['COMMA_SEPARATOR'] . '</span>';
-	$total_pages = ceil($num_items / $per_page);
-
-	if ($total_pages == 1 || !$num_items)
+	/**
+	* Assign template variables for pagination of pages with #'s
+	* Based of phpBB3 standard generate_pagination
+	*
+	* @param string $base_url 
+	* @param string $hash_location
+	* @param int $num_items
+	* @param int $per_page
+	* @param int $start_item
+	* @param string $add_prevnext_text
+	* @param string $tpl_prefix
+	*
+	*/
+	function generate_pagination($base_url, $hash_location, $num_items, $per_page, $start_item, $add_prevnext_text = false, $tpl_prefix = '')
 	{
-		return false;
-	}
+		global $template, $user;
 
-	$on_page = floor($start_item / $per_page) + 1;
-	$page_string = ($on_page == 1) ? '<strong>1</strong>' : '<a href="' . $base_url . '#'. $hash_location .'">1</a>';
+		// Make sure $per_page is a valid value
+		$per_page = ($per_page <= 0) ? 1 : $per_page;
 
-	if ($total_pages > 5)
-	{
-		$start_cnt = min(max(1, $on_page - 4), $total_pages - 5);
-		$end_cnt = max(min($total_pages, $on_page + 4), 6);
+		$seperator = '<span class="page-sep">' . $user->lang['COMMA_SEPARATOR'] . '</span>';
+		$total_pages = ceil($num_items / $per_page);
 
-		$page_string .= ($start_cnt > 1) ? ' ... ' : $seperator;
-
-		for ($i = $start_cnt + 1; $i < $end_cnt; $i++)
+		if ($total_pages == 1 || !$num_items)
 		{
-			$page_string .= ($i == $on_page) ? '<strong>' . $i . '</strong>' : '<a href="' . $base_url . "&amp;start=" . (($i - 1) * $per_page) . '#'. $hash_location .'">' . $i . '</a>';
-			if ($i < $end_cnt - 1)
+			return false;
+		}
+
+		$on_page = floor($start_item / $per_page) + 1;
+		$page_string = ($on_page == 1) ? '<strong>1</strong>' : '<a href="' . $base_url . '#'. $hash_location .'">1</a>';
+
+		if ($total_pages > 5)
+		{
+			$start_cnt = min(max(1, $on_page - 4), $total_pages - 5);
+			$end_cnt = max(min($total_pages, $on_page + 4), 6);
+
+			$page_string .= ($start_cnt > 1) ? ' ... ' : $seperator;
+
+			for ($i = $start_cnt + 1; $i < $end_cnt; $i++)
 			{
-				$page_string .= $seperator;
+				$page_string .= ($i == $on_page) ? '<strong>' . $i . '</strong>' : '<a href="' . $base_url . "&amp;start=" . (($i - 1) * $per_page) . '#'. $hash_location .'">' . $i . '</a>';
+				if ($i < $end_cnt - 1)
+				{
+					$page_string .= $seperator;
+				}
+			}
+
+			$page_string .= ($end_cnt < $total_pages) ? ' ... ' : $seperator;
+		}
+		else
+		{
+			$page_string .= $seperator;
+
+			for ($i = 2; $i < $total_pages; $i++)
+			{
+				$page_string .= ($i == $on_page) ? '<strong>' . $i . '</strong>' : '<a href="' . $base_url . "&amp;start=" . (($i - 1) * $per_page) . '#'. $hash_location .'">' . $i . '</a>';
+				if ($i < $total_pages)
+				{
+					$page_string .= $seperator;
+				}
 			}
 		}
 
-		$page_string .= ($end_cnt < $total_pages) ? ' ... ' : $seperator;
-	}
-	else
-	{
-		$page_string .= $seperator;
+		$page_string .= ($on_page == $total_pages) ? '<strong>' . $total_pages . '</strong>' : '<a href="' . $base_url . '&amp;start=' . (($total_pages - 1) * $per_page) . '#'. $hash_location .'">' . $total_pages . '</a>';
 
-		for ($i = 2; $i < $total_pages; $i++)
+		if ($add_prevnext_text)
 		{
-			$page_string .= ($i == $on_page) ? '<strong>' . $i . '</strong>' : '<a href="' . $base_url . "&amp;start=" . (($i - 1) * $per_page) . '#'. $hash_location .'">' . $i . '</a>';
-			if ($i < $total_pages)
+			if ($on_page != 1) 
 			{
-				$page_string .= $seperator;
+				$page_string = '<a href="' . $base_url . '&amp;start=' . (($on_page - 2) * $per_page) . '#'. $hash_location .'">' . $user->lang['PREVIOUS'] . '</a>&nbsp;&nbsp;' . $page_string;
+			}
+
+			if ($on_page != $total_pages)
+			{
+				$page_string .= '&nbsp;&nbsp;<a href="' . $base_url . '&amp;start=' . ($on_page * $per_page) . '#'. $hash_location .'">' . $user->lang['NEXT'] . '</a>';
 			}
 		}
+
+		$template->assign_vars(array(
+			$tpl_prefix . 'BASE_URL'	=> $base_url,
+			$tpl_prefix . 'HASH_LOCATION'	=> $hash_location,
+			$tpl_prefix . 'PER_PAGE'	=> $per_page,
+
+			$tpl_prefix . 'PREVIOUS_PAGE'	=> ($on_page == 1) ? '' : $base_url . '&amp;start=' . (($on_page - 2) * $per_page). '#'. $hash_location,
+			$tpl_prefix . 'NEXT_PAGE'	=> ($on_page == $total_pages) ? '' : $base_url . '&amp;start=' . ($on_page * $per_page) .'#'. $hash_location,
+		));
+
+		return $page_string;
 	}
-
-	$page_string .= ($on_page == $total_pages) ? '<strong>' . $total_pages . '</strong>' : '<a href="' . $base_url . '&amp;start=' . (($total_pages - 1) * $per_page) . '#'. $hash_location .'">' . $total_pages . '</a>';
-
-	if ($add_prevnext_text)
-	{
-		if ($on_page != 1) 
-		{
-			$page_string = '<a href="' . $base_url . '&amp;start=' . (($on_page - 2) * $per_page) . '#'. $hash_location .'">' . $user->lang['PREVIOUS'] . '</a>&nbsp;&nbsp;' . $page_string;
-		}
-
-		if ($on_page != $total_pages)
-		{
-			$page_string .= '&nbsp;&nbsp;<a href="' . $base_url . '&amp;start=' . ($on_page * $per_page) . '#'. $hash_location .'">' . $user->lang['NEXT'] . '</a>';
-		}
-	}
-
-	$template->assign_vars(array(
-		$tpl_prefix . 'BASE_URL'	=> $base_url,
-		$tpl_prefix . 'HASH_LOCATION'	=> $hash_location,
-		$tpl_prefix . 'PER_PAGE'	=> $per_page,
-
-		$tpl_prefix . 'PREVIOUS_PAGE'	=> ($on_page == 1) ? '' : $base_url . '&amp;start=' . (($on_page - 2) * $per_page). '#'. $hash_location,
-		$tpl_prefix . 'NEXT_PAGE'	=> ($on_page == $total_pages) ? '' : $base_url . '&amp;start=' . ($on_page * $per_page) .'#'. $hash_location,
-	));
-
-	return $page_string;
-}
-
-
 }
 
 $garage_template = new garage_template();

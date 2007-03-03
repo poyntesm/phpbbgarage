@@ -410,7 +410,7 @@ class garage_dynorun
 			'ORDER_BY'	=> "bhp DESC"
 		));
 
-		$result = $db->sql_query_limit($sql, $limit, $start);
+		$result = $db->sql_query_limit($sql, $limit, 0);
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$data[] = $row;

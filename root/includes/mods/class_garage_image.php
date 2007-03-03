@@ -23,10 +23,12 @@ class garage_image
 {
 	var $classname = "garage_image";
 
-	/*========================================================================*/
-	// Gets User Image Upload Quota
-	// Usage: get_user_upload_image_quota(array(group_membership));
-	/*========================================================================*/
+	/**
+	* Return users upload image quota
+	*
+	* @param array $groups multi-dimensional array holding the users group membership
+	*
+	*/
 	function get_user_upload_image_quota($groups)
 	{
 		global $user, $garage_config, $garage;
@@ -64,10 +66,13 @@ class garage_image
 			return max($quota);
 		}
 	}
-	/*========================================================================*/
-	// Gets User Remote Image Quota
-	// Usage: get_user_upload_image_quota(array(group_membership);
-	/*========================================================================*/
+
+	/**
+	* Return users remote image quota
+	*
+	* @param array $groups multi-dimensional array holding the users group membership
+	*
+	*/
 	function get_user_remote_image_quota($groups)
 	{
 		global $user, $garage_config, $garage;
@@ -106,10 +111,12 @@ class garage_image
 		}
 	}
 
-	/*========================================================================*/
-	// Gets Group Image Upload Quota - Used Only In ACP Page
-	// Usage: get_group_upload_image_quota('group id');
-	/*========================================================================*/
+	/**
+	* Return groups upload image quota
+	*
+	* @param int $gid group id to filter on
+	*
+	*/
 	function get_group_upload_image_quota($gid)
 	{
 		global $garage_config;
@@ -137,10 +144,12 @@ class garage_image
 		}
 	}
 
-	/*========================================================================*/
-	// Gets Group Remote Image Quota - Used Only In ACP Page
-	// Usage: get_group_remote_image_quota('group id');
-	/*========================================================================*/
+	/**
+	* Return groups remote image quota
+	*
+	* @param int $gid group id to filter on
+	*
+	*/
 	function get_group_remote_image_quota($gid)
 	{
 		global $garage_config;
@@ -168,10 +177,14 @@ class garage_image
 		}
 	}
 
-	/*========================================================================*/
-	// Inserts Existing Image Into Vehicle Gallery
-	// Usage: insert_vehicle_gallery_image('image id', 1|0);
-	/*========================================================================*/
+	/**
+	* TODO: change global vid to parameter 
+	* Insert image into vehicle gallery
+	*
+	* @param int $image_id image id to add to vehicle gallery
+	* @param boolean $hilite image should be highlight image
+	*
+	*/
 	function insert_vehicle_gallery_image($image_id, $hilite)
 	{
 		global $db, $vid;
@@ -187,10 +200,14 @@ class garage_image
 		return;
 	}
 
-	/*========================================================================*/
-	// Inserts Existing Image Into Modification Gallery
-	// Usage: insert_modification_gallery_image('image id', 1|0);
-	/*========================================================================*/
+	/**
+	* TODO: change global mid and vid to parameter 
+	* Insert image into modification gallery
+	*
+	* @param int $image_id image id to add to vehicle gallery
+	* @param boolean $hilite image should be highlight image
+	*
+	*/
 	function insert_modification_gallery_image($image_id, $hilite)
 	{
 		global $db, $vid, $mid;
@@ -207,10 +224,14 @@ class garage_image
 		return;
 	}
 
-	/*========================================================================*/
-	// Inserts Existing Image Into Quartermile Gallery
-	// Usage: insert_quartermile_gallery_image('image id', 1|0);
-	/*========================================================================*/
+	/**
+	* TODO: change global qmid and vid to parameter 
+	* Insert image into quartermile gallery
+	*
+	* @param int $image_id image id to add to vehicle gallery
+	* @param boolean $hilite image should be highlight image
+	*
+	*/
 	function insert_quartermile_gallery_image($image_id, $hilite)
 	{
 		global $db, $vid, $qmid;
@@ -227,10 +248,14 @@ class garage_image
 		return;
 	}
 
-	/*========================================================================*/
-	// Inserts Existing Image Into Dynorun Gallery
-	// Usage: insert_dynorun_gallery_image('image id', 1|0);
-	/*========================================================================*/
+	/**
+	* TODO: change global did and vid to parameter 
+	* Insert image into dynorun gallery
+	*
+	* @param int $image_id image id to add to vehicle gallery
+	* @param boolean $hilite image should be highlight image
+	*
+	*/
 	function insert_dynorun_gallery_image($image_id, $hilite)
 	{
 		global $db, $vid, $did;
@@ -247,10 +272,14 @@ class garage_image
 		return;
 	}
 
-	/*========================================================================*/
-	// Inserts Existing Image Into Lap Gallery
-	// Usage: insert_lap_gallery_image('image id', 1|0);
-	/*========================================================================*/
+	/**
+	* TODO: change global lid and vid to parameter 
+	* Insert image into lap gallery
+	*
+	* @param int $image_id image id to add to vehicle gallery
+	* @param boolean $hilite image should be highlight image
+	*
+	*/
 	function insert_lap_gallery_image($image_id, $hilite)
 	{
 		global $db, $vid, $lid;
@@ -267,10 +296,12 @@ class garage_image
 		return;
 	}
 
-	/*========================================================================*/
-	// Check GD Version Available
-	// Usage: gd_version_check();
-	/*========================================================================*/
+	/**
+	* Determine GD version if available else set to 0
+	*
+	* @param int $user_ver version to default
+	*
+	*/
 	function gd_version_check($user_ver = 0)
 	{
 		if (!extension_loaded('gd'))
@@ -316,10 +347,12 @@ class garage_image
 		return $match[0];
 	}
 
-	/*========================================================================*/
-	// Return True/False Depending On If Any Images Need Handling
-	// Usage: image_attached();
-	/*========================================================================*/
+	/**
+	* Check if any image either uploaded or remote needs processing
+	*
+	* @return boolean
+	*
+	*/
 	function image_attached()
 	{
 		global $HTTP_POST_FILES, $HTTP_POST_VARS;
@@ -334,10 +367,12 @@ class garage_image
 		return false;
 	}
 
-	/*========================================================================*/
-	// Return True/False Depending On If Image Is Remote
-	// Usage: image_is_remote();
-	/*========================================================================*/
+	/**
+	* Determine if image is remote
+	*
+	* @return boolean
+	*
+	*/
 	function image_is_remote()
 	{
 		global $HTTP_POST_VARS;
@@ -359,10 +394,12 @@ class garage_image
 		return false;
 	}
 
-	/*========================================================================*/
-	// Return True/False Depending On If Image Is Locally Uploaded
-	// Usage: image_is_local();
-	/*========================================================================*/
+	/**
+	* Determine if image is uploaded
+	*
+	* @return boolean
+	*
+	*/
 	function image_is_local()
 	{
 		global $HTTP_POST_FILES;
@@ -377,10 +414,13 @@ class garage_image
 		return false;
 	}
 
-	/*========================================================================*/
-	// Handle Image Upload And Thumbnail Creation For Remote/Local Images
-	// Usage: process_image_attached('type', 'id');
-	/*========================================================================*/
+	/**
+	* Handle image upload including thumbnail creation
+	*
+	* @param string $type type of parent item (vehicle, modification quartermile, dynorun, lap)
+	* @param int $id id of parent item 
+	*
+	*/
 	function process_image_attached($type, $id)
 	{
 		global $user, $images, $phpEx, $phpbb_root_path, $garage_config, $HTTP_POST_FILES, $HTTP_POST_VARS, $garage, $vid, $auth;
@@ -615,10 +655,12 @@ class garage_image
 		}
 	}
 
-	/*========================================================================*/
-	// Insert Image Into DB
-	// Usage: insert_image(array());
-	/*========================================================================*/
+	/**
+	* Insert image details into DB
+	*
+	* @param array $data single-dimension array with data for image
+	*
+	*/
 	function insert_image($data)
 	{
 		global $db;
@@ -643,10 +685,15 @@ class garage_image
 		return $db->sql_nextid();
 	}
 	
-	/*========================================================================*/
-	// Create Thumbnail From Sourcefile 
-	// Usage: create_thumbnail('source file', 'destination file', 'file type');
-	/*========================================================================*/
+
+	/**
+	* Thumbnail creation
+	*
+	* @param string $source_file_name file name to use source file
+	* @param string $thumb_file_name destination name for thumbnail
+	* @param string $file_ext file type of source file
+	*
+	*/
 	function create_thumbnail($source_file_name, $thumb_file_name, $file_ext)
 	{
 		global $phpbb_root_path, $garage_config;
@@ -727,10 +774,18 @@ class garage_image
 		return;
 	}
 
-	/*========================================================================*/
-	// Create Resized Image From Sourcefile 
-	// Usage: resize_image('source file', 'destination file', 'file type', 'source width', 'source height', 'width', 'height');
-	/*========================================================================*/
+	/**
+	* Resize Image
+	*
+	* @param string $source source file
+	* @param string $destination destination file
+	* @param string $ext file tyep of source file
+	* @param int $src_width width of source 
+	* @param int $src_hieght height of source
+	* @param int $resize_width required resized width
+	* @param int $resize_height required resized height
+	*
+	*/
 	function resize_image($source, $destination, $ext, $src_width, $src_height, $resize_width, $resize_height)
 	{
 		global $phpbb_root_path, $garage_config;
@@ -794,10 +849,12 @@ class garage_image
 		return;
 	}
 
-	/*========================================================================*/
-	// Return The Width Of An Image
-	// Usage: get_image_width('source file');
-	/*========================================================================*/
+	/**
+	* Return image width
+	*
+	* @param string $source_file_name source file you require width of
+	*
+	*/
 	function get_image_width($source_file_name)
 	{
 		global $phpbb_root_path;
@@ -807,10 +864,12 @@ class garage_image
 		return $imagesize[0];
 	}
 
-	/*========================================================================*/
-	// Return The Height Of An Image
-	// Usage: get_image_height('source file');
-	/*========================================================================*/
+	/**
+	* Return image height
+	*
+	* @param string $source_file_name source file you require height of
+	*
+	*/	
 	function get_image_height($source_file_name)
 	{
 		global $phpbb_root_path;
@@ -820,10 +879,12 @@ class garage_image
 		return $imagesize[1];
 	}
 
-	/*========================================================================*/
-	// Return The Filesize Of An Image
-	// Usage: get_image_filesize('source file');
-	/*========================================================================*/
+	/**
+	* Return image size in btyes
+	*
+	* @param string $source_file_name sourec file you require size of
+	*
+	*/	
 	function get_image_filesize($source_file_name)
 	{
 		global $phpbb_root_path;
@@ -831,10 +892,12 @@ class garage_image
 		return filesize($phpbb_root_path . GARAGE_UPLOAD_PATH . $source_file_name);
 	}
 
-	/*========================================================================*/
-	// Return The Disk Space Used By Any User..
-	// Usage: get_image_space_used('user_id');
-	/*========================================================================*/
+	/**
+	* Return size of all images in btyes stored for user
+	*
+	* @param int $user_id user id to get space usage for
+	*
+	*/
 	function get_image_space_used($user_id)
 	{
 		//Set Inital Counter To Zero
@@ -858,10 +921,12 @@ class garage_image
 		return $space;
 	}
 	
-	/*========================================================================*/
-	// Delete Image Including Actual File & Thumbnail
-	// Usage:  delete_image('image id');
-	/*========================================================================*/
+	/**
+	* Delete an image physically from server & entry in garage_images_table
+	*
+	* @param int $image_id id of image to delete
+	*
+	*/	
 	function delete_image($image_id)
 	{
 		global $phpbb_root_path, $garage;
@@ -893,10 +958,12 @@ class garage_image
 		return;
 	}
 	
-	/*========================================================================*/
-	// Delete A Vehicle Image
-	// Usage: delete_vehicle_image('image id');
-	/*========================================================================*/
+	/**
+	* Delete image from vehicle gallery
+	*
+	* @param int $image_id image id to delete
+	*
+	*/	
 	function delete_vehicle_image($image_id)
 	{
 		global $garage;
@@ -908,10 +975,12 @@ class garage_image
 		return;
 	}
 
-	/*========================================================================*/
-	// Delete A Modification Image
-	// Usage: delete_modification_image('image id');
-	/*========================================================================*/
+	/**
+	* Delete image from modification gallery
+	*
+	* @param int $image_id image id to delete
+	*
+	*/
 	function delete_modification_image($image_id)
 	{
 		global $garage;
@@ -923,10 +992,12 @@ class garage_image
 		return;
 	}
 
-	/*========================================================================*/
-	// Delete A Quartermile Image
-	// Usage: delete_quartermile_image('image id');
-	/*========================================================================*/
+	/**
+	* Delete image from quartermile gallery
+	*
+	* @param int $image_id image id to delete
+	*
+	*/
 	function delete_quartermile_image($image_id)
 	{
 		global $garage;
@@ -938,10 +1009,12 @@ class garage_image
 		return;
 	}
 
-	/*========================================================================*/
-	// Delete A Dynorun Image
-	// Usage: delete_dynorun_image('image id');
-	/*========================================================================*/
+	/**
+	* Delete image from dynorun gallery
+	*
+	* @param int $image_id image id to delete
+	*
+	*/
 	function delete_dynorun_image($image_id)
 	{
 		global $garage;
@@ -953,10 +1026,12 @@ class garage_image
 		return;
 	}
 
-	/*========================================================================*/
-	// Delete A Lap Image
-	// Usage: delete_lap_image('image id');
-	/*========================================================================*/
+	/**
+	* Delete image from lap gallery
+	*
+	* @param int $image_id image id to delete
+	*
+	*/
 	function delete_lap_image($image_id)
 	{
 		global $garage;
@@ -968,10 +1043,12 @@ class garage_image
 		return;
 	}
 	
-	/*========================================================================*/
-	// Check The Remote File Actually Exists
-	// Usage: remote_file_exists('url location');
-	/*========================================================================*/
+	/**
+	* Check a remote file exists
+	*
+	* @param string $url url to check for exists
+	*
+	*/
 	function remote_file_exists($url)
 	{
 		$head = '';
@@ -1036,10 +1113,12 @@ class garage_image
 	        return false;
 	}
 	
-	/*========================================================================*/
-	// Select Single Image Data From DB
-	// Usage: get_image('image id');
-	/*========================================================================*/
+	/**
+	* Return data for specific image
+	*
+	* @param int $image_id image id to get data for
+	*
+	*/
 	function get_image($image_id)
 	{
 		global $db;
@@ -1062,10 +1141,12 @@ class garage_image
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Random Image(s) Data From DB
-	// Usage: get_random_image('image numbers');
-	/*========================================================================*/
+	/**
+	* Return a limited array of random selection of images
+	*
+	* @param int $required number of images to return
+	*
+	*/
 	function get_random_image($required = 5)
 	{
 		global $db;
@@ -1091,10 +1172,9 @@ class garage_image
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select All Image Data From DB
-	// Usage: get_all_images();
-	/*========================================================================*/
+	/**
+	* Return array of all images
+	*/
 	function get_all_images()
 	{
 		global $db;
@@ -1138,10 +1218,12 @@ class garage_image
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Vehicle Gallery Data
-	// Usage: get_vehicle_gallery('vehicle id');
-	/*========================================================================*/
+	/**
+	* Return array of specific vehicle gallery images
+	*
+	* @param int $vid vehicle id to get images for
+	*
+	*/	
 	function get_vehicle_gallery($vid)
 	{
 		global $db;
@@ -1174,10 +1256,13 @@ class garage_image
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Modification Gallery Data
-	// Usage: get_modification_gallery('vehicle id', 'modification id');
-	/*========================================================================*/
+	/**
+	* Return array of specific modification gallery images
+	*
+	* @param int $vid vehicle id to get images for
+	* @param int $mid modification id to get images for
+	*
+	*/
 	function get_modification_gallery($vid, $mid)
 	{
 		global $db;
@@ -1210,10 +1295,13 @@ class garage_image
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Quartermile Gallery Data
-	// Usage: get_quartermile_gallery('vehicle id', 'quartermile id');
-	/*========================================================================*/
+	/**
+	* Return array of specific quartermile gallery images
+	*
+	* @param int $vid vehicle id to get images for
+	* @param int $qmid quartermile id to get images for
+	*
+	*/
 	function get_quartermile_gallery($vid, $qmid)
 	{
 		global $db;
@@ -1246,10 +1334,13 @@ class garage_image
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Dynorun Gallery Data
-	// Usage: get_dynorun_gallery('vehicle id', 'dynorun id');
-	/*========================================================================*/
+	/**
+	* Return array of specific dynorun gallery images
+	*
+	* @param int $vid vehicle id to get images for
+	* @param int $did dynorun id to get images for
+	*
+	*/
 	function get_dynorun_gallery($vid, $did)
 	{
 		global $db;
@@ -1282,10 +1373,13 @@ class garage_image
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Lap Gallery Data
-	// Usage: get_lap_gallery('vehicle id', 'lap id');
-	/*========================================================================*/
+	/**
+	* Return array of specific lap gallery images
+	*
+	* @param int $vid vehicle id to get images for
+	* @param int $lid lap id to get images for
+	*
+	*/
 	function get_lap_gallery($vid, $lid)
 	{
 		global $db;
@@ -1318,10 +1412,12 @@ class garage_image
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select All Uploaded Images From User
-	// Usage: get_user_upload_images('user id');
-	/*========================================================================*/
+	/**
+	* Return array of uploaded images for specific user
+	*
+	* @param int $user_id user id to get uploaded images for
+	*
+	*/
 	function get_user_upload_images($user_id)
 	{
 		global $db;
@@ -1353,10 +1449,12 @@ class garage_image
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select All Remote Images From User
-	// Usage: get_user_remote_images('user id');
-	/*========================================================================*/
+	/**
+	* Return array of remote images for specific user
+	*
+	* @param int $user_id user id to get remote images for
+	*
+	*/
 	function get_user_remote_images($user_id)
 	{
 		global $db;
@@ -1388,10 +1486,12 @@ class garage_image
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Below Image Quotas
-	// Usage: below_image_quotas();
-	/*========================================================================*/
+	/**
+	* Return boolean if user is below remote or uploaded quota depending on image 
+	* 
+	* @return boolean
+	*
+	*/
 	function below_image_quotas()
 	{
 		global $phpbb_root_path, $phpEx, $user;
@@ -1412,10 +1512,12 @@ class garage_image
 		}
 	}
 
-	/*========================================================================*/
-	// Above Or Equal Image Quotas
-	// Usage: above_image_quotas();
-	/*========================================================================*/
+	/**
+	* Return boolean if user is above remote or uploaded quota depending on image
+	* 
+	* @return boolean
+	*
+	*/
 	function above_image_quotas()
 	{
 		global $phpbb_root_path, $phpEx, $user;
@@ -1436,19 +1538,21 @@ class garage_image
 		}
 	}
 
-	/*========================================================================*/
-	// Count All Images In The Garage
-	// Usage: count_total_images();
-	/*========================================================================*/
+	/**
+	* Return count of total images
+	*/	
 	function count_total_images()
 	{
 		return sizeof($this->get_all_images());
 	}
 
-	/*========================================================================*/
-	// Download Remote Image
-	// Usage: download_remote_image('Image URL', 'Destination File Name');
-	/*========================================================================*/
+	/**
+	* Download a remote image to local for thumbnail creation
+	*
+	* @param string $remote_url url to download
+	* @param string $destination_file destination file
+	*
+	*/
 	function download_remote_image($remote_url, $destination_file)
 	{
 		global $garage_config, $phpbb_root_path;
@@ -1486,10 +1590,15 @@ class garage_image
 		return;
 	}
 
-	/*========================================================================*/
-	// Rebuild Thumbnails
-	// Usage: rebuild_thumbs('start point', 'per cycle', 'already completed', 'log file');
-	/*========================================================================*/
+	/**
+	* Rebuild thumbnails. Useful when deminisions changed in ACP
+	*
+	* @param int $start starting point for loop
+	* @param int $limit images to process in loop
+	* @param int $done number of images completed already
+	* @param string $file file name to for log creation
+	*
+	*/
 	function rebuild_thumbs($start, $limit, $done, $file) 
 	{
 	

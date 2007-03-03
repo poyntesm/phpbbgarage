@@ -23,10 +23,12 @@ class garage_service
 {
 	var $classname = "garage_service";
 
-	/*========================================================================*/
-	// Inserts Service Into DB
-	// Usage: insert_service(array());
-	/*========================================================================*/
+	/**
+	* Insert new service history
+	*
+	* @param array $data single-dimension array holding the data for the new service history
+	*
+	*/
 	function insert_service($data)
 	{
 		global $vid, $db;
@@ -47,10 +49,12 @@ class garage_service
 		return $db->sql_nextid();
 	}
 
-	/*========================================================================*/
-	// Updates Service In DB
-	// Usage: update_service(array());
-	/*========================================================================*/
+	/**
+	* Updates a service history
+	*
+	* @param array $data single-dimension array holding the data to update the service history with
+	*
+	*/
 	function update_service($data)
 	{
 		global $db, $vid, $svid;
@@ -74,10 +78,12 @@ class garage_service
 		return;
 	}
 
-	/*========================================================================*/
-	// Delete Service Entry Including Image 
-	// Usage: delete_service('service id');
-	/*========================================================================*/
+	/**
+	* Delete service history
+	*
+	* @param int $svid service history id to delete
+	*
+	*/
 	function delete_service($svid)
 	{
 		global $garage, $garage_image;
@@ -87,10 +93,12 @@ class garage_service
 		return ;
 	}
 
-	/*========================================================================*/
-	// Select Service Data By Service ID
-	// Usage: get_service('service id');
-	/*========================================================================*/
+	/**
+	* Return data for a specific service history
+	*
+	* @param int $svid service history id to return data for
+	*
+	*/
 	function get_service($svid)
 	{
 		global $db;
@@ -119,10 +127,12 @@ class garage_service
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Service Data By Vehicle ID
-	// Usage: get_services_by_vehicle('garage id');
-	/*========================================================================*/
+	/**
+	* Return array of service histories for specific vehicle
+	*
+	* @param int $vid vehicle id to return service histories for
+	*
+	*/
 	function get_services_by_vehicle($vid)
 	{
 		global $db;
@@ -155,10 +165,12 @@ class garage_service
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Returns Lang String For Service Type
-	// Usage: get_service_type();
-	/*========================================================================*/
+	/**
+	* Return language string for service history type id
+	*
+	* @param int $id service history type id to return language for
+	*
+	*/
 	function get_service_type($id)
 	{
 		global $user;
@@ -173,10 +185,14 @@ class garage_service
 		}
 	}
 
-	/*========================================================================*/
-	// Select Services By Buisness From DB
-	// Usage: get_services_by_business('business id', 'start row', 'end row');
-	/*========================================================================*/
+	/**
+	* Returns array with limited number of service histories from specific business
+	*
+	* @param int $business_id business id to get data for
+	* @param int $start starting row for data selection
+	* @param int $limit number to limit rows returned
+	*
+	*/
 	function get_services_by_business($business_id, $start = 0 , $limit = 20)
 	{
 		global $db;
