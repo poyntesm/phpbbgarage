@@ -2,7 +2,7 @@
 /** 
 *
 * @package garage
-* @version $Id: memberlist.php,v 1.207 2007/01/26 16:05:14 acydburn Exp $
+* @version $Id$
 * @copyright (c) 2005 phpBB Garage
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
 *
@@ -23,10 +23,9 @@ class garage_vehicle
 {
 	var $classname = "garage_vehicle";
 
-	/*========================================================================*/
-	// Gets User Vehicle Quota
-	// Usage: get_user_vehicle_quota();
-	/*========================================================================*/
+	/**
+	* Return user vehicle quota
+	*/
 	function get_user_add_quota()
 	{
 		global $db, $user, $garage_config, $garage, $phpEx, $phpbb_root_path;
@@ -70,10 +69,12 @@ class garage_vehicle
 		}
 	}
 
-	/*========================================================================*/
-	// Gets Group Vehicle Quota - Used Only In ACP Page
-	// Usage: get_group_vehicle_quota('group id');
-	/*========================================================================*/
+	/**
+	* Return group vehicle quota
+	*
+	* @param int $gid group id to return quota for
+	*
+	*/
 	function get_group_vehicle_quota($gid)
 	{
 		global $db, $garage_config;
@@ -100,10 +101,12 @@ class garage_vehicle
 		}
 	}
 
-	/*========================================================================*/
-	// Inserts Vehicle Into DB
-	// Usage: insert_vehicle(array());
-	/*========================================================================*/
+	/**
+	* Insert new vehicle
+	*
+	* @param array $data single-dimension array holding the data for the new vehicle
+	*
+	*/
 	function insert_vehicle($data)
 	{
 		global $user, $db, $garage_config;
@@ -131,10 +134,12 @@ class garage_vehicle
 		return $db->sql_nextid();
 	}
 
-	/*========================================================================*/
-	// Insurance Vehicle Rating Into DB
-	// Usage: insert_vehicel_rating(array());
-	/*========================================================================*/
+	/**
+	* Insert new vehicle rating
+	*
+	* @param array $data single-dimension array holding the data for the new vehicle rating
+	*
+	*/
 	function insert_vehicle_rating($data)
 	{
 		global $vid, $db;
@@ -151,10 +156,9 @@ class garage_vehicle
 		return;
 	}
 
-	/*========================================================================*/
-	// Returns Count Of Users Vehicles
-	// Usage: count_user_vehicles();
-	/*========================================================================*/
+	/**
+	* Count number of vehicles owned by user
+	*/
 	function count_user_vehicles()
 	{
 		global $user, $db;
@@ -178,10 +182,12 @@ class garage_vehicle
 		return $data['total'];
 	}
 
-	/*========================================================================*/
-	// Returns Count Of Users Vehicles
-	// Usage: count_user_vehicles();
-	/*========================================================================*/
+	/**
+	* Return rating granted by user to specific vehicle
+	*
+	* @param int $vid vehicle id to return rating for
+	*
+	*/
 	function get_user_vehicle_rating($vid)
 	{
 		global $user, $db;
@@ -205,10 +211,12 @@ class garage_vehicle
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Updates Vehicle In DB
-	// Usage: update_vehicle(array());
-	/*========================================================================*/
+	/**
+	* Updates a existing vehicle
+	*
+	* @param array $data single-dimension array holding the data to update the vehicle with
+	*
+	*/
 	function update_vehicle($data)
 	{
 		global $vid, $db, $garage_config, $user;
@@ -238,10 +246,12 @@ class garage_vehicle
 		return;
 	}
 
-	/*========================================================================*/
-	// Updates Vehicle Rating In DB
-	// Usage: update_vehicle_rating(array());
-	/*========================================================================*/
+	/**
+	* Updates a existing vehicle rating
+	*
+	* @param array $data single-dimension array holding the data to update the vehicle rating with
+	*
+	*/
 	function update_vehicle_rating($data)
 	{
 		global $db, $vid;
@@ -260,10 +270,9 @@ class garage_vehicle
 		return;
 	}
 
-	/*========================================================================*/
-	// Resets All Vehicles Rating To 0
-	// Usage: reset_all_vehicles_rating();
-	/*========================================================================*/
+	/**
+	* Reset all vehicle ratings to 0
+	*/
 	function reset_all_vehicles_rating()
 	{
 		global $db;
@@ -284,10 +293,12 @@ class garage_vehicle
 		return;
 	}
 
-	/*========================================================================*/
-	// Calculates A Vehicles Weighted Rating
-	// Usage: update_vehicle_rating('vehicle id');
-	/*========================================================================*/
+	/**
+	* Calculate weighted rating
+	*
+	* @param int $vid vehicle id
+	*
+	*/
 	function calculate_weighted_rating($vid)
 	{
 		global $db, $garage_config;
@@ -328,10 +339,13 @@ class garage_vehicle
 		return $weighted_rating;
 	}
 
-	/*========================================================================*/
-	// Updates Weighted Rating Of Vehicle In DB
-	// Usage: update_vehicle_rating('vehicle id', 'weighted rating');
-	/*========================================================================*/
+	/**
+	* Updates a existing dynorun
+	*
+	* @param int $vid
+	* @param int $weighted rating
+	*
+	*/
 	function update_weighted_rating($vid, $weighted_rating)
 	{
 		global $db;
@@ -349,10 +363,9 @@ class garage_vehicle
 		return;
 	}
 
-	/*========================================================================*/
-	// Count The Total Vehicles Within The Garage
-	// Usage: count_total_vehciles();
-	/*========================================================================*/
+	/**
+	* Count all vehicles
+	*/
 	function count_total_vehicles()
 	{
 		global $db;
@@ -419,10 +432,12 @@ class garage_vehicle
 		return $data['total'];
 	}
 
-	/*========================================================================*/
-	// Check A User Owns The Vehicle, If Not Display Message
-	// Usage: check_ownership('vehicle id');
-	/*========================================================================*/
+	/**
+	* Check user owns vehicle or is allowed moderate
+	*
+	* @param int $vid vehicle id to check ownership for
+	*
+	*/
 	function check_ownership($vid)
 	{
 		global $user, $auth;
@@ -440,10 +455,12 @@ class garage_vehicle
 		return;
 	}
 	
-	/*========================================================================*/
-	// Update Vehicle Modified Time
-	// Usage: update_vehicle_time('vehicle id');
-	/*========================================================================*/
+	/**
+	* Update vehicle timestamp
+	*
+	* @param int $vid vehicle id to update timestamp for
+	*
+	*/
 	function update_vehicle_time($vid)
 	{
 		global $garage;
@@ -453,12 +470,13 @@ class garage_vehicle
 		return;
 	}
 	
-	/*========================================================================*/
-	// Build Featured Vehicle HTML If Required..A Absolute URL Can Be Passed To
-	// Allow Calls From A Different Domain..I.E Fourm Resides In A Subdomain 
-	// Usage: show_featuredvehicle( 'URL');
-	/*========================================================================*/
-	function show_featuredvehicle( $absolute_url = NULL )
+	/**
+	* Assign template variables to show featured vehicle
+	*
+	* @param string $absolute_url url for links if outside forum or in subforums
+	*
+	*/
+	function show_featuredvehicle($absolute_url = NULL)
 	{
 		global $user, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
@@ -694,10 +712,9 @@ class garage_vehicle
 	        return ;
 	}
 	
-	/*========================================================================*/
-	// Build updated vehicles HTML if required 
-	// Usage: show_updated_vehicles();
-	/*========================================================================*/
+	/**
+	* Assign template variables to display last updated vehicles
+	*/
 	function show_updated_vehicles()
 	{
 		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $garage_config, $garage_vehicle, $board_config;
@@ -736,10 +753,9 @@ class garage_vehicle
 		return ;
 	}
 	
-	/*========================================================================*/
-	// Build Most Spent HTML If Required 
-	// Usage: show_most_spent();
-	/*========================================================================*/
+	/**
+	* Assign template variables to display vehicles with most money spent
+	*/
 	function show_most_spent()
 	{
 		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config;
@@ -778,10 +794,9 @@ class garage_vehicle
 		return ;
 	}
 	
-	/*========================================================================*/
-	// Build Most Viewed Vehicle HTML If Required 
-	// Usage: show_most_viewed();
-	/*========================================================================*/
+	/**
+	* Assign template variables to display most viewed vehicles
+	*/
 	function show_most_viewed()
 	{
 		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config;
@@ -820,10 +835,9 @@ class garage_vehicle
 		return ;
 	}
 	
-	/*========================================================================*/
-	// Build Top Rated HTML If Required 
-	// Usage: show_most_viewed();
-	/*========================================================================*/
+	/**
+	* Assign template variables to display top rated vehicles
+	*/
 	function show_toprated()
 	{
 		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config;
@@ -862,10 +876,9 @@ class garage_vehicle
 		return ;
 	}
 	
-	/*========================================================================*/
-	// Build Newest Vehicles HTML If Required 
-	// Usage:  show_newest_vehicles()
-	/*========================================================================*/
+	/**
+	* Assign template variables to display newest vehicles
+	*/
 	function show_newest_vehicles()
 	{
 		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $garage_config, $board_config;
@@ -904,10 +917,12 @@ class garage_vehicle
 		return ;
 	}
 	
-	/*========================================================================*/
-	// Delete A Vehicle From The Garage Including All Related Data
-	// Usage: delete_vehicle('vehicle id');
-	/*========================================================================*/
+	/**
+	* Delete a vehicle and EVERYTHING linked to to
+	*
+	* @param int $id vehicle id to delete
+	*
+	*/
 	function delete_vehicle($id)
 	{
 		global $garage, $garage_modification, $garage_quartermile, $garage_dynorun, $garage_insurance, $garage_guestbook, $garage_vehicle, $garage_image, $garage_service, $garage_track, $garage_blog, $vid;
@@ -980,10 +995,12 @@ class garage_vehicle
 		return;
 	}
 
-	/*========================================================================*/
-	// Display Vehicle Page - With Or Without Management Links & Galleries
-	// Usage:  display_vehicle('YES|NO|MODERATE');
-	/*========================================================================*/
+	/**
+	* Assign template variables to display vehicle page
+	*
+	* @param YES|NO|MODERATE ownership mode
+	*
+	*/
 	function display_vehicle($owned)
 	{
 		global $user, $template, $images, $phpEx, $phpbb_root_path, $garage_config, $config, $vid, $mode, $garage, $garage_template, $garage_modification, $garage_insurance, $garage_quartermile, $garage_dynorun, $garage_image, $auth, $garage_guestbook, $garage_track, $garage_service, $garage_blog, $HTTP_SERVER_VARS, $start;
@@ -1521,67 +1538,12 @@ class garage_vehicle
 		return;
 	}
 	
-	/*========================================================================*/
-	// Select All Vehicles Data From Db
-	// Usage: get_all_vehicles();
-	/*========================================================================*/
-	function get_all_vehicles($additional_where = NULL, $order, $sort, $start = 0, $limit = 10000)
-	{
-		global $db;
-
-		$data = null;
-
-		$sql = $db->sql_build_query('SELECT', 
-			array(
-			'SELECT'	=> 'g.*, mk.make, md.model, user.username, u.user_colour, u.user_id, count(mods.id) AS total_mods, count(*) as total, i.attach_id',
-			'FROM'		=> array(
-				GARAGE_VEHICLES_TABLE	=> 'g',
-			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'mods'),	
-					'ON'	=> 'mods.vehicle_id = g.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'g.make_id = mk.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'g.model_id = md.id'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'user'),
-					'ON'	=> 'g.user_id = user.user_id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_VEHICLE_GALLERY_TABLE => 'vg'),
-					'ON'	=> 'g.id = vg.vehicle_id AND vg.hilite = 1',
-				)
-				,array(
-					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
-					'ON'	=> 'i.attach_id = vg.image_id'
-				)
-			),
-			'WHERE'		=> "mk.pending = 0 AND md.pending = 0 " . $additional_where,
-			'GROUP_BY'	=> "g.id",
-			'ORDER_BY'	=> "$order $sort"
-		));
-
-      		$result = $db->sql_query_limit($sql, $limit, $start);
-		while ($row = $db->sql_fetchrow($result) )
-		{
-			$data[] = $row;
-		}
-		$db->sql_freeresult($result);
-
-		return $data;
-	}
-
-	/*========================================================================*/
-	// Select All Vehicle Data From Db
-	// Usage: get_vehicle('vehicle id');
-	/*========================================================================*/
+	/**
+	* Return data for specific vehicle
+	*
+	* @param int $vid vehicle id to return data for
+	*
+	*/
 	function get_vehicle($vid)
 	{
 		global $db;
@@ -1631,10 +1593,9 @@ class garage_vehicle
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select All Vehicle Data From Db
-	// Usage: get_pending_vehicles();
-	/*========================================================================*/
+	/**
+	* Return array holding all pending vehicles
+	*/
 	function get_pending_vehicles()
 	{
 		global $db;
@@ -1687,10 +1648,12 @@ class garage_vehicle
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select All Vehicle Data From Db
-	// Usage: get_pending_vehicles();
-	/*========================================================================*/
+	/**
+	* Return array of vehicles for specific make
+	*
+	* @param int $make_id make id to return vehicles for
+	*
+	*/
 	function get_vehicles_by_make_id($make_id)
 	{
 		global $db;
@@ -1716,10 +1679,12 @@ class garage_vehicle
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select All Vehicle Data From Db
-	// Usage: get_pending_vehicles();
-	/*========================================================================*/
+	/**
+	* Return array of vehicles for specific model
+	*
+	* @param int $model_id model id to return vehicles for
+	*
+	*/
 	function get_vehicles_by_model_id($model_id)
 	{
 		global $db;
@@ -1745,10 +1710,12 @@ class garage_vehicle
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select Vehicle Owner From Db
-	// Usage: get_vehicle_owner('vehicle id');
-	/*========================================================================*/
+	/**
+	* Return username owning a specific vehicle
+	*
+	* @param int $vid vehicle id to return data for
+	*
+	*/
 	function get_vehicle_owner($vid)
 	{
 		global $db;
@@ -1773,10 +1740,12 @@ class garage_vehicle
 		return $data['username'];
 	}
 
-	/*========================================================================*/
-	// Select Vehicle Owner ID From Db
-	// Usage: get_vehicle_owner_id('vehicle id');
-	/*========================================================================*/
+	/**
+	* Return user id owning a specific vehicle
+	*
+	* @param int $vid vehicle id to return data for
+	*
+	*/
 	function get_vehicle_owner_id($vid)
 	{
 		global $db;
@@ -1802,10 +1771,12 @@ class garage_vehicle
 	}
 
 
-	/*========================================================================*/
-	// Select All Vehicles From User Data From Db
-	// Usage: get_vehicles_by_user('user id');
-	/*========================================================================*/
+	/**
+	* Return array holding vehicles owned by a specific user
+	*
+	* @param int $user_id user id to return vehicles for
+	*
+	*/
 	function get_vehicles_by_user($user_id)
 	{
 		global $db;
@@ -1858,10 +1829,12 @@ class garage_vehicle
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Selects Rating Information For Vehicle
-	// Usage: get_vehicle_rating('vehicle id');
-	/*========================================================================*/
+	/**
+	* Return rating data for specific vehicle
+	*
+	* @param int $vid vehicle id to return rating data for
+	*
+	*/
 	function get_vehicle_rating($vid)
 	{
 		global $db;
@@ -1897,10 +1870,12 @@ class garage_vehicle
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Selects Newest Vehicles
-	// Usage: get_newest_vehicles('No. To Return');
-	/*========================================================================*/
+	/**
+	* Return limited array of newest created vehicles
+	*
+	* @param int $limit number of rows to return
+	*
+	*/
 	function get_newest_vehicles($limit)
 	{
 		global $db;
@@ -1941,10 +1916,12 @@ class garage_vehicle
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Selects Top Rated Vehicles
-	// Usage: get_top_rated_vehicles('No. To Return');
-	/*========================================================================*/
+	/**
+	* Return limited array of top rated vehicles
+	*
+	* @param int $limit number of rows to return
+	*
+	*/
 	function get_top_rated_vehicles($limit)
 	{
 		global $db;
@@ -1985,10 +1962,12 @@ class garage_vehicle
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Selects Most Viewed Vehicles
-	// Usage: get_most_viewed_vehicles('No. To Return');
-	/*========================================================================*/
+	/**
+	* Return limited array of most viewed vehicles
+	*
+	* @param int $limit number of rows to return
+	*
+	*/
 	function get_most_viewed_vehicles($limit)
 	{
 		global $db;
@@ -2029,10 +2008,12 @@ class garage_vehicle
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Selects Most Spent Vehicle
-	// Usage: get_most_spent_vehicles('No. To Return');
-	/*========================================================================*/
+	/**
+	* Return limited array of vehicle with most money spent
+	*
+	* @param int $limit number of rows to return
+	*
+	*/
 	function get_most_spent_vehicles($limit)
 	{
 		global $db;
@@ -2078,10 +2059,12 @@ class garage_vehicle
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Selects Lastest Updated Vehicle
-	// Usage: get_latest_updatest_vehicles('No. To Return');
-	/*========================================================================*/
+	/**
+	* Return modification categories from specific vehicle
+	*
+	* @param int $vid vehicle id to return modification categories for
+	*
+	*/
 	function get_vehicle_modification_categories($vid)
 	{
 		global $db;
@@ -2109,10 +2092,12 @@ class garage_vehicle
 		return $data;
 	}
 	            
-	/*========================================================================*/
-	// Selects Lastest Updated Vehicle
-	// Usage: get_latest_updatest_vehicles('No. To Return');
-	/*========================================================================*/
+	/**
+	* Return limited array with latest updated vehicles
+	*
+	* @param int $limit rumber of rows to return data for
+	*
+	*/
 	function get_latest_updated_vehicles($limit)
 	{
 		global $db;
@@ -2153,10 +2138,12 @@ class garage_vehicle
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Select A Users Main Vehicle Data From Db
-	// Usage: get_user_main_vehicle('user id');
-	/*========================================================================*/
+	/**
+	* Return data for a users main vehicle
+	*
+	* @param int $user_id user id to return main vehicle for
+	*
+	*/
 	function get_user_main_vehicle($user_id)
 	{
 		global $db;
@@ -2206,10 +2193,12 @@ class garage_vehicle
 		return $data;
 	}
 
-	/*========================================================================*/
-	// Integrates phpBB Garage & phpBB User Profiles
-	// Usage: profile_integration('user_id');
-	/*========================================================================*/
+	/**
+	* Assign template variables for profile integration
+	*
+	* @param int $user_id user id to integrate profile
+	*
+	*/
 	function profile_integration($user_id)
 	{
 		global $images, $template, $member, $lang, $phpbb_root_path, $phpEx, $garage_config, $user;
@@ -2304,11 +2293,13 @@ class garage_vehicle
 		}
 	}
 
-	/*========================================================================*/
-	// Approve Quartermile Times
-	// Usage: approve_quartermile(array(), 'mode');
-	/*========================================================================*/
-	function approve_vehicle($id_list, $mode)
+	/**
+	* Approve vehicle
+	*
+	* @param array $data single-dimension array holding the vehicle ids to approve
+	*
+	*/
+	function approve_vehicle($id_list)
 	{
 		global $phpbb_root_path, $phpEx, $garage;
 
@@ -2320,11 +2311,13 @@ class garage_vehicle
 		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_vehicles"));
 	}
 
-	/*========================================================================*/
-	// Approve Quartermile Times
-	// Usage: approve_quartermile(array(), 'mode');
-	/*========================================================================*/
-	function disapprove_vehicle($id_list, $mode)
+	/**
+	* Disapprove vehicle
+	*
+	* @param array $data single-dimension array holding the vehicle ids to disapprove
+	*
+	*/
+	function disapprove_vehicle($id_list)
 	{
 		global $phpbb_root_path, $phpEx;
 
