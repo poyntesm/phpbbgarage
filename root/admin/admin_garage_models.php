@@ -40,7 +40,13 @@ require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/
 //Build All Garage Classes e.g $garage_images->
 require($phpbb_root_path . 'includes/class_garage.' . $phpEx);
 require($phpbb_root_path . 'includes/class_garage_business.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_dynorun.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_image.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_insurance.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_modification.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_quartermile.' . $phpEx);
 require($phpbb_root_path . 'includes/class_garage_template.' . $phpEx);
+require($phpbb_root_path . 'includes/class_garage_vehicle.' . $phpEx);
 require($phpbb_root_path . 'includes/class_garage_guestbook.' . $phpEx);
 require($phpbb_root_path . 'includes/class_garage_model.' . $phpEx);
 
@@ -129,6 +135,7 @@ switch($mode)
 
 		//Set Make To Pending
 		$garage->update_single_field(GARAGE_MAKES_TABLE, 'pending', '1' , 'id' , $data['id']);
+		$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', '1', 'config_name', 'items_pending');
 
 		//Return a message...
 		message_die(GENERAL_MESSAGE, $make_updated_message);
@@ -147,6 +154,27 @@ switch($mode)
 
 		//Set Make To Approved
 		$garage->update_single_field(GARAGE_MAKES_TABLE, 'pending', '0' , 'id' , $data['id']);
+
+		//Build The Quartermile Table With Only Pending Times And Get Returned Count
+		$pending_quartermile_count = $garage_quartermile->build_quartermile_table('YES');
+
+		//Build The Rollingroad Table With Only Pending Run And Get Returned Counts
+		$pending_dynorun_count = $garage_dynorun->build_dynorun_table('YES');
+
+		//Build The Business Table With Only Pending One And Get Returned Counts
+		$pending_business_count = $garage_business->build_business_table('YES');
+
+		//Build The Make Table With Only Pending One And Get Returned Counts
+		$pending_make_count = $garage_model->build_make_table('YES');
+
+		//Build The Model Table With Only Pending One And Get Returned Counts
+		$pending_model_count = $garage_model->build_model_table('YES');
+
+		//Display A Nice Message Saying Nothing Is Pending Approval If Needed
+		if ( $pending_quartermile_count == '0' AND $pending_dynorun_count == '0' AND $pending_business_count == '0' AND $pending_make_count == '0' AND  $pending_model_count == '0' )
+		{
+			$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', 0, 'config_name', 'items_pending');
+		}
 
 		//Return a message...
 		message_die(GENERAL_MESSAGE, $make_updated_message);
@@ -276,6 +304,7 @@ switch($mode)
 
 		//Set Model To Pending
 		$garage->update_single_field(GARAGE_MODELS_TABLE, 'pending', '1' , 'id' , $data['id']);
+		$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', '1', 'config_name', 'items_pending');
 
 		//Return a message...
 		message_die(GENERAL_MESSAGE, $model_updated_message);
@@ -294,6 +323,26 @@ switch($mode)
 
 		//Set Model To Approved
 		$garage->update_single_field(GARAGE_MODELS_TABLE, 'pending', '0' , 'id' , $data['id']);
+		//Build The Quartermile Table With Only Pending Times And Get Returned Count
+		$pending_quartermile_count = $garage_quartermile->build_quartermile_table('YES');
+
+		//Build The Rollingroad Table With Only Pending Run And Get Returned Counts
+		$pending_dynorun_count = $garage_dynorun->build_dynorun_table('YES');
+
+		//Build The Business Table With Only Pending One And Get Returned Counts
+		$pending_business_count = $garage_business->build_business_table('YES');
+
+		//Build The Make Table With Only Pending One And Get Returned Counts
+		$pending_make_count = $garage_model->build_make_table('YES');
+
+		//Build The Model Table With Only Pending One And Get Returned Counts
+		$pending_model_count = $garage_model->build_model_table('YES');
+
+		//Display A Nice Message Saying Nothing Is Pending Approval If Needed
+		if ( $pending_quartermile_count == '0' AND $pending_dynorun_count == '0' AND $pending_business_count == '0' AND $pending_make_count == '0' AND  $pending_model_count == '0' )
+		{
+			$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', 0, 'config_name', 'items_pending');
+		}
 
 		//Return a message...
 		message_die(GENERAL_MESSAGE, $model_updated_message);

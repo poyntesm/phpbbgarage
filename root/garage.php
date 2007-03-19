@@ -20,13 +20,38 @@
  *
  ***************************************************************************/
 
+if ( defined('NUKE_FILE') && !defined('MODULE_FILE') )
+{
+	die("You can't access this file directly...");
+}
+
 define('IN_PHPBB', true);
 
 //Let's Set The Root Dir For phpBB And Load Normal phpBB Required Files
 $phpbb_root_path = './';
+$phpbb_inc_path = './';
+
+//Setup some Nuke Related Stuff
+$nuke_popup= '';
+if ( defined('NUKE_FILE') )
+{
+	//Let's Set The Root Dir For phpBB inside of nukePHP
+	if ($popup != "1")
+	{
+		$module_name = basename(dirname(__FILE__));
+		require("modules/".$module_name."/nukebb.php");
+	}
+	else
+	{
+		$phpbb_root_path = 'modules/Forums/';
+	}
+	$phpbb_inc_path = '';
+	$nuke_popup= '&amp;popup=1';
+}
+
 require($phpbb_root_path . 'extension.inc');
 include($phpbb_root_path . 'common.' . $phpEx);
-include($phpbb_root_path . 'includes/bbcode.' . $phpEx);
+include($phpbb_inc_path . 'includes/bbcode.' . $phpEx);
 
 //Setup Garage Language Files...
 if(empty($board_config['default_lang']))
@@ -50,7 +75,16 @@ require($phpbb_root_path . 'includes/class_garage_guestbook.' . $phpEx);
 require($phpbb_root_path . 'includes/class_garage_model.' . $phpEx);
 
 //Start Session Management
-$userdata = session_pagestart($user_ip, PAGE_GARAGE);
+if ( defined('NUKE_FILE') )
+{
+	// phpNuke has a username argument
+	$userdata = session_pagestart($user_ip, PAGE_GARAGE, $nukeuser);
+
+}
+else
+{
+	$userdata = session_pagestart($user_ip, PAGE_GARAGE);
+}
 init_userprefs($userdata);
 
 //Set The Page Title & Version Notice
@@ -88,7 +122,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if (!$userdata['session_logged_in'])
 		{
-			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=create_vehicle", true));
+			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=create_vehicle", true), false);
 		}
 
 		//Check The User Is Allowed Perform This Action
@@ -106,7 +140,7 @@ switch( $mode )
 		//Check If User Has Too Many Vehicles Already...If So Display Notice
 		if ( $count >= $garage_vehicle->get_user_add_quota() ) 
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=5", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=5", true), false);
 		}
 
 		//Set Default Make 
@@ -161,7 +195,7 @@ switch( $mode )
 			'MILEAGE_UNIT_LIST' => $garage_template->dropdown('mileage_units', $mileage_unit_types, $mileage_unit_types))
 		);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 		
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$template->pparse('header');
@@ -176,7 +210,7 @@ switch( $mode )
 		//User Is Annoymous...So Not Allowed To Create A Vehicle
 		if ( $userdata['user_id'] == ANONYMOUS )
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=2", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=2", true), false);
 		}
 
 		//Check The User Is Allowed Perform This Action
@@ -188,7 +222,7 @@ switch( $mode )
 		//Check To See If User Has Too Many Vehicles Already...If So Display Notice
 		if ( $count >= $garage_vehicle->get_user_add_quota() ) 
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=5", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=5", true), false);
 		}
 
 		//Get All Data Posted And Make It Safe To Use
@@ -223,11 +257,11 @@ switch( $mode )
 			//You Have Reached Your Image Quota..Error Nicely
 			else if ( !($garage_image->remote_image_below_quota()) OR !($garage_image->upload_image_below_quota()) )
 			{
-				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true));
+				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true), false);
 			}
 		}
 
-		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
+		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true), false);
 
 		break;
 
@@ -237,7 +271,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if (!$userdata['session_logged_in'])
 		{
-			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=edit_vehicle&CID=$cid", true));
+			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=edit_vehicle&CID=$cid", true), false);
 		}
 
 		//Check Vehicle Ownership
@@ -292,7 +326,7 @@ switch( $mode )
 			'COMMENTS' => $data['comments'])
 		);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$template->pparse('header');
@@ -307,7 +341,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if (!$userdata['session_logged_in'])
 		{
-			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=edit_vehicle&CID=$cid", true));
+			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=edit_vehicle&CID=$cid", true), false);
 		}
 
 		//Check Vehicle Ownership
@@ -328,7 +362,7 @@ switch( $mode )
 		//Update Timestamp For Vehicle	
 		$garage_vehicle->update_vehicle_time($cid);
 
-		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
+		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true), false);
 
 		break;
 
@@ -341,7 +375,7 @@ switch( $mode )
 		//Actually Delete The Vehicle..This Will Delete All Related Items!!
 		$garage_vehicle->delete_vehicle($cid);
 
-		redirect(append_sid("garage.$phpEx?mode=main_menu", true));
+		redirect(append_sid("garage.$phpEx?mode=main_menu", true), false);
 
 		break;
 
@@ -354,13 +388,13 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if (!$userdata['session_logged_in'])
 		{
-			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=add_modification&CID=$cid", true));
+			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=add_modification&CID=$cid", true), false);
 		}
 
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
 			'header' => 'garage_header.tpl',
 			'body'   => 'garage_modification.tpl')
@@ -415,7 +449,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if (!$userdata['session_logged_in'])
 		{
-			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=add_modification&CID=$cid", true));
+			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=add_modification&CID=$cid", true), false);
 		}
 
 		//Check Vehicle Ownership
@@ -452,11 +486,11 @@ switch( $mode )
 			//You Have Reached Your Image Quota..Error Nicely
 			else if ( !($garage_image->remote_image_below_quota()) OR !($garage_image->upload_image_below_quota()) )
 			{
-				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true));
+				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true), false);
 			}
 		}
 
-		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
+		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true), false);
 
 		break;
 
@@ -465,7 +499,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if (!$userdata['session_logged_in'])
 		{
-			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=edit_modification&MID=$mid&CID=$cid", true));
+			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=edit_modification&MID=$mid&CID=$cid", true), false);
 		}
 
 		//Check Vehicle Ownership
@@ -522,7 +556,7 @@ switch( $mode )
 			'INSTALL_COMMENTS' => $data['install_comments'])
 		);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$template->pparse('header');
@@ -572,11 +606,11 @@ switch( $mode )
 			//You Have Reached Your Image Quota..Error Nicely
 			else if ( !($garage_image->remote_image_below_quota()) OR !($garage_image->upload_image_below_quota()) )
 			{
-				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true));
+				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true), false);
 			}
 		}
 
-		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
+		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true), false);
 
 		break;
 
@@ -591,7 +625,7 @@ switch( $mode )
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
-		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
+		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true), false);
 
 		break;
 
@@ -603,7 +637,7 @@ switch( $mode )
 		//Let Check That Quartermile Times Are Allowed...If Not Redirect
 		if ($garage_config['enable_quartermile'] == '0')
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=18", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=18", true), false);
 		}
 
 		//Check Vehicle Ownership
@@ -616,7 +650,7 @@ switch( $mode )
 			$garage_template->dynorun_dropdown(NULL, NULL, $cid);
 		}
 		
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 
 		$template->set_filenames(array(
 			'header' => 'garage_header.tpl',
@@ -661,7 +695,7 @@ switch( $mode )
 		//Check That Quartermile Times Are Allowed...If Not Redirect
 		if ($garage_config['enable_quartermile'] == '0')
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=18", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=18", true), false);
 		}
 
 		//Check Vehicle Ownership
@@ -696,7 +730,7 @@ switch( $mode )
 			//You Have Reached Your Image Quota..Error Nicely
 			else if ( !($garage_image->remote_image_below_quota()) OR !($garage_image->upload_image_below_quota()) )
 			{
-				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true));
+				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true), false);
 			}
 		}
 		//No Image Attached..We Need To Check If This Breaks The Site Rule
@@ -704,7 +738,7 @@ switch( $mode )
 		{
 			//That Time Requires An Image...Delete Entered Time And Notify User
 			$garage_quartermile->delete_quartermile($qmid);
-			redirect(append_sid("garage.$phpEx?mode=error&EID=26", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=26", true), false);
 		}
 
 		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
@@ -714,7 +748,7 @@ switch( $mode )
 			$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', $data['pending'], 'config_name', 'items_pending');
 		}
 
-		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
+		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true), false);
 
 		break;
 
@@ -723,13 +757,13 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if (!$userdata['session_logged_in'])
 		{
-			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=edit_quartermile&QMID=$qmid&CID=$cid", true));
+			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=edit_quartermile&QMID=$qmid&CID=$cid", true), false);
 		}
 
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
 			'header' => 'garage_header.tpl',
 			'body'   => 'garage_quartermile.tpl')
@@ -841,7 +875,7 @@ switch( $mode )
 			//You Have Reached Your Image Quota..Error Nicely
 			else if ( !($garage_image->remote_image_below_quota()) OR !($garage_image->upload_image_below_quota()) )
 			{
-				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true));
+				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true), false);
 			}
 		}
 		//No Image Attached..We Need To Check If This Breaks The Site Rule
@@ -849,16 +883,16 @@ switch( $mode )
 		{
 			//That Time Requires An Image...Delete Entered Time And Notify User
 			$garage_quartermile->delete_quartermile_time($qmid);
-			redirect(append_sid("garage.$phpEx?mode=error&EID=26", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=26", true), false);
 		}
 
 		//If Editting From Pending Page Redirect Back To There Instead
 		if ( $data['pending_redirect'] == 'YES' )
 		{
-			redirect(append_sid("garage.$phpEx?mode=garage_pending", true));
+			redirect(append_sid("garage.$phpEx?mode=garage_pending", true), false);
 		}
 
-		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
+		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true), false);
 
 		break;
 
@@ -873,7 +907,7 @@ switch( $mode )
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
-		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
+		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true), false);
 
 		break;
 	
@@ -882,7 +916,7 @@ switch( $mode )
 		//Let Check That Rollingroad Runs Are Allowed...If Not Redirect
 		if ($garage_config['enable_rollingroad'] == '0')
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=18", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=18", true), false);
 		}
 
 		//Check The User Is Allowed Perform This Action
@@ -891,7 +925,7 @@ switch( $mode )
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 		
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
 			'header' => 'garage_header.tpl',
 			'body'   => 'garage_rollingroad.tpl')
@@ -933,7 +967,7 @@ switch( $mode )
 		//Let Check That Rollingroad Runs Are Allowed...If Not Redirect
 		if ($garage_config['enable_rollingroad'] == '0')
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=18", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=18", true), false);
 		}
 
 		//Check The User Is Allowed Perform This Action
@@ -971,7 +1005,7 @@ switch( $mode )
 			//You Have Reached Your Image Quota..Error Nicely
 			else if ( !($garage_image->remote_image_below_quota()) OR !($garage_image->upload_image_below_quota()) )
 			{
-				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true));
+				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true), false);
 			}
 		}
 		//No Image Attached..We Need To Check If This Breaks The Site Rule
@@ -979,7 +1013,7 @@ switch( $mode )
 		{
 			//That Time Requires An Image...Delete Entered Time And Notify User
 			$garage_dynorun->delete_dynorun($rrid);
-			redirect(append_sid("garage.$phpEx?mode=error&EID=26", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=26", true), false);
 		}
 
 		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
@@ -989,7 +1023,7 @@ switch( $mode )
 			$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', $data['pending'], 'config_name', 'items_pending');
 		}
 
-		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
+		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true), false);
 
 		break;
 
@@ -998,13 +1032,13 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if (!$userdata['session_logged_in'])
 		{
-			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=edit_rollingroad&RRID=$rrid&CID=$cid", true));
+			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=edit_rollingroad&RRID=$rrid&CID=$cid", true), false);
 		}
 
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
 			'header' => 'garage_header.tpl',
 			'body'   => 'garage_rollingroad.tpl')
@@ -1098,7 +1132,7 @@ switch( $mode )
 			//You Have Reached Your Image Quota..Error Nicely
 			else if ( !($garage_image->remote_image_below_quota()) OR !($garage_image->upload_image_below_quota()) )
 			{
-				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true));
+				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true), false);
 			}
 		}
 		//No Image Attached..We Need To Check If This Breaks The Site Rule
@@ -1106,16 +1140,16 @@ switch( $mode )
 		{
 			//That Time Requires An Image...Delete Entered Time And Notify User
 			$garage_dynorun->delete_dynorun($rrid);
-			redirect(append_sid("garage.$phpEx?mode=error&EID=26", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=26", true), false);
 		}
 
 		//If Editting From Pending Page Redirect Back To There Instead
 		if ( $data['pending_redirect'] == 'YES' )
 		{
-			redirect(append_sid("garage.$phpEx?mode=garage_pending", true));
+			redirect(append_sid("garage.$phpEx?mode=garage_pending", true), false);
 		}
 
-		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
+		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true), false);
 
 		break;
 
@@ -1130,7 +1164,7 @@ switch( $mode )
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
-		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
+		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true), false);
 
 		break;
 
@@ -1139,7 +1173,7 @@ switch( $mode )
 		//Let Check That Insurance Premiums Are Allowed...If Not Redirect
 		if ($garage_config['enable_insurance'] == '0')
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=18", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=18", true), false);
 		}
 
 		//Check The User Is Allowed Perform This Action
@@ -1148,7 +1182,7 @@ switch( $mode )
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
 			'header' => 'garage_header.tpl',
 			'body'   => 'garage_insurance.tpl')
@@ -1187,7 +1221,7 @@ switch( $mode )
 		//Let Check That Insurance Premiums Are Allowed...If Not Redirect
 		if ($garage_config['enable_insurance'] == '0')
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=18", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=18", true), false);
 		}
 
 		//Check The User Is Allowed Perform This Action
@@ -1211,20 +1245,20 @@ switch( $mode )
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
-		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
+		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true), false);
 
 	case 'edit_insurance':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if (!$userdata['session_logged_in'])
 		{
-			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=edit_insurance&IND_ID=$ins_id&CID=$cid", true));
+			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=edit_insurance&IND_ID=$ins_id&CID=$cid", true), false);
 		}
 
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
 			'header' => 'garage_header.tpl',
 			'body'   => 'garage_insurance.tpl')
@@ -1281,7 +1315,7 @@ switch( $mode )
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
-		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
+		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true), false);
 
 		break;
 	
@@ -1296,7 +1330,7 @@ switch( $mode )
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
-		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
+		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true), false);
 
 		break;
 
@@ -1316,7 +1350,7 @@ switch( $mode )
 			'body'   => 'garage_browse.tpl')
 		);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 
 		//Check If This Is A Search....If So We Have A Bit More Work To Do.....
 		if ((!empty($HTTP_GET_VARS['search'])) OR (!empty($HTTP_POST_VARS['search'])))
@@ -1342,9 +1376,11 @@ switch( $mode )
 		for ($i = 0; $i < count($data); $i++)
       		{
 			$image_attached = '';
+			$thumbnail_image = '<a href="garage.'.$phpEx.'?mode=view_vehicle&CID='. $data[$i]['id'] .'"><img hspace="5" vspace="5" src="' . $phpbb_root_path . GARAGE_UPLOAD_PATH . 'no_thumb.jpg' . '" class="attach"  /></a>';
             		if ($data[$i]['image_id'])
 			{
 				$image_attached = '<img hspace="1" vspace="1" src="' . $images['vehicle_image_attached'] . '" alt="' . $lang['Vehicle_Image_Attahced'] . '" title="' . $lang['Vehicle_Image_Attached'] . '" border="0" />';
+				$thumbnail_image = '<a href="garage.'.$phpEx.'?mode=view_vehicle&CID='. $data[$i]['id'] .'" title="' . $data['attach_file'] .'"><img hspace="5" vspace="5" src="' . $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'] .'" class="attach"  /></a>';
 			}
 
 			$row_color = ( !($i % 2) ) ? $theme['td_color1'] : $theme['td_color2'];
@@ -1355,6 +1391,7 @@ switch( $mode )
 				'ROW_COLOR' => '#' . $row_color,
 				'ROW_CLASS' => $row_class,
 				'IMAGE_ATTACHED' => $image_attached,
+				'THUMBNAIL_IMAGE' => $thumbnail_image,
 				'YEAR' => $data[$i]['made_year'],
 				'MAKE' => $data[$i]['make'],
 				'COLOUR' => $data[$i]['color'],
@@ -1431,7 +1468,7 @@ switch( $mode )
 		$order_by = (empty($sort)) ? 'premium' : $sort;
 		$sort_order = (empty($order)) ? 'ASC' : $order;
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 
 		$search_data = $garage_model->build_search_for_user_make_model();
 		
@@ -1527,7 +1564,7 @@ switch( $mode )
 		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
 			'header' => 'garage_header.tpl',
 			'javascript' => 'garage_vehicle_select_javascript.tpl',
@@ -1575,7 +1612,7 @@ switch( $mode )
 		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
 			'header' => 'garage_header.tpl',
 			'body'   => 'garage_view_vehicle.tpl')
@@ -1599,7 +1636,7 @@ switch( $mode )
 		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 
 		$template->set_filenames(array(
 			'header' => 'garage_header.tpl',
@@ -1630,8 +1667,10 @@ switch( $mode )
 		//If Images Exists For Modification..Display Thumbnail
 		if ( ($data['attach_id']) AND ($data['attach_is_image']) AND (!empty($data['attach_thumb_location'])) AND (!empty($data['attach_location'])) )
 		{
-			$thumb_image = GARAGE_UPLOAD_PATH . $data['attach_thumb_location'];
-			$data['modification_image'] = '<a href="garage.' . $phpEx . '?mode=view_gallery_item&amp;type=garage_mod&amp;image_id=' . $data['attach_id'] . '" title="' . $data['attach_file'] . '" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image . '" /></a>';
+			$temp_url = append_sid("garage.". $phpEx."?mode=view_gallery_item&amp;type=garage_mod&amp;image_id=". $data['attach_id'] . $nukepopup);
+
+			$thumb_image = $phpbb_root_path .GARAGE_UPLOAD_PATH . $data['attach_thumb_location'];
+			$data['modification_image'] = '<a href="'.$temp_url .'" title="' . $data['attach_file'] . '" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image . '" /></a>';
 		}
 
 		$template->assign_block_vars('level1', array());
@@ -1691,7 +1730,7 @@ switch( $mode )
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
 			'header' => 'garage_header.tpl',
 			'body'   => 'garage_view_vehicle.tpl')
@@ -1715,7 +1754,7 @@ switch( $mode )
 		//Check Vehicle Ownership
 		$garage_vehicle->check_ownership($cid);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
 			'header' => 'garage_header.tpl',
 			'body'   => 'garage_view_vehicle.tpl')
@@ -1756,7 +1795,7 @@ switch( $mode )
 		//Now We Update This Vehicle To The Main Vehicle
 		$garage->update_single_field(GARAGE_TABLE, 'main_vehicle', 1, 'id', $cid);
 
-		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
+		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true), false);
 
 		break;
 
@@ -1789,14 +1828,14 @@ switch( $mode )
 			//You Have Reached Your Image Quota..Error Nicely
 			else if ( !($garage_image->remote_image_below_quota()) OR !($garage_image->upload_image_below_quota()) )
 			{
-				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true));
+				redirect(append_sid("garage.$phpEx?mode=error&EID=4", true), false);
 			}
 		}
 
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
-		redirect(append_sid("garage.$phpEx?mode=manage_vehicle_gallery&CID=$cid", true));
+		redirect(append_sid("garage.$phpEx?mode=manage_vehicle_gallery&CID=$cid", true), false);
 
 		break;
 
@@ -1863,10 +1902,12 @@ switch( $mode )
 			//Produce Actual Image Thumbnail And Link It To Full Size Version..
 			if ( ($data[$i]['attach_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location'])) )
 			{
+				$temp_url = append_sid("garage.". $phpEx."?mode=view_gallery_item&amp;type=garage_mod&amp;image_id=" . $data[$i]['attach_id'].$nuke_popup);
+
 				// Form the image link
 				$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'];
-				$image = '<a href="garage.' . $phpEx . '?mode=view_gallery_item&amp;type=garage_mod&amp;image_id=' . $data[$i]['attach_id'] . '" title="' . $data[$i]['attach_file'] . '" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image . '" /></a>';
-	
+				$image = '<a href="' . $temp_url .'" title="' . $data[$i]['attach_file'] . '" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image . '" /></a>';
+				
 				$template->assign_block_vars('pic_row', array(
 					'THUMB_IMAGE' => $image,
 					'U_VIEW_PROFILE' => append_sid("profile.$phpEx?mode=viewprofile&amp;" . POST_USERS_URL . "=" .$data[$i]['user_id']),
@@ -1880,7 +1921,7 @@ switch( $mode )
 			$image = '';
 		}
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx); 
 
 		//Count Total Returned For Pagination...Notice No $start or $end to get complete count
 		$count = count($garage_image->select_all_image_data());
@@ -1949,9 +1990,10 @@ switch( $mode )
 			//Produce Actual Image Thumbnail And Link It To Full Size Version..
 			if ( ($data[$i]['image_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location'])) )
 			{
+                $temp_url = append_sid("garage.".$phpEx."?mode=view_gallery_item&amp;type=garage_mod&amp;image_id=" . $data[$i]['image_id'] . $nuke_popup); 
 				// Form the image link
 				$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'];
-				$image = '<a href="garage.' . $phpEx . '?mode=view_gallery_item&amp;type=garage_mod&amp;image_id=' . $data[$i]['image_id'] . '" title="' . $data[$i]['attach_file'] . '" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image . '" /></a>';
+				$image = '<a href="' . $temp_url . '." title="' . $data[$i]['attach_file'] . '" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image . '" /></a>';
 			}
 
 			$template->assign_block_vars('pic_row', array(
@@ -1974,7 +2016,7 @@ switch( $mode )
 			'CID' => $cid)
          	);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$template->pparse('header');
@@ -1994,7 +2036,7 @@ switch( $mode )
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
-		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true));
+		redirect(append_sid("garage.$phpEx?mode=view_own_vehicle&CID=$cid", true), false);
 
 		break;
 
@@ -2009,7 +2051,7 @@ switch( $mode )
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
 
-		redirect(append_sid("garage.$phpEx?mode=manage_vehicle_gallery&CID=$cid", true));
+		redirect(append_sid("garage.$phpEx?mode=manage_vehicle_gallery&CID=$cid", true), false);
 
 		break;
 
@@ -2039,7 +2081,7 @@ switch( $mode )
 		//If No Business Error Nicely Rather Than Display Nothing To The User
 		if ( count($business) < 1 )
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=1", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=1", true), false);
 		}
 
 		//Display Correct Breadcrumb Links..
@@ -2140,7 +2182,7 @@ switch( $mode )
                		'L_OPENING_HOURS' => $lang['Opening_Hours'])
             	);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$template->pparse('header');
@@ -2176,10 +2218,10 @@ switch( $mode )
 		//If No Business Let The User Know..
 		if ( count($business) < 1 )
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=1", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=1", true), false);
 		}
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 
 		//Setup Breadcrumb Trail Correctly...
 		if (!empty($data['business_id']))
@@ -2326,10 +2368,10 @@ switch( $mode )
 		//If No Business Let The User Know..
 		if ( count($business) < 1 )
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=1", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=1", true), false);
 		}
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 
 		if (!empty($data['business_id']))
 		{
@@ -2456,13 +2498,13 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if (!$userdata['session_logged_in'])
 		{
-			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=user_submit_business", true));
+			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=user_submit_business", true), false);
 		}
 
 		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
 			'header' => 'garage_header.tpl',
 			'body'   => 'garage_user_submit.tpl')
@@ -2528,7 +2570,7 @@ switch( $mode )
 		}
 
 		//Checks All Required Data Is Present
-		$params = array('name');
+		$params = array('title');
 		$garage->check_required_vars($params);
 
 		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
@@ -2542,7 +2584,7 @@ switch( $mode )
 		$garage_business->insert_business($data);
 
 		//Send Them Back To Whatever Page Them Came From..Now With Their Required Business :)
-		redirect(append_sid("garage.$phpEx?mode=" . $data['mode_redirect'] . "&CID=$cid", true));
+		redirect(append_sid("garage.$phpEx?mode=" . $data['mode_redirect'] . "&CID=$cid", true), false);
 
 		break;
 
@@ -2551,7 +2593,7 @@ switch( $mode )
 		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
 			'header' => 'garage_header.tpl',
 			'body'   => 'garage_user_submit.tpl')
@@ -2628,7 +2670,7 @@ switch( $mode )
 		//Update The Business With Data Acquired
 		$garage_business->update_business($data);
 
-		redirect(append_sid("garage.$phpEx?mode=garage_pending", true));
+		redirect(append_sid("garage.$phpEx?mode=garage_pending", true), false);
 
 		break;
 
@@ -2637,13 +2679,13 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if (!$userdata['session_logged_in'])
 		{
-			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=user_submit_make", true));
+			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=user_submit_make", true), false);
 		}
 
 		//Check This Feature Is Enabled
 		if ( $garage_config['enable_user_submit_make'] == '0' )
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=18", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=18", true), false);
 		}
 
 		//Check The User Is Allowed Perform This Action
@@ -2653,7 +2695,7 @@ switch( $mode )
 		$params = array('year');
 		$data = $garage->process_post_vars($params);
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
 			'header' => 'garage_header.tpl',
 			'body'   => 'garage_user_submit_make.tpl')
@@ -2679,7 +2721,7 @@ switch( $mode )
 		//User Is Annoymous...So Not Allowed To Create A Vehicle
 		if ( $userdata['user_id'] == -1 )
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=2", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=2", true), false);
 		}
 
 		//Check The User Is Allowed Perform This Action
@@ -2696,7 +2738,7 @@ switch( $mode )
 		//Check Make Does Not Already Exist
 		if ($garage_model->count_make($data['make']) > 0)
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=27", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=27", true), false);
 		}
 
 		//Create The Make
@@ -2709,7 +2751,7 @@ switch( $mode )
 			$garage->update_single_field(GARAGE_CONFIG_TABLE, 'config_value', '1', 'config_name', 'items_pending');
 		}
 
-		redirect(append_sid("garage.$phpEx?mode=create_vehicle&MAKE=" . $data['make'] . "&YEAR=" . $data['year'], true));
+		redirect(append_sid("garage.$phpEx?mode=create_vehicle&MAKE=" . $data['make'] . "&YEAR=" . $data['year'], true), false);
 
 		break;
 
@@ -2718,13 +2760,13 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if (!$userdata['session_logged_in'])
 		{
-			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=user_submit_model", true));
+			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=user_submit_model", true), false);
 		}
 
 		//Check This Feature Is Enabled
 		if ( $garage_config['enable_user_submit_model'] == '0' )
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=18", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=18", true), false);
 		}
 
 		//Check The User Is Allowed Perform This Action
@@ -2738,10 +2780,10 @@ switch( $mode )
 		//Check If User Owns Vehicle
 		if ( empty($data['make_id']))
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=23", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=23", true), false);
 		}
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
 			'header' => 'garage_header.tpl',
 			'body'   => 'garage_user_submit_model.tpl')
@@ -2772,7 +2814,7 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if (!$userdata['session_logged_in'])
 		{
-			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=user_submit_model", true));
+			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=user_submit_model", true), false);
 		}
 
 		//Check The User Is Allowed Perform This Action
@@ -2795,7 +2837,7 @@ switch( $mode )
 		//Create The Model
 		$garage_model->insert_model($data);
 
-		redirect(append_sid("garage.$phpEx?mode=create_vehicle&MAKE=" . $data['make'] . "&MODEL=" . $data['model'] . "&YEAR=" . $data['year'], true));
+		redirect(append_sid("garage.$phpEx?mode=create_vehicle&MAKE=" . $data['make'] . "&MODEL=" . $data['model'] . "&YEAR=" . $data['year'], true), false);
 
 		break;
 
@@ -2805,7 +2847,7 @@ switch( $mode )
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
 		$page_title = $lang['Car_Quart'];
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 
 		$template->set_filenames(array(
 			'javascript' => 'garage_vehicle_select_javascript.tpl',
@@ -2860,17 +2902,17 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if (!$userdata['session_logged_in'])
 		{
-			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=garage_pending", true));
+			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=garage_pending", true), false);
 		}
 
 		//Check The User Is Allowed To View This Page...If Not Send Them On There Way Nicely
 		if (!in_array($userdata['user_level'], array(ADMIN, MOD)) )
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true), false);
 		}
 
 		//Generate Page Header
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 
 		$template->set_filenames(array(
 			'header' => 'garage_header.tpl',
@@ -2971,13 +3013,13 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if (!$userdata['session_logged_in'])
 		{
-			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=quartermile_pending", true));
+			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=quartermile_pending", true), false);
 		}
 
 		//Check The User Is Allowed To View This Page...If Not Send Them On There Way Nicely
 		if ( !in_array($userdata['user_level'], array(ADMIN, MOD)) )
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true), false);
 		}
 
 		//Get All Data Posted And Make It Safe To Use
@@ -2991,7 +3033,7 @@ switch( $mode )
 			$total = count($HTTP_POST_VARS['bus_id']);
 			if ( $total != 1 )
 			{
-				redirect(append_sid("garage.$phpEx?mode=error&EID=22", true));
+				redirect(append_sid("garage.$phpEx?mode=error&EID=22", true), false);
 			}
 
 			//Get Business ID We Are Going To Delete
@@ -2999,7 +3041,7 @@ switch( $mode )
 			$data = $garage_business->select_business_data($bus_id);
 
 			//Generate Page Header
-			include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+			include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 
 			$template->set_filenames(array(
 				'header' => 'garage_header.tpl',
@@ -3084,7 +3126,7 @@ switch( $mode )
 			}
 		}
 
-		redirect(append_sid("garage.$phpEx?mode=garage_pending", true));
+		redirect(append_sid("garage.$phpEx?mode=garage_pending", true), false);
 
 		break;
 
@@ -3093,13 +3135,13 @@ switch( $mode )
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
 		if (!$userdata['session_logged_in'])
 		{
-			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=quartermile_pending", true));
+			redirect(append_sid("login.$phpEx?redirect=garage.$phpEx&mode=quartermile_pending", true), false);
 		}
 
 		//Check The User Is Allowed To View This Page...If Not Send Them On There Way Nicely
 		if ( !in_array($userdata['user_level'], array(ADMIN, MOD)) )
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true), false);
 		}
 
 		//Get All Data Posted And Make It Safe To Use
@@ -3118,7 +3160,7 @@ switch( $mode )
 		//Since We Have Updated All Item Lets Do The Original Delete Now
 		$garage->delete_rows(GARAGE_BUSINESS_TABLE, 'id', $data['business_id']);
 
-		redirect(append_sid("garage.$phpEx?mode=garage_pending", true));
+		redirect(append_sid("garage.$phpEx?mode=garage_pending", true), false);
 
 		break;
 
@@ -3127,7 +3169,7 @@ switch( $mode )
 		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 
 		$template->set_filenames(array(
 			'javascript' => 'garage_vehicle_select_javascript.tpl',
@@ -3176,7 +3218,7 @@ switch( $mode )
 		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
 			'header' => 'garage_header.tpl',
 			'body'   => 'garage_view_guestbook.tpl')
@@ -3212,16 +3254,24 @@ switch( $mode )
 				$poster = '<a href="' . $temp_url . '">' . $comment_data[$i]['username'] . '</a>';
 				$poster_posts = ( $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang['Posts'] . ': ' . $comment_data[$i]['user_posts'] : '';
 				$poster_from = ( $comment_data[$i]['user_from'] && $comment_data['user_id'] != ANONYMOUS ) ? $lang['Location'] . ': ' . $comment_data[$i]['user_from'] : '';
-				$garage_id = $comment_data['garage_id'];
+				$garage_id = $comment_data[$i]['garage_id'];
 				$poster_car_year = ( $comment_data[$i]['made_year'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $comment_data[$i]['made_year'] : '';
 				$poster_car_mark = ( $comment_data[$i]['make'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $comment_data[$i]['make'] : '';
 				$poster_car_model = ( $comment_data[$i]['model'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $comment_data[$i]['model'] : '';
-				$poster_joined = ( $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang['Joined'] . ': ' . create_date($board_config['default_dateformat'], $comment_data[$i]['user_regdate'], $board_config['board_timezone']) : '';
+				if ( defined('NUKE_FILE') )
+				{
+					$poster_joined = ( $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang['Joined'] . ': ' . $comment_data[$i]['user_regdate'] : '';
+				}
+				else
+				{
+					$poster_joined = ( $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang['Joined'] . ': ' . create_date($board_config['default_dateformat'], $comment_data[$i]['user_regdate'], $board_config['board_timezone']) : '';
+				}
+
 
 				$poster_avatar = '';
-				if ( $data['user_avatar_type'] && $comment_data[$i]['user_id'] != ANONYMOUS && $comment_data[$i]['user_allowavatar'] )
+				if ( $comment_data[$i]['user_avatar_type'] && $comment_data[$i]['user_id'] != ANONYMOUS && $comment_data[$i]['user_allowavatar'] )
 				{
-					switch( $row['user_avatar_type'] )
+					switch( $comment_data[$i]['user_avatar_type'] )
 					{
 						case USER_AVATAR_UPLOAD:
 							$poster_avatar = ( $board_config['allow_avatar_upload'] ) ? '<img src="' . $board_config['avatar_path'] . '/' . $comment_data[$i]['user_avatar'] . '" alt="" border="0" />' : '';
@@ -3390,10 +3440,11 @@ switch( $mode )
 		//If User Has Requested Notification On Comments Sent Them A PM
 		if ( $data['guestbook_pm_notify'] == TRUE )
 		{
+			$temp_url = append_sid("garage.".$phpEx."?mode=view_guestbook&CID=".$cid);
 			//Build Rest Of Required Data
 			$data['date'] = date("U");
 			$data['pm_subject'] = $lang['Guestbook_Notify_Subject'];
-			$data['vehicle_link'] = '<a href="garage.'.$phpEx.'?mode=view_guestbook&CID=$cid">' . $lang['Here'] . '</a>';
+			$data['vehicle_link'] = '<a href="'.$temp_url.'">' . $lang['Here'] . '</a>';
              		$data['pm_text'] = (sprintf($lang['Guestbook_Notify_Text'], $data['vehicle_link']));
 
 			//Checks All Required Data Is Present
@@ -3404,7 +3455,7 @@ switch( $mode )
 			$garage_guestbook->send_user_pm($data);
 		}
 
-		redirect(append_sid("garage.$phpEx?mode=view_guestbook&CID=$cid", true));
+		redirect(append_sid("garage.$phpEx?mode=view_guestbook&CID=$cid", true), false);
 
 		break;
 
@@ -3413,7 +3464,7 @@ switch( $mode )
 		//Only Allow Moderators Or Administrators Perform This Action
 		if ( !in_array($userdata['user_level'], array(ADMIN, MOD)) )
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true), false);
 		}
 
 		//Pull Required Comment Data From DB
@@ -3430,7 +3481,7 @@ switch( $mode )
 		);
 
 		//Produce The Page
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
 			'header' => 'garage_header.tpl',
 			'body'   => 'garage_edit_comment.tpl')
@@ -3448,7 +3499,7 @@ switch( $mode )
 		//Only Allow Moderators Or Administrators Perform This Action
 		if ( !in_array($userdata['user_level'], array(ADMIN, MOD)) )
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true), false);
 		}
 
 		//Get All Data Posted And Make It Safe To Use
@@ -3462,7 +3513,7 @@ switch( $mode )
 		//Update The Comment In The Vehicle Guestbook
 		$garage->update_single_field(GARAGE_GUESTBOOKS_TABLE, 'post', $data['comments'], 'id', $data['COMMENT_ID']);
 
-		redirect(append_sid("garage.$phpEx?mode=view_guestbook&CID=$cid", true));
+		redirect(append_sid("garage.$phpEx?mode=view_guestbook&CID=$cid", true), false);
 
 		break;
 
@@ -3471,7 +3522,7 @@ switch( $mode )
 		//Only Allow Moderators Or Administrators Perform This Action
 		if ( !in_array($userdata['user_level'], array(ADMIN, MOD)) )
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true), false);
 		}
 
 		//Get All Data Posted And Make It Safe To Use
@@ -3481,13 +3532,13 @@ switch( $mode )
 		//Delete The Comment From The Guestbook
 		$garage->delete_rows(GARAGE_GUESTBOOKS_TABLE, 'id', $data['comment_id']);
 
-		redirect(append_sid("garage.$phpEx?mode=view_guestbook&CID=$cid", true));
+		redirect(append_sid("garage.$phpEx?mode=view_guestbook&CID=$cid", true), false);
 
 		break;
 
 	case 'error':
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 
 		$template->set_filenames(array(
 			'header' => 'garage_header.tpl',
@@ -3531,7 +3582,7 @@ switch( $mode )
 		//Check If User Owns Vehicle
 		if ( $vehicle_data['member_id'] == $data['user_id'] )
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=21", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=21", true), false);
 		}
 
 		$count = $garage_vehicle->count_vehicle_ratings($data);
@@ -3551,7 +3602,7 @@ switch( $mode )
 		$weighted_rating = $garage_vehicle->calculate_weighted_rating($cid);
 		$garage_vehicle->update_weighted_rating($cid, $weighted_rating);
 
-		redirect(append_sid("garage.$phpEx?mode=view_vehicle&CID=$cid", true));
+		redirect(append_sid("garage.$phpEx?mode=view_vehicle&CID=$cid", true), false);
 
 		break;
 
@@ -3560,7 +3611,7 @@ switch( $mode )
 		//Only Allow Moderators Or Administrators Perform This Action
 		if ( !in_array($userdata['user_level'], array(ADMIN, MOD)) )
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true), false);
 		}
 
 		//Get All Data Posted And Make It Safe To Use
@@ -3578,7 +3629,7 @@ switch( $mode )
 		$weighted_rating = $garage_vehicle->calculate_weighted_rating($cid);
 		$garage_vehicle->update_weighted_rating($cid, $weighted_rating);
 
-		redirect(append_sid("garage.$phpEx?mode=moderate_vehicle&CID=$cid", true));
+		redirect(append_sid("garage.$phpEx?mode=moderate_vehicle&CID=$cid", true), false);
 
 		break;
 
@@ -3587,7 +3638,7 @@ switch( $mode )
 		//Only Allow Moderators Or Administrators Perform This Action
 		if ( !in_array($userdata['user_level'], array(ADMIN, MOD)) )
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true));
+			redirect(append_sid("garage.$phpEx?mode=error&EID=13", true), false);
 		}
 
 		//Let Get Vehicle Rating & Delete Them
@@ -3601,7 +3652,7 @@ switch( $mode )
 		$weighted_rating = $garage_vehicle->calculate_weighted_rating($cid);
 		$garage_vehicle->update_weighted_rating($cid, $weighted_rating);
 
-		redirect(append_sid("garage.$phpEx?mode=moderate_vehicle&CID=$cid", true));
+		redirect(append_sid("garage.$phpEx?mode=moderate_vehicle&CID=$cid", true), false);
 
 		break;
 
@@ -3610,7 +3661,7 @@ switch( $mode )
 		//Check The User Is Allowed Perform This Action
 		$garage->check_permissions('BROWSE', "garage.$phpEx?mode=error&EID=15");
 
-		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
+		include($phpbb_inc_path . 'includes/page_header.' . $phpEx);
 
 		$template->set_filenames(array(
 			'header' => 'garage_header.tpl',
@@ -3657,6 +3708,6 @@ $template->set_filenames(array(
 $template->pparse('garage_footer');
 
 //Display The Forums Bottom...Which Will Include the Pending Link If Needed
-include($phpbb_root_path . 'includes/page_tail.' . $phpEx);
+include($phpbb_inc_path . 'includes/page_tail.' . $phpEx);
 
 ?>

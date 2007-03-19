@@ -267,7 +267,7 @@ class garage_dynorun
 	/*========================================================================*/
 	function build_dynorun_table($pending)
 	{
-		global $db, $template, $images, $start, $sort, $order,$phpEx, $garage_config, $lang, $theme, $mode, $HTTP_POST_VARS, $HTTP_GET_VARS, $garage_model, $phpEx;
+		global $db, $template, $images, $start, $sort, $order,$phpEx, $garage_config, $lang, $theme, $mode, $HTTP_POST_VARS, $HTTP_GET_VARS, $garage_model, $phpEx, $nuke_popup;
 
 		$pending = ($pending == 'YES') ? 1 : 0;
 		$start = (isset($HTTP_GET_VARS['start'])) ? intval($HTTP_GET_VARS['start']) : 0;
@@ -373,15 +373,17 @@ class garage_dynorun
 			$row_class = ( !($i % 2) ) ? $theme['td_class1'] : $theme['td_class2'];
 			if ($full_row['image_id'])
 			{
-				$data['image_link'] ='<a href="garage.' . $phpEx . '?mode=view_gallery_item&amp;image_id='. $full_row['image_id'] . '" target="_blank"><img src="' . $images['slip_image_attached'] . '" alt="' . $lang['Slip_Image_Attached'] . '" title="' . $lang['Slip_Image_Attached'] . '" border="0" /></a>';
+				$temp_url = append_sid("garage.". $phpEx ."?mode=view_gallery_item&amp;image_id=". $full_row['image_id'].$nuke_popup );
+
+				$data['image_link'] ='<a href="'.$temp_url.'" target="_blank"><img src="' . $images['slip_image_attached'] . '" alt="' . $lang['Slip_Image_Attached'] . '" title="' . $lang['Slip_Image_Attached'] . '" border="0" /></a>';
 			}
 			else
 			{
 				$data['image_link'] ='';
 			}
 			
-            		$temp_url = append_sid("garage.$phpEx?mode=edit_rollingroad&amp;RRID=" . $full_row['rr_id'] . "&amp;CID=" . $full_row['id'] . "&amp;PENDING=YES");
-	            	$edit_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="'.$lang['Edit'].'" title="'.$lang['Edit'].'" border="0" /></a>';
+			$temp_url = append_sid("garage.$phpEx?mode=edit_rollingroad&amp;RRID=" . $full_row['rr_id'] . "&amp;CID=" . $full_row['id'] . "&amp;PENDING=YES");
+			$edit_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="'.$lang['Edit'].'" title="'.$lang['Edit'].'" border="0" /></a>';
 
 
 			$assign_block = ($pending == 1) ? 'rollingroad_pending.row' : 'memberrow';

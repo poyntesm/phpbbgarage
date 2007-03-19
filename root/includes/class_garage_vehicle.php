@@ -546,9 +546,15 @@ class garage_vehicle
 						if (!empty($absolute_url))
 						{
 							$thumb_image = $absolute_url . GARAGE_UPLOAD_PATH . $vehicle_data['attach_thumb_location'];
+							$temp_url = $absolute_url. append_sid('garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $vehicle_data['attach_id']. $nuke_popup);
 
 						}
-						$featured_image = '<a href="'.$absolute_url.'garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $vehicle_data['attach_id'] .'" title="' . $vehicle_data['attach_file'] .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" /></a>';
+						else
+						{
+							$temp_url = append_sid("garage.".$phpEx."?mode=view_gallery_item&amp;type=garage_mod&amp;image_id=". $vehicle_data['attach_id'] . $nuke_popup);
+						}
+								
+						$featured_image = '<a href="'.$temp_url.'" title="' . $vehicle_data['attach_file'] .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" /></a>';
 	                		} 
 	        		}
 				$template->assign_vars(array(
@@ -937,7 +943,7 @@ class garage_vehicle
 			message_die(GENERAL_ERROR, 'Could Not Select Rating Data For Vehicle', '', __LINE__, __FILE__, $sql);
 		}
 
-		while ($rating_row = $db->sql_fetchrow($mods_result) )
+		while ($rating_row = $db->sql_fetchrow($rating_result) )
 		{
    			$garage->delete_rows(GARAGE_RATING_TABLE, 'id', $rating_row['id']);
 		} 
@@ -1022,7 +1028,9 @@ class garage_vehicle
 			$id = $vehicle_row['attach_id'];
 			$title = $vehicle_row['attach_file'];
 			$total_image_views = $vehicle_row['attach_hits'];
-			$hilite_image = '<a href="garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .'" title="' . $title .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" /></a>';
+			$temp_url = append_sid("garage.".$phpEx."?mode=view_gallery_item&amp;type=garage_mod&amp;image_id=". $id  . $nuke_popup);
+
+			$hilite_image = '<a href="'.$temp_url.'" title="' . $title .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" /></a>';
 		}
 	
 		$user_id = $vehicle_row['member_id'];
@@ -1250,8 +1258,8 @@ class garage_vehicle
 	                    			// If this is a long message append some dots
 	                    			$guestbook_msg['post'] .= '...';
 	                		}
-	
-	                		$guestbook['messages'] = '<a href="profile.'.$phpEx.'?mode=viewprofile&amp;'.POST_USERS_URL.'='.$guestbook_msg['author_id'].'">'.$guestbook_msg['username'].'</a>: '.$guestbook_msg['post'].'<br />' . $guestbook['messages'];
+							$temp_url = append_sid("profile.".$phpEx."?mode=viewprofile&amp;".POST_USERS_URL."=".$guestbook_msg['author_id']);
+	                		$guestbook['messages'] = '<a href="'.$temp_url.'">'.$guestbook_msg['username'].'</a>: '.$guestbook_msg['post'].'<br />' . $guestbook['messages']; 
 				}
 	
 				$temp_url = append_sid("garage.$phpEx?mode=view_guestbook&amp;CID=$cid");
@@ -1309,7 +1317,8 @@ class garage_vehicle
 				$image_attached ='';
 	           		if ($image_id)
 				{
-					$image_attached ='<a href="garage.'. $phpEx .'?mode=view_gallery_item&amp;image_id='. $image_id .'" target="_blank"><img src="' . $images['vehicle_image_attached'] . '" alt="'.$lang['Modification_Image_Attached'].'" title="'.$lang['Modification_Image_Attached'].'" border="0" /></a>';
+					$temp_url = append_sid("garage.". $phpEx ."?mode=view_gallery_item&amp;image_id=". $image_id . $nuke_popup);
+					$image_attached ='<a href="'. $temp_url.'" target="_blank"><img src="' . $images['vehicle_image_attached'] . '" alt="'.$lang['Modification_Image_Attached'].'" title="'.$lang['Modification_Image_Attached'].'" border="0" /></a>';
 		                        $mod_images_found++;
 				}
 	
@@ -1346,7 +1355,8 @@ class garage_vehicle
 							$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $modification_data[$j]['attach_thumb_location'];
 							$id = $modification_data[$j]['attach_id'];
 							$title = $modification_data[$j]['attach_file'];
-							$gallery_modification_images .= '<a href="garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .'" title="' . $title .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" /></a> ';
+							$temp_url = append_sid("garage.".$phpEx."?mode=view_gallery_item&amp;type=garage_mod&amp;image_id=". $id  . $nuke_popup);
+							$gallery_modification_images .= '<a href="'.$temp_url.'" title="' . $title .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" /></a> ';
 	               				} 
 					}
 				}
@@ -1366,7 +1376,7 @@ class garage_vehicle
 				if ( $owned == 'YES' )
 				{
 					$temp_url = append_sid("garage.$phpEx?mode=edit_insurance&amp;INS_ID=$ins_id&amp;CID=$cid");
-	            			$edit_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="'.$lang['Edit'].'" title="'.$lang['Edit'].'" border="0" /></a>';
+					$edit_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="'.$lang['Edit'].'" title="'.$lang['Edit'].'" border="0" /></a>';
 					$delete_link = '<a href="javascript:confirm_delete_insurance(' . $cid . ',' . $ins_id . ')"><img src="' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" /></a>';
 				}
 
@@ -1394,12 +1404,14 @@ class garage_vehicle
 				$slip_image = '';
 				if (!empty($image_id))
 				{
-					$slip_image = '<a href="garage.'. $phpEx .'?mode=view_gallery_item&amp;image_id='. $image_id .'" target="_blank"><img src="' . $images['slip_image_attached'] . '" alt="'.$lang['Slip_Image_Attached'].'" title="'.$lang['Slip_Image_Attached'].'" border="0" /></a>';
+					$temp_url = append_sid("garage.".$phpEx."?mode=view_gallery_item&amp;type=garage_mod&amp;image_id=". $id  . $nuke_popup);
+
+					$slip_image = '<a href="'. $temp_url .'" target="_blank"><img src="' . $images['slip_image_attached'] . '" alt="'.$lang['Slip_Image_Attached'].'" title="'.$lang['Slip_Image_Attached'].'" border="0" /></a>';
 				}
 				if ( ( $owned == 'YES' ) OR ( $owned == 'MODERATE') )
 				{
 					$temp_url = append_sid("garage.$phpEx?mode=edit_quartermile&amp;QMID=$qmid&amp;CID=$cid");
-	            			$edit_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="'.$lang['Edit'].'" title="'.$lang['Edit'].'" border="0" /></a>';
+					$edit_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="'.$lang['Edit'].'" title="'.$lang['Edit'].'" border="0" /></a>';
 					$delete_link = '<a href="javascript:confirm_delete_quartermile(' . $cid . ',' . $qmid . ')"><img src="' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" /></a>';
 				}
 
@@ -1433,12 +1445,13 @@ class garage_vehicle
 				$slip_image = '';
 				if (!empty($image_id))
 				{
-					$slip_image = '<a href="garage.'. $phpEx .'?mode=view_gallery_item&amp;image_id='. $image_id .'" target="_blank"><img src="' . $images['slip_image_attached'] . '" alt="'.$lang['Slip_Image_Attached'].'" title="'.$lang['Slip_Image_Attached'].'" border="0" /></a>';
+					$temp_url = append_sid("garage.". $phpEx ."?mode=view_gallery_item&amp;image_id=". $image_id  . $nuke_popup);
+					$slip_image = '<a href="'. $temp_url .'" target="_blank"><img src="' . $images['slip_image_attached'] . '" alt="'.$lang['Slip_Image_Attached'].'" title="'.$lang['Slip_Image_Attached'].'" border="0" /></a>';
 				}
 				if ( ( $owned == 'YES' ) OR ( $owned == 'MODERATE') )
 				{
 					$temp_url = append_sid("garage.$phpEx?mode=edit_rollingroad&amp;RRID=$rrid&amp;CID=$cid");
-            				$edit_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="'.$lang['Edit'].'" title="'.$lang['Edit'].'" border="0" /></a>';
+					$edit_link = '<a href="' . $temp_url . '"><img src="' . $images['garage_edit'] . '" alt="'.$lang['Edit'].'" title="'.$lang['Edit'].'" border="0" /></a>';
 					$delete_link = '<a href="javascript:confirm_delete_rollingroad(' . $cid . ',' . $rrid . ')"><img src="' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" /></a>';
 				}
 
@@ -1478,8 +1491,9 @@ class garage_vehicle
 					if ( (empty($gallery_data[$i]['attach_thumb_location']) == FALSE) AND ($gallery_data[$i]['attach_thumb_location'] != $gallery_data[$i]['attach_location']) )
                 			{
                     				// Form the image link
+						$temp_url = append_sid("garage.".$phpEx."?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id=". $gallery_data[$i]['attach_id'] .$nuke_popup);
 						$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $gallery_data[$i]['attach_thumb_location'];
-						$gallery_vehicle_images .= '<a href="garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $gallery_data[$i]['attach_id'] .'" title="' . $gallery_data[$i]['attach_file'] .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" /></a> ';
+						$gallery_vehicle_images .= '<a href="'.$temp_url.'" title="' . $gallery_data[$i]['attach_file'] .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" /></a> ';
                				} 
 				}
 	        	}
@@ -1625,6 +1639,7 @@ class garage_vehicle
 
 		$sql = "SELECT g.*, makes.make, models.model, user.username, count(mods.id) AS total_mods, count(*) as total
         		FROM " . GARAGE_TABLE . " AS g 
+				LEFT JOIN " . GARAGE_IMAGES_TABLE . " AS images ON images.attach_id = g.image_id
                     		LEFT JOIN " . GARAGE_MODS_TABLE . " AS mods ON mods.garage_id = g.id
 			        LEFT JOIN " . GARAGE_MAKES_TABLE . " AS makes ON g.make_id = makes.id 
 			        LEFT JOIN " . GARAGE_MODELS_TABLE . " AS models ON g.model_id = models.id 
@@ -1768,10 +1783,11 @@ class garage_vehicle
 						if ( (empty($gallery_data[$i]['attach_thumb_location']) == FALSE) AND ($gallery_data[$i]['attach_thumb_location'] != $gallery_data[$i]['attach_location']) AND ( $vehicle_images_found <= 12) )
                 				{
                     					// Form the image link
-							$thumb_image = GARAGE_UPLOAD_PATH . $gallery_data[$i]['attach_thumb_location'];
+							$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $gallery_data[$i]['attach_thumb_location'];
 							$id = $gallery_data[$i]['attach_id'];
 							$title = $gallery_data[$i]['attach_file'];
-							$hilite_image .= '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" /></a> ';
+							$temp_url = append_sid("garage.".$phpEx."?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id=". $id . $nuke_popup);
+							$hilite_image .= '<a href="'.$temp_url.'" title="' . $title .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" /></a> ';
                					} 
 					}
 				}
@@ -1786,10 +1802,11 @@ class garage_vehicle
 						if ( (empty($mod_data[$i]['attach_thumb_location']) == FALSE) AND ($mod_data[$i]['attach_thumb_location'] != $mod_data[$i]['attach_location']) AND ( $vehicle_images_found <= 12) )
 		                		{
                 		    			// Form the image link
-							$thumb_image = GARAGE_UPLOAD_PATH . $mod_data[$i]['attach_thumb_location'];
+							$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $mod_data[$i]['attach_thumb_location'];
 							$id = $mod_data[$i]['attach_id'];
 							$title = $mod_data[$i]['attach_file'];
-							$hilite_image .= '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" /></a> ';
+							$temp_url = append_sid("garage.".$phpEx."?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id=". $id . $nuke_popup);
+							$hilite_image .= '<a href="'.$temp_url.'" title="' . $title .'" target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" /></a> ';
 		               			} 
 					}
 			        }
@@ -1806,20 +1823,22 @@ class garage_vehicle
 						$id = $vehicle_data['attach_id'];
 						$title = $vehicle_data['attach_file'];
 						$total_image_views = $vehicle_data['attach_hits'];
-						$hilite_image = '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" /></a>';
+						$temp_url = append_sid("garage.".$phpEx."?mode=view_gallery_item&amp;type=garage_mod&amp;image_id=". $id . $nuke_popup);
+						$hilite_image = '<a href="'.$temp_url.'" title="' . $title .'" target="_blank"><img hspace="5" vspace="5" src="' . $image .'" /></a>';
 					}
 					else
 					{
-						$image = GARAGE_UPLOAD_PATH . $vehicle_data['attach_location'];
+						$image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $vehicle_data['attach_location'];
 						$id = $vehicle_data['attach_id'];
 						$title = $vehicle_data['attach_file'];
 						$total_image_views = $vehicle_data['attach_hits'];
-						$hilite_image = '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" /></a>';
+						$temp_url = append_sid("garage.".$phpEx."?mode=view_gallery_item&amp;type=garage_mod&amp;image_id=". $id . $nuke_popup);
+						$hilite_image = '<a href="'.$temp_url.'" title="' . $title .'" target="_blank"><img hspace="5" vspace="5" src="' . $image .'" /></a>';
 					}
 				}
 			}
 
-			$garage_img ='<a href="' . append_sid("garage.$phpEx?mode=browse&search=yes&user=".urlencode($profiledata['username'])."") . '"><img src="' . $images['icon_garage'] . '" alt="'.$lang['Garage'].'" title="'.$lang['Garage'].'" border="0" /></a>';
+			$garage_img ='<a href="' . append_sid("garage.$phpEx?mode=browse&search=yes&username=".urlencode($profiledata['username'])."") . '"><img src="' . $images['icon_garage'] . '" alt="'.$lang['Garage'].'" title="'.$lang['Garage'].'" border="0" /></a>';
 
 			$template->assign_vars(array(
 				'L_VEHICLE' => $lang['Vehicle'],

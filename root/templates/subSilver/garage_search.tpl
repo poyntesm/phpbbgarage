@@ -31,7 +31,7 @@
 				</tr>
 				<tr>
 					<td class="row1" width="30%"><span class="gen"><b>{L_MEMBER_NAME}</b></span></td>
-					<td class="row2"><input name="user" type="text" class="post" size="35" value="" /></td>
+					<td class="row2"><input name="username" type="text" class="post" size="35" value="" /></td>
 				</tr>
 				<tr>
 					<td class="catBottom" align="center" height="28" colspan="2"><input type="hidden" value="browse" name="mode" /><input type="hidden" value="yes" name="search" /><input name="submit" type="submit" value="{L_SEARCH}" class="liteoption" /></td>

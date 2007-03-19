@@ -128,7 +128,7 @@ else
 
 	if( isset($HTTP_POST_VARS['submit']) )
 	{
-		$message = $lang['Garage_Config_Updated'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Config'], "<a href=\"" . append_sid("admin_garage_config.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
+		$message = $lang['Garage_Config_Updated'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Config'], "<a href=\"" . append_sid("admin_garage_cfg.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
 
 		message_die(GENERAL_MESSAGE, $message);
 	}
@@ -168,7 +168,7 @@ $template->assign_vars(array(
 $template->assign_vars(array(
 
 	// GENERAL VARS
-	'S_GARAGE_CONFIG_ACTION' => append_sid('admin_garage_config.'.$phpEx),
+	'S_GARAGE_CONFIG_ACTION' => append_sid('admin_garage_cfg.'.$phpEx),
 
 	// GENERAL GARAGE CONFIG VARS
 	'MAIN_CHECKED' => (preg_match("/MAIN/",$garage_config['menu_selection'])) ? 'selected="selected"' : '',

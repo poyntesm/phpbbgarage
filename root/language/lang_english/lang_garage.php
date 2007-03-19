@@ -419,6 +419,7 @@ $lang['Rating_Permanent'] = '<b>Ratings Permanent?</b><br />Allows you to set th
 $lang['Rate_Permanent'] = 'You Have Already Rated';
 $lang['Rating_Always_Updateable'] = '<b>Rating Always Updateable?</b><br />If ratings not permanent this allows you to set if a rating can be changed at anytime, or only if vehicle has been updated since last rating.';
 $lang['Vehicle_Update_Required_For_Rate'] = 'Vehicle Update Required Before You Can Update Rating';
+$lang['Minimum_Ratings_Required'] = '<b>Minimum number of ratings required<b>';
 
 //Since 0.1.1
 $lang['Approve_RR'] = 'Approve Run';

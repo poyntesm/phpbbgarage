@@ -137,7 +137,7 @@ class garage
 		{
 			if (empty($data[$param]))
 			{
-				redirect(append_sid("garage.$phpEx?mode=error&EID=3", true));
+				redirect(append_sid("garage.$phpEx?mode=error&EID=3", true), false);
 			}
 		}
 
@@ -193,8 +193,10 @@ class garage
 	{
 		global $db;
 
+		$set_value  = ( $set_value == "NULL" ) ? $set_value : "'$set_value'";
+
 		$sql = "UPDATE $table 
-			SET $set_field = '$set_value' 
+			SET $set_field = $set_value 
 			WHERE $where_field = '$where_value'";
 
 		if( !$result = $db->sql_query($sql) )
@@ -328,7 +330,7 @@ class garage
 					//You Were Found To Be A Member Of A Denied Group And We Know Where To Send You
 					if (!empty($redirect_url))
 					{
-						redirect(append_sid($redirect_url, true));
+						redirect(append_sid($redirect_url, true), false);
 					}
 					//You Were Found To Be A Member Of A Denied Group But No URL So Return False
 					else
@@ -379,7 +381,7 @@ class garage
 		//Looks Like You Are Out Of Look...You Are Not Allowed Perform The Action You Requested...
 		if (!empty($redirect_url))
 		{
-			redirect(append_sid("$redirect_url", true));
+			redirect(append_sid("$redirect_url", true), false);
 		}
 		//No URL To Redirect So We Will Just Return FALSE
 		else
@@ -501,7 +503,7 @@ class garage
 			//Build Required PM Data
 			$data['date'] = date("U");
 			$data['pm_subject'] = $lang['Pending_Items'];
-			$data['link'] = '<a href="garage.' . $phpEx . '?mode=garage_pending">' . $lang['Here'] . '</a>';
+			$data['link'] = '<a href="'.append_sid("garage.' . $phpEx . '?mode=garage_pending").'">' . $lang['Here'] . '</a>';
 			$data['pm_text'] = (sprintf($lang['Pending_Notify_Text'],$data['link']));
 			$data['author_id'] = $userdata['user_id'];
 			$data['user_id'] = $row['user_id'];

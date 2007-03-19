@@ -356,14 +356,14 @@ class garage_model
 	{
 		global $template, $lang, $garage;
 
-		$params = array('make_id', 'model_id', 'user');
+		$params = array('make_id', 'model_id', 'username');
 		$data = $garage->process_post_vars($params);
 
 		//Check If This Is A Search Including User
-		if (!empty($data['user']))
+		if (!empty($data['username']))
 		{
-			$data['where'] = "AND username = '".$data['user']."'" ;
-			$data['search_message'] = $lang['Search_Results_For_Member'] . $data['user'];
+			$data['where'] = "AND username = '".$data['username']."'" ;
+			$data['search_message'] = $lang['Search_Results_For_Member'] . $data['username'];
 			$template->assign_vars(array(
 				'L_LEVEL3' => $lang['Username_Results'])
 			);
