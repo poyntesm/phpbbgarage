@@ -426,8 +426,8 @@ switch( $mode )
 			'L_CREATE_NEW_MOD' 	=> $lang['Create_New_Mod'],
 			'L_BUTTON' 		=> $lang['Add_Modification'],
 			'L_TITLE' 		=> $lang['Add_Modification'],
-			'U_SUBMIT_SHOP'		=> append_sid("garage.$phpEx?mode=user_submit_business&CID=$cid&mode_redirect=add_modification&BUSINESS=shop"),
-			'U_SUBMIT_GARAGE'	=> append_sid("garage.$phpEx?mode=user_submit_business&CID=$cid&mode_redirect=add_modification&BUSINESS=garage"),
+			'U_SUBMIT_SHOP'		=> append_sid("garage.$phpEx?mode=user_submit_business&CID=$cid&mode_redir=add_modification&BUSINESS=shop"),
+			'U_SUBMIT_GARAGE'	=> append_sid("garage.$phpEx?mode=user_submit_business&CID=$cid&mode_redir=add_modification&BUSINESS=garage"),
 			'PRODUCT_RATING_LIST' 	=> $garage_template->dropdown('product_rating', $rating_text, $rating_types),
 			'PURCHASE_RATING_LIST' 	=> $garage_template->dropdown('purchase_rating', $rating_text, $rating_types),
 			'INSTALL_RATING_LIST' 	=> $garage_template->dropdown('install_rating', $rating_text, $rating_types),
@@ -1204,7 +1204,7 @@ switch( $mode )
 			'L_COVER_TYPE' => $lang['Cover_Type'],
 			'L_COMMENTS' => $lang['Comments'],
 			'S_MODE_ACTION' => append_sid("garage.$phpEx?mode=insert_insurance"),
-			'U_SUBMIT_BUSINESS' => append_sid("garage.$phpEx?mode=user_submit_business&CID=$cid&mode_redirect=add_insurance&BUSINESS=insurance"),
+			'U_SUBMIT_BUSINESS' => append_sid("garage.$phpEx?mode=user_submit_business&CID=$cid&mode_redir=add_insurance&BUSINESS=insurance"),
 			'CID' => $cid,
 			'COVER_TYPE_LIST' => $garage_template->dropdown('cover_type', $cover_types, $cover_types))
 		);
@@ -1376,11 +1376,12 @@ switch( $mode )
 		for ($i = 0; $i < count($data); $i++)
       		{
 			$image_attached = '';
-			$thumbnail_image = '<a href="garage.'.$phpEx.'?mode=view_vehicle&CID='. $data[$i]['id'] .'"><img hspace="5" vspace="5" src="' . $phpbb_root_path . GARAGE_UPLOAD_PATH . 'no_thumb.jpg' . '" class="attach"  /></a>';
+			$temp_url = append_sid("garage.".$phpEx."?mode=view_vehicle&CID=". $data[$i]['id']);
+			$thumbnail_image = '<a href="'.$temp_url.'"><img hspace="5" vspace="5" src="' . $phpbb_root_path . GARAGE_UPLOAD_PATH . 'no_thumb.jpg' . '" class="attach"  /></a>';
             		if ($data[$i]['image_id'])
 			{
 				$image_attached = '<img hspace="1" vspace="1" src="' . $images['vehicle_image_attached'] . '" alt="' . $lang['Vehicle_Image_Attahced'] . '" title="' . $lang['Vehicle_Image_Attached'] . '" border="0" />';
-				$thumbnail_image = '<a href="garage.'.$phpEx.'?mode=view_vehicle&CID='. $data[$i]['id'] .'" title="' . $data['attach_file'] .'"><img hspace="5" vspace="5" src="' . $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'] .'" class="attach"  /></a>';
+				$thumbnail_image = '<a href="'.$temp_url.'" title="' . $data['attach_file'] .'"><img hspace="5" vspace="5" src="' . $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'] .'" class="attach"  /></a>';
 			}
 
 			$row_color = ( !($i % 2) ) ? $theme['td_color1'] : $theme['td_color2'];
@@ -2511,7 +2512,7 @@ switch( $mode )
 		);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('BUSINESS', 'mode_redirect');
+		$params = array('BUSINESS', 'mode_redir');
 		$data = $garage->process_post_vars($params);
 		$data['insurance'] = ($data['BUSINESS'] == 'insurance') ? 'checked="checked"' : '' ;
 		$data['garage'] = ($data['BUSINESS'] == 'garage') ? 'checked="checked"' : '' ;
@@ -2540,7 +2541,7 @@ switch( $mode )
 			'RETAIL_CHECKED' 	=> $data['retail_shop'],
 			'WEBSHOP_CHECKED' 	=> $data['web_shop'],
 			'CID' 			=> $cid,
-			'MODE_REDIRECT'		=> $data['mode_redirect'])
+			'MODE_REDIRECT'		=> $data['mode_redir'])
 		);
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
@@ -2556,7 +2557,7 @@ switch( $mode )
 		$garage->check_permissions('ADD',"garage.$phpEx?mode=error&EID=14");
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('mode_redirect', 'title', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
+		$params = array('mode_redir', 'title', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
 		$data = $garage->process_post_vars($params);
 		$data['pending'] = ($garage_config['enable_business_approval'] == '1') ? 1 : 0 ;
 		$data['insurance'] = ($data['insurance'] == 'on') ? 1 : 0 ;
@@ -2584,7 +2585,7 @@ switch( $mode )
 		$garage_business->insert_business($data);
 
 		//Send Them Back To Whatever Page Them Came From..Now With Their Required Business :)
-		redirect(append_sid("garage.$phpEx?mode=" . $data['mode_redirect'] . "&CID=$cid", true), false);
+		redirect(append_sid("garage.$phpEx?mode=" . $data['mode_redir'] . "&CID=$cid", true), false);
 
 		break;
 

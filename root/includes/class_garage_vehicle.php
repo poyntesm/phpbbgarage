@@ -415,7 +415,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function show_featuredvehicle( $absolute_url = NULL )
 	{
-		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
+		global $userdata, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $nuke_popup;
 	
 		if ( $garage_config['enable_featured_vehicle'] == 1 )
 		{
@@ -977,7 +977,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function display_vehicle($owned)
 	{
-		global $userdata, $template, $images, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $HTTP_POST_FILES, $HTTP_POST_VARS, $HTTP_GET_VARS, $rating_text, $rating_types, $cid, $mode, $garage, $garage_template, $garage_modification, $garage_insurance, $garage_quartermile, $garage_dynorun, $garage_image;
+		global $userdata, $template, $images, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $HTTP_POST_FILES, $HTTP_POST_VARS, $HTTP_GET_VARS, $rating_text, $rating_types, $cid, $mode, $garage, $garage_template, $garage_modification, $garage_insurance, $garage_quartermile, $garage_dynorun, $garage_image, $nuke_popup;
 
 		//Since We Called This Fuction Display Top Block With All Vehicle Info
 		$template->assign_block_vars('switch_top_block', array());
@@ -1756,7 +1756,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function profile_integration($user_id)
 	{
-		global $images, $template, $profiledata, $lang, $phpEx, $phpbb_root_path, $db, $garage_config, $garage;
+		global $images, $template, $profiledata, $lang, $phpEx, $phpbb_root_path, $db, $garage_config, $garage, $nuke_popup;
 
 		include_once($phpbb_root_path . 'includes/class_garage.' . $phpEx);
 		include_once($phpbb_root_path . 'includes/class_garage_image.' . $phpEx);
