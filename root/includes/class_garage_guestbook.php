@@ -146,7 +146,7 @@ class garage_guestbook
 		$sql = "INSERT INTO " . PRIVMSGS_TABLE . " 
 			(privmsgs_type, privmsgs_subject, privmsgs_from_userid, privmsgs_to_userid, privmsgs_date, privmsgs_enable_html, privmsgs_enable_bbcode, privmsgs_enable_smilies, privmsgs_attach_sig)
 			VALUES 
-			('0', '" . $data['pm_subject'] . "', '" . $data['author_id'] . "', '" . $data['user_id'] . "', '" . $data['date'] . "', '0', '1', '1', '0')";
+			('".PRIVMSGS_NEW_MAIL."', '" . $data['pm_subject'] . "', '" . $data['author_id'] . "', '" . $data['user_id'] . "', '" . $data['date'] . "', '0', '1', '1', '0')";
            	
 	 	if ( !$db->sql_query($sql) )
          	{

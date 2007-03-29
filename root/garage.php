@@ -855,11 +855,14 @@ switch( $mode )
 		//Update The Vehicle Timestamp Now...In Case We Get Redirected During Image Processing
 		$garage_vehicle->update_vehicle_time($cid);
 
+		$image_id = $data['image_id'];
+
 		//Removed The Old Image If Required By A Delete Or A New Image Existing
 		if ( ($data['editupload'] == 'delete') OR ($data['editupload'] == 'new') )
 		{
 			$garage_image->delete_image($data['image_id']);
 			$garage->update_single_field(GARAGE_QUARTERMILE_TABLE, 'image_id', 'NULL', 'id', $qmid);
+			$image_id = 0;
 		}
 
 		//If Any Image Variables Set Enter The Image Handling
@@ -871,6 +874,7 @@ switch( $mode )
 				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('quartermile', $qmid);
 				$garage->update_single_field(GARAGE_QUARTERMILE_TABLE, 'image_id', $image_id, 'id', $qmid);
+
 			}
 			//You Have Reached Your Image Quota..Error Nicely
 			else if ( !($garage_image->remote_image_below_quota()) OR !($garage_image->upload_image_below_quota()) )
@@ -879,10 +883,10 @@ switch( $mode )
 			}
 		}
 		//No Image Attached..We Need To Check If This Breaks The Site Rule
-		else if ( ($garage_config['quartermile_image_required'] == '1') AND ($data['quart'] <= $garage_config['quartermile_image_required_limit']))
+		else if ( ($garage_config['quartermile_image_required'] == '1') AND ($data['quart'] <= $garage_config['quartermile_image_required_limit'] AND !$image_id))
 		{
 			//That Time Requires An Image...Delete Entered Time And Notify User
-			$garage_quartermile->delete_quartermile_time($qmid);
+			$garage_quartermile->delete_quartermile($qmid);
 			redirect(append_sid("garage.$phpEx?mode=error&EID=26", true), false);
 		}
 
@@ -1112,11 +1116,14 @@ switch( $mode )
 		//Update The Time Now...In Case We Get Redirected During Image Processing
 		$garage_vehicle->update_vehicle_time($cid);
 
+		$image_id = $data['image_id'];
+
 		//Removed The Old Image If Required By A Delete Or A New Image Existing
 		if ( ($data['editupload'] == 'delete') OR ($data['editupload'] == 'new') )
 		{
 			$garage_image->delete_image($data['image_id']);
 			$garage->update_single_field(GARAGE_ROLLINGROAD_TABLE, 'image_id', 'NULL', 'id', $rrid);
+			$image_id = 0;
 		}
 
 		//If Any Image Variables Set Enter The Image Handling
@@ -1136,7 +1143,7 @@ switch( $mode )
 			}
 		}
 		//No Image Attached..We Need To Check If This Breaks The Site Rule
-		else if ( ($garage_config['dynorun_image_required'] == '1') AND ($data['bhp'] >= $garage_config['dynorun_image_required_limit']))
+		else if ( ($garage_config['dynorun_image_required'] == '1') AND ($data['bhp'] >= $garage_config['dynorun_image_required_limit']) AND !$image_id)
 		{
 			//That Time Requires An Image...Delete Entered Time And Notify User
 			$garage_dynorun->delete_dynorun($rrid);
