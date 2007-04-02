@@ -190,7 +190,7 @@ class garage_business
 	{
 		global $db;
 
-		$data = null;
+		$data = array();
 		$field = null;
 
 		//Setup Field We Will Query Based On Constant
@@ -468,79 +468,362 @@ class garage_business
 	}
 
 	/**
-	* TODO : Move / Replace ???
-	* Build complete page to reassign business
+	* Delete a business and either move or delete linked items
+	*
+	* @param int $business_id business id to delete
+	* @param delete|move $action_garage move or delete modification from garage business
+	* @param int $garage_to_id business id of garage business to move modifications to
+	* @param delete|move $action_insurance move or delete premiums from insurer
+	* @param int $insurance_to_id business id of insurer to move premiums to
+	* @param delete|move $action_dynocentre move or delete dynoruns from dynocentre
+	* @param int $dynocentre_to_id business id of dynocentre to move dynoruns to
+	* @param delete|move $action_retail move or delete modification from retail business
+	* @param int $retail_to_id business id of retail business to move modifications to
+	* @param delete|move $action_move or delete modification from product manufacturer business
+	* @param int $product_to_id business id of product manufacturer to move modifications to
+	*
 	*/
-	function reassign_business($id_list)
+	function delete_business($business_id, $action_garage = 'delete', $garage_to_id = 0, $action_insurance = 'delete', $insurance_to_id = 0, $action_dynocentre = 'delete', $dynocentre_to_id = 0, $action_retail = 'delete', $retail_to_id = 0, $action_product = 'delete', $product_to_id = 0)
 	{
-		global $template, $garage_template, $page_title, $phpbb_root_path, $phpEx;
 
-		$exclude_list = null;
-		for($i = 0; $i < count($id_list); $i++)
+		global $db, $user, $cache, $garage, $garage_business;
+
+		$business_data = $garage_business->get_business($business_id);
+
+		$errors = array();
+
+		if ($action_garage == 'delete')
 		{
-			$data[] 	= $this->get_business($id_list[$i]);
-			$exclude_list 	.= $id_list[$i] . ',';
+			$this->delete_garage_business_content($business_id);
+			add_log('admin', 'LOG_GARAGE_DELETE_GARAGE', $business_data['title']);
 		}
-		$exclude_list = rtrim($exclude_list, ', ');
-
-		//Generate Page Header
-		page_header($page_title);
-
-		//Set Template Files In Use For This Mode
-		$template->set_filenames(array(
-			'header' => 'garage_header.html',
-			'body'   => 'garage_reassign_business.html')
-		);
-
-		//Build Dropdown Box Of Business's To Reassign It 
-		$business = $this->get_reassign_business($exclude_list);
-		$garage_template->reassign_business_dropdown($business);
-
-		$business_names = null;
-		for ($i = 0, $count = sizeof($data); $i < $count; $i++)
+		else if ($action_garage == 'move')
 		{
-			$business_names	.= $data[$i]['title'] . ',';
-			$template->assign_block_vars('business', array(
-				'ID'	=> $data[$i]['id'])
-			);
+			if (!$garage_to_id)
+			{
+				$errors[] = $user->lang['NO_DESTINATION_GARAGE_BUSINESS'];
+			}
+			else
+			{
+				$row = $garage_business->get_business($garage_to_id);
+
+				if (!$row)
+				{
+					$errors[] = $user->lang['NO_BUSINESS'];
+				}
+				else
+				{
+					$garage_to_name = $row['title'];
+					$from_name = $business_data['title'];
+					$this->move_garage_business_content($business_id, $garage_to_id);
+					add_log('admin', 'LOG_GARAGE_MOVED_GARAGE', $from_name, $garage_to_name);
+				}
+			}
 		}
-		$business_names = rtrim($business_names, ', ');
 
-		//Set Up Template Varibles
-		$template->assign_vars(array(
-			'BUSINESS_NAMES'	=> $business_names,
-			'S_MODE_ACTION'		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=reassign_business"))
-		);
+		if ($action_insurance == 'delete')
+		{
+			$this->delete_insurance_business_content($business_id);
+			add_log('admin', 'LOG_GARAGE_DELETE_GARAGE', $business_data['title']);
+		}
+		else if ($action_insurance == 'move')
+		{
+			if (!$insurance_to_id)
+			{
+				$errors[] = $user->lang['NO_DESTINATION_INSURANCE_BUSINESS'];
+			}
+			else
+			{
+				$row = $garage_business->get_business($insurance_to_id);
 
-		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$garage_template->sidemenu();
+				if (!$row)
+				{
+					$errors[] = $user->lang['NO_BUSINESS'];
+				}
+				else
+				{
+					$insurance_to_name = $row['title'];
+					$from_name = $business_data['title'];
+					$this->move_insurance_business_content($business_id, $insurance_to_id);
+					add_log('admin', 'LOG_GARAGE_MOVED_PREMIUMS', $from_name, $insurance_to_name);
+				}
+			}
+		}
 
-		$garage_template->version_notice();
+		if ($action_dynocentre == 'delete')
+		{
+			$this->delete_dynocentre_business_content($business_id);
+			add_log('admin', 'LOG_GARAGE_DELETE_GARAGE', $business_data['title']);
+		}
+		else if ($action_dynocentre == 'move')
+		{
+			if (!$dynocentre_to_id)
+			{
+				$errors[] = $user->lang['NO_DESTINATION_DYNOCENTRE_BUSINESS'];
+			}
+			else
+			{
+				$row = $garage_business->get_business($garage_to_id);
 
-		//Set Template Files In Used For Footer
-		$template->set_filenames(array(
-			'garage_footer' => 'garage_footer.html')
-		);
+				if (!$row)
+				{
+					$errors[] = $user->lang['NO_BUSINESS'];
+				}
+				else
+				{
+					$dynocentre_to_name = $row['title'];
+					$from_name = $business_data['title'];
+					$this->move_dynocentre_business_content($business_id, $dynocentre_to_id);
+					add_log('admin', 'LOG_GARAGE_MOVED_DYNORUNS', $from_name, $dynocentre_to_name);
+				}
+			}
+		}
+		
+		if ($action_retail == 'delete')
+		{
+			$this->delete_retail_business_content($business_id);
+			add_log('admin', 'LOG_GARAGE_DELETE_GARAGE', $business_data['title']);
+		}
+		else if ($action_retail == 'move')
+		{
+			if (!$retail_to_id)
+			{
+				$errors[] = $user->lang['NO_DESTINATION_RETAIL_BUSINESS'];
+			}
+			else
+			{
+				$row = $garage_business->get_business($retail_to_id);
 
-		//Generate Page Footer
-		page_footer();
+				if (!$row)
+				{
+					$errors[] = $user->lang['NO_BUSINESS'];
+				}
+				else
+				{
+					$retail_to_name = $row['title'];
+					$from_name = $business_data['title'];
+					$this->move_retail_business_content($business_id, $retail_to_id);
+					add_log('admin', 'LOG_GARAGE_MOVED_RETAIL', $from_name, $retail_to_name);
+				}
+			}
+		}
+
+		if ($action_product == 'delete')
+		{
+			$this->delete_product_business_content($business_id);
+			add_log('admin', 'LOG_GARAGE_DELETE_GARAGE', $business_data['title']);
+		}
+		else if ($action_product == 'move')
+		{
+			if (!$product_to_id)
+			{
+				$errors[] = $user->lang['NO_DESTINATION_PRODUCT_BUSINESS'];
+			}
+			else
+			{
+				$row = $garage_business->get_business($product_to_id);
+
+				if (!$row)
+				{
+					$errors[] = $user->lang['NO_BUSINESS'];
+				}
+				else
+				{
+					$product_to_name = $row['title'];
+					$from_name = $business_data['title'];
+					$this->move_product_business_content($business_id, $product_to_id);
+					add_log('admin', 'LOG_GARAGE_MOVED_PRODUCT', $from_name, $product_to_name);
+				}
+			}
+		}
+
+		$garage->delete_rows(GARAGE_BUSINESS_TABLE, 'id', $business_id);
+		add_log('admin', 'LOG_GARAGE_BUSINESS_DELETED', $business_data['title']);
+
+		if (sizeof($errors))
+		{
+			return $errors;
+		}
 	}
 
 	/**
-	* TODO: Expanded to handle linked items??
-	* Delete a business
+	* Delete all modifications linked to a garage business
 	*
-	* @param int $id sbusiness id to delete
+	* @param int $business_id business id to delete items for
 	*
 	*/
-	function delete_business($id)
+	function delete_garage_business_content($business_id)
 	{
-		global $garage, $garage_image;
-	
-		//Time To Delete The Actual Quartermile Time Now
-		$garage->delete_rows(GARAGE_BUSINESS_TABLE, 'id', $id);
+		global $db, $config, $phpbb_root_path, $phpEx, $garage;
 
-		return ;
+		include_once($phpbb_root_path . 'includes/mods/class_garage_modification.' . $phpEx);
+		$modifications = $garage_modification->get_modifications_by_garage_id($business_id);
+		for ($i = 0, $count = sizeof($modifications);$i < $count; $i++)
+		{
+			$garage_modification->delete_modification($modifications[$i]['id']);
+		}
+
+		return;
+	}
+
+	/**
+	* Delete all premiums linked to a insurance business
+	*
+	* @param int $business_id business id to delete items for
+	*
+	*/
+	function delete_insurance_business_content($business_id)
+	{
+		global $db, $config, $phpbb_root_path, $phpEx, $garage;
+
+		include_once($phpbb_root_path . 'includes/mods/class_garage_insurance.' . $phpEx);
+		$premiums = $garage_insurance->get_premiums_by_insurer_id($business_id);
+		for ($i = 0, $count = sizeof($premiums);$i < $count; $i++)
+		{
+			$garage_insurance->delete_premium($premiums[$i]['id']);
+		}
+
+		return;
+	}
+
+	/**
+	* Delete all dynoruns linked to a dynorun business
+	*
+	* @param int $business_id business id to delete items for
+	*
+	*/
+	function delete_dynocentre_business_content($business_id)
+	{
+		global $db, $config, $phpbb_root_path, $phpEx, $garage;
+
+		include_once($phpbb_root_path . 'includes/mods/class_garage_dynorun.' . $phpEx);
+		$dynoruns = $garage_dynorun->get_dynoruns_by_dynocentre_id($business_id);
+		for ($i = 0, $count = sizeof($dynoruns);$i < $count; $i++)
+		{
+			$garage_dynoruns->delete_dynorun($dynoruns[$i]['id']);
+		}
+
+		return;
+	}
+
+	/**
+	* Delete all modifications linked to a retail business
+	*
+	* @param int $business_id business id to delete items for
+	*
+	*/
+	function delete_retail_business_content($business_id)
+	{
+		global $db, $config, $phpbb_root_path, $phpEx, $garage;
+
+		include_once($phpbb_root_path . 'includes/mods/class_garage_modification.' . $phpEx);
+		$modifications = $garage_modification->get_modifications_by_retail_id($business_id);
+		for ($i = 0, $count = sizeof($modifications);$i < $count; $i++)
+		{
+			$garage_modification->delete_modification($modifications[$i]['id']);
+		}
+
+		return;
+	}
+
+	/**
+	* Delete all modifications linked to a product business
+	*
+	* @param int $business_id business id to delete items for
+	*
+	*/
+	function delete_product_business_content($business_id)
+	{
+		global $db, $config, $phpbb_root_path, $phpEx, $garage;
+
+		include_once($phpbb_root_path . 'includes/mods/class_garage_modification.' . $phpEx);
+		$modifications = $garage_modification->get_modifications_by_manufacturer_id($business_id);
+		for ($i = 0, $count = sizeof($modifications);$i < $count; $i++)
+		{
+			$garage_modification->delete_modification($modifications[$i]['id']);
+		}
+
+		return;
+	}
+
+	/**
+	* Reassign products to installation garage
+	*
+	* @param int $from_id business id to move from
+	* @param int $to_id business id to move to
+	*
+	*/
+	function move_garage_business_content($from_id, $to_id)
+	{
+		global $garage;
+
+		$garage->update_single_field(GARAGE_MODIFICATIONS_TABLE, 'installer_id', $to_id, 'installer_id', $from_id);
+
+		return;
+	}
+
+	/**
+	* Reassign premiums to different insurer
+	*
+	* @param int $from_id business id to move from
+	* @param int $to_id business id to move to
+	*
+	*/
+	function move_insurance_business_content($from_id, $to_id)
+	{
+		global $garage;
+
+		$garage->update_single_field(GARAGE_PREMIUMS_TABLE, 'business_id', $to_id, 'business_id', $from_id);
+
+		return;
+	}
+
+	/**
+	* Reassign dynoruns to different dynocentre
+	*
+	* @param int $from_id business id to move from
+	* @param int $to_id business id to move to
+	*
+	*/
+	function move_dynocentre_business_content($from_id, $to_id)
+	{
+		global $garage;
+
+		$garage->update_single_field(GARAGE_DYNORUNS_TABLE, 'dynocentre_id', $to_id, 'dynocentre_id', $from_id);
+
+		return;
+	}
+
+	/**
+	* Reassign products to different shop
+	*
+	* @param int $from_id business id to move from
+	* @param int $to_id business id to move to
+	*
+	*/
+	function move_retail_business_content($from_id, $to_id)
+	{
+		global $garage;
+
+		$garage->update_single_field(GARAGE_MODIFICATIONS_TABLE, 'shop_id', $to_id, 'shop_id', $from_id);
+
+		return;
+	}
+
+	/**
+	* Reassign products to different manufacturer
+	*
+	* @param int $from_id business id to move from
+	* @param int $to_id business id to move to
+	*
+	*/
+	function move_product_business_content($from_id, $to_id)
+	{
+		global $garage;
+
+		$garage->update_single_field(GARAGE_MODIFICATIONS_TABLE, 'manufacturer_id', $to_id, 'manufacturer_id', $from_id);
+
+		return;
 	}
 
 	/**
@@ -562,8 +845,7 @@ class garage_business
 	}
 
 	/**
-	* TODO: Perhaps pass a parameter to delete_business with explicit delete of all linked items
-	* Disapprove business's
+	* Disapprove business's, this will force a delete of ALL items linked to the business
 	*
 	* @param array $id_list single-dimension array with business ids to disapprove
 	*
@@ -580,7 +862,5 @@ class garage_business
 		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_business"));
 	}
 }
-
 $garage_business = new garage_business();
-
 ?>

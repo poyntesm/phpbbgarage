@@ -13,7 +13,9 @@
 */
 define('IN_PHPBB', true);
 
-//Let's Set The Root Dir For phpBB And Load Normal phpBB Required Files
+/**
+* Set root path & include standard phpBB files required
+*/
 $phpbb_root_path = './';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
@@ -26,7 +28,9 @@ $auth->acl($user->data);
 //Setup Lang Files
 $user->setup(array('mods/garage'));
 
-//Build All Garage Classes e.g $garage_images->
+/**
+* Build All Garage Classes e.g $garage_images->
+*/
 require($phpbb_root_path . 'includes/mods/class_garage_business.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_dynorun.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_image.' . $phpEx);
@@ -57,21 +61,179 @@ while(list($var, $param) = @each($params))
 	$$var = request_var($param, '');
 }
 
-//Build Inital Navlink...Yes Forum Name!! We Use phpBB3 Standard Navlink Process!!
+		//Setup $auth_admin class so we can add permission options
+		include($phpbb_root_path . '/includes/acp/auth.' . $phpEx);
+		$auth_admin = new auth_admin();
+
+		//Lets Add The Required New Permissions
+		$phpbbgarage_permissions = array(
+			'local'		=> array(),
+			'global'	=> array(
+				'u_garage_browse',
+				'u_garage_search',
+				'u_garage_add_vehicle',
+				'u_garage_delete_vehicle',
+				'u_garage_add_modification',
+				'u_garage_delete_modification',
+				'u_garage_add_quartermile',
+				'u_garage_delete_quartermile',
+				'u_garage_add_lap',
+				'u_garage_delete_lap',
+				'u_garage_add_track',
+				'u_garage_delete_track',
+				'u_garage_add_dynorun',
+				'u_garage_delete_dynorun',
+				'u_garage_add_insurance',
+				'u_garage_delete_insurance',
+				'u_garage_add_service',
+				'u_garage_delete_service',
+				'u_garage_add_blog',
+				'u_garage_delete_blog',
+				'u_garage_add_business',
+				'u_garage_add_make_model',
+				'u_garage_add_product',
+				'u_garage_rate',
+				'u_garage_comment',
+				'u_garage_upload_image',
+				'u_garage_remote_image',
+				'u_garage_delete_image',
+				'u_garage_deny',
+				'm_garage',
+			 	'acl_a_garage_setting',
+			 	'acl_a_garage_business',
+			 	'acl_a_garage_category',
+			 	'acl_a_garage_field',
+			 	'acl_a_garage_model',
+			 	'acl_a_garage_product',
+			 	'acl_a_garage_quota',
+			 	'acl_a_garage_tool',
+			 	'acl_a_garage_track',
+		));
+		$auth_admin->acl_add_option($phpbbgarage_permissions);
+
+
+
+function get_role_by_name($name)
+{
+	global $db;
+
+	$data = null;
+
+	$sql = "SELECT *
+		FROM " . ACL_ROLES_TABLE . "
+		WHERE role_name = '$name'";
+	$result = $db->sql_query($sql);
+	$data = $db->sql_fetchrow($result);
+	$db->sql_freeresult($result);
+
+	return $data;
+}
+
+/**
+* Set role-specific ACL options without deleting enter existing options. If option already set it will NOT be updated.
+* 
+* @param int $role_id role id to update (a role_id has to be specified)
+* @param mixed $auth_options auth_options to grant (a auth_option has to be specified)
+* @param ACL_YES|ACL_NO|ACL_NEVER $auth_setting defines the mode acl_options are getting set with
+ *
+*/
+function acl_update_role($role_id, $auth_options, $auth_setting = ACL_YES)
+{
+	global $db;
+
+	$acl_options_ids = $this->get_acl_option_ids($auth_options);
+
+	$role_options = array();
+	$sql = "SELECT auth_option_id
+		FROM " . ACL_ROLES_DATA_TABLE . "
+		WHERE role_id = " . (int) $role_id . "
+		GROUP BY auth_option_id";
+	$result = $db->sql_query($sql);
+	while ($row = $db->sql_fetchrow($result))
+	{
+		$role_options[] = $row;
+	}
+	$db->sql_freeresult($result);
+
+	$sql_ary = array();
+	for ($i = 0, $count = sizeof($acl_options_ids);$i < $count; $i++)
+	{
+		if (in_array($acl_options_id[$i]['auth_options_id'], $role_options))
+		{
+			continue;
+		}
+		$sql_ary[] = array(
+			'role_id'		=> (int) $role_id,
+			'auth_option_id'	=> (int) $acl_options_ids[$i]['auth_option_id'],
+			'auth_setting'		=> $auth_setting, 
+		);
+	}
+
+	$db->sql_multi_insert(ACL_ROLES_DATA_TABLE, $sql_ary);
+
+	$this->acl_clear_prefetch();
+}
+
+/**
+* Get ACL option ids
+*
+* @param mixed $auth_options auth_options to grant (a auth_option has to be specified)
+*/
+function get_acl_option_ids($auth_options)
+{
+	global $db;
+
+	$data = array();
+	$sql = "SELECT auth_option_id
+		FROM " . ACL_OPTIONS_TABLE . "
+		WHERE " . $db->sql_in_set('auth_option', $auth_options) . "
+		GROUP BY auth_option_id";
+	$result = $db->sql_query($sql);
+	while ($row = $db->sql_fetchrow($result))
+	{
+		$data[] = $row;
+	}
+	$db->sql_freeresult($result);
+
+	return $data;
+}
+
+		$role = get_role_by_name('ROLE_ADMIN_STANDARD');
+		if ($role)
+		{
+			acl_update_role($role['role_id'], array('a_garage_setting', 'a_garage_business', 'a_garage_category', 'a_garage_field', 'a_garage_model', 'a_garage_product', 'a_garage_quota', 'a_garage_tool', 'a_garage_track'));
+		}
+
+		//Full Admin Role
+		$role = get_role_by_name('ROLE_ADMIN_FULL');
+		if ($role)
+		{
+			acl_update_role($role['role_id'], array('a_garage_setting', 'a_garage_business', 'a_garage_category', 'a_garage_field', 'a_garage_model', 'a_garage_product', 'a_garage_quota', 'a_garage_tool', 'a_garage_track'));
+		}
+
+/**
+* Build inital navlink..we use the standard phpBB3 breadcrumb process
+*/
 $template->assign_block_vars('navlinks', array(
 	'FORUM_NAME'	=> $user->lang['GARAGE'],
 	'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx"))
 );
 
-//Display MCP Link If Authorised
+/**
+* Display the moderator control panel link if authorised
+*/
 $template->assign_vars(array(
 	'U_MCP'	=> ($auth->acl_get('m_garage')) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=garage', true, $user->session_id) : '')
 );
 
-//Decide What Mode The User Is Doing
+/**
+* Perform a set action based on value for $mode
+*/
 switch( $mode )
 {
-	//Display Search Options Page...
+	/**
+	* Display search options page
+	*/
 	case 'search':
 
 		//Let Check The User Is Allowed Perform This Action
@@ -110,15 +272,18 @@ switch( $mode )
 			'U_FIND_USERNAME'		=> append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=searchuser&amp;form=search_garage&amp;field=username&amp;select_single=true'),
 			'UA_FIND_USERNAME'		=> append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=searchuser&form=search_garage&field=username&select_single=true', false),
 			'S_DISPLAY_SEARCH_INSURANCE'	=> $garage_config['enable_insurance'],
-			'S_MODE_ACTION_SEARCH' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=search_results"))
-		);
+			'S_MODE_ACTION_SEARCH' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=search_results"),
+			'S_SEARCH_TAB_ACTIVE'		=> true,
+		));
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$garage_template->sidemenu();
 
-		break;
+	break;
 
-	//Browse, Quartermile Table, Dynorun Table & Lap Table Are Really Just A Search, How Cool Is That :)
+	/**
+	* Browse, quartermile table, dynorun table & lap table pages Are really just a search, how cool is that :)
+	*/
 	case 'browse':
 	case 'quartermile_table':
 	case 'dynorun_table':
@@ -133,6 +298,9 @@ switch( $mode )
 				'FORUM_NAME'	=> $user->lang['BROWSE'],
 				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=$mode"))
 			);
+			$template->assign_vars(array(
+				'S_BROWSE_TAB_ACTIVE'	=> true,
+			));
 			$default_display = 'vehicles';
 		}
 		else if ($mode == 'quartermile_table')
@@ -142,6 +310,9 @@ switch( $mode )
 				'FORUM_NAME'	=> $user->lang['QUARTERMILE_TABLE'],
 				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=$mode"))
 			);
+			$template->assign_vars(array(
+				'S_QUARTERMILE_TABLE_TAB_ACTIVE'	=> true,
+			));
 			$default_display = 'quartermiles';
 		}
 		elseif ($mode == 'dynorun_table')
@@ -151,6 +322,9 @@ switch( $mode )
 				'FORUM_NAME'	=> $user->lang['DYNORUN_TABLE'],
 				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=$mode"))
 			);
+			$template->assign_vars(array(
+				'S_DYNORUN_TABLE_TAB_ACTIVE'	=> true,
+			));
 			$default_display = 'dynoruns';
 		}
 		elseif ($mode == 'lap_table')
@@ -160,6 +334,9 @@ switch( $mode )
 				'FORUM_NAME'	=> $user->lang['LAP_TABLE'],
 				'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=$mode"))
 			);
+			$template->assign_vars(array(
+				'S_LAP_TABLE_TAB_ACTIVE'	=> true,
+			));
 			$default_display = 'laps';
 		}
 		else
@@ -211,26 +388,7 @@ switch( $mode )
 				'PAGE_NUMBER' 			=> on_page($total_vehicles, $garage_config['cars_per_page'], $start),
 				'TOTAL_VEHICLES'		=> ($total_vehicles == 1) ? $user->lang['VIEW_VEHICLE'] : sprintf($user->lang['VIEW_VEHICLES'], $total_vehicles),
 			));
-			for ($i = 0, $count = sizeof($results_data); $i < $count; $i++)
-			{
-				//Provide Results To Template Engine
-				$template->assign_block_vars('vehicle', array(
-					'U_IMAGE'	=> ($results_data[$i]['attach_id']) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_image&amp;image_id=" . $results_data[$i]['attach_id']) : '',
-					'U_VIEW_VEHICLE'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=" . $results_data[$i]['id']),
-					'U_VIEW_PROFILE'	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $results_data[$i]['user_id']),
-					'ROW_NUMBER' 		=> $i + ( $start + 1 ),
-					'IMAGE'			=> $user->img('garage_vehicle_img_attached', 'VEHICLE_IMAGE_ATTACHED'),
-					'YEAR' 			=> $results_data[$i]['made_year'],
-					'MAKE' 			=> $results_data[$i]['make'],
-					'COLOUR'		=> $results_data[$i]['colour'],
-					'UPDATED'		=> $user->format_date($results_data[$i]['date_updated']),
-					'VIEWS'			=> $results_data[$i]['views'],
-					'MODS'			=> $results_data[$i]['total_mods'],
-					'MODEL'			=> $results_data[$i]['model'],
-					'USERNAME'		=> $results_data[$i]['username'],
-					'USERNAME_COLOUR'	=> get_username_string('colour', $results_data[$i]['user_id'], $results_data[$i]['username'], $results_data[$i]['user_colour']),
-				));
-			}
+			$garage_template->vehicle_assignment($results_data, 'vehicle');
 		}
 		//Display Results As Modifications
 		else if ($data['display_as'] == 'modifications')
@@ -425,6 +583,9 @@ switch( $mode )
 
 		break;
 
+	/**
+	* View a iamge contained in the garage
+	*/
 	case 'view_image':
 
 		//Let Check The User Is Allowed Perform This Action
@@ -457,46 +618,44 @@ switch( $mode )
 			        switch ( $data['watermark_ext'] )
 				{
 			                case 'png':
-			                        $wtr_src = imagecreatefrompng( $phpbb_root_path . GARAGE_WATERMARK_PATH . $garage_config['watermark_source']);
-			                        break;
-			                case 'gif':
-			                        $wtr_src = imagecreatefromgif( $phpbb_root_path . GARAGE_WATERMARK_PATH . $garage_config['watermark_source']);
-			                        break;
-			                case 'jpg':
-			                case 'jpeg':
-			                        $wtr_src = imagecreatefromjpeg( $phpbb_root_path . GARAGE_WATERMARK_PATH . $garage_config['watermark_source']);
-			                        break;
-			                default:
+						$watermark = imagecreatefrompng( $phpbb_root_path . GARAGE_WATERMARK_PATH . $garage_config['watermark_source']);
+						imageAlphaBlending($watermark, false);
+						imageSaveAlpha($watermark, true);
+					break;
 
-			                        $wtr_src = false;
+			                default:
+						$watermakr = false;
+					break;
 			        }
 
-			        if ( $wtr_src )
+			        if ( $watermark )
 			        {
 					$data['width'] = $garage_image->get_image_width($data['attach_location']);
 					$data['height'] = $garage_image->get_image_height($data['attach_location']);
-			                $data['watermark_width'] = imagesx($wtr_src);
-					$data['watermark_height'] = imagesy($wtr_src);
-		
+			                $data['watermark_width'] = imagesx($watermark);
+					$data['watermark_height'] = imagesy($watermark);
+					$data['dest_x'] = $data['width'] - $data['watermark_width'] - 5;  
+					$data['dest_y'] = $data['height'] - $data['watermark_height'] - 5; 
+
                 			switch ( $data['attach_ext'] )
 			                {
 			                        case '.png':
-			                                $img_src = imagecreatefrompng($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['attach_location']);
+			                                $source = imagecreatefrompng($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['attach_location']);
 			                                break;
 			                        case '.gif':
-			                                $img_src = imagecreatefromgif($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['attach_location']);
+			                                $source = imagecreatefromgif($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['attach_location']);
 			                                break;
 			                        case '.jpg':
 			                        case '.jpeg':
-			                                $img_src = imagecreatefromjpeg($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['attach_location']);
+			                                $source = imagecreatefromjpeg($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['attach_location']);
 			                                break;
 			                        default:
 			                                $img_src = false;
 			                }
 
-                			if ( $img_src )
+                			if ( $source )
 					{
-			                        imagecopymerge($img_src, $wtr_src, ($data['width'] - $data['watermark_width'] - 5), ($data['height'] - $data['watermark_height'] - 5), 0, 0, $data['watermark_height'], $data['watermark_width'], 40);
+			                        imagecopymerge($source, $watermark, $data['dest_x'], $data['dest_y'], 0, 0, $data['watermark_width'], $data['watermark_height'], 60);
 			                        $watermark_ok = 1;
 			                }
 			        }
@@ -510,15 +669,22 @@ switch( $mode )
 			                case '.gif':
 			                case '.png':
 			                        header('Content-type: image/png');
-			                        imagepng($img_src);
-						break;
+						imagepng($source);
+						imagedestroy($source);  
+						imagedestroy($watermark);
+					break;
+
 					case '.jpg':
 					case '.jpeg':
 			                        header('Content-type: image/jpeg');
-			                        imagejpeg($img_src);
-			                        break;
+			                        imagejpeg($source);
+						imagedestroy($source);  
+						imagedestroy($watermark);
+					break;
+
 			                default:
 						trigger_error('UNSUPPORTED_FILE_TYPE');
+					break;
 			        }
 			}
 			//Looks Like We Need To Just Show The Original Image
@@ -544,6 +710,9 @@ switch( $mode )
         		exit;
 		}
 
+	/**
+	* View all iamges contained in the garage
+	*/
 	case 'view_all_images':
 
 		//Let Check The User Is Allowed Perform This Action
@@ -604,6 +773,9 @@ switch( $mode )
 
 		break;
 
+	/**
+	* Insurer review page
+	*/
 	case 'insurance_review':
 
 		//Let Check The User Is Allowed Perform This Action
@@ -706,6 +878,7 @@ switch( $mode )
 			'PAGINATION' 			=> $pagination,
 			'PAGE_NUMBER' 			=> on_page($count, $garage_config['cars_per_page'], $start),
 			'TOTAL_BUSINESS'		=> ($count == 1) ? $user->lang['VIEW_BUSINESS'] : sprintf($user->lang['VIEW_BUSINESS\'S'], $count),
+			'S_INSURANCE_REVIEW_TAB_ACTIVE'	=> true,
 		));
 		}
 
@@ -714,6 +887,9 @@ switch( $mode )
 
 		break;
 
+	/**
+	* Garage review page
+	*/
 	case 'garage_review':
 
 		//Let Check The User Is Allowed Perform This Action
@@ -833,6 +1009,7 @@ switch( $mode )
 			'PAGINATION' 			=> $pagination,
 			'PAGE_NUMBER' 			=> on_page($count, $garage_config['cars_per_page'], $start),
 			'TOTAL_BUSINESS'		=> ($count == 1) ? $user->lang['VIEW_BUSINESS'] : sprintf($user->lang['VIEW_BUSINESS\'S'], $count),
+			'S_GARAGE_REVIEW_TAB_ACTIVE'	=> true,
 		));
 		}
 
@@ -841,6 +1018,9 @@ switch( $mode )
 
 		break;
 
+	/**
+	* Shop review page
+	*/
 	case 'shop_review':
 
 		//Let Check The User Is Allowed Perform This Action
@@ -948,6 +1128,7 @@ switch( $mode )
 			'PAGINATION' 			=> $pagination,
 			'PAGE_NUMBER' 			=> on_page($count, $garage_config['cars_per_page'], $start),
 			'TOTAL_BUSINESS'		=> ($count == 1) ? $user->lang['VIEW_BUSINESS'] : sprintf($user->lang['VIEW_BUSINESS\'S'], $count),
+			'S_SHOP_REVIEW_TAB_ACTIVE'	=> true,
 		));
 		}
 
@@ -956,6 +1137,9 @@ switch( $mode )
 
 		break;
 
+	/**
+	* Page allowing users to submit new business's
+	*/
 	case 'user_submit_business':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
@@ -1007,6 +1191,9 @@ switch( $mode )
 
 		break;
 
+	/**
+	* Insert new business into database
+	*/
 	case 'insert_business':
 
 		//Let Check The User Is Allowed Perform This Action
@@ -1055,6 +1242,11 @@ switch( $mode )
 
 		break;
 
+	/**
+	* Page allowing users to edit business's
+	* 
+	* @todo Move to MCP?
+	*/
 	case 'edit_business':
 
 		//Let Check The User Is Allowed Perform This Action
@@ -1105,6 +1297,9 @@ switch( $mode )
 
 		break;
 
+	/**
+	* Update business
+	*/
 	case 'update_business':
 
 		//Let Check The User Is Allowed Perform This Action
@@ -1134,6 +1329,9 @@ switch( $mode )
 
 		break;
 
+	/**
+	* Page allowing users to submit new makes
+	*/
 	case 'user_submit_make':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
@@ -1214,6 +1412,9 @@ switch( $mode )
 
 		break;
 
+	/**
+	* Page allowing users to submit new models
+	*/
 	case 'user_submit_model':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
@@ -1271,6 +1472,9 @@ switch( $mode )
 
 		break;
 
+	/**
+	* Page allowing users to submit new modification products
+	*/
 	case 'user_submit_product':
 
 		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
@@ -1389,40 +1593,9 @@ switch( $mode )
 
 		break;
 
-	case 'reassign_business':
-
-		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if ( $user->data['user_id'] == ANONYMOUS )
-		{
-			login_box("garage.$phpEx?mode=pending");
-		}
-
-		//Check The User Is Allowed To View This Page...If Not Send Them On There Way Nicely
-		if (!$auth->acl_get('m_garage'))
-		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=13"));
-		}
-
-		//Get All Data Posted And Make It Safe To Use
-		$params = array('business_id' => '', 'target_id' => '');
-		$data = $garage->process_vars($params);
-
-		//Checks All Required Data Is Present
-		$params = array('business_id', 'target_id');
-		$garage->check_required_vars($params);
-
-		//Lets Update All Possible Business Fields With The Reassigned Business
-		$garage->update_single_field(GARAGE_MODIFICATIONS_TABLE, 'business_id', $data['target_id'], 'business_id', $data['business_id']);
-		$garage->update_single_field(GARAGE_MODIFICATIONS_TABLE, 'install_business_id', $data['target_id'], 'install_business_id', $data['business_id']);
-		$garage->update_single_field(GARAGE_INSURANCE_TABLE, 'business_id', $data['target_id'], 'business_id', $data['business_id']);
-
-		//Since We Have Updated All Item Lets Do The Original Delete Now
-		$garage->delete_rows(GARAGE_BUSINESS_TABLE, 'id', $data['business_id']);
-
-		redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=pending"));
-
-		break;
-
+	/**
+	* Page to display an error nicely to the user
+	*/
 	case 'error':
 
 		//Build Page Header ;)
@@ -1446,10 +1619,12 @@ switch( $mode )
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$garage_template->sidemenu();
 
-		break;
+	break;
 
+	/**
+	* Called by AJAX toolkit to build product model options
+	*/
 	case 'get_model_list':
-
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('make_id' => '', 'model_id' => '');
 		$data = $garage->process_vars($params);
@@ -1475,11 +1650,12 @@ switch( $mode )
 				}
 			}
 		}
+	exit;
 
-		exit;
-
+	/**
+	* Called by AJAX toolkit to build product dropdown options
+	*/
 	case 'get_product_list':
-
 		//Get All Data Posted And Make It Safe To Use
 		$params = array('manufacturer_id' => '' , 'category_id' => '', 'product_id' => '');
 		$data = $garage->process_vars($params);
@@ -1511,11 +1687,47 @@ switch( $mode )
 				}
 			}
 		}
+	exit;
 
-		exit;
+	/**
+	* Page to display a users personal vehicles and option to create new one if authorised
+	*/
+	case 'user_garage':
+		//Build Page Header ;)
+		page_header($page_title);
 
+		//Set Template Files In Use For This Mode
+		$template->set_filenames(array(
+			'header' => 'garage_header.html',
+			'body'   => 'garage_users_garage.html')
+		);
+
+		//Build Navlinks
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $user->lang['YOUR_GARAGE'])
+		);
+
+		$template->assign_vars(array(
+			'S_USER_GARAGE_TAB_ACTIVE'	=> true,
+		));
+
+		$user_vehicles = $garage_vehicle->get_vehicles_by_user($user->data['user_id']);
+		for ($i = 0; $i < count($user_vehicles); $i++)
+		{
+		      	$template->assign_block_vars('user_vehicles', array(
+       				'U_VIEW_VEHICLE'=> append_sid("garage_vehicle.$phpEx?mode=view_own_vehicle&amp;VID=" . $user_vehicles[$i]['id']),
+       				'VEHICLE' 	=> $user_vehicles[$i]['vehicle'],
+			));
+		}
+
+		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
+		$garage_template->sidemenu();
+	break;
+
+	/**
+	* Default statistics page
+	*/
 	default:
-
 		//Let Check The User Is Allowed Perform This Action
 		if (!$auth->acl_get('u_garage_browse'))
 		{
@@ -1550,33 +1762,31 @@ switch( $mode )
 		$garage_quartermile->show_topquartermile();
 		$garage_dynorun->show_topdynorun();
 		$garage_vehicle->show_toprated();
+		$garage_track->show_toplap();
 
 		$template->assign_vars(array(
 			'S_INDEX_COLUMNS' 	=> ($garage_config['enable_user_index_columns'] && ($user->data['user_garage_index_columns'] != $garage_config['index_columns'])) ? $user->data['user_garage_index_columns'] : $garage_config['index_columns'],
+			'S_MAIN_TAB_ACTIVE'	=> true,
 			'TOTAL_VEHICLES' 	=> $garage_vehicle->count_total_vehicles(),
 			'TOTAL_VIEWS' 		=> $garage->count_total_views(),
 			'TOTAL_MODIFICATIONS' 	=> $garage_modification->count_total_modifications(),
-			'TOTAL_COMMENTS'  	=> $garage_guestbook->count_total_comments())
-		);
+			'TOTAL_COMMENTS'  	=> $garage_guestbook->count_total_comments(),
+		));
 
 		//Set Template Files In Use For This Mode
 		$template->set_filenames(array(
 			'header'	=> 'garage_header.html',
 			'menu' 		=> 'garage_menu.html',
-			'body' 		=> 'garage.html')
-		);
-
-		break;
+			'body' 		=> 'garage.html',
+		));
+	break;
 }
 
 $garage_template->version_notice();
 
-//Set Template Files In Used For Footer
 $template->set_filenames(array(
 	'garage_footer' => 'garage_footer.html')
 );
 
-//Generate Page Footer
 page_footer();
-
 ?>

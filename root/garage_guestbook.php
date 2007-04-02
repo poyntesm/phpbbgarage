@@ -13,86 +13,79 @@
 */
 define('IN_PHPBB', true);
 
-//Let's Set The Root Dir For phpBB And Load Normal phpBB Required Files
+/**
+* Set root path & include standard phpBB files required
+*/
 $phpbb_root_path = './';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 include($phpbb_root_path . 'includes/bbcode.' . $phpEx);
 
-//Start Session Management
+/**
+* Setup user session, authorisation & language 
+*/
 $user->session_begin();
 $auth->acl($user->data);
-
-//Setup Lang Files
 $user->setup(array('mods/garage'));
 
-//Build All Garage Classes e.g $garage_images->
-require($phpbb_root_path . 'includes/mods/class_garage_business.' . $phpEx);
-require($phpbb_root_path . 'includes/mods/class_garage_dynorun.' . $phpEx);
-require($phpbb_root_path . 'includes/mods/class_garage_image.' . $phpEx);
-require($phpbb_root_path . 'includes/mods/class_garage_insurance.' . $phpEx);
-require($phpbb_root_path . 'includes/mods/class_garage_modification.' . $phpEx);
-require($phpbb_root_path . 'includes/mods/class_garage_quartermile.' . $phpEx);
+/**
+* Build All Garage Classes e.g $garage_images->
+*/
 require($phpbb_root_path . 'includes/mods/class_garage_template.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_guestbook.' . $phpEx);
-require($phpbb_root_path . 'includes/mods/class_garage_model.' . $phpEx);
 
-//Set The Page Title
-$page_title = $user->lang['GARAGE'];
+/**
+* Setup variables 
+*/
+$mode = request_var('mode', '');
+$vid = request_var('VID', '');
+$comment_id = request_var('CMT_ID', '');
 
-//Get All String Parameters And Make Safe
-$params = array('mode' => 'mode', 'sort' => 'sort', 'start' => 'start', 'order' => 'order');
-while(list($var, $param) = @each($params))
-{
-	$$var = request_var($param, '');
-}
-
-//Get All Non-String Parameters
-$params = array('vid' => 'VID', 'mid' => 'MID', 'did' => 'DID', 'qmid' => 'QMID', 'ins_id' => 'INS_ID', 'eid' => 'EID', 'image_id' => 'image_id', 'comment_id' => 'CMT_ID', 'bus_id' => 'BUS_ID');
-while(list($var, $param) = @each($params))
-{
-	$$var = request_var($param, '');
-}
-
-//Build Inital Navlink...Yes Forum Name!! We Use phpBB3 Standard Navlink Process!!
+/**
+* Build inital navlink..we use the standard phpBB3 breadcrumb process
+*/
 $template->assign_block_vars('navlinks', array(
 	'FORUM_NAME'	=> $user->lang['GARAGE'],
 	'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx"))
 );
 
-//Display MCP Link If Authorised
+/**
+* Display the moderator control panel link if authorised
+*/
 $template->assign_vars(array(
 	'U_MCP'	=> ($auth->acl_get('m_garage')) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=garage', true, $user->session_id) : '')
 );
 
-//Decide What Mode The User Is Doing
+/**
+* Perform a set action based on value for $mode
+*/
 switch( $mode )
 {
 	case 'view_guestbook':
-
-		//Let Check The User Is Allowed Perform This Action
+		/**
+		* Check authorisation to perform action, redirecting to error screen if not
+		*/
 		if (!$auth->acl_get('u_garage_browse'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=15"));
 		}
 
-		//Build Page Header ;)
-		page_header($page_title);
-
-		//Set Template Files In Use For This Mode
+		/**
+		* Get vehicle & comment data from DB
+		*/
+		$vehicle_data = $garage_vehicle->get_vehicle($vid);
+		$comment_data = $garage_guestbook->get_vehicle_comments($vid);
+		
+		/**
+		* Handle template declarations & assignments
+		*/
+		page_header($user->lang['GARAGE']);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_view_guestbook.html')
 		);
-
-		//Get Vehicle Data
-		$vehicle_data = $garage_vehicle->get_vehicle($vid);
-
-		//Get All Comments Data
-		$comment_data = $garage_guestbook->get_vehicle_comments($vid);
-
 		for ($i = 0, $count = sizeof($comment_data);$i < $count; $i++)
 		{	
 			$username = $comment_data[$i]['username'];
@@ -123,7 +116,6 @@ switch( $mode )
 				$poster_avatar = '<img src="' . $avatar_img . '" width="' . $comment_data[$i]['user_avatar_width'] . '" height="' . $comment_data[$i]['user_avatar_height'] . '" alt="" />';
 			}
 
-			// Handle anon users posting with usernames
 			if ( $comment_data[$i]['user_id'] == ANONYMOUS && $comment_data[$i]['post_username'] != '' )
 			{
 				$poster = $comment_data[$i]['post_username'];
@@ -196,32 +188,31 @@ switch( $mode )
 				'POST' 			=> $post)
 			);
 		}
-
 		$template->assign_vars(array(
 			'L_GUESTBOOK_TITLE' 	=> $vehicle_data['username'] . " - " . $vehicle_data['vehicle'] . " " . $user->lang['GUESTBOOK'],
 			'VID' 			=> $vid,
 			'S_DISPLAY_LEAVE_COMMENT'=> $auth->acl_get('u_garage_comment'),
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=insert_comment&VID=$vid"))
 		);
-
-		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$garage_template->sidemenu();
-
-		break;
+	break;
 
 	case 'insert_comment':
-
-		//Let Check The User Is Allowed Perform This Action
+		/**
+		* Check authorisation to perform action, redirecting to error screen if not
+		*/
 		if (!$auth->acl_get('u_garage_comment'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=17"));
 		}
 
+		/**
+		* Handle text in the phpBB standard UTF8 way, allowing bbcode, urls & smilies
+		*/
 		$text = utf8_normalize_nfc(request_var('comments', '', true));
-		$uid = $bitfield = $flags = ''; // will be modified by generate_text_for_storage
+		$uid = $bitfield = $flags = ''; 
 		$allow_bbcode = $allow_urls = $allow_smilies = true;
 		generate_text_for_storage($text, $uid, $bitfield, $flags, $allow_bbcode, $allow_urls, $allow_smilies);
-
 		$data = array(
 		    'post'              => $text,
 		    'bbcode_uid'        => $uid,
@@ -229,15 +220,20 @@ switch( $mode )
 		    'bbcode_flags'      => $flags,
 		);
 
-		//Insert The Comment Into Vehicle Guestbook
+		/**
+		* Perform required DB work to create new guestbook comment
+		*/
 		$garage_guestbook->insert_vehicle_comment($data);
 
-		//Get Data So We Can Check If We Need To PM Owner Or Email
+		/**
+		* Get vehicle & user notification data from DB
+		*/
 		$data = $garage_vehicle->get_vehicle($vid);		
-
 		$notify_data = $garage_guestbook->notify_on_comment($data['user_id']);
 
-		//If User Has Requested Notification On Comments Sent Them A PM
+		/**
+		* Perform user PM notification if required
+		*/
 		if ($notify_data['user_garage_guestbook_pm_notify'])
 		{
 			include_once($phpbb_root_path . 'includes/functions_privmsgs.' . $phpEx);
@@ -263,114 +259,134 @@ switch( $mode )
 				'message'			=> $message_parser->message,
 				'address_list'			=> array('u' => array($data['user_id'] => 'to')),
 			);
+			submit_pm('post', $user->lang['GUESTBOOK_NOTIFY_SUBJECT'], $pm_data, false, false);
 		}
-		//If User Has Requested Notification On Comments Sent Them A Email
+
+		/**
+		* Perform user email/jabber notification if required
+		*/
 		if ($notify_data['user_garage_guestbook_email_notify'])
 		{
-			//
+			//Guess we need some code here at some point soon ;)
 		}
 
-		//Now We Have All Data Lets Send The PM!!
-		submit_pm('post', $user->lang['GUESTBOOK_NOTIFY_SUBJECT'], $pm_data, false, false);
-
-		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
+		/**
+		* Perform moderator notification if required
+		*/
 		if ( $garage_config['enable_guestbooks_comment_approval'] )
 		{
 			$garage->pending_notification('unapproved_guestbook_comments');
 		}
 
+		/**
+		* All work complete for mode, so redirect to correct page
+		*/
 		redirect(append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=view_guestbook&amp;VID=$vid"));
-
-		break;
+	break;
 
 	case 'edit_comment':
-
-		//Only Allow Moderators Or Administrators Perform This Action
+		/**
+		* Check authorisation to perform action, redirecting to error screen if not
+		*/
 		if (!$auth->acl_get('m_garage'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=13"));
 		}
 
-		//Pull Required Comment Data From DB
+		/**
+		* Get comment data from DB
+		*/
 		$data = $garage_guestbook->get_comment($comment_id);	
 		
+		/**
+		* Handle template declarations & assignments
+		*/
+		page_header($user->lang['GARAGE']);
 		$template->assign_vars(array(
 			'VID' 		 => $vid,
 			'COMMENT_ID' 	 => $data['comment_id'],
 			'COMMENTS' 	 => $data['post'])
 		);
-
-		//Build Page Header ;)
-		page_header($page_title);
-
-		//Set Template Files In Use For This Mode
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_edit_comment.html')
 		);
-
-		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$garage_template->sidemenu();
-
-		break;
+	break;
 
 	case 'update_comment':
-
-		//Only Allow Moderators Or Administrators Perform This Action
+		/**
+		* Check authorisation to perform action, redirecting to error screen if not
+		*/
 		if (!$auth->acl_get('m_garage'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=13"));
 		}
 
-		//Get All Data Posted And Make It Safe To Use
-		$params = array('comments' => '', 'COMMENT_ID' => '');
-		$data = $garage->process_vars($params);
+		/**
+		* Handle text in the phpBB standard UTF8 way, allowing bbcode, urls & smilies
+		*/
+		$text = utf8_normalize_nfc(request_var('comments', '', true));
+		$uid = $bitfield = $flags = ''; 
+		$allow_bbcode = $allow_urls = $allow_smilies = true;
+		generate_text_for_storage($text, $uid, $bitfield, $flags, $allow_bbcode, $allow_urls, $allow_smilies);
+		$data = array(
+		    'post'              => $text,
+		    'bbcode_uid'        => $uid,
+		    'bbcode_bitfield'   => $bitfield,
+		    'bbcode_flags'      => $flags,
+		);
 
-		//Checks All Required Data Is Present
-		$params = array('comments', 'COMMENT_ID');
-		$garage->check_required_vars($params);
+		/**
+		* Perform required DB work to update comment
+		*/
+		$garage_guestbook->update_vehicle_comment($data, $comment_id);
 
-		//Update The Comment In The Vehicle Guestbook
-		$garage->update_single_field(GARAGE_GUESTBOOKS_TABLE, 'post', $data['comments'], 'id', $data['COMMENT_ID']);
-
-		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
+		/**
+		* Perform notification if required
+		*/
 		if ( $garage_config['enable_guestbooks_comment_approval'] )
 		{
 			$garage->pending_notification('unapproved_guestbook_comments');
 		}
 
+		/**
+		* All work complete for mode, so redirect to correct page
+		*/
 		redirect(append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=view_guestbook&amp;VID=$vid"));
-
-		break;
+	break;
 
 	case 'delete_comment':
-
-		//Only Allow Moderators Or Administrators Perform This Action
+		/**
+		* Check authorisation to perform action, redirecting to error screen if not
+		*/
 		if (!$auth->acl_get('m_garage'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=13"));
 		}
 
-		//Get All Data Posted And Make It Safe To Use
+		/**
+		* Get all required/optional data and check required data is present
+		*/
 		$params = array('comment_id' => '');
 		$data = $garage->process_vars($params);
 
-		//Delete The Comment From The Guestbook
+		/**
+		* Perform required DB work to delete comment
+		*/
 		$garage->delete_rows(GARAGE_GUESTBOOKS_TABLE, 'id', $data['comment_id']);
 
+		/**
+		* All work complete for mode, so redirect to correct page
+		*/
 		redirect(append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=view_guestbook&amp;VID=$vid"));
-
-		break;
+	break;
 }
-
 $garage_template->version_notice();
 
-//Set Template Files In Used For Footer
 $template->set_filenames(array(
 	'garage_footer' => 'garage_footer.html')
 );
 
-//Generate Page Footer
 page_footer();
-
 ?>

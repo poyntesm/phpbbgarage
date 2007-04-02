@@ -29,6 +29,7 @@ class mcp_garage_info
 				'unapproved_guestbook_comments'	=> array('title' => 'MCP_GARAGE_UNAPPROVED_GUESTBOOK_COMMENTS', 'auth' => 'acl_m_garage', 'cat' => array('MCP_GARAGE')),
 				'unapproved_laps'		=> array('title' => 'MCP_GARAGE_UNAPPROVED_LAPS', 'auth' => 'acl_m_garage', 'cat' => array('MCP_GARAGE')),
 				'unapproved_tracks'		=> array('title' => 'MCP_GARAGE_UNAPPROVED_TRACKS', 'auth' => 'acl_m_garage', 'cat' => array('MCP_GARAGE')),
+				'unapproved_products'		=> array('title' => 'MCP_GARAGE_UNAPPROVED_PRODUCTS', 'auth' => 'acl_m_garage', 'cat' => array('MCP_GARAGE')),
 			),
 		);
 	}

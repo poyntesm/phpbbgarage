@@ -20,7 +20,7 @@ class acp_garage_tool_info
 			'title'		=> 'ACP_GARAGE_TOOL_MANAGEMENT',
 			'version'	=> '1.0.0',
 			'modes'		=> array(
-				'tools'	=> array('title' => 'ACP_GARAGE_TOOLS', 'auth' => 'acl_a_garage', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
+				'tools'	=> array('title' => 'ACP_GARAGE_TOOLS', 'auth' => 'acl_a_garage_tool', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
 			),
 		);
 	}

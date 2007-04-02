@@ -64,6 +64,7 @@ class garage_template
 			'U_GARAGE_DYNORUN_TABLE' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=dynorun_table"),
 			'U_GARAGE_LAP_TABLE' 			=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=lap_table"),
 			'U_GARAGE_CREATE_VEHICLE' 		=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_vehicle"),
+			'U_GARAGE_USER_GARAGE'	 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_garage"),
 			'MAIN' 					=> ($garage_config['enable_images']) ? $user->img('garage_main_menu', 'MAIN_MENU') : $user->lang['MAIN_MENU'],
 			'BROWSE' 				=> ($garage_config['enable_images']) ? $user->img('garage_browse', 'BROWSE_GARAGE') : $user->lang['BROWSE_GARAGE'],
 			'SEARCH' 				=> ($garage_config['enable_images']) ? $user->img('garage_search', 'SEARCH_GARAGE') : $user->lang['SEARCH_GARAGE'],
@@ -98,14 +99,6 @@ class garage_template
 			$template->assign_vars(array(
 				'S_DISPLAY_USER_VEHICLES' => true)
 			);
-			$user_vehicles = $garage_vehicle->get_vehicles_by_user($user->data['user_id']);
-			for ($i = 0; $i < count($user_vehicles); $i++)
-			{
-		       		$template->assign_block_vars('user_vehicles', array(
-       					'U_VIEW_VEHICLE'=> append_sid("garage_vehicle.$phpEx?mode=view_own_vehicle&amp;VID=" . $user_vehicles[$i]['id']),
-       					'VEHICLE' 	=> $user_vehicles[$i]['vehicle'])
-      				);
-			}
 		}
 
 		if ($garage_config['enable_latest_vehicle_index'] == true)
@@ -728,6 +721,27 @@ class garage_template
 	}
 
 	/**
+	* Return a string to be used inside selection box. Used in ACP/MCP pages
+	*
+	* @param array $data single-deminision array holding data for dropdown
+	* @param int $exclude_id id to be excluded from dropdown
+	* @param string $option_title array key to be used to return selection text
+	*/
+	function build_move_to($data, $exclude_id, $option_title)
+	{
+		$select_to = null;
+		for ($i = 0; $i < count($data); $i++)
+		{
+			if ($data[$i]['id'] == $exclude_id)
+			{
+				continue;
+			}
+			$select_to .= '<option value="'. $data[$i]['id'] .'">'. $data[$i][$option_title] .'</option>';
+		}
+		return $select_to;
+	}
+
+	/**
 	* Assign template variables for pagination of pages with #'s
 	* Based of phpBB3 standard generate_pagination
 	*
@@ -816,8 +830,46 @@ class garage_template
 
 		return $page_string;
 	}
+
+	/**
+	* Assign template variables for vehicle(s)
+	*
+	* @param array $data single-deminsion array holding data for vehicle(s)
+	* @param string $block_name template block name
+	*
+	*/
+	function vehicle_assignment($data, $block_name = 'vehicle')
+	{
+		global $template, $auth, $user, $garage_config;
+
+		for ($i = 0, $count = sizeof($data);$i < $count; $i++)
+		{
+			$template->assign_block_vars($block_name, array(
+				'U_IMAGE'		=> ($data[$i]['attach_id']) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_image&amp;image_id=" . $data[$i]['attach_id']) : '',
+				'U_VIEW_VEHICLE'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=" . $data[$i]['id']),
+				'U_VIEW_PROFILE'	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $data[$i]['user_id']),
+				'U_EDIT'		=> ($auth->acl_get('m_garage') || $user->data['user_id'] == $data[$i]['user_id'] ) ? append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;VID=" . $data[$i]['id']. "&amp;redirect=MCP") : '',
+				'ROW_NUMBER' 		=> $i + ( $start + 1 ),
+				'IMAGE'			=> $user->img('garage_vehicle_img_attached', 'VEHICLE_IMAGE_ATTACHED'),
+				'ID'			=> $data[$i]['id'],
+				'YEAR' 			=> $data[$i]['made_year'],
+				'MAKE' 			=> $data[$i]['make'],
+				'COLOUR'		=> $data[$i]['colour'],
+				'UPDATED'		=> $user->format_date($data[$i]['date_updated']),
+				'VIEWS'			=> $data[$i]['views'],
+				'MODS'			=> $data[$i]['total_mods'],
+				'MODEL'			=> $data[$i]['model'],
+				'USERNAME'		=> $data[$i]['username'],
+				'ENGINE_TYPE'		=> $data[$i]['engine_type'],
+				'PRICE'			=> $data[$i]['price'],
+				'CURRENCY'		=> $data[$i]['currency'],
+				'MILEAGE'		=> $data[$i]['mileage'],
+				'MILEAGE_UNIT'		=> $data[$i]['mileage_unit'],
+				'USERNAME_COLOUR'	=> get_username_string('colour', $data[$i]['user_id'], $data[$i]['username'], $data[$i]['user_colour']),
+				'EDIT'			=> ($garage_config['enable_images']) ? $user->img('garage_edit', 'EDIT') : $user->lang['EDIT'],
+			));
+		}
+	}
 }
-
 $garage_template = new garage_template();
-
 ?>

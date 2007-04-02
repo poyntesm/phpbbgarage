@@ -105,7 +105,6 @@ class garage_modification
 	{
 		global $vid, $garage, $garage_image;
 	
-		//Lets See If There Are Any Images Associated With This Modification
 		$images	= $garage_image->get_modification_gallery($vid, $mid);
 	
 		for ($i = 0, $count = sizeof($images);$i < $count; $i++)
@@ -126,12 +125,15 @@ class garage_modification
 	*/
 	function insert_product($data)
 	{
-		global $vid, $db, $garage_vehicle;
+		global $vid, $db, $garage_vehicle, $garage_config;
+
+		$pending = ($data['pending'] == 0) ? 0 : $garage_config['enable_product_approval'];
 
 		$sql = 'INSERT INTO ' . GARAGE_PRODUCTS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 			'category_id'		=> $data['category_id'],
 			'business_id'		=> $data['manufacturer_id'],
 			'title'			=> $data['title'],
+			'pending'		=> $pending,
 		));
 
 		$db->sql_query($sql);
@@ -147,12 +149,15 @@ class garage_modification
 	*/
 	function update_product($data)
 	{
-		global $db;
+		global $db, $garage_config;
+
+		$pending = ($data['pending'] == 0) ? 0 : $garage_config['enable_product_approval'];
 
 		$update_sql = array(
 			'category_id'		=> $data['category_id'],
 			'business_id'		=> $data['manufacturer_id'],
 			'title'			=> $data['title'],
+			'pending'		=> $pending,
 		);
 
 		$sql = 'UPDATE ' . GARAGE_PRODUCTS_TABLE . '
@@ -253,30 +258,17 @@ class garage_modification
 			'SELECT'	=> 'm.id, m.vehicle_id, m.user_id, p.title AS mod_title, m.date_updated AS POI, u.username, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
+				GARAGE_PRODUCTS_TABLE		=> 'p',
+				GARAGE_VEHICLES_TABLE		=> 'v',
+				GARAGE_MAKES_TABLE		=> 'mk',
+				GARAGE_MODELS_TABLE		=> 'md',
+				USERS_TABLE			=> 'u',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_PRODUCTS_TABLE => 'p'),	
-					'ON'	=> 'm.product_id = p.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'm.vehicle_id = g.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'g.model_id = md.id and md.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'm.user_id = u.user_id'
-				)
-			),
-			'WHERE'		=> "mk.pending = 0 AND md.pending = 0",
+			'WHERE'		=> "m.product_id = p.id
+						AND m.vehicle_id = v.id
+						AND m.user_id = u.user_id
+						AND v.make_id = mk.id AND mk.pending = 0
+						AND v.model_id = md.id AND md.pending = 0",
 			'ORDER_BY'	=> "POI DESC"
 		));
 
@@ -313,6 +305,39 @@ class garage_modification
 
 	 	$result = $db->sql_query($sql);
 		$data = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/**
+	* Return data for pending products
+	*
+	*/
+	function get_pending_products()
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'p.id, p.title as product, b.title as manufacturer, c.title as category',
+			'FROM'		=> array(
+				GARAGE_PRODUCTS_TABLE	=> 'p',
+				GARAGE_BUSINESS_TABLE	=> 'b',
+				GARAGE_CATEGORIES_TABLE	=> 'c',
+			),
+			'WHERE'		=> "p.pending = 1
+						AND b.id = p.business_id
+						AND c.id = p.category_id"
+		));
+
+	 	$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$data[] = $row;
+		}
 		$db->sql_freeresult($result);
 
 		return $data;
@@ -377,30 +402,17 @@ class garage_modification
 			'SELECT'	=> 'm.id, m.vehicle_id, m.user_id, p.title AS mod_title, m.date_created AS POI, u.username, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
+				GARAGE_PRODUCTS_TABLE		=> 'p',
+				GARAGE_VEHICLES_TABLE		=> 'v',
+				GARAGE_MAKES_TABLE		=> 'mk',
+				GARAGE_MODELS_TABLE		=> 'md',
+				USERS_TABLE			=> 'u',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_PRODUCTS_TABLE => 'p'),	
-					'ON'	=> 'm.product_id = p.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'm.vehicle_id = g.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'g.model_id = md.id and md.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'm.user_id = u.user_id'
-				)
-			),
-			'WHERE'		=> "mk.pending = 0 AND md.pending = 0",
+			'WHERE'		=> "m.product_id = p.id
+						AND m.vehicle_id = v.id
+						AND v.user_id = u.user_id
+						AND v.make_id = mk.id AND mk.pending = 0
+						AND v.model_id = md.id AND md.pending = 0",
 			'ORDER_BY'	=> "POI DESC"
 		));
 
@@ -428,30 +440,19 @@ class garage_modification
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, g.user_id, COUNT(m.id) AS POI, u.username, u.user_colour',
+			'SELECT'	=> 'v.id, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, v.user_id, COUNT(m.id) AS POI, u.username, u.user_colour',
 			'FROM'		=> array(
-				GARAGE_VEHICLES_TABLE	=> 'g',
+				GARAGE_MODIFICATIONS_TABLE	=> 'm',
+				GARAGE_VEHICLES_TABLE		=> 'v',
+				GARAGE_MAKES_TABLE		=> 'mk',
+				GARAGE_MODELS_TABLE		=> 'md',
+				USERS_TABLE			=> 'u',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'g.model_id = md.id and md.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'g.user_id = u.user_id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'm'),
-					'ON'	=> 'g.id = m.vehicle_id'
-				)
-			),
-			'WHERE'		=> "mk.pending = 0 AND md.pending = 0",
-			'GROUP_BY'	=> "g.id",
+			'WHERE'		=> "m.vehicle_id = v.id
+						AND v.user_id = u.user_id
+						AND v.make_id = mk.id AND mk.pending = 0
+						AND v.model_id = md.id AND md.pending = 0",
+			'GROUP_BY'	=> "v.id",
 			'ORDER_BY'	=> "POI DESC"
 		));
 
@@ -480,21 +481,19 @@ class garage_modification
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'm.*, g.made_year, g.id, g.currency, i.*, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.title as business_title, b2.title as install_business_title, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, p.title, u.user_avatar_width, u.user_avatar_height, u.user_colour',
+			'SELECT'	=> 'm.*, v.made_year, v.id, v.currency, i.*, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.title as business_title, b2.title as install_business_title, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, p.title, u.user_avatar_width, u.user_avatar_height, u.user_colour',
 			'FROM'		=> array(
-				GARAGE_VEHICLES_TABLE	=> 'g',
+				GARAGE_VEHICLES_TABLE		=> 'v',
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
+				GARAGE_PRODUCTS_TABLE		=> 'p',
+				GARAGE_CATEGORIES_TABLE		=> 'c',
+				GARAGE_MAKES_TABLE		=> 'mk',
+				GARAGE_MODELS_TABLE		=> 'md',
+				GARAGE_BUSINESS_TABLE		=> array('b1', 'b2'),
+				USERS_TABLE			=> 'u',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_PRODUCTS_TABLE => 'p'),	
-					'ON'	=> 'm.product_id = p.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_CATEGORIES_TABLE => 'c'),
-					'ON'	=> 'm.category_id = c.id'
-				)
-				,array(
 					'FROM'	=> array(GARAGE_MODIFICATION_GALLERY_TABLE => 'mg'),
 					'ON'	=> 'm.id = mg.modification_id AND mg.hilite = 1',
 				)
@@ -502,28 +501,16 @@ class garage_modification
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
 					'ON'	=> 'mg.image_id = i.attach_id'
 				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'g.model_id = md.id and md.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'g.user_id = u.user_id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b1'),
-					'ON'	=> 'm.shop_id = b1.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b2'),
-					'ON'	=> 'm.installer_id = b2.id'
-				)
 			),
-			'WHERE'		=> "m.id = $mid AND g.id = m.vehicle_id"
+			'WHERE'		=> "m.id = $mid 
+						AND v.id = m.vehicle_id
+						AND m.product_id = p.id
+						AND m.category_id = c.id
+						AND (v.make_id = mk.id AND mk.pending = 0)
+						AND (v.model_id = md.id AND md.pending = 0)
+						AND v.user_id = u.user_id
+						AND m.shop_id = b1.id
+						AND m.installer_id = b2.id"
 		));
 
       		$result = $db->sql_query($sql);
@@ -551,13 +538,10 @@ class garage_modification
 			'SELECT'	=> 'm.*, i.*, p.title',
 			'FROM'		=> array(
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
+				GARAGE_PRODUCTS_TABLE		=> 'p',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_PRODUCTS_TABLE => 'p'),	
-					'ON'	=> 'm.product_id = p.id'
-				)
-				,array(
 					'FROM'	=> array(GARAGE_MODIFICATION_GALLERY_TABLE => 'mg'),
 					'ON'	=> 'm.id = mg.modification_id AND mg.hilite = 1',
 				)
@@ -566,7 +550,9 @@ class garage_modification
 					'ON'	=> 'mg.image_id = i.attach_id'
 				)
 			),
-			'WHERE'		=> "m.vehicle_id = $vid AND m.category_id = $category_id",
+			'WHERE'		=> "m.vehicle_id = $vid 
+						AND m.category_id = $category_id
+						AND m.product_id = p.id",
 			'ORDER_BY'	=> "p.title ASC"
 		));
 
@@ -598,13 +584,10 @@ class garage_modification
 			'SELECT'	=> 'm.*, i.*, p.title',
 			'FROM'		=> array(
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
+				GARAGE_PRODUCTS_TABLE		=> 'p',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_PRODUCTS_TABLE => 'p'),	
-					'ON'	=> 'm.product_id = p.id'
-				)
-				,array(
 					'FROM'	=> array(GARAGE_MODIFICATION_GALLERY_TABLE => 'mg'),
 					'ON'	=> 'm.id = mg.modification_id AND mg.hilite = 1',
 				)
@@ -613,7 +596,8 @@ class garage_modification
 					'ON'	=> 'mg.image_id = i.attach_id'
 				)
 			),
-			'WHERE'		=> "m.category_id = $category_id",
+			'WHERE'		=> "m.category_id = $category_id
+						AND m.product_id = p.id",
 			'ORDER_BY'	=> "p.title ASC"
 		));
 
@@ -644,34 +628,26 @@ class garage_modification
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> "m.id, m.vehicle_id, p.title AS mod_title, m.install_price, m.install_rating, m.install_comments, u.username, u.user_id, mk.make, md.model, g.made_year, b.id as business_id, CONCAT_WS(' ', g.made_year, mk.make, md.model) AS vehicle, u.user_colour",
+			'SELECT'	=> "m.id, m.vehicle_id, p.title AS mod_title, m.install_price, m.install_rating, m.install_comments, u.username, u.user_id, mk.make, md.model, v.made_year, b.id as business_id, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, u.user_colour",
 			'FROM'		=> array(
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
-				GARAGE_BUSINESS_TABLE	=> 'b',
+				GARAGE_BUSINESS_TABLE		=> 'b',
+				GARAGE_PRODUCTS_TABLE		=> 'p',
+				GARAGE_VEHICLES_TABLE		=> 'v',
+				GARAGE_MAKES_TABLE		=> 'mk',
+				GARAGE_MODELS_TABLE		=> 'md',
+				USERS_TABLE			=> 'u',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_PRODUCTS_TABLE => 'p'),	
-					'ON'	=> 'm.product_id = p.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'm.vehicle_id = g.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'g.model_id = md.id and md.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'g.user_id = u.user_id'
-				)
-			),
-			'WHERE'		=> "m.installer_id = b.id AND b.garage = 1 AND b.pending = 0 AND b.id = $business_id AND mk.pending = 0 AND md.pending = 0",
+			'WHERE'		=> "b.id = $business_id
+						AND m.installer_id = b.id 
+						AND b.garage = 1 
+						AND b.pending = 0 
+						AND b.id = $business_id 
+						AND m.product_id = p.id
+						AND m.vehicle_id = v.id
+						AND v.user_id = u.user_id
+						AND (v.make_id = mk.id AND mk.pending = 0)
+						AND (v.model_id = md.id AND md.pending = 0)",
 			'ORDER_BY'	=> "m.id, m.date_created DESC"
 		));
 
@@ -702,34 +678,25 @@ class garage_modification
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'm.id, m.vehicle_id, p.title AS mod_title, m.price, m.purchase_rating, m.product_rating, m.comments, u.username, u.user_id, mk.make, md.model, g.made_year, b.id as business_id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, u.user_colour',
+			'SELECT'	=> 'm.id, m.vehicle_id, p.title AS mod_title, m.price, m.purchase_rating, m.product_rating, m.comments, u.username, u.user_id, mk.make, md.model, v.made_year, b.id as business_id, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
-				GARAGE_BUSINESS_TABLE	=> 'b',
+				GARAGE_BUSINESS_TABLE		=> 'b',
+				GARAGE_PRODUCTS_TABLE		=> 'p',
+				GARAGE_VEHICLES_TABLE		=> 'v',
+				GARAGE_MAKES_TABLE		=> 'mk',
+				GARAGE_MODELS_TABLE		=> 'md',
+				USERS_TABLE			=> 'u',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_PRODUCTS_TABLE => 'p'),	
-					'ON'	=> 'm.product_id = p.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'm.vehicle_id = g.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'g.model_id = md.id and md.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'g.user_id = u.user_id'
-				)
-			),
-			'WHERE'		=> "m.shop_id = b.id AND b.retail = 1 AND b.pending = 0 AND b.id = $business_id AND mk.pending = 0 AND md.pending = 0",
+			'WHERE'		=> "b.id = $business_id 
+						AND m.shop_id = b.id
+						AND b.retail = 1 
+						AND b.pending = 0
+						AND m.product_id = p.id
+						AND m.vehicle_id = v.id
+						AND v.user_id = u.user_id
+						AND (v.make_id = mk.id AND mk.pending = 0)
+						AND (v.model_id = md.id AND md.pending = 0)",
 			'ORDER_BY'	=> "m.id, m.date_created DESC"
 		));
 
@@ -761,13 +728,10 @@ class garage_modification
 			'SELECT'	=> 'm.*, i.*, p.*',
 			'FROM'		=> array(
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
+				GARAGE_PRODUCTS_TABLE		=> 'p',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_PRODUCTS_TABLE => 'p'),	
-					'ON'	=> 'm.product_id = p.id'
-				)
-				,array(
 					'FROM'	=> array(GARAGE_MODIFICATION_GALLERY_TABLE => 'mg'),
 					'ON'	=> 'm.id = mg.modification_id AND mg.hilite = 1',
 				)
@@ -776,7 +740,8 @@ class garage_modification
 					'ON'	=> 'mg.image_id = i.attach_id'
 				)
 			),
-			'WHERE'		=> "m.vehicle_id = $vid"
+			'WHERE'		=> "m.vehicle_id = $vid
+						AND m.product_id = p.id"
 		));
 
 		$result = $db->sql_query($sql);
@@ -944,6 +909,42 @@ class garage_modification
 		$db->sql_freeresult($result);
 
 		return $data;
+	}
+
+	/**
+	* Approve products
+	*
+	* @param array $id_list single-dimension array holding the product ids to approve
+	*
+	*/
+	function approve_dynorun($id_list)
+	{
+		global $phpbb_root_path, $phpEx, $garage;
+
+		for($i = 0; $i < count($id_list); $i++)
+		{
+			$garage->update_single_field(GARAGE_PRODUCTS_TABLE, 'pending', 0, 'id', $id_list[$i]);
+		}
+
+		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_products"));
+	}
+
+	/**
+	* Disapprove products
+	*
+	* @param array $id_list sigle-dimension array holding the product ids to disapprove
+	*
+	*/
+	function disapprove_dynorun($id_list)
+	{
+		global $phpbb_root_path, $phpEx;
+
+		for($i = 0; $i < count($id_list); $i++)
+		{
+			$this->delete_product($id_list[$i]);
+		}
+
+		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_products"));
 	}
 }
 

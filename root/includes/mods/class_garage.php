@@ -8,15 +8,21 @@
 *
 */
 
+/**
+*/
 if (!defined('IN_PHPBB'))
 {
 	die('Hacking attempt');
 }
 
-//Inlcude Garage Constants
+/**
+* Inlcude constant definations
+*/
 include_once($phpbb_root_path . 'includes/mods/constants_garage.'. $phpEx);
 
-// Build Up Garage Config...We Will Use These Values Many A Time
+/**
+* Build $garage_config
+*/
 $sql = $db->sql_build_query('SELECT', 
 	array(
 	'SELECT'	=> 'c.config_name, c.config_value',
@@ -32,6 +38,10 @@ while( $row = $db->sql_fetchrow($result) )
 }
 $db->sql_freeresult($result);
 
+/**
+* phpBB Garage Class
+* @package garage
+*/
 class garage 
 {
 	var $classname = "garage";
@@ -41,6 +51,7 @@ class garage
 	*
 	* @param array $params multi-dimensional array holding the requested vars & defaults.
 	*
+	* @return mixed
 	*/
 	function process_vars($params = array())
 	{
@@ -53,7 +64,8 @@ class garage
 	}
 
 	/**
-	* Checks all required data is present
+	* Checks all required data is present. If any required data is missing 
+	* the user is redirected to an informational error page
 	*
 	* @param array $params multi-dimensional array holding the required variables.
 	*
@@ -75,6 +87,8 @@ class garage
 
 	/**
 	* Count the total views the garage has recieved
+	*
+	* @return int
 	*/
 	function count_total_views()
 	{
@@ -171,12 +185,14 @@ class garage
 
 	/**
 	* Get all modification categories available
+	*
+	* @return array
 	*/
 	function get_categories()
 	{
 		global $db;
 
-		$data = null;
+		$data = array();
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -198,9 +214,11 @@ class garage
 	}
 
 	/**
-	* Return data for single modification category
+	* Return data for specific modification category
 	*
 	* @param int $category_id category id to get data for
+	*
+	* @retun mixed
 	*/
 	function get_category($category_id)
 	{
@@ -236,19 +254,20 @@ class garage
 
 	/**
 	* Return year list based on ACP configuration options
+	*
+	* @return array
 	*/
 	function year_list()
 	{
 		global $garage_config;
 
-		// Grab the current year
+		$years = array();
+
 		$my_array = localtime(time(), 1) ;
 		$current_date = $my_array["tm_year"] +1900 ;
 	
-	        // Calculate end year based on offset configured
 	        $end_year = $current_date + $garage_config['year_end'];
 	
-		// A simple check to prevent infinite loop
 		if ( $garage_config['year_start'] > $end_year ) 
 		{
 			return;
@@ -276,7 +295,9 @@ class garage
 
 		$data = null;
 
-		//Lets Build The Main Parts For The Query & Some Template Stuff..We Will Add Conditions Later..
+		/**
+		* Searching for just vehicles, so build query and pagination accordingly
+		*/
 		if ($search_options['display_as'] == 'vehicles')
 		{
 			//Update Display As Unless We Are In A Mode Which Defaults To this, We Try Hide This Fact
@@ -285,7 +306,6 @@ class garage
 				$pagination_url .= "&amp;display_as=vehicles";
 			}
 
-			//Handle Sorting & Ordering
 			if (empty($sort))
 			{
 				$sort = 'date_created';
@@ -306,7 +326,6 @@ class garage
 			}
 			$garage_template->order_dropdown($order);
 
-			//Handle SQL Part
 			$sql_array = array(
 				'SELECT'	=> 'v.*, i.*, mk.make, md.model, u.username, u.user_colour, count(m.id) AS total_mods',
 				'SELECT_COUNT'	=> "count(DISTINCT v.id) as total",
@@ -342,7 +361,6 @@ class garage
 		{
 			$pagination_url .= "&amp;display_as=modifications";
 
-			//Handle Sorting & Ordering
 			if (empty($sort))
 			{
 				$sort = 'category_id';
@@ -363,7 +381,6 @@ class garage
 			}
 			$garage_template->order_dropdown($order);
 
-			//Handle SQL Part
 			$sql_array = array(
 				'SELECT'	=> "m.*, m.id as modification_id, v.id as vehicle_id, v.made_year, v.currency, i.*, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.title as business_title, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, CONCAT_WS(' ', b1.title, p.title) as modification_title, u.user_colour",
 				'SELECT_COUNT'	=> "COUNT(m.id) AS total",
@@ -407,7 +424,6 @@ class garage
 		{
 			$pagination_url .= "&amp;display_as=premiums";
 			
-			//Handle Sorting & Ordering
 			if (empty($sort))
 			{
 				$sort = 'premium';
@@ -428,7 +444,6 @@ class garage
 			}
 			$garage_template->order_dropdown($order);
 
-			//Handle SQL Part
 			$sql_array = array(
 				'SELECT'	=> "p.*, v.*, b.title, b.id as business_id, mk.make, md.model, u.username, u.user_id, ( SUM(m.price) + SUM(m.install_price) ) AS total_spent, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, u.user_colour",
 				'SELECT_COUNT'	=> "COUNT(DISTINCT p.id) AS total",
@@ -462,7 +477,6 @@ class garage
 				$pagination_url .= "&amp;display_as=quartermiles";
 			}
 
-			//Handle Sorting & Ordering
 			if (empty($sort))
 			{
 				$sort = 'quart';
@@ -483,7 +497,6 @@ class garage
 			}
 			$garage_template->order_dropdown($order);
 
-			//Handle SQL Part
 			$sql_array = array(
 				'SELECT'	=> "v.id, v.user_id, q.id as qmid, qg.image_id, i.attach_id, i.attach_file, u.username, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.dynorun_id, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, d.vehicle_id, u.user_colour",
 				'SELECT_COUNT'	=> "COUNT(q.id) AS total",
@@ -521,7 +534,6 @@ class garage
 				$pagination_url .= "&amp;display_as=dynoruns";
 			}
 
-			//Handle Sorting & Ordering
 			if (empty($sort))
 			{
 				$sort = 'bhp';
@@ -542,7 +554,6 @@ class garage
 			}
 			$garage_template->order_dropdown($order);
 
-			//Handle SQL Part
 			$sql_array = array(
 				'SELECT'	=> "v.id, v.made_year, v.user_id, mk.make, md.model, b.title, d.*, i.*, d.id as did, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, u.username, d.vehicle_id, u.user_colour",
 				'SELECT_COUNT'	=> "COUNT(d.id) AS total",
@@ -580,7 +591,6 @@ class garage
 				$pagination_url .= "&amp;display_as=laps";
 			}
 
-			//Handle Sorting & Ordering
 			if (empty($sort))
 			{
 				$sort = 'minute, second, millisecond';
@@ -601,7 +611,6 @@ class garage
 			}
 			$garage_template->order_dropdown($order);
 
-			//Handle SQL Part
 			$sql_array = array(
 				'SELECT'	=> "v.id, v.made_year, v.user_id, mk.make, md.model, l.*, i.*, l.id as lid, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, u.username, t.title, v.id as vehicle_id, u.user_colour",
 				'SELECT_COUNT'	=> "COUNT(l.id) AS total",
@@ -633,14 +642,17 @@ class garage
 
 		}
 
-		//Add Modifications Tabe To Query So We Can Do Where Statement On It Only If Needed..Else It Produces Too Many Rows Since Its A Left Join
+		/**
+		* Add Modifications Tabe To Query So We Can Do Where Statement On It Only If Needed..Else It Produces Too Many Rows Since Its A Left Join
+		*/	
 		if (($search_options['search_category'] OR $search_options['search_manufacturer'] OR $search_options['search_product']) AND !($search_options['display_as'] == 'vehicles' OR $search_options['display_as'] == 'premiums'))
 		{
-			//Add Modifications Tabe To Query So We Can Do Where Statement On It
 			array_push($sql_array['LEFT_JOIN'], array('FROM' => array(GARAGE_MODIFICATIONS_TABLE => 'm'), 'ON' => 'v.id = m.vehicle_id'));
 		}
 
-		//Now We Need To Build All Extra Where Statements & Update Pagination If Needed
+		/**
+		* Now We Need To Build All Extra Where Statements & Update Pagination
+		*/
 		if ($search_options['search_year'] AND (!empty($search_options['made_year'])))
 		{
 			$sql_array['WHERE'] .= " AND v.made_year = " . $search_options['made_year'];
@@ -677,7 +689,9 @@ class garage
 			$pagination_url .= "&amp;search_username=1&amp;username=" . $search_options['username'];
 		}
 
-		//Build Complete SQL Statement Now With All Options
+		/**
+		* Take all elements and build & execute complete SQL query
+		*/
 		$sql = $db->sql_build_query('SELECT', array(
 			'SELECT'	=> $sql_array['SELECT'],
 			'FROM'		=> $sql_array['FROM'],
@@ -694,8 +708,9 @@ class garage
 		}
 		$db->sql_freeresult($result);
 
-
-		//We Need To Also Get Total Number Of Items
+		/**
+		* We Need To Also Get Total Number Of Items
+		*/
 		$sql = $db->sql_build_query('SELECT', array(
 			'SELECT'	=> $sql_array['SELECT_COUNT'],
 			'FROM'		=> $sql_array['FROM'],
@@ -712,12 +727,14 @@ class garage
 
 	/**
 	* Return groups which have users with a quota based permission
+	*
+	* @return array
 	*/
 	function get_groups_allowed_quotas()
 	{
 		global $db, $auth;
 
-		$data = null;
+		$data = array();
 
 		$authd = $auth->acl_get_list(false, array('u_garage_add_vehicle', 'u_garage_upload_image', 'u_garage_remote_image'), false);
 
@@ -750,12 +767,13 @@ class garage
 	*
 	* @param array $moderators multi-dimensional array holding all garage moderators
 	*
+	* @return array
 	*/
 	function moderators_requiring_email($moderators)
 	{
 		global $db;
 
-		$data = null;
+		$data = array();
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
@@ -781,12 +799,13 @@ class garage
 	*
 	* @param array $moderators multi-dimensional array holding all garage moderators
 	*
+	* @retutn array
 	*/
 	function moderators_requiring_pm($moderators)
 	{
 		global $db;
 
-		$data = null;
+		$data = array();
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(

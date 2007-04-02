@@ -110,14 +110,10 @@ class garage_service
 			'SELECT'	=> 's.*, b.title',
 			'FROM'		=> array(
 				GARAGE_SERVICE_HISTORY_TABLE	=> 's',
+				GARAGE_BUSINESS_TABLE		=> 'b',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b'),
-					'ON'	=> 's.garage_id = b.id'
-				)
-			),
-			'WHERE'		=> 	"s.id = $svid"
+			'WHERE'	=> "s.id = $svid
+					AND s.garage_id = b.id"
 		));
 
       		$result = $db->sql_query($sql);
@@ -144,15 +140,11 @@ class garage_service
 			'SELECT'	=> 's.*, b.title',
 			'FROM'		=> array(
 				GARAGE_SERVICE_HISTORY_TABLE	=> 's',
+				GARAGE_BUSINESS_TABLE		=> 'b',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b'),
-					'ON'	=> 's.garage_id = b.id'
-				)
-			),
-			'WHERE'		=> 	"s.vehicle_id = $vid",
-			'ORDER_BY'	=>	's.mileage DESC'
+			'WHERE'		=> "s.vehicle_id = $vid
+						AND s.garage_id = b.id",
+			'ORDER_BY'	=> "s.mileage DESC"
 		));
 	
 	       	$result = $db->sql_query($sql);
@@ -201,30 +193,23 @@ class garage_service
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> "s.*, u.username, u.user_id, u.user_colour, mk.make, md.model, g.made_year, b.id as business_id, CONCAT_WS(' ', g.made_year, mk.make, md.model) AS vehicle",
+			'SELECT'	=> "s.*, u.username, u.user_id, u.user_colour, mk.make, md.model, v.made_year, b.id as business_id, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle",
 			'FROM'		=> array(
 				GARAGE_SERVICE_HISTORY_TABLE	=> 's',
-				GARAGE_BUSINESS_TABLE	=> 'b',
+				GARAGE_BUSINESS_TABLE		=> 'b',
+				GARAGE_VEHICLES_TABLE		=> 'v',
+				GARAGE_MAKES_TABLE		=> 'mk',
+				GARAGE_MODELS_TABLE		=> 'md',
+				USERS_TABLE			=> 'u',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 's.vehicle_id = g.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'g.model_id = md.id and md.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'g.user_id = u.user_id'
-				)
-			),
-			'WHERE'		=> "s.garage_id = b.id AND b.garage = 1 AND b.pending = 0 AND b.id = $business_id AND mk.pending = 0 AND md.pending = 0",
+			'WHERE'		=> "s.garage_id = b.id 
+						AND b.garage = 1 
+						AND b.pending = 0 
+						AND b.id = $business_id 
+						AND s.vehicle_id = v.id
+						AND v.user_id = u.user_id
+						AND v.make_id = mk.id AND mk.pending = 0
+					       	AND v.model_id = md.id AND md.pending = 0",
 			'ORDER_BY'	=> "s.id, s.date_created DESC"
 		));
 

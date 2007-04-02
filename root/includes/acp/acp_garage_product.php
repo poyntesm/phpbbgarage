@@ -17,46 +17,62 @@ class acp_garage_product
 
 	function main($id, $mode)
 	{
+		/**
+		* Setup global variables such as $db 
+		*/
 		global $db, $user, $auth, $template, $cache, $garage, $garage_config, $garage_template, $garage_vehicle;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx, $garage_business, $garage_modification;
 
-		//Build All Garage Classes e.g $garage_images->
+		/**
+		* Build All Garage Classes e.g $garage_images->
+		*/
 		require($phpbb_root_path . 'includes/mods/class_garage_template.' . $phpEx);
 		require($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
 		require($phpbb_root_path . 'includes/mods/class_garage_business.' . $phpEx);
 		require($phpbb_root_path . 'includes/mods/class_garage_modification.' . $phpEx);
 
-
+		/**
+		* Setup page variables such as title, template & available language strings
+		*/
 		$user->add_lang('acp/garage');
 		$this->tpl_name = 'acp_garage_product';
 		$this->page_title = 'ACP_MANAGE_FORUMS';
 
-		$action		= request_var('action', '');
-		$update		= (isset($_POST['update'])) ? true : false;
-
+		/**
+		* Setup variables required
+		*/
+		$action			= request_var('action', '');
+		$update			= (isset($_POST['update'])) ? true : false;
 		$manufacturer_id	= request_var('manufacturer_id', '');
 		$product_id		= request_var('product_id', '');
+		$errors 		= array();
 
-		$errors = array();
-
-		// Major routines
+		/**
+		* Perform a set action based on value for $action
+		* An action is normally a DB action such as insert/update/delete
+		* An action will only show a page to show success or failure
+		*/
 		if ($update)
 		{
 			switch ($action)
 			{
-
+				/**
+				* Insert product into database
+				*/
 				case 'add_product':
-
-					$params = array('title' => '', 'category_id' => '', 'manufacturer_id' => $manufacturer_id);
+					$params = array('title' => '', 'category_id' => '', 'manufacturer_id' => $manufacturer_id, 'pending' => '0');
 					$data = $garage->process_vars($params);
 
 					$garage_modification->insert_product($data);
 					add_log('admin', 'LOG_GARAGE_PRODUCT_CREATED', $data['title']);
 
 					trigger_error($user->lang['PRODUCT_CREATED'] . adm_back_link($this->u_action . "&amp;action=products&amp;manufacturer_id=$manufacturer_id"));
+				break;
 
+				/**
+				* Update an existing product
+				*/
 				case 'edit_product':
-
 					$params = array('title' => '', 'category_id' => '', 'manufacturer_id' => $manufacturer_id, 'product_id' => $product_id);
 					$data = $garage->process_vars($params);
 
@@ -64,55 +80,63 @@ class acp_garage_product
 					add_log('admin', 'LOG_GARAGE_PRODUCT_UPDATED', $data['title']);
 
 					trigger_error($user->lang['PRODUCT_UPDATED'] . adm_back_link($this->u_action . "&amp;action=products&amp;manufacturer_id=$manufacturer_id"));
+				break;
 
+				/**
+				* Update an existing product
+				*/
 				case 'delete_product':
+					$action_modifications	= request_var('action_modifications', '');
+					$product_to_id		= request_var('modifications_to_id', 0);
 
-					$action_model		= request_var('action_modifications', '');
-					$model_to_id		= request_var('modifications_to_id', 0);
-
-					$garage_model->delete_product($product_id, $action_modifications, $model_to_id);
+					$garage_modification->delete_product($product_id, $action_modifications, $product_to_id);
 
 					if (sizeof($errors))
 					{
 						break;
 					}
 
-					trigger_error($user->lang['MODEL_DELETED'] . adm_back_link($this->u_action  . "&amp;action=models&amp;make_id=$make_id"));
-
+					trigger_error($user->lang['PRODUCT_DELETED'] . adm_back_link($this->u_action  . "&amp;action=products&amp;manufacturer_id=$manufacturer_id"));
 				break;
 			}
 		}
 
+		/**
+		* Perform a set action based on value for $action
+		*/
 		switch ($action)
 		{
+			/**
+			* Page to delete an existing product
+			* Administrators decides where modifications can be moved to
+			*/
 			case 'delete_product':
-
-				if (!$model_id)
+				if (!$product_id)
 				{
-					trigger_error($user->lang['NO_MODEL'] . adm_back_link($this->u_action), E_USER_WARNING);
+					trigger_error($user->lang['NO_PRODUCT'] . adm_back_link($this->u_action), E_USER_WARNING);
 				}
 
-				$model_data = $garage_model->get_model($model_id);
-				$models_data = $garage_model->get_all_models_from_make($make_id);
-				$select_to = $this->build_move_model_to($models_data, $model_id);
+				$product_data = $garage_modification->get_product($product_id);
+				$products_data = $garage_modification->get_products_by_manufacturer($product_data['business_id'], $product_data['category_id']);
+				$select_to = $garage_template->build_move_to($products_data, $product_id, 'title');
 
 				$template->assign_vars(array(
 					'S_DELETE_PRODUCT'		=> true,
-					'U_ACTION'			=> $this->u_action . "&amp;action=model_delete&amp;model_id=$model_id&amp;make_id=$make_id",
-					'U_BACK'			=> $this->u_action . "&amp;action=models&amp;make_id=$make_id",
+					'U_ACTION'			=> $this->u_action . "&amp;action=delete_product&amp;product_id=$product_id&amp;manufacturer_id=".$product_data['business_id'],
+					'U_BACK'			=> $this->u_action . "&amp;action=products&amp;manufacturer_id=".$product_data['business_id'],
 					'S_MOVE'			=> (!empty($select_to)) ? true : false ,
 					'S_MOVE_OPTIONS'		=> $select_to,
-					'MODEL'				=> $model_data['model'],
+					'PRODUCT'				=> $product_data['title'],
 					'S_ERROR'			=> (sizeof($errors)) ? true : false,
-					'ERROR_MSG'			=> (sizeof($errors)) ? implode('<br />', $errors) : '')
-				);
-		
+					'ERROR_MSG'			=> (sizeof($errors)) ? implode('<br />', $errors) : '',
+				));
 			break;
 
+			/**
+			* Display page to add or edit a product
+			*/
 			case 'add_product':
 			case 'edit_product':
-
-				// Show form to create/modify a business
 				if ($action == 'edit_product')
 				{
 					$this->page_title = 'EDIT_PRODUCT';
@@ -127,7 +151,9 @@ class acp_garage_product
 				{
 					$this->page_title = 'CREATE_PRODUCT';
 
-					// Fill business data with default values
+					/**
+					* Fill producy data with default values
+					*/
 					if (!$update)
 					{
 						$product_data = array(
@@ -146,52 +172,29 @@ class acp_garage_product
 					'U_ACTION'		=> $this->u_action . "&amp;action=$action&amp;manufacturer_id=$manufacturer_id&amp;product_id=$product_id",
 					'PRODUCT'		=> $product_data['title'],
 					'ERROR_MSG'		=> (sizeof($errors)) ? implode('<br />', $errors) : '',
-					)
-				);
-
+				));
 				return;
-
 			break;
 
-			case 'approve_product':
-			case 'disapprove_product':
+			/**
+			* Page to display products for a specific manufacturer
+			* Due to wanting approval & disapproval to appear seamless we have them within this action also
+			*/
+			case 'approve':
+			case 'disapprove':
 			case 'products':
-
-				if ($action == 'approve_product')
+				if ($action == 'approve')
 				{
-					$data = $garage_model->get_model($model_id);
-					$garage->update_single_field(GARAGE_MODELS_TABLE, 'pending', 0, 'id', $model_id);
-					add_log('admin', 'LOG_GARAGE_MODEL_APPROVED', $data['model']);
+					$data = $garage_modification->get_product($product_id);
+					$garage->update_single_field(GARAGE_PRODUCTS_TABLE, 'pending', 0, 'id', $product_id);
+					add_log('admin', 'LOG_GARAGE_PRODUCT_APPROVED', $data['title']);
 				}
 
-				if ($action == 'disapprove_product')
+				if ($action == 'disapprove')
 				{
-					$data = $garage_model->get_model($model_id);
-					$garage->update_single_field(GARAGE_MODELS_TABLE, 'pending', 1, 'id', $model_id);
-					add_log('admin', 'LOG_GARAGE_MODEL_DISAPPROVED', $data['model']);
-				}
-
-				if ($action == 'add_product')
-				{
-					$params = array('model' => '', 'make_id' => '');
-					$data = $garage->process_vars($params);
-	
-					if(!$data['model'])
-					{
-						$errors[] = $user->lang['MODEL_NAME_EMPTY'];
-					}
-	
-					$count = $garage_model->count_model_in_make($data['model'], $data['make_id']);
-					if ( $count > 0)
-					{
-						$errors[] = $user->lang['MODEL_EXISTS'];
-					}
-						
-					if (!sizeof($errors))
-					{						
-						$garage_model->insert_model($data);
-						add_log('admin', 'LOG_FORUM_ADD_MODEL', $data['model']);
-					}
+					$data = $garage_modification->get_product($product_id);
+					$garage->update_single_field(GARAGE_PRODUCTS_TABLE, 'pending', 1, 'id', $product_id);
+					add_log('admin', 'LOG_GARAGE_PRODUCT_DISAPPROVED', $data['title']);
 				}
 
 				$categories = $garage_modification->get_manufacturer_modification_categories($manufacturer_id);
@@ -204,13 +207,16 @@ class acp_garage_product
 			           		'CATEGORY_TITLE' => $categories[$i]['title'])
 	       				);
 					$products = $garage_modification->get_products_by_manufacturer($manufacturer_id, $categories[$i]['id']);
-					//Process Array For Each Model
 					for ( $j = 0; $j < count($products); $j++ )
 					{
 						$url = $this->u_action . "&amp;manufacturer_id=$manufacturer_id&amp;product_id={$products[$j]['id']}";
 						$template->assign_block_vars('category.product', array(
 							'ID' 			=> $products[$j]['id'],
 							'PRODUCT' 		=> $products[$j]['title'],
+							'S_DISAPPROVED'		=> ($products[$j]['pending'] == 1) ? true : false,
+							'S_APPROVED'		=> ($products[$j]['pending'] == 0) ? true : false,
+							'U_APPROVE'		=> $url . '&amp;action=approve',
+							'U_DISAPPROVE'		=> $url . '&amp;action=disapprove',
 							'U_EDIT'		=> $url . '&amp;action=edit_product',
 							'U_DELETE'		=> $url . '&amp;action=delete_product',
 						));
@@ -225,15 +231,14 @@ class acp_garage_product
 					'U_LIST_MANUFACTURERS'	=> $url = $this->u_action,
 					'S_LIST_PRODUCTS'	=> true,
 				));
-		
 			break;
-
 		}
 		
-		//Default Management screen..
+		/**
+		* Display default page to show list of business's
+		* Select business to display products
+		*/
 		$manufacturers = $garage_business->get_business_by_type(BUSINESS_PRODUCT);
-	
-		//Process Array For Each Make
 		for( $i = 0; $i < count($manufacturers); $i++ )
 		{
 			$url = $this->u_action . "&amp;manufacturer_id={$manufacturers[$i]['id']}";
@@ -248,22 +253,6 @@ class acp_garage_product
 			'S_ERROR'	=> (sizeof($errors)) ? true : false,
 			'ERROR_MSG'	=> (sizeof($errors)) ? implode('<br />', $errors) : '',
 		));
-		
-	}
-
-	function build_move_to($data, $exclude_id)
-	{
-		$select_to = null;
-		for ($i = 0; $i < count($data); $i++)
-		{
-			if ($exclude_id == $data[$i]['id'])
-			{
-				continue;
-			}
-			$select_to .= '<option value="'. $data[$i]['id'] .'">'. $data[$i]['title'] .'</option>';
-		}
-		return $select_to;
 	}
 }
-
 ?>

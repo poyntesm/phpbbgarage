@@ -13,80 +13,88 @@
 */
 define('IN_PHPBB', true);
 
-//Let's Set The Root Dir For phpBB And Load Normal phpBB Required Files
+/**
+* Set root path & include standard phpBB files required
+*/
 $phpbb_root_path = './';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
 include($phpbb_root_path . 'includes/bbcode.' . $phpEx);
 
-//Start Session Management
+/**
+* Setup user session, authorisation & language 
+*/
 $user->session_begin();
 $auth->acl($user->data);
-
-//Setup Lang Files
 $user->setup(array('mods/garage'));
 
-//Build All Garage Classes e.g $garage_images->
+/**
+* Build All Garage Classes e.g $garage_images->
+*/
 require($phpbb_root_path . 'includes/mods/class_garage_service.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_business.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_template.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
 
-//Set The Page Title
-$page_title = $user->lang['GARAGE'];
+/**
+* Setup variables 
+*/
+$mode = request_var('mode', '');
+$vid = request_var('VID', '');
+$svid = request_var('SVID', '');
+$eid = request_var('EID', '');
 
-//Get All String Parameters And Make Safe
-$params = array('mode' => 'mode', 'sort' => 'sort', 'start' => 'start', 'order' => 'order');
-while(list($var, $param) = @each($params))
-{
-	$$var = request_var($param, '');
-}
-
-//Get All Non-String Parameters
-$params = array('vid' => 'VID', 'svid' => 'SVID', 'eid' => 'EID');
-while(list($var, $param) = @each($params))
-{
-	$$var = request_var($param, '');
-}
-
-//Build Inital Navlink...Yes Forum Name!! We Use phpBB3 Standard Navlink Process!!
+/**
+* Build inital navlink..we use the standard phpBB3 breadcrumb process
+*/
 $template->assign_block_vars('navlinks', array(
 	'FORUM_NAME'	=> $user->lang['GARAGE'],
 	'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx"))
 );
 
-//Display MCP Link If Authorised
+/**
+* Display the moderator control panel link if authorised
+*/
 $template->assign_vars(array(
 	'U_MCP'	=> ($auth->acl_get('m_garage')) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=garage', true, $user->session_id) : '')
 );
 
-//Decide What Mode The User Is Doing
+/**
+* Perform a set action based on value for $mode
+*/
 switch( $mode )
 {
+	/**
+	* Display page to add new service history
+	*/
 	case 'add_service':
-
-		//Let Check The User Is Allowed Perform This Action
+		/**
+		* Check authorisation to perform action, redirecting to error screen if not
+		*/
 		if (!$auth->acl_get('u_garage_add_service') || $garage_config['enable_service'] == '0')
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
 		}
 
-		//Check Vehicle Ownership
+		/**
+		* Check vehicle ownership, only owners & moderators with correct permissions get past here
+		*/
 		$garage_vehicle->check_ownership($vid);
 
-		//Build Page Header ;)
-		page_header($page_title);
+		/**
+		* Get vehicle & garage business data from DB
+		*/
+		$vehicle = $garage_vehicle->get_vehicle($vid);
+		$garages = $garage_business->get_business_by_type(BUSINESS_GARAGE);
 
-		//Set Template Files In Use For This Mode
+		/**
+		* Handle template declarations & assignments
+		*/
+		page_header($user->lang['GARAGE']);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_service.html')
 		);
-
-		//Get Vehicle Data For Navlinks
-		$vehicle = $garage_vehicle->get_vehicle($vid);
-
-		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $vehicle['vehicle'],
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"))
@@ -95,9 +103,6 @@ switch( $mode )
 			'FORUM_NAME'	=> $user->lang['ADD_SERVICE'],
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_service&amp;VID=$vid"))
 		);
-
-		$garages 	= $garage_business->get_business_by_type(BUSINESS_GARAGE);
-
 		$garage_template->garage_dropdown($garages);
 		$garage_template->rating_dropdown('rating');
 		$garage_template->service_type_dropdown();
@@ -107,77 +112,91 @@ switch( $mode )
 			'VID' 				=> $vid,
 			'S_MODE_ACTION' 		=> append_sid("{$phpbb_root_path}garage_service.$phpEx", "mode=insert_service"))
          	);
-
-		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$garage_template->sidemenu();
+	break;
 
-		break;
-
+	/**
+	* Insert new service history
+	*/
 	case 'insert_service':
-
-		//Let Check The User Is Allowed Perform This Action
+		/**
+		* Check authorisation to perform action, redirecting to error screen if not
+		*/
 		if (!$auth->acl_get('u_garage_add_service') || !$garage_config['enable_service'])
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
 		}
 
-		//Check Vehicle Ownership
+		/**
+		* Check vehicle ownership, only owners & moderators with correct permissions get past here
+		*/
 		$garage_vehicle->check_ownership($vid);
 
-		//Get All Data Posted And Make It Safe To Use
+		/**
+		* Get all required/optional data and check required data is present
+		*/
 		$params	= array('garage_id' => '', 'type_id' => '', 'price' => '', 'rating' => '', 'mileage' => '');
 		$data 	= $garage->process_vars($params);
-
-		//Checks All Required Data Is Present
 		$params = array('garage_id', 'type_id', 'mileage');
 		$garage->check_required_vars($params);
 
-		//Update Service With Data Acquired
+		/**
+		* Perform required DB work to create new service history
+		*/
 		$svid = $garage_service->insert_service($data);
 
-		//Update The Time Now...In Case We Get Redirected During Image Processing
+		/**
+		* Updates timestamp on vehicle, indicating it has been updated.
+		* Updated vehicles are displayed on statistics page
+		*/
 		$garage_vehicle->update_vehicle_time($vid);
 
+		/**
+		* All work complete for mode, so redirect to correct page
+		*/
 		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
+	break;
 
-		break;
-
+	/**
+	* Display page to edit an existing service history
+	*/
 	case 'edit_service':
-
-		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
+		/**
+		* Check user logged in, else redirecting to login with return address to get them back
+		*/
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
 			login_box("garage_service.$phpEx?mode=edit_service&amp;SVID=$svid&amp;VID=$vid");
 		}
 
-		//Check Vehicle Ownership
+		/**
+		* Check vehicle ownership, only owners & moderators with correct permissions get past here
+		*/
 		$garage_vehicle->check_ownership($vid);
 
-		//Build Page Header ;)
-		page_header($page_title);
+		/**
+		* Get vehicle, service history & garage business data from DB
+		*/
+		$vehicle	= $garage_vehicle->get_vehicle($vid);
+		$data 		= $garage_service->get_service($svid);
+		$garages 	= $garage_business->get_business_by_type(BUSINESS_GARAGE);
 
-		//Set Template Files In Use For This Mode
+		/**
+		* Handle template declarations & assignments
+		*/
+		page_header($user->lang['GARAGE']);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_service.html')
 		);
-
-		//Build Navlinks
-		$vehicle_data 	= $garage_vehicle->get_vehicle($vid);
 		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $vehicle_data['vehicle'],
+			'FORUM_NAME'	=> $vehicle['vehicle'],
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"))
 		);
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $user->lang['EDIT_SERVICE'],
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;VID=$vid&amp;SVID=$svid"))
 		);
-
-		//Pull Required Service Data From DB
-		$data = $garage_service->get_service($svid);
-		$garages = $garage_business->get_business_by_type(BUSINESS_GARAGE);
-
-		//Build All HTML Parts
 		$garage_template->garage_dropdown($garages, $data['garage_id']);
 		$garage_template->rating_dropdown('rating', $data['rating']);
 		$garage_template->service_type_dropdown($data['type_id']);
@@ -190,72 +209,90 @@ switch( $mode )
 			'SVID'			=> $svid,
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_service.$phpEx", "mode=update_service"))
 		);
-
-		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$garage_template->sidemenu();
+	break;
 
-		break;
-
+	/**
+	* Update existing service history
+	*/
 	case 'update_service':
-
-		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
+		/**
+		* Check user logged in, else redirecting to login with return address to get them back
+		*/
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
 			login_box("garage_service.$phpEx?mode=edit_service&amp;SVID=$svid&amp;VID=$vid");
 		}
 
-		//Check Vehicle Ownership
+		/**
+		* Check vehicle ownership, only owners & moderators with correct permissions get past here
+		*/
 		$garage_vehicle->check_ownership($vid);
 
-		//Get All Data Posted And Make It Safe To Use
+		/**
+		* Get all required/optional data and check required data is present
+		*/
 		$params	= array('garage_id' => '', 'type_id' => '', 'price' => '', 'rating' => '', 'mileage' => '');
 		$data = $garage->process_vars($params);
-
-		//Checks All Required Data Is Present
 		$params = array('garage_id', 'type_id', 'mileage');
 		$garage->check_required_vars($params);
 
-		//Update The Service With Data Acquired
+		/**
+		* Perform required DB work to update service history
+		*/
 		$garage_service->update_service($data);
 
-		//Update The Vehicle Timestamp Now...In Case We Get Redirected During Image Processing
+		/**
+		* Updates timestamp on vehicle, indicating it has been updated.
+		* Updated vehicles are displayed on statistics page
+		*/
 		$garage_vehicle->update_vehicle_time($vid);
 
+		/**
+		* All work complete for mode, so redirect to correct page
+		*/
 		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
+	break;
 
-		break;
-
+	/**
+	* Delete existing service history
+	*/
 	case 'delete_service':
-
-		//Let Check The User Is Allowed Perform This Action
+		/**
+		* Check authorisation to perform action, redirecting to error screen if not
+		*/
 		if (!$auth->acl_get('u_garage_delete_service'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
 		}
 
-		//Check Vehicle Ownership
+		/**
+		* Check vehicle ownership, only owners & moderators with correct permissions get past here
+		*/
 		$garage_vehicle->check_ownership($vid);
 
-		//Delete The Quartermie Time
+		/**
+		* Perform required DB work to delete service history
+		*/
 		$garage_service->delete_service($svid);
 
-		//Update Timestamp For Vehicle
+		/**
+		* Updates timestamp on vehicle, indicating it has been updated.
+		* Updated vehicles are displayed on statistics page
+		*/
 		$garage_vehicle->update_vehicle_time($vid);
 
+		/**
+		* All work complete for mode, so redirect to correct page
+		*/
 		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
-
-		break;
-	
+	break;
 }
-
 $garage_template->version_notice();
 
-//Set Template Files In Used For Footer
 $template->set_filenames(array(
 	'garage_footer' => 'garage_footer.html')
 );
 
-//Generate Page Footer
 page_footer();
-
 ?>

@@ -106,6 +106,33 @@ class garage_guestbook
 	}
 
 	/**
+	* Update vehicle comment
+	*
+	* @param array $data single-dimensionl array holding the data for comment
+	* @param int $comment_id id of comment to update
+	*
+	*/
+	function update_vehicle_comment($data, $comment_id)
+	{
+		global $vid, $db, $user;
+
+		$update_sql = array(
+			'post'			=> $data['post'],
+    			'bbcode_uid'		=> $data['bbcode_uid'],
+			'bbcode_bitfield'	=> $data['bbcode_bitfield'],
+			'bbcode_flags'		=> $data['bbcode_flags'],
+		);
+
+		$sql = 'UPDATE ' . GARAGE_GUESBOOKS_TABLE . '
+			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
+			WHERE id = $comment_id";
+
+		$result = $db->sql_query($sql);
+
+		return;
+	}
+
+	/**
 	* Return limited array of vehicle comments
 	*
 	* @param int $vid vehicle id to filter comments for
@@ -121,29 +148,19 @@ class garage_guestbook
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, gb.bbcode_uid, gb.bbcode_bitfield, gb.bbcode_flags, u.username, u.user_id, u.user_posts, u.user_from, u.user_website, u.user_email, u.user_icq, u.user_aim, u.user_yim, u.user_regdate, u.user_msnm, u.user_allow_viewemail, u.user_rank, u.user_sig, u.user_sig_bbcode_uid, u.user_avatar, u.user_avatar_type, u.user_allow_viewonline, g.made_year, g.id as vehicle_id, mk.make, md.model, u.user_avatar, u.user_colour',
+			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, gb.bbcode_uid, gb.bbcode_bitfield, gb.bbcode_flags, u.username, u.user_id, u.user_posts, u.user_from, u.user_website, u.user_email, u.user_icq, u.user_aim, u.user_yim, u.user_regdate, u.user_msnm, u.user_allow_viewemail, u.user_rank, u.user_sig, u.user_sig_bbcode_uid, u.user_avatar, u.user_avatar_type, u.user_allow_viewonline, v.made_year, v.id as vehicle_id, mk.make, md.model, u.user_avatar, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
+				GARAGE_VEHICLES_TABLE	=> 'v',
+				GARAGE_MAKES_TABLE	=> 'mk',
+				GARAGE_MODELS_TABLE	=> 'md',
+				USERS_TABLE		=> 'u',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'gb.author_id = u.user_id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'g.user_id = gb.author_id and g.main_vehicle = 1'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'g.model_id = md.id and md.pending = 0'
-				)
-			),
-			'WHERE'		=>  "gb.vehicle_id = $vid",
+			'WHERE'		=>  "gb.vehicle_id = $vid
+						AND gb.author_id = u.user_id
+						AND v.user_id = gb.author_id AND v.main_vehicle = 1
+						AND v.make_id = mk.id AND mk.pending = 0
+						AND v.model_id = md.id AND md.pending = 0",
 			'ORDER_BY'	=>  "gb.post_date ASC"
 		));
 
@@ -200,29 +217,19 @@ class garage_guestbook
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, u.username, u.user_id, u.user_posts, u.user_from, u.user_website, u.user_email, u.user_icq, u.user_aim, u.user_yim, u.user_regdate, u.user_msnm, u.user_allow_viewemail, u.user_rank, u.user_sig, u.user_sig_bbcode_uid, u.user_avatar, u.user_avatar_type, u.user_allow_viewonline, g.made_year, g.id as vehicle_id, mk.make, md.model, u.user_avatar, u.user_colour',
+			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, u.username, u.user_id, u.user_posts, u.user_from, u.user_website, u.user_email, u.user_icq, u.user_aim, u.user_yim, u.user_regdate, u.user_msnm, u.user_allow_viewemail, u.user_rank, u.user_sig, u.user_sig_bbcode_uid, u.user_avatar, u.user_avatar_type, u.user_allow_viewonline, v.made_year, v.id as vehicle_id, mk.make, md.model, u.user_avatar, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
+				GARAGE_VEHICLES_TABLE	=> 'v',
+				GARAGE_MAKES_TABLE	=> 'mk',
+				GARAGE_MODELS_TABLE	=> 'md',
+				USERS_TABLE		=> 'u',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'gb.author_id = u.user_id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'g.user_id = gb.author_id and g.main_vehicle = 1'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'g.model_id = md.id and md.pending = 0'
-				)
-			),
-			'WHERE'		=>  "gb.pending = 1",
+			'WHERE'		=>  "gb.pending = 1
+						AND gb.author_id = u.user_id
+						AND v.user_id = gb.author_id AND v.main_vehicle = 1
+						AND v.make_id = mk.id AND mk.pending = 0
+						AND v.model_id = md.id AND md.pending = 0",
 			'ORDER_BY'	=>  "gb.post_date ASC"
 		));
 
@@ -237,7 +244,7 @@ class garage_guestbook
 	}
 
 	/**
-	* TODO: Should this get drop along with old guestbook view???
+	* TODO: Should this get deprecaited along with old guestbook view???
 	* Return limited array of vehicle comments with text truncated for display
 	*
 	* @param int $vid vehicle id to filter comments for
@@ -255,14 +262,10 @@ class garage_guestbook
 			'SELECT'	=> 'SUBSTRING(REPLACE(gb.post,\'<br />\',\' \'),1,75) AS post, gb.author_id, u.username',
 			'FROM'		=> array(
 				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
+				USERS_TABLE		=> 'u',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'gb.author_id = u.user_id'
-				)
-			),
-			'WHERE'		=>  "gb.vehicle_id = $vid",
+			'WHERE'		=>  "gb.vehicle_id = $vid
+						AND gb.author_id = u.user_id",
 			'ORDER_BY'	=>  "gb.post_date DESC"
 		));
 
@@ -290,30 +293,19 @@ class garage_guestbook
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'gb.vehicle_id AS id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, gb.author_id AS author_id, gb.post_date, u.username, u.user_colour',
+			'SELECT'	=> 'gb.vehicle_id AS id, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, gb.author_id AS author_id, gb.post_date, u.username, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
+				GARAGE_VEHICLES_TABLE	=> 'v',
+				GARAGE_MAKES_TABLE	=> 'mk',
+				GARAGE_MODELS_TABLE	=> 'md',
+				USERS_TABLE		=> 'u',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'gb.author_id = u.user_id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'g.user_id = gb.author_id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'g.model_id = md.id and md.pending = 0'
-				)
-			),
-			'WHERE'		=>  "mk.pending = 0 AND md.pending = 0",
-			'ORDER_BY'	=>  "gb.post_date ASC"
+			'WHERE'		=>  "gb.author_id = u.user_id
+						AND v.user_id = gb.author_id AND v.main_vehicle = 1
+						AND v.make_id = mk.id AND mk.pending = 0
+						AND v.model_id = md.id AND md.pending = 0",
+			'ORDER_BY'	=>  "gb.post_date DESC"
 		));
 
 	 	$result = $db->sql_query_limit($sql, $limit);
@@ -340,29 +332,18 @@ class garage_guestbook
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, gb.vehicle_id, g.made_year, mk.make, md.model, u.username, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
+			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, gb.vehicle_id, v.made_year, mk.make, md.model, u.username, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle',
 			'FROM'		=> array(
 				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
+				GARAGE_VEHICLES_TABLE	=> 'v',
+				GARAGE_MAKES_TABLE	=> 'mk',
+				GARAGE_MODELS_TABLE	=> 'md',
+				USERS_TABLE		=> 'u',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'gb.author_id = u.user_id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'g.user_id = gb.author_id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'g.model_id = md.id and md.pending = 0'
-				)
-			),
-			'WHERE'		=>  "gb.id = $comment_id",
+			'WHERE'		=>  "gb.id = $comment_id
+						AND v.user_id = gb.author_id AND v.main_vehicle = 1
+						AND v.make_id = mk.id AND mk.pending = 0
+						AND v.model_id = md.id AND md.pending = 0",
 			'ORDER_BY'	=>  "gb.post_date ASC"
 		));
 
@@ -429,7 +410,7 @@ class garage_guestbook
 		for($i = 0; $i < count($comment_data); $i++)
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' 		=> append_sid("garage.$phpEx", "mode=view_vehicle&amp;VID=" . $comment_data[$i]['id']),
+				'U_COLUMN_1' 		=> append_sid("garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=" . $comment_data[$i]['id'] ."#guestbook"),
 				'U_COLUMN_2' 		=> append_sid("memberlist.$phpEx", "mode=viewprofile&amp;u=" . $comment_data[$i]['author_id']),
 				'COLUMN_1_TITLE'	=> $comment_data[$i]['vehicle'],
 				'COLUMN_2_TITLE'	=> $comment_data[$i]['username'],

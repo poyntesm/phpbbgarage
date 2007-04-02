@@ -18,14 +18,25 @@ class acp_garage_setting
 
 	function main($id, $mode)
 	{
+		/**
+		* Setup global variables such as $db 
+		*/
 		global $db, $user, $auth, $template, $garage_config;
 		global $config, $phpbb_root_path, $phpbb_admin_path, $phpEx;
 
-		//Build All Garage Classes e.g $garage_images->
+		/**
+		* Build All Garage Classes e.g $garage_images->
+		*/
 		require($phpbb_root_path . 'includes/mods/class_garage_admin.' . $phpEx);
 
+		/**
+		* Setup page variables such as title, template & available language strings
+		*/
 		$user->add_lang(array('acp/board', 'mods/garage', 'acp/garage'));
 
+		/**
+		* Setup variables required
+		*/
 		$action	= request_var('action', '');
 		$submit = (isset($_POST['submit'])) ? true : false;
 
@@ -113,6 +124,8 @@ class acp_garage_setting
 						'top_quartermile_limit'			=> array('lang' => 'TOP_QUARTERMILE_LIMIT', 'type' => 'text:3:4', 'explain' => true),
 						'enable_top_rating'			=> array('lang' => 'ENABLE_TOP_RATING', 'type' => 'radio:yes_no', 'explain' => true),
 						'top_rating_limit'			=> array('lang' => 'TOP_RATING_LIMIT', 'type' => 'text:3:4', 'explain' => true),
+						'enable_top_lap'			=> array('lang' => 'ENABLE_TOP_LAP', 'type' => 'radio:yes_no', 'explain' => true),
+						'top_lap_limit'				=> array('lang' => 'TOP_LAP_LIMIT', 'type' => 'text:3:4', 'explain' => true),
 					)
 				);
 

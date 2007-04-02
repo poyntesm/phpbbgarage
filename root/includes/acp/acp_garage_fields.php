@@ -21,19 +21,30 @@ class acp_garage_fields
 
 	function main($id, $mode)
 	{
+		/**
+		* Setup global variables such as $db 
+		*/
 		global $config, $db, $user, $auth, $template, $cache;
 		global $phpbb_root_path, $phpbb_admin_path, $phpEx, $table_prefix;
 
+		/**
+		* Build All Garage Classes e.g $garage_images->
+		*/
 		include($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
 		include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 		include($phpbb_root_path . 'includes/functions_profile_fields.' . $phpEx);
 
+		/**
+		* Setup page variables such as title, template & available language strings
+		*/
 		$user->add_lang(array('ucp', 'acp/profile', 'acp/garage'));
 		$this->tpl_name = 'acp_garage_fields';
 		$this->page_title = 'ACP_GARAGE_FIELDS';
 
+		/**
+		* Setup variables required
+		*/
 		$action = (isset($_POST['create'])) ? 'create' : request_var('action', '');
-
 		$error = array();
 		$s_hidden_fields = '';
 
@@ -119,16 +130,16 @@ class acp_garage_fields
 							$sql = "SELECT sql
 								FROM sqlite_master 
 								WHERE type = 'table' 
-									AND name = '" . PROFILE_FIELDS_DATA_TABLE . "'
+									AND name = '" . GARAGE_CUSTOM_FIELDS_DATA_TABLE . "'
 								ORDER BY type DESC, name;";
 							$result = $db->sql_query($sql);
 							$row = $db->sql_fetchrow($result);
 							$db->sql_freeresult($result);
 
 							// Create a temp table and populate it, destroy the existing one
-							$db->sql_query(preg_replace('#CREATE\s+TABLE\s+"?' . PROFILE_FIELDS_DATA_TABLE . '"?#i', 'CREATE TEMPORARY TABLE ' . PROFILE_FIELDS_DATA_TABLE . '_temp', $row['sql']));
-							$db->sql_query('INSERT INTO ' . PROFILE_FIELDS_DATA_TABLE . '_temp SELECT * FROM ' . PROFILE_FIELDS_DATA_TABLE);
-							$db->sql_query('DROP TABLE ' . PROFILE_FIELDS_DATA_TABLE);
+							$db->sql_query(preg_replace('#CREATE\s+TABLE\s+"?' . GARAGE_CUSTOM_FIELDS_DATA_TABLE . '"?#i', 'CREATE TEMPORARY TABLE ' . GARAGE_CUSTOM_FIELDS_DATA_TABLE . '_temp', $row['sql']));
+							$db->sql_query('INSERT INTO ' . GARAGE_CUSTOM_FIELDS_DATA_TABLE . '_temp SELECT * FROM ' . GARAGE_CUSTOM_FIELDS_DATA_TABLE);
+							$db->sql_query('DROP TABLE ' . GARAGE_CUSTOM_FIELDS_DATA_TABLE);
 
 							preg_match('#\((.*)\)#s', $row['sql'], $matches);
 
@@ -150,13 +161,13 @@ class acp_garage_fields
 							$new_table_cols = preg_replace('/' . 'pf_' . $field_ident . '[^,]+,/', '', $new_table_cols);
 
 							// create a new table and fill it up. destroy the temp one
-							$db->sql_query('CREATE TABLE ' . PROFILE_FIELDS_DATA_TABLE . ' (' . $new_table_cols . ');');
-							$db->sql_query('INSERT INTO ' . PROFILE_FIELDS_DATA_TABLE . ' (' . $columns . ') SELECT ' . $columns . ' FROM ' . PROFILE_FIELDS_DATA_TABLE . '_temp;');
-							$db->sql_query('DROP TABLE ' . PROFILE_FIELDS_DATA_TABLE . '_temp');
+							$db->sql_query('CREATE TABLE ' . GARAGE_CUSTOM_FIELDS_DATA_TABLE . ' (' . $new_table_cols . ');');
+							$db->sql_query('INSERT INTO ' . GARAGE_CUSTOM_FIELDS_DATA_TABLE . ' (' . $columns . ') SELECT ' . $columns . ' FROM ' . GARAGE_CUSTOM_FIELDS_DATA_TABLE . '_temp;');
+							$db->sql_query('DROP TABLE ' . GARAGE_CUSTOM_FIELDS_DATA_TABLE . '_temp');
 						break;
 
 						default:
-							$db->sql_query('ALTER TABLE ' . PROFILE_FIELDS_DATA_TABLE . " DROP COLUMN pf_$field_ident");
+							$db->sql_query('ALTER TABLE ' . GARAGE_CUSTOM_FIELDS_DATA_TABLE . " DROP COLUMN pf_$field_ident");
 					}
 
 					$order = 0;
@@ -801,13 +812,17 @@ class acp_garage_fields
 
 				'L_ACTIVATE_DEACTIVATE'		=> $user->lang[$active_lang],
 				'U_ACTIVATE_DEACTIVATE'		=> $this->u_action . "&amp;action=$active_value&amp;field_id=$id",
-				'U_EDIT'					=> $this->u_action . "&amp;action=edit&amp;field_id=$id",
-				'U_TRANSLATE'				=> $this->u_action . "&amp;action=edit&amp;field_id=$id&amp;step=3",
-				'U_DELETE'					=> $this->u_action . "&amp;action=delete&amp;field_id=$id",
-				'U_MOVE_UP'					=> $this->u_action . "&amp;action=move_up&amp;order={$row['field_order']}",
-				'U_MOVE_DOWN'				=> $this->u_action . "&amp;action=move_down&amp;order={$row['field_order']}",
+				'U_ACTIVATE'			=> $this->u_action . "&amp;action=activate&amp;field_id=$id",
+				'U_DEACTIVATE'			=> $this->u_action . "&amp;action=deactivate&amp;field_id=$id",
+				'U_EDIT'			=> $this->u_action . "&amp;action=edit&amp;field_id=$id",
+				'U_TRANSLATE'			=> $this->u_action . "&amp;action=edit&amp;field_id=$id&amp;step=3",
+				'U_DELETE'			=> $this->u_action . "&amp;action=delete&amp;field_id=$id",
+				'U_MOVE_UP'			=> $this->u_action . "&amp;action=move_up&amp;order={$row['field_order']}",
+				'U_MOVE_DOWN'			=> $this->u_action . "&amp;action=move_down&amp;order={$row['field_order']}",
 
-				'S_NEED_EDIT'				=> $s_need_edit)
+				'S_DEACTIVATE'			=> (!$row['field_active']) ? true : false,
+				'S_ACTIVATE'			=> ($row['field_active']) ? true : false,
+				'S_NEED_EDIT'			=> $s_need_edit)
 			);
 		}
 		$db->sql_freeresult($result);
@@ -1085,7 +1100,7 @@ class acp_garage_fields
 
 			if ($action != 'create')
 			{
-				$sql = 'DELETE FROM ' . GARAGE_FIELDS_LANG_TABLE . " 
+				$sql = 'DELETE FROM ' . GARAGE_CUSTOM_FIELDS_LANG_TABLE . " 
 					WHERE field_id = $field_id
 						AND lang_id = " . (int) $default_lang_id;
 				$db->sql_query($sql);
@@ -1104,11 +1119,11 @@ class acp_garage_fields
 					$sql_ary['lang_id'] = $default_lang_id;
 					$sql_ary['option_id'] = (int) $option_id;
 
-					$profile_sql[] = 'INSERT INTO ' . GARAGE_FIELDS_LANG_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
+					$profile_sql[] = 'INSERT INTO ' . GARAGE_CUSTOM_FIELDS_LANG_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
 				}
 				else
 				{
-					$this->update_insert(GARAGE_FIELDS_LANG_TABLE, $sql_ary, array(
+					$this->update_insert(GARAGE_CUSTOM_FIELDS_LANG_TABLE, $sql_ary, array(
 						'field_id'	=> $field_id,
 						'lang_id'	=> (int) $default_lang_id,
 						'option_id'	=> (int) $option_id)
@@ -1137,7 +1152,7 @@ class acp_garage_fields
 				{
 					if ($action != 'create')
 					{
-						$sql = 'DELETE FROM ' . GARAGE_FIELDS_LANG_TABLE . " 
+						$sql = 'DELETE FROM ' . GARAGE_CUSTOM_FIELDS_LANG_TABLE . " 
 							WHERE field_id = $field_id
 							AND lang_id = " . (int) $lang_id;
 						$db->sql_query($sql);

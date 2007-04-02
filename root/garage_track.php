@@ -13,86 +13,97 @@
 */
 define('IN_PHPBB', true);
 
-//Let's Set The Root Dir For phpBB And Load Normal phpBB Required Files
+/**
+* Set root path & include standard phpBB files required
+*/
 $phpbb_root_path = './';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
 include($phpbb_root_path . 'includes/bbcode.' . $phpEx);
 
-//Start Session Management
+/**
+* Setup user session, authorisation & language 
+*/
 $user->session_begin();
 $auth->acl($user->data);
-
-//Setup Lang Files
 $user->setup(array('mods/garage'));
 
-//Build All Garage Classes e.g $garage_images->
+/**
+* Build All Garage Classes e.g $garage_images->
+*/
 require($phpbb_root_path . 'includes/mods/class_garage_image.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_template.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_track.' . $phpEx);
 
-//Set The Page Title
-$page_title = $user->lang['GARAGE'];
+/**
+* Setup variables 
+*/
+$mode = request_var('mode', '');
+$vid = request_var('VID', '');
+$lid = request_var('LID', '');
+$tid = request_var('TID', '');
+$image_id = request_var('image_id', '');
 
-//Get All String Parameters And Make Safe
-$params = array('mode' => 'mode', 'sort' => 'sort', 'start' => 'start', 'order' => 'order');
-while(list($var, $param) = @each($params))
-{
-	$$var = request_var($param, '');
-}
-
-//Get All Non-String Parameters
-$params = array('vid' => 'VID', 'eid' => 'EID', 'image_id' => 'image_id', 'tid' => 'TID', 'lid' => 'LID');
-while(list($var, $param) = @each($params))
-{
-	$$var = request_var($param, '');
-}
-
-//Build Inital Navlink...Yes Forum Name!! We Use phpBB3 Standard Navlink Process!!
+/**
+* Build inital navlink..we use the standard phpBB3 breadcrumb process
+*/
 $template->assign_block_vars('navlinks', array(
 	'FORUM_NAME'	=> $user->lang['GARAGE'],
 	'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage.$phpEx"))
 );
 
-//Display MCP Link If Authorised
+/**
+* Display the moderator control panel link if authorised
+*/
 $template->assign_vars(array(
 	'U_MCP'	=> ($auth->acl_get('m_garage')) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=garage', true, $user->session_id) : '')
 );
 
-//Decide What Mode The User Is Doing
+/**
+* Perform a set action based on value for $mode
+*/
 switch( $mode )
 {
+	/**
+	* Display page to add new lap
+	*/
 	case 'add_lap':
-
-		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
+		/**
+		* Check user logged in, else redirecting to login with return address to get them back
+		*/
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
 			login_box("garage_track.$phpEx?mode=add_lap&amp;VID=$vid");
 		}
 
-		//Let Check That Laps Are Allowed...If Not Redirect
+		/**
+		* Check authorisation to perform action, redirecting to error screen if not
+		*/
 		if (!$garage_config['enable_tracktime'] || !$auth->acl_get('u_garage_add_lap'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=18"));
 		}
 
-		//Check Vehicle Ownership
+		/**
+		* Check vehicle ownership, only owners & moderators with correct permissions get past here
+		*/
 		$garage_vehicle->check_ownership($vid);
-		
-		//Build Page Header ;)
-		page_header($page_title);
 
-		//Set Template Files In Use For This Mode
+		/**
+		* Get vehicle & tracks data from DB
+		*/
+		$vehicle=$garage_vehicle->get_vehicle($vid);
+		$tracks = $garage_track->get_all_tracks();
+
+		/**
+		* Handle template declarations & assignments
+		*/
+		page_header($user->lang['GARAGE']);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_lap.html')
 		);
-
-		//Get Vehicle Data For Navlinks
-		$vehicle=$garage_vehicle->get_vehicle($vid);
-
-		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $vehicle['vehicle'],
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"))
@@ -101,11 +112,6 @@ switch( $mode )
 			'FORUM_NAME'	=> $user->lang['ADD_LAP'],
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=add_lap&amp;VID=$vid"))
 		);
-
-		//Get Required Data
-		$tracks = $garage_track->get_all_tracks();
-
-		//Build Required HTML Components Like Drop Down Boxes.....
 		$garage_template->attach_image('lap');
 		$garage_template->track_dropdown($tracks);
 		$garage_template->track_condition_dropdown();
@@ -118,42 +124,47 @@ switch( $mode )
 			'S_DISPLAY_ADD_TRACK'	=> $garage_config['enable_user_add_track'],
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=insert_lap"))
          	);
-
-		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$garage_template->sidemenu();
+	break;
 
-		break;
-
+	/**
+	* Display page to add new lap
+	*/
 	case 'add_track':
-
-		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
+		/**
+		* Check user logged in, else redirecting to login with return address to get them back
+		*/
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
 			login_box("garage_track.$phpEx?mode=add_track&amp;VID=$vid");
 		}
 
-		//Let Check That User Adding Tracks Are Allowed...If Not Redirect
+		/**
+		* Check authorisation to perform action, redirecting to error screen if not
+		*/
 		if (!$garage_config['enable_tracktime'] || !$garage_config['enable_user_add_track'] || !$auth->acl_get('u_garage_add_track'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=18"));
 		}
 
-		//Check Vehicle Ownership
+		/**
+		* Check vehicle ownership, only owners & moderators with correct permissions get past here
+		*/
 		$garage_vehicle->check_ownership($vid);
-		
-		//Build Page Header ;)
-		page_header($page_title);
 
-		//Set Template Files In Use For This Mode
+		/**
+		* Get vehicle & tracks data from DB
+		*/
+		$vehicle=$garage_vehicle->get_vehicle($vid);
+
+		/**
+		* Handle template declarations & assignments
+		*/
+		page_header($user->lang['GARAGE']);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_track.html')
 		);
-
-		//Get Vehicle Data For Navlinks
-		$vehicle=$garage_vehicle->get_vehicle($vid);
-
-		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $vehicle['vehicle'],
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"))
@@ -162,8 +173,6 @@ switch( $mode )
 			'FORUM_NAME'	=> $user->lang['ADD_TRACK'],
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=add_track&amp;VID=$vid"))
 		);
-
-		//Build Required HTML Components Like Drop Down Boxes.....
 		$garage_template->mileage_dropdown();
 		$template->assign_vars(array(
 			'L_TITLE'  		=> $user->lang['ADD_TRACK'],
@@ -171,132 +180,169 @@ switch( $mode )
 			'VID' 			=> $vid,
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=insert_track"))
          	);
-
-		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$garage_template->sidemenu();
+	break;
 
-		break;
-
+	/**
+	* Insert new lap
+	*/
 	case 'insert_lap':
-
-		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
+		/**
+		* Check user logged in, else redirecting to login with return address to get them back
+		*/
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
 			login_box("garage_track.$phpEx?mode=add_lap&amp;VID=$vid");
 		}
 
-		//Let Check That Laps Are Allowed...If Not Redirect
+		/**
+		* Check authorisation to perform action, redirecting to error screen if not
+		*/
 		if (!$garage_config['enable_tracktime'] || !$auth->acl_get('u_garage_add_lap'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=18"));
 		}
 
-		//Check Vehicle Ownership
+		/**
+		* Check vehicle ownership, only owners & moderators with correct permissions get past here
+		*/
 		$garage_vehicle->check_ownership($vid);
 
-		//Get All Data Posted And Make It Safe To Use
+		/**
+		* Get all required/optional data and check required data is present
+		*/
 		$params = array('track_id' => '', 'condition_id' => '', 'type_id' => '', 'minute' => '', 'second' => '', 'millisecond' => '');
 		$data 	= $garage->process_vars($params);
-
-		//Checks All Required Data Is Present
 		$params = array('track_id', 'condition_id', 'type_id', 'minute', 'second', 'millisecond');
 		$garage->check_required_vars($params);
 
-		//Update The Dynorun With Data Acquired
+		/**
+		* Perform required DB work to create lap
+		*/
 		$lid = $garage_track->insert_lap($data);
 
-		//Update The Time Now...In Case We Get Redirected During Image Processing
+		/**
+		* Updates timestamp on vehicle, indicating it has been updated.
+		* Updated vehicles are displayed on statistics page
+		*/
 		$garage_vehicle->update_vehicle_time($vid);
 
-		//If Any Image Variables Set Enter The Image Handling
+		/**
+		* Handle any images
+		*/
 		if ($garage_image->image_attached())
 		{
-			//Check For Remote & Local Image Quotas
 			if ($garage_image->below_image_quotas())
 			{
-				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('lap', $lid);
-				//Insert Image Into Lap Gallery
 				$hilite = $garage_track->hilite_exists($vid, $lid);
 				$garage_image->insert_lap_gallery_image($image_id, $hilite);
 			}
-			//You Have Reached Your Image Quota..Error Nicely
 			else if ($garage_image->above_image_quotas())
 			{
 				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=4"));
 			}
 		}
 
-		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
+		/**
+		* Perform notification if required
+		*/
 		if ($garage_config['enable_lap_approval'])
 		{
 			$garage->pending_notification('unapproved_laps');
 		}
 
+		/**
+		* All work complete for mode, so redirect to correct page
+		*/
 		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
+	break;
 
-		break;
-
+	/**
+	* Insert new track
+	*/
 	case 'insert_track':
-
-		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
+		/**
+		* Check user logged in, else redirecting to login with return address to get them back
+		*/
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
 			login_box("garage_track.$phpEx?mode=add_lap&amp;VID=$vid");
 		}
 
-		//Let Check That Laps Are Allowed...If Not Redirect
+		/**
+		* Check authorisation to perform action, redirecting to error screen if not
+		*/
 		if (!$garage_config['enable_tracktime'] || !$auth->acl_get('u_garage_add_track'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=18"));
 		}
 
-		//Check Vehicle Ownership
+		/**
+		* Check vehicle ownership, only owners & moderators with correct permissions get past here
+		*/
 		$garage_vehicle->check_ownership($vid);
 
-		//Get All Data Posted And Make It Safe To Use
+		/**
+		* Get all required/optional data and check required data is present
+		*/
 		$params = array('title' => '', 'length' => '', 'mileage_unit' => '');
 		$data 	= $garage->process_vars($params);
-
-		//Checks All Required Data Is Present
 		$params = array('title');
 		$garage->check_required_vars($params);
 
-		//Update The Dynorun With Data Acquired
+		/**
+		* Perform required DB work to create track
+		*/
 		$tid = $garage_track->insert_track($data);
 
-		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
+		/**
+		* Perform notification if required
+		*/
 		if ($garage_config['enable_track_approval'])
 		{
 			$garage->pending_notification('unapproved_tracks');
 		}
 
+		/**
+		* All work complete for mode, so redirect to correct page
+		*/
 		redirect(append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=add_lap&amp;VID=$vid"));
+	break;
 
-		break;
-
+	/**
+	* Display page to edit an existing lap
+	*/
 	case 'edit_lap':
-
-		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
+		/**
+		* Check user logged in, else redirecting to login with return address to get them back
+		*/
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
 			login_box("garage_track.$phpEx?mode=edit_lap&amp;LID=$lid&amp;VID=$vid");
 		}
 
-		//Check Vehicle Ownership
+		/**
+		* Check vehicle ownership, only owners & moderators with correct permissions get past here
+		*/
 		$garage_vehicle->check_ownership($vid);
 
-		//Build Page Header ;)
-		page_header($page_title);
+		/**
+		* Get vehicle, tracks & lap data from DB
+		*/
+		$vehicle_data 	= $garage_vehicle->get_vehicle($vid);
+		$data 		= $garage_track->get_lap($lid);
+		$tracks 	= $garage_track->get_all_tracks();
+		$galley_data 	= $garage_image->get_lap_gallery($vid, $lid);
 
-		//Set Template Files In Use For This Mode
+		/**
+		* Handle template declarations & assignments
+		*/
+		page_header($user->lang['GARAGE']);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_lap.html')
 		);
-
-		//Build Navlinks
-		$vehicle_data 	= $garage_vehicle->get_vehicle($vid);
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $vehicle_data['vehicle'],
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"))
@@ -305,18 +351,6 @@ switch( $mode )
 			'FORUM_NAME'	=> $user->lang['EDIT_LAP'],
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_lap&amp;VID=$vid&amp;LID=$lid"))
 		);
-
-		//Pull Required Lap Data From DB
-		$data = $garage_track->get_lap($lid);
-
-		//See If We Got Sent Here By Pending Page...If So We Need To Tell Update To Redirect Correctly
-		$params = array('PENDING' => '');
-		$redirect = $garage->process_vars($params);
-
-		//Build All Required HTML
-		$tracks = $garage_track->get_all_tracks();
-
-		//Build Required HTML Components Like Drop Down Boxes.....
 		$garage_template->track_dropdown($tracks, $data['track_id']);
 		$garage_template->track_condition_dropdown($data['condition_id']);
 		$garage_template->lap_type_dropdown($data['type_id']);
@@ -330,203 +364,247 @@ switch( $mode )
 			'MILLISECOND' 		=> $data['millisecond'],
 			'VID' 			=> $vid,
 			'LID' 			=> $lid,
-			'PENDING_REDIRECT'	=> $redirect['PENDING'],
+			'PENDING_REDIRECT'	=> request_var('PENDING', ''),
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=update_lap"),
 			'S_IMAGE_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=insert_lap_image"),
 		));
-
-		//Let Check The User Is Allowed Perform This Action
-		if ((!$auth->acl_get('u_garage_upload_image')) OR (!$auth->acl_get('u_garage_remote_image')))
-		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=16"));
-		}
-
-		//Pre Build All Side Menus
 		$garage_template->attach_image('lap');
-
-		//Pull Lap Gallery Data From DB
-		$data = $garage_image->get_lap_gallery($vid, $lid);
-
-		//Process Each Image From Lap Gallery
-		for ($i = 0, $count = sizeof($data);$i < $count; $i++)
+		for ($i = 0, $count = sizeof($gallery_data);$i < $count; $i++)
 		{
 			$template->assign_block_vars('pic_row', array(
-				'U_IMAGE'	=> (($data[$i]['attach_id']) AND ($data[$i]['attach_is_image']) AND (!empty($data[$i]['attach_thumb_location'])) AND (!empty($data[$i]['attach_location']))) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_image&amp;image_id=" . $data[$i]['attach_id']) : '',
-				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=remove_lap_image&amp;&amp;VID=$vid&amp;LID=$lid&amp;image_id=" . $data[$i]['attach_id']),
-				'U_SET_HILITE'	=> ($data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=set_lap_hilite&amp;image_id=" . $data[$i]['attach_id'] . "&amp;VID=$vid&amp;LID=$lid") : '',
-				'IMAGE' 	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $data[$i]['attach_thumb_location'],
-				'IMAGE_TITLE' 	=> $data[$i]['attach_file'])
+				'U_IMAGE'	=> (($gallery_data[$i]['attach_id']) AND ($gallery_data[$i]['attach_is_image']) AND (!empty($gallery_data[$i]['attach_thumb_location'])) AND (!empty($gallery_data[$i]['attach_location']))) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_image&amp;image_id=" . $gallery_data[$i]['attach_id']) : '',
+				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=remove_lap_image&amp;&amp;VID=$vid&amp;LID=$lid&amp;image_id=" . $gallery_data[$i]['attach_id']),
+				'U_SET_HILITE'	=> ($gallery_data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=set_lap_hilite&amp;image_id=" . $gallery_data[$i]['attach_id'] . "&amp;VID=$vid&amp;LID=$lid") : '',
+				'IMAGE' 	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $gallery_data[$i]['attach_thumb_location'],
+				'IMAGE_TITLE' 	=> $gallery_data[$i]['attach_file'])
 			);
 		}
-		
-		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$garage_template->sidemenu();
+	break;
 
-		break;
-
+	/**
+	* Update existing lap
+	*/
 	case 'update_lap':
-
-		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
+		/**
+		* Check user logged in, else redirecting to login with return address to get them back
+		*/
 		if ($user->data['user_id'] == ANONYMOUS)
 		{
 			login_box("garage_track.$phpEx?mode=edit_lap&amp;LID=$lid&amp;VID=$vid");
 		}
 
-		//Check Vehicle Ownership
+		/**
+		* Check vehicle ownership, only owners & moderators with correct permissions get past here
+		*/
 		$garage_vehicle->check_ownership($vid);
 
-		//Get All Data Posted And Make It Safe To Use
+		/**
+		* Get all required/optional data and check required data is present
+		*/
 		$params = array('track_id' => '', 'condition_id' => '', 'type_id' => '', 'minute' => '', 'second' => '', 'millisecond' => '', 'pending_redirect' => '');
 		$data 	= $garage->process_vars($params);
-
-		//Checks All Required Data Is Present
 		$params = array('track_id', 'condition_id', 'type_id', 'minute', 'second', 'millisecond');
 		$garage->check_required_vars($params);
 
-		//Update The Dynorun With Data Acquired
+		/**
+		* Perform required DB work to update lap
+		*/
 		$garage_track->update_lap($data);
 
-		//Update The Time Now...In Case We Get Redirected During Image Processing
+		/**
+		* Updates timestamp on vehicle, indicating it has been updated.
+		* Updated vehicles are displayed on statistics page
+		*/
 		$garage_vehicle->update_vehicle_time($vid);
 
-		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
+		/**
+		* Perform notification if required
+		*/
 		if ($garage_config['enable_lap_approval'])
 		{
 			$garage->pending_notification('unapproved_laps');
 		}
 
-		//If Editting From Pending Page Redirect Back To There Instead
+		/**
+		* If editted by MCP redirect back to MCP
+		*/
 		if ($data['pending_redirect'] == 'MCP')
 		{
 			redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_laps"));
 		}
 
+		/**
+		* All work complete for mode, so redirect to correct page
+		*/
 		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
+	break;
 
-		break;
-
+	/**
+	* Delete existing lap
+	*/
 	case 'delete_lap':
-
-		//Let Check The User Is Allowed Perform This Action
+		/**
+		* Check authorisation to perform action, redirecting to error screen if not
+		*/
 		if (!$auth->acl_get('u_garage_delete_lap'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
 		}
 
-		//Check Vehicle Ownership
+		/**
+		* Check vehicle ownership, only owners & moderators with correct permissions get past here
+		*/
 		$garage_vehicle->check_ownership($vid);
 
-		//Delete The Dynorun
+		/**
+		* Perform required DB work to delete lap
+		*/
 		$garage_track->delete_lap($lid);
 
-		//Update Timestamp For Vehicle
+		/**
+		* Updates timestamp on vehicle, indicating it has been updated.
+		* Updated vehicles are displayed on statistics page
+		*/
 		$garage_vehicle->update_vehicle_time($vid);
 
+		/**
+		* All work complete for mode, so redirect to correct page
+		*/
 		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
+	break;
 
-		break;
-
+	/**
+	* Insert image into lap
+	*/
 	case 'insert_lap_image':
-
-		//Let Check The User Is Allowed Perform This Action
+		/**
+		* Check authorisation to perform action, redirecting to error screen if not
+		*/
 		if ((!$auth->acl_get('u_garage_upload_image')) OR (!$auth->acl_get('u_garage_remote_image')))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=16"));
 		}
 
-		//Check Vehicle Ownership
+		/**
+		* Check vehicle ownership, only owners & moderators with correct permissions get past here
+		*/
 		$garage_vehicle->check_ownership($vid);
 
-		//If Any Image Variables Set Enter The Image Handling
+		/**
+		* Handle any images
+		*/
 		if ($garage_image->image_attached())
 		{
-			//Check For Remote & Local Image Quotas
 			if ($garage_image->below_image_quotas())
 			{
-				//Create Thumbnail & DB Entry For Image
 				$image_id = $garage_image->process_image_attached('lap', $lid);
-				//Insert Image Into Lap Gallery
 				$hilite = $garage_track->hilite_exists($lid);
 				$garage_image->insert_lap_gallery_image($image_id, $hilite);
 			}
-			//You Have Reached Your Image Quota..Error Nicely
 			else if ($garage_image->above_image_quotas())
 			{
 				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=4"));
 			}
 		}
 
-		//Update Timestamp For Vehicle
+		/**
+		* Updates timestamp on vehicle, indicating it has been updated.
+		* Updated vehicles are displayed on statistics page
+		*/
 		$garage_vehicle->update_vehicle_time($vid);
 
+		/**
+		* All work complete for mode, so redirect to correct page
+		*/
 		redirect(append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;VID=$vid&amp;LID=$lid#images"));
+	break;
 
-		break;
-
+	/**
+	* Set highlight image for lap
+	*/
 	case 'set_lap_hilite':
-
-		//Check Vehicle Ownership
+		/**
+		* Check vehicle ownership, only owners & moderators with correct permissions get past here
+		*/
 		$garage_vehicle->check_ownership($vid);
 
-		//Set All Images To Non Hilite So We Do Not End Up With Two Hilites & Then Set Hilite
+		/**
+		* Perform required DB work to set hightlight image
+		*/
 		$garage->update_single_field(GARAGE_LAP_GALLERY_TABLE, 'hilite', 0, 'lap_id', $lid);
 		$garage->update_single_field(GARAGE_LAP_GALLERY_TABLE, 'hilite', 1, 'image_id', $image_id);
 
-		//Update Timestamp For Vehicle
+		/**
+		* Updates timestamp on vehicle, indicating it has been updated.
+		* Updated vehicles are displayed on statistics page
+		*/
 		$garage_vehicle->update_vehicle_time($vid);
 
+		/**
+		* All work complete for mode, so redirect to correct page
+		*/
 		redirect(append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;VID=$vid&amp;LID=$lid#images"));
+	break;
 
-		break;
-
+	/**
+	* Delete lap image
+	*/
 	case 'remove_lap_image':
-
-		//Check Vehicle Ownership
+		/**
+		* Check vehicle ownership, only owners & moderators with correct permissions get past here
+		*/
 		$garage_vehicle->check_ownership($vid);
 
-		//Remove Image From Lap Gallery & Deletes Image
+		/**
+		* Perform required DB work to delete image
+		*/
 		$garage_image->delete_lap_image($image_id);
 
-		//Update Timestamp For Vehicle
+		/**
+		* Updates timestamp on vehicle, indicating it has been updated.
+		* Updated vehicles are displayed on statistics page
+		*/
 		$garage_vehicle->update_vehicle_time($vid);
 
+		/**
+		* All work complete for mode, so redirect to correct page
+		*/
 		redirect(append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;VID=$vid&amp;LID=$lid#images"));
+	break;
 
-		break;
-
+	/**
+	* Display page to view lap
+	*/
 	case 'view_lap':
-
-		//Let Check The User Is Allowed Perform This Action
+		/**
+		* Check authorisation to perform action, redirecting to error screen if not
+		*/
 		if (!$auth->acl_get('u_garage_browse'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=15"));
 		}
 
-		//Build Page Header ;)
-		page_header($page_title);
+		/**
+		* Get lap & gallery data from DB
+		*/
+		$data = $garage_track->get_lap($lid);
+		$gallery_data = $garage_image->get_lap_gallery($vid, $lid);
 
-		//Set Template Files In Use For This Mode
+		/**
+		* Handle template declarations & assignments
+		*/
+		page_header($user->lang['GARAGE']);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_view_lap.html')
 		);
-
-		//Pull Required Modification Data From DB
-		$data = $garage_track->get_lap($lid);
-
-		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $data['vehicle'],
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=$vid"))
 		);
-
-		//Get All Gallery Data Required
-		$gallery_data = $garage_image->get_lap_gallery($vid, $lid);
-			
-		//Process Each Image From Lap Gallery	
        		for ( $i = 0; $i < count($gallery_data); $i++ )
         	{
-               		// Do we have a thumbnail?  If so, our job is simple here :)
 			if ( (empty($gallery_data[$i]['attach_thumb_location']) == false) AND ($gallery_data[$i]['attach_thumb_location'] != $gallery_data[$i]['attach_location']) )
 			{
 				$template->assign_vars(array(
@@ -540,8 +618,6 @@ switch( $mode )
 				);
                		} 
 	       	}
-
-		//Build The Owners Avatar Image If Any...
 		$data['avatar'] = '';
 		if ($data['user_avatar'] AND $user->optionget('viewavatars'))
 		{
@@ -558,7 +634,6 @@ switch( $mode )
 			}
 			$data['avatar'] = '<img src="' . $avatar_img . '" width="' . $data['user_avatar_width'] . '" height="' . $data['user_avatar_height'] . '" alt="" />';
 		}
-
 		$template->assign_vars(array(
 			'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $data['user_id']),
 			'U_VIEW_TRACK' 		=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=view_track&amp;TID=" . $data['track_id']),
@@ -575,42 +650,39 @@ switch( $mode )
 			'USERNAME_COLOUR'	=> get_username_string('colour', $data['user_id'], $data['username'], $data['user_colour']),
             		'AVATAR_IMG' 		=> $data['avatar'],
          	));
-
-		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$garage_template->sidemenu();
+	break;
 
-		break;
-
+	/**
+	* Display page to view track
+	*/
 	case 'view_track':
-
-		//Let Check The User Is Allowed Perform This Action
+		/**
+		* Check authorisation to perform action, redirecting to error screen if not
+		*/
 		if (!$auth->acl_get('u_garage_browse'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=15"));
 		}
 
-		//Build Page Header ;)
-		page_header($page_title);
+		/**
+		* Get track & laps data from DB
+		*/
+		$data = $garage_track->get_track($tid);
+		$lap_data = $garage_track->get_laps_by_track($tid);
 
-		//Set Template Files In Use For This Mode
+		/**
+		* Handle template declarations & assignments
+		*/
+		page_header($user->lang['GARAGE']);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_view_track.html')
 		);
-
-		//Pull Required Modification Data From DB
-		$data = $garage_track->get_track($tid);
-
-		//Build Navlinks
 		$template->assign_block_vars('navlinks', array(
 			'FORUM_NAME'	=> $data['title'],
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=view_track&amp;TID=$tid"))
 		);
-
-		//Get All Lap Data
-		$lap_data = $garage_track->get_laps_by_track($tid);
-
-		//Process Each Lap
        		for ( $i = 0; $i < count($lap_data); $i++ )
 		{
 
@@ -634,7 +706,6 @@ switch( $mode )
 				'U_LAP'		=> append_sid("garage_track.$phpEx?mode=view_lap&amp;LID=".$lap_data[$i]['lid']."&amp;VID=". $lap_data[$i]['vehicle_id']),
 			));
 
-               		// Do we have a thumbnail?  If so, our job is simple here :)
 			if ( (empty($lap_data[$i]['attach_thumb_location']) == false) AND ($lap_data[$i]['attach_thumb_location'] != $lap_data[$i]['attach_location']) )
 			{
 				$template->assign_vars(array(
@@ -648,29 +719,19 @@ switch( $mode )
 				);
                		} 
 	       	}
-
 		$template->assign_vars(array(
 			'TRACK'			=> $data['title'],
 			'LENGTH'		=> $data['length'],
 			'MILEAGE_UNIT'		=> $data['mileage_unit'],
          	));
-
-		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$garage_template->sidemenu();
-
-		break;
-
-		break;
+	break;
 }
-
 $garage_template->version_notice();
 
-//Set Template Files In Used For Footer
 $template->set_filenames(array(
 	'garage_footer' => 'garage_footer.html')
 );
 
-//Generate Page Footer
 page_footer();
-
 ?>

@@ -139,7 +139,6 @@ class garage_track
 	{
 		global $vid, $garage_image, $garage;
 	
-		//Lets See If There Are Any Images Associated With This Lap
 		$images	= $garage_image->get_lap_gallery($vid, $lid);
 	
 		for ($i = 0, $count = sizeof($images);$i < $count; $i++)
@@ -147,34 +146,7 @@ class garage_track
 			$garage_image->delete_lap_image($images[$i]['id']);
 		}
 
-		//Time To Delete The Actual Lap Now
 		$garage->delete_rows(GARAGE_LAPS_TABLE, 'id', $lid);
-	
-		return ;
-	}
-
-	/**
-	* Delete track and all laps linked to it
-	*
-	* @param int $tid track id to delete
-	*
-	*/	
-	function delete_track($tid)
-	{
-		global $db, $garage_image, $garage;
-	
-		//Get All Laps
-		$data = $this->get_laps_by_track($tid);
-	
-		//Lets See If There Is An Image Associated With This Run
-		for($i = 0; $i < count($data); $i++)
-		{
-			//Delete Lap
-			$this->delete_lap($data[$i]['id']);
-		}
-	
-		//Time To Delete The Actual Track Now
-		$garage->delete_rows(GARAGE_TRACKS_TABLE, 'id', $tid);
 	
 		return ;
 	}
@@ -240,29 +212,18 @@ class garage_track
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'u.*, g.id, g.made_year, g.user_id, mk.make, md.model, l.*, i.attach_id as image_id, i.attach_file, l.id as lid, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, t.title',
+			'SELECT'	=> 'u.*, v.id, v.made_year, v.user_id, mk.make, md.model, l.*, i.attach_id as image_id, i.attach_file, l.id as lid, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, t.title',
 
 			'FROM'		=> array(
 				GARAGE_LAPS_TABLE	=> 'l',
+				GARAGE_TRACKS_TABLE	=> 't',
+				GARAGE_VEHICLES_TABLE	=> 'v',
+				GARAGE_MAKES_TABLE	=> 'mk',
+				GARAGE_MODELS_TABLE	=> 'md',
+				USERS_TABLE		=> 'u',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'l.vehicle_id =g.id'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'g.user_id = u.user_id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'g.model_id = md.id and md.pending = 0'
-				)
-				,array(
 					'FROM'	=> array(GARAGE_LAP_GALLERY_TABLE => 'lg'),
 					'ON'	=> 'l.id = lg.lap_id'
 				)
@@ -270,12 +231,13 @@ class garage_track
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
 					'ON'	=> 'i.attach_id = lg.image_id'
 				)
-				,array(
-					'FROM'	=> array(GARAGE_TRACKS_TABLE => 't'),
-					'ON'	=> 'l.track_id = t.id'
-				)
 			),
-			'WHERE'		=>  "l.id = $lid"
+			'WHERE'		=>  "l.id = $lid
+						AND l.track_id = t.id
+						AND l.vehicle_id = v.id
+						AND v.user_id = u.user_id
+						AND v.make_id = mk.id AND mk.pending = 0
+						AND v.model_id = md.id AND md.pending = 0"
 		));
 
 		$result = $db->sql_query($sql);
@@ -325,28 +287,17 @@ class garage_track
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id, g.made_year, g.user_id, mk.make, md.model, u.username, u.user_id, t.title, l.*, i.attach_id, l.id as lid, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
+			'SELECT'	=> 'v.id, v.made_year, v.user_id, mk.make, md.model, u.username, u.user_id, t.title, l.*, i.attach_id, l.id as lid, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle',
 			'FROM'		=> array(
 				GARAGE_LAPS_TABLE	=> 'l',
+				GARAGE_TRACKS_TABLE	=> 't',
+				GARAGE_VEHICLES_TABLE	=> 'v',
+				GARAGE_MAKES_TABLE	=> 'mk',
+				GARAGE_MODELS_TABLE	=> 'md',
+				USERS_TABLE		=> 'u',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'l.vehicle_id =g.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'g.model_id = md.id and md.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'g.user_id = u.user_id'
-				)
-				,array(
 					'FROM'	=> array(GARAGE_LAP_GALLERY_TABLE => 'lg'),
 					'ON'	=> 'l.id = lg.lap_id'
 				)
@@ -354,12 +305,13 @@ class garage_track
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
 					'ON'	=> 'i.attach_id = lg.image_id'
 				)
-				,array(
-					'FROM'	=> array(GARAGE_TRACKS_TABLE => 't'),
-					'ON'	=> 'l.track_id = t.id'
-				)
 			),
-			'WHERE'		=>  "l.pending = 1"
+			'WHERE'		=>  "l.pending = 1
+						AND l.track_id = t.id
+						AND l.vehicle_id = v.id
+						AND v.user_id = u.user_id
+						AND v.make_id = mk.id AND mk.pending = 0
+						AND v.model_id = md.id AND md.pending = 0"
 		));
 
 		$result = $db->sql_query($sql);
@@ -389,6 +341,7 @@ class garage_track
 			'SELECT'	=> 'l.*, l.id as lid, i.*, t.title',
 			'FROM'		=> array(
 				GARAGE_LAPS_TABLE	=> 'l',
+				GARAGE_TRACKS_TABLE	=> 't',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
@@ -399,14 +352,11 @@ class garage_track
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
 					'ON'	=> 'i.attach_id = lg.image_id'
 				)
-				,array(
-					'FROM'	=> array(GARAGE_TRACKS_TABLE => 't'),
-					'ON'	=> 'l.track_id = t.id'
-				)
 			),
-			'WHERE'		=>	"l.vehicle_id = $vid",
-			'GROUP_BY'	=>	'l.id',
-			'ORDER_BY'	=>	'l.id'
+			'WHERE'		=> "l.vehicle_id = $vid
+						AND l.track_id = t.id",
+			'GROUP_BY'	=> 'l.id',
+			'ORDER_BY'	=> 'l.id'
 		));
 
 		$result = $db->sql_query($sql);
@@ -433,28 +383,17 @@ class garage_track
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'l.*, l.id as lid, i.*, t.title, u.username, u.user_id, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, g.id as vehicle_id, u.user_colour',
+			'SELECT'	=> 'l.*, l.id as lid, i.*, t.title, u.username, u.user_id, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, v.id as vehicle_id, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_LAPS_TABLE	=> 'l',
+				GARAGE_TRACKS_TABLE	=> 't',
+				GARAGE_VEHICLES_TABLE	=> 'v',
+				GARAGE_MAKES_TABLE	=> 'mk',
+				GARAGE_MODELS_TABLE	=> 'md',
+				USERS_TABLE		=> 'u',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'l.vehicle_id =g.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'g.model_id = md.id and md.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'g.user_id = u.user_id'
-				)
-				,array(
 					'FROM'	=> array(GARAGE_LAP_GALLERY_TABLE => 'lg'),
 					'ON'	=> 'l.id = lg.lap_id and lg.hilite = 1'
 				)
@@ -462,16 +401,61 @@ class garage_track
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
 					'ON'	=> 'i.attach_id = lg.image_id'
 				)
-				,array(
-					'FROM'	=> array(GARAGE_TRACKS_TABLE => 't'),
-					'ON'	=> 'l.track_id = t.id'
-				)
 			),
-			'WHERE'		=>	"l.track_id = $tid",
+			'WHERE'		=> "l.track_id = $tid
+						AND l.track_id = t.id
+						AND l.vehicle_id = v.id
+						AND v.user_id = u.user_id
+						AND v.make_id = mk.id AND mk.pending = 0
+						AND v.model_id = md.id AND md.pending = 0",
 			'ORDER_BY'	=>	'l.track_id, l.minute, l.second, l.millisecond'
 		));
 
 		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$data[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+
+	/**
+	* Return array of top laps
+	*
+	* @param int $limit number of rows to return
+	*
+	*/
+	function get_top_laps($limit = 30)
+	{
+		global $db, $garage;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'l.*, l.id as lid, t.title, t.id as tid, v.*, u.username, u.user_id, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, v.id as vid, u.user_colour',
+			'FROM'		=> array(
+				GARAGE_LAPS_TABLE	=> 'l',
+				GARAGE_TRACKS_TABLE	=> 't',
+				GARAGE_VEHICLES_TABLE	=> 'v',
+				GARAGE_MAKES_TABLE	=> 'mk',
+				GARAGE_MODELS_TABLE	=> 'md',
+				USERS_TABLE		=> 'u',
+			),
+			'WHERE'		=> "l.pending = 0
+						AND l.track_id = t.id
+						AND l.vehicle_id = v.id
+						AND v.make_id = mk.id AND mk.pending =0
+						AND v.model_id = md.id and md.pending = 0
+						AND v.user_id = u.user_id",
+			'GROUP_BY'	=> 't.id',
+			'ORDER_BY'	=> "l.minute DESC"
+		));
+
+		$result = $db->sql_query_limit($sql, $limit, 0);
 		while ($row = $db->sql_fetchrow($result))
 		{
 			$data[] = $row;
@@ -654,6 +638,139 @@ class garage_track
 		}
 
 		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_tracks"));
+	}
+
+	/**
+	* Delete track and all laps linked to it
+	*
+	* @param int $tid track id to delete
+	* @param delete|move 
+	* @param int $laps_to_id track id to move laps to
+	*
+	*/
+	function delete_track($track_id, $action_laps = 'delete', $laps_to_id = 0)
+	{
+
+		global $db, $user, $cache, $garage, $garage_track;
+
+		$track_data = $garage_track->get_track($track_id);
+
+		$errors = array();
+
+		//Handle Items Linked To Garage Business
+		if ($action_garage == 'delete')
+		{
+			$this->delete_garage_track_content($track_id);
+			add_log('admin', 'LOG_GARAGE_DELETE_GARAGE', $track_data['title']);
+		}
+		else if ($action_garage == 'move')
+		{
+			if (!$laps_to_id)
+			{
+				$errors[] = $user->lang['NO_DESTINATION_GARAGE_TRACK'];
+			}
+			else
+			{
+				$row = $garage_track->get_track($laps_to_id);
+
+				if (!$row)
+				{
+					$errors[] = $user->lang['NO_TRACK'];
+				}
+				else
+				{
+					$to_name = $row['title'];
+					$from_name = $track_data['title'];
+					$this->move_category_content($track_id, $laps_to_id);
+					add_log('admin', 'LOG_GARAGE_MOVED_GARAGE', $from_name, $to_name);
+				}
+			}
+		}
+
+		$garage->delete_rows(GARAGE_TRACKS_TABLE, 'id', $track_id);
+		add_log('admin', 'LOG_GARAGE_TRACK_DELETED', $track_data['title']);
+
+		if (sizeof($errors))
+		{
+			return $errors;
+		}
+	}
+
+	/**
+	* Delete all laps linked to a track
+	*
+	* @param int $track_id track id to delete laps for
+	*
+	*/
+	function delete_garage_track_content($track_id)
+	{
+		global $db, $config, $phpbb_root_path, $phpEx, $garage;
+
+		$laps = $garage_modification->get_laps_by_track($track_id);
+		for ($i = 0, $count = sizeof($laps);$i < $count; $i++)
+		{
+			$garage_modification->delete_lap($laps[$i]['id']);
+		}
+
+		return;
+	}
+
+	/**
+	* Reassign laps to track
+	*
+	* @param int $from_id track id to move from
+	* @param int $to_id track id to move to
+	*
+	*/
+	function move_track_content($from_id, $to_id)
+	{
+		global $garage;
+
+		$garage->update_single_field(GARAGE_LAPS_TABLE, 'track_id', $to_id, 'track_id', $from_id);
+
+		return;
+	}
+
+	/**
+	* Assign template variables to display top laps
+	*/
+	function show_toplap()
+	{
+		global $required_position, $user, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
+	
+		if ( $garage_config['enable_top_lap'] != true )
+		{
+			return;
+		}
+
+		$template_block = 'block_'.$required_position;
+		$template_block_row = 'block_'.$required_position.'.row';
+		$template->assign_block_vars($template_block, array(
+			'BLOCK_TITLE' => $user->lang['TOP_LAPS'],
+			'COLUMN_1_TITLE' => $user->lang['VEHICLE'],
+			'COLUMN_2_TITLE' => $user->lang['TRACK'],
+			'COLUMN_3_TITLE' => $user->lang['LAP_TIME'])
+		);
+	
+		$limit = $garage_config['top_lap_limit'] ? $garage_config['top_lap_limit'] : 10;
+
+		$laps = $this->get_top_laps($limit);
+	
+		for($i = 0; $i < count($laps); $i++)
+		{
+			$template->assign_block_vars($template_block_row, array(
+				'U_COLUMN_1' 		=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=".$laps[$i]['vid']),
+				'U_COLUMN_2' 		=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=view_track&amp;VID=".$laps[$i]['vid']."&amp;TID=".$laps[$i]['tid']),
+				'U_COLUMN_3' 		=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=view_lap&amp;VID=".$laps[$i]['vid']."&amp;LID=".$laps[$i]['lid']),
+				'COLUMN_1_TITLE'	=> $laps[$i]['vehicle'],
+				'COLUMN_2_TITLE'	=> $laps[$i]['title'],
+				'COLUMN_3_TITLE'	=> $laps[$i]['minute'] .':' . $laps[$i]['second'] . ':' . $laps[$i]['millisecond'],
+				'USERNAME_COLOUR'	=> get_username_string('colour', $laps[$i]['user_id'], $laps[$i]['username'], $laps[$i]['user_colour']),
+			));
+	 	}
+	
+		$required_position++;
+		return ;
 	}
 }
 

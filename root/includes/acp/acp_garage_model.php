@@ -17,34 +17,49 @@ class acp_garage_model
 
 	function main($id, $mode)
 	{
+		/**
+		* Setup global variables such as $db 
+		*/
 		global $db, $user, $auth, $template, $cache, $garage, $garage_config, $garage_model, $garage_vehicle;
 		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx;
 
-		//Build All Garage Classes e.g $garage_images->
+		/**
+		* Build All Garage Classes e.g $garage_images->
+		*/
 		require($phpbb_root_path . 'includes/mods/class_garage_model.' . $phpEx);
 		require($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
 
+		/**
+		* Setup page variables such as title, template & available language strings
+		*/
 		$user->add_lang('acp/garage');
 		$this->tpl_name = 'acp_garage_model';
 		$this->page_title = 'ACP_MANAGE_FORUMS';
 
+		/**
+		* Setup variables 
+		*/
 		$action		= request_var('action', '');
 		$update		= (isset($_POST['update'])) ? true : false;
-
 		$make_id	= request_var('make_id', '');
 		$model_id	= request_var('model_id', '');
+		$errors 	= array();
 
-		$errors = array();
-
-		// Major routines
+		/**
+		* Perform a set action based on value for $action
+		* An action is normally a DB action such as insert/update/delete
+		* An action will only show a page to show success or failure
+		*/
 		if ($update)
 		{
 			switch ($action)
 			{
+				/**
+				* Delete a make & log it
+				*/
 				case 'make_delete':
-
-					$action_make		= request_var('action_make', '');
-					$make_to_id		= request_var('make_to_id', 0);
+					$action_make	= request_var('action_make', '');
+					$make_to_id	= request_var('make_to_id', 0);
 
 					$garage_model->delete_make($make_id, $action_make, $make_to_id);
 
@@ -54,13 +69,14 @@ class acp_garage_model
 					}
 
 					trigger_error($user->lang['MAKE_DELETED'] . adm_back_link($this->u_action));
-
 				break;
 
+				/**
+				* Delete a model & log it
+				*/
 				case 'model_delete':
-
-					$action_model		= request_var('action_model', '');
-					$model_to_id		= request_var('model_to_id', 0);
+					$action_model	= request_var('action_model', '');
+					$model_to_id	= request_var('model_to_id', 0);
 
 					$garage_model->delete_model($model_id, $action_model, $model_to_id);
 
@@ -70,11 +86,12 @@ class acp_garage_model
 					}
 
 					trigger_error($user->lang['MODEL_DELETED'] . adm_back_link($this->u_action  . "&amp;action=models&amp;make_id=$make_id"));
-
 				break;
 
+				/**
+				* Update an existing make & log it
+				*/
 				case 'make_edit':
-
 					$params = array('make' => '');
 					$data = $garage->process_vars($params);
 					$data['id'] = $make_id;
@@ -82,11 +99,12 @@ class acp_garage_model
 					$garage_model->update_make($data);
 		
 					trigger_error($user->lang['MAKE_UPDATED'] . adm_back_link($this->u_action));
-		
 				break;
-		
+
+				/**
+				* Update an existing model & log it
+				*/
 				case 'model_edit':
-			
 					$params = array('model' => '');
 					$data = $garage->process_vars($params);
 					$data['id'] = $model_id;
@@ -94,17 +112,19 @@ class acp_garage_model
 					$garage_model->update_model($data);
 		
 					trigger_error($user->lang['MODEL_UPDATED'] . adm_back_link($this->u_action  . "&amp;action=models&amp;make_id=$make_id"));
-				
 				break;
-		
 			}
 		}
 
+		/**
+		* Perform a set action based on value for $action
+		*/
 		switch ($action)
 		{
-
+			/**
+			* Add a new make & log it
+			*/
 			case 'make_add':
-		
 				$params = array('make' => '');
 				$data = $garage->process_vars($params);
 
@@ -124,27 +144,31 @@ class acp_garage_model
 				$garage_model->insert_make($data);
 
 				add_log('admin', 'LOG_FORUM_ADD_MAKE', $data['make']);
-		
-				break;
+			break;
 
+			/**
+			* Approve a make & log it
+			*/
 			case 'make_approve':
-
 				$data = $garage_model->get_make($make_id);
 				$garage->update_single_field(GARAGE_MAKES_TABLE, 'pending', 0, 'id', $make_id);
 				add_log('admin', 'LOG_GARAGE_MAKE_APPROVED', $data['make']);
-
 			break;
 
+			/**
+			* Disapprove a make & log it
+			*/
 			case 'make_disapprove':
 
 				$data = $garage_model->get_make($make_id);
 				$garage->update_single_field(GARAGE_MAKES_TABLE, 'pending', 1, 'id', $make_id);
 				add_log('admin', 'LOG_GARAGE_MAKE_DISAPPROVED', $data['make']);
-
 			break;
 
+			/**
+			* Page to edit an existing make
+			*/
 			case 'make_edit':
-
 				if (!$make_id)
 				{
 					trigger_error($user->lang['NO_MAKE'] . adm_back_link($this->u_action), E_USER_WARNING);
@@ -164,8 +188,10 @@ class acp_garage_model
 				return;
 			break;
 
+			/**
+			* Page to edit an existing model
+			*/
 			case 'model_edit':
-
 				if (!$model_id)
 				{
 					trigger_error($user->lang['NO_MODEL'] . adm_back_link($this->u_action . "&amp;action=models&amp;make_id=$make_id"), E_USER_WARNING);
@@ -185,8 +211,11 @@ class acp_garage_model
 				return;
 			break;
 
+			/**
+			* Page to delete an existing make
+			* Administrators decides where vehicles can be moved to
+			*/
 			case 'make_delete':
-
 				if (!$make_id)
 				{
 					trigger_error($user->lang['NO_MAKE'] . adm_back_link($this->u_action), E_USER_WARNING);
@@ -194,7 +223,7 @@ class acp_garage_model
 
 				$make_data = $garage_model->get_make($make_id);
 				$makes_data = $garage_model->get_all_makes();
-				$select_to = $this->build_move_to($makes_data, $make_id);
+				$select_to = $garage_template->build_move_to($makes_data, $make_id, 'make');
 
 				$template->assign_vars(array(
 					'S_DELETE_MAKE'			=> true,
@@ -206,11 +235,13 @@ class acp_garage_model
 					'S_ERROR'			=> (sizeof($errors)) ? true : false,
 					'ERROR_MSG'			=> (sizeof($errors)) ? implode('<br />', $errors) : '')
 				);
-		
 			break;
 
+			/**
+			* Page to delete an existing model
+			* Administrators decides where vehicles can be moved to
+			*/
 			case 'model_delete':
-
 				if (!$model_id)
 				{
 					trigger_error($user->lang['NO_MODEL'] . adm_back_link($this->u_action), E_USER_WARNING);
@@ -218,7 +249,7 @@ class acp_garage_model
 
 				$model_data = $garage_model->get_model($model_id);
 				$models_data = $garage_model->get_all_models_from_make($make_id);
-				$select_to = $this->build_move_model_to($models_data, $model_id);
+				$select_to = $garage_template->build_move_to($models_data, $model_id, 'model');
 
 				$template->assign_vars(array(
 					'S_DELETE_MODEL'		=> true,
@@ -230,14 +261,16 @@ class acp_garage_model
 					'S_ERROR'			=> (sizeof($errors)) ? true : false,
 					'ERROR_MSG'			=> (sizeof($errors)) ? implode('<br />', $errors) : '')
 				);
-		
 			break;
 
+			/**
+			* Page to display models for a specific make
+			* Due to wanting approval & disapproval & addition to appear seamless we have them within this action also
+			*/
 			case 'model_add':
 			case 'model_approve':
 			case 'model_disapprove':
 			case 'models':
-
 				if ($action == 'model_approve')
 				{
 					$data = $garage_model->get_model($model_id);
@@ -275,12 +308,9 @@ class acp_garage_model
 					}
 				}
 
-				//Get Models
 				$models = $garage_model->get_all_models_from_make($make_id);
-
 				$make = $garage_model->get_make($make_id);
 	
-				//Process Array For Each Model
 				for( $i = 0; $i < count($models); $i++ )
 				{
 					$url = $this->u_action . "&amp;make_id=$make_id&amp;model_id={$models[$i]['id']}";
@@ -305,15 +335,13 @@ class acp_garage_model
 					'S_LIST_MODELS'	=> true,
 					'S_MODE_ACTION' => append_sid('admin_garage_models.'.$phpEx),
 				));
-		
 			break;
-
 		}
 		
-		//Default Management screen..
+		/**
+		* Display default page to show list of makes
+		*/
 		$makes = $garage_model->get_all_makes();
-	
-		//Process Array For Each Make
 		for( $i = 0; $i < count($makes); $i++ )
 		{
 			$url = $this->u_action . "&amp;make_id={$makes[$i]['id']}";
@@ -334,39 +362,6 @@ class acp_garage_model
 			'S_ERROR'	=> (sizeof($errors)) ? true : false,
 			'ERROR_MSG'	=> (sizeof($errors)) ? implode('<br />', $errors) : '',
 		));
-		
 	}
-
-	function build_move_to($data, $exclude_id)
-	{
-		$select_to = null;
-		for ($i = 0; $i < count($data); $i++)
-		{
-			if ($exclude_id == $data[$i]['id'])
-			{
-				continue;
-			}
-			$select_to .= '<option value="'. $data[$i]['id'] .'">'. $data[$i]['make'] .'</option>';
-		}
-		return $select_to;
-	}
-
-	function build_move_model_to($data, $exclude_id)
-	{
-		$select_to = null;
-		for ($i = 0; $i < count($data); $i++)
-		{
-			if ($exclude_id == $data[$i]['id'])
-			{
-				continue;
-			}
-			$select_to .= '<option value="'. $data[$i]['id'] .'">'. $data[$i]['model'] .'</option>';
-		}
-		return $select_to;
-	}
-
-
-
 }
-
 ?>

@@ -99,7 +99,6 @@ class garage_dynorun
 	{
 		global $vid, $garage_image, $garage;
 	
-		//Lets See If There Are Any Images Associated With This Run
 		$images	= $garage_image->get_dynorun_gallery($vid, $did);
 	
 		for ($i = 0, $count = sizeof($images);$i < $count; $i++)
@@ -107,10 +106,8 @@ class garage_dynorun
 			$garage_image->delete_dynorun_image($images[$i]['id']);
 		}
 	
-		//Update Quartermile Table For An Matched Times
 		$garage->update_single_field(GARAGE_QUARTERMILES_TABLE, 'dynorun_id', 'NULL', 'dynorun_id', $did);	
 	
-		//Time To Delete The Actual RollingRoad Run Now
 		$garage->delete_rows(GARAGE_DYNORUNS_TABLE, 'id', $did);
 	
 		return ;
@@ -207,29 +204,18 @@ class garage_dynorun
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'u.*, g.id, g.made_year, g.user_id, mk.make, md.model, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, d.peakpoint, i.attach_id as image_id, i.attach_file, d.id as did, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, b.title, d.dynocentre_id',
+			'SELECT'	=> 'u.*, v.id, v.made_year, v.user_id, mk.make, md.model, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, d.peakpoint, i.attach_id as image_id, i.attach_file, d.id as did, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, b.title, d.dynocentre_id',
 
 			'FROM'		=> array(
 				GARAGE_DYNORUNS_TABLE	=> 'd',
+				GARAGE_VEHICLES_TABLE	=> 'v',
+				GARAGE_MAKES_TABLE	=> 'mk',
+				GARAGE_MODELS_TABLE	=> 'md',
+				GARAGE_BUSINESS_TABLE	=> 'b',
+				USERS_TABLE		=> 'u',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'd.vehicle_id =g.id'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'g.user_id = u.user_id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'g.model_id = md.id and md.pending = 0'
-				)
-				,array(
 					'FROM'	=> array(GARAGE_DYNORUN_GALLERY_TABLE => 'dg'),
 					'ON'	=> 'd.id = dg.dynorun_id'
 				)
@@ -237,12 +223,13 @@ class garage_dynorun
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
 					'ON'	=> 'i.attach_id = dg.image_id'
 				)
-				,array(
-					'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b'),
-					'ON'	=> 'd.dynocentre_id = b.id'
-				)
 			),
-			'WHERE'		=>  "d.id = $did"
+			'WHERE'		=>  "d.id = $did
+						AND d.vehicle_id = v.id
+						AND v.make_id = mk.id AND mk.pending =0
+						AND v.model_id = md.id and md.pending = 0
+						AND d.dynocentre_id = b.id
+						AND v.user_id = u.user_id"
 		));
 
 		$result = $db->sql_query($sql);
@@ -263,28 +250,17 @@ class garage_dynorun
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id, g.made_year, g.user_id, mk.make, md.model, u.username, u.user_id, b.title, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, round(d.peakpoint,0) as peakpoint, i.attach_id as image_id, d.id as did, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
+			'SELECT'	=> 'v.id, v.made_year, v.user_id, mk.make, md.model, u.username, u.user_id, b.title, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, round(d.peakpoint,0) as peakpoint, i.attach_id as image_id, d.id as did, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle',
 			'FROM'		=> array(
 				GARAGE_DYNORUNS_TABLE	=> 'd',
+				GARAGE_VEHICLES_TABLE	=> 'v',
+				GARAGE_MAKES_TABLE	=> 'mk',
+				GARAGE_MODELS_TABLE	=> 'md',
+				GARAGE_BUSINESS_TABLE	=> 'b',
+				USERS_TABLE		=> 'u',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'd.vehicle_id =g.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'g.model_id = md.id and md.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'g.user_id = u.user_id'
-				)
-				,array(
 					'FROM'	=> array(GARAGE_DYNORUN_GALLERY_TABLE => 'dg'),
 					'ON'	=> 'd.id = dg.dynorun_id'
 				)
@@ -292,12 +268,13 @@ class garage_dynorun
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
 					'ON'	=> 'i.attach_id = dg.image_id'
 				)
-				,array(
-					'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b'),
-					'ON'	=> 'd.dynocentre_id = b.id'
-				)
 			),
-			'WHERE'		=>  "d.pending = 1"
+			'WHERE'		=>  "d.pending = 1
+						AND d.vehicle_id = v.id
+						AND v.make_id = mk.id AND mk.pending =0
+						AND v.model_id = md.id and md.pending = 0
+						AND d.dynocentre_id = b.id
+						AND v.user_id = u.user_id"
 		));
 
 		$result = $db->sql_query($sql);
@@ -325,41 +302,32 @@ class garage_dynorun
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id, g.made_year, g.user_id, mk.make, md.model, u.username, u.user_colour, b.title, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, round(d.peakpoint,0) as peakpoint, i.attach_id as image_id, d.id as did, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
+			'SELECT'	=> 'd.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, round(d.peakpoint,0) as peakpoint, v.id, v.made_year, v.user_id, mk.make, md.model, u.username, u.user_colour, b.title,  i.attach_id as image_id, d.id as did, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle',
 			'FROM'		=> array(
 				GARAGE_DYNORUNS_TABLE	=> 'd',
+				GARAGE_VEHICLES_TABLE	=> 'v',
+				GARAGE_MAKES_TABLE	=> 'mk',
+				GARAGE_MODELS_TABLE	=> 'md',
+				GARAGE_BUSINESS_TABLE	=> 'b',
+				USERS_TABLE		=> 'u',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'd.vehicle_id =g.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'g.model_id = md.id and md.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'g.user_id = u.user_id'
-				)
-				,array(
 					'FROM'	=> array(GARAGE_DYNORUN_GALLERY_TABLE => 'dg'),
-					'ON'	=> 'g.id = dg.vehicle_id'
+					'ON'	=> 'd.id = dg.dynorun_id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
 					'ON'	=> 'i.attach_id = dg.image_id'
 				)
-				,array(
-					'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b'),
-					'ON'	=> 'd.dynocentre_id = b.id'
-				)
 			),
-			'WHERE'		=>  "d.bhp = $bhp AND d.vehicle_id = $vehicle_id"
+			'WHERE'		=>  "d.bhp = $bhp AND d.vehicle_id = $vehicle_id
+						AND d.vehicle_id = v.id
+						AND v.make_id = mk.id AND mk.pending =0
+						AND v.model_id = md.id and md.pending = 0
+						AND d.dynocentre_id = b.id
+						AND v.user_id = u.user_id",
+			'ORDER_BY'	=> "d.id"
 		));
 
 		$result = $db->sql_query($sql);
@@ -386,26 +354,16 @@ class garage_dynorun
 			'SELECT'	=> 'd.vehicle_id, MAX(d.bhp) as bhp',
 			'FROM'		=> array(
 				GARAGE_DYNORUNS_TABLE	=> 'd',
+				GARAGE_VEHICLES_TABLE	=> 'v',
+				GARAGE_MAKES_TABLE	=> 'mk',
+				GARAGE_MODELS_TABLE	=> 'md',
+				USERS_TABLE		=> 'u',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'd.vehicle_id =g.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'g.model_id = md.id and md.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'g.user_id = u.user_id'
-				)
-			),
-			'WHERE'		=> "d.pending = 0 AND mk.pending = 0 AND md.pending = 0",
+			'WHERE'		=> "d.pending = 0
+						AND d.vehicle_id = v.id
+						AND v.make_id = mk.id AND mk.pending =0
+						AND v.model_id = md.id and md.pending = 0
+						AND v.user_id = u.user_id",
 			'GROUP_BY'	=> 'd.vehicle_id',
 			'ORDER_BY'	=> "bhp DESC"
 		));
@@ -437,6 +395,7 @@ class garage_dynorun
 			'SELECT'	=> 'd.*, d.id as did, i.*, b.title',
 			'FROM'		=> array(
 				GARAGE_DYNORUNS_TABLE	=> 'd',
+				GARAGE_BUSINESS_TABLE	=> 'b',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
@@ -447,12 +406,9 @@ class garage_dynorun
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
 					'ON'	=> 'i.attach_id = dg.image_id'
 				)
-				,array(
-					'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b'),
-					'ON'	=> 'd.dynocentre_id = b.id'
-				)
 			),
-			'WHERE'		=>	"d.vehicle_id = $vid",
+			'WHERE'		=>	"d.vehicle_id = $vid
+							AND d.dynocentre_id = b.id",
 			'GROUP_BY'	=>	'd.id',
 			'ORDER_BY'	=>	'd.id'
 		));
@@ -490,7 +446,7 @@ class garage_dynorun
 	
 		$limit = $garage_config['top_dynorun_limit'] ? $garage_config['top_dynorun_limit'] : 10;
 
-		$runs = $this->get_top_dynoruns('bhp', 'DESC', 0, $limit);
+		$runs = $this->get_top_dynoruns($limit);
 	
 		for($i = 0; $i < count($runs); $i++)
 		{

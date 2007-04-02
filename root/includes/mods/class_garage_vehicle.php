@@ -142,12 +142,12 @@ class garage_vehicle
 	*/
 	function insert_vehicle_rating($data)
 	{
-		global $vid, $db;
+		global $vid, $db, $user;
 
 		$sql = 'INSERT INTO ' . GARAGE_RATINGS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 			'vehicle_id'		=> $vid,
 			'rating'		=> $data['vehicle_rating'],
-			'user_id'		=> $data['user_id'],
+			'user_id'		=> $user->data['user_id'],
 			'rate_date'		=> time())
 		);
 
@@ -486,40 +486,34 @@ class garage_vehicle
 
 			//Start To Build SQl For Selecting Featured Vehicle..We Will Extend This Array Based On User Options
 			$sql_array = array(
-				'SELECT'	=> 'g.id, g.made_year, vg.image_id, g.user_id, makes.make, models.model, images.attach_id, images.attach_hits, images.attach_thumb_location, u.username, images.attach_is_image, images.attach_location, COUNT(mods.id) AS mod_count, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, images.attach_file, (SUM(mods.install_price) + SUM(mods.price)) AS money_spent, sum( r.rating ) AS rating, u.user_colour',
+				'SELECT'	=> 'v.id, v.made_year, vg.image_id, v.user_id, mk.make, md.model, images.attach_id, images.attach_hits, images.attach_thumb_location, u.username, images.attach_is_image, images.attach_location, COUNT(mods.id) AS mod_count, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, images.attach_file, (SUM(mods.install_price) + SUM(mods.price)) AS money_spent, sum( r.rating ) AS rating, u.user_colour',
 				'FROM'		=> array(
-					GARAGE_VEHICLES_TABLE	=> 'g',
+					GARAGE_VEHICLES_TABLE	=> 'v',
+					GARAGE_MAKES_TABLE	=> 'mk',
+					GARAGE_MODELS_TABLE	=> 'md',
+					USERS_TABLE		=> 'u',
 				),
 				'LEFT_JOIN'	=> array(
 					array(
-						'FROM'	=> array(GARAGE_MAKES_TABLE => 'makes'),
-						'ON'	=> 'g.make_id = makes.id',
-					)
-					,array(
 						'FROM'	=> array(GARAGE_VEHICLE_GALLERY_TABLE => 'vg'),
-						'ON'	=> 'g.id = vg.vehicle_id AND vg.hilite = 1',
+						'ON'	=> 'v.id = vg.vehicle_id AND vg.hilite = 1',
 					)
 					,array(
 						'FROM'	=> array(GARAGE_IMAGES_TABLE => 'images'),
 						'ON'	=> 'images.attach_id = vg.image_id',
 					)
 					,array(
-						'FROM'	=> array(GARAGE_MODELS_TABLE => 'models'),
-						'ON'	=> 'g.model_id = models.id ',
-					)
-					,array(
 						'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'mods'),
-						'ON'	=> 'g.id = mods.vehicle_id ',
+						'ON'	=> 'v.id = mods.vehicle_id ',
 					)
 					,array(
 						'FROM'	=> array(GARAGE_RATINGS_TABLE => 'r'),
-						'ON'	=> 'g.id = r.vehicle_id ',
+						'ON'	=> 'v.id = r.vehicle_id ',
 					)
-					,array(
-						'FROM'	=> array(USERS_TABLE => 'u'),
-						'ON'	=> 'g.user_id = u.user_id',
-					)
-				)
+				),
+				'WHERE'		=> 'v.make_id = mk.id
+							AND v.model_id = md.id
+							AND v.user_id = u.user_id'
 			);
 
 			//If we are using random, go fetch!
@@ -531,23 +525,14 @@ class garage_vehicle
 				array(
 					'SELECT'	=> 'g.id',
 					'FROM'		=> array(
-						GARAGE_VEHICLES_TABLE	=> 'g',
+						GARAGE_VEHICLES_TABLE		=> 'v',
+						GARAGE_MAKES_TABLE		=> 'mk',
+						GARAGE_MODELS_TABLE		=> 'md',
+						GARAGE_VEHICLE_GALLERY_TABLE	=> 'vg',
 					),
-					'LEFT_JOIN'	=> array(
-						array(
-							'FROM'	=> array(GARAGE_MAKES_TABLE => 'md'),
-							'ON'	=> 'g.make_id = mk.id'
-						)
-						,array(
-							'FROM'	=> array(GARAGE_MODELS_TABLE => 'mk'),
-							'ON'	=> 'g.model_id = md.id'
-						)
-						,array(
-							'FROM'	=> array(GARAGE_VEHICLE_GALLERY_TABLE => 'vg'),
-						'ON'	=> 'g.id = vg.vehicle_id AND vg.hilite = 1',
-						)
-					),
-					'WHERE'		=> "makes.pending = 0 and models.pending = 0 and vg.image_id IS NOT NULL",
+					'WHERE'		=> "v.make_id = mk.id AND mk.pending = 0 
+								AND v.model_id = md.id AMD md.pending = 0 
+								AND v.id = vg.vehicle_id AND vg.hilite = 1",
 					'ORDER_BY'	=> "rand()"
 				));
 
@@ -557,51 +542,51 @@ class garage_vehicle
 
 				//Update SQL Array With Required Statements
 				$featured_vehicle_id = $vehicle_data['id'];
-				$sql_array['WHERE'] = "g.id =" . $vehicle_data['id'];
-				$sql_array['GROUP_BY'] = "g.id";
-				$sql_array['ORDER_BY'] = "g.id ASC";
+				$sql_array['WHERE'] .= " AND v.id =" . $vehicle_data['id'];
+				$sql_array['GROUP_BY'] = "v.id";
+				$sql_array['ORDER_BY'] = "v.id ASC";
 	 	 	}
 			else if ( $garage_config['featured_vehicle_from_block'] == $lang['NEWEST_vEHICLES'] )
 			{
-				$sql_array['WHERE'] = "makes.pending = 0 and models.pending = 0";
-				$sql_array['GROUP_BY'] = "g.id";
-				$sql_array['ORDER_BY'] = "g.date_created DESC";
+				$sql_array['WHERE'] .= " AND makes.pending = 0 and models.pending = 0";
+				$sql_array['GROUP_BY'] = "v.id";
+				$sql_array['ORDER_BY'] = "v.date_created DESC";
 			}
 			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Last_Updated_Vehicles'] )
 			{
-				$sql_array['WHERE'] = "makes.pending = 0 and models.pending = 0";
-				$sql_array['GROUP_BY'] = "g.id";
-				$sql_array['ORDER_BY'] = "g.date_updated DESC";
+				$sql_array['WHERE'] .= " AND makes.pending = 0 and models.pending = 0";
+				$sql_array['GROUP_BY'] = "v.id";
+				$sql_array['ORDER_BY'] = "v.date_updated DESC";
 			}
 			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Newest_Modifications'] )
 			{
-				$sql_array['WHERE'] = "makes.pending = 0 and models.pending = 0";
-				$sql_array['GROUP_BY'] = "g.id";
+				$sql_array['WHERE'] .= "makes.pending = 0 and models.pending = 0";
+				$sql_array['GROUP_BY'] = "v.id";
 				$sql_array['ORDER_BY'] = "mods.date_created DESC";
 			}
 			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Last_Updated_Modifications'] )
 			{
-				$sql_array['WHERE'] = "makes.pending = 0 and models.pending = 0";
-				$sql_array['GROUP_BY'] = "g.id";
+				$sql_array['WHERE'] .= " AND makes.pending = 0 and models.pending = 0";
+				$sql_array['GROUP_BY'] = "v.id";
 				$sql_array['ORDER_BY'] = "mods.date_updated";
 			}
 			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Most_Modified_Vehicle'] )
 			{
-				$sql_array['WHERE'] = "makes.pending = 0 and models.pending = 0";
-				$sql_array['GROUP_BY'] = "g.id";
+				$sql_array['WHERE'] .= " AND makes.pending = 0 and models.pending = 0";
+				$sql_array['GROUP_BY'] = "v.id";
 				$sql_array['ORDER_BY'] = "mod_count DESC";
 			}
 			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Most_Money_Spent'] )
 			{
-				$sql_array['WHERE'] = "makes.pending = 0 and models.pending = 0";
-				$sql_array['GROUP_BY'] = "g.id";
+				$sql_array['WHERE'] .= " AND makes.pending = 0 and models.pending = 0";
+				$sql_array['GROUP_BY'] = "v.id";
 				$sql_array['ORDER_BY'] = "money_spent DESC";
 			}
 			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Most_Viewed_Vehicle'] )
 			{
-				$sql_array['WHERE'] = "makes.pending = 0 and models.pending = 0";
-				$sql_array['GROUP_BY'] = "g.id";
-				$sql_array['ORDER_BY'] = "g.views DESC";
+				$sql_array['WHERE'] .= " AND makes.pending = 0 and models.pending = 0";
+				$sql_array['GROUP_BY'] = "v.id";
+				$sql_array['ORDER_BY'] = "v.views DESC";
 			}
 			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Latest_Vehicle_Comments'] )
 			{
@@ -609,34 +594,34 @@ class garage_vehicle
 								'FROM'	=> array(GARAGE_GUESTBOOKS_TABLE => 'gb'),	
 								'ON'	=> 'g.id = gb.vehicle_id'
 							));
-				$sql_array['WHERE'] = "makes.pending = 0 and models.pending = 0";
-				$sql_array['GROUP_BY'] = "g.id";
+				$sql_array['WHERE'] .= " AND makes.pending = 0 and models.pending = 0";
+				$sql_array['GROUP_BY'] = "v.id";
 				$sql_array['ORDER_BY'] = "gb.post_date DESC";
 			}
 			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Top_Quartermile_Runs'] )
 			{
 				$sql_array['LEFT_JOIN'] .= array(array(
 								'FROM'	=> array(GARAGE_QUARTERMILES_TABLE => 'qm'),	
-								'ON'	=> 'g.id = qm.vehicle_id'
+								'ON'	=> 'v.id = qm.vehicle_id'
 							));
-				$sql_array['WHERE'] = "makes.pending = 0 and models.pending = 0";
-				$sql_array['GROUP_BY'] = "g.id";
+				$sql_array['WHERE'] .= " AND makes.pending = 0 and models.pending = 0";
+				$sql_array['GROUP_BY'] = "v.id";
 				$sql_array['ORDER_BY'] = "qm.quart ASC";
 			}
 			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Top_Dyno_Runs'] )
 			{
 				$sql_array['LEFT_JOIN'] .= array(array(
 								'FROM'	=> array(GARAGE_DYNORUNS_TABLE => 'rr'),	
-								'ON'	=> 'g.id = rr.vehicle_id'
+								'ON'	=> 'v.id = rr.vehicle_id'
 							));
-				$sql_array['WHERE'] = "makes.pending = 0 and models.pending = 0";
-				$sql_array['GROUP_BY'] = "g.id";
+				$sql_array['WHERE'] .= " AND makes.pending = 0 and models.pending = 0";
+				$sql_array['GROUP_BY'] = "v.id";
 				$sql_array['ORDER_BY'] = "rr.bhp DESC";
 			}
 			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Top_Rated_Vehicles'] )
 			{
-				$sql_array['WHERE'] = "makes.pending = 0 and models.pending = 0";
-				$sql_array['GROUP_BY'] = "g.id";
+				$sql_array['WHERE'] .= " AND makes.pending = 0 and models.pending = 0";
+				$sql_array['GROUP_BY'] = "v.id";
 				$sql_array['ORDER_BY'] = "rating DESC";
 			}
 			else
@@ -645,19 +630,19 @@ class garage_vehicle
 				//Make sure the vehicle exists if entered in ACP..
 				$sql = $db->sql_build_query('SELECT', 
 					array(
-					'SELECT'	=> 'COUNT(g.id) as num_vehicle',
+					'SELECT'	=> 'COUNT(v.id) as num_vehicle',
 					'FROM'		=> array(
-						GARAGE_VEHICLES_TABLE	=> 'g',
+						GARAGE_VEHICLES_TABLE	=> 'v',
 					),
-					'WHERE'		=> "id = ". $featured_vehicle_id,
+					'WHERE'		=> "v.id = ". $featured_vehicle_id,
 				));
 				$result = $db->sql_query($sql);
 				$total_vehicles = (int) $db->sql_fetchfield('num_vehicle');
 				$db->sql_freeresult($result);
 
-				$sql_array['WHERE'] = "g.id = " . $garage_config['featured_vehicle_id'];
-				$sql_array['GROUP_BY'] = "g.id";
-				$sql_array['ORDER_BY'] = "g.id DESC";
+				$sql_array['WHERE'] .= " AND v.id = " . $garage_config['featured_vehicle_id'];
+				$sql_array['GROUP_BY'] = "v.id";
+				$sql_array['ORDER_BY'] = "v.id DESC";
 			}
 
 		        if ( $total_vehicles > 0 OR (!empty($garage_config['featured_vehicle_from_block'])) )
@@ -692,6 +677,7 @@ class garage_vehicle
 	                		} 
 	        		}
 				$template->assign_vars(array(
+					'S_FEATURED_VEHICLE'	=> true,
 					'FEATURED_DESCRIPTION' 	=> $garage_config['featured_vehicle_description'],
 					'FEATURED_THUMB' 	=> $thumb_image,
 					'VEHICLE' 		=> $vehicle_data['vehicle'],
@@ -1013,7 +999,7 @@ class garage_vehicle
 		//Setup Variables
 		$vehicle_images_found = $mod_images_found = $quartermile_images_found = $dynorun_images_found = $lap_images_found = 0;
 		$mod_images_displayed = $quartermile_images_displayed = $dynorun_images_displayed = $lap_images_displayed = null;
-		$lowest_tab		= array();
+		$lowest_tab = array();
 
 		//Get Vehicle Information	
 		$vehicle = $this->get_vehicle($vid);
@@ -1552,38 +1538,32 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.*, ROUND(g.weighted_rating, 2) as weighted_rating, images.*, makes.make, models.model, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id, user.user_avatar_width, user.user_avatar_height, user.user_colour, user.user_id',
+			'SELECT'	=> 'v.*, ROUND(v.weighted_rating, 2) as weighted_rating, images.*, mk.make, md.model, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, u.username, u.user_avatar_type, u.user_avatar, u.user_id, u.user_avatar_width, u.user_avatar_height, u.user_colour, u.user_id',
 			'FROM'		=> array(
-				GARAGE_VEHICLES_TABLE	=> 'g',
+				GARAGE_VEHICLES_TABLE	=> 'v',
+				GARAGE_MAKES_TABLE	=> 'mk',
+				GARAGE_MODELS_TABLE	=> 'md',
+				USERS_TABLE		=> 'u',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
 					'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'mods'),	
-					'ON'	=> 'mods.vehicle_id = g.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'makes'),
-					'ON'	=> 'g.make_id = makes.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'models'),
-					'ON'	=> 'g.model_id = models.id'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'user'),
-					'ON'	=> 'g.user_id = user.user_id'
+					'ON'	=> 'mods.vehicle_id = v.id'
 				)
 				,array(
 					'FROM'	=> array(GARAGE_VEHICLE_GALLERY_TABLE => 'vg'),
-					'ON'	=> 'g.id = vg.vehicle_id AND vg.hilite = 1',
+					'ON'	=> 'v.id = vg.vehicle_id AND vg.hilite = 1',
 				)
 				,array(
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'images'),
 					'ON'	=> 'images.attach_id = vg.image_id'
 				)
 			),
-			'WHERE'		=> "g.id = $vid",
-			'GROUP_BY'	=> "g.id"
+			'WHERE'		=> "v.id = $vid
+						AND v.make_id = mk.id
+						AND v.model_id = md.id
+						AND v.user_id = u.user_id",
+			'GROUP_BY'	=> "v.id"
 		));
 
       		$result = $db->sql_query($sql);
@@ -1604,38 +1584,28 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> "g.*, ROUND(g.weighted_rating, 2) as weighted_rating, images.*, makes.make, models.model, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id, user.user_colour, user.user_id",
+			'SELECT'	=> "v.*, ROUND(v.weighted_rating, 2) as weighted_rating, i.*, mk.make, md.model, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, u.username, u.user_avatar_type, u.user_avatar, u.user_id, u.user_colour",
 			'FROM'		=> array(
-				GARAGE_VEHICLES_TABLE	=> 'g',
+				GARAGE_VEHICLES_TABLE	=> 'v',
+				GARAGE_MAKES_TABLE	=> 'mk',
+				GARAGE_MODELS_TABLE	=> 'md',
+				USERS_TABLE		=> 'u',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'mods'),	
-					'ON'	=> 'mods.vehicle_id = g.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'makes'),
-					'ON'	=> 'g.make_id = makes.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'models'),
-					'ON'	=> 'g.model_id = models.id'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'user'),
-					'ON'	=> 'g.user_id = user.user_id'
-				)
-				,array(
 					'FROM'	=> array(GARAGE_VEHICLE_GALLERY_TABLE => 'vg'),
-					'ON'	=> 'g.id = vg.vehicle_id AND vg.hilite = 1',
+					'ON'	=> 'v.id = vg.vehicle_id AND vg.hilite = 1',
 				)
 				,array(
-					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'images'),
-					'ON'	=> 'images.attach_id = vg.image_id'
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
+					'ON'	=> 'i.attach_id = vg.image_id'
 				)
 			),
-			'WHERE'		=> "g.pending = 1",
-			'GROUP_BY'	=> "g.id"
+			'WHERE'		=> "v.pending = 1
+						AND v.make_id = mk.id
+						AND v.model_id = md.id
+						AND v.user_id = u.user_id",
+			'GROUP_BY'	=> "v.id"
 		));
 
       		$result = $db->sql_query($sql);
@@ -1662,11 +1632,11 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> "g.id",
+			'SELECT'	=> "v.id",
 			'FROM'		=> array(
-				GARAGE_VEHICLES_TABLE	=> 'g',
+				GARAGE_VEHICLES_TABLE	=> 'v',
 			),
-			'WHERE'		=> "g.make_id = $make_id"
+			'WHERE'		=> "v.make_id = $make_id"
 		));
 
       		$result = $db->sql_query($sql);
@@ -1693,11 +1663,11 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> "g.id",
+			'SELECT'	=> "v.id",
 			'FROM'		=> array(
-				GARAGE_VEHICLES_TABLE	=> 'g',
+				GARAGE_VEHICLES_TABLE	=> 'v',
 			),
-			'WHERE'		=> "g.model_id = $model_id"
+			'WHERE'		=> "v.model_id = $model_id"
 		));
 
       		$result = $db->sql_query($sql);
@@ -1726,11 +1696,12 @@ class garage_vehicle
 			array(
 			'SELECT'	=> 'u.username',
 			'FROM'		=> array(
-				GARAGE_VEHICLES_TABLE	=> 'g',
+				GARAGE_VEHICLES_TABLE	=> 'v',
 				USERS_TABLE		=> 'u',
 			),
-			'WHERE'		=> "g.id = $vid and g.user_id = u.user_id",
-			'GROUP_BY'	=> "g.id",
+			'WHERE'		=> "v.id = $vid 
+						AND v.user_id = u.user_id",
+			'GROUP_BY'	=> "v.id",
 		));
 
       		$result = $db->sql_query($sql);
@@ -1756,11 +1727,12 @@ class garage_vehicle
 			array(
 			'SELECT'	=> 'u.user_id',
 			'FROM'		=> array(
-				GARAGE_VEHICLES_TABLE	=> 'g',
+				GARAGE_VEHICLES_TABLE	=> 'v',
 				USERS_TABLE		=> 'u',
 			),
-			'WHERE'		=> "g.id = $vid and g.user_id = u.user_id",
-			'GROUP_BY'	=> "g.id",
+			'WHERE'		=> "v.id = $vid 
+						AND v.user_id = u.user_id",
+			'GROUP_BY'	=> "v.id",
 		));
 
       		$result = $db->sql_query($sql);
@@ -1785,38 +1757,17 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.*, ROUND(g.weighted_rating, 2) as weighted_rating, images.*, makes.make, models.model, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, user.username, user.user_avatar_type, user.user_avatar, user.user_id, user.user_colour',
+			'SELECT'	=> 'v.id, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle',
 			'FROM'		=> array(
-				GARAGE_VEHICLES_TABLE	=> 'g',
+				GARAGE_VEHICLES_TABLE	=> 'v',
+				GARAGE_MAKES_TABLE	=> 'mk',
+				GARAGE_MODELS_TABLE	=> 'md',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'mods'),	
-					'ON'	=> 'mods.vehicle_id = g.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'makes'),
-					'ON'	=> 'g.make_id = makes.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'models'),
-					'ON'	=> 'g.model_id = models.id'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'user'),
-					'ON'	=> 'g.user_id = user.user_id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_VEHICLE_GALLERY_TABLE => 'vg'),
-					'ON'	=> 'g.id = vg.vehicle_id AND vg.hilite = 1'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'images'),
-					'ON'	=> 'images.attach_id = vg.image_id'
-				)
-			),
-			'WHERE'		=> "g.user_id = $user_id",
-			'GROUP_BY'	=> "g.id"
+			'WHERE'		=> "v.user_id = $user_id
+						AND v.make_id = mk.id
+						AND v.model_id = md.id",
+			'ORDER_BY'	=> 'v.id',
+			'GROUP_BY'	=> "v.id"
 		));
 
       		$result = $db->sql_query($sql);
@@ -1846,18 +1797,12 @@ class garage_vehicle
 			'SELECT'	=> 'r.*, u.username, u.user_colour, u.user_id',
 			'FROM'		=> array(
 				GARAGE_RATINGS_TABLE	=> 'r',
+				GARAGE_VEHICLES_TABLE	=> 'v',
+				USERS_TABLE		=> 'u',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),	
-					'ON'	=> 'r.vehicle_id = g.id'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'r.user_id = u.user_id'
-				)
-			),
-			'WHERE'		=> "r.vehicle_id = $vid"
+			'WHERE'		=> "r.vehicle_id = $vid
+						AND r.vehicle_id = g.id
+						AND r.user_id = u.user_id"
 		));
 
       		$result = $db->sql_query($sql);
@@ -1884,25 +1829,16 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, g.user_id, g.date_created AS POI, u.username, u.user_colour, u.user_id',
+			'SELECT'	=> 'v.id, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, v.user_id, v.date_created AS POI, u.username, u.user_colour, u.user_id',
 			'FROM'		=> array(
-				GARAGE_VEHICLES_TABLE	=> 'g',
+				GARAGE_VEHICLES_TABLE	=> 'v',
+				GARAGE_MAKES_TABLE	=> 'mk',
+				GARAGE_MODELS_TABLE	=> 'md',
+				USERS_TABLE		=> 'u',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'makes'),	
-					'ON'	=> 'g.make_id = makes.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'models'),	
-					'ON'	=> 'g.model_id = models.id'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'g.user_id = u.user_id'
-				)
-			),
-			'WHERE'		=> "makes.pending = 0 AND models.pending = 0",
+			'WHERE'		=> "v.user_id = u.user_id	
+						AND (v.make_id = mk.id AND mk.pending = 0)
+						AND (v.model_id = md.id AND md.pending = 0)",
 			'ODRDER_BY'	=> "POI DESC"
 		));
 
@@ -1930,26 +1866,17 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id, g.user_id, ROUND(g.weighted_rating, 2) as weighted_rating, u.username, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, u.user_colour, u.user_id',
+			'SELECT'	=> 'v.id, v.user_id, ROUND(v.weighted_rating, 2) as weighted_rating, u.username, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, u.user_colour, u.user_id',
 			'FROM'		=> array(
-				GARAGE_VEHICLES_TABLE	=> 'g',
+				GARAGE_VEHICLES_TABLE	=> 'v',
+				GARAGE_MAKES_TABLE	=> 'mk',
+				GARAGE_MODELS_TABLE	=> 'md',
+				USERS_TABLE		=> 'u',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'makes'),	
-					'ON'	=> 'g.make_id = makes.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'models'),	
-					'ON'	=> 'g.model_id = models.id'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'g.user_id = u.user_id'
-				)
-			),
-			'WHERE'		=> "makes.pending = 0 AND models.pending = 0",
-			'ODRDER_BY'	=> "g.weighted_rating DESC"
+			'WHERE'		=> "v.user_id = u.user_id
+						AND (v.make_id = mk.id AND mk.pending = 0)
+						AND (v.model_id = md.id AND md.pending = 0)",
+			'ODRDER_BY'	=> "v.weighted_rating DESC"
 		));
 
 	 	$result = $db->sql_query_limit($sql, $limit);
@@ -1976,25 +1903,16 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle,  g.user_id, g.views AS POI, u.username, u.user_colour, u.user_id',
+			'SELECT'	=> 'v.id, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, v.user_id, v.views AS POI, u.username, u.user_colour, u.user_id',
 			'FROM'		=> array(
-				GARAGE_VEHICLES_TABLE	=> 'g',
+				GARAGE_VEHICLES_TABLE	=> 'v',
+				GARAGE_MAKES_TABLE	=> 'mk',
+				GARAGE_MODELS_TABLE	=> 'md',
+				USERS_TABLE		=> 'u',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'makes'),	
-					'ON'	=> 'g.make_id = makes.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'models'),	
-					'ON'	=> 'g.model_id = models.id'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'g.user_id = u.user_id'
-				)
-			),
-			'WHERE'		=> "makes.pending = 0 AND models.pending = 0",
+			'WHERE'		=> "v.user_id = u.user_id
+						AND (v.make_id = mk.id AND mk.pending = 0)
+						AND (v.model_id = md.id AND md.pending = 0)",
 			'ODRDER_BY'	=> "POI DESC"
 		));
 
@@ -2022,30 +1940,19 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, g.user_id, (SUM(mods.install_price) + SUM(mods.price)) AS POI, u.username, g.currency, u.user_colour, u.user_id',
+			'SELECT'	=> 'v.id, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, v.user_id, (SUM(m.install_price) + SUM(m.price)) AS POI, u.username, v.currency, u.user_colour, u.user_id',
 			'FROM'		=> array(
-				GARAGE_VEHICLES_TABLE	=> 'g',
+				GARAGE_VEHICLES_TABLE		=> 'v',
+				GARAGE_MAKES_TABLE		=> 'mk',
+				GARAGE_MODELS_TABLE		=> 'md',
+				USERS_TABLE			=> 'u',
+				GARAGE_MODIFICATIONS_TABLE 	=> 'm',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'makes'),	
-					'ON'	=> 'g.make_id = makes.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'models'),	
-					'ON'	=> 'g.model_id = models.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'mods'),
-					'ON'	=> 'mods.vehicle_id = g.id'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'g.user_id = u.user_id'
-				)
-			),
-			'WHERE'		=> 'makes.pending = 0 AND models.pending = 0',
-			'GROUP_BY'	=> 'g.id',
+			'WHERE'		=> 'm.vehicle_id = v.id
+						AND v.make_id = mk.id AND mk.pending = 0 
+						AND v.model_id = md.id AND md.pending = 0
+						AND v.user_id = u.user_id',
+			'GROUP_BY'	=> 'v.id',
 			'ODRDER_BY'	=> 'POI DESC'
 		));
 
@@ -2106,26 +2013,17 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id, g.made_year, g.user_id, g.date_updated, u.username, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, u.user_colour',
+			'SELECT'	=> 'v.id, v.made_year, v.user_id, v.date_updated, u.username, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, u.user_colour',
 			'FROM'		=> array(
-				GARAGE_VEHICLES_TABLE	=> 'g',
+				GARAGE_VEHICLES_TABLE	=> 'v',
+				GARAGE_MAKES_TABLE	=> 'mk',
+				GARAGE_MODELS_TABLE	=> 'md',
+				USERS_TABLE		=> 'u',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'makes'),	
-					'ON'	=> 'g.make_id = makes.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'models'),	
-					'ON'	=> 'g.model_id = models.id'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'g.user_id = u.user_id'
-				)
-			),
-			'WHERE'		=> 'makes.pending = 0 AND models.pending = 0',
-			'ORDER_BY'	=> 'g.date_updated DESC'
+			'WHERE'		=> 'v.user_id = u.user_id
+						AND (v.make_id = mk.id AND mk.pending = 0)
+					       	AND (v.model_id = md.id AND md.pending = 0)',
+			'ORDER_BY'	=> 'v.date_updated DESC'
 		));
 
       		$result = $db->sql_query_limit($sql, $limit);
@@ -2155,6 +2053,9 @@ class garage_vehicle
 			'SELECT'	=> 'g.*, images.*, makes.make, models.model, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, u.username, u.user_avatar_type, u.user_avatar, u.user_id, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'g',
+				GARAGE_MAKES_TABLE	=> 'mk',
+				GARAGE_MODELS_TABLE	=> 'md',
+				USERS_TABLE		=> 'u',
 			),
 			'LEFT_JOIN'	=> array(
 				array(

@@ -88,10 +88,7 @@ class garage_blog
 	{
 		global $db, $garage_image, $garage;
 	
-		//Get All Required Data
 		$data = $this->get_blog($id);
-	
-		//Time To Delete The Actual Lap Now
 		$garage->delete_rows(GARAGE_BLOGS_TABLE, 'id', $id);
 	
 		return ;
@@ -102,26 +99,23 @@ class garage_blog
 	*
 	* @param int $vid vehicle id to filter on
 	*
+	* @return array
 	*/
 	function get_blogs_by_vehicle($vid)
 	{
 		global $db;
 
-		$data = null;
+		$data = array();
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
 			'SELECT'	=> 'b.*, u.username',
 			'FROM'		=> array(
 				GARAGE_BLOGS_TABLE	=> 'b',
+				USERS_TABLE		=> 'u',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'b.user_id = u.user_id'
-				)
-			),
-			'WHERE'		=>	"b.vehicle_id = $vid",
+			'WHERE'		=>	"b.vehicle_id = $vid 
+							AND b.user_id = u.user_id",
 			'ORDER_BY'	=>	'b.id DESC'
 		));
 
@@ -147,10 +141,8 @@ class garage_blog
 
 		$template->assign_block_vars('blog', array());
 
-		//Get Blog For Vehicle
 		$data = $this->get_blogs_by_vehicle($vehicle_id);
 
-		//Process Each Blog Entry
 		for ( $i=0; $i < count($data); $i++ )
 		{
 			$blog_text = generate_text_for_display($data[$i]['blog_text'], $data[$i]['bbcode_uid'], $data[$i]['bbcode_bitfield'], $data[$i]['bbcode_flags']);
@@ -172,7 +164,5 @@ class garage_blog
 		);
 	}
 }
-
 $garage_blog = new garage_blog();
-
 ?>

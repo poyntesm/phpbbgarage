@@ -45,6 +45,8 @@ class garage_admin
 
 	/**
 	* Count existing modification categories
+	* 
+	* @return int
 	*/
 	function count_categories()
 	{
@@ -67,6 +69,89 @@ class garage_admin
 		$data['total'] = (empty($data['total'])) ? 0 : $data['total'];
 
 		return $data['total'];
+	}
+
+
+	/**
+	* Remove complete category
+	*/
+	function delete_category($category_id, $action_modifications = 'delete', $modifications_to_id = 0)
+	{
+
+		global $db, $user, $cache, $garage;
+
+		$category_data = $garage->get_category($category_id);
+
+		$errors = array();
+		$log_action_modifications = $modifications_to_name = '';
+
+		if ($action_modifications == 'delete')
+		{
+			$log_action_modifications = 'MODIFICATIONS';
+			$errors = array_merge($errors, $this->delete_category_content($category_id));
+		}
+		else if ($action_modifications == 'move')
+		{
+			if (!$modifications_to_id)
+			{
+				$errors[] = $user->lang['NO_DESTINATION_CATEGORY'];
+			}
+			else
+			{
+				$log_action_modifications = 'MOVE_MODIFICATIONS';
+
+				$row = $garage->get_category($modifications_to_id);
+
+				if (!$row)
+				{
+					$errors[] = $user->lang['NO_CATEGORY'];
+				}
+				else
+				{
+					$modifications_to_name = $row['title'];
+					$errors = array_merge($errors, $this->move_category_content($category_id, $modifications_to_id));
+					$errors = array_merge($errors, $this->delete_category_content($category_id));
+				}
+			}
+		}
+
+		if (sizeof($errors))
+		{
+			return $errors;
+		}
+	}
+
+	/**
+	* Delete category content
+	*/
+	function delete_category_content($category_id)
+	{
+		global $db, $config, $phpbb_root_path, $phpEx, $garage;
+
+		include_once($phpbb_root_path . 'includes/mods/class_garage_modification.' . $phpEx);
+
+		$modifications = $garage_modification->get_modifications_by_category_id($category_id);
+
+		for ($i = 0, $count = sizeof($modifications);$i < $count; $i++)
+		{
+			$garage_modification->delete_modification($modifications[$i]['id']);
+		}
+
+		$garage->delete_rows(GARAGE_CATEGORIES_TABLE, 'id', $category_id);
+
+		return array();
+	}
+
+	/**
+	* Move category content from one to another category
+	*/
+	function move_category_content($from_id, $to_id)
+	{
+		global $garage;
+
+		$garage->update_single_field(GARAGE_MODIFICATIONS_TABLE, 'category_id', $to_id, 'category_id', $from_id);
+
+		return array();
 	}
 
 	/**
@@ -100,6 +185,8 @@ class garage_admin
 
 	/**
 	* Re-reading garage configuration option
+	* 
+	* @return array
 	*/
 	function sync_config()
 	{
@@ -123,7 +210,5 @@ class garage_admin
 		return $garage_config;
 	}
 }
-
 $garage_admin = new garage_admin();
-
 ?>

@@ -19,19 +19,34 @@ class ucp_garage
 
 	function main($id, $mode)
 	{
+		/**
+		* Setup global variables such as $db 
+		*/
 		global $config, $db, $user, $auth, $template, $phpbb_root_path, $phpEx;
 		global $garage_config;
 
+		/**
+		* Setup variables 
+		*/
 		$submit = (isset($_POST['submit'])) ? true : false;
 		$error = $data = array();
 		$s_hidden_fields = '';
 
+		/**
+		* Setup page variables such as title, template & available language strings
+		*/
 		$user->add_lang('mods/garage');
 
+		/**
+		* Perform a set action based on value for $mode
+		* A mode will noramlly display a page
+		*/
 		switch ($mode)
 		{
+			/**
+			* Handle user options
+			*/
 			case 'options':
-
 				$data = array(
 					'index_columns'=> request_var('index_columns', $user->data['user_garage_index_columns']),
 				);
@@ -64,8 +79,10 @@ class ucp_garage
 				$this->page_title = 'UCP_GARAGE_' . strtoupper($mode);
 			break;
 
+			/**
+			* Handle notification options
+			*/
 			case 'notify':
-
 				$data = array(
 					'guestbook_email_notify'=> request_var('guestbook_email_notify', $user->data['user_garage_guestbook_email_notify']),
 					'guestbook_pm_notify'	=> request_var('guestbook_pm_notify', $user->data['user_garage_guestbook_pm_notify']),
@@ -105,7 +122,6 @@ class ucp_garage
 				);
 				$this->tpl_name = 'ucp_garage_notify';
 				$this->page_title = 'UCP_GARAGE_NOTIFY';
-
 			break;
 		}
 	}

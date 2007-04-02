@@ -96,7 +96,6 @@ class garage_quartermile
 	{
 		global $vid, $garage, $garage_image;
 	
-		//Lets See If There Are Any Images Associated With This Time
 		$images	= $garage_image->get_quartermile_gallery($vid, $qmid);
 	
 		for ($i = 0, $count = sizeof($images);$i < $count; $i++)
@@ -173,28 +172,17 @@ class garage_quartermile
 			'SELECT'	=> 'q.vehicle_id, MIN(q.quart) as quart',
 			'FROM'		=> array(
 				GARAGE_QUARTERMILES_TABLE	=> 'q',
+				GARAGE_VEHICLES_TABLE		=> 'v',
+				GARAGE_MAKES_TABLE		=> 'mk',
+				GARAGE_MODELS_TABLE		=> 'md',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'q.vehicle_id =g.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'g.model_id = md.id and md.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'g.user_id = u.user_id'
-				)
-			),
-			'WHERE'		=>  "(q.sixty IS NOT NULL OR q.three IS NOT NULL OR q.eighth IS NOT NULL OR q.eighthmph IS NOT NULL OR q.thou IS NOT NULL OR q.rt IS NOT NULL OR q.quartmph IS NOT NULL) AND ( q.pending = 0 ) AND ( mk.pending = 0 AND md.pending = 0 ) $addtional_where",
-			'GROUP_BY'	=> 'q.vehicle_id',
-			'ORDER_BY'	=> "quart DESC"
+			'WHERE'		=>  "q.pending = 0 
+						AND (q.sixty IS NOT NULL OR q.three IS NOT NULL OR q.eighth IS NOT NULL OR q.eighthmph IS NOT NULL OR q.thou IS NOT NULL OR q.rt IS NOT NULL OR q.quartmph IS NOT NULL) 
+						AND q.vehicle_id = v.id
+						AND (v.make_id = mk.id AND mk.pending = 0)
+						AND (v.model_id =md.id AND md.pending = 0)",
+			'GROUP_BY'	=> 'q.vehicle_id, q.quart',
+			'ORDER_BY'	=> "q.quart DESC"
 		));
 
 		$result = $db->sql_query_limit($sql, $limit, 0);
@@ -223,28 +211,16 @@ class garage_quartermile
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id, g.user_id, q.id as qmid, qg.image_id, u.username, u.user_colour, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.dynorun_id, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous',
+			'SELECT'	=> 'v.id, v.user_id, q.id as qmid, qg.image_id, u.username, u.user_colour, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.dynorun_id, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous',
 			'FROM'		=> array(
 				GARAGE_QUARTERMILES_TABLE	=> 'q',
+				GARAGE_VEHICLES_TABLE		=> 'v',
+				GARAGE_MAKES_TABLE		=> 'mk',
+				GARAGE_MODELS_TABLE		=> 'md',
+				USERS_TABLE			=> 'u',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'q.vehicle_id =g.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'g.model_id = md.id and md.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'g.user_id = u.user_id'
-				)
-				,array(
 					'FROM'	=> array(GARAGE_DYNORUNS_TABLE => 'd'),
 					'ON'	=> 'q.dynorun_id = d.id'
 				)
@@ -257,7 +233,12 @@ class garage_quartermile
 					'ON'	=> 'i.attach_id = qg.image_id'
 				)
 			),
-			'WHERE'		=>  "q.quart = $quart AND q.vehicle_id = $vehicle_id"
+			'WHERE'		=>  "q.quart = $quart 
+						AND q.vehicle_id = $vehicle_id
+						AND q.vehicle_id = v.id
+						AND v.user_id = u.user_id
+						AND (v.make_id = mk.id AND mk.pending = 0)
+						AND (v.model_id =md.id AND md.pending = 0)",
 		));
 
 		$result = $db->sql_query($sql);
@@ -278,28 +259,16 @@ class garage_quartermile
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.id as vehicle_id, u.user_id, g.user_id, q.id as qmid, qg.image_id, u.username, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.dynorun_id',
+			'SELECT'	=> 'v.id as vehicle_id, u.user_id, v.user_id, q.id as qmid, qg.image_id, u.username, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.dynorun_id',
 			'FROM'		=> array(
 				GARAGE_QUARTERMILES_TABLE	=> 'q',
+				GARAGE_VEHICLES_TABLE		=> 'v',
+				GARAGE_MAKES_TABLE		=> 'mk',
+				GARAGE_MODELS_TABLE		=> 'md',
+				USERS_TABLE			=> 'u',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'q.vehicle_id =g.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'g.model_id = md.id and md.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'g.user_id = u.user_id'
-				)
-				,array(
 					'FROM'	=> array(GARAGE_QUARTERMILE_GALLERY_TABLE => 'qg'),
 					'ON'	=> 'q.id = qg.quartermile_id'
 				)
@@ -308,7 +277,11 @@ class garage_quartermile
 					'ON'	=> 'i.attach_id = qg.image_id'
 				)
 			),
-			'WHERE'		=>  "q.pending = 1"
+			'WHERE'		=>  "q.pending = 1
+						AND q.vehicle_id = v.id
+						AND v.user_id = u.user_id
+						AND (v.make_id = mk.id AND mk.pending = 0)
+						AND (v.model_id =md.id AND md.pending = 0)",
 		));
 
 		$result = $db->sql_query($sql);
@@ -336,28 +309,16 @@ class garage_quartermile
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'q.*, d.id, d.bhp, d.bhp_unit, i.*, g.made_year, mk.make, md.model, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, u.*',
+			'SELECT'	=> 'q.*, d.id, d.bhp, d.bhp_unit, i.*, v.made_year, mk.make, md.model, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, u.*',
 			'FROM'		=> array(
 				GARAGE_QUARTERMILES_TABLE	=> 'q',
+				GARAGE_VEHICLES_TABLE		=> 'v',
+				GARAGE_MAKES_TABLE		=> 'mk',
+				GARAGE_MODELS_TABLE		=> 'md',
+				USERS_TABLE			=> 'u',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'q.vehicle_id =g.id'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'g.user_id = u.user_id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'g.model_id = md.id and md.pending = 0'
-				)
-				,array(
 					'FROM'	=> array(GARAGE_DYNORUNS_TABLE => 'd'),
 					'ON'	=> 'q.dynorun_id = d.id'
 				)
@@ -370,7 +331,11 @@ class garage_quartermile
 					'ON'	=> 'i.attach_id = qg.image_id'
 				)
 			),
-			'WHERE'		=>  "q.id = $qmid"
+			'WHERE'		=>  "q.id = $qmid
+						AND q.vehicle_id = v.id
+						AND v.user_id = u.user_id
+						AND (v.make_id = mk.id AND mk.pending = 0)
+						AND (v.model_id =md.id AND md.pending = 0)",
 		));
 
       		$result = $db->sql_query($sql);

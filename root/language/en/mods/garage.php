@@ -19,6 +19,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
+	'YOUR_GARAGE'			=> 'Your Garage',
 	'MODERATE_VEHICLE'		=> 'Moderate Vehicle',
 	'EDIT_MODIFICATION'		=> 'Edit modification',
 	'EDIT_QUARTERMILE'		=> 'Edit &frac14; mile',
@@ -389,6 +390,7 @@ $lang = array_merge($lang, array(
 	'UPDATE_RATING' 		=> 'Update Existing Rating',
 	'TOP_QUARTERMILE_RUNS' 		=> 'Top &frac14; mile Runs',
 	'TOP_RATED_VEHICLES' 		=> 'Top Rated Vehicles',
+	'TOP_LAPS'	 		=> 'Top Lap Times',
 	'ENABLE_TOP_QUARTERMILE' 	=> '<b>Enable Top &frac14; miles?</b><br />Allows the top &frac14; mile times to be shown on the main menu.',
 	'MAX_TOP_QUARTERMILE' 		=> 'Max. no times to show:',
 	'ENABLE_TOP_RATED' 		=> '<b>Enable Top Rated?</b><br />Allows the top rated vehicles to be shown on the main menu.',
@@ -709,6 +711,7 @@ $lang = array_merge($lang, array(
 	'NO_LAPS_PENDING'		=> 'There are no laps requiring approval currently.',
 	'NO_TRACKS_PENDING'		=> 'There are no tracks requiring approval currently.',
 	'NO_COMMENTS_PENDING'		=> 'There are no comments requiring approval currently.',
+	'NO_PRODUCTS_PENDING'		=> 'There are no products requiring approval currently.',
 	'NO_VEHICLE_SELECTED'		=> 'You must select at least one vehicle to perform this action.',
 	'NO_MAKE_SELECTED'		=> 'You must select at least one make to perform this action.',
 	'NO_MODEL_SELECTED'		=> 'You must select at least one model to perform this action.',
@@ -717,7 +720,9 @@ $lang = array_merge($lang, array(
 	'NO_DYNORUN_SELECTED'		=> 'You must select at least one dynorun to perform this action.',
 	'NO_LAP_SELECTED'		=> 'You must select at least one lap to perform this action.',
 	'NO_TRACK_SELECTED'		=> 'You must select at least one track to perform this action.',
-	'DISAPPROVE_QUARTERMILE'	=> 'Dissaprove &frac14; mile time.',	
+	'NO_PRODUCT_SELECTED'		=> 'You must select at least one product to perform this action.',
+	'DISAPPROVE_QUARTERMILE'	=> 'Disapprove &frac14; mile time.',
+	'SELECT_ONE_ONLY'		=> 'Disapproving this item require decisions about linked items, as such you can not disapprove more than one item at a time.',
 
 	//UCP LANGUAGE KEYS
 	'EMAIL_OPTOUT'			=> 'Optout of pending notification emails',

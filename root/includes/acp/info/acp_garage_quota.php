@@ -20,7 +20,7 @@ class acp_garage_quota_info
 			'title'		=> 'ACP_GARAGE_QUOTA_MANAGEMENT',
 			'version'	=> '1.0.0',
 			'modes'		=> array(
-				'quotas'	=> array('title' => 'ACP_GARAGE_QUOTAS', 'auth' => 'acl_a_garage', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
+				'quotas'	=> array('title' => 'ACP_GARAGE_QUOTAS', 'auth' => 'acl_a_garage_quota', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
 			),
 		);
 	}

@@ -1186,26 +1186,16 @@ class garage_image
 			'SELECT'	=> "i.*, u.*, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle",
 			'FROM'		=> array(
 				GARAGE_IMAGES_TABLE	=> 'i',
+				GARAGE_VEHICLES_TABLE	=> 'v',
+				GARAGE_MAKES_TABLE	=> 'mk',
+				GARAGE_MODELS_TABLE	=> 'md',
+				USERS_TABLE		=> 'u',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'v'),
-					'ON'	=> "i.vehicle_id = v.id"
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> "v.user_id = u.user_id"
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> "v.make_id = mk.id"
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> "v.model_id = md.id"
-				)
-			),		
-			'ORDER_BY'	=>  "i.attach_id ASC"
+			'WHERE'		=> "i.vehicle_id = v.id
+						AND v.user_id = u.user_id
+						AND v.make_id = mk.id
+						AND v.model_id = md.id",
+			'ORDER_BY'	=> "i.attach_id ASC"
 		));
 
 		$result = $db->sql_query($sql);
@@ -1235,14 +1225,10 @@ class garage_image
 			'SELECT'	=> 'vg.*, i.*',
 			'FROM'		=> array(
 				GARAGE_VEHICLE_GALLERY_TABLE	=> 'vg',
+				GARAGE_IMAGES_TABLE		=> 'i',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
-					'ON'	=> 'i.attach_id = vg.image_id'
-				)
-			),
-			'WHERE'		=>  "vg.vehicle_id = $vid",
+			'WHERE'		=>  "vg.vehicle_id = $vid
+						AND i.attach_id = vg.image_id",
 			'GROUP_BY'	=>  "vg.id"
 		));
 
@@ -1274,14 +1260,10 @@ class garage_image
 			'SELECT'	=> 'mg.*, i.*',
 			'FROM'		=> array(
 				GARAGE_MODIFICATION_GALLERY_TABLE	=> 'mg',
+				GARAGE_IMAGES_TABLE			=> 'i',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
-					'ON'	=> 'i.attach_id = mg.image_id'
-				)
-			),
-			'WHERE'		=>  "mg.vehicle_id = $vid AND mg.modification_id = $mid",
+			'WHERE'		=>  "mg.vehicle_id = $vid AND mg.modification_id = $mid
+						AND i.attach_id = mg.image_id",
 			'GROUP_BY'	=>  "mg.id"
 		));
 
@@ -1313,14 +1295,10 @@ class garage_image
 			'SELECT'	=> 'qg.*, i.*',
 			'FROM'		=> array(
 				GARAGE_QUARTERMILE_GALLERY_TABLE	=> 'qg',
+				GARAGE_IMAGES_TABLE			=> 'i',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
-					'ON'	=> 'i.attach_id = qg.image_id'
-				)
-			),
-			'WHERE'		=>  "qg.vehicle_id = $vid AND qg.quartermile_id = $qmid",
+			'WHERE'		=>  "qg.vehicle_id = $vid AND qg.quartermile_id = $qmid
+						AND i.attach_id = qg.image_id",
 			'GROUP_BY'	=>  "qg.id"
 		));
 
@@ -1352,14 +1330,10 @@ class garage_image
 			'SELECT'	=> 'dg.*, i.*',
 			'FROM'		=> array(
 				GARAGE_DYNORUN_GALLERY_TABLE	=> 'dg',
+				GARAGE_IMAGES_TABLE		=> 'i',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
-					'ON'	=> 'i.attach_id = dg.image_id'
-				)
-			),
-			'WHERE'		=>  "dg.vehicle_id = $vid AND dg.dynorun_id = $did",
+			'WHERE'		=>  "dg.vehicle_id = $vid AND dg.dynorun_id = $did
+						AND i.attach_id = dg.image_id",
 			'GROUP_BY'	=>  "dg.id"
 		));
 
@@ -1391,14 +1365,10 @@ class garage_image
 			'SELECT'	=> 'lg.*, i.*',
 			'FROM'		=> array(
 				GARAGE_LAP_GALLERY_TABLE	=> 'lg',
+				GARAGE_IMAGES_TABLE		=> 'i',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
-					'ON'	=> 'i.attach_id = lg.image_id'
-				)
-			),
-			'WHERE'		=>  "lg.vehicle_id = $vid AND lg.lap_id = $lid",
+			'WHERE'		=>  "lg.vehicle_id = $vid AND lg.lap_id = $lid
+						AND i.attach_id = lg.image_id",
 			'GROUP_BY'	=>  "lg.id"
 		));
 
@@ -1428,15 +1398,12 @@ class garage_image
 			array(
 			'SELECT'	=> 'i.*',
 			'FROM'		=> array(
+				GARAGE_VEHICLES_TABLE	=> 'v',
 				GARAGE_IMAGES_TABLE	=> 'i',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'g.id = i.vehicle_id'
-				)
-			),
-			'WHERE'		=>  "g.user_id = $user_id AND i.attach_location NOT LIKE 'http://%'"
+			'WHERE'		=>  "v.user_id = $user_id
+		       				AND v.id = i.vehicle_id	
+						AND i.attach_location NOT LIKE 'http://%'"
 		));
 
       		$result = $db->sql_query($sql);
@@ -1465,15 +1432,12 @@ class garage_image
 			array(
 			'SELECT'	=> 'i.*',
 			'FROM'		=> array(
+				GARAGE_VEHICLES_TABLE	=> 'v',
 				GARAGE_IMAGES_TABLE	=> 'i',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'g.id = i.vehicle_id'
-				)
-			),
-			'WHERE'		=>  "g.user_id = $user_id AND i.attach_location LIKE 'http://%'"
+			'WHERE'		=>  "v.user_id = $user_id 
+		       				AND v.id = i.vehicle_id	
+						AND i.attach_location LIKE 'http://%'"
 		));
 
       		$result = $db->sql_query($sql);
@@ -1563,7 +1527,6 @@ class garage_image
 			$infile	= @fopen ($remote_url, "rb");
                 	$outfile= @fopen ( $phpbb_root_path . GARAGE_UPLOAD_PATH . $destination_file, "wb");
 
-	                //Set Our Custom Timeout
        		        socket_set_timeout($infile, $garage_config['remote_timeout']);
 
                		while (!@feof ($infile)) 

@@ -20,7 +20,7 @@ class acp_garage_business_info
 			'title'		=> 'ACP_GARAGE_BUSINESS_MANAGEMENT',
 			'version'	=> '1.0.0',
 			'modes'		=> array(
-				'business'	=> array('title' => 'ACP_GARAGE_BUSINESS', 'auth' => 'acl_a_garage', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
+				'business'	=> array('title' => 'ACP_GARAGE_BUSINESS', 'auth' => 'acl_a_garage_business', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
 			),
 		);
 	}

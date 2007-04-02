@@ -160,7 +160,7 @@
 
 <!-- ELSE -->
 
-	<h1>{L_ACP_CUSTOM_PROFILE_FIELDS}</h1>
+	<h1>{L_GARAGE_CUSTOM_FIELDS}</h1>
 
 	<!-- IF S_NEED_EDIT -->
 		<div class="errorbox">
@@ -183,9 +183,16 @@
 
 		<td>{fields.FIELD_IDENT}</td>
 		<td>{fields.FIELD_TYPE}</td>
-		<td style="text-align: center;"><a href="{fields.U_ACTIVATE_DEACTIVATE}">{fields.L_ACTIVATE_DEACTIVATE}</a><!-- IF fields.S_NEED_EDIT --> | <a href="{fields.U_TRANSLATE}" style="color: red;">{L_TRANSLATE}</a><!-- ENDIF --></td>
+		<td style="text-align: center;"><!-- IF fields.S_NEED_EDIT --> | <a href="{fields.U_TRANSLATE}" style="color: red;">{L_TRANSLATE}</a><!-- ENDIF --></td>
 
 		<td style="width: 80px; text-align: right; white-space: nowrap;">
+			<!-- IF fields.S_DEACTIVATE -->
+				{ICON_DISAPPROVE_DISABLED}
+				<a href="{fields.U_ACTIVATE}">{ICON_APPROVE}</a>
+			<!-- ELSEIF fields.S_ACTIVATE  -->
+				<a href="{fields.U_DEACTIVATE}">{ICON_DISAPPROVE}</a>
+				{ICON_APPROVE_DISABLED}
+			<!-- ENDIF -->
 			<!-- IF fields.S_FIRST_ROW && not fields.S_LAST_ROW -->
 				{ICON_MOVE_UP_DISABLED}
 				<a href="{fields.U_MOVE_DOWN}">{ICON_MOVE_DOWN}</a>

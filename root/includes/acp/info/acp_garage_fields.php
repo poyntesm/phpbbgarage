@@ -20,7 +20,7 @@ class acp_garage_fields_info
 			'title'		=> 'ACP_GARAGE_FIELDS_MANAGEMENT',
 			'version'	=> '1.0.0',
 			'modes'		=> array(
-				'fields'	=> array('title' => 'ACP_GARAGE_FIELDS', 'auth' => 'acl_a_garage', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
+				'fields'	=> array('title' => 'ACP_GARAGE_FIELDS', 'auth' => 'acl_a_garage_field', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
 			),
 		);
 	}

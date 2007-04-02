@@ -105,26 +105,16 @@ class garage_insurance
 			'SELECT'	=> "p.*, b.title, v.made_year, mk.make, md.model, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle",
 			'FROM'		=> array(
 				GARAGE_PREMIUMS_TABLE	=> 'p',
+				GARAGE_VEHICLES_TABLE 	=> 'v',
+				GARAGE_MAKES_TABLE 	=> 'mk',
+				GARAGE_MODELS_TABLE 	=> 'md',
+				GARAGE_BUSINESS_TABLE 	=> 'b',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'v'),
-					'ON'	=> 'v.id = p.vehicle_id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'v.make_id = mk.id and mk.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'v.model_id = md.id and md.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b'),
-					'ON'	=> 'b.id = p.business_id'
-				)
-			),
-			'WHERE'		=>  "p.id = $ins_id"
+			'WHERE'		=>  "p.id = $ins_id
+						AND v.id = p.vehicle_id
+						AND v.make_id = mk.id AND mk.pending = 0
+						AND v.model_id = md.id AND md.pending = 0
+						AND b.id = p.business_id"
 		));
 
       		$result = $db->sql_query($sql);
@@ -148,33 +138,23 @@ class garage_insurance
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'i.*, g.made_year, b.title, b.id as business_id, mk.make, md.model, u.username, u.user_id, u.user_colour, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle',
+			'SELECT'	=> 'i.*, v.made_year, b.title, b.id as business_id, mk.make, md.model, u.username, u.user_id, u.user_colour, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle',
 			'FROM'		=> array(
 				GARAGE_PREMIUMS_TABLE	=> 'i',
+				GARAGE_VEHICLES_TABLE 	=> 'v',
+				GARAGE_MAKES_TABLE 	=> 'mk',
+				GARAGE_MODELS_TABLE 	=> 'md',
+				GARAGE_BUSINESS_TABLE 	=> 'b',
+				USERS_TABLE	 	=> 'u',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
-					'ON'	=> 'g.id = i.vehicle_id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'g.make_id = mk.id and mk.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'md'),
-					'ON'	=> 'g.model_id = md.id and md.pending = 0'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b'),
-					'ON'	=> 'i.business_id = b.id'
-				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'g.user_id = u.user_id'
-				)
-			),
-			'WHERE'		=>  "i.business_id = b.id AND b.insurance = 1 AND b.pending = 0 AND b.id = $business_id AND mk.pending = 0 AND md.pending = 0",
+			'WHERE'		=>  "i.business_id = b.id
+		       				AND b.insurance = 1
+						AND b.pending = 0
+						AND b.id = $business_id
+						AND v.id = i.vehicle_id
+						AND v.make_id = mk.id AND mk.pending = 0
+						AND v.model_id = md.id AND md.pending = 0
+						AND v.user_id = u.user_id",
 			'GROUP_BY'	=>  "i.id"
 		));
 
@@ -208,7 +188,11 @@ class garage_insurance
 				GARAGE_BUSINESS_TABLE	=> 'b',
 				GARAGE_PREMIUMS_TABLE	=> 'i',
 			),
-			'WHERE'		=>  "i.business_id = b.id AND b.id = $business_id AND b.insurance = 1 AND i.cover_type = '".htmlspecialchars($cover_type)."' AND i.premium > 0"
+			'WHERE'		=>  "i.business_id = b.id 
+						AND b.id = $business_id 
+						AND b.insurance = 1 
+						AND i.cover_type = '".htmlspecialchars($cover_type)."' 
+						AND i.premium > 0"
 		));
 
 		$result = $db->sql_query($sql);
@@ -235,14 +219,10 @@ class garage_insurance
 			'SELECT'	=> 'i.*, b.title',
 			'FROM'		=> array(
 				GARAGE_PREMIUMS_TABLE	=> 'i',
+				GARAGE_BUSINESS_TABLE	=> 'b',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b'),
-					'ON'	=> 'i.business_id = b.id'
-				)
-			),
-			'WHERE'		=>  "i.vehicle_id = $vid"
+			'WHERE'		=>  "i.vehicle_id = $vid
+						AND i.business_id = b.id"
 		));
 	
 	       	$result = $db->sql_query($sql);

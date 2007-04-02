@@ -378,14 +378,10 @@ class garage_model
 			'SELECT'	=> 'md.*, mk.make',
 			'FROM'		=> array(
 				GARAGE_MODELS_TABLE	=> 'md',
+				GARAGE_MAKES_TABLE		=> 'mk',
 			),
-			'LEFT_JOIN'	=> array(
-				array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'mk'),
-					'ON'	=> 'md.make_id = mk.id'
-				)
-			),
-			'ORDER_BY'	=>	'md.pending = 1'
+			'WHERE'	=> 'md.pending = 1
+					AND md.make_id = mk.id'
 		));
 
 		$result = $db->sql_query($sql);
