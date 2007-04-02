@@ -22,7 +22,7 @@ class acp_garage_setting_info
 			'modes'		=> array(
 				'general'	=> array('title' => 'ACP_GARAGE_GENERAL_SETTINGS', 'auth' => 'acl_a_garage_setting', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
 				'menu'		=> array('title' => 'ACP_GARAGE_MENU_SETTINGS', 'auth' => 'acl_a_garage_setting', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
-				'index'		=> array('title' => 'ACP_GARAGE_INDEX_SETTINGS', 'auth' => 'acl_a_garage', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
+				'index'		=> array('title' => 'ACP_GARAGE_INDEX_SETTINGS', 'auth' => 'acl_a_garage_setting', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
 				'images'	=> array('title' => 'ACP_GARAGE_IMAGES_SETTINGS', 'auth' => 'acl_a_garage_setting', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
 				'quartermile'	=> array('title' => 'ACP_GARAGE_QUARTERMILE_SETTINGS', 'auth' => 'acl_a_garage_setting', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
 				'dynorun'	=> array('title' => 'ACP_GARAGE_DYNORUN_SETTINGS', 'auth' => 'acl_a_garage_setting', 'cat' => array('ACP_GARAGE_CONFIGURATION')),

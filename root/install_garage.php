@@ -105,9 +105,9 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_vehicles_gallery (
 		`vehicle_id` int(10) unsigned NOT NULL default '0',
 		`image_id` int(10) unsigned NOT NULL default '0',
 		`hilite` tinyint(1) unsigned NOT NULL default '0',
-		PRIMARY KEY  (`id`)
+		PRIMARY KEY  (`id`),
 		KEY `vehicle_id` (`vehicle_id`),
-		KEY `image_id` (`image_id`),
+		KEY `image_id` (`image_id`)
 		)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_modifications_gallery (
 		`id` int(10) unsigned NOT NULL auto_increment,
@@ -115,9 +115,9 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_modifications_galler
 		`modification_id` int(10) unsigned NOT NULL default '0',
 		`image_id` int(10) unsigned NOT NULL default '0',
 		`hilite` tinyint(1) unsigned NOT NULL default '0',
-		PRIMARY KEY  (`id`)
+		PRIMARY KEY  (`id`),
 		KEY `vehicle_id` (`vehicle_id`),
-		KEY `image_id` (`image_id`),
+		KEY `image_id` (`image_id`)
 		)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_quartermiles_gallery (
 		`id` int(10) unsigned NOT NULL auto_increment,
@@ -125,9 +125,9 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_quartermiles_gallery
 		`quartermile_id` int(10) unsigned NOT NULL default '0',
 		`image_id` int(10) unsigned NOT NULL default '0',
 		`hilite` tinyint(1) unsigned NOT NULL default '0',
-		PRIMARY KEY  (`id`)
+		PRIMARY KEY  (`id`),
 		KEY `vehicle_id` (`vehicle_id`),
-		KEY `image_id` (`image_id`),
+		KEY `image_id` (`image_id`)
 		)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_dynoruns_gallery (
 		`id` int(10) unsigned NOT NULL auto_increment,
@@ -135,9 +135,9 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_dynoruns_gallery (
 		`dynorun_id` int(10) unsigned NOT NULL default '0',
 		`image_id` int(10) unsigned NOT NULL default '0',
 		`hilite` tinyint(1) unsigned NOT NULL default '0',
-		PRIMARY KEY  (`id`)
+		PRIMARY KEY  (`id`),
 		KEY `vehicle_id` (`vehicle_id`),
-		KEY `image_id` (`image_id`),
+		KEY `image_id` (`image_id`)
 		)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_laps_gallery (
 		`id` int(10) unsigned NOT NULL auto_increment,
@@ -145,9 +145,9 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_laps_gallery (
 		`lap_id` int(10) unsigned NOT NULL default '0',
 		`image_id` int(10) unsigned NOT NULL default '0',
 		`hilite` tinyint(1) unsigned NOT NULL default '0',
-		PRIMARY KEY  (`id`)
+		PRIMARY KEY  (`id`),
 		KEY `vehicle_id` (`vehicle_id`),
-		KEY `image_id` (`image_id`),
+		KEY `image_id` (`image_id`)
 		)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_guestbooks (
 		`id` int(10) unsigned NOT NULL auto_increment,
@@ -334,48 +334,48 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_blog (
 		KEY `user_id` (`user_id`)
 	)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_custom_fields (
-  field_id mediumint(8) unsigned NOT NULL auto_increment,
-  field_name varchar(255) collate utf8_bin NOT NULL default '',
-  field_type tinyint(4) NOT NULL default '0',
-  field_ident varchar(20) collate utf8_bin NOT NULL default '',
-  field_length varchar(20) collate utf8_bin NOT NULL default '',
-  field_minlen varchar(255) collate utf8_bin NOT NULL default '',
-  field_maxlen varchar(255) collate utf8_bin NOT NULL default '',
-  field_novalue varchar(255) collate utf8_bin NOT NULL default '',
-  field_default_value varchar(255) collate utf8_bin NOT NULL default '',
-  field_validation varchar(20) collate utf8_bin NOT NULL default '',
-  field_required tinyint(1) unsigned NOT NULL default '0',
-  field_show_on_reg tinyint(1) unsigned NOT NULL default '0',
-  field_hide tinyint(1) unsigned NOT NULL default '0',
-  field_no_view tinyint(1) unsigned NOT NULL default '0',
-  field_active tinyint(1) unsigned NOT NULL default '0',
-  field_order mediumint(8) unsigned NOT NULL default '0',
-  PRIMARY KEY  (field_id),
-  KEY fld_type (field_type),
-  KEY fld_ordr (field_order)
-)";
+		field_id mediumint(8) unsigned NOT NULL auto_increment,
+		field_name varchar(255) collate utf8_bin NOT NULL default '',
+		field_type tinyint(4) NOT NULL default '0',
+		field_ident varchar(20) collate utf8_bin NOT NULL default '',
+		field_length varchar(20) collate utf8_bin NOT NULL default '',
+		field_minlen varchar(255) collate utf8_bin NOT NULL default '',
+		field_maxlen varchar(255) collate utf8_bin NOT NULL default '',
+		field_novalue varchar(255) collate utf8_bin NOT NULL default '',
+		field_default_value varchar(255) collate utf8_bin NOT NULL default '',
+		field_validation varchar(20) collate utf8_bin NOT NULL default '',
+		field_required tinyint(1) unsigned NOT NULL default '0',
+		field_show_on_reg tinyint(1) unsigned NOT NULL default '0',
+		field_hide tinyint(1) unsigned NOT NULL default '0',
+		field_no_view tinyint(1) unsigned NOT NULL default '0',
+		field_active tinyint(1) unsigned NOT NULL default '0',
+		field_order mediumint(8) unsigned NOT NULL default '0',
+		PRIMARY KEY  (field_id),
+		KEY fld_type (field_type),
+		KEY fld_ordr (field_order)
+	)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_custom_fields_data (
-  user_id mediumint(8) unsigned NOT NULL default '0',
-  gf_number bigint(20) default NULL,
-  gf_text varchar(255) collate utf8_bin default NULL,
-  PRIMARY KEY  (user_id)
-)";
+		user_id mediumint(8) unsigned NOT NULL default '0',
+		gf_number bigint(20) default NULL,
+		gf_text varchar(255) collate utf8_bin default NULL,
+		PRIMARY KEY  (user_id)
+	)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_custom_fields_lang (
-  field_id mediumint(8) unsigned NOT NULL default '0',
-  lang_id mediumint(8) unsigned NOT NULL default '0',
-  option_id mediumint(8) unsigned NOT NULL default '0',
-  field_type tinyint(4) NOT NULL default '0',
-  lang_value varchar(255) collate utf8_bin NOT NULL default '',
-  PRIMARY KEY  (field_id,lang_id,option_id)
-)";
+		field_id mediumint(8) unsigned NOT NULL default '0',
+		lang_id mediumint(8) unsigned NOT NULL default '0',
+		option_id mediumint(8) unsigned NOT NULL default '0',
+		field_type tinyint(4) NOT NULL default '0',
+		lang_value varchar(255) collate utf8_bin NOT NULL default '',
+		PRIMARY KEY  (field_id,lang_id,option_id)
+	)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_fields_lang (
-  `field_id` mediumint(8) unsigned NOT NULL default '0',
-  `lang_id` mediumint(8) unsigned NOT NULL default '0',
-  `lang_name` varchar(255) collate utf8_bin NOT NULL default '',
-  `lang_explain` text collate utf8_bin NOT NULL,
-  `lang_default_value` varchar(255) collate utf8_bin NOT NULL default '',
-  PRIMARY KEY  (`field_id`,`lang_id`)
-)";
+		field_id mediumint(8) unsigned NOT NULL default '0',
+		lang_id mediumint(8) unsigned NOT NULL default '0',
+		lang_name varchar(255) collate utf8_bin NOT NULL default '',
+		lang_explain text collate utf8_bin NOT NULL,
+		lang_default_value varchar(255) collate utf8_bin NOT NULL default '',
+		PRIMARY KEY  (`field_id`,`lang_id`)
+	)";
 
 //Required Configuration Options
 $params = array(
@@ -468,7 +468,7 @@ $params = array(
 	'thumbnail_resolution' 			=> '150',
 	'enable_watermark'			=> '0',
 	'watermark_type'			=> 'non_permanent',
-	'watermark_source'			=> '',
+	'watermark_source'			=> 'watermark.png',
 
 //Quartermile Config Data
 	'enable_quartermile' 			=> '1',
@@ -541,6 +541,8 @@ $required_sql[] = "ALTER TABLE " . $table_prefix . "users ADD `user_garage_mod_e
 $required_sql[] = "ALTER TABLE " . $table_prefix . "users ADD `user_garage_mod_pm_optout` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0'";
 //Required SQL For Images
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_img_attached` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_edit` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_delete` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_icon_garage` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_main_menu` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_browse` text NOT NULL";
@@ -561,48 +563,51 @@ $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_add_quartermile` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_add_lap` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_add_service` text NOT NULL";
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_manage_gallery` text NOT NULL";
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_edit` text NOT NULL";
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_delete` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_main_vehicle` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_no_thumb` text NOT NULL";
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_show_details` text NOT NULL";
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_hide_details` text NOT NULL";
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_move_up` text NOT NULL";
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_move_down` text NOT NULL";
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_set_approved` text NOT NULL";
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_set_pending` text NOT NULL";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_img_attached = 'garage_camera.gif*13*18'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_icon_garage = '{LANG}/icon_garage.gif*18*59'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_main_menu = '{LANG}/garage_main_menu.gif*33*130'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_browse = '{LANG}/garage_browse.gif*33*130'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_search = '{LANG}/garage_search.gif*33*130'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_lap_table = '{LANG}/garage_lap_table.gif*33*130'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_dynorun_table = '{LANG}/garage_dynorun_table.gif*33*130'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_garage_review = '{LANG}/garage_garage_review.gif*33*130'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_shop_review = '{LANG}/garage_shop_review.gif*33*130'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_insurance_review = '{LANG}/garage_insurance_review.gif*33*130'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_create_vehicle = '{LANG}/garage_create_vehicle.gif*33*130'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_edit_vehicle = '{LANG}/garage_edit_vehicle.gif*33*130'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_delete_vehicle = '{LANG}/garage_delete_vehicle.gif*33*130'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_view_vehicle = '{LANG}/garage_view_vehicle.gif*33*130'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_modification = '{LANG}/garage_add_modification.gif*33*130'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_insurance = '{LANG}/garage_add_insurance.gif*33*130'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_dynorun = '{LANG}/garage_add_dynorun.gif*33*130'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_quartermile = '{LANG}/garage_add_quartermile.gif*33*130'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_lap = '{LANG}/garage_add_lap.gif*33*130'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_service = '{LANG}/garage_add_service.gif*33*130'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_manage_gallery = '{LANG}/garage_manage_gallery.gif*33*130'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_edit = '{LANG}/garage_edit.gif*21*34'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_delete = '{LANG}/garage_delete.gif*21*34'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_main_vehicle = '{LANG}/garage_main_vehicle.gif*33*130'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_no_thumb = '{LANG}/garage_no_thumb.gif*33*130'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_show_details = '{LANG}/garage_show_details.gif*21*34'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_hide_details = '{LANG}/garage_hide_details.gif*21*34'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_move_up = '{LANG}/garage_move_up.gif*21*34'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_move_down = '{LANG}/garage_move_down.gif*21*34'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_set_approved = '{LANG}/garage_set_approved.gif*21*34'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_set_pending = '{LANG}/garage_set_pending.gif*21*34'";
+
+//We by default support both prosilver & subsilver2
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_img_attached = 'garage_camera.gif*20*41' WHERE imageset_name = 'prosilver'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_img_attached = 'garage_camera.gif*20*20' WHERE imageset_name = 'subsilver2'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_edit = 'garage_edit.gif*20*41' WHERE imageset_name = 'prosilver'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_edit = 'garage_edit.gif*20*20' WHERE imageset_name = 'subsilver2'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_delete = 'garage_delete.gif*20*41' WHERE imageset_name = 'prosilver'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_delete = 'garage_delete.gif*20*20' WHERE imageset_name = 'subsilver2'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_icon_garage = 'icon_miniprofile_garage.gif*20*41' WHERE imageset_name = 'prosilver'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_icon_garage = '{LANG}/icon_garage.gif' WHERE imageset_name = 'subsilver2'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_main_menu = '{LANG}/garage_main_menu.gif' WHERE imageset_name = 'subsilver2'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_browse = '{LANG}/garage_browse.gif' WHERE imageset_name = 'subsilver2'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_search = '{LANG}/garage_search.gif' WHERE imageset_name = 'subsilver2'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_quartermile_table = '{LANG}/garage_quartermile_table.gif' WHERE imageset_name = 'subsilver2'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_lap_table = '{LANG}/garage_lap_table.gif' WHERE imageset_name = 'subsilver2'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_dynorun_table = '{LANG}/garage_dynorun_table.gif' WHERE imageset_name = 'subsilver2'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_garage_review = '{LANG}/garage_garage_review.gif' WHERE imageset_name = 'subsilver2'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_shop_review = '{LANG}/garage_shop_review.gif' WHERE imageset_name = 'subsilver2'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_insurance_review = '{LANG}/garage_insurance_review.gif' WHERE imageset_name = 'subsilver2'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_create_vehicle = '{LANG}/garage_create_vehicle.gif' WHERE imageset_name = 'prosilver'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_create_vehicle = '{LANG}/garage_create_vehicle.gif' WHERE imageset_name = 'subsilver2'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_edit_vehicle = '{LANG}/garage_edit_vehicle.gif' WHERE imageset_name = 'prosilver'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_edit_vehicle = '{LANG}/garage_edit_vehicle.gif' WHERE imageset_name = 'subsilver2'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_delete_vehicle = '{LANG}/garage_delete_vehicle.gif' WHERE imageset_name = 'prosilver'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_delete_vehicle = '{LANG}/garage_delete_vehicle.gif' WHERE imageset_name = 'subsilver2'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_view_vehicle = '{LANG}/garage_view_vehicle.gif' WHERE imageset_name = 'prosilver'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_view_vehicle = '{LANG}/garage_view_vehicle.gif' WHERE imageset_name = 'subsilver2'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_modification = '{LANG}/garage_add_modification.gif' WHERE imageset_name = 'prosilver'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_modification = '{LANG}/garage_add_modification.gif' WHERE imageset_name = 'subsilver2'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_insurance = '{LANG}/garage_add_insurance.gif' WHERE imageset_name = 'prosilver'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_insurance = '{LANG}/garage_add_insurance.gif' WHERE imageset_name = 'subsilver2'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_dynorun = '{LANG}/garage_add_dynorun.gif' WHERE imageset_name = 'prosilver'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_dynorun = '{LANG}/garage_add_dynorun.gif' WHERE imageset_name = 'subsilver2'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_quartermile = '{LANG}/garage_add_quartermile.gif' WHERE imageset_name = 'prosilver'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_quartermile = '{LANG}/garage_add_quartermile.gif' WHERE imageset_name = 'subsilver2'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_lap = '{LANG}/garage_add_lap.gif' WHERE imageset_name = 'prosilver'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_lap = '{LANG}/garage_add_lap.gif' WHERE imageset_name = 'subsilver2'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_service = '{LANG}/garage_add_service.gif' WHERE imageset_name = 'prosilver'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_add_service = '{LANG}/garage_add_service.gif' WHERE imageset_name = 'subsilver2'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_main_vehicle = '{LANG}/garage_main_vehicle.gif' WHERE imageset_name = 'prosilver'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_main_vehicle = '{LANG}/garage_main_vehicle.gif' WHERE imageset_name = 'subsilver2'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_no_thumb = '{LANG}/garage_no_thumb.gif' WHERE imageset_name = 'prosilver'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_no_thumb = '{LANG}/garage_no_thumb.gif' WHERE imageset_name = 'subsilver2'";
 
 $categories_sql = array();
 $categories_sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (1, 'Engine', 1)";
@@ -1597,15 +1602,15 @@ switch( $mode )
 				'u_garage_delete_image',
 				'u_garage_deny',
 				'm_garage',
-			 	'acl_a_garage_setting',
-			 	'acl_a_garage_business',
-			 	'acl_a_garage_category',
-			 	'acl_a_garage_field',
-			 	'acl_a_garage_model',
-			 	'acl_a_garage_product',
-			 	'acl_a_garage_quota',
-			 	'acl_a_garage_tool',
-			 	'acl_a_garage_track',
+			 	'a_garage_setting',
+			 	'a_garage_business',
+			 	'a_garage_category',
+			 	'a_garage_field',
+			 	'a_garage_model',
+			 	'a_garage_product',
+			 	'a_garage_quota',
+			 	'a_garage_tool',
+			 	'a_garage_track',
 		));
 		$auth_admin->acl_add_option($phpbbgarage_permissions);
 
@@ -1889,9 +1894,9 @@ function get_role_by_name($name)
 */
 function acl_update_role($role_id, $auth_options, $auth_setting = ACL_YES)
 {
-	global $db;
+	global $db, $cache, $auth;
 
-	$acl_options_ids = $this->get_acl_option_ids($auth_options);
+	$acl_options_ids = get_acl_option_ids($auth_options);
 
 	$role_options = array();
 	$sql = "SELECT auth_option_id
@@ -1908,7 +1913,7 @@ function acl_update_role($role_id, $auth_options, $auth_setting = ACL_YES)
 	$sql_ary = array();
 	for ($i = 0, $count = sizeof($acl_options_ids);$i < $count; $i++)
 	{
-		if (in_array($acl_options_id[$i]['auth_options_id'], $role_options))
+		if (in_array($acl_options_ids[$i]['auth_option_id'], $role_options))
 		{
 			continue;
 		}
@@ -1921,7 +1926,8 @@ function acl_update_role($role_id, $auth_options, $auth_setting = ACL_YES)
 
 	$db->sql_multi_insert(ACL_ROLES_DATA_TABLE, $sql_ary);
 
-	$this->acl_clear_prefetch();
+	$cache->destroy('acl_options');
+	$auth->acl_clear_prefetch();
 }
 
 /**
