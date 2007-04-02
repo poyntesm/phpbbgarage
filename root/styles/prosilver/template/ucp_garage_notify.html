@@ -1,0 +1,18 @@
+<!-- INCLUDE ucp_header.html -->
+
+<table class="tablebg" width="100%" cellspacing="1">
+<tr>
+	<th colspan="2" valign="middle">{L_TITLE}</th>
+</tr>
+<!-- IF ERROR -->
+	<tr>
+		<td class="row3" colspan="2" align="center"><span class="gensmall" style="color:red">{ERROR}</span></td>
+	</tr>
+<!-- ENDIF -->
+<tr>
+	<td class="row1" width="50%"><b class="genmed">{L_GUESTBOOK_EMAIL_NOTIFY}:</b></td>
+	<td class="row2"><input type="radio" class="radio" name="guestbook_email_notify" value="1"<!-- IF S_GUESTBOOK_EMAIL_NOTIFY --> checked="checked"<!-- ENDIF --> /><span class="gen">{L_YES}</span>&nbsp; &nbsp;<input type="radio" class="radio" name="guestbook_email_notify" value="0"<!-- IF not S_GUESTBOOK_EMAIL_NOTIFY --> checked="checked"<!-- ENDIF --> /><span class="gen">{L_NO}</span></td>
+</tr>
+<tr>
+	<td class="row1" width="50%"><b class="genmed">{L_GUESTBOOK_PM_NOTIFY}:</b></td>
+

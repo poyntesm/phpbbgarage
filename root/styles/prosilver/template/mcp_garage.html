@@ -1,0 +1,591 @@
+<!-- INCLUDE mcp_header.html -->
+
+<!-- IF S_UNAPPROVED_VEHICLE -->
+<form name="mcp" id="mcp" method="post" action="{S_MCP_ACTION}">
+
+<table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
+<tr> 
+	<th>&nbsp;</th>
+	<th>&nbsp;{L_USERNAME}&nbsp;</th>
+  	<th>&nbsp;{L_VEHICLE}&nbsp;</th>
+  	<th>&nbsp;{L_COLOUR}&nbsp;</th>
+  	<th>&nbsp;{L_PRICE}&nbsp;</th>
+  	<th>&nbsp;{L_MILEAGE}&nbsp;</th>
+	<th>&nbsp;{L_EDIT}&nbsp;</th>
+	<th width="5%">&nbsp;{L_SELECT}&nbsp;</th>
+</tr>
+<!-- BEGIN vehicle_row -->
+	<!-- IF vehicle_row.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap"><!-- IF vehicle_row.U_IMAGE --><a href="{vehicle_row.U_IMAGE}" target="_blank">{vehicle_row.IMAGE}</a><!-- ENDIF --></td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap"><b><a href="{vehicle_row.U_PROFILE}" <!-- IF vehicle_row.USERNAME_COLOUR --> style="color: {vehicle_row.USERNAME_COLOUR}"<!-- ENDIF -->>{vehicle_row.USERNAME}</a></b></td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{vehicle_row.MAKE}&nbsp;{vehicle_row.MODEL}&nbsp;{vehicle_row.ENGINE_TYPE}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{vehicle_row.COLOUR}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{vehicle_row.PRICE}&nbsp;{vehicle_row.CURRENCY}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{vehicle_row.MILEAGE}&nbsp;{vehicle_row.MILEAGE_UNIT}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap"><a href="{vehicle_row.U_EDIT}">{vehicle_row.EDIT}</a></td>
+		<td align="center"><input type="checkbox" class="radio" name="vehicle_id_list[]" value="{vehicle_row.ID}" /></td>
+	</tr>
+<!-- BEGINELSE -->
+	<tr>
+		<td class="row1" colspan="13" height="30" align="center" valign="middle"><span class="gen">{L_NO_VEHICLES_PENDING}</span></td>
+	</tr>
+<!-- END vehicle_row -->
+<tr>
+	<td class="cat" colspan="13" align="center"><input class="btnmain" type="submit" name="action[approve_vehicle]" value="{L_APPROVE}" />&nbsp;&nbsp;<input class="btnlite" type="submit" name="action[disapprove_vehicle]" value="{L_DISAPPROVE}" /></td>
+</tr>
+</table>
+
+</form>
+
+<table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
+<tr>
+	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '', false); return false;">{L_UNMARK_ALL}</a></b></td>
+</tr>
+</table>
+
+<!-- ELSEIF S_UNAPPROVED_MAKE -->
+<form name="mcp" id="mcp" method="post" action="{S_MCP_ACTION}">
+
+<table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
+<tr> 
+	<th>&nbsp;{L_MAKE}&nbsp;</th>
+	<th width="5%">&nbsp;{L_SELECT}&nbsp;</th>
+</tr>
+<!-- BEGIN makes_row -->
+
+	<!-- IF makes_row.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{makes_row.MAKE}</td>
+		<td align="center"><input type="checkbox" class="radio" name="make_id_list[]" value="{makes_row.ID}" /></td>
+	</tr>
+<!-- BEGINELSE -->
+	<tr>
+		<td class="row1" colspan="2" height="30" align="center" valign="middle"><span class="gen">{L_NO_MAKES_PENDING}</span></td>
+	</tr>
+<!-- END makes_row -->
+<tr>
+	<td class="cat" colspan="2" align="center"><input class="btnmain" type="submit" name="action[approve_make]" value="{L_APPROVE}" />&nbsp;&nbsp;<input class="btnlite" type="submit" name="action[disapprove_make_confirm]" value="{L_DISAPPROVE}" /></td>
+</tr>
+</table>
+
+</form>
+
+<table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
+<tr>
+	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '', false); return false;">{L_UNMARK_ALL}</a></b></td>
+</tr>
+</table>
+
+<!-- ELSEIF S_UNAPPROVED_MODEL -->
+<form name="mcp" id="mcp" method="post" action="{S_MCP_ACTION}">
+
+<table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
+<tr> 
+	<th>&nbsp;{L_MAKE}&nbsp;</th>
+	<th>&nbsp;{L_MODEL}&nbsp;</th>
+	<th width="5%">&nbsp;{L_SELECT}&nbsp;</th>
+</tr>
+<!-- BEGIN models_row -->
+
+	<!-- IF models_row.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{models_row.MAKE}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{models_row.MODEL}</td>
+		<td align="center"><input type="checkbox" class="radio" name="model_id_list[]" value="{models_row.ID}" /></td>
+	</tr>
+<!-- BEGINELSE -->
+	<tr>
+		<td class="row1" colspan="3" height="30" align="center" valign="middle"><span class="gen">{L_NO_MODELS_PENDING}</span></td>
+	</tr>
+<!-- END models_row -->
+<tr>
+	<td class="cat" colspan="3" align="center"><input class="btnmain" type="submit" name="action[approve_model]" value="{L_APPROVE}" />&nbsp;&nbsp;<input class="btnlite" type="submit" name="action[disapprove_model_confirm]" value="{L_DISAPPROVE}" /></td>
+</tr>
+</table>
+</form>
+
+<table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
+<tr>
+	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '', false); return false;">{L_UNMARK_ALL}</a></b></td>
+</tr>
+</table>
+
+<!-- ELSEIF S_UNAPPROVED_BUSINESS -->
+<form name="mcp" id="mcp" method="post" action="{S_MCP_ACTION}">
+
+<table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
+<tr> 
+	<th>&nbsp;{L_TITLE}&nbsp;</th>
+	<th>&nbsp;{L_ADDRESS}&nbsp;</th>
+  	<th>&nbsp;{L_TELEPHONE}&nbsp;</th>
+  	<th>&nbsp;{L_FAX}&nbsp;</th>
+	<th>&nbsp;{L_WEBSITE}/{L_EMAIL}</th>
+  	<th>&nbsp;{L_OPENING_HOURS}&nbsp;</th>
+  	<th>&nbsp;{L_TYPE}&nbsp;</th>
+  	<th>&nbsp;{L_EDIT}&nbsp;</th>
+	<th width="5%">&nbsp;{L_SELECT}&nbsp;</th>
+</tr>
+	<!-- BEGIN business_row -->
+
+	<!-- IF business_row.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{business_row.TITLE}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{business_row.ADDRESS}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{business_row.TELEPHONE}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{business_row.FAX}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{business_row.WEBSITE}<br />{business_row.EMAIL}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{business_row.OPENING_HOURS}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{business_row.TYPE}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap"><a href="{business_row.U_EDIT}">{business_row.EDIT}</a></td>
+		<td align="center"><input type="checkbox" class="radio" name="business_id_list[]" value="{business_row.ID}" /></td>
+	</tr>
+	<!-- BEGINELSE -->
+	<tr>
+		<td class="row1" colspan="10" height="30" align="center" valign="middle"><span class="gen">{L_NO_BUSINESS_PENDING}</span></td>
+	</tr>
+	<!-- END business_row -->
+	<tr>
+		<td class="cat" colspan="10" align="center"><input class="btnmain" type="submit" name="action[approve_business]" value="{L_APPROVE}" />&nbsp;&nbsp;<input class="btnlite" type="submit" name="action[disapprove_business_confirm]" value="{L_DISAPPROVE}" /></td>
+</tr>
+</table>
+
+</form>
+
+<table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
+<tr>
+	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '', false); return false;">{L_UNMARK_ALL}</a></b></td>
+</tr>
+</table>
+
+<!-- ELSEIF S_UNAPPROVED_QUARTERMILE -->
+<form name="mcp" id="mcp" method="post" action="{S_MCP_ACTION}">
+
+<table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
+<tr> 
+	<th>&nbsp;</th>
+	<th>&nbsp;{L_USERNAME}&nbsp;</th>
+	<th>&nbsp;{L_VEHICLE}&nbsp;</th>
+  	<th>&nbsp;{L_RT}&nbsp;</th>
+  	<th>&nbsp;{L_SIXTY}&nbsp;</th>
+ 	<th>&nbsp;{L_THREE}&nbsp;</th>
+  	<th>&nbsp;{L_EIGHTH}&nbsp;</th>
+  	<th>&nbsp;{L_THOU}&nbsp;</th>
+  	<th>&nbsp;{L_QUART}&nbsp;</th>
+	<th>&nbsp;{L_EDIT}&nbsp;</th>
+	<th width="5%">&nbsp;{L_SELECT}&nbsp;</th>
+</tr>
+<!-- BEGIN quartermile_row -->
+
+	<!-- IF quartermile_row.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap"><!-- IF quartermile_row.U_IMAGE --><a href="{quartermile_row.U_IMAGE}" target="_blank">{quartermile_row.IMAGE}</a><!-- ENDIF --></td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap"><b><a href="{quartermile_row.U_PROFILE}" <!-- IF quartermile_row.USERNAME_COLOUR --> style="color: {quartermile_row.USERNAME_COLOUR}"<!-- ENDIF -->>{quartermile_row.USERNAME}</a></b></td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap"><a href="{quartermile_row.U_VEHICLE}" class="gen">{quartermile_row.VEHICLE}</a></td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{quartermile_row.RT}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{quartermile_row.SIXTY}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{quartermile_row.THREE}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{quartermile_row.EIGHTH}&nbsp;@&nbsp;{quartermile_row.EIGHTHMPH}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{quartermile_row.THOU}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{quartermile_row.QUART}&nbsp;@&nbsp;{quartermile_row.QUARTMPH}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap"><a href="{quartermile_row.U_EDIT}">{quartermile_row.EDIT}</a></td>
+		<td align="center"><input type="checkbox" class="radio" name="quartermile_id_list[]" value="{quartermile_row.ID}" /></td>
+	</tr>
+<!-- BEGINELSE -->
+	<tr>
+		<td class="row1" colspan="13" height="30" align="center" valign="middle"><span class="gen">{L_NO_QUARTERMILES_PENDING}</span></td>
+	</tr>
+<!-- END quartermile_row -->
+<tr>
+	<td class="cat" colspan="13" align="center"><input class="btnmain" type="submit" name="action[approve_quartermile]" value="{L_APPROVE}" />&nbsp;&nbsp;<input class="btnlite" type="submit" name="action[disapprove_quartermile]" value="{L_DISAPPROVE}" /></td>
+</tr>
+</table>
+
+</form>
+
+<table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
+<tr>
+	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '', false); return false;">{L_UNMARK_ALL}</a></b></td>
+</tr>
+</table>
+
+<!-- ELSEIF S_UNAPPROVED_DYNORUN -->
+<form name="mcp" id="mcp" method="post" action="{S_MCP_ACTION}">
+
+<table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
+<tr> 
+	<th>&nbsp;</th>
+	<th>&nbsp;{L_USERNAME}&nbsp;</th>
+	<th>&nbsp;{L_VEHICLE}&nbsp;</th>
+	<th>&nbsp;{L_DYNOCENTRE}&nbsp;</th>
+  	<th>&nbsp;{L_BHP}&nbsp;</th>
+  	<th>&nbsp;{L_TORQUE}&nbsp;</th>
+  	<th>&nbsp;{L_BOOST}&nbsp;</th>
+  	<th>&nbsp;{L_NITROUS}&nbsp;</th>
+  	<th>&nbsp;{L_PEAKPOINT}&nbsp;</th>
+  	<th>&nbsp;{L_EDIT}&nbsp;</th>
+	<th width="5%">&nbsp;{L_SELECT}&nbsp;</th>
+</tr>
+<!-- BEGIN dynorun_row -->
+
+	<!-- IF dynorun_row.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap"><!-- IF dynorun_row.U_IMAGE --><a href="{dynorun_row.U_IMAGE}" target="_blank">{dynorun_row.IMAGE}</a><!-- ENDIF --></td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top"><b><a href="{dynorun_row.U_PROFILE}" <!-- IF dynorun_row.USERNAME_COLOUR --> style="color: {dynorun_row.USERNAME_COLOUR}"<!-- ENDIF -->>{dynorun_row.USERNAME}</a></b></td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top"><a href="{dynorun_row.U_VEHICLE}" class="gen">{dynorun_row.VEHICLE}</a></td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top">{dynorun_row.DYNOCENTRE}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top">{dynorun_row.BHP}&nbsp;{dynorun_row.BHP_UNIT}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top">{dynorun_row.TORQUE}&nbsp;{dynorun_row.TORQUE_UNIT}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top">{dynorun_row.BOOST}&nbsp;{dynorun_row.BOOST_UNIT}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top">{dynorun_row.NITROUS}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top">{dynorun_row.PEAKPOINT}</td>
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top"><a href="{dynorun_row.U_EDIT}">{dynorun_row.EDIT}</a></td>
+		<td align="center"><input type="checkbox" class="radio" name="dynorun_id_list[]" value="{dynorun_row.ID}" /></td>
+	</tr>
+<!-- BEGINELSE -->
+	<tr>
+		<td class="row1" colspan="14" height="30" align="center" valign="middle"><span class="gen">{L_NO_DYNORUNS_PENDING}</span></td>
+	</tr>
+<!-- END dynorun_row -->
+<tr>
+	<td class="cat" colspan="14" align="center"><input class="btnmain" type="submit" name="action[approve_dynorun]" value="{L_APPROVE}" />&nbsp;&nbsp;<input class="btnlite" type="submit" name="action[disapprove_dynorun]" value="{L_DISAPPROVE}" /></td>
+</tr>
+</table>
+
+</form>
+
+<table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
+<tr>
+	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '', false); return false;">{L_UNMARK_ALL}</a></b></td>
+</tr>
+</table>
+
+<!-- ELSEIF S_UNAPPROVED_COMMENT -->
+<form name="mcp" id="mcp" method="post" action="{S_MCP_ACTION}">
+
+<table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
+<tr> 
+	<th>&nbsp;{L_VEHICLE}&nbsp;</th>
+	<th>&nbsp;{L_POST}&nbsp;</th>
+	<th>&nbsp;{L_AUTHOR}&nbsp;</th>
+	<th>&nbsp;{L_POST_TIME}&nbsp;</th>
+	<th>&nbsp;{L_EDIT}&nbsp;</th>
+	<th width="5%">&nbsp;{L_SELECT}&nbsp;</th>
+</tr>
+	<!-- BEGIN comment_row -->
+
+		<!-- IF comment_row.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+			<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{comment_row.TITLE}</td>
+			<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap"><a href="{comment_row.U_EDIT}">{comment_row.EDIT}</a></td>
+			<td align="center"><input type="checkbox" class="radio" name="track_id_list[]" value="{comment_row.ID}" /></td>
+		</tr>
+		<!-- BEGINELSE -->
+			<tr>
+			<td class="row1" colspan="6" height="30" align="center" valign="middle"><span class="gen">{L_NO_COMMENTS_PENDING}</span></td>
+		</tr>
+	<!-- END comment_row -->
+	<tr>
+		<td class="cat" colspan="6" align="center"><input class="btnmain" type="submit" name="action[approve_comment]" value="{L_APPROVE}" />&nbsp;&nbsp;<input class="btnlite" type="submit" name="action[disapprove_comment]" value="{L_DISAPPROVE}" /></td>
+</tr>
+</table>
+
+</form>
+
+<table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
+<tr>
+	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '', false); return false;">{L_UNMARK_ALL}</a></b></td>
+</tr>
+</table>
+
+<!-- ELSEIF S_UNAPPROVED_LAP -->
+<form name="mcp" id="mcp" method="post" action="{S_MCP_ACTION}">
+
+<table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
+<tr> 
+		<th>&nbsp;</th>
+		<th>&nbsp;{L_USERNAME}&nbsp;</th>
+		<th>&nbsp;{L_VEHICLE}&nbsp;</th>
+		<th>{L_TRACK}</td>
+		<th>{L_CONDITION}</td>
+		<th>{L_TYPE}</td>
+		<th>{L_TIME}&nbsp;<span class="gensmall">(M:S:MS)</span></td>
+		<th>&nbsp;{L_EDIT}&nbsp;</th>
+		<th width="5%">&nbsp;{L_SELECT}&nbsp;</th>
+	</tr>
+	<!-- BEGIN lap_row -->
+		<!-- IF lap_row.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+		<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap"><!-- IF lap_row.U_IMAGE --><a href="{lap_row.U_IMAGE}" target="_blank">{lap_row.IMAGE}</a><!-- ENDIF --></td>
+			<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap"><b><a href="{lap_row.U_PROFILE}" <!-- IF lap_row.USERNAME_COLOUR --> style="color: {lap_row.USERNAME_COLOUR}"<!-- ENDIF -->>{lap_row.USERNAME}</a></b></td>
+			<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap"><a href="{lap_row.U_VEHICLE}" class="gen">{lap_row.VEHICLE}</a></td>
+			<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{lap_row.TRACK}</td>
+			<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{lap_row.CONDITION}</td>
+			<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{lap_row.TYPE}</td>
+			<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{lap_row.MINUTE}.{lap_row.SECOND}.{lap_row.MILLISECOND}</td>
+			<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap"><a href="{lap_row.U_EDIT}">{lap_row.EDIT}</a></td>
+			<td align="center"><input type="checkbox" class="radio" name="lap_id_list[]" value="{lap_row.ID}" /></td>
+		</tr>
+	<!-- BEGINELSE -->
+		<tr>
+			<td class="row1" colspan="9" height="30" align="center" valign="middle"><span class="gen">{L_NO_LAPS_PENDING}</span></td>
+		</tr>
+	<!-- END lap_row -->
+		<tr>
+			<td class="cat" colspan="9" align="center"><input class="btnmain" type="submit" name="action[approve_lap]" value="{L_APPROVE}" />&nbsp;&nbsp;<input class="btnlite" type="submit" name="action[disapprove_lap]" value="{L_DISAPPROVE}" /></td>
+</tr>
+</table>
+
+</form>
+
+<table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
+<tr>
+	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '', false); return false;">{L_UNMARK_ALL}</a></b></td>
+</tr>
+</table>
+
+<!-- ELSEIF S_UNAPPROVED_TRACK -->
+<form name="mcp" id="mcp" method="post" action="{S_MCP_ACTION}">
+
+<table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
+<tr> 
+	<th>&nbsp;{L_TRACK}&nbsp;</th>
+	<th>&nbsp;{L_EDIT}&nbsp;</th>
+	<th width="5%">&nbsp;{L_SELECT}&nbsp;</th>
+</tr>
+	<!-- BEGIN track_row -->
+	<!-- IF track_row.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+	<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{track_row.TITLE}</td>
+	<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap"><a href="{track_row.U_EDIT}">{track_row.EDIT}</a></td>
+	<td align="center"><input type="checkbox" class="radio" name="track_id_list[]" value="{track_row.ID}" /></td>
+</tr>
+	<!-- BEGINELSE -->
+<tr>
+	<td class="row1" colspan="3" height="30" align="center" valign="middle"><span class="gen">{L_NO_TRACKS_PENDING}</span></td>
+</tr>
+	<!-- END track_row -->
+<tr>
+	<td class="cat" colspan="3" align="center"><input class="btnmain" type="submit" name="action[approve_track]" value="{L_APPROVE}" />&nbsp;&nbsp;<input class="btnlite" type="submit" name="action[disapprove_track_confirm]" value="{L_DISAPPROVE}" /></td>
+</tr>
+</table>
+
+</form>
+
+<table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
+<tr>
+	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '', false); return false;">{L_UNMARK_ALL}</a></b></td>
+</tr>
+</table>
+
+<!-- ELSEIF S_UNAPPROVED_PRODUCT -->
+<form name="mcp" id="mcp" method="post" action="{S_MCP_ACTION}">
+
+<table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
+<tr> 
+	<th>&nbsp;{L_PRODUCT}&nbsp;</th>
+	<th>&nbsp;{L_MANUFACTURER}&nbsp;</th>
+	<th>&nbsp;{L_CATEGORY}&nbsp;</th>
+	<th width="5%">&nbsp;{L_SELECT}&nbsp;</th>
+</tr>
+	<!-- BEGIN products_row -->
+	<!-- IF products_row.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+	<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{products_row.PRODUCT}</td>
+	<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{products_row.MANUFACTURER}</td>
+	<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{products_row.CATEGORY}</td>
+	<td align="center"><input type="checkbox" class="radio" name="product_id_list[]" value="{products_row.ID}" /></td>
+</tr>
+	<!-- BEGINELSE -->
+<tr>
+	<td class="row1" colspan="4" height="30" align="center" valign="middle"><span class="gen">{L_NO_PRODUCTS_PENDING}</span></td>
+</tr>
+	<!-- END models_row -->
+	<tr>
+	<td class="cat" colspan="4" align="center"><input class="btnmain" type="submit" name="action[approve_product]" value="{L_APPROVE}" />&nbsp;&nbsp;<input class="btnlite" type="submit" name="action[disapprove_product_confirm]" value="{L_DISAPPROVE}" /></td>
+</tr>
+</table>
+
+</form>
+
+<table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
+<tr>
+	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '', false); return false;">{L_UNMARK_ALL}</a></b></td>
+</tr>
+</table>
+<!-- ENDIF -->
+
+<!-- IF S_DELETE_BUSINESS -->
+
+	<h1>{L_BUSINESS_DELETE}</h1>
+
+	<p>{L_BUSINESS_DELETE_EXPLAIN}</p>
+
+	<form id="mcp_business" method="post" action="{U_ACTION}">
+
+	<table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
+	<tr> 
+		<th colspan="2">{L_BUSINESS_DELETE}</th>
+	</tr>
+	<tr>
+		<td class="row1"><label>{L_BUSINESS_NAME}:</label></td>
+		<td class="row2"><b>{BUSINESS_NAME}</b></td>
+	</tr>
+	<tr>
+		<td valign="top" class="row1"><label for="delete_action">{L_ACTION}:</label></td>
+		<td class="row2">
+		<!-- IF S_TYPE_GARAGE -->
+			<input type="radio" class="radio" id="delete_action" name="action_garage" value="delete" checked="checked" /> {L_DELETE_INSTALLED_MODIFICATIONS}
+			<!-- IF S_MOVE_GARAGE -->
+				<dd><input type="radio" class="radio" name="action_garage" value="move" /> {L_MOVE_MODIFICATIONS_TO} <select name="garage_to_id">{S_MOVE_GARAGE_OPTIONS}</select></dd>
+			<!-- ENDIF -->
+			<br /><br />
+		<!-- ENDIF -->
+		<!-- IF S_TYPE_INSURER -->
+			<input type="radio" class="radio" id="delete_action" name="action_insurance" value="delete" checked="checked" /> {L_DELETE_ALL_PREMIUMS}
+			<!-- IF S_MOVE_INSURER -->
+				<dd><input type="radio" class="radio" name="action_insurance" value="move" /> {L_MOVE_PREMIUMS_TO} <select name="insurance_to_id">{S_MOVE_INSURER_OPTIONS}</select></dd>
+			<!-- ENDIF -->
+			<br /><br />
+		<!-- ENDIF -->
+		<!-- IF S_TYPE_DYNOCENTRE -->
+			<input type="radio" class="radio" id="delete_action" name="action_dynocentre" value="delete" checked="checked" /> {L_DELETE_ALL_DYNORUNS}
+			<!-- IF S_MOVE_DYNOCENTRE -->
+				<dd><input type="radio" class="radio" name="action_dynocentre" value="move" /> {L_MOVE_DYNORUNS_TO} <select name="dynocentre_to_id">{S_MOVE_DYNOCENTRE_OPTIONS}</select></dd>
+			<!-- ENDIF -->
+			<br /><br />
+		<!-- ENDIF -->
+		<!-- IF S_TYPE_RETAIL -->
+			<input type="radio" class="radio" id="delete_action" name="action_retail" value="delete" checked="checked" /> {L_DELETE_BOUGHT_MODIFICATIONS}
+			<!-- IF S_MOVE_RETAIL -->
+				<dd><input type="radio" class="radio" name="action_retail" value="move" /> {L_MOVE_MODIFICATIONS_TO} <select name="retail_to_id">{S_MOVE_RETAIL_OPTIONS}</select></dd>
+			<!-- ENDIF -->
+			<br /><br />
+		<!-- ENDIF -->
+		<!-- IF S_TYPE_PRODUCT -->	
+			<input type="radio" class="radio" id="delete_action" name="action_product" value="delete" checked="checked" /> {L_DELETE_MADE_MODIFICATIONS}
+			<!-- IF S_MOVE_PRODUCT -->
+				<dd><input type="radio" class="radio" name="action_product" value="move" /> {L_MOVE_MODIFICATIONS_TO} <select name="product_to_id">{S_MOVE_PRODUCT_OPTIONS}</select></dd>
+			<!-- ENDIF -->
+		<!-- ENDIF --></td>
+	</tr>
+	<tr>
+		<td class="cat" colspan="2" align="center"><input class="btnmain" type="submit" name="update" value="{L_SUBMIT}" /></td>
+	</tr>
+	</table>
+
+	</form>
+
+<!-- ELSEIF S_DELETE_MAKE -->
+
+	<h1>{L_MAKE_DELETE}</h1>
+
+	<p>{L_MAKE_DELETE_EXPLAIN}</p>
+
+	<form id="mcp_category" method="post" action="{U_ACTION}">
+
+	<table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
+	<tr> 
+		<th colspan="2">{L_MAKE_DELETE}</th>
+	</tr>
+	<tr>
+		<td class="row1"><label>{L_MAKE}:</label></td>
+		<td class="row2"><b>{MAKE}</b></td>
+	</tr>
+	<tr>
+		<td class="row1"><label for="delete_action">{L_ACTION}:</label></dt>
+		<td class="row2"><input type="radio" class="radio" id="delete_action" name="action_make" value="delete" checked="checked" /> {L_DELETE_ALL_VEHICLES}</dd>
+		<!-- IF S_MOVE -->
+			<br /><input type="radio" class="radio" name="action_make" value="move" /> {L_MOVE_VEHICLES_TO} <select name="make_to_id">{S_MOVE_OPTIONS}</select></dd>
+		<!-- ENDIF -->
+	</tr>
+	<tr>
+		<td class="cat" colspan="2" align="center"><input class="btnmain" type="submit" name="update" value="{L_SUBMIT}" /></td>
+	</tr>
+	</table>
+
+	</form>
+
+<!-- ELSEIF S_DELETE_MODEL -->
+
+	<h1>{L_MODEL_DELETE}</h1>
+
+	<p>{L_MODEL_DELETE_EXPLAIN}</p>
+
+	<form id="mcp_category" method="post" action="{U_ACTION}">
+
+	<table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
+	<tr> 
+		<th colspan="2">{L_MODEL_DELETE}</th>
+	</tr>
+	<tr>
+		<td class="row1"><label>{L_MODEL}:</label></td>
+		<td class="row2"><b>{MODEL}</b></td>
+	</tr>
+	<tr>
+		<td class="row1"><label for="delete_action">{L_ACTION}:</label></dt>
+		<td class="row2"><input type="radio" class="radio" id="delete_action" name="action_model" value="delete" checked="checked" /> {L_DELETE_ALL_VEHICLES}
+		<!-- IF S_MOVE -->
+			<br /><input type="radio" class="radio" name="action_model" value="move" /> {L_MOVE_VEHICLES_TO} <select name="model_to_id">{S_MOVE_OPTIONS}</select>
+		<!-- ENDIF --></td>
+	</tr>
+	<tr>
+		<td class="cat" colspan="2" align="center"><input class="btnmain" type="submit" name="update" value="{L_SUBMIT}" /></td>
+	</tr>
+	</table>
+
+	</form>
+
+<!-- ELSEIF S_DELETE_PRODUCT -->
+
+	<h1>{L_PRODUCT_DELETE}</h1>
+
+	<p>{L_PRODUCT_DELETE_EXPLAIN}</p>
+
+	<form id="mcp_product" method="post" action="{U_ACTION}">
+
+	<table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
+	<tr> 
+		<th colspan="2">{L_PRODUCT_DELETE}</th>
+	</tr>
+	<tr>
+		<td class="row1"><label>{L_PRODUCT}:</label></td>
+		<td class="row2"><b>{PRODUCT}</b></td>
+	</tr>
+	<tr>
+		<td class="row1"><label for="delete_action">{L_ACTION}:</label></dt>
+		<td class="row2"><input type="radio" class="radio" id="delete_action" name="action_modifications" value="delete" checked="checked" /> {L_DELETE_ALL_MODIFICATIONS}
+		<!-- IF S_MOVE -->
+			<br /><input type="radio" class="radio" name="action_modifications" value="move" /> {L_MOVE_MODIFICATIONS_TO} <select name="product_to_id">{S_MOVE_OPTIONS}</select>
+		<!-- ENDIF --></td>
+	</tr>
+	<tr>
+		<td class="cat" colspan="2" align="center"><input class="btnmain" type="submit" name="update" value="{L_SUBMIT}" /></td>
+	</tr>
+	</table>
+
+	</form>
+
+<!-- ELSEIF S_DELETE_TRACK -->
+
+	<h1>{L_TRACK_DELETE}</h1>
+
+	<p>{L_TRACK_DELETE_EXPLAIN}</p>
+
+	<form id="mcp_track" method="post" action="{U_ACTION}">
+
+	<table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
+	<tr> 
+		<th colspan="2">{L_TRACK_DELETE}</th>
+	</tr>
+	<tr>
+		<td class="row1"><label>{L_TRACK_NAME}:</label></td>
+		<td class="row2"><b>{TRACK_NAME}</b></td>
+	</tr>
+	<tr>
+		<td class="row1"><label for="delete_action">{L_ACTION}:</label></dt>
+		<td class="row2"><input type="radio" class="radio" id="delete_action" name="action_laps" value="delete" checked="checked" /> {L_DELETE_ALL_LAPS}
+		<!-- IF S_MOVE -->
+			<br /><input type="radio" class="radio" name="action_laps" value="move" /> {L_MOVE_LAPS_TO} <select name="garage_to_id">{S_MOVE_OPTIONS}</select>
+		<!-- ENDIF --></td>
+	</tr>
+	<tr>
+		<td class="cat" colspan="2" align="center"><input class="btnmain" type="submit" name="update" value="{L_SUBMIT}" /></td>
+	</tr>
+	</table>
+
+	</form>
+
+<!-- ENDIF -->
+
+<!-- INCLUDE mcp_footer.html -->
