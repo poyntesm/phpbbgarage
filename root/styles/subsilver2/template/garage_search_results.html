@@ -1,0 +1,360 @@
+<!-- INCLUDE overall_header.html -->
+
+<!-- IF U_MCP -->
+	<div id="pageheader">
+		<p class="linkmcp">[ <a href="{U_MCP}">{L_MCP}</a> ]</p>
+	</div>
+
+	<br clear="all" /><br />
+<!-- ENDIF -->
+
+<!-- INCLUDE garage_header.html -->
+
+<!-- INCLUDE garage_menu.html -->
+
+		<td width="72%" valign="top">
+
+			<!-- IF SEARCH_MESSAGE -->
+			<table width="100%" border="0" cellspacing="1" cellpadding="4" class="tablebg">
+			<tbody>
+	  			<tr>
+					<td valign="top" class="row1" align="center"><span class="gen"><b>{SEARCH_MESSAGE}</b></span><br /></td>
+	  			</tr>
+			</tbody>
+			</table>
+			<br />
+
+			<!-- ENDIF -->
+
+			<form method="post" action="{S_MODE_ACTION}">
+
+			<!-- IF S_DISPLAY_VEHICLE_RESULTS -->
+			<table width="100%" cellpadding="2" cellspacing="1" border="0" class="tablebg">
+			<thead>
+				<tr> 
+	  				<th nowrap="nowrap"></th>
+					<th nowrap="nowrap">{L_YEAR}</th>
+					<th nowrap="nowrap">{L_MAKE}</th>
+					<th nowrap="nowrap">{L_MODEL}</th>
+					<th>{L_COLOUR}</th>
+					<th nowrap="nowrap">{L_OWNER}</th>
+					<th nowrap="nowrap">{L_VIEWS}</th>
+					<th nowrap="nowrap">{L_MODS}</th>
+					<th nowrap="nowrap">{L_UPDATED}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- BEGIN vehicle -->
+<!-- IF vehicle.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+					<td align="center"><span class="gen"><!-- IF vehicle.U_IMAGE --><a href="{vehicle.U_IMAGE}" target="_blank">{vehicle.IMAGE}</a><!-- ENDIF --></span></td>
+	  				<td align="center"><span class="gensmall">{vehicle.YEAR}</span></td>
+					<td align="center"><span class="gensmall">{vehicle.MAKE}</span></td>
+					<td align="center"><span class="gensmall"><a href="{vehicle.U_VIEW_VEHICLE}">{vehicle.MODEL}</a></span></td>
+					<td align="center"><span class="gensmall">{vehicle.COLOUR}</span></td>
+					<td align="center"><span class="gen"><b><a href="{vehicle.U_VIEW_PROFILE}" <!-- IF vehicle.USERNAME_COLOUR --> style="color: {vehicle.USERNAME_COLOUR}"<!-- ENDIF -->>{vehicle.USERNAME}</a></b></span></td>
+					<td align="center"><span class="gensmall">{vehicle.VIEWS}</span></td>
+					<td align="center"><span class="gensmall">{vehicle.MODS}</span></td>
+					<td align="center"><span class="gensmall">{vehicle.UPDATED}</span></td>
+				</tr>
+				<!-- BEGINELSE -->
+				<tr class="row1">
+					<td align="center" colspan="12"><span class="gen">{L_SEARCH_PRODUCED_NO_RESULTS}</span></td>
+				</tr>
+				<!-- END vehicle -->
+				<tr>
+					<td class="cat" align="center" height="28" colspan="9"><span class="genmed">{L_SORTED_BY}&nbsp;<select id="sort" name="sort"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN sort --><option value="{sort.VALUE}" <!-- IF sort.S_SELECTED -->selected="selected"<!-- ENDIF -->>{sort.TEXT}</option><!-- END sort --></select>&nbsp;&nbsp;{L_IN}&nbsp;<select id="order" name="order"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN order --><option value="{order.VALUE}" <!-- IF order.S_SELECTED -->selected="selected"<!-- ENDIF -->>{order.TEXT}</option><!-- END order --></select>&nbsp;&nbsp;<input type="submit" name="submit" value="{L_GO}" class="liteoption" /></td>
+				</tr>
+			</tbody>
+			</table>
+
+			<table width="100%" cellspacing="1">
+			<tbody>
+				<tr>
+				<!-- IF TOTAL_VEHICLES -->
+					<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
+					<td class="gensmall" nowrap="nowrap">&nbsp;[ {TOTAL_VEHICLES} ]&nbsp;</td>
+					<td class="gensmall" width="100%" align="right" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
+				<!-- ENDIF -->
+				</tr>
+			</tbody>
+			</table>
+
+			<!-- ENDIF -->
+
+			<!-- IF S_DISPLAY_MODIFICATION_RESULTS -->
+			<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
+			<thead>
+				<tr> 
+	  				<th></th>
+	  				<th class="thCornerL" nowrap="nowrap">{L_VEHICLE}</th>
+					<th class="thTop" nowrap="nowrap">{L_MODIFICATION}</th>
+					<th class="thTop" nowrap="nowrap">{L_CATEGORY}</th>
+					<th class="thTop" nowrap="nowrap">{L_OWNER}</th>
+					<th class="thTop" nowrap="nowrap">{L_PRICE}</th>
+					<th class="thTop" nowrap="nowrap">{L_RATING}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- BEGIN modification -->
+<!-- IF modification.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+					<td align="center"><span class="gen"><!-- IF modification.U_IMAGE --><a href="{modification.U_IMAGE}" target="_blank">{modification.IMAGE}</a><!-- ENDIF --></span></td>
+	  				<td align="center" valign="middle"><span class="gensmall"><a href="{modification.U_VIEW_VEHICLE}">{modification.VEHICLE}</a></span></td>
+					<td align="center" valign="middle"><span class="gensmall"><a href="{modification.U_VIEW_MODIFICATION}">{modification.MODIFICATION}</a></span></td>
+					<td align="center" valign="middle"><span class="gensmall">{modification.CATEGORY}</span></td>
+					<td align="center" valign="middle"><span class="gensmall"><b><a href="{modification.U_VIEW_PROFILE}" <!-- IF modification.USERNAME_COLOUR --> style="color: {modification.USERNAME_COLOUR}"<!-- ENDIF -->>{modification.USERNAME}</a></b></span></td>
+					<td align="center" valign="middle"><span class="gensmall">{modification.PRICE}</span></td>
+					<td align="center" valign="middle"><span class="gensmall">{modification.RATING}</span></td>
+				</tr>
+				<!-- BEGINELSE -->
+				<tr class="row1">
+					<td align="center" colspan="12"><span class="gen">{L_SEARCH_PRODUCED_NO_RESULTS}</span></td>
+				</tr>
+				<!-- END modification -->
+				<tr>
+					<td class="cat" align="center" height="28" colspan="9"><span class="genmed">{L_MODIFICATIONS_SORTED_BY}&nbsp;<select id="sort" name="sort"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN sort --><option value="{sort.VALUE}" <!-- IF sort.S_SELECTED -->selected="selected"<!-- ENDIF -->>{sort.TEXT}</option><!-- END sort --></select>&nbsp;&nbsp;{L_IN}&nbsp;<select id="order" name="order"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN order --><option value="{order.VALUE}" <!-- IF order.S_SELECTED -->selected="selected"<!-- ENDIF -->>{order.TEXT}</option><!-- END order --></select>&nbsp;&nbsp;<input type="submit" name="submit" value="{L_GO}" class="liteoption" /></td>
+				</tr>
+			</tbody>
+			</table>
+
+			<table width="100%" cellspacing="1">
+			<tbody>
+				<tr>
+				<!-- IF TOTAL_MODIFICATIONS -->
+					<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
+					<td class="gensmall" nowrap="nowrap">&nbsp;[ {TOTAL_MODIFICATIONS} ]&nbsp;</td>
+					<td class="gensmall" width="100%" align="right" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
+				<!-- ENDIF -->
+				</tr>
+			</tbody>
+			</table>
+
+			<!-- ENDIF -->
+
+			<!-- IF S_DISPLAY_PREMIUM_RESULTS -->
+			<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
+			<thead>
+				<tr> 
+	  				<th class="thCornerL" nowrap="nowrap">{L_VEHICLE}</th>
+					<th class="thTop" nowrap="nowrap">{L_PRICE}</th>
+					<th class="thTop" nowrap="nowrap">{L_MOD_PRICE}</th>
+					<th class="thTop" nowrap="nowrap">{L_OWNER}</th>
+					<th class="thTop" nowrap="nowrap">{L_PREMIUM}</th>
+					<th class="thTop" nowrap="nowrap">{L_COVER_TYPE}</th>
+					<th class="thCornerR" nowrap="nowrap">{L_INSURER}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- BEGIN premium -->
+<!-- IF vehicle.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+				<td align="center" valign="middle"><span class="gensmall"><a href="{premium.U_VIEW_VEHICLE}">{premium.VEHICLE}</a></span></td>
+					<td align="center" valign="middle"><span class="gensmall">{premium.PRICE}</span></td>
+					<td align="center" valign="middle"><span class="gensmall">{premium.MOD_PRICE}</span></td>
+					<td align="center" valign="middle"><span class="gensmall"><b><a href="{premium.U_VIEW_PROFILE}" <!-- IF premium.USERNAME_COLOUR --> style="color: {premium.USERNAME_COLOUR}"<!-- ENDIF -->>{premium.USERNAME}</a></b></span></td>
+					<td align="center" valign="middle"><span class="gensmall">{premium.PREMIUM}</span></td>
+					<td align="center" valign="middle"><span class="gensmall">{premium.COVER_TYPE}</span></td>
+					<td align="center" valign="middle"><span class="gensmall"><a href="{premium.U_VIEW_BUSINESS}">{premium.BUSINESS}</a></span></td>
+				</tr>
+				<!-- BEGINELSE -->
+				<tr class="row1">
+					<td align="center" colspan="12"><span class="gen">{L_SEARCH_PRODUCED_NO_RESULTS}</span></td>
+				</tr>
+				<!-- END premium -->
+				<tr>
+					<td class="cat" align="center" height="28" colspan="9"><span class="genmed">{L_INSURANCE_SORTED_BY}&nbsp;<select id="sort" name="sort"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN sort --><option value="{sort.VALUE}" <!-- IF sort.S_SELECTED -->selected="selected"<!-- ENDIF -->>{sort.TEXT}</option><!-- END sort --></select>&nbsp;&nbsp;{L_IN}&nbsp;<select id="order" name="order"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN order --><option value="{order.VALUE}" <!-- IF order.S_SELECTED -->selected="selected"<!-- ENDIF -->>{order.TEXT}</option><!-- END order --></select>&nbsp;&nbsp;<input type="submit" name="submit" value="{L_GO}" class="liteoption" /></td>
+				</tr>
+			</tbody>
+			</table>
+
+			<table width="100%" cellspacing="1">
+			<tbody>
+				<tr>
+				<!-- IF TOTAL_PREMIUMS -->
+					<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
+					<td class="gensmall" nowrap="nowrap">&nbsp;[ {TOTAL_PREMIUMS} ]&nbsp;</td>
+					<td class="gensmall" width="100%" align="right" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
+				<!-- ENDIF -->
+				</tr>
+			</tbody>
+			</table>
+
+			<!-- ENDIF -->
+
+			<!-- IF S_DISPLAY_QUARTERMILE_RESULTS -->
+			<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
+			<thead>
+				<tr>
+	  				<th nowrap="nowrap"></th>
+				  	<th nowrap="nowrap">{L_USERNAME}</th>
+					<th nowrap="nowrap">{L_VEHICLE}</th>
+					<th nowrap="nowrap">{L_RT}</th>
+					<th nowrap="nowrap">{L_SIXTY}</th>
+					<th nowrap="nowrap">{L_THREE}</th>
+					<th nowrap="nowrap">{L_EIGHTH}</th>
+					<th nowrap="nowrap">{L_THOU}</th>
+					<th nowrap="nowrap">{L_QUART}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- BEGIN quartermile -->
+				<!-- IF quartermile.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+					<td align="center"><span class="gen"><!-- IF quartermile.U_IMAGE --><a href="{quartermile.U_IMAGE}" target="_blank">{quartermile.IMAGE}</a><!-- ENDIF --></span></td>
+					<td align="center"><span class="gen"><b><a href="{quartermile.U_VIEWPROFILE}" <!-- IF quartermile.USERNAME_COLOUR --> style="color: {quartermile.USERNAME_COLOUR}"<!-- ENDIF -->>{quartermile.USERNAME}</a></b></span></td>
+					<td align="center"><span class="gen"><a href="{quartermile.U_VIEWVEHICLE}">{quartermile.VEHICLE}</a></span></td>
+					<td align="center"><span class="gensmall">{quartermile.RT}</span></td>
+					<td align="center"><span class="gensmall">{quartermile.SIXTY}</span></td>
+					<td align="center"><span class="gensmall">{quartermile.THREE}</span></td>
+					<td align="center"><span class="gensmall">{quartermile.EIGHTH}&nbsp;&#64;&nbsp;{quartermile.EIGHTHMPH}</span></td>
+					<td align="center"><span class="gensmall">{quartermile.THOU}</span></td>
+					<td align="center"><span class="gensmall"><a href="{quartermile.U_QUART}">{quartermile.QUART}&nbsp;&#64;&nbsp;{quartermile.QUARTMPH}</a></span></td>
+				</tr>
+				<!-- BEGINELSE -->
+				<tr class="row1">
+					<td align="center" colspan="12"><span class="gen">{L_SEARCH_PRODUCED_NO_RESULTS}</span></td>
+				</tr>
+				<!-- END quartermile -->
+				<tr> 
+					<td class="cat" align="center" height="28" colspan="12"><span class="genmed">{L_QUARTERMILE_SORTED_BY}&nbsp;<select id="sort" name="sort"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN sort --><option value="{sort.VALUE}" <!-- IF sort.S_SELECTED -->selected="selected"<!-- ENDIF -->>{sort.TEXT}</option><!-- END sort --></select>&nbsp;&nbsp;{L_IN}&nbsp;<select id="order" name="order"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN order --><option value="{order.VALUE}" <!-- IF order.S_SELECTED -->selected="selected"<!-- ENDIF -->>{order.TEXT}</option><!-- END order --></select>&nbsp;&nbsp;<input type="submit" name="submit" value="{L_GO}" class="liteoption" /></td>
+				</tr>
+			</tbody>
+			</table>
+
+			<table width="100%" cellspacing="1">
+			<tbody>
+				<tr>
+				<!-- IF TOTAL_QUARTERMILES -->
+					<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
+					<td class="gensmall" nowrap="nowrap">&nbsp;[ {TOTAL_QUARTERMILES} ]&nbsp;</td>
+					<td class="gensmall" width="100%" align="right" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
+				<!-- ENDIF -->
+				</tr>
+			</tbody>
+			</table>
+
+			<!-- ENDIF -->
+
+			<!-- IF S_DISPLAY_DYNORUN_RESULTS -->
+			<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
+			<thead>
+				<tr> 
+					<th class="thTop" nowrap="nowrap"></th>
+					<th class="thTop" nowrap="nowrap">{L_USERNAME}</th>
+					<th class="thTop" nowrap="nowrap">{L_VEHICLE}</th>
+					<th class="thTop" nowrap="nowrap">{L_DYNOCENTRE}</th>
+					<th class="thTop" nowrap="nowrap">{L_BHP}</th>
+					<th class="thTop" nowrap="nowrap">{L_TORQUE}</th>
+					<th class="thTop" nowrap="nowrap">{L_BOOST}</th>
+					<th class="thTop" nowrap="nowrap">{L_NITROUS}</th>
+					<th class="thTop" nowrap="nowrap">{L_PEAKPOINT}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- BEGIN dynorun -->
+				<!-- IF dynorun.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+					<td align="center"><span class="gen"><!-- IF dynorun.U_IMAGE --><a href="{dynorun.U_IMAGE}" target="_blank">{dynorun.IMAGE}</a><!-- ENDIF --></span></td>
+					<td align="center"><span class="gen"><b><a href="{dynorun.U_VIEWPROFILE}" <!-- IF dynorun.USERNAME_COLOUR --> style="color: {dynorun.USERNAME_COLOUR}"<!-- ENDIF -->>{dynorun.USERNAME}</a></b></span></td>
+					<td align="center"><span class="gen"><a href="{dynorun.U_VIEWVEHICLE}" >{dynorun.VEHICLE}</a></span></td>
+					<td align="center"><span class="gensmall">{dynorun.DYNOCENTRE}</span></td>
+					<td align="center"><span class="gensmall"><a href="{dynorun.U_BHP}">{dynorun.BHP}&nbsp;{dynorun.BHP_UNIT}</a></span></td>
+					<td align="center"><span class="gensmall">{dynorun.TORQUE}&nbsp;{dynorun.TORQUE_UNIT}</span></td>
+					<td align="center"><span class="gensmall">{dynorun.BOOST}&nbsp;{dynorun.BOOST_UNIT}</span></td>
+					<td align="center"><span class="gensmall">{dynorun.NITROUS}</span></td>
+					<td align="center"><span class="gensmall">{dynorun.PEAKPOINT}</span></td>
+				</tr>
+				<!-- BEGINELSE -->
+				<tr class="row1">
+					<td align="center" colspan="12"><span class="gen">{L_SEARCH_PRODUCED_NO_RESULTS}</span></td>
+				</tr>
+				<!-- END dynorun -->
+				<tr> 
+					<td class="cat" align="center" height="28" colspan="12"><span class="genmed">{L_DYNORUN_SORTED_BY}&nbsp;<select id="sort" name="sort"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN sort --><option value="{sort.VALUE}" <!-- IF sort.S_SELECTED -->selected="selected"<!-- ENDIF -->>{sort.TEXT}</option><!-- END sort --></select>&nbsp;&nbsp;{L_IN}&nbsp;<select id="order" name="order"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN order --><option value="{order.VALUE}" <!-- IF order.S_SELECTED -->selected="selected"<!-- ENDIF -->>{order.TEXT}</option><!-- END order --></select>&nbsp;&nbsp;<input type="submit" name="submit" value="{L_GO}" class="liteoption" /></td>
+				</tr>
+			</tbody>
+			</table>
+
+			<table width="100%" cellspacing="1">
+			<tbody>
+				<tr>
+				<!-- IF TOTAL_DYNORUNS -->
+					<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
+					<td class="gensmall" nowrap="nowrap">&nbsp;[ {TOTAL_DYNORUNS} ]&nbsp;</td>
+					<td class="gensmall" width="100%" align="right" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
+				<!-- ENDIF -->
+				</tr>
+			</tbody>
+			</table>
+
+			<!-- ENDIF -->
+
+			<!-- IF S_DISPLAY_LAP_RESULTS -->
+			<table width="100%" cellpadding="1" cellspacing="1" border="0" class="tablebg">
+			<thead>
+				<tr>
+					<th></td>
+					<th nowrap="nowrap">{L_USERNAME}</th>
+					<th nowrap="nowrap">{L_VEHICLE}</th>
+					<th><span class="gen">{L_TRACK}</span></td>
+					<th><span class="gen">{L_CONDITION}</span></td>
+					<th><span class="gen">{L_TYPE}</span></td>
+					<th><span class="gen">{L_TIME}</span>&nbsp;<span class="gensmall">(M:S:MS)</span></td>
+
+				</tr>
+			</thead>
+			<tbody>
+				<!-- BEGIN lap -->
+				<!-- IF lap.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+	  				<td class="row1" align="center"><span class="gensmall"><!-- IF lap.U_IMAGE --><a href="{lap.U_IMAGE}" target="_blank">{lap.IMAGE}</a><!-- ENDIF --></span></td>
+					<td align="center"><span class="gen"><b><a href="{lap.U_VIEWPROFILE}" <!-- IF lap.USERNAME_COLOUR --> style="color: {lap.USERNAME_COLOUR}"<!-- ENDIF -->>{lap.USERNAME}</a></b></span></td>
+					<td align="center"><span class="gen"><a href="{lap.U_VIEWVEHICLE}">{lap.VEHICLE}</a></span></td>
+					<td class="row1" align="center"><span class="gensmall"><a href="{lap.U_TRACK}">{lap.TRACK}</a></span></td>
+					<td class="row1" align="center"><span class="gensmall">{lap.CONDITION}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{lap.TYPE}</span></td>
+					<td class="row1" align="center"><span class="gensmall"><a href="{lap.U_LAP}">{lap.MINUTE}.{lap.SECOND}.{lap.MILLISECOND}</a></span></td>
+				</tr>
+				<!-- BEGINELSE -->
+				<tr class="row1">
+					<td align="center" colspan="12"><span class="gen">{L_SEARCH_PRODUCED_NO_RESULTS}</span></td>
+				</tr>
+				<!-- END lap -->
+				<tr> 
+					<td class="cat" align="center" height="28" colspan="12"><span class="genmed">{L_LAP_SORTED_BY}&nbsp;<select id="sort" name="sort"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN sort --><option value="{sort.VALUE}" <!-- IF sort.S_SELECTED -->selected="selected"<!-- ENDIF -->>{sort.TEXT}</option><!-- END sort --></select>&nbsp;&nbsp;{L_IN}&nbsp;<select id="order" name="order"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN order --><option value="{order.VALUE}" <!-- IF order.S_SELECTED -->selected="selected"<!-- ENDIF -->>{order.TEXT}</option><!-- END order --></select>&nbsp;&nbsp;<input type="submit" name="submit" value="{L_GO}" class="liteoption" /></td>
+				</tr>
+			</tbody>
+			</table>
+			<br />
+
+			<table width="100%" cellspacing="1">
+			<tbody>
+				<tr>
+				<!-- IF TOTAL_LAPS -->
+					<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
+					<td class="gensmall" nowrap="nowrap">&nbsp;[ {TOTAL_LAPS} ]&nbsp;</td>
+					<td class="gensmall" width="100%" align="right" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
+				<!-- ENDIF -->
+				</tr>
+			</tbody>
+			</table>
+
+
+			<!-- ENDIF -->
+
+			<input type="hidden" value="{SEARCH_YEAR}" name="search_year" />
+			<input type="hidden" value="{SEARCH_MAKE}" name="search_make" />
+			<input type="hidden" value="{SEARCH_MODEL}" name="search_model" />
+			<input type="hidden" value="{SEARCH_CATEGORY}" name="search_category" />
+			<input type="hidden" value="{SEARCH_MANUFACTURER}" name="search_manufacturer" />
+			<input type="hidden" value="{SEARCH_PRODUCT}" name="search_product" />
+			<input type="hidden" value="{SEARCH_USERNAME}" name="search_username" />
+			<input type="hidden" value="{DISPLAY_AS}" name="display_as" />
+			<input type="hidden" value="{MADE_YEAR}" name="made_year" />
+			<input type="hidden" value="{MAKE_ID}" name="make_id" />
+			<input type="hidden" value="{MODEL_ID}" name="model_id" />
+			<input type="hidden" value="{CATEGORY_ID}" name="category_id" />
+			<input type="hidden" value="{MANUFACTURER_ID}" name="manufacturer_id" />
+			<input type="hidden" value="{PRODUCT_ID}" name="product_id" />
+			<input type="hidden" value="{USERNAME}" name="username'" />
+		</form>
+	</td>
+
+<!-- INCLUDE garage_footer.html -->
+
+<!-- INCLUDE overall_footer.html -->

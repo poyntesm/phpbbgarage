@@ -1,0 +1,71 @@
+<!-- INCLUDE overall_header.html -->
+
+<!-- IF U_MCP -->
+	<div id="pageheader">
+		<p class="linkmcp">[ <a href="{U_MCP}">{L_MCP}</a> ]</p>
+	</div>
+
+	<br clear="all" /><br />
+<!-- ENDIF -->
+
+<!-- INCLUDE garage_header.html -->
+
+<!-- INCLUDE garage_menu.html -->
+
+		<td width="72%" valign="top" >
+			<form enctype="multipart/form-data" method="post" name="user_submit" action="{S_MODE_ACTION}">
+			<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
+			<thead>
+				<tr>
+					<th height="25" nowrap="nowrap" colspan="2">{L_TITLE}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- IF S_DISPLAY_PENDING -->
+				<tr>
+					<td class="row1" colspan="2" width="20%" align="center"><span class="gen"><br />{L_BUSINESS_NOTICE}<br /><br /></span></td>
+				</tr>
+				<!-- ENDIF -->
+				<tr>
+					<td class="row1" width="20%"><span class="gen"><b>{L_BUSINESS_NAME}</b></span></td>
+					<td class="row2"><input name="title" type="text" class="post" size="35" value="{TITLE}" /> <span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td>
+				</tr>
+				<tr>
+					<td class="row1" width="35%"><span class="gen"><b>{L_ADDRESS}</b></span></td>
+					<td class="row2"><textarea name="address" cols="40" rows="4" wrap="soft"   class="post">{ADDRESS}</textarea></td>
+				</tr>
+				<tr>
+					<td class="row1" width="20%"><span class="gen"><b>{L_TELEPHONE}</b></span></td>
+					<td class="row2"><input name="telephone" type="text" class="post" size="35" value="{TELEPHONE}" /></td>
+				</tr>
+				<tr>
+					<td class="row1" width="20%"><span class="gen"><b>{L_FAX}</b></span></td>
+					<td class="row2"><input name="fax" type="text" class="post" size="35" value="{FAX}" /></td>
+				</tr>
+				<tr>
+					<td class="row1" width="20%"><span class="gen"><b>{L_WEBSITE}</b></span></td>
+					<td class="row2"><input name="website" type="text" class="post" size="35" value="{WEBSITE}" /></td>
+				</tr>
+				<tr>
+					<td class="row1" width="20%"><span class="gen"><b>{L_EMAIL}</b></span></td>
+					<td class="row2"><input name="email" type="text" class="post" size="35" value="{EMAIL}" /></td>
+				</tr>
+				<tr>
+					<td class="row1" width="35%"><span class="gen"><b>{L_OPENING_HOURS}</b></span></td>
+					<td class="row2"><textarea name="opening_hours" cols="40" rows="4" wrap="soft" class="post">{OPENING_HOURS}</textarea></td>
+				</tr>
+				<tr>
+					<td class="row1" width="20%"><span class="gen"><b>{L_TYPE}</b></span></td>
+					<td class="row2">{L_INSURANCE}&nbsp;:&nbsp;<input type="checkbox" name="insurance" value="1" <!-- IF S_BUSINESS_INSURANCE -->checked="checked"<!-- ENDIF --> /><br />{L_GARAGE}&nbsp;:&nbsp;<input type="checkbox" name="garage" value="1" <!-- IF S_BUSINESS_GARAGE-->checked="checked"<!-- ENDIF --> /><br />{L_RETAIL}&nbsp;:&nbsp;<input type="checkbox" name="retail" value="1" <!-- IF S_BUSINESS_RETAIL -->checked="checked"<!-- ENDIF --> /><br />{L_PRODUCT_MANUFACTURER}&nbsp;:&nbsp;<input type="checkbox" name="product" value="1" <!-- IF S_BUSINESS_PRODUCT -->checked="checked"<!-- ENDIF --> /><br />{L_DYNOCENTRE}&nbsp;:&nbsp;<input type="checkbox" name="dynocentre" value="1" <!-- IF S_BUSINESS_DYNOCENTRE -->checked="checked"<!-- ENDIF --> /></td>
+				</tr>
+				<tr>
+					<td class="cat" align="center" height="28" colspan="2"><input type="hidden" value="{VID}" name="VID" /><input type="hidden" value="{BUSINESS_ID}" name="id" /><input type="hidden" value="{REDIRECT}" name="redirect" /><input name="submit" type="submit" value="{L_BUTTON}" class="liteoption" /></td>
+				</tr>
+			</tbody>
+			</table>
+			</form>
+		</td>
+
+<!-- INCLUDE garage_footer.html -->
+
+<!-- INCLUDE overall_footer.html -->

@@ -1,0 +1,457 @@
+<!-- INCLUDE overall_header.html -->
+
+<!-- IF U_MCP -->
+	<div id="pageheader">
+		<p class="linkmcp">[ <a href="{U_MCP}">{L_MCP}</a> ]</p>
+	</div>
+
+	<br clear="all" /><br />
+<!-- ENDIF -->
+
+<!-- INCLUDE garage_header.html -->
+
+<!-- INCLUDE garage_menu.html -->
+
+<script type="text/javascript">
+<!--
+function confirm_delete_car(car_id)
+{
+	if ( confirm("{L_CONFIRM_DELETE_VEHICLE}") )
+	{
+
+		window.location.href = "{U_DELETE_VEHICLE}&VID=" + car_id;
+	}
+}
+
+function confirm_delete_mod (car_id, mod_id)
+{
+	if ( confirm("{L_CONFIRM_DELETE_MODIFICATION}") )
+	{
+		window.location.href = "{U_DELETE_MODIFICATION}&MID=" + mod_id + "&VID=" + car_id;
+	}
+}
+
+function confirm_delete_insurance (car_id, ins_id)
+{
+	if ( confirm("{L_CONFIRM_DELETE_PREMIUM}") )
+	{
+		window.location.href = "{U_DELETE_PREMIUM}&INS_ID=" + ins_id + "&VID=" + car_id;
+	}
+}
+
+function confirm_delete_quartermile (car_id, qm_id)
+{
+	if ( confirm("{L_CONFIRM_DELETE_QUARTERMILE}") )
+	{
+		window.location.href = "{U_DELETE_QUARTERMILE}&QMID=" + qm_id + "&VID=" + car_id;
+	}
+}
+
+function confirm_delete_dynorun (car_id, did)
+{
+	if ( confirm("{L_CONFIRM_DELETE_DYNORUN}") )
+	{
+		window.location.href = "{U_DELETE_DYNORUN}&DID=" + did + "&VID=" + car_id;
+	}
+}
+
+function confirm_delete_lap (car_id, lid)
+{
+	if ( confirm("{L_CONFIRM_DELETE_LAP}") )
+	{
+		window.location.href = "{U_DELETE_LAP}&LID=" + lid + "&VID=" + car_id;
+	}
+}
+
+function confirm_delete_service (car_id, svid)
+{
+	if ( confirm("{L_CONFIRM_DELETE_SERVICE}") )
+	{
+		window.location.href = "{U_DELETE_LAP}&SVID=" + svid + "&VID=" + car_id;
+	}
+}
+// -->
+</script>
+		<td width="72%" valign="top">
+			<table cellpadding="4" cellspacing="1" border="0" width="100%" class="tablebg">
+			<thead>
+     				<tr>
+      					<th height="25" colspan="2">{YEAR}&nbsp;{MAKE}&nbsp;{MODEL}</th>
+				</tr>
+			</thead>
+			<tbody>
+        			<tr>
+            				<td class="row1" width="59%" valign="top">
+						<table width="100%" cellpadding="4" cellspacing="1" border="0">
+						<tbody>
+		    					<!-- IF ! U_VIEW_VEHICLE -->
+		    					<tr>
+   								<td class="row1"><span class="gen"><b>{L_OWNER}</b></span></td>
+		    					</tr>
+                    					<tr>
+								<td align="center">{AVATAR_IMG}<br /><span class="gen"><b><a href="{U_PROFILE}" <!-- IF USERNAME_COLOUR --> style="color: {USERNAME_COLOUR}"<!-- ENDIF -->>{USERNAME}</a></b></span></td>
+		   					</tr>
+							<!-- IF U_HILITE_IMAGE -->
+							<tr>
+    								<td class="row1"><span class="gen"><b>{L_HILITE_IMAGE}</b></span></td>
+	           					</tr>
+							<tr>
+                        					<td align="center"><a href="{U_HILITE_IMAGE}" title="{HILITE_IMAGE_TITLE}" target="_blank"><img hspace="5" vspace="5" src="{HILITE_IMAGE}" /></a><br /><span class="gensmall">{L_TOTAL_VIEWS}: {TOTAL_IMAGE_VIEWS}</span></td>
+                    					</tr>
+							<!-- ENDIF -->
+			                                <tr>
+				                        	<td class="row1"><span class="gen"><b>{L_DESCRIPTION}</b></span></td>
+                                   			</tr> 
+			                                <tr>
+				                        	<td align="center"><span class="gen">{DESCRIPTION}</span></td>
+							</tr> 
+							<!-- ENDIF -->
+							<!-- IF U_MODERATE_VEHICLE -->
+							<tr>
+								<td align="center"><span class="gen"><a href="{U_MODERATE_VEHICLE}">{MODERATE_VEHICLE}</a></span></td>
+							</tr>
+							<!-- ENDIF -->
+							<!-- IF U_VIEW_VEHICLE -->
+                    					<tr>
+    								<td class="row1"><span class="gen"><b>{L_MANAGE_VEHICLE_LINKS}</b><br /></span></td>
+  		    					</tr>
+                    					<tr>
+                        					<td align="center" >
+									<span class="gen">
+									<!-- IF U_VIEW_VEHICLE --><a href="{U_VIEW_VEHICLE}">{VIEW_VEHICLE}</a>&nbsp;<!-- ENDIF -->
+									<!-- IF U_EDIT_VEHICLE --><a href="{U_EDIT_VEHICLE}">{EDIT_VEHICLE}</a>&nbsp;<!-- ENDIF -->
+									<!-- IF U_DELETE_VEHICLE --><a href="{U_DELETE_VEHICLE}">{DELETE_VEHICLE}</a>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_MODIFICATION --><a href="{U_ADD_MODIFICATION}">{ADD_MODIFICATION}</a>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_INSURANCE --><a href="{U_ADD_INSURANCE}">{ADD_INSURANCE}</a>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_QUARTERMILE --><a href="{U_ADD_QUARTERMILE}">{ADD_QUARTERMILE}</a>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_DYNORUN --><a href="{U_ADD_DYNORUN}">{ADD_DYNORUN}</a>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_LAP --><a href="{U_ADD_LAP}">{ADD_LAP}</a>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_SERVICE --><a href="{U_ADD_SERVICE}">{ADD_SERVICE}</a>&nbsp;<!-- ENDIF -->
+									<!-- IF U_SET_MAIN_VEHICLE --><a href="{U_SET_MAIN_VEHICLE}">{SET_MAIN_VEHICLE}</a>&nbsp;<!-- ENDIF -->
+									<br />
+									<!-- IF U_HILITE_IMAGE -->
+									<a href="{U_HILITE_IMAGE}" title="{HILITE_IMAGE_TITLE}" target="_blank"><img hspace="5" vspace="5" src="{HILITE_IMAGE}" /></a>
+									<br /></span><span class="gensmall">{L_TOTAL_VIEWS}:&nbsp;{TOTAL_IMAGE_VIEWS}</span>
+									<!-- ENDIF -->
+                        					</td>
+							</tr>
+							<!-- ENDIF -->
+						</tbody>
+                				</table>
+            				</td>
+            				<td class="row1" width="41%" valign="top">
+						<form method="post" name="view_vehicle" action="{S_MODE_ACTION}">
+						<table cellpadding="4" cellspacing="1" width="100%">
+						<tbody>
+                    					<tr>
+                        					<td class="row1" ><span class="gen"><b>{L_VEHICLE}</b></span></td>
+                        					<td><span class="gen">{YEAR}&nbsp;{MAKE}&nbsp;{MODEL}</span></td>
+                    					</tr>
+                    					<tr>
+                        					<td class="row1" ><span class="gen"><b>{L_COLOUR}</b></span></td>
+                        					<td><span class="gen">{COLOUR}</span></td>
+                    					</tr>
+                    					<tr>
+                        					<td class="row1" ><span class="gen"><b>{L_UPDATED}</b></span></td>
+                        					<td><span class="gen">{DATE_UPDATED}</span></td>
+                    					</tr>
+                    					<tr>
+                        					<td class="row1" ><span class="gen"><b>{L_MILEAGE}</b></span></td>
+                        					<td><span class="gen">{MILEAGE}&nbsp;{MILEAGE_UNITS}</span></td>
+                    					</tr>
+                    					<tr>
+                        					<td class="row1" ><span class="gen"><b>{L_PRICE}</b></span></td>
+                        					<td><span class="gen">{PRICE}&nbsp;{CURRENCY}</span></td>
+                    					</tr>
+                    					<tr>
+                        					<td class="row1" ><span class="gen"><b>{L_TOTAL_MODS}</b></span></td>
+                        					<td><span class="gen">{TOTAL_MODS}</span></td>
+                    					</tr>
+                    					<tr>
+                        					<td class="row1" ><span class="gen"><b>{L_TOTAL_SPENT}</b></span></td>
+                        					<td><span class="gen">{TOTAL_SPENT}&nbsp;{CURRENCY}</span></td>
+                    					</tr>
+                    					<tr>
+                        					<td class="row1" ><span class="gen"><b>{L_TOTAL_VIEWS}</b></span></td>
+                        					<td><span class="gen">{TOTAL_VIEWS}</span></td>
+                    					</tr>
+            	    					<tr>
+                        					<td class="row1" valign="top" nowrap="nowrap"><span class="gen"><b>{L_VEHICLE_RATING}</b></span></td>
+                        					<td width="95%"><span class="gen">{RATING}</span></td>
+                    					</tr>
+							<!-- IF ! S_DISPLAY_VEHICLE_OWNER -->
+            	    					<tr>
+                        					<td class="row1"  valign="top" ><span class="gen"><b>{L_PLEASE_RATE}</b></span></td>
+                        					<td width="85%"><select id="vehicle_rating" name="vehicle_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN rating --><option value="{rating.VALUE}" <!-- IF rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{rating.TEXT}</option><!-- END rating --></select>&nbsp;<input type="hidden" value="rate_vehicle" name="mode" /><input type="hidden" value="{VID}" name="VID" />
+								<!-- IF S_DISPLAY_RATE -->
+								<input name="submit" type="submit" value="{L_RATE}" class="liteoption" />
+								<!-- ENDIF rate -->
+								<span class="gensmall"><i> {L_RATING_NOTICE}</i></span></td>
+                    					</tr>
+							<!-- ENDIF -->
+
+							<!-- IF S_DISPLAY_GUESTBOOK -->
+        					 	<tr>
+                        					<td class="row1"  valign="top"><span class="gen"><b>{L_GUESTBOOK}</b></span></td>
+								<td width="95%"><span class="gensmall" align="center"><i>( {COMMENT_COUNT} {L_TOTAL_COMMENTS} )</i></span><span class="gensmall" style="color:666666"><br />
+								<!-- BEGIN guestbook_comments -->
+									<a href="{guestbook_comments.U_PROFILE}">{guestbook_comments.USERNAME}</a>:&nbsp;{guestbook_comments.COMMENT}<br />
+								<!-- END guestbook_comments -->
+										<a href="{U_GUESTBOOK}">{L_VIEW_GUESTBOOK}</a></span></td>
+                    					</tr>
+							<!-- ENDIF -->
+						</tbody>
+                				</table>
+						</form>
+            				</td>
+        			</tr>
+    			</table>
+			<br />
+
+			<!-- IF S_DISPLAY_GALLERIES -->
+			<table width="100%" border="0" cellspacing="1" cellpadding="4" class="tablebg">
+			<thead>
+				<tr>
+      					<th height="25">{L_GALLERY}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- IF S_DISPLAY_VEHICLE_IMAGES -->
+   				<tr>
+			      		<td class="cat" width="100%"><span class="gen">{L_VEHICLE_PICTURES}</span></td>
+			     	</tr>
+			        <tr>
+					<td class="row1">
+						<!-- BEGIN vehicle_image -->
+							<a href="{vehicle_image.U_IMAGE}"><img hspace="5" vspace="5" name="{vehicle_image.IMAGE_NAME}" src="{vehicle_image.IMAGE_SOURCE}" /></a>
+						<!-- END vehicle_image -->
+					</td>
+				</tr>
+				<!-- ENDIF -->
+				<!-- IF S_DISPLAY_MODIFICATION_IMAGES -->
+				<tr>
+      					<td class="cat" width="100%"><span class="gen">{L_MODIFICATION_PICTURES} <i>({L_SHOWING} {SHOWING_MOD_IMAGES} {L_OF} {TOTAL_MOD_IMAGES} {L_IMAGES})</i></span></td>
+     				</tr>
+        			<tr>
+					<td class="row1">
+						<!-- BEGIN modification_image -->
+							<a href="{modification_image.U_IMAGE}"><img hspace="5" vspace="5" name="{modification_image.IMAGE_NAME}" src="{modification_image.IMAGE_SOURCE}" /></a>
+						<!-- END modification_image -->
+					</td>
+        			</tr>
+				<!-- ENDIF -->
+			</tbody>
+    			</table>
+			<br />
+			<!-- ENDIF -->
+
+			<!-- BEGIN service_history -->
+			<table width="100%" cellpadding="1" cellspacing="1" border="0" class="tablebg">
+			<thead>
+				<tr>
+	  				<th colspan="6">{L_SERVICE_HISTORY}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+	  				<td class="cat" ><span class="gen">{L_GARAGE}</span></td>
+	  				<td class="cat" ><span class="gen">{L_TYPE}</span></td>
+	  				<td class="cat" ><span class="gen">{L_COST}</span></td>
+	  				<td class="cat" ><span class="gen">{L_RATING}</span></td>
+	  				<td class="cat" ><span class="gen">{L_MILEAGE}</span></td>
+	  				<!-- IF S_DISPLAY_VEHICLE_OWNER --><td class="cat" ></td><!-- ENDIF -->
+				</tr>
+				<!-- BEGIN service -->
+				<tr>
+					<td class="row1" align="center"><span class="gensmall"><a href="{service_history.service.U_GARAGE}">{service_history.service.TITLE}</a></span></td>
+	  				<td class="row1" align="center"><span class="gensmall">{service_history.service.TYPE}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{service_history.service.PRICE}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{service_history.service.RATING}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{service_history.service.MILEAGE}</span></td>
+					<!-- IF S_DISPLAY_VEHICLE_OWNER --><td class="row1" align="right"><span class="gensmall"><!-- IF service_history.service.U_EDIT --><a href="{service_history.service.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF service_history.service.U_DELETE--><a href="{service_history.service.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
+				</tr>
+				<!-- END service -->
+			</tbody>
+			</table>
+			<br />
+			<!-- END service_history -->
+
+			<!-- BEGIN insurance -->
+			<table width="100%" cellpadding="1" cellspacing="1" border="0" class="tablebg">
+			<thead>
+				<tr>
+	  				<th colspan="4">{L_INSURANCE_PREMIUMS}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+	  				<td class="cat" ><span class="gen">{L_INSURANCE_COMPANY}</span></td>
+	  				<td class="cat" ><span class="gen">{L_PREMIUM}</span></td>
+	  				<td class="cat" ><span class="gen">{L_COVER_TYPE}</span></td>
+	  				<!-- IF S_DISPLAY_VEHICLE_OWNER --><td class="cat" ></td><!-- ENDIF -->
+				</tr>
+				<!-- BEGIN premium -->
+				<tr>
+					<td class="row1" align="center"><span class="gensmall"><a href="{insurance.premium.U_INSURER}">{insurance.premium.INSURER}</a></span></td>
+	  				<td class="row1" align="center"><span class="gensmall">{insurance.premium.PREMIUM}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{insurance.premium.COVER_TYPE}</span></td>
+					<!-- IF S_DISPLAY_VEHICLE_OWNER --><td class="row1" align="right"><span class="gensmall"><!-- IF insurance.premium.U_EDIT --><a href="{insurance.premium.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF insurance.premium.U_DELETE--><a href="{insurance.premium.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
+				</tr>
+				<!-- END premium -->
+			</tbody>
+			</table>
+			<br />
+			<!-- END insurance -->
+
+			<!-- BEGIN quartermile -->
+			<table width="100%" cellpadding="1" cellspacing="1" border="0" class="tablebg">
+			<thead>
+				<tr>
+	  				<th colspan="10">{L_QUARTER_MILE_TIMES}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+	  				<td class="cat" ></th>
+	  				<td class="cat" ><span class="gen">{L_RT}</span></td>
+					<td class="cat" ><span class="gen">{L_SIXTY}</span></td>
+					<td class="cat" ><span class="gen">{L_THREE}</span></td>
+					<td class="cat" ><span class="gen">{L_EIGHTH}</span></td>
+					<td class="cat" ><span class="gen">{L_EIGHTHMPH}</span></td>
+					<td class="cat" ><span class="gen">{L_THOU}</span></td>
+					<td class="cat" ><span class="gen">{L_QUART}</span></td>
+					<td class="cat" ><span class="gen">{L_QUARTMPH}</span></td>
+					<!-- IF S_DISPLAY_VEHICLE_OWNER --><td class="cat" ></td><!-- ENDIF -->
+				</tr>
+				<!-- BEGIN run -->
+				<tr>
+	  				<td class="row1" align="center"><span class="gensmall"><!-- IF quartermile.run.U_IMAGE --><a href="{quartermile.run.U_IMAGE}" target="_blank">{quartermile.run.IMAGE}</a><!-- ENDIF --></span></td>
+		  			<td class="row1" align="center"><span class="gensmall">{quartermile.run.RT}</span></td>
+		  			<td class="row1" align="center"><span class="gensmall">{quartermile.run.SIXTY}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{quartermile.run.THREE}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{quartermile.run.EIGHTH}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{quartermile.run.EIGHTHMPH}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{quartermile.run.THOU}</span></td>
+					<td class="row1" align="center"><span class="gensmall"><a href="{quartermile.run.U_QUART}">{quartermile.run.QUART}</a></span></td>
+					<td class="row1" align="center"><span class="gensmall">{quartermile.run.QUARTMPH}</span></td>
+					<!-- IF S_DISPLAY_VEHICLE_OWNER--><td class="row1" align="right"><span class="gensmall"><!-- IF quartermile.run.U_EDIT --><a href="{quartermile.run.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF quartermile.run.U_DELETE--><a href="{quartermile.run.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
+				</tr>
+				<!-- END run -->
+			</tbody>
+			</table>
+			<br />
+			<!-- END quartermile -->
+
+			<!-- BEGIN dynorun -->
+			<table width="100%" cellpadding="1" cellspacing="1" border="0" class="tablebg">
+			<thead>
+				<tr>
+					<th colspan="11">{L_DYNORUNS}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="cat" ></td>
+					<td class="cat" ><span class="gen">{L_DYNOCENTRE}</span></td>
+					<td class="cat" ><span class="gen">{L_BHP}</span></td>
+					<td class="cat" ><span class="gen">{L_BHP_UNIT}</span></td>
+					<td class="cat" ><span class="gen">{L_TORQUE}</span></td>
+					<td class="cat" ><span class="gen">{L_TORQUE_UNIT}</span></td>
+					<td class="cat" ><span class="gen">{L_BOOST}</span></td>
+					<td class="cat" ><span class="gen">{L_BOOST_UNIT}</span></td>
+					<td class="cat" ><span class="gen">{L_NITROUS}</span></td>
+					<td class="cat" ><span class="gen">{L_PEAKPOINT}</span></td>
+					<!-- IF S_DISPLAY_VEHICLE_OWNER --><td class="cat" ></td><!-- ENDIF -->
+
+				</tr>
+				<!-- BEGIN run -->
+				<tr>
+	  				<td class="row1" align="center"><span class="gensmall"><!-- IF dynorun.run.U_IMAGE --><a href="{dynorun.run.U_IMAGE}" target="_blank">{dynorun.run.IMAGE}</a><!-- ENDIF --></span></td>
+					<td class="row1" align="center"><span class="gensmall">{dynorun.run.DYNOCENTER}</span></td>
+					<td class="row1" align="center"><span class="gensmall"><a href="{dynorun.run.U_BHP}">{dynorun.run.BHP}</a></span></td>
+					<td class="row1" align="center"><span class="gensmall">{dynorun.run.BHP_UNIT}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{dynorun.run.TORQUE}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{dynorun.run.TORQUE_UNIT}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{dynorun.run.BOOST}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{dynorun.run.BOOST_UNIT}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{dynorun.run.NITROUS}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{dynorun.run.PEAKPOINT}</span></td>
+					<!-- IF S_DISPLAY_VEHICLE_OWNER--><td class="row1" align="right"><span class="gensmall"><!-- IF dynorun.run.U_EDIT --><a href="{dynorun.run.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF dynorun.run.U_DELETE--><a href="{dynorun.run.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
+				</tr>
+				<!-- END run -->
+			</tbody>
+			</table>
+			<br />
+			<!-- END dynorun -->
+
+			<!-- BEGIN tracktime -->
+			<table width="100%" cellpadding="1" cellspacing="1" border="0" class="tablebg">
+			<thead>
+				<tr>
+					<th colspan="11">{L_LAPS}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="cat" ></td>
+					<td class="cat" ><span class="gen">{L_TRACK}</span></td>
+					<td class="cat" ><span class="gen">{L_CONDITION}</span></td>
+					<td class="cat" ><span class="gen">{L_TYPE}</span></td>
+					<td class="cat" ><span class="gen">{L_TIME}</span>&nbsp;<span class="gensmall">(M:S:MS)</span></td>
+					<!-- IF S_DISPLAY_VEHICLE_OWNER --><td class="cat" ></td><!-- ENDIF -->
+
+				</tr>
+				<!-- BEGIN lap -->
+				<tr>
+	  				<td class="row1" align="center"><span class="gensmall"><!-- IF tracktime.lap.U_IMAGE --><a href="{tracktime.lap.U_IMAGE}" target="_blank">{tracktime.lap.IMAGE}</a><!-- ENDIF --></span></td>
+					<td class="row1" align="center"><span class="gensmall"><a href="{tracktime.lap.U_TRACK}">{tracktime.lap.TRACK}</a></span></td>
+					<td class="row1" align="center"><span class="gensmall">{tracktime.lap.CONDITION}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{tracktime.lap.TYPE}</span></td>
+					<td class="row1" align="center"><span class="gensmall"><a href="{tracktime.lap.U_LAP}">{tracktime.lap.MINUTE}.{tracktime.lap.SECOND}.{tracktime.lap.MILLISECOND}</a></span></td>
+					<!-- IF S_DISPLAY_VEHICLE_OWNER--><td class="row1" align="right"><span class="gensmall"><!-- IF tracktime.lap.U_EDIT --><a href="{tracktime.lap.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF tracktime.lap.U_DELETE--><a href="{tracktime.lap.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
+				</tr>
+				<!-- END lap -->
+			</tbody>
+			</table>
+			<br />
+			<!-- END tracktime -->
+
+			<!-- BEGIN category -->
+ 			<table width="100%" cellpadding="1" cellspacing="1" border="0" class="tablebg">
+			<thead>
+   				<tr>
+					<th height="25" colspan="8">{category.CATEGORY_TITLE}&nbsp;{L_MODIFICATIONS}</th>
+   				</tr>
+			</thead>
+			<tbody>
+   				<tr>
+      					<td class="cat" width="3%"><span class="gen"></span></td>
+				      	<td class="cat" ><span class="gen">{L_MODIFICATION}</span></td>
+					<td class="cat" ><span class="gen">{L_RATING}</span></td>
+					<td class="cat" ><span class="gen">{L_COST}</span></td>
+					<td class="cat" ><span class="gen">{L_INSTALL}</span></td>
+					<td class="cat" nowrap><span class="gen">{L_CREATED}</span></td>
+					<td class="cat" nowrap><span class="gen">{L_UPDATED}</span></td>
+					<!-- IF S_DISPLAY_VEHICLE_OWNER--><td class="cat" ></td><!-- ENDIF -->
+				</tr>
+				<!-- BEGIN modification -->
+   				<tr>
+					<td class="row1"><span class="gen"><!-- IF category.modification.U_IMAGE --><a href="{category.modification.U_IMAGE}" target="_blank">{category.modification.IMAGE}</a><!-- ENDIF --></span></td>
+					<td class="row1"><span class="gen">{category.modification.MODIFICATION}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{category.modification.RATING}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{category.modification.COST}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{category.modification.INSTALL}</span></td>
+					<td class="row1" nowrap><span class="gensmall">{category.modification.CREATED}</span></td>
+					<td class="row1" nowrap><span class="gensmall">{category.modification.UPDATED}</span></td>
+					<!-- IF S_DISPLAY_VEHICLE_OWNER--><td class="row1" align="right"><span class="gensmall"><!-- IF category.modification.U_EDIT --><a href="{category.modification.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF category.modification.U_DELETE--><a href="{category.modification.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
+				</tr>
+				<!-- END modification -->
+			</tbody>
+ 			</table>
+ 			<br /> 
+ 			<!-- END category -->
+		</td>
+
+<!-- INCLUDE garage_footer.html -->
+
+<!-- INCLUDE overall_footer.html -->

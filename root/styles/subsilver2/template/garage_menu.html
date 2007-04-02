@@ -1,0 +1,19 @@
+		<td width="23%" valign="top" >
+			<!-- IF S_GARAGE_DISPLAY_UPDATED_VEHICLES -->
+			<table width="100%" cellpadding="2" cellspacing="1" border="0" class="tablebg">
+			<thead>	
+				<tr>
+					<th>{L_LATEST_UPDATED}</th>
+				</tr>
+			</head>
+			<tbody>
+				<!-- BEGIN updated_vehicles -->
+				<tr>
+					<td class="row1" align="left" nowrap="nowrap"><span class="genmed"><a href="{updated_vehicles.U_VIEW_VEHICLE}" >{updated_vehicles.VEHICLE}</a><br />{updated_vehicles.UPDATED_TIME}<br>{L_OWNER}:&nbsp;<b><a href="{updated_vehicles.U_VIEW_PROFILE}" <!-- IF updated_vehicles.USERNAME_COLOUR --> style="color: {updated_vehicles.USERNAME_COLOUR}"<!-- ENDIF -->>{updated_vehicles.USERNAME}</a></b></span></td>
+				</tr>
+				<!-- END updated_vehicles -->
+			</tbody>
+			</table>
+			<br />
+			<!-- ENDIF -->
+		</td>
