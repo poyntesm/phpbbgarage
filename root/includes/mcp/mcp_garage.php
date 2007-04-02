@@ -607,7 +607,7 @@ class mcp_garage
 						'MILLISECOND'	=> $data[$i]['millisecond'],
 						'USERNAME'	=> $data[$i]['username'],
 						'VEHICLE'	=> $data[$i]['vehicle'],
-						'IMAGE'		=> $user->img('garage_slip_img_attached', 'SLIP_IMAGE_ATTACHED'),
+						'IMAGE'		=> $user->img('garage_img_attached', 'IMAGE_ATTACHED'),
 						'U_PROFILE'	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $data[$i]['user_id']),
 						'U_VEHICLE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;VID=" . $data[$i]['id']),
 						'U_IMAGE'	=> ($data[$i]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_image&amp;image_id=". $data[$i]['attach_id']) : '',

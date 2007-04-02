@@ -540,8 +540,7 @@ $required_sql[] = "ALTER TABLE " . $table_prefix . "users ADD `user_garage_guest
 $required_sql[] = "ALTER TABLE " . $table_prefix . "users ADD `user_garage_mod_email_optout` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0'";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "users ADD `user_garage_mod_pm_optout` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0'";
 //Required SQL For Images
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_vehicle_img_attached` text NOT NULL";
-$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_slip_img_attached` text NOT NULL";
+$required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_img_attached` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_icon_garage` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_main_menu` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_browse` text NOT NULL";
@@ -573,8 +572,7 @@ $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_move_down` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_set_approved` text NOT NULL";
 $required_sql[] = "ALTER TABLE " . $table_prefix . "styles_imageset ADD `garage_set_pending` text NOT NULL";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_vehicle_img_attached = 'garage_camera.gif*13*18'";
-$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_slip_img_attached = 'garage_slip.gif*13*12'";
+$required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_img_attached = 'garage_camera.gif*13*18'";
 $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_icon_garage = '{LANG}/icon_garage.gif*18*59'";
 $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_main_menu = '{LANG}/garage_main_menu.gif*33*130'";
 $required_sql[] = "UPDATE " . $table_prefix . "styles_imageset SET garage_browse = '{LANG}/garage_browse.gif*33*130'";

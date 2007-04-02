@@ -1151,7 +1151,7 @@ class garage_vehicle
 			{
 				$template->assign_block_vars('category.modification', array(
 					'U_IMAGE'	=> ($modification_data[$j]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_image&amp;image_id=". $modification_data[$j]['attach_id']) : '',
-					'IMAGE'		=> $user->img('garage_vehicle_img_attached', 'MODIFICATION_IMAGE_ATTACHED'),
+					'IMAGE'		=> $user->img('garage_img_attached', 'MODIFICATION_IMAGE_ATTACHED'),
 	               			'COST' 		=> $modification_data[$j]['price'],
 	               			'INSTALL' 	=> $modification_data[$j]['install_price'],
 	               			'RATING' 	=> $modification_data[$j]['product_rating'],
@@ -1237,7 +1237,7 @@ class garage_vehicle
 					'QUART' 	=> $quartermile_data[$i]['quart'],
 					'QUARTMPH' 	=> $quartermile_data[$i]['quartmph'],
 					'U_IMAGE'	=> ($quartermile_data[$i]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_image&amp;image_id=". $quartermile_data[$i]['attach_id']) : '',
-					'IMAGE'		=> $user->img('garage_slip_img_attached', 'SLIP_IMAGE_ATTACHED'),
+					'IMAGE'		=> $user->img('garage_img_attached', 'IMAGE_ATTACHED'),
 					'U_QUART'	=> append_sid("garage_quartermile.$phpEx?mode=view_quartermile&amp;QMID=".$quartermile_data[$i]['id']."&amp;VID=$vid"),
 					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage_quartermile.$phpEx?mode=edit_quartermile&amp;QMID=".$quartermile_data[$i]['id']."&amp;VID=$vid") : '',
 					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_quartermile'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_quartermile(' . $vid . ',' . $quartermile_data[$i]['id'] . ')' : '')
@@ -1295,7 +1295,7 @@ class garage_vehicle
 					'NITROUS' 	=> $dynorun_data[$i]['nitrous'],
 					'PEAKPOINT' 	=> $dynorun_data[$i]['peakpoint'],
 					'U_IMAGE'	=> ($dynorun_data[$i]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_image&amp;image_id=". $dynorun_data[$i]['attach_id']) : '',
-					'IMAGE'		=> $user->img('garage_slip_img_attached', 'SLIP_IMAGE_ATTACHED'),
+					'IMAGE'		=> $user->img('garage_img_attached', 'IMAGE_ATTACHED'),
 					'U_BHP'		=> append_sid("garage_dynorun.$phpEx?mode=view_dynorun&amp;DID=".$dynorun_data[$i]['did']."&amp;VID=$vid"),
 					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage_dynorun.$phpEx?mode=edit_dynorun&amp;DID=".$dynorun_data[$i]['did']."&amp;VID=$vid") : '',
 					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_dynorun'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_dynorun(' . $vid . ',' . $dynorun_data[$i]['id'] . ')' : '')
@@ -1349,7 +1349,7 @@ class garage_vehicle
 					'MINUTE'	=> $lap_data[$i]['minute'],
 					'SECOND'	=> $lap_data[$i]['second'],
 					'MILLISECOND'	=> $lap_data[$i]['millisecond'],
-					'IMAGE'		=> $user->img('garage_slip_img_attached', 'SLIP_IMAGE_ATTACHED'),
+					'IMAGE'		=> $user->img('garage_img_attached', 'IMAGE_ATTACHED'),
 					'U_IMAGE'	=> ($lap_data[$i]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_image&amp;image_id=". $lap_data[$i]['attach_id']) : '',
 					'U_TRACK'	=> append_sid("garage_track.$phpEx?mode=view_track&amp;TID=".$lap_data[$i]['track_id']."&amp;VID=$vid"),
 					'U_LAP'		=> append_sid("garage_track.$phpEx?mode=view_lap&amp;LID=".$lap_data[$i]['lid']."&amp;VID=$vid"),

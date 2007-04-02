@@ -699,7 +699,7 @@ switch( $mode )
 				'USERNAME'	=> $lap_data[$i]['username'],
 				'USERNAME_COLOUR'	=> get_username_string('colour', $lap_data[$i]['user_id'], $lap_data[$i]['username'], $lap_data[$i]['user_colour']),
 				'VEHICLE'	=> $lap_data[$i]['vehicle'],
-				'IMAGE'		=> $user->img('garage_slip_img_attached', 'SLIP_IMAGE_ATTACHED'),
+				'IMAGE'		=> $user->img('garage_img_attached', 'IMAGE_ATTACHED'),
 				'U_IMAGE'	=> ($lap_data[$i]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_image&amp;image_id=". $lap_data[$i]['attach_id']) : '',
 				'U_VIEWPROFILE'	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $lap_data[$i]['user_id']),
 				'U_VIEWVEHICLE'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=" . $lap_data[$i]['vehicle_id']),

@@ -850,7 +850,7 @@ class garage_template
 				'U_VIEW_PROFILE'	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $data[$i]['user_id']),
 				'U_EDIT'		=> ($auth->acl_get('m_garage') || $user->data['user_id'] == $data[$i]['user_id'] ) ? append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;VID=" . $data[$i]['id']. "&amp;redirect=MCP") : '',
 				'ROW_NUMBER' 		=> $i + ( $start + 1 ),
-				'IMAGE'			=> $user->img('garage_vehicle_img_attached', 'VEHICLE_IMAGE_ATTACHED'),
+				'IMAGE'			=> $user->img('garage_img_attached', 'VEHICLE_IMAGE_ATTACHED'),
 				'ID'			=> $data[$i]['id'],
 				'YEAR' 			=> $data[$i]['made_year'],
 				'MAKE' 			=> $data[$i]['make'],
