@@ -14,12 +14,13 @@
 
 <script type="text/javascript">
 <!--
-function confirm_delete_car(car_id)
+
+function confirm_delete_vehicle(car_id)
 {
 	if ( confirm("{L_CONFIRM_DELETE_VEHICLE}") )
 	{
 
-		window.location.href = "{U_DELETE_VEHICLE}&VID=" + car_id;
+		window.location.href = "{U_DELETE_VEHICLE2}&VID=" + car_id;
 	}
 }
 
@@ -67,23 +68,37 @@ function confirm_delete_service (car_id, svid)
 {
 	if ( confirm("{L_CONFIRM_DELETE_SERVICE}") )
 	{
-		window.location.href = "{U_DELETE_LAP}&SVID=" + svid + "&VID=" + car_id;
+		window.location.href = "{U_DELETE_SERVICE}&SVID=" + svid + "&VID=" + car_id;
 	}
 }
-// -->
+
+function jumpto_garage()
+{
+	var page = prompt('{LA_JUMP_PAGE}:', '{ON_PAGE}');
+	var perpage = '{PER_PAGE}';
+	var base_url = '{BASE_URL}';
+	var hash_location = '#' + '{HASH_LOCATION}';
+
+	if (page !== null && !isNaN(page) && page > 0)
+	{
+		document.location.href = base_url.replace(/&amp;/g, '&') + '&start=' + ((page - 1) * perpage) + hash_location;
+	}
+}
+
+//-->
 </script>
-		<td width="72%" valign="top">
-			<table cellpadding="4" cellspacing="1" border="0" width="100%" class="tablebg">
-			<thead>
+
+<script type="text/javascript" src="{T_TEMPLATE_PATH}/garage_functions.js"></script>
+
+<td width="72%" valign="top" >
+
+    			<table cellpadding="4" cellspacing="1" border="0" width="100%" class="tablebg">
      				<tr>
       					<th height="25" colspan="2">{YEAR}&nbsp;{MAKE}&nbsp;{MODEL}</th>
-				</tr>
-			</thead>
-			<tbody>
+     				</tr>
         			<tr>
             				<td class="row1" width="59%" valign="top">
-						<table width="100%" cellpadding="4" cellspacing="1" border="0">
-						<tbody>
+                				<table width="100%" cellpadding="4" cellspacing="1" border="0">
 		    					<!-- IF ! U_VIEW_VEHICLE -->
 		    					<tr>
    								<td class="row1"><span class="gen"><b>{L_OWNER}</b></span></td>
@@ -134,15 +149,13 @@ function confirm_delete_service (car_id, svid)
 									<br /></span><span class="gensmall">{L_TOTAL_VIEWS}:&nbsp;{TOTAL_IMAGE_VIEWS}</span>
 									<!-- ENDIF -->
                         					</td>
-							</tr>
+                    					</tr>
 							<!-- ENDIF -->
-						</tbody>
                 				</table>
             				</td>
             				<td class="row1" width="41%" valign="top">
 						<form method="post" name="view_vehicle" action="{S_MODE_ACTION}">
-						<table cellpadding="4" cellspacing="1" width="100%">
-						<tbody>
+                				<table cellpadding="4" cellspacing="1" width="100%">
                     					<tr>
                         					<td class="row1" ><span class="gen"><b>{L_VEHICLE}</b></span></td>
                         					<td><span class="gen">{YEAR}&nbsp;{MAKE}&nbsp;{MODEL}</span></td>
@@ -178,7 +191,10 @@ function confirm_delete_service (car_id, svid)
             	    					<tr>
                         					<td class="row1" valign="top" nowrap="nowrap"><span class="gen"><b>{L_VEHICLE_RATING}</b></span></td>
                         					<td width="95%"><span class="gen">{RATING}</span></td>
-                    					</tr>
+							</tr>
+							<!-- BEGIN custom_vehicle_fields -->
+								<br /><b>{custom_vehicle_fields.PROFILE_FIELD_NAME}:</b> {custom_vehicle_fields.PROFILE_FIELD_VALUE}
+							<!-- END custom_vehicle_fields -->
 							<!-- IF ! S_DISPLAY_VEHICLE_OWNER -->
             	    					<tr>
                         					<td class="row1"  valign="top" ><span class="gen"><b>{L_PLEASE_RATE}</b></span></td>
@@ -189,18 +205,6 @@ function confirm_delete_service (car_id, svid)
 								<span class="gensmall"><i> {L_RATING_NOTICE}</i></span></td>
                     					</tr>
 							<!-- ENDIF -->
-
-							<!-- IF S_DISPLAY_GUESTBOOK -->
-        					 	<tr>
-                        					<td class="row1"  valign="top"><span class="gen"><b>{L_GUESTBOOK}</b></span></td>
-								<td width="95%"><span class="gensmall" align="center"><i>( {COMMENT_COUNT} {L_TOTAL_COMMENTS} )</i></span><span class="gensmall" style="color:666666"><br />
-								<!-- BEGIN guestbook_comments -->
-									<a href="{guestbook_comments.U_PROFILE}">{guestbook_comments.USERNAME}</a>:&nbsp;{guestbook_comments.COMMENT}<br />
-								<!-- END guestbook_comments -->
-										<a href="{U_GUESTBOOK}">{L_VIEW_GUESTBOOK}</a></span></td>
-                    					</tr>
-							<!-- ENDIF -->
-						</tbody>
                 				</table>
 						</form>
             				</td>
@@ -208,14 +212,11 @@ function confirm_delete_service (car_id, svid)
     			</table>
 			<br />
 
-			<!-- IF S_DISPLAY_GALLERIES -->
-			<table width="100%" border="0" cellspacing="1" cellpadding="4" class="tablebg">
-			<thead>
+				<!-- IF S_DISPLAY_GALLERIES -->
+				<table width="100%" id="table000" cellspacing="1" class="tablebg">
 				<tr>
       					<th height="25">{L_GALLERY}</th>
-				</tr>
-			</thead>
-			<tbody>
+    				</tr>
 				<!-- IF S_DISPLAY_VEHICLE_IMAGES -->
    				<tr>
 			      		<td class="cat" width="100%"><span class="gen">{L_VEHICLE_PICTURES}</span></td>
@@ -240,77 +241,81 @@ function confirm_delete_service (car_id, svid)
 					</td>
         			</tr>
 				<!-- ENDIF -->
-			</tbody>
-    			</table>
-			<br />
-			<!-- ENDIF -->
+				<!-- IF S_DISPLAY_QUARTERMILE_IMAGES -->
+   				<tr>
+			      		<td class="cat" width="100%"><span class="gen">{L_QUARTERMILE_PICTURES} <i>({L_SHOWING} {SHOWING_QUARTERMILE_IMAGES} {L_OF} {TOTAL_QUARTERMILE_IMAGES} {L_IMAGES})</i></span></td>
+			     	</tr>
+			        <tr>
+					<td class="row1">
+						<!-- BEGIN quartermile_image -->
+							<a href="{quartermile_image.U_IMAGE}"><img hspace="5" vspace="5" name="{quartermile_image.IMAGE_NAME}" src="{quartermile_image.IMAGE_SOURCE}" /></a>
+						<!-- END quartermile_image -->
+					</td>
+				</tr>
+				<!-- ENDIF -->
+				<!-- IF S_DISPLAY_DYNORUN_IMAGES -->
+   				<tr>
+			      		<td class="cat" width="100%"><span class="gen">{L_DYNORUN_PICTURES} <i>({L_SHOWING} {SHOWING_DYNORUN_IMAGES} {L_OF} {TOTAL_DYNORUN_IMAGES} {L_IMAGES})</i></span></td>
+			     	</tr>
+			        <tr>
+					<td class="row1">
+						<!-- BEGIN dynorun_image -->
+							<a href="{dynorun_image.U_IMAGE}"><img hspace="5" vspace="5" name="{dynorun_image.IMAGE_NAME}" src="{dynorun_image.IMAGE_SOURCE}" /></a>
+						<!-- END dynorun_image -->
+					</td>
+				</tr>
+				<!-- ENDIF -->
+				<!-- IF S_DISPLAY_LAP_IMAGES -->
+   				<tr>
+			      		<td class="cat" width="100%"><span class="gen">{L_LAP_PICTURES} <i>({L_SHOWING} {SHOWING_LAP_IMAGES} {L_OF} {TOTAL_LAP_IMAGES} {L_IMAGES})</i></span></td>
+			     	</tr>
+			        <tr>
+					<td class="row1">
+						<!-- BEGIN lap_image -->
+							<a href="{lap_image.U_IMAGE}"><img hspace="5" vspace="5" name="{lap_image.IMAGE_NAME}" src="{lap_image.IMAGE_SOURCE}" /></a>
+						<!-- END lap_image -->
+					</td>
+				</tr>
+				<!-- ENDIF -->
+				</table>
+				<!-- ENDIF -->
 
-			<!-- BEGIN service_history -->
-			<table width="100%" cellpadding="1" cellspacing="1" border="0" class="tablebg">
-			<thead>
+				<!-- BEGIN category -->
+				<table width="100%" cellspacing="1" class="tablebg">
 				<tr>
-	  				<th colspan="6">{L_SERVICE_HISTORY}</th>
+					<th height="25" colspan="8">{category.CATEGORY_TITLE}&nbsp;{L_MODIFICATIONS}</th>
+   				</tr>
+   				<tr>
+      					<td class="cat" width="3%"><span class="gen"></span></td>
+				      	<td class="cat" ><span class="gen">{L_MODIFICATION}</span></td>
+					<td class="cat" ><span class="gen">{L_RATING}</span></td>
+					<td class="cat" ><span class="gen">{L_COST}</span></td>
+					<td class="cat" ><span class="gen">{L_INSTALL}</span></td>
+					<td class="cat" nowrap><span class="gen">{L_CREATED}</span></td>
+					<td class="cat" nowrap><span class="gen">{L_UPDATED}</span></td>
+					<!-- IF S_DISPLAY_VEHICLE_OWNER--><td class="cat" ></td><!-- ENDIF -->
 				</tr>
-			</thead>
-			<tbody>
-				<tr>
-	  				<td class="cat" ><span class="gen">{L_GARAGE}</span></td>
-	  				<td class="cat" ><span class="gen">{L_TYPE}</span></td>
-	  				<td class="cat" ><span class="gen">{L_COST}</span></td>
-	  				<td class="cat" ><span class="gen">{L_RATING}</span></td>
-	  				<td class="cat" ><span class="gen">{L_MILEAGE}</span></td>
-	  				<!-- IF S_DISPLAY_VEHICLE_OWNER --><td class="cat" ></td><!-- ENDIF -->
+				<!-- BEGIN modification -->
+   				<tr>
+					<td class="row1"><span class="gen"><!-- IF category.modification.U_IMAGE --><a href="{category.modification.U_IMAGE}" target="_blank">{category.modification.IMAGE}</a><!-- ENDIF --></span></td>
+					<td class="row1"><span class="gen">{category.modification.MODIFICATION}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{category.modification.RATING}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{category.modification.COST}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{category.modification.INSTALL}</span></td>
+					<td class="row1" nowrap><span class="gensmall">{category.modification.CREATED}</span></td>
+					<td class="row1" nowrap><span class="gensmall">{category.modification.UPDATED}</span></td>
+					<!-- IF S_DISPLAY_VEHICLE_OWNER--><td class="row1" align="right"><span class="gensmall"><!-- IF category.modification.U_EDIT --><a href="{category.modification.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF category.modification.U_DELETE--><a href="{category.modification.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
 				</tr>
-				<!-- BEGIN service -->
-				<tr>
-					<td class="row1" align="center"><span class="gensmall"><a href="{service_history.service.U_GARAGE}">{service_history.service.TITLE}</a></span></td>
-	  				<td class="row1" align="center"><span class="gensmall">{service_history.service.TYPE}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{service_history.service.PRICE}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{service_history.service.RATING}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{service_history.service.MILEAGE}</span></td>
-					<!-- IF S_DISPLAY_VEHICLE_OWNER --><td class="row1" align="right"><span class="gensmall"><!-- IF service_history.service.U_EDIT --><a href="{service_history.service.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF service_history.service.U_DELETE--><a href="{service_history.service.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
-				</tr>
-				<!-- END service -->
-			</tbody>
-			</table>
-			<br />
-			<!-- END service_history -->
-
-			<!-- BEGIN insurance -->
-			<table width="100%" cellpadding="1" cellspacing="1" border="0" class="tablebg">
-			<thead>
-				<tr>
-	  				<th colspan="4">{L_INSURANCE_PREMIUMS}</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-	  				<td class="cat" ><span class="gen">{L_INSURANCE_COMPANY}</span></td>
-	  				<td class="cat" ><span class="gen">{L_PREMIUM}</span></td>
-	  				<td class="cat" ><span class="gen">{L_COVER_TYPE}</span></td>
-	  				<!-- IF S_DISPLAY_VEHICLE_OWNER --><td class="cat" ></td><!-- ENDIF -->
-				</tr>
-				<!-- BEGIN premium -->
-				<tr>
-					<td class="row1" align="center"><span class="gensmall"><a href="{insurance.premium.U_INSURER}">{insurance.premium.INSURER}</a></span></td>
-	  				<td class="row1" align="center"><span class="gensmall">{insurance.premium.PREMIUM}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{insurance.premium.COVER_TYPE}</span></td>
-					<!-- IF S_DISPLAY_VEHICLE_OWNER --><td class="row1" align="right"><span class="gensmall"><!-- IF insurance.premium.U_EDIT --><a href="{insurance.premium.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF insurance.premium.U_DELETE--><a href="{insurance.premium.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
-				</tr>
-				<!-- END premium -->
-			</tbody>
-			</table>
-			<br />
-			<!-- END insurance -->
-
-			<!-- BEGIN quartermile -->
-			<table width="100%" cellpadding="1" cellspacing="1" border="0" class="tablebg">
-			<thead>
+  				<!-- END modification -->
+				</table>
+				<br />
+				<!-- END category -->
+				
+				<!-- BEGIN quartermile -->
+				<table width="100%" cellspacing="1" class="tablebg">
 				<tr>
 	  				<th colspan="10">{L_QUARTER_MILE_TIMES}</th>
 				</tr>
-			</thead>
-			<tbody>
 				<tr>
 	  				<td class="cat" ></th>
 	  				<td class="cat" ><span class="gen">{L_RT}</span></td>
@@ -337,19 +342,15 @@ function confirm_delete_service (car_id, svid)
 					<!-- IF S_DISPLAY_VEHICLE_OWNER--><td class="row1" align="right"><span class="gensmall"><!-- IF quartermile.run.U_EDIT --><a href="{quartermile.run.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF quartermile.run.U_DELETE--><a href="{quartermile.run.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
 				</tr>
 				<!-- END run -->
-			</tbody>
-			</table>
-			<br />
-			<!-- END quartermile -->
-
-			<!-- BEGIN dynorun -->
-			<table width="100%" cellpadding="1" cellspacing="1" border="0" class="tablebg">
-			<thead>
+				</table>
+				<br />
+				<!-- END quartermile -->
+			
+				<!-- BEGIN dynorun -->
+				<table width="100%" cellspacing="1" class="tablebg">
 				<tr>
 					<th colspan="11">{L_DYNORUNS}</th>
 				</tr>
-			</thead>
-			<tbody>
 				<tr>
 					<td class="cat" ></td>
 					<td class="cat" ><span class="gen">{L_DYNOCENTRE}</span></td>
@@ -379,19 +380,15 @@ function confirm_delete_service (car_id, svid)
 					<!-- IF S_DISPLAY_VEHICLE_OWNER--><td class="row1" align="right"><span class="gensmall"><!-- IF dynorun.run.U_EDIT --><a href="{dynorun.run.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF dynorun.run.U_DELETE--><a href="{dynorun.run.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
 				</tr>
 				<!-- END run -->
-			</tbody>
-			</table>
-			<br />
-			<!-- END dynorun -->
-
-			<!-- BEGIN tracktime -->
-			<table width="100%" cellpadding="1" cellspacing="1" border="0" class="tablebg">
-			<thead>
+				</table>
+				<br />
+				<!-- END dynorun -->
+				
+				<!-- BEGIN tracktime -->
+				<table width="100%" cellspacing="1" class="tablebg">
 				<tr>
 					<th colspan="11">{L_LAPS}</th>
 				</tr>
-			</thead>
-			<tbody>
 				<tr>
 					<td class="cat" ></td>
 					<td class="cat" ><span class="gen">{L_TRACK}</span></td>
@@ -411,47 +408,251 @@ function confirm_delete_service (car_id, svid)
 					<!-- IF S_DISPLAY_VEHICLE_OWNER--><td class="row1" align="right"><span class="gensmall"><!-- IF tracktime.lap.U_EDIT --><a href="{tracktime.lap.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF tracktime.lap.U_DELETE--><a href="{tracktime.lap.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
 				</tr>
 				<!-- END lap -->
-			</tbody>
+				</table>
+				<br />
+				<!-- END tracktime -->
+				
+				<!-- BEGIN insurance -->
+				<table width="100%" cellspacing="1" class="tablebg">
+				<tr>
+	  				<th colspan="4">{L_INSURANCE_PREMIUMS}</th>
+				</tr>
+				<tr>
+	  				<td class="cat" ><span class="gen">{L_INSURANCE_COMPANY}</span></td>
+	  				<td class="cat" ><span class="gen">{L_PREMIUM}</span></td>
+	  				<td class="cat" ><span class="gen">{L_COVER_TYPE}</span></td>
+	  				<!-- IF S_DISPLAY_VEHICLE_OWNER --><td class="cat" ></td><!-- ENDIF -->
+				</tr>
+				<!-- BEGIN premium -->
+				<tr>
+					<td class="row1" align="center"><span class="gensmall"><a href="{insurance.premium.U_INSURER}">{insurance.premium.INSURER}</a></span></td>
+	  				<td class="row1" align="center"><span class="gensmall">{insurance.premium.PREMIUM}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{insurance.premium.COVER_TYPE}</span></td>
+					<!-- IF S_DISPLAY_VEHICLE_OWNER --><td class="row1" align="right"><span class="gensmall"><!-- IF insurance.premium.U_EDIT --><a href="{insurance.premium.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF insurance.premium.U_DELETE--><a href="{insurance.premium.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
+				</tr>
+				<!-- END premium -->
+				</table>
+				<br />
+				<!-- END insurance -->
+				
+				<!-- BEGIN service_history -->
+				<table width="100%" cellspacing="1" class="tablebg">
+				<tr>
+	  				<th colspan="6">{L_SERVICE_HISTORY}</th>
+				</tr>
+				<tr>
+	  				<td class="cat" ><span class="gen">{L_GARAGE}</span></td>
+	  				<td class="cat" ><span class="gen">{L_TYPE}</span></td>
+	  				<td class="cat" ><span class="gen">{L_COST}</span></td>
+	  				<td class="cat" ><span class="gen">{L_RATING}</span></td>
+	  				<td class="cat" ><span class="gen">{L_MILEAGE}</span></td>
+	  				<!-- IF S_DISPLAY_VEHICLE_OWNER --><td class="cat" ></td><!-- ENDIF -->
+				</tr>
+				<!-- BEGIN service -->
+				<tr>
+					<td class="row1" align="center"><span class="gensmall"><a href="{service_history.service.U_GARAGE}">{service_history.service.TITLE}</a></span></td>
+	  				<td class="row1" align="center"><span class="gensmall">{service_history.service.TYPE}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{service_history.service.PRICE}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{service_history.service.RATING}</span></td>
+					<td class="row1" align="center"><span class="gensmall">{service_history.service.MILEAGE}</span></td>
+					<!-- IF S_DISPLAY_VEHICLE_OWNER --><td class="row1" align="right"><span class="gensmall"><!-- IF service_history.service.U_EDIT --><a href="{service_history.service.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF service_history.service.U_DELETE--><a href="{service_history.service.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
+				</tr>
+				<!-- END service -->
+				</table>
+				<br />
+				<!-- END service_history -->
+				
+				<!-- BEGIN blog -->
+				<form method="post" name="guestbook" action="{S_MODE_BLOG_ACTION}">
+				<table width="100%" cellspacing="1" cellpadding="3" border="0" class="tablebg">
+				<tr>
+					<th height="25" nowrap="nowrap" colspan="5">{L_BLOG}</th>
+				</tr>
+				<!-- IF S_DISPLAY_ENTRY_BLOG -->
+				<tr>
+					<td class="cat" align="center" height="28" colspan="5"><span class="gen">{L_ADD_BLOG}</span></td>
+				</tr>
+				<tr>
+					<td class="row1" width="20%"><span class="gen">{L_BLOG_HEADER}</span></td>
+					<td class="row2" colspan="1"><input name="blog_title" type="text" class="post" size="60" value="{}" /></td>
+				</tr>
+				<tr>
+					<td class="row1" width="20%"><span class="gen">{L_ADD_BLOG}</span></td>
+					<td class="row2" colspan="1"><textarea name="blog_text" cols="70" rows="6" wrap="soft" class="post">{}</textarea></td>
+				</tr>
+				<tr>
+					<td class="cat" align="center" height="28" colspan="5"><input type="hidden" value="{VID}" name="VID" /><input name="submit" type="submit" class="liteoption" value="{L_ADD_BLOG}"/></td>
+				</tr>
+				<!-- ENDIF -->
+				<!-- BEGIN entry -->
+				<tr>
+					<td class="row1" colspan="2"><h3>{blog.entry.BLOG_TITLE}</h3>{blog.entry.BLOG_DATE}<br /><br />{blog.entry.BLOG_TEXT}</td>
+				</tr>
+				<!-- BEGINELSE -->
+				<tr>
+					<td class="row1" align="center" height="28" colspan="5"><span class="gen">{L_ADD_FIRST_BLOG}</span></td>
+				</tr>
+				<!-- END entry -->
 			</table>
+
+			<table width="100%" cellspacing="1">
+			<tr>
+				<!-- IF TOTAL_BLOGS -->
+					<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
+					<td class="gensmall" nowrap="nowrap">&nbsp;[ {TOTAL_BLOGS} ]&nbsp;</td>
+					<td class="gensmall" width="100%" align="right" nowrap="nowrap"><!-- INCLUDE garage_pagination.html --></td>
+				<!-- ENDIF -->
+			</tr>
+			</table>
+			</form>
 			<br />
-			<!-- END tracktime -->
+			<!-- END blog -->
 
-			<!-- BEGIN category -->
- 			<table width="100%" cellpadding="1" cellspacing="1" border="0" class="tablebg">
-			<thead>
-   				<tr>
-					<th height="25" colspan="8">{category.CATEGORY_TITLE}&nbsp;{L_MODIFICATIONS}</th>
-   				</tr>
-			</thead>
-			<tbody>
-   				<tr>
-      					<td class="cat" width="3%"><span class="gen"></span></td>
-				      	<td class="cat" ><span class="gen">{L_MODIFICATION}</span></td>
-					<td class="cat" ><span class="gen">{L_RATING}</span></td>
-					<td class="cat" ><span class="gen">{L_COST}</span></td>
-					<td class="cat" ><span class="gen">{L_INSTALL}</span></td>
-					<td class="cat" nowrap><span class="gen">{L_CREATED}</span></td>
-					<td class="cat" nowrap><span class="gen">{L_UPDATED}</span></td>
-					<!-- IF S_DISPLAY_VEHICLE_OWNER--><td class="cat" ></td><!-- ENDIF -->
+			<!-- BEGIN guestbook -->
+			<form method="post" name="guestbook" action="{S_MODE_GUESTBOOK_ACTION}">
+			<table width="100%" cellspacing="1" cellpadding="3" border="0" class="tablebg">
+			<!-- BEGIN comments -->
+			<!-- IF guestbook.comments.S_FIRST_ROW -->
+				<tr>
+					<th>{L_AUTHOR}</th>
+					<th>{L_MESSAGE}</th>
 				</tr>
-				<!-- BEGIN modification -->
-   				<tr>
-					<td class="row1"><span class="gen"><!-- IF category.modification.U_IMAGE --><a href="{category.modification.U_IMAGE}" target="_blank">{category.modification.IMAGE}</a><!-- ENDIF --></span></td>
-					<td class="row1"><span class="gen">{category.modification.MODIFICATION}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{category.modification.RATING}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{category.modification.COST}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{category.modification.INSTALL}</span></td>
-					<td class="row1" nowrap><span class="gensmall">{category.modification.CREATED}</span></td>
-					<td class="row1" nowrap><span class="gensmall">{category.modification.UPDATED}</span></td>
-					<!-- IF S_DISPLAY_VEHICLE_OWNER--><td class="row1" align="right"><span class="gensmall"><!-- IF category.modification.U_EDIT --><a href="{category.modification.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF category.modification.U_DELETE--><a href="{category.modification.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
-				</tr>
-				<!-- END modification -->
-			</tbody>
- 			</table>
- 			<br /> 
- 			<!-- END category -->
-		</td>
+				<!-- ENDIF -->
+				<!-- IF guestbook.comments.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
 
+				<!-- IF guestbook.comments.S_IGNORE_POST -->
+						<td class="gensmall" colspan="2" height="25" align="center"><!-- IF guestbook.comments.S_FIRST_UNREAD --><a name="unread"></a><!-- ENDIF --><a name="p{guestbook.comments.POST_ID}"></a>{guestbook.comments.L_IGNORE_POST}</td>
+				<!-- ELSE -->
+
+						<td align="center" valign="middle">
+							<b class="postauthor" <!-- IF guestbook.comments.POST_AUTHOR_COLOUR -->style="color: {guestbook.comments.POST_AUTHOR_COLOUR}"<!-- ENDIF -->>{guestbook.comments.POST_AUTHOR}</b>
+						</td>
+						<td width="100%" height="25">
+							<table width="100%" cellspacing="0">
+							<tr>
+							<!-- IF guestbook.comments.POST_ICON_IMG -->
+								<td><img src="{T_ICONS_PATH}{guestbook.comments.POST_ICON_IMG}" width="{guestbook.comments.POST_ICON_IMG_WIDTH}" height="{guestbook.comments.POST_ICON_IMG_HEIGHT}" alt="" title="" /></td>
+							<!-- ENDIF -->
+								<td class="gensmall" width="100%"><div style="float:right"><a href="{guestbook.comments.U_MINI_POST}">{guestbook.comments.MINI_POST_IMG}</a><b>{L_POSTED}:</b> {guestbook.comments.POST_DATE}&nbsp;</div></td>
+							</tr>
+							</table>
+						</td>
+					</tr>
+		
+					<!-- IF guestbook.comments.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+
+						<td valign="top">
+							<table cellspacing="4" align="center" width="150">
+						<!-- IF guestbook.comments.ONLINE_IMG -->
+							<tr>
+								<td>{guestbook.comments.ONLINE_IMG}</td>
+				</tr>
+			<!-- ENDIF -->
+			<!-- IF guestbook.comments.RANK_TITLE -->
+				<tr>
+					<td class="postdetails">{guestbook.comments.RANK_TITLE}</td>
+				</tr>
+			<!-- ENDIF -->
+			<!-- IF guestbook.comments.RANK_IMG -->
+				<tr>
+					<td>{guestbook.comments.RANK_IMG}</td>
+				</tr>
+			<!-- ENDIF -->
+			<!-- IF guestbook.comments.POSTER_AVATAR -->
+				<tr>
+					<td>{guestbook.comments.POSTER_AVATAR}</td>
+				</tr>
+			<!-- ENDIF -->
+			<!-- IF guestbook.comments.U_VEHICLE -->
+				<tr>
+					<td class="postdetails"><a href={guestbook.comments.U_VEHICLE}>{guestbook.comments.POSTER_CAR_YEAR} {guestbook.comments.POSTER_CAR_MARK} {guestbook.comments.POSTER_CAR_MODEL}</a></td>
+				</tr>
+			<!-- ENDIF -->
+				</table>
+
+				<span class="postdetails">
+					<!-- IF guestbook.comments.POSTER_JOINED --><br /><b>{L_JOINED}:</b> {guestbook.comments.POSTER_JOINED}<!-- ENDIF -->
+					<!-- IF guestbook.comments.POSTER_POSTS != '' --><br /><b>{L_POSTS}:</b> {guestbook.comments.POSTER_POSTS}<!-- ENDIF -->
+					<!-- IF guestbook.comments.POSTER_FROM --><br /><b>{L_LOCATION}:</b> {guestbook.comments.POSTER_FROM}<!-- ENDIF -->
+
+					<!-- BEGIN custom_fields -->
+						<br /><b>{guestbook.comments.custom_fields.PROFILE_FIELD_NAME}:</b> {guestbook.comments.custom_fields.PROFILE_FIELD_VALUE}
+					<!-- END custom_fields -->
+				</span>
+
+			</td>
+			<td valign="top">
+				<table width="100%" cellspacing="5">
+				<tr>
+					<td>
+						<div class="postbody">{guestbook.comments.MESSAGE}</div>
+
+					<!-- IF guestbook.comments.SIGNATURE -->
+						<span class="postbody"><br />_________________<br />{guestbook.comments.SIGNATURE}</span>
+					<!-- ENDIF -->
+
+					<!-- IF not guestbook.comments.S_HAS_ATTACHMENTS --><br clear="all" /><br /><!-- ENDIF -->
+									<table width="100%" cellspacing="0">
+									<tr valign="middle">
+										<td class="gensmall" align="right">
+										<!-- IF not S_IS_BOT -->
+											<!-- IF guestbook.comments.U_INFO --><a href="{guestbook.comments.U_INFO}">{INFO_IMG}</a> <!-- ENDIF --> 
+											<!-- IF guestbook.comments.U_WARN --><a href="{guestbook.comments.U_WARN}">{WARN_IMG}</a> <!-- ENDIF --> 
+											<!-- IF guestbook.comments.U_DELETE --><a href="{guestbook.comments.U_DELETE}">{DELETE_IMG}</a> <!-- ENDIF -->
+										<!-- ENDIF -->
+										</td>
+									</tr>
+									</table>
+								</td>
+							</tr>
+							</table>
+						</td>
+					</tr>
+
+					<!-- IF guestbook.comments.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
+
+						<td nowrap="nowrap">&nbsp;</td>
+						<td><div class="gensmall" style="float: left;">&nbsp;<!-- IF guestbook.comments.U_PROFILE --><a href="{guestbook.comments.U_PROFILE}">{PROFILE_IMG}</a> <!-- ENDIF --> <!-- IF guestbook.comments.U_PM --><a href="{guestbook.comments.U_PM}">{PM_IMG}</a> <!-- ENDIF --> <!-- IF guestbook.comments.U_EMAIL --><a href="{guestbook.comments.U_EMAIL}">{EMAIL_IMG}</a> <!-- ENDIF -->&nbsp;</div> <div class="gensmall" style="float:right"><!-- IF not S_IS_BOT --><!-- IF guestbook.comments.U_EDIT --><a href="{guestbook.comments.U_EDIT}">{EDIT_IMG}</a> <!-- ENDIF --> <!-- IF guestbook.comments.U_QUOTE --><a href="{guestbook.comments.U_QUOTE}">{QUOTE_IMG}</a> <!-- ENDIF --> <!-- ENDIF -->&nbsp;</div></td>
+					</tr>
+
+				<!-- ENDIF -->
+	
+				<tr>
+					<td class="spacer" colspan="2" height="1"><img src="images/spacer.gif" alt="" width="1" height="1" /></td>
+				</tr>
+				<!-- BEGINELSE -->
+				<tr>
+					<td class="row1" align="center" height="28" colspan="5"><span class="gen">{L_ADD_FIRST_COMMENT}</span></td>
+				</tr>
+				<!-- END comments -->
+
+				<!-- IF S_DISPLAY_LEAVE_COMMENT -->
+				<tr>
+					<td class="cat" align="center" height="28" colspan="5"><span class="gen">{L_ADD_COMMENT}</span></td>
+				</tr>
+				<tr>
+					<td class="row1" width="20%"><span class="gen">{L_ADD_COMMENT}</span></td>
+					<td class="row2" colspan="4"><textarea name="comments" cols="70" rows="7" wrap="soft" class="post">{COMMENTS}</textarea></td>
+				</tr>
+				<tr>
+					<td class="cat" align="center" height="28" colspan="5"><input type="hidden" value="insert_comment" name="mode" /><input type="hidden" value="{VID}" name="VID" /><input name="submit" type="submit" value="{L_POST_COMMENT}" class="liteoption" /></td>
+				</tr>
+				<!-- ENDIF -->
+			</table>
+
+			<table width="100%" cellspacing="1">
+			<tr>
+				<!-- IF TOTAL_COMMENTS -->
+					<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
+					<td class="gensmall" nowrap="nowrap">&nbsp;[ {TOTAL_COMMENTS} ]&nbsp;</td>
+					<td class="gensmall" width="100%" align="right" nowrap="nowrap"><!-- INCLUDE garage_pagination.html --></td>
+				<!-- ENDIF -->
+			</tr>
+			</table>
+
+			</form>
+			<!-- END guestbook -->
+		
 <!-- INCLUDE garage_footer.html -->
 
 <!-- INCLUDE overall_footer.html -->

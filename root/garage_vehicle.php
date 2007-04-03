@@ -411,7 +411,7 @@ switch( $mode )
 		page_header($user->lang['GARAGE']);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
-			'body'   => 'garage_view_vehicle_tabs.html')
+			'body'   => 'garage_view_vehicle.html')
 		);
 		$garage_vehicle->display_vehicle('NO');
 		$garage_template->sidemenu();
@@ -437,7 +437,7 @@ switch( $mode )
 		page_header($user->lang['GARAGE']);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
-			'body'   => 'garage_view_vehicle_tabs.html')
+			'body'   => 'garage_view_vehicle.html')
 		);
 		$garage_template->sidemenu();
 		$garage_vehicle->display_vehicle('YES');
@@ -466,7 +466,7 @@ switch( $mode )
 		page_header($user->lang['GARAGE']);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
-			'body'   => 'garage_view_vehicle_tabs.html')
+			'body'   => 'garage_view_vehicle.html')
 		);
 		$garage_vehicle->display_vehicle('MODERATE');
 		$garage_template->sidemenu();

@@ -12,25 +12,13 @@
 
 <!-- INCLUDE garage_menu.html -->
 
-		<script type="text/javascript" src="{T_TEMPLATE_PATH}/garage_functions.js"></script>
 		<td width="72%" valign="top">
 
-			<div id="advanced00">
-			<div class="garage_cat">
-				<ul>
-					<li class="garage_preset_yes" id="tab000"><a href="#data" onclick="swap_options('0','0','0');"><span class="tabbg">{L_QUARTERMILE}</span></a></li>
-					<!-- IF U_MANAGE_GALLERY --><li class="garage_preset_yes" id="tab001"><a href="#images" onclick="swap_options('0','0','1');"><span class="tabbg">{L_IMAGES}</span></a></li><!-- ENDIF -->
-				</ul>
-			</div>
-
-			<div class="garage_panel" id="options000" style="display: none;">
-			<span class="corners-top"><span></span></span>
-			<div class="tablewrap">
 				<form enctype="multipart/form-data" method="post" name="quartermile" action="{S_MODE_ACTION}">
 				<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
 				<tbody>
 					<tr>
-						<td class="cat" align="center" height="28" colspan="2"><span class="gen">{L_TITLE}</span></td>
+						<th colspan="2"><span class="gen">{L_TITLE}</span></th>
 					</tr>
 					<tr>
 						<td class="row1" width="35%"><span class="gen">{L_RT_EXPLAIN}</span></td>
@@ -80,52 +68,14 @@
 					</tr>
 				</tbody>
 				</table>
-				</form>
-			</div>
-			<span class="corners-bottom"><span></span></span>
-			</div>
+			</form>
 
-			<div class="garage_panel" id="options001" style="display: none;">
-			<span class="corners-top"><span></span></span>
-			<div class="tablewrap">
+			<!-- IF U_MANAGE_GALLERY -->
+			<br />
 				<!-- INCLUDE garage_manage_gallery.html -->
-			</div>
-			<span class="corners-bottom"><span></span></span>
-			</div>
-
-			</div>
+			<!-- ENDIF -->
 			
 		</td>
-
-<script type="text/javascript">
-<!--
-	var lowest_tab = '0';
-	var active_pmask = '0';
-	var active_fmask = '0';
-	if (document.location.hash == "")
-	{
-		active_cat = lowest_tab;
-		dE('options00' + lowest_tab , 0)
-		var active_tab = document.getElementById("tab00" + lowest_tab);
-	}
-	else if (document.location.hash == "#data")
-	{
-		active_cat = '0';
-		dE('options000', 0)
-		var active_tab = document.getElementById("tab000");
-	}
-	else if (document.location.hash == "#images")
-	{
-		active_cat = '1';
-		dE('options001', 0)
-		var active_tab = document.getElementById("tab001");
-	}
-
-	var id = '000';
-	active_tab.setAttribute("class", "garage_preset_yes activetab");
-
-//-->
-</script>
 
 <!-- INCLUDE garage_footer.html -->
 

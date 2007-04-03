@@ -37,17 +37,12 @@
 			</table>
 			</form>
 
-			<table width="100%" cellspacing="1">
-			<tbody>
-				<tr>
-				<!-- IF TOTAL_IMAGES -->
-					<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
-					<td class="gensmall" nowrap="nowrap">&nbsp;[ {TOTAL_IMAGES} ]&nbsp;</td>
-					<td class="gensmall" width="100%" align="right" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
-				<!-- ENDIF -->
-				</tr>
-			</tbody>
-			</table>
+			<!-- IF PAGINATION or TOTAL_IMAGES -->
+			<div class="pagination">
+				{TOTAL_IMAGES}
+				<!-- IF PAGE_NUMBER --><!-- IF PAGINATION --> &bull; <a href="#" onclick="jumpto(); return false;" title="{L_JUMP_TO_PAGE}">{PAGE_NUMBER}</a> &bull; <span>{PAGINATION}</span><!-- ELSE --> &bull; {PAGE_NUMBER}<!-- ENDIF --><!-- ENDIF -->
+			</div>
+			<!-- ENDIF -->
 		</td>
 
 <!-- INCLUDE garage_footer.html -->

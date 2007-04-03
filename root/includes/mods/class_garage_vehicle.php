@@ -482,7 +482,9 @@ class garage_vehicle
 	
 		if ( $garage_config['enable_featured_vehicle'] == 1 )
 		{
-			$template->assign_block_vars('show_featured_vehicle', array());
+			$template->assign_vars(array(
+				'S_FEATURED_VEHICLE' => true,
+			));
 
 			//Start To Build SQl For Selecting Featured Vehicle..We Will Extend This Array Based On User Options
 			$sql_array = array(

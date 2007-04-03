@@ -1561,14 +1561,14 @@ switch( $mode )
 			'S_USER_GARAGE_TAB_ACTIVE'	=> true,
 		));
 
-		$user_vehicles = $garage_vehicle->get_vehicles_by_user($user->data['user_id']);
+		/*$user_vehicles = $garage_vehicle->get_vehicles_by_user($user->data['user_id']);
 		for ($i = 0; $i < count($user_vehicles); $i++)
 		{
 		      	$template->assign_block_vars('user_vehicles', array(
        				'U_VIEW_VEHICLE'=> append_sid("garage_vehicle.$phpEx?mode=view_own_vehicle&amp;VID=" . $user_vehicles[$i]['id']),
        				'VEHICLE' 	=> $user_vehicles[$i]['vehicle'],
 			));
-		}
+		}*/
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$garage_template->sidemenu();

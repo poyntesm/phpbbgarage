@@ -99,6 +99,14 @@ class garage_template
 			$template->assign_vars(array(
 				'S_DISPLAY_USER_VEHICLES' => true)
 			);
+			$user_vehicles = $garage_vehicle->get_vehicles_by_user($user->data['user_id']);
+			for ($i = 0; $i < count($user_vehicles); $i++)
+			{
+		       		$template->assign_block_vars('user_vehicles', array(
+       					'U_VIEW_VEHICLE'=> append_sid("garage_vehicle.$phpEx?mode=view_own_vehicle&amp;CID=" . $user_vehicles[$i]['id']),
+       					'VEHICLE' 	=> $user_vehicles[$i]['vehicle'])
+      				);
+			}
 		}
 
 		if ($garage_config['enable_latest_vehicle_index'] == true)

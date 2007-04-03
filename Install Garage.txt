@@ -8,7 +8,7 @@
 ## 
 ## Installation Level:	Medium
 ## Installation Time:	20 Minutes
-## Files To Edit: (18)
+## Files To Edit: (25)
 ## 			common.php
 ## 			memberlist.php
 ## 			viewtopic.php
@@ -26,6 +26,8 @@
 ##			styles/prosilver/templates/memberlist_view.html
 ## 			styles/prosilver/templates/viewtopic_body.html
 ##			styles/prosilver/templates/overall_header.html
+##			styles/prosilver/theme/buttons.css
+##			styles/prosilver/theme/colours.css
 ##			styles/subsilver2/imageset/imageset.cfg
 ##			styles/subsilver2/templates/memberlist_body.html
 ##			styles/subsilver2/templates/memberlist_view.html
@@ -165,6 +167,10 @@
 ##			root/styles/prosilver/template/
 ##			root/styles/prosilver/template/
 ##			root/styles/prosilver/template/
+##			styles/prosilver/theme/.css
+##			styles/prosilver/theme/images/icon_dynorun.gif
+##			styles/prosilver/theme/images/icon_garage.gif
+##			styles/prosilver/theme/images/icon_quartermile.gif
 ##			root/styles/subsilver2/imageset/garage_camera.gif
 ##			root/styles/subsilver2/imageset/garage_edit.gif
 ##			root/styles/subsilver2/imageset/garage_delete.gif
@@ -235,8 +241,11 @@
 ##			root/styles/subsilver2/template/garage.html
 ##			root/styles/subsilver2/template/garage.html
 ##			root/styles/subsilver2/template/garage.html
-##			root/styles/subsilver2/themes/images/garage_tabs1.gif
-##			root/styles/subsilver2/themes/images/garage_tabs2.gif
+##			root/styles/subsilver2/theme/images/garage_tabs1.gif
+##			root/styles/subsilver2/theme/images/garage_tabs2.gif
+##			root/styles/subsilver2/theme/images/icon_dynorun.gif
+##			root/styles/subsilver2/theme/images/icon_garage.gif
+##			root/styles/subsilver2/theme/images/icon_quartermile.gif
 ##
 ## License: http://opensource.org/licenses/gpl-license.php GNU General Public License v2 or any later version
 ######################################################################################
@@ -1243,6 +1252,54 @@ styles/prosilver/templates/overall_header.html
 					<!-- IF S_DISPLAY_QUARTERMILE --><a href="{U_QUARTERMILE}" title="{L_QUARTERMILE}" class="icon-quartermile">{L_QUARTERMILE}</a>&nbsp; <!-- ENDIF -->
 					<!-- IF S_DISPLAY_DYNORUN --><a href="{U_DYNORUN}" title="{L_DYNORUN}" class="icon-dynorun">{L_DYNORUN}</a>&nbsp; <!-- ENDIF -->
 
+# 
+#-----[ OPEN ]----- 
+# 
+styles/prosilver/theme/buttons.css
+
+#
+#-----[ FIND ]------------------------------------------
+#
+.icon-search, .sitehome 
+
+#
+#-----[ IN-LINE FIND ]------------------------------------------
+#
+.icon-search, .sitehome
+
+#
+#-----[ IN-LINE AFTER, ADD ]------------------------------------------
+#
+, .icon-garage, .icon-quartermile, .icon-dynorun 
+
+#
+#-----[ FIND ]------------------------------------------
+#
+.icon-pages			{ background-image: none; }
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+.icon-garage			{ background-image: none; }
+.icon-quartermile		{ background-image: none; }
+.icon-dynorun			{ background-image: none; }
+
+# 
+#-----[ OPEN ]----- 
+# 
+styles/prosilver/theme/colours.css
+
+#
+#-----[ FIND ]------------------------------------------
+#
+.icon-search						{ background-image: url("{T_THEME_PATH}/images/icon_search.gif"); }
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+.icon-garage						{ background-image: url("{T_THEME_PATH}/images/icon_garage.gif"); }
+.icon-quartermile					{ background-image: url("{T_THEME_PATH}/images/icon_quartermile.gif"); }
+.icon-dynorun						{ background-image: url("{T_THEME_PATH}/images/icon_dynorun.gif"); }
 
 # 
 #-----[ OPEN ]----- 
@@ -1458,5 +1515,6 @@ TODO: Make memberlist display garage button - template side done
 TODO: Events system
 TODO: Add vehicle status
 TODO: Make viewonline know exactly what you are doing..not just view garage
-TODO: Add class for icon-garage, icon-quartermile, icon-dynorun for overall_header.html in prosilver. Need images too.
-TODO: Add garage-iconf class for viewtopic_body.html in prosilver. Use image icon_miniprofile_garage.gif
+TODO: Create images for icon-garage, icon-quartermile, icon-dynorun for overall_header.html in prosilver
+TODO: Add garage-icon class for viewtopic_body.html in prosilver. Use image icon_miniprofile_garage.gif
+TODO: Force a theme & imageset refresh

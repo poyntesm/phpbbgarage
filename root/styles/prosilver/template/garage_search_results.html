@@ -67,17 +67,12 @@
 			</tbody>
 			</table>
 
-			<table width="100%" cellspacing="1">
-			<tbody>
-				<tr>
-				<!-- IF TOTAL_VEHICLES -->
-					<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
-					<td class="gensmall" nowrap="nowrap">&nbsp;[ {TOTAL_VEHICLES} ]&nbsp;</td>
-					<td class="gensmall" width="100%" align="right" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
-				<!-- ENDIF -->
-				</tr>
-			</tbody>
-			</table>
+			<!-- IF PAGINATION or TOTAL_VEHICLES -->
+			<div class="pagination">
+				{TOTAL_VEHICLES}
+				<!-- IF PAGE_NUMBER --><!-- IF PAGINATION --> &bull; <a href="#" onclick="jumpto(); return false;" title="{L_JUMP_TO_PAGE}">{PAGE_NUMBER}</a> &bull; <span>{PAGINATION}</span><!-- ELSE --> &bull; {PAGE_NUMBER}<!-- ENDIF --><!-- ENDIF -->
+			</div>
+			<!-- ENDIF -->
 
 			<!-- ENDIF -->
 
@@ -116,17 +111,12 @@
 			</tbody>
 			</table>
 
-			<table width="100%" cellspacing="1">
-			<tbody>
-				<tr>
-				<!-- IF TOTAL_MODIFICATIONS -->
-					<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
-					<td class="gensmall" nowrap="nowrap">&nbsp;[ {TOTAL_MODIFICATIONS} ]&nbsp;</td>
-					<td class="gensmall" width="100%" align="right" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
-				<!-- ENDIF -->
-				</tr>
-			</tbody>
-			</table>
+			<!-- IF PAGINATION or TOTAL_MODIFICATIONS -->
+			<div class="pagination">
+				{TOTAL_MODIFICATIONS}
+				<!-- IF PAGE_NUMBER --><!-- IF PAGINATION --> &bull; <a href="#" onclick="jumpto(); return false;" title="{L_JUMP_TO_PAGE}">{PAGE_NUMBER}</a> &bull; <span>{PAGINATION}</span><!-- ELSE --> &bull; {PAGE_NUMBER}<!-- ENDIF --><!-- ENDIF -->
+			</div>
+			<!-- ENDIF -->
 
 			<!-- ENDIF -->
 
@@ -165,17 +155,12 @@
 			</tbody>
 			</table>
 
-			<table width="100%" cellspacing="1">
-			<tbody>
-				<tr>
-				<!-- IF TOTAL_PREMIUMS -->
-					<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
-					<td class="gensmall" nowrap="nowrap">&nbsp;[ {TOTAL_PREMIUMS} ]&nbsp;</td>
-					<td class="gensmall" width="100%" align="right" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
-				<!-- ENDIF -->
-				</tr>
-			</tbody>
-			</table>
+			<!-- IF PAGINATION or TOTAL_PREMIUMS -->
+			<div class="pagination">
+				{TOTAL_PREMIUMS}
+				<!-- IF PAGE_NUMBER --><!-- IF PAGINATION --> &bull; <a href="#" onclick="jumpto(); return false;" title="{L_JUMP_TO_PAGE}">{PAGE_NUMBER}</a> &bull; <span>{PAGINATION}</span><!-- ELSE --> &bull; {PAGE_NUMBER}<!-- ENDIF --><!-- ENDIF -->
+			</div>
+			<!-- ENDIF -->
 
 			<!-- ENDIF -->
 
@@ -218,17 +203,12 @@
 			</tbody>
 			</table>
 
-			<table width="100%" cellspacing="1">
-			<tbody>
-				<tr>
-				<!-- IF TOTAL_QUARTERMILES -->
-					<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
-					<td class="gensmall" nowrap="nowrap">&nbsp;[ {TOTAL_QUARTERMILES} ]&nbsp;</td>
-					<td class="gensmall" width="100%" align="right" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
-				<!-- ENDIF -->
-				</tr>
-			</tbody>
-			</table>
+			<!-- IF PAGINATION or TOTAL_QUARTERMILES -->
+			<div class="pagination">
+				{TOTAL_QUARTERMILES}
+				<!-- IF PAGE_NUMBER --><!-- IF PAGINATION --> &bull; <a href="#" onclick="jumpto(); return false;" title="{L_JUMP_TO_PAGE}">{PAGE_NUMBER}</a> &bull; <span>{PAGINATION}</span><!-- ELSE --> &bull; {PAGE_NUMBER}<!-- ENDIF --><!-- ENDIF -->
+			</div>
+			<!-- ENDIF -->
 
 			<!-- ENDIF -->
 
@@ -271,17 +251,12 @@
 			</tbody>
 			</table>
 
-			<table width="100%" cellspacing="1">
-			<tbody>
-				<tr>
-				<!-- IF TOTAL_DYNORUNS -->
-					<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
-					<td class="gensmall" nowrap="nowrap">&nbsp;[ {TOTAL_DYNORUNS} ]&nbsp;</td>
-					<td class="gensmall" width="100%" align="right" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
-				<!-- ENDIF -->
-				</tr>
-			</tbody>
-			</table>
+			<!-- IF PAGINATION or TOTAL_DYNORUNS -->
+			<div class="pagination">
+				{TOTAL_DYNORUNS}
+				<!-- IF PAGE_NUMBER --><!-- IF PAGINATION --> &bull; <a href="#" onclick="jumpto(); return false;" title="{L_JUMP_TO_PAGE}">{PAGE_NUMBER}</a> &bull; <span>{PAGINATION}</span><!-- ELSE --> &bull; {PAGE_NUMBER}<!-- ENDIF --><!-- ENDIF -->
+			</div>
+			<!-- ENDIF -->
 
 			<!-- ENDIF -->
 
@@ -322,17 +297,12 @@
 			</table>
 			<br />
 
-			<table width="100%" cellspacing="1">
-			<tbody>
-				<tr>
-				<!-- IF TOTAL_LAPS -->
-					<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
-					<td class="gensmall" nowrap="nowrap">&nbsp;[ {TOTAL_LAPS} ]&nbsp;</td>
-					<td class="gensmall" width="100%" align="right" nowrap="nowrap"><!-- INCLUDE pagination.html --></td>
-				<!-- ENDIF -->
-				</tr>
-			</tbody>
-			</table>
+			<!-- IF PAGINATION or TOTAL_LAPS -->
+			<div class="pagination">
+				{TOTAL_LAPS}
+				<!-- IF PAGE_NUMBER --><!-- IF PAGINATION --> &bull; <a href="#" onclick="jumpto(); return false;" title="{L_JUMP_TO_PAGE}">{PAGE_NUMBER}</a> &bull; <span>{PAGINATION}</span><!-- ELSE --> &bull; {PAGE_NUMBER}<!-- ENDIF --><!-- ENDIF -->
+			</div>
+			<!-- ENDIF -->
 
 
 			<!-- ENDIF -->

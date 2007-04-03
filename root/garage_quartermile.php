@@ -258,8 +258,8 @@ switch( $mode )
 			$template->assign_block_vars('link_rr', array());
 			$garage_template->dynorun_dropdown(NULL, NULL, $vid);
 		}
-		$template->assign_vars(array(
 		$garage_template->attach_image('quartermile');
+		$template->assign_vars(array(
 			'L_TITLE'		=> $user->lang['EDIT_TIME'],
 			'L_BUTTON'		=> $user->lang['EDIT_TIME'],
 			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=edit_quartermile&amp;VID=$vid&amp;QMID=$qmid"),
