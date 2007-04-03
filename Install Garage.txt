@@ -8,7 +8,7 @@
 ## 
 ## Installation Level:	Medium
 ## Installation Time:	20 Minutes
-## Files To Edit: (19)
+## Files To Edit: (18)
 ## 			common.php
 ## 			memberlist.php
 ## 			viewtopic.php
@@ -21,93 +21,223 @@
 ##			language/en/ucp.php
 ##			language/en/acp/common.php
 ##			language/en/acp/styles.php
-##			styles/subSilver/imageset/imageset.cfg
-##			styles/subSilver/templates/memberlist_body.html
-##			styles/subSilver/templates/memberlist_view.html
-## 			styles/subSilver/templates/viewtopic_body.tpl
-##			styles/subSilver/templates/overall_header.tpl
-##			styles/subSilver/theme/stylesheet.css
+##			styles/prosilver/imageset/imageset.cfg
+##			styles/prosilver/templates/memberlist_body.html
+##			styles/prosilver/templates/memberlist_view.html
+## 			styles/prosilver/templates/viewtopic_body.html
+##			styles/prosilver/templates/overall_header.html
+##			styles/subsilver2/imageset/imageset.cfg
+##			styles/subsilver2/templates/memberlist_body.html
+##			styles/subsilver2/templates/memberlist_view.html
+## 			styles/subsilver2/templates/viewtopic_body.html
+##			styles/subsilver2/templates/overall_header.html
+##			styles/subsilver2/theme/stylesheet.css
 ##
-## Included Files: (84)
+## Included Files: (203)
 ##			Install Garage.txt
 ##			Upgrade.txt
 ## 			root/garage.php
+## 			root/garage_blog.php
+## 			root/garage_dynorun.php
+## 			root/garage_guestbook.php
+## 			root/garage_modification.php
+## 			root/garage_premium.php
+## 			root/garage_quartermile.php
+## 			root/garage_service.php
+## 			root/garage_track.php
+## 			root/garage_vehicle.php
 ## 			root/install_garage.php
-##			root/admin/admin_garage_business.php
-##			root/admin/admin_garage_categories.php
-##			root/admin/admin_garage_config.php
-##			root/admin/admin_garage_models.php
-##			root/admin/admin_garage_permissions.php
-##			root/admin/admin_garage_tools.php
-##			root/includes/functions_garage.php
-##			root/language/lang_english/lang_garage.php
-##			root/language/lang_english/lang_garage_error.php
-##			root/templates/subSilver/garage.tpl
-##			root/templates/subSilver/garage_browse.tpl
-##			root/templates/subSilver/garage_browse_insurance.tpl
-##			root/templates/subSilver/garage_edit_comment.tpl
-##			root/templates/subSilver/garage_error.tpl
-##			root/templates/subSilver/garage_footer.tpl
-##			root/templates/subSilver/garage_header.tpl
-##			root/templates/subSilver/garage_insurance.tpl
-##			root/templates/subSilver/garage_manage_vehicle_gallery.tpl
-##			root/templates/subSilver/garage_menu.tpl
-##			root/templates/subSilver/garage_modification.tpl
-##			root/templates/subSilver/garage_pending.tpl
-##			root/templates/subSilver/garage_quartermile.tpl
-##			root/templates/subSilver/garage_quartermile_table.tpl
-##			root/templates/subSilver/garage_reassign_business.tpl
-##			root/templates/subSilver/garage_dynorun.tpl
-##			root/templates/subSilver/garage_dynorun_table.tpl
-##			root/templates/subSilver/garage_search.tpl
-##			root/templates/subSilver/garage_user_submit.tpl
-##			root/templates/subSilver/garage_user_submit_make.tpl
-##			root/templates/subSilver/garage_user_submit_model.tpl
-##			root/templates/subSilver/garage_vehicle.tpl
-##			root/templates/subSilver/garage_vehicle_select_javascript.tpl
-##			root/templates/subSilver/garage_view_garage_business.tpl
-##			root/templates/subSilver/garage_view_guestbook.tpl
-##			root/templates/subSilver/garage_view_insurance_business.tpl
-##			root/templates/subSilver/garage_view_modification.tpl
-##			root/templates/subSilver/garage_view_shop_business.tpl
-##			root/templates/subSilver/garage_view_vehicle.tpl
-##			root/templates/subSilver/admin/garage_business.tpl
-##			root/templates/subSilver/admin/garage_business_edit.tpl
-##			root/templates/subSilver/admin/garage_category.tpl
-##			root/templates/subSilver/admin/garage_category_delete_body.tpl
-##			root/templates/subSilver/admin/garage_category_edit_body.tpl
-##			root/templates/subSilver/admin/garage_config.tpl
-##			root/templates/subSilver/admin/garage_message.tpl
-##			root/templates/subSilver/admin/garage_model.tpl
-##			root/templates/subSilver/admin/garage_model_delete.tpl
-##			root/templates/subSilver/admin/garage_model_edit.tpl
-##			root/templates/subSilver/admin/garage_orphans.tpl
-##			root/templates/subSilver/admin/garage_permissions.tpl
-##			root/templates/subSilver/admin/garage_tools.tpl
-##			root/templates/subSilver/images/garage_camera.gif
-##			root/templates/subSilver/images/garage_slip.gif
-##			root/templates/subSilver/images/lang_english/garage_add_insurance.gif
-##			root/templates/subSilver/images/lang_english/garage_add_modification.gif
-##			root/templates/subSilver/images/lang_english/garage_add_quartermile.gif
-##			root/templates/subSilver/images/lang_english/garage_add_dynorun.gif
-##			root/templates/subSilver/images/lang_english/garage_browse.gif
-##			root/templates/subSilver/images/lang_english/garage_create_vehicle.gif
-##			root/templates/subSilver/images/lang_english/garage_delete.gif
-##			root/templates/subSilver/images/lang_english/garage_delete_vehicle.gif
-##			root/templates/subSilver/images/lang_english/garage_edit.gif
-##			root/templates/subSilver/images/lang_english/garage_edit_vehicle.gif
-##			root/templates/subSilver/images/lang_english/garage_garage_review.gif
-##			root/templates/subSilver/images/lang_english/garage_insurance_review.gif
-##			root/templates/subSilver/images/lang_english/garage_main_menu.gif
-##			root/templates/subSilver/images/lang_english/garage_main_vehicle.gif
-##			root/templates/subSilver/images/lang_english/garage_manage_gallery.gif
-##			root/templates/subSilver/images/lang_english/garage_no_thumb.gif
-##			root/templates/subSilver/images/lang_english/garage_quartermile_table.gif
-##			root/templates/subSilver/images/lang_english/garage_dynorun_table.gif
-##			root/templates/subSilver/images/lang_english/garage_search.gif
-##			root/templates/subSilver/images/lang_english/garage_shop_review.gif
-##			root/templates/subSilver/images/lang_english/garage_view_vehicle.gif
-##			root/templates/subSilver/images/lang_english/icon_garage.gif
+##			root/adm/style/acp_garage_business.html
+##			root/adm/style/acp_garage_category.html
+##			root/adm/style/acp_garage_fields.html
+##			root/adm/style/acp_garage_message.html
+##			root/adm/style/acp_garage_model.html
+##			root/adm/style/acp_garage_orphans.html
+##			root/adm/style/acp_garage_product.html
+##			root/adm/style/acp_garage_quota.html
+##			root/adm/style/acp_garage_tool.html
+##			root/adm/style/acp_garage_track.html
+##			root/adm/images/icon_garage_approve.gif
+##			root/adm/images/icon_garage_approve_disabled.gif
+##			root/adm/images/icon_garage_disapprove.gif
+##			root/adm/images/icon_garage_disapprove_disabled.gif
+##			root/garage/watermark.png
+##			root/garage/includes/acp/acp_garage_business.php
+##			root/garage/includes/acp/acp_garage_category.php
+##			root/garage/includes/acp/acp_garage_fields.php
+##			root/garage/includes/acp/acp_garage_model.php
+##			root/garage/includes/acp/acp_garage_product.php
+##			root/garage/includes/acp/acp_garage_quota.php
+##			root/garage/includes/acp/acp_garage_setting.php
+##			root/garage/includes/acp/acp_garage_tool.php
+##			root/garage/includes/acp/acp_garage_track.php
+##			root/garage/includes/acp/info/acp_garage_business.php
+##			root/garage/includes/acp/info/acp_garage_category.php
+##			root/garage/includes/acp/info/acp_garage_fields.php
+##			root/garage/includes/acp/info/acp_garage_model.php
+##			root/garage/includes/acp/info/acp_garage_product.php
+##			root/garage/includes/acp/info/acp_garage_quota.php
+##			root/garage/includes/acp/info/acp_garage_setting.php
+##			root/garage/includes/acp/info/acp_garage_tool.php
+##			root/garage/includes/acp/info/acp_garage_track.php
+##			root/garage/includes/mcp/mcp_garage.php
+##			root/garage/includes/mcp/info/mcp_garage.php
+##			root/garage/includes/mods/class_garage.php
+##			root/garage/includes/mods/class_garage_admin.php
+##			root/garage/includes/mods/class_garage_blog.php
+##			root/garage/includes/mods/class_garage_business.php
+##			root/garage/includes/mods/class_garage_custom_fields.php
+##			root/garage/includes/mods/class_garage_dynorun.php
+##			root/garage/includes/mods/class_garage_guestbook.php
+##			root/garage/includes/mods/class_garage_image.php
+##			root/garage/includes/mods/class_garage_insurance.php
+##			root/garage/includes/mods/class_garage_model.php
+##			root/garage/includes/mods/class_garage_modification.php
+##			root/garage/includes/mods/class_garage_quartermile.php
+##			root/garage/includes/mods/class_garage_service.php
+##			root/garage/includes/mods/class_garage_template.php
+##			root/garage/includes/mods/class_garage_track.php
+##			root/garage/includes/mods/class_garage_vehicle.php
+##			root/garage/includes/mods/constants_garage.php
+##			root/garage/includes/ucp/ucp_garage.php
+##			root/garage/includes/ucp/info/ucp_garage.php
+##			root/language/en/acp/garage.php
+##			root/language/en/acp/permissions_garage.php
+##			root/language/en/email/garage_pending.txt
+##			root/language/en/email/garage_guestbook_comment.txt
+##			root/language/en/mods/garage.php
+##			root/styles/prosilver/imageset/garage_camera.gif
+##			root/styles/prosilver/imageset/garage_edit.gif
+##			root/styles/prosilver/imageset/garage_delete.gif
+##			root/styles/prosilver/imageset/icon_miniprofile_garage.gif
+##			root/styles/prosilver/imageset/en/garage_delete_vehicle.gif
+##			root/styles/prosilver/imageset/en/garage_edit_vehicle.gif
+##			root/styles/prosilver/imageset/en/garage_main_vehicle.gif
+##			root/styles/prosilver/imageset/en/garage_new_dynorun.gif
+##			root/styles/prosilver/imageset/en/garage_new_lap.gif
+##			root/styles/prosilver/imageset/en/garage_new_modification.gif
+##			root/styles/prosilver/imageset/en/garage_new_premium.gif
+##			root/styles/prosilver/imageset/en/garage_new_quartermile.gif
+##			root/styles/prosilver/imageset/en/garage_new_service.gif
+##			root/styles/prosilver/imageset/en/garage_new_vehicle.gif
+##			root/styles/prosilver/imageset/en/garage_no_thumb.gif
+##			root/styles/prosilver/imageset/en/garage_view_vehicle.gif
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/prosilver/template/
+##			root/styles/subsilver2/imageset/garage_camera.gif
+##			root/styles/subsilver2/imageset/garage_edit.gif
+##			root/styles/subsilver2/imageset/garage_delete.gif
+##			root/styles/subsilver2/imageset/en/garage_add_insurance.gif
+##			root/styles/subsilver2/imageset/en/garage_add_modification.gif
+##			root/styles/subsilver2/imageset/en/garage_add_quartermile.gif
+##			root/styles/subsilver2/imageset/en/garage_add_dynorun.gif
+##			root/styles/subsilver2/imageset/en/garage_add_lap.gif
+##			root/styles/subsilver2/imageset/en/garage_add_service.gif
+##			root/styles/subsilver2/imageset/en/garage_browse.gif
+##			root/styles/subsilver2/imageset/en/garage_create_vehicle.gif
+##			root/styles/subsilver2/imageset/en/garage_delete_vehicle.gif
+##			root/styles/subsilver2/imageset/en/garage_edit_vehicle.gif
+##			root/styles/subsilver2/imageset/en/garage_garage_review.gif
+##			root/styles/subsilver2/imageset/en/garage_insurance_review.gif
+##			root/styles/subsilver2/imageset/en/garage_main_menu.gif
+##			root/styles/subsilver2/imageset/en/garage_main_vehicle.gif
+##			root/styles/subsilver2/imageset/en/garage_no_thumb.gif
+##			root/styles/subsilver2/imageset/en/garage_quartermile_table.gif
+##			root/styles/subsilver2/imageset/en/garage_dynorun_table.gif
+##			root/styles/subsilver2/imageset/en/garage_lap_table.gif
+##			root/styles/subsilver2/imageset/en/garage_search.gif
+##			root/styles/subsilver2/imageset/en/garage_shop_review.gif
+##			root/styles/subsilver2/imageset/en/garage_view_vehicle.gif
+##			root/styles/subsilver2/imageset/en/icon_garage.gif
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/template/garage.html
+##			root/styles/subsilver2/themes/images/garage_tabs1.gif
+##			root/styles/subsilver2/themes/images/garage_tabs2.gif
+##
 ## License: http://opensource.org/licenses/gpl-license.php GNU General Public License v2 or any later version
 ######################################################################################
 ## For security purposes, please check: http://www.phpbb.com/mods/
@@ -119,13 +249,13 @@
 ###################################################################################### 
 ## Author Notes: 
 ##
-##	- This Mod Was Inspired By IPB Based Garage By Matthew C. Veno
+##	- Support is given for both prosilver & subsilver2 templates
+##	- If you only plan on using prosilver you can omit edits to subsilver2 and vica-versa
 ##
 ######################################################################################
 ## MOD History: 
 ##   27-02-2006 - Version 2.0.0
-##	- First phpBB3 version of phpBB Garage
-##	- Version Submitted To phpBB.com's MOD DB. (Resubmitted with one change 08-01-2006)
+##	- First phpBB3 version of phpBB Garage for phpBB3
 ##
 ###################################################################################### 
 ## Before Adding This MOD To Your Forum, You Should Back Up All Files Related To This MOD 
@@ -230,20 +360,21 @@ ug.user_id as ug_user_id
 #
 #-----[ IN-LINE AFTER, ADD ]------------------------------------------
 #
-, g.id as garage_id
+, v.id as vid
 
 #
 #-----[ FIND ]------------------------------------------
 #
 			),
+
 			'WHERE'		=> $db->sql_in_set('u.user_id', array_unique(array_merge($admin_id_ary, $mod_id_ary))) . '
 
 #
 #-----[ BEFORE, ADD ]------------------------------------------
 #
 				,array(
-					'FROM'	=> array(GARAGE__VEHICLES_TABLE => 'g'),
-					'ON'	=> 'g.user_id = u.user_id AND g.main_vehicle = 1'
+					'FROM'	=> array(GARAGE__VEHICLES_TABLE => 'v'),
+					'ON'	=> 'v.user_id = u.user_id AND v.main_vehicle = 1'
 				)
 
 #
@@ -306,17 +437,61 @@ viewonline.php
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 		case 'garage':
+			$url_params = array(
+				'mode=register'		=> 'VIEWING_REGISTER',
+				'i=pm&mode=compose'	=> 'POSTING_PRIVATE_MESSAGE',
+				'i=pm&'			=> 'VIEWING_PRIVATE_MESSAGES',
+				'i=profile&'		=> 'CHANGING_PROFILE',
+				'i=prefs&'		=> 'CHANGING_PREFERENCES',
+			);
+
+			foreach ($url_params as $param => $lang)
+			{
+				if (strpos($row['session_page'], $param) !== false)
+				{
+					$location = $user->lang[$lang];
+					break;
+				}
+			}
+
+			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
+		break;
+
 		case 'garage_blog':
+			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
+		break;
+
 		case 'garage_dynorun':
+			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
+		break;
+
 		case 'garage_guestbook':
+			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
+		break;
+
 		case 'garage_modification':
+			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
+		break;
+
 		case 'garage_premium':
+			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
+		break;
+
 		case 'garage_quartermile':
+			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
+		break;
+
 		case 'garage_service':
+			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
+		break;
+
 		case 'garage_track':
+			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
+		break;
+
 		case 'garage_vehicle':
 			$location = $user->lang['VIEWING_GARAGE'];
-			$location_url = append_sid("{$phpbb_root_path}garage.$phpEx");
+			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
 		break;
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
@@ -334,6 +509,19 @@ viewtopic.php
 #-----[ AFTER, ADD ]------------------------------------------
 #
 //-- mod : Garage ----------------------------------------------------------------------------------------------------------
+
+#
+#-----[ FIND ]------------------------------------------
+#
+	'WARN_IMG'			=> $user->img('icon_user_warn', 'WARN_USER'),
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+	'GARAGE_IMG'			=> $user->img('icon_garage', 'USERS_GARAGE'),
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
 #
 #-----[ FIND ]------------------------------------------
@@ -437,6 +625,7 @@ p.*
 //-- add
 		'VEHICLE'			=> $user_cache[$poster_id]['vehicle'],
 		'U_VEHICLE'			=> (isset($user_cache[$poster_id]['garage_id'])) ? append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", 'mode=view_vehicle&amp;VID=' . $user_cache[$poster_id]['garage_id']) : '',
+		'U_GARAGE'			=> (isset($user_cache[$poster_id]['garage_id'])) ? append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=dispay_results&amp;username=' . $user_cache[$poster_id]['username']) : '',
 		'S_DISPLAY_GARAGE_VIEWTOPIC'	=> ($garage_config['integrate_viewtopic']) ? true : false,
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
@@ -544,7 +733,7 @@ includes/acp/acp_styles.php
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 			'garage'	=> array(
-				'garage_vehicle_img_attached', 'garage_slip_img_attached', 'garage_icon_garage', 'garage_main_menu', 'garage_browse', 'garage_search', 'garage_quartermile_table', 'garage_dynorun_table', 'garage_lap_table', 'garage_garage_review', 'garage_shop_review', 'garage_insurance_review', 'garage_create_vehicle', 'garage_edit_vehicle', 'garage_delete_vehicle', 'garage_view_vehicle', 'garage_add_modification', 'garage_add_insurance', 'garage_add_dynorun', 'garage_add_quartermile', 'garage_add_lap', 'garage_add_service', 'garage_manage_gallery', 'garage_edit', 'garage_delete', 'garage_main_vehicle', 'garage_no_thumb', 'garage_show_details', 'garage_hide_details', 'garage_move_up', 'garage_move_down', 'garage_set_approved', 'garage_set_pending',
+				'garage_img_attached', 'garage_icon_garage', 'garage_main_menu', 'garage_browse', 'garage_search', 'garage_quartermile_table', 'garage_dynorun_table', 'garage_lap_table', 'garage_garage_review', 'garage_shop_review', 'garage_insurance_review', 'garage_create_vehicle', 'garage_edit_vehicle', 'garage_delete_vehicle', 'garage_view_vehicle', 'garage_add_modification', 'garage_add_insurance', 'garage_add_dynorun', 'garage_add_quartermile', 'garage_add_lap', 'garage_add_service', 'garage_edit', 'garage_delete', 'garage_main_vehicle', 'garage_no_thumb',
 			),
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
@@ -576,7 +765,7 @@ $lang = array_merge($lang, array(
 	'DYNORUN'				=> 'Dynorun',
 	'PENDING_GARAGE_ITEMS'			=> 'Pending Garage Items',
 	'VIEWING_GARAGE'			=> 'Viewing Garage',
-	'VIEW_USERS_GARAGE'			=> 'View user\'s Garage',
+	'USERS_GARAGE'				=> 'View user\'s Garage',
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
 # 
@@ -613,6 +802,7 @@ $lang = array_merge($lang, array(
 	'MCP_GARAGE_UNAPPROVED_DYNORUNS'		=> 'Dynoruns awaiting approval',
 	'MCP_GARAGE_UNAPPROVED_LAPS'			=> 'Laps awaiting approval',
 	'MCP_GARAGE_UNAPPROVED_TRACKS'			=> 'Tracks awaiting approval', 
+	'MCP_GARAGE_UNAPPROVED_PRODUCTS'		=> 'Products awaiting approval', 
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
 # 
@@ -642,7 +832,7 @@ $lang = array_merge($lang, array(
 //-- add
 	'UCP_GARAGE'				=> 'Garage',
 	'UCP_GARAGE_OPTIONS'			=> 'Edit global settings',
-	'UCP_GARAGE_MODERATION'			=> 'Edit moderator notification settings',
+	'UCP_GARAGE_NOTIFY'			=> 'Edit notification settings',
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
 # 
@@ -735,8 +925,7 @@ language/en/acp/styles.php
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 	'IMG_CAT_GARAGE'		=> 'phpBB Garage images',
-	'IMG_GARAGE_VEHICLE_IMG_ATTACHED'=> 'Vehicle with image',
-	'IMG_GARAGE_SLIP_IMG_ATTACHED'	=> 'Slip with image',
+	'IMG_GARAGE_IMG_ATTACHED'	=> 'Image attached',
 	'IMG_GARAGE_ICON_GARAGE'	=> 'Garage icon',
 	'IMG_GARAGE_MAIN_MENU'		=> 'Index menu',
 	'IMG_GARAGE_BROWSE'		=> 'Browse menu',
@@ -757,28 +946,21 @@ language/en/acp/styles.php
 	'IMG_GARAGE_ADD_LAP'		=> 'Add lap',
 	'IMG_GARAGE_ADD_SERVICE'	=> 'Add service',
 	'IMG_GARAGE_ADD_QUARTERMILE'	=> 'Add &frac14; mile',
-	'IMG_GARAGE_MANAGE_GALLERY'	=> 'Manage vehicle gallery',
 	'IMG_GARAGE_EDIT'		=> 'Edit',
 	'IMG_GARAGE_DELETE'		=> 'Delete',
 	'IMG_GARAGE_MAIN_VEHICLE'	=> 'Main vehicle',
 	'IMG_GARAGE_NO_THUMB'		=> 'No thumb',
-	'IMG_GARAGE_SHOW_DETAILS'	=> 'Show details',
-	'IMG_GARAGE_HIDE_DETAILS'	=> 'Hide details',
-	'IMG_GARAGE_MOVE_UP'		=> 'Move up',
-	'IMG_GARAGE_MOVE_DOWN'		=> 'Move down',
-	'IMG_GARAGE_SET_APPROVED'	=> 'Approve',
-	'IMG_GARAGE_SET_PENDING'	=> 'Pending',
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
 #
 #-----[ OPEN ]----- 
 # 
-styles/subSilver/imageset/imageset.cfg
+styles/subsilver2/imageset/imageset.cfg
 
 #
 #-----[ FIND ]------------------------------------------
 #
-img_button_topic_reply = {LANG}/button_topic_reply.gif*27*97
+img_button_topic_reply = {LANG}/button_topic_reply.gif
 
 #
 #-----[ AFTER, ADD ]------------------------------------------
@@ -786,45 +968,72 @@ img_button_topic_reply = {LANG}/button_topic_reply.gif*27*97
 
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
-img_garage_vehicle_img_attached	= garage_camera.gif*13*18
-img_garage_slip_img_attached	= garage_slip.gif*13*12
-img_garage_icon_garage		= {LANG}/icon_garage.gif*18*59
-img_garage_main_menu		= {LANG}/garage_main_menu.gif*33*130
-img_garage_browse		= {LANG}/garage_browse.gif*33*130
-img_garage_search		= {LANG}/garage_search.gif*33*130
-img_garage_quartermile_table	= {LANG}/garage_quartermile_table.gif*33*130
-img_garage_dynorun_table	= {LANG}/garage_dynorun_table.gif*33*130
-img_garage_lap_table		= {LANG}/garage_lap_table.gif*33*130
-img_garage_garage_review	= {LANG}/garage_garage_review.gif*33*130
-img_garage_shop_review		= {LANG}/garage_shop_review.gif*33*130
-img_garage_insurance_review	= {LANG}/garage_insurance_review.gif*33*130
-img_garage_create_vehicle	= {LANG}/garage_create_vehicle.gif*33*130
-img_garage_edit_vehicle		= {LANG}/garage_edit_vehicle.gif*33*130
-img_garage_delete_vehicle	= {LANG}/garage_delete_vehicle.gif*33*130
-img_garage_view_vehicle		= {LANG}/garage_view_vehicle.gif*33*130
-img_garage_add_modification	= {LANG}/garage_add_modification.gif*33*130
-img_garage_add_insurance	= {LANG}/garage_add_insurance.gif*33*130
-img_garage_add_dynorun		= {LANG}/garage_add_dynorun.gif*33*130
-img_garage_add_quartermile	= {LANG}/garage_add_quartermile.gif*33*130
-img_garage_add_lap		= {LANG}/garage_add_lap.gif*33*130
-img_garage_add_service		= {LANG}/garage_add_service.gif*33*130
-img_garage_manage_gallery	= {LANG}/garage_manage_gallery.gif*33*130
-img_garage_edit			= {LANG}/garage_edit.gif*16*16
-img_garage_delete		= {LANG}/garage_delete.gif*16*16
-img_garage_main_vehicle		= {LANG}/garage_main_vehicle.gif*33*130
-img_garage_no_thumb		= {LANG}/garage_no_thumb.gif*33*130
-img_garage_show_details		= {LANG}/garage_show_details.gif*21*34
-img_garage_hide_details		= {LANG}/garage_hide_details.gif*21*34
-img_garage_move_up		= {LANG}/garage_move_up.gif*16*16
-img_garage_move_down		= {LANG}/garage_move_down.gif*16*16
-img_garage_set_approved		= {LANG}/garage_set_approved.gif*21*34
-img_garage_set_pending		= {LANG}/garage_set_pending.gif*21*34
+img_garage_img_attached		= garage_camera.gif*20*20
+img_garage_edit			= garage_edit.gif*20*20
+img_garage_delete		= garage_delete.gif*20*20
+img_garage_icon_garage		= {LANG}/icon_garage.gif
+img_garage_main_menu		= {LANG}/garage_main_menu.gif
+img_garage_browse		= {LANG}/garage_browse.gif
+img_garage_search		= {LANG}/garage_search.gif
+img_garage_quartermile_table	= {LANG}/garage_quartermile_table.gif
+img_garage_dynorun_table	= {LANG}/garage_dynorun_table.gif
+img_garage_lap_table		= {LANG}/garage_lap_table.gif
+img_garage_garage_review	= {LANG}/garage_garage_review.gif
+img_garage_shop_review		= {LANG}/garage_shop_review.gif
+img_garage_insurance_review	= {LANG}/garage_insurance_review.gif
+img_garage_create_vehicle	= {LANG}/garage_create_vehicle.gif
+img_garage_edit_vehicle		= {LANG}/garage_edit_vehicle.gif
+img_garage_delete_vehicle	= {LANG}/garage_delete_vehicle.gif
+img_garage_view_vehicle		= {LANG}/garage_view_vehicle.gif
+img_garage_add_modification	= {LANG}/garage_add_modification.gif
+img_garage_add_insurance	= {LANG}/garage_add_insurance.gif
+img_garage_add_dynorun		= {LANG}/garage_add_dynorun.gif
+img_garage_add_quartermile	= {LANG}/garage_add_quartermile.gif
+img_garage_add_lap		= {LANG}/garage_add_lap.gif
+img_garage_add_service		= {LANG}/garage_add_service.gif
+img_garage_main_vehicle		= {LANG}/garage_main_vehicle.gif
+img_garage_no_thumb		= {LANG}/garage_no_thumb.gif
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+#
+#-----[ OPEN ]----- 
+# 
+styles/prosilver/imageset/imageset.cfg
+
+#
+#-----[ FIND ]------------------------------------------
+#
+img_button_topic_reply = {LANG}/button_topic_reply.gif
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+img_garage_img_attached		= garage_camera.gif*20*41
+img_garage_edit			= garage_edit.gif*20*41
+img_garage_delete		= garage_delete.gif*20*41
+img_garage_icon_garage		= icon_miniprofile_garage*20*41
+img_garage_create_vehicle	= {LANG}/garage_new_vehicle.gif
+img_garage_edit_vehicle		= {LANG}/garage_edit_vehicle.gif
+img_garage_delete_vehicle	= {LANG}/garage_delete_vehicle.gif
+img_garage_view_vehicle		= {LANG}/garage_view_vehicle.gif
+img_garage_add_modification	= {LANG}/garage_new_modification.gif
+img_garage_add_insurance	= {LANG}/garage_new_premium.gif
+img_garage_add_dynorun		= {LANG}/garage_new_dynorun.gif
+img_garage_add_quartermile	= {LANG}/garage_new_quartermile.gif
+img_garage_add_lap		= {LANG}/garage_new_lap.gif
+img_garage_add_service		= {LANG}/garage_new_service.gif
+img_garage_main_vehicle		= {LANG}/garage_main_vehicle.gif
+img_garage_no_thumb		= {LANG}/garage_no_thumb.gif
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
 
 # 
 #-----[ OPEN ]----- 
 # 
-styles/subSilver/templates/memberlist_body.html
+styles/subsilver2/templates/memberlist_body.html
 
 #
 #-----[ FIND ]------------------------------------------
@@ -880,7 +1089,7 @@ styles/subSilver/templates/memberlist_body.html
 # 
 #-----[ OPEN ]----- 
 # 
-styles/subSilver/templates/memberlist_view.html
+styles/subsilver2/templates/memberlist_view.html
 
 #
 #-----[ FIND ]------------------------------------------
@@ -914,7 +1123,33 @@ styles/subSilver/templates/memberlist_view.html
 # 
 #-----[ OPEN ]----- 
 # 
-styles/subSilver/templates/viewtopic_body.html
+styles/prosilver/templates/memberlist_view.html
+
+#
+#-----[ FIND ]------------------------------------------
+#
+		<!-- IF U_JABBER and S_JABBER_ENABLED --><dt>{L_JABBER}:</dt> <dd><a href="{U_JABBER}" onclick="popup('{U_JABBER}', 550, 320); return false;">{L_SEND_JABBER_MESSAGE}</a></dd><!-- ELSEIF USER_JABBER --><dt>{L_JABBER}:</dt> <dd>{USER_JABBER}</dd><!-- ENDIF -->
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+		<!-- IF S_DISPLAY_GARAGE_PROFILE --><dt>{L_GARAGE}:</dt> <dd><a href="{U_GARAGE_USER_SEARCH}" >{L_VIEW_USERS_GARAGE}</a></dd><!-- ENDIF -->
+
+#
+#-----[ FIND ]------------------------------------------
+#
+</form>
+
+#
+#-----[ BEFORE, ADD ]------------------------------------------
+#
+
+<!-- INCLUDE garage_profile_integration.html -->
+
+# 
+#-----[ OPEN ]----- 
+# 
+styles/subsilver2/templates/viewtopic_body.html
 
 #
 #-----[ FIND ]------------------------------------------
@@ -931,31 +1166,88 @@ styles/subSilver/templates/viewtopic_body.html
 					<td class="postdetails"><a href={postrow.U_VEHICLE}>{postrow.VEHICLE}</a></td>
 				</tr>
 			<!-- ENDIF -->
-# 
-#-----[ OPEN ]----- 
-# 
-styles/subSilver/templates/overall_header.html
 
 #
 #-----[ FIND ]------------------------------------------
 #
-<td class="genmed" align="right">
+			<td><div class="gensmall" style="float: {S_CONTENT_FLOW_BEGIN};">
 
 #
 #-----[ IN-LINE FIND ]------------------------------------------
 #
-<td class="genmed" align="right">
+{EMAIL_IMG}</a> <!-- ENDIF -->&nbsp;
 
 #
 #-----[ IN-LINE AFTER, ADD ]------------------------------------------
 #
-<!-- IF S_DISPLAY_GARAGE --><a href="{U_GARAGE}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_GARAGE}" hspace="3" /> {L_GARAGE}</a>&nbsp; &nbsp;<!-- ENDIF --><!-- IF S_DISPLAY_QUARTERMILE --><a href="{U_QUARTERMILE}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_QUARTERMILE}" hspace="3" /> {L_QUARTERMILE}</a>&nbsp; &nbsp;<!-- ENDIF --><!-- IF S_DISPLAY_DYNORUN --><a href="{U_DYNORUN}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_DYNORUN}" hspace="3" /> {L_DYNORUN}</a>&nbsp; &nbsp;<!-- ENDIF -->
+<!-- IF postrow.U_GARAGE --><a href="{postrow.U_GARAGE}">{GARAGE_IMG}</a> <!-- ENDIF -->&nbsp;
+
+# 
+#-----[ OPEN ]----- 
+# 
+styles/prosilver/templates/viewtopic_body.html
+
+#
+#-----[ FIND ]------------------------------------------
+#
+		<!-- IF postrow.POSTER_FROM --><dd><strong>{L_LOCATION}:</strong> {postrow.POSTER_FROM}</dd><!-- ENDIF -->
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+		<!-- IF postrow.U_VEHICLE and postrow.S_DISPLAY_GARAGE_VIEWTOPIC --><dd><br /><a href={postrow.U_VEHICLE}>{postrow.VEHICLE}</a></dd><!-- ENDIF -->
+
+#
+#-----[ FIND ]------------------------------------------
+#
+					<!-- IF postrow.U_JABBER --><li class="jabber-icon"><a href="{postrow.U_JABBER}" title="{L_JABBER}"><span>{L_JABBER}</span></a></li><!-- ENDIF -->
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+					<!-- IF postrow.U_GARAGE and postrow.S_DISPLAY_GARAGE_VIEWTOPIC --><li class="garage-icon"><a href="{postrow.U_GARAGE}" title="{L_GARAGE}"><span>{L_GARAGE}</span></a></li><!-- ENDIF -->
 
 
 # 
 #-----[ OPEN ]----- 
 # 
-styles/subSilver/theme/stylesheet.css
+styles/subsilver2/templates/overall_header.html
+
+#
+#-----[ FIND ]------------------------------------------
+#
+			<td class="genmed" align="{S_CONTENT_FLOW_END}">
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+				<!-- IF S_DISPLAY_GARAGE --><a href="{U_GARAGE}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_GARAGE}" hspace="3" /> {L_GARAGE}</a>&nbsp; &nbsp;<!-- ENDIF -->
+				<!-- IF S_DISPLAY_QUARTERMILE --><a href="{U_QUARTERMILE}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_QUARTERMILE}" hspace="3" /> {L_QUARTERMILE}</a>&nbsp; &nbsp;<!-- ENDIF -->
+				<!-- IF S_DISPLAY_DYNORUN --><a href="{U_DYNORUN}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_DYNORUN}" hspace="3" /> {L_DYNORUN}</a>&nbsp; &nbsp;<!-- ENDIF -->
+
+# 
+#-----[ OPEN ]----- 
+# 
+styles/prosilver/templates/overall_header.html
+
+#
+#-----[ FIND ]------------------------------------------
+#
+				<!-- ENDIF -->
+				<li class="rightside">
+
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+					<!-- IF S_DISPLAY_GARAGE --><a href="{U_GARAGE}" title="{L_GARAGE}" class="icon-garage">{L_GARAGE}</a>&nbsp; <!-- ENDIF -->
+					<!-- IF S_DISPLAY_QUARTERMILE --><a href="{U_QUARTERMILE}" title="{L_QUARTERMILE}" class="icon-quartermile">{L_QUARTERMILE}</a>&nbsp; <!-- ENDIF -->
+					<!-- IF S_DISPLAY_DYNORUN --><a href="{U_DYNORUN}" title="{L_DYNORUN}" class="icon-dynorun">{L_DYNORUN}</a>&nbsp; <!-- ENDIF -->
+
+
+# 
+#-----[ OPEN ]----- 
+# 
+styles/subsilver2/theme/stylesheet.css
 
 #
 #-----[ FIND ]------------------------------------------
@@ -1161,7 +1453,10 @@ styles/subSilver/theme/stylesheet.css
 #-----[ SAVE/CLOSE ALL FILES ]------------------------------------------
 #
 # EoM
+TODO: make phpBB user deletion delete all Garage items
 TODO: Make memberlist display garage button - template side done
 TODO: Events system
 TODO: Add vehicle status
 TODO: Make viewonline know exactly what you are doing..not just view garage
+TODO: Add class for icon-garage, icon-quartermile, icon-dynorun for overall_header.html in prosilver. Need images too.
+TODO: Add garage-iconf class for viewtopic_body.html in prosilver. Use image icon_miniprofile_garage.gif

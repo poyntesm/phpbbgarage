@@ -2050,7 +2050,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.*, images.*, makes.make, models.model, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, u.username, u.user_avatar_type, u.user_avatar, u.user_id, u.user_colour',
+			'SELECT'	=> 'g.*, images.*, mk.make, md.model, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, u.username, u.user_avatar_type, u.user_avatar, u.user_id, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'g',
 				GARAGE_MAKES_TABLE	=> 'mk',
@@ -2059,14 +2059,6 @@ class garage_vehicle
 			),
 			'LEFT_JOIN'	=> array(
 				array(
-					'FROM'	=> array(GARAGE_MAKES_TABLE => 'makes'),	
-					'ON'	=> 'g.make_id = makes.id'
-				)
-				,array(
-					'FROM'	=> array(GARAGE_MODELS_TABLE => 'models'),	
-					'ON'	=> 'g.model_id = models.id'
-				)
-				,array(
 					'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'mods'),
 					'ON'	=> 'g.id = mods.vehicle_id'
 				)
@@ -2078,12 +2070,12 @@ class garage_vehicle
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'images'),
 					'ON'	=> 'images.attach_id = vg.image_id'
 				)
-				,array(
-					'FROM'	=> array(USERS_TABLE => 'u'),
-					'ON'	=> 'g.user_id = u.user_id'
-				)
 			),
-			'WHERE'		=> "g.user_id = $user_id and g.main_vehicle =1",
+			'WHERE'		=> "g.user_id = $user_id and g.main_vehicle = 1
+						AND g.user_id = u.user_id
+						AND g.make_id = mk.id
+						AND g.model_id = md.id
+			",
 			'GROUP_BY'	=> 'g.id'
 		));
 

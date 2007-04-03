@@ -110,7 +110,7 @@ switch( $mode )
 		* Get make, model & year data from web server
 		* If no make or model use default configuration
 		*/
-		$year	= request_var('YEAR');
+		$year	= request_var('YEAR', '');
 		$make	= request_var('MAKE_ID', $garage_config['default_make_id']);
 		$model	= request_var('MODEL_ID', $garage_config['default_model_id']);
 
@@ -129,7 +129,7 @@ switch( $mode )
 			'body'   	=> 'garage_vehicle.html')
 		);
 		$garage_template->attach_image('vehicle');
-		$garage_template->make_dropdown($makes, $make_id);
+		$garage_template->make_dropdown($makes, $make);
 		$garage_template->engine_dropdown();
 		$garage_template->currency_dropdown();
 		$garage_template->mileage_dropdown();

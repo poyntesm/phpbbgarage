@@ -1,4 +1,48 @@
 		<td width="23%" valign="top" >
+			<table width="100%" cellpadding="2" cellspacing="1" border="0" class="tablebg">
+			<thead>
+				<tr>
+					<th>{L_MENU}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="row1" align="center"><span class="genmed">
+						<!-- IF S_GARAGE_DISPLAY_MAIN --><a href="{U_GARAGE_MAIN}">{MAIN}</a><br /><!-- ENDIF -->
+						<!-- IF S_GARAGE_DISPLAY_BROWSE --><a href="{U_GARAGE_BROWSE}">{BROWSE}</a><br /><!-- ENDIF -->
+						<!-- IF S_GARAGE_DISPLAY_SEARCH --><a href="{U_GARAGE_SEARCH}">{SEARCH}</a><br /><!-- ENDIF -->
+						<!-- IF S_GARAGE_DISPLAY_INSURANCE_REVIEW --><a href="{U_GARAGE_INSURANCE_REVIEW}">{INSURANCE_REVIEW}</a><br /><!-- ENDIF -->
+						<!-- IF S_GARAGE_DISPLAY_SHOP_REVIEW --><a href="{U_GARAGE_SHOP_REVIEW}">{SHOP_REVIEW}</a><br /><!-- ENDIF -->
+						<!-- IF S_GARAGE_DISPLAY_GARAGE_REVIEW --><a href="{U_GARAGE_GARAGE_REVIEW}">{GARAGE_REVIEW}</a><br /><!-- ENDIF -->
+						<!-- IF S_GARAGE_DISPLAY_QUARTERMILE_TABLE --><a href="{U_GARAGE_QUARTERMILE_TABLE}">{QUARTERMILE_TABLE}</a><br /><!-- ENDIF -->
+						<!-- IF S_GARAGE_DISPLAY_DYNORUN_TABLE --><a href="{U_GARAGE_DYNORUN_TABLE}">{DYNORUN_TABLE}</a><br /><!-- ENDIF -->
+						<!-- IF S_GARAGE_DISPLAY_LAP_TABLE --><a href="{U_GARAGE_LAP_TABLE}">{LAP_TABLE}</a><br /><!-- ENDIF -->
+					</span></td>
+				</tr>
+			</table>
+			<br />
+
+			<!-- IF S_DISPLAY_USER_VEHICLES -->
+			<table width="100%" cellpadding="2" cellspacing="1" border="0" class="tablebg">
+			<thead>
+				<tr>
+					<th>{L_MY_VEHICLES}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- IF S_GARAGE_DISPLAY_CREATE_VEHICLE -->
+				<tr>
+					<td class="row1" align="center"><span class="genmed"><a href="{U_GARAGE_CREATE_VEHICLE}">{CREATE_VEHICLE}</a></span></td>
+				</tr>
+				<!-- ENDIF -->
+				<!-- BEGIN user_vehicles -->
+				<tr>
+					<td class="row1" align="left"><span class="genmed"><a href="{user_vehicles.U_VIEW_VEHICLE}">{user_vehicles.VEHICLE}</a></span></td>
+				</tr>
+				<!-- END user_vehicles -->
+			</table>
+			<br />
+			<!-- ENDIF -->
 			<!-- IF S_GARAGE_DISPLAY_UPDATED_VEHICLES -->
 			<table width="100%" cellpadding="2" cellspacing="1" border="0" class="tablebg">
 			<thead>	
