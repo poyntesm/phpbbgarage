@@ -1,22 +1,32 @@
 <!-- INCLUDE ucp_header.html -->
 
-<table class="tablebg" width="100%" cellspacing="1">
-<tr>
-	<th colspan="2" valign="middle">{L_TITLE}</th>
-</tr>
-<!-- IF ERROR -->
-	<tr>
-		<td class="row3" colspan="2" align="center"><span class="gensmall" style="color:red">{ERROR}</span></td>
-	</tr>
-<!-- ENDIF -->
-<tr>
-	<td class="row1" width="50%"><b class="genmed">{L_INDEX_COLUMNS}:</b></td>
-	<td class="row2"><select name="index_columns" id="index_columns"><option value="1"<!-- IF S_INDEX_COLUMNS == 1 -->selected="selected"<!-- ENDIF --> >1</option><option value="2"<!-- IF S_INDEX_COLUMNS == 2 -->selected="selected"<!-- ENDIF --> >2</option><option value="3"<!-- IF S_INDEX_COLUMNS == 3 -->selected="selected"<!-- ENDIF --> >3</option><option value="4"<!-- IF S_INDEX_COLUMNS == 4 -->selected="selected"<!-- ENDIF --> >4</option>
-	</select></td>
-</tr>
-<tr>
-	<td class="cat" colspan="2" align="center">{S_HIDDEN_FIELDS}<input class="btnmain" type="submit" name="submit" value="{L_SUBMIT}" />&nbsp;&nbsp;<input class="btnlite" type="reset" value="{L_RESET}" name="reset" /></td>
-</tr>
-</table>
+<form id="ucp" method="post" action="{S_UCP_ACTION}"{S_FORM_ENCTYPE}>
+
+<h2>{L_TITLE}</h2>
+
+<div class="panel">
+	<div class="inner"><span class="corners-top"><span></span></span>
+
+		<fieldset>
+		<!-- IF ERROR --><p class="error">{ERROR}</p><!-- ENDIF -->
+		<dl>
+			<dt><label for="index_columns">{L_INDEX_COLUMNS}:</label></dt>
+			<dd>
+				<label for="index_columns"><select name="index_columns" id="index_columns"><option value="1"<!-- IF S_INDEX_COLUMNS == 1 -->selected="selected"<!-- ENDIF --> >1</option><option value="2"<!-- IF S_INDEX_COLUMNS == 2 -->selected="selected"<!-- ENDIF --> >2</option><option value="3"<!-- IF S_INDEX_COLUMNS == 3 -->selected="selected"<!-- ENDIF --> >3</option><option value="4"<!-- IF S_INDEX_COLUMNS == 4 -->selected="selected"<!-- ENDIF --> >4</option></select></label>
+			</dd>
+		</dl>
+		</fieldset>
+
+	<span class="corners-bottom"><span></span></span></div>
+</div>
+
+<fieldset class="submit-buttons">
+	{S_HIDDEN_FIELDS}<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 
+	<input type="submit" name="submit" value="{L_SUBMIT}" class="button1" />
+</fieldset>
+
+</form>
+
+	<td class="row2">
 
 <!-- INCLUDE ucp_footer.html -->

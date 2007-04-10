@@ -1,44 +1,43 @@
-		<td width="23%" valign="top" >
-			<!-- IF S_DISPLAY_USER_VEHICLES -->
-			<table width="100%" cellpadding="2" cellspacing="1" border="0" class="tablebg">
-			<thead>
-				<tr>
-					<th>{L_MY_VEHICLES}</th>
-				</tr>
-			</thead>
-			<tbody>
-				<!-- IF S_GARAGE_DISPLAY_CREATE_VEHICLE -->
-				<div class="buttons">
-					<div class="locked-icon"><a href="{U_GARAGE_CREATE_VEHICLE}"><span>{L_CREATE_VEHICLE}</a></span></a></div>
-				</div>
-				<tr>
-					<td class="row1" align="center"><span class="genmed"><a href="{U_GARAGE_CREATE_VEHICLE}">{CREATE_VEHICLE}</a></span></td>
-				</tr>
-				<!-- ENDIF -->
-				<!-- BEGIN user_vehicles -->
-				<tr>
-					<td class="row1" align="left"><span class="genmed"><a href="{user_vehicles.U_VIEW_VEHICLE}">{user_vehicles.VEHICLE}</a></span></td>
-				</tr>
-				<!-- END user_vehicles -->
-			</table>
-			<br />
-			<!-- ENDIF -->
 
-			<!-- IF S_GARAGE_DISPLAY_UPDATED_VEHICLES -->
-			<table width="100%" cellpadding="2" cellspacing="1" border="0" class="tablebg">
-			<thead>	
-				<tr>
-					<th>{L_LATEST_UPDATED}</th>
-				</tr>
-			</head>
-			<tbody>
-				<!-- BEGIN updated_vehicles -->
-				<tr>
-					<td class="row1" align="left" nowrap="nowrap"><span class="genmed"><a href="{updated_vehicles.U_VIEW_VEHICLE}" >{updated_vehicles.VEHICLE}</a><br />{updated_vehicles.UPDATED_TIME}<br>{L_OWNER}:&nbsp;<b><a href="{updated_vehicles.U_VIEW_PROFILE}" <!-- IF updated_vehicles.USERNAME_COLOUR --> style="color: {updated_vehicles.USERNAME_COLOUR}"<!-- ENDIF -->>{updated_vehicles.USERNAME}</a></b></span></td>
-				</tr>
-				<!-- END updated_vehicles -->
-			</tbody>
-			</table>
-			<br />
-			<!-- ENDIF -->
-		</td>
+	<div id="garage-toggle">						
+		<a id="garage-toggle-handle" accesskey="m" title="Hide or display the side menu" onclick="garage_switch_menu(); return false;" href="#"></a>
+	</div>
+
+	<div id="garage-menu">		
+		<div class="cp-mini">
+			<div class="inner">
+				<span class="corners-top"><span></span></span>
+				<!-- IF S_DISPLAY_USER_VEHICLES -->
+				<dl>
+					<dt>{L_MY_VEHICLES}</dt>
+					<!-- IF S_GARAGE_DISPLAY_CREATE_VEHICLE -->
+					<div class="buttons">
+						<div class="locked-icon">
+							<a href="{U_GARAGE_CREATE_VEHICLE}"><span>{L_CREATE_VEHICLE}</a></span></a>
+						</div>
+					</div>
+					<!-- ENDIF -->
+					<!-- BEGIN user_vehicles -->
+					<dd class="row1" align="left"><span class="genmed"><a href="{user_vehicles.U_VIEW_VEHICLE}">{user_vehicles.VEHICLE}</a></span></dd>
+					<!-- END user_vehicles -->
+				</dl>
+				<!-- ENDIF -->
+				<span class="corners-bottom"><span></span></span>
+			</div>
+		</div>
+
+		<div class="cp-mini">
+			<div class="inner">
+				<span class="corners-top"><span></span></span>
+				<!-- IF S_GARAGE_DISPLAY_UPDATED_VEHICLES -->
+				<dl>
+					<dt>{L_LATEST_UPDATED}</dt>
+					<!-- BEGIN updated_vehicles -->
+					<dd class="row1" align="left" nowrap="nowrap"><span class="genmed"><a href="{updated_vehicles.U_VIEW_VEHICLE}" >{updated_vehicles.VEHICLE}</a><br />{updated_vehicles.UPDATED_TIME}<br>{L_OWNER}:&nbsp;<b><a href="{updated_vehicles.U_VIEW_PROFILE}" <!-- IF updated_vehicles.USERNAME_COLOUR --> style="color: {updated_vehicles.USERNAME_COLOUR}"<!-- ENDIF -->>{updated_vehicles.USERNAME}</a></b></span></dd>
+					<!-- END updated_vehicles -->
+				</dl>
+				<!-- ENDIF -->
+				<span class="corners-bottom"><span></span></span>
+			</div>
+		</div>
+	</div>

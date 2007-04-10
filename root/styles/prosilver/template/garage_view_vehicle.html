@@ -88,13 +88,16 @@ function jumpto_garage()
 //-->
 </script>
 
-<script type="text/javascript" src="{T_TEMPLATE_PATH}/garage_functions.js"></script>
+<div id="garage-main">
+<div id="cp-main">
 
-<td width="72%" valign="top" >
+<div class="panel">
+	<div class="inner"><span class="corners-top"><span></span></span>
+		<h3>{YEAR}&nbsp;{MAKE}&nbsp;{MODEL}</h3>
 
     			<table cellpadding="4" cellspacing="1" border="0" width="100%" class="tablebg">
      				<tr>
-      					<th height="25" colspan="2">{YEAR}&nbsp;{MAKE}&nbsp;{MODEL}</th>
+      					<th height="25" colspan="2"></th>
      				</tr>
         			<tr>
             				<td class="row1" width="59%" valign="top">
@@ -133,16 +136,16 @@ function jumpto_garage()
                     					<tr>
                         					<td align="center" >
 									<span class="gen">
-									<!-- IF U_VIEW_VEHICLE --><a href="{U_VIEW_VEHICLE}">{VIEW_VEHICLE}</a>&nbsp;<!-- ENDIF -->
-									<!-- IF U_EDIT_VEHICLE --><a href="{U_EDIT_VEHICLE}">{EDIT_VEHICLE}</a>&nbsp;<!-- ENDIF -->
-									<!-- IF U_DELETE_VEHICLE --><a href="{U_DELETE_VEHICLE}">{DELETE_VEHICLE}</a>&nbsp;<!-- ENDIF -->
-									<!-- IF U_ADD_MODIFICATION --><a href="{U_ADD_MODIFICATION}">{ADD_MODIFICATION}</a>&nbsp;<!-- ENDIF -->
-									<!-- IF U_ADD_INSURANCE --><a href="{U_ADD_INSURANCE}">{ADD_INSURANCE}</a>&nbsp;<!-- ENDIF -->
-									<!-- IF U_ADD_QUARTERMILE --><a href="{U_ADD_QUARTERMILE}">{ADD_QUARTERMILE}</a>&nbsp;<!-- ENDIF -->
-									<!-- IF U_ADD_DYNORUN --><a href="{U_ADD_DYNORUN}">{ADD_DYNORUN}</a>&nbsp;<!-- ENDIF -->
-									<!-- IF U_ADD_LAP --><a href="{U_ADD_LAP}">{ADD_LAP}</a>&nbsp;<!-- ENDIF -->
-									<!-- IF U_ADD_SERVICE --><a href="{U_ADD_SERVICE}">{ADD_SERVICE}</a>&nbsp;<!-- ENDIF -->
-									<!-- IF U_SET_MAIN_VEHICLE --><a href="{U_SET_MAIN_VEHICLE}">{SET_MAIN_VEHICLE}</a>&nbsp;<!-- ENDIF -->
+									<!-- IF U_VIEW_VEHICLE --><div class="locked-icon"><a href="{U_VIEW_VEHICLE}">{VIEW_VEHICLE}</a></div>&nbsp;<!-- ENDIF -->
+									<!-- IF U_EDIT_VEHICLE --><div class="locked-icon"><a href="{U_EDIT_VEHICLE}">{EDIT_VEHICLE}</a></div>&nbsp;<!-- ENDIF -->
+									<!-- IF U_DELETE_VEHICLE --><div class="locked-icon"><a href="{U_DELETE_VEHICLE}">{DELETE_VEHICLE}</a></div>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_MODIFICATION --><div class="locked-icon"><a href="{U_ADD_MODIFICATION}">{ADD_MODIFICATION}</a></div>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_INSURANCE --><div class="locked-icon"><a href="{U_ADD_INSURANCE}">{ADD_INSURANCE}</a></div>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_QUARTERMILE --><div class="locked-icon"><a href="{U_ADD_QUARTERMILE}">{ADD_QUARTERMILE}</a></div>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_DYNORUN --><div class="locked-icon"><a href="{U_ADD_DYNORUN}">{ADD_DYNORUN}</a></div>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_LAP --><div class="locked-icon"><a href="{U_ADD_LAP}">{ADD_LAP}</a></div>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_SERVICE --><div class="locked-icon"><a href="{U_ADD_SERVICE}">{ADD_SERVICE}</a></div>&nbsp;<!-- ENDIF -->
+									<!-- IF U_SET_MAIN_VEHICLE --><div class="locked-icon"><a href="{U_SET_MAIN_VEHICLE}">{SET_MAIN_VEHICLE}</a></div>&nbsp;<!-- ENDIF -->
 									<br />
 									<!-- IF U_HILITE_IMAGE -->
 									<a href="{U_HILITE_IMAGE}" title="{HILITE_IMAGE_TITLE}" target="_blank"><img hspace="5" vspace="5" src="{HILITE_IMAGE}" /></a>

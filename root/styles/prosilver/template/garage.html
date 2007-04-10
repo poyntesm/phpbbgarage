@@ -10,13 +10,16 @@
 
 <!-- INCLUDE garage_header.html -->
 
-		<td width="72%" valign="top" >
+<!-- INCLUDE garage_menu.html -->
+
+<div id="garage-main">
+<div id="cp-main">
+
+<div class="panel">
+	<div class="inner"><span class="corners-top"><span></span></span>
+
+			<h3>{L_WELCOME}</h3>
 			<table width="100%" border="0" cellspacing="1" cellpadding="4" class="tablebg">
-			<thead>
-				<tr>
-					<th height="25" colspan="2">{L_WELCOME}</th>
-				</tr>
-			</thead>
 			<tbody>
 				<tr>
 					<!-- IF S_FEATURED_VEHICLE -->
@@ -41,55 +44,55 @@
 				</tr>
 			</tbody>
 			</table>
-			<br />
 
-			<table cellpadding="0" cellspacing="1" border="0" width="100%">
-			<tbody>
-				<tr>	
-					<!-- IF S_INDEX_COLUMNS == 1 -->
-					<td width="100%" valign="top" >
-					<!-- ENDIF -->
-					<!-- IF S_INDEX_COLUMNS == 2 -->
-					<td width="50%" valign="top" >
-					<!-- ENDIF -->
-					<!-- IF S_INDEX_COLUMNS == 3 -->
-					<td width="33%" valign="top" >
-					<!-- ENDIF -->
-					<!-- IF S_INDEX_COLUMNS == 4 -->
-					<td width="25%" valign="top" >
-					<!-- ENDIF -->
-						<!-- BEGIN block_1 -->
-						<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
-						<thead>	
-							<tr>
-								<th align="center" colspan="3">{block_1.BLOCK_TITLE}</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td class="cat" ><span class="gen">{block_1.COLUMN_1_TITLE}</span></td>
-								<td class="cat" ><span class="gen">{block_1.COLUMN_2_TITLE}</span></td>
-								<td class="cat" ><span class="gen">{block_1.COLUMN_3_TITLE}</span></td>
-							</tr>
-							<!-- BEGIN row -->
-							<tr>
-								<td class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></span></td>
-								<td class="row1" align="center" valign="middle"><span class="gensmall"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></span></td>
-								<!-- IF block_1.row.U_COLUMN_3 -->
-								<td class="row1" align="center" valign="middle" nowrap><span class="gensmall"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></span></td>
-								<!-- ELSE -->
-								<td class="row1" align="center" valign="middle" nowrap><span class="gensmall">{block_1.row.COLUMN_3_TITLE}</span></td>
-								<!-- ENDIF -->
-							</tr>
-							<!-- BEGINELSE -->
-							<tr>
-								<td class="row1" align="center" valign="middle" colspan="3">{L_NO_ITEM_TO_LIST}</td>
-							</tr>
-							<!-- END row -->
-						</tbody>
-						</table>
-						<br />
-						<!-- END block_1 -->
+	<span class="corners-bottom"><span></span></span></div>
+</div>
+
+<div class="panel">
+	<div class="inner"><span class="corners-top"><span></span></span>
+
+		<!-- BEGIN block_1 -->
+		<h3>{block_1.BLOCK_TITLE}</h3>
+		<div class="forabg">
+			<div class="inner"><span class="corners-top"><span></span></span>
+				<ul class="topiclist">
+					<li class="header">
+						<dl class="icon">
+							<dt>{block_1.COLUMN_1_TITLE}</dt>
+							<dd class="topics">{block_1.COLUMN_2_TITLE}</dd>
+							<dd class="posts">{block_1.COLUMN_3_TITLE}</dd>
+						</dl>
+					</li>
+				</ul>
+				<ul class="topiclist forums">
+					<!-- BEGIN row -->
+					<li class="row">
+						<dl>
+							<dt class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></span></dt>
+							<dd class="row1" align="center" valign="middle"><span class="gensmall"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></span></dd>
+							<!-- IF block_1.row.U_COLUMN_3 -->
+							<dd class="row1" align="center" valign="middle" nowrap><span class="gensmall"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></span></dd>
+							<!-- ELSE -->
+							<dd class="row1" align="center" valign="middle" nowrap><span class="gensmall">{block_1.row.COLUMN_3_TITLE}</span></dd>
+							<!-- ENDIF -->
+						</dl>
+					</li>
+					<!-- BEGINELSE -->
+					<div class="panel">
+						<div class="inner"><span class="corners-top"><span></span></span>
+						<strong>{L_NO_ITEM_TO_LIST}</strong>
+						<span class="corners-bottom"><span></span></span></div>
+					</div>
+					<!-- END row -->
+				</ul>
+
+			<span class="corners-bottom"><span></span></span></div>
+		</div>
+		<!-- END block_1 -->
+	<span class="corners-bottom"><span></span></span></div>
+</div>
+
+
 
 						<!-- BEGIN block_3 -->
 						<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
@@ -487,7 +490,9 @@
 				</tr>
 			</tbody>
 			</table>
-		</td>
+
+	<span class="corners-bottom"><span></span></span></div>
+</div>
 
 <!-- INCLUDE garage_footer.html -->
 
