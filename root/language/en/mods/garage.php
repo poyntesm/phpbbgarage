@@ -722,6 +722,9 @@ $lang = array_merge($lang, array(
 	'NO_TRACK_SELECTED'		=> 'You must select at least one track to perform this action.',
 	'NO_PRODUCT_SELECTED'		=> 'You must select at least one product to perform this action.',
 	'DISAPPROVE_QUARTERMILE'	=> 'Disapprove &frac14; mile time.',
+	'CONTACT_NUMBERS'		=> 'Contact no.',
+	'F'				=> 'F',
+	'T'				=> 'T',
 	'SELECT_ONE_ONLY'		=> 'Disapproving this item require decisions about linked items, as such you can not disapprove more than one item at a time.',
 
 	//UCP LANGUAGE KEYS

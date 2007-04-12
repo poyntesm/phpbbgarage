@@ -94,11 +94,7 @@ function jumpto_garage()
 <div class="panel">
 	<div class="inner"><span class="corners-top"><span></span></span>
 		<h3>{YEAR}&nbsp;{MAKE}&nbsp;{MODEL}</h3>
-
     			<table cellpadding="4" cellspacing="1" border="0" width="100%" class="tablebg">
-     				<tr>
-      					<th height="25" colspan="2"></th>
-     				</tr>
         			<tr>
             				<td class="row1" width="59%" valign="top">
                 				<table width="100%" cellpadding="4" cellspacing="1" border="0">
@@ -131,24 +127,20 @@ function jumpto_garage()
 							<!-- ENDIF -->
 							<!-- IF U_VIEW_VEHICLE -->
                     					<tr>
-    								<td class="row1"><span class="gen"><b>{L_MANAGE_VEHICLE_LINKS}</b><br /></span></td>
-  		    					</tr>
-                    					<tr>
                         					<td align="center" >
-									<span class="gen">
-									<!-- IF U_VIEW_VEHICLE --><div class="locked-icon"><a href="{U_VIEW_VEHICLE}">{VIEW_VEHICLE}</a></div>&nbsp;<!-- ENDIF -->
-									<!-- IF U_EDIT_VEHICLE --><div class="locked-icon"><a href="{U_EDIT_VEHICLE}">{EDIT_VEHICLE}</a></div>&nbsp;<!-- ENDIF -->
-									<!-- IF U_DELETE_VEHICLE --><div class="locked-icon"><a href="{U_DELETE_VEHICLE}">{DELETE_VEHICLE}</a></div>&nbsp;<!-- ENDIF -->
-									<!-- IF U_ADD_MODIFICATION --><div class="locked-icon"><a href="{U_ADD_MODIFICATION}">{ADD_MODIFICATION}</a></div>&nbsp;<!-- ENDIF -->
-									<!-- IF U_ADD_INSURANCE --><div class="locked-icon"><a href="{U_ADD_INSURANCE}">{ADD_INSURANCE}</a></div>&nbsp;<!-- ENDIF -->
-									<!-- IF U_ADD_QUARTERMILE --><div class="locked-icon"><a href="{U_ADD_QUARTERMILE}">{ADD_QUARTERMILE}</a></div>&nbsp;<!-- ENDIF -->
-									<!-- IF U_ADD_DYNORUN --><div class="locked-icon"><a href="{U_ADD_DYNORUN}">{ADD_DYNORUN}</a></div>&nbsp;<!-- ENDIF -->
-									<!-- IF U_ADD_LAP --><div class="locked-icon"><a href="{U_ADD_LAP}">{ADD_LAP}</a></div>&nbsp;<!-- ENDIF -->
-									<!-- IF U_ADD_SERVICE --><div class="locked-icon"><a href="{U_ADD_SERVICE}">{ADD_SERVICE}</a></div>&nbsp;<!-- ENDIF -->
-									<!-- IF U_SET_MAIN_VEHICLE --><div class="locked-icon"><a href="{U_SET_MAIN_VEHICLE}">{SET_MAIN_VEHICLE}</a></div>&nbsp;<!-- ENDIF -->
+									<!-- IF U_VIEW_VEHICLE --><div class="buttons"><div class="viewvehicle-icon"><a href="{U_VIEW_VEHICLE}" title="{L_VIEW_VEHICLE}"></a></div></div>&nbsp;<!-- ENDIF -->
+									<!-- IF U_EDIT_VEHICLE --><div class="buttons"><div class="editvehicle-icon"><a href="{U_EDIT_VEHICLE}" title="{L_EDIT_VEHICLE}"></a></div></div>&nbsp;<!-- ENDIF -->
+									<!-- IF U_DELETE_VEHICLE --><div class="buttons"><div class="deletevehicle-icon"><a href="{U_DELETE_VEHICLE}" title="{L_DELETE_VEHICLE}"></a></div></div>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_MODIFICATION --><div class="buttons"><div class="newmodification-icon"><a href="{U_ADD_MODIFICATION}" title="{L_ADD_MODIFICATION}"></a></div></div>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_INSURANCE --><div class="buttons"><div class="newpremium-icon"><a href="{U_ADD_INSURANCE}" title="{L_ADD_INSURANCE}"></a></div></div>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_QUARTERMILE --><div class="buttons"><div class="newquartermile-icon"><a href="{U_ADD_QUARTERMILE}" title="{L_ADD_QUARTERMILE}"></a></div></div>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_DYNORUN --><div class="buttons"><div class="newdynorun-icon"><a href="{U_ADD_DYNORUN}" title="{L_ADD_DYNORUN}"></a></div></div>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_LAP --><div class="buttons"><div class="newlap-icon"><a href="{U_ADD_LAP}" title="{L_ADD_LAP}"></a></div></div>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_SERVICE --><div class="buttons"><div class="newservice-icon"><a href="{U_ADD_SERVICE}" title="{L_ADD_SERVICE}"></a></div></div>&nbsp;<!-- ENDIF -->
+									<!-- IF U_SET_MAIN_VEHICLE --><div class="buttons"><div class="mainvehicle-icon"><a href="{U_SET_MAIN_VEHICLE}" title="{L_SET_MAIN_VEHICLE}"></a></div></div>&nbsp;<!-- ENDIF -->
 									<br />
 									<!-- IF U_HILITE_IMAGE -->
-									<a href="{U_HILITE_IMAGE}" title="{HILITE_IMAGE_TITLE}" target="_blank"><img hspace="5" vspace="5" src="{HILITE_IMAGE}" /></a>
+									<span class="gen"><a href="{U_HILITE_IMAGE}" title="{HILITE_IMAGE_TITLE}" target="_blank"><img hspace="5" vspace="5" src="{HILITE_IMAGE}" /></a>
 									<br /></span><span class="gensmall">{L_TOTAL_VIEWS}:&nbsp;{TOTAL_IMAGE_VIEWS}</span>
 									<!-- ENDIF -->
                         					</td>
@@ -214,7 +206,12 @@ function jumpto_garage()
         			</tr>
     			</table>
 			<br />
+			<span class="corners-bottom"><span></span></span>
+		</div>
+	</div>
 
+	<div class="panel">
+	<div class="inner"><span class="corners-top"><span></span></span>
 		<div id="advanced00">
 			<div id="tabs">
 				<ul>
@@ -231,294 +228,303 @@ function jumpto_garage()
 			</div>
 
 			<div class="garage_panel" id="options000" style="display: none;">
-			<span class="corners-top"><span></span></span>
 			<div class="tablewrap">
-			<!-- IF S_DISPLAY_GALLERIES -->
-				<table width="100%" id="table000" cellspacing="1" class="tablebg">
-				<tr>
-      					<th height="25">{L_GALLERY}</th>
-    				</tr>
-				<!-- IF S_DISPLAY_VEHICLE_IMAGES -->
-   				<tr>
-			      		<td class="cat" width="100%"><span class="gen">{L_VEHICLE_PICTURES}</span></td>
-			     	</tr>
-			        <tr>
-					<td class="row1">
-						<!-- BEGIN vehicle_image -->
+				<!-- IF S_DISPLAY_GALLERIES -->
+				<div class="panel">
+					<div class="inner"><span class="corners-top"><span></span></span>
+						<!-- IF S_DISPLAY_VEHICLE_IMAGES -->
+						<h3>{L_VEHICLE_PICTURES}</h3>
+						<div class="garage-image-gallery">
+							<!-- BEGIN vehicle_image -->
 							<a href="{vehicle_image.U_IMAGE}"><img hspace="5" vspace="5" name="{vehicle_image.IMAGE_NAME}" src="{vehicle_image.IMAGE_SOURCE}" /></a>
-						<!-- END vehicle_image -->
-					</td>
-				</tr>
-				<!-- ENDIF -->
-				<!-- IF S_DISPLAY_MODIFICATION_IMAGES -->
-				<tr>
-      					<td class="cat" width="100%"><span class="gen">{L_MODIFICATION_PICTURES} <i>({L_SHOWING} {SHOWING_MOD_IMAGES} {L_OF} {TOTAL_MOD_IMAGES} {L_IMAGES})</i></span></td>
-     				</tr>
-        			<tr>
-					<td class="row1">
-						<!-- BEGIN modification_image -->
+							<!-- END vehicle_image -->
+						</div>
+						<!-- ENDIF -->
+						<!-- IF S_DISPLAY_MODIFICATION_IMAGES -->
+						<h3>{L_MODIFICATION_PICTURES}</h3>
+						<div class="garage-image-gallery">
+							<!-- BEGIN modification_image -->
 							<a href="{modification_image.U_IMAGE}"><img hspace="5" vspace="5" name="{modification_image.IMAGE_NAME}" src="{modification_image.IMAGE_SOURCE}" /></a>
-						<!-- END modification_image -->
-					</td>
-        			</tr>
-				<!-- ENDIF -->
-				<!-- IF S_DISPLAY_QUARTERMILE_IMAGES -->
-   				<tr>
-			      		<td class="cat" width="100%"><span class="gen">{L_QUARTERMILE_PICTURES} <i>({L_SHOWING} {SHOWING_QUARTERMILE_IMAGES} {L_OF} {TOTAL_QUARTERMILE_IMAGES} {L_IMAGES})</i></span></td>
-			     	</tr>
-			        <tr>
-					<td class="row1">
-						<!-- BEGIN quartermile_image -->
+							<!-- END modification_image -->
+						</div>
+						<!-- ENDIF -->
+						<!-- IF S_DISPLAY_QUARTERMILE_IMAGES -->
+						<h3>{L_QUARTERMILE_PICTURES}</h3>
+						<div class="garage-image-gallery">
+							<!-- BEGIN quartermile_image -->
 							<a href="{quartermile_image.U_IMAGE}"><img hspace="5" vspace="5" name="{quartermile_image.IMAGE_NAME}" src="{quartermile_image.IMAGE_SOURCE}" /></a>
-						<!-- END quartermile_image -->
-					</td>
-				</tr>
-				<!-- ENDIF -->
-				<!-- IF S_DISPLAY_DYNORUN_IMAGES -->
-   				<tr>
-			      		<td class="cat" width="100%"><span class="gen">{L_DYNORUN_PICTURES} <i>({L_SHOWING} {SHOWING_DYNORUN_IMAGES} {L_OF} {TOTAL_DYNORUN_IMAGES} {L_IMAGES})</i></span></td>
-			     	</tr>
-			        <tr>
-					<td class="row1">
-						<!-- BEGIN dynorun_image -->
+							<!-- END quartermile_image -->
+				    		</div>
+						<!-- ENDIF -->
+						<!-- IF S_DISPLAY_DYNORUN_IMAGES -->
+						<h3>{L_DYNORUN_PICTURES}</h3>
+						<div class="garage-image-gallery">
+							<!-- BEGIN dynorun_image -->
 							<a href="{dynorun_image.U_IMAGE}"><img hspace="5" vspace="5" name="{dynorun_image.IMAGE_NAME}" src="{dynorun_image.IMAGE_SOURCE}" /></a>
-						<!-- END dynorun_image -->
-					</td>
-				</tr>
-				<!-- ENDIF -->
-				<!-- IF S_DISPLAY_LAP_IMAGES -->
-   				<tr>
-			      		<td class="cat" width="100%"><span class="gen">{L_LAP_PICTURES} <i>({L_SHOWING} {SHOWING_LAP_IMAGES} {L_OF} {TOTAL_LAP_IMAGES} {L_IMAGES})</i></span></td>
-			     	</tr>
-			        <tr>
-					<td class="row1">
-						<!-- BEGIN lap_image -->
+							<!-- END dynorun_image -->
+						</div>
+						<!-- ENDIF -->
+						<!-- IF S_DISPLAY_LAP_IMAGES -->
+						<h3>{L_LAP_PICTURES}</h3>
+						<div class="garage-image-gallery">
+							<!-- BEGIN lap_image -->
 							<a href="{lap_image.U_IMAGE}"><img hspace="5" vspace="5" name="{lap_image.IMAGE_NAME}" src="{lap_image.IMAGE_SOURCE}" /></a>
-						<!-- END lap_image -->
-					</td>
-				</tr>
+							<!-- END lap_image -->
+						</div>
+						<!-- ENDIF -->
+					</div><span class="corners-bottom"><span></span></span>
+				</div>
 				<!-- ENDIF -->
-				</table>
-			<!-- ENDIF -->
 			</div>
-			<span class="corners-bottom"><span></span></span>
 			</div>
 
 			<div class="garage_panel" id="options001" style="display: none;">
-			<span class="corners-top"><span></span></span>
 			<div class="tablewrap">
 				<!-- BEGIN category -->
-				<table width="100%" cellspacing="1" class="tablebg">
-				<tr>
-					<th height="25" colspan="8">{category.CATEGORY_TITLE}&nbsp;{L_MODIFICATIONS}</th>
-   				</tr>
-   				<tr>
-      					<td class="cat" width="3%"><span class="gen"></span></td>
-				      	<td class="cat" ><span class="gen">{L_MODIFICATION}</span></td>
-					<td class="cat" ><span class="gen">{L_RATING}</span></td>
-					<td class="cat" ><span class="gen">{L_COST}</span></td>
-					<td class="cat" ><span class="gen">{L_INSTALL}</span></td>
-					<td class="cat" nowrap><span class="gen">{L_CREATED}</span></td>
-					<td class="cat" nowrap><span class="gen">{L_UPDATED}</span></td>
-					<!-- IF S_DISPLAY_VEHICLE_OWNER--><td class="cat" ></td><!-- ENDIF -->
-				</tr>
-				<!-- BEGIN modification -->
-   				<tr>
-					<td class="row1"><span class="gen"><!-- IF category.modification.U_IMAGE --><a href="{category.modification.U_IMAGE}" target="_blank">{category.modification.IMAGE}</a><!-- ENDIF --></span></td>
-					<td class="row1"><span class="gen">{category.modification.MODIFICATION}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{category.modification.RATING}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{category.modification.COST}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{category.modification.INSTALL}</span></td>
-					<td class="row1" nowrap><span class="gensmall">{category.modification.CREATED}</span></td>
-					<td class="row1" nowrap><span class="gensmall">{category.modification.UPDATED}</span></td>
-					<!-- IF S_DISPLAY_VEHICLE_OWNER--><td class="row1" align="right"><span class="gensmall"><!-- IF category.modification.U_EDIT --><a href="{category.modification.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF category.modification.U_DELETE--><a href="{category.modification.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
-				</tr>
-  				<!-- END modification -->
-				</table>
-				<br />
+				<h3>{category.CATEGORY_TITLE}&nbsp;{L_MODIFICATIONS}</h3>
+				<div class="forabg">
+					<div class="inner"><span class="corners-top"><span></span></span>
+						<ul class="topiclist">
+							<li class="header">
+								<dl>
+									<dt></dt>
+									<dd>{L_MODIFICATION}</dd>
+									<dd>{L_RATING}</dd>
+									<dd>{L_COST}</dd>
+									<dd>{L_INSTALL}</dd>
+									<dd>{L_CREATED}</dd>
+									<dd>{L_UPDATED}</dd>
+									<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd></dd><!-- ENDIF -->
+								</dl>
+							</li>
+						</ul>
+						<ul class="topiclist topics">
+							<!-- BEGIN modification -->
+							<!-- IF modification.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
+								<dl>
+									<dt class="row1"><span class="gen"><!-- IF category.modification.U_IMAGE --><a href="{category.modification.U_IMAGE}" target="_blank">{category.modification.IMAGE}</a><!-- ENDIF --></span></td>
+									<dd class="row1"><span class="gen">{category.modification.MODIFICATION}</span></td>
+									<dd class="row1" align="center"><span class="gensmall">{category.modification.RATING}</span></td>
+									<dd class="row1" align="center"><span class="gensmall">{category.modification.COST}</span></td>
+									<dd class="row1" align="center"><span class="gensmall">{category.modification.INSTALL}</span></td>
+									<dd class="row1" nowrap><span class="gensmall">{category.modification.CREATED}</span></td>
+									<dd class="row1" nowrap><span class="gensmall">{category.modification.UPDATED}</span></td>
+									<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd class="row1" align="right"><span class="gensmall"><!-- IF category.modification.U_EDIT --><a href="{category.modification.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF category.modification.U_DELETE--><a href="{category.modification.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
+								</dl>
+							</li>
+							<!-- END modification -->
+						</ul>
+					</div><span class="corners-bottom"><span></span></span>
+				</div>
 				<!-- END category -->
 			</div>
-			<span class="corners-bottom"><span></span></span>
 			</div>
 			
 			<div class="garage_panel" id="options002" style="display: none;">
-			<span class="corners-top"><span></span></span>
 			<div class="tablewrap">
-			<!-- BEGIN quartermile -->
-				<table width="100%" cellspacing="1" class="tablebg">
-				<tr>
-	  				<th colspan="10">{L_QUARTER_MILE_TIMES}</th>
-				</tr>
-				<tr>
-	  				<td class="cat" ></th>
-	  				<td class="cat" ><span class="gen">{L_RT}</span></td>
-					<td class="cat" ><span class="gen">{L_SIXTY}</span></td>
-					<td class="cat" ><span class="gen">{L_THREE}</span></td>
-					<td class="cat" ><span class="gen">{L_EIGHTH}</span></td>
-					<td class="cat" ><span class="gen">{L_EIGHTHMPH}</span></td>
-					<td class="cat" ><span class="gen">{L_THOU}</span></td>
-					<td class="cat" ><span class="gen">{L_QUART}</span></td>
-					<td class="cat" ><span class="gen">{L_QUARTMPH}</span></td>
-					<!-- IF S_DISPLAY_VEHICLE_OWNER --><td class="cat" ></td><!-- ENDIF -->
-				</tr>
-				<!-- BEGIN run -->
-				<tr>
-	  				<td class="row1" align="center"><span class="gensmall"><!-- IF quartermile.run.U_IMAGE --><a href="{quartermile.run.U_IMAGE}" target="_blank">{quartermile.run.IMAGE}</a><!-- ENDIF --></span></td>
-		  			<td class="row1" align="center"><span class="gensmall">{quartermile.run.RT}</span></td>
-		  			<td class="row1" align="center"><span class="gensmall">{quartermile.run.SIXTY}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{quartermile.run.THREE}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{quartermile.run.EIGHTH}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{quartermile.run.EIGHTHMPH}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{quartermile.run.THOU}</span></td>
-					<td class="row1" align="center"><span class="gensmall"><a href="{quartermile.run.U_QUART}">{quartermile.run.QUART}</a></span></td>
-					<td class="row1" align="center"><span class="gensmall">{quartermile.run.QUARTMPH}</span></td>
-					<!-- IF S_DISPLAY_VEHICLE_OWNER--><td class="row1" align="right"><span class="gensmall"><!-- IF quartermile.run.U_EDIT --><a href="{quartermile.run.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF quartermile.run.U_DELETE--><a href="{quartermile.run.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
-				</tr>
-				<!-- END run -->
-				</table>
-			<!-- END quartermile -->
+				<!-- BEGIN quartermile -->
+				<h3>{L_QUARTER_MILE_TIMES}</h3>
+				<div class="forabg">
+					<div class="inner"><span class="corners-top"><span></span></span>
+						<ul class="topiclist">
+							<li class="header">
+								<dl>
+									<dt></dt>
+									<dd>{L_RT}</dd>
+									<dd>{L_SIXTY}</dd>
+									<dd>{L_THREE}</dd>
+									<dd>{L_EIGHTH}</dd>
+									<dd>{L_EIGHTHMPH}</dd>
+									<dd>{L_THOU}</dd>
+									<dd>{L_QUART}</dd>
+									<dd>{L_QUARTMPH}</dd>
+									<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd></dd><!-- ENDIF -->
+								</dl>
+							</li>
+						</ul>
+						<ul class="topiclist topics">
+							<!-- BEGIN run -->
+							<!-- IF run.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
+								<dl>
+					<dt class="row1" align="center"><span class="gensmall"><!-- IF quartermile.run.U_IMAGE --><a href="{quartermile.run.U_IMAGE}" target="_blank">{quartermile.run.IMAGE}</a><!-- ENDIF --></span></td>
+						  			<dd class="row1" align="center"><span class="gensmall">{quartermile.run.RT}</span></td>
+						  			<dd class="row1" align="center"><span class="gensmall">{quartermile.run.SIXTY}</span></td>
+									<dd class="row1" align="center"><span class="gensmall">{quartermile.run.THREE}</span></td>
+									<dd class="row1" align="center"><span class="gensmall">{quartermile.run.EIGHTH}</span></td>
+									<dd class="row1" align="center"><span class="gensmall">{quartermile.run.EIGHTHMPH}</span></td>
+									<dd class="row1" align="center"><span class="gensmall">{quartermile.run.THOU}</span></td>
+									<dd class="row1" align="center"><span class="gensmall"><a href="{quartermile.run.U_QUART}">{quartermile.run.QUART}</a></span></td>
+									<dd class="row1" align="center"><span class="gensmall">{quartermile.run.QUARTMPH}</span></td>
+									<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd class="row1" align="right"><span class="gensmall"><!-- IF quartermile.run.U_EDIT --><a href="{quartermile.run.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF quartermile.run.U_DELETE--><a href="{quartermile.run.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
+								</dl>
+							</li>
+							<!-- END run -->
+						</ul>
+					</div><span class="corners-bottom"><span></span></span>
+				</div>
+				<!-- END quartermile -->
 			</div>
-			<span class="corners-bottom"><span></span></span>
 			</div>
 
 			<div class="garage_panel" id="options003" style="display: none;">
-			<span class="corners-top"><span></span></span>
 			<div class="tablewrap">
-			<!-- BEGIN dynorun -->
-				<table width="100%" cellspacing="1" class="tablebg">
-				<tr>
-					<th colspan="11">{L_DYNORUNS}</th>
-				</tr>
-				<tr>
-					<td class="cat" ></td>
-					<td class="cat" ><span class="gen">{L_DYNOCENTRE}</span></td>
-					<td class="cat" ><span class="gen">{L_BHP}</span></td>
-					<td class="cat" ><span class="gen">{L_BHP_UNIT}</span></td>
-					<td class="cat" ><span class="gen">{L_TORQUE}</span></td>
-					<td class="cat" ><span class="gen">{L_TORQUE_UNIT}</span></td>
-					<td class="cat" ><span class="gen">{L_BOOST}</span></td>
-					<td class="cat" ><span class="gen">{L_BOOST_UNIT}</span></td>
-					<td class="cat" ><span class="gen">{L_NITROUS}</span></td>
-					<td class="cat" ><span class="gen">{L_PEAKPOINT}</span></td>
-					<!-- IF S_DISPLAY_VEHICLE_OWNER --><td class="cat" ></td><!-- ENDIF -->
-
-				</tr>
-				<!-- BEGIN run -->
-				<tr>
-	  				<td class="row1" align="center"><span class="gensmall"><!-- IF dynorun.run.U_IMAGE --><a href="{dynorun.run.U_IMAGE}" target="_blank">{dynorun.run.IMAGE}</a><!-- ENDIF --></span></td>
-					<td class="row1" align="center"><span class="gensmall">{dynorun.run.DYNOCENTER}</span></td>
-					<td class="row1" align="center"><span class="gensmall"><a href="{dynorun.run.U_BHP}">{dynorun.run.BHP}</a></span></td>
-					<td class="row1" align="center"><span class="gensmall">{dynorun.run.BHP_UNIT}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{dynorun.run.TORQUE}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{dynorun.run.TORQUE_UNIT}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{dynorun.run.BOOST}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{dynorun.run.BOOST_UNIT}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{dynorun.run.NITROUS}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{dynorun.run.PEAKPOINT}</span></td>
-					<!-- IF S_DISPLAY_VEHICLE_OWNER--><td class="row1" align="right"><span class="gensmall"><!-- IF dynorun.run.U_EDIT --><a href="{dynorun.run.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF dynorun.run.U_DELETE--><a href="{dynorun.run.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
-				</tr>
-				<!-- END run -->
-				</table>
-			<!-- END dynorun -->
+				<!-- BEGIN dynorun -->
+				<h3>{L_DYNORUNS}</h3>
+				<div class="forabg">
+					<div class="inner"><span class="corners-top"><span></span></span>
+						<ul class="topiclist">
+							<li class="header">
+								<dl>
+									<dt></dt>
+									<dd>{L_DYNOCENTRE}</dd>
+									<dd>{L_BHP}</dd>
+									<dd>{L_BHP_UNIT}</dd>
+									<dd>{L_TORQUE}</dd>
+									<dd>{L_TORQUE_UNIT}</dd>
+									<dd>{L_BOOST}</dd>
+									<dd>{L_BOOST_UNIT}</dd>
+									<dd>{L_NITROUS}</dd>
+									<dd>{L_PEAKPOINT}</dd>
+									<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd></dd><!-- ENDIF -->
+								</dl>
+							</li>
+						</ul>
+						<ul class="topiclist topics">
+							<!-- BEGIN run -->
+							<!-- IF run.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
+								<dl>
+	  								<dt class="row1" align="center"><span class="gensmall"><!-- IF dynorun.run.U_IMAGE --><a href="{dynorun.run.U_IMAGE}" target="_blank">{dynorun.run.IMAGE}</a><!-- ENDIF --></span></td>
+									<dd class="row1" align="center"><span class="gensmall">{dynorun.run.DYNOCENTER}</span></td>
+									<dd class="row1" align="center"><span class="gensmall"><a href="{dynorun.run.U_BHP}">{dynorun.run.BHP}</a></span></td>
+									<dd class="row1" align="center"><span class="gensmall">{dynorun.run.BHP_UNIT}</span></td>
+									<dd class="row1" align="center"><span class="gensmall">{dynorun.run.TORQUE}</span></td>
+									<dd class="row1" align="center"><span class="gensmall">{dynorun.run.TORQUE_UNIT}</span></td>				
+									<dd class="row1" align="center"><span class="gensmall">{dynorun.run.BOOST}</span></td>
+									<dd class="row1" align="center"><span class="gensmall">{dynorun.run.BOOST_UNIT}</span></td>
+									<dd class="row1" align="center"><span class="gensmall">{dynorun.run.NITROUS}</span></td>
+									<dd class="row1" align="center"><span class="gensmall">{dynorun.run.PEAKPOINT}</span></td>
+									<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd class="row1" align="right"><span class="gensmall"><!-- IF dynorun.run.U_EDIT --><a href="{dynorun.run.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF dynorun.run.U_DELETE--><a href="{dynorun.run.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
+								</dl>
+							</li>
+							<!-- END run -->
+						</ul>
+					</div><span class="corners-bottom"><span></span></span>
+				</div>
+				<!-- END dynorun -->
 			</div>
-			<span class="corners-bottom"><span></span></span>
 			</div>
 
 			<div class="garage_panel" id="options004" style="display: none;">
-			<span class="corners-top"><span></span></span>
 			<div class="tablewrap">
-			<!-- BEGIN tracktime -->
-				<table width="100%" cellspacing="1" class="tablebg">
-				<tr>
-					<th colspan="11">{L_LAPS}</th>
-				</tr>
-				<tr>
-					<td class="cat" ></td>
-					<td class="cat" ><span class="gen">{L_TRACK}</span></td>
-					<td class="cat" ><span class="gen">{L_CONDITION}</span></td>
-					<td class="cat" ><span class="gen">{L_TYPE}</span></td>
-					<td class="cat" ><span class="gen">{L_TIME}</span>&nbsp;<span class="gensmall">(M:S:MS)</span></td>
-					<!-- IF S_DISPLAY_VEHICLE_OWNER --><td class="cat" ></td><!-- ENDIF -->
-
-				</tr>
-				<!-- BEGIN lap -->
-				<tr>
-	  				<td class="row1" align="center"><span class="gensmall"><!-- IF tracktime.lap.U_IMAGE --><a href="{tracktime.lap.U_IMAGE}" target="_blank">{tracktime.lap.IMAGE}</a><!-- ENDIF --></span></td>
-					<td class="row1" align="center"><span class="gensmall"><a href="{tracktime.lap.U_TRACK}">{tracktime.lap.TRACK}</a></span></td>
-					<td class="row1" align="center"><span class="gensmall">{tracktime.lap.CONDITION}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{tracktime.lap.TYPE}</span></td>
-					<td class="row1" align="center"><span class="gensmall"><a href="{tracktime.lap.U_LAP}">{tracktime.lap.MINUTE}.{tracktime.lap.SECOND}.{tracktime.lap.MILLISECOND}</a></span></td>
-					<!-- IF S_DISPLAY_VEHICLE_OWNER--><td class="row1" align="right"><span class="gensmall"><!-- IF tracktime.lap.U_EDIT --><a href="{tracktime.lap.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF tracktime.lap.U_DELETE--><a href="{tracktime.lap.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
-				</tr>
-				<!-- END lap -->
-				</table>
+				<!-- BEGIN tracktime -->
+				<h3>{L_LAPS}</h3>
+				<div class="forabg">
+					<div class="inner"><span class="corners-top"><span></span></span>
+						<ul class="topiclist">
+							<li class="header">
+								<dl>
+									<dt></dt>
+									<dd>{L_TRACK}</dd>
+									<dd>{L_CONDITION}</dd>
+									<dd>{L_TYPE}</dd>
+									<dd>{L_TIME}&nbsp;<span class="gensmall">(M:S:MS)</span></dd>
+									<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd></dd><!-- ENDIF -->
+								</dl>
+							</li>
+						</ul>
+						<ul class="topiclist topics">
+							<!-- BEGIN lap -->
+							<!-- IF lap.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
+								<dl>
+					  				<dt class="row1" align="center"><span class="gensmall"><!-- IF tracktime.lap.U_IMAGE --><a href="{tracktime.lap.U_IMAGE}" target="_blank">{tracktime.lap.IMAGE}</a><!-- ENDIF --></span></td>
+									<dd class="row1" align="center"><span class="gensmall"><a href="{tracktime.lap.U_TRACK}">{tracktime.lap.TRACK}</a></span></td>
+									<dd class="row1" align="center"><span class="gensmall">{tracktime.lap.CONDITION}</span></td>
+									<dd class="row1" align="center"><span class="gensmall">{tracktime.lap.TYPE}</span></td>
+									<dd class="row1" align="center"><span class="gensmall"><a href="{tracktime.lap.U_LAP}">{tracktime.lap.MINUTE}.{tracktime.lap.SECOND}.{tracktime.lap.MILLISECOND}</a></span></td>
+									<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd class="row1" align="right"><span class="gensmall"><!-- IF tracktime.lap.U_EDIT --><a href="{tracktime.lap.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF tracktime.lap.U_DELETE--><a href="{tracktime.lap.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
+								</dl>
+							</li>
+							<!-- END lap -->
+						</ul>
+					</div><span class="corners-bottom"><span></span></span>
+				</div>
 			<!-- END tracktime -->
 			</div>
-			<span class="corners-bottom"><span></span></span>
 			</div>
 
 			<div class="garage_panel" id="options005" style="display: none;">
-			<span class="corners-top"><span></span></span>
 			<div class="tablewrap">
-			<!-- BEGIN insurance -->
-				<table width="100%" cellspacing="1" class="tablebg">
-				<tr>
-	  				<th colspan="4">{L_INSURANCE_PREMIUMS}</th>
-				</tr>
-				<tr>
-	  				<td class="cat" ><span class="gen">{L_INSURANCE_COMPANY}</span></td>
-	  				<td class="cat" ><span class="gen">{L_PREMIUM}</span></td>
-	  				<td class="cat" ><span class="gen">{L_COVER_TYPE}</span></td>
-	  				<!-- IF S_DISPLAY_VEHICLE_OWNER --><td class="cat" ></td><!-- ENDIF -->
-				</tr>
-				<!-- BEGIN premium -->
-				<tr>
-					<td class="row1" align="center"><span class="gensmall"><a href="{insurance.premium.U_INSURER}">{insurance.premium.INSURER}</a></span></td>
-	  				<td class="row1" align="center"><span class="gensmall">{insurance.premium.PREMIUM}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{insurance.premium.COVER_TYPE}</span></td>
-					<!-- IF S_DISPLAY_VEHICLE_OWNER --><td class="row1" align="right"><span class="gensmall"><!-- IF insurance.premium.U_EDIT --><a href="{insurance.premium.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF insurance.premium.U_DELETE--><a href="{insurance.premium.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
-				</tr>
-				<!-- END premium -->
-				</table>
+				<!-- BEGIN insurance -->
+				<h3>{L_INSURANCE_PREMIUMS}</h3>
+				<div class="forabg">
+					<div class="inner"><span class="corners-top"><span></span></span>
+						<ul class="topiclist">
+							<li class="header">
+								<dl>
+									<dt>{L_INSURANCE_COMPANY}</dt>
+									<dd>{L_PREMIUM}</dd>
+									<dd>{L_COVER_TYPE}</dd>
+									<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd></dd><!-- ENDIF -->
+								</dl>
+							</li>
+						</ul>
+						<ul class="topiclist topics">
+							<!-- BEGIN premium -->
+							<!-- IF premium.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
+								<dl>
+									<dt class="row1" align="center"><span class="gensmall"><a href="{insurance.premium.U_INSURER}">{insurance.premium.INSURER}</a></span></td>
+					  				<dd class="row1" align="center"><span class="gensmall">{insurance.premium.PREMIUM}</span></td>
+									<dd class="row1" align="center"><span class="gensmall">{insurance.premium.COVER_TYPE}</span></td>
+									<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd class="row1" align="right"><span class="gensmall"><!-- IF insurance.premium.U_EDIT --><a href="{insurance.premium.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF insurance.premium.U_DELETE--><a href="{insurance.premium.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
+								</dl>
+							</li>
+							<!-- END premium -->
+						</ul>
+					</div><span class="corners-bottom"><span></span></span>
+				</div>
 			<!-- END insurance -->
 			</div>
-			<span class="corners-bottom"><span></span></span>
 			</div>
 
 			<div class="garage_panel" id="options006" style="display: none;">
-			<span class="corners-top"><span></span></span>
 			<div class="tablewrap">
-			<!-- BEGIN service_history -->
-				<table width="100%" cellspacing="1" class="tablebg">
-				<tr>
-	  				<th colspan="6">{L_SERVICE_HISTORY}</th>
-				</tr>
-				<tr>
-	  				<td class="cat" ><span class="gen">{L_GARAGE}</span></td>
-	  				<td class="cat" ><span class="gen">{L_TYPE}</span></td>
-	  				<td class="cat" ><span class="gen">{L_COST}</span></td>
-	  				<td class="cat" ><span class="gen">{L_RATING}</span></td>
-	  				<td class="cat" ><span class="gen">{L_MILEAGE}</span></td>
-	  				<!-- IF S_DISPLAY_VEHICLE_OWNER --><td class="cat" ></td><!-- ENDIF -->
-				</tr>
-				<!-- BEGIN service -->
-				<tr>
-					<td class="row1" align="center"><span class="gensmall"><a href="{service_history.service.U_GARAGE}">{service_history.service.TITLE}</a></span></td>
-	  				<td class="row1" align="center"><span class="gensmall">{service_history.service.TYPE}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{service_history.service.PRICE}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{service_history.service.RATING}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{service_history.service.MILEAGE}</span></td>
-					<!-- IF S_DISPLAY_VEHICLE_OWNER --><td class="row1" align="right"><span class="gensmall"><!-- IF service_history.service.U_EDIT --><a href="{service_history.service.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF service_history.service.U_DELETE--><a href="{service_history.service.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
-				</tr>
-				<!-- END service -->
-				</table>
+				<!-- BEGIN service_history -->
+				<h3>{L_SERVICE_HISTORY}</h3>
+				<div class="forabg">
+					<div class="inner"><span class="corners-top"><span></span></span>
+						<ul class="topiclist">
+							<li class="header">
+								<dl>
+									<dt>{L_GARAGE}</dt>
+									<dd>{L_TYPE}</dd>
+									<dd>{L_COST}</dd>
+									<dd>{L_RATING}</dd>
+									<dd>{L_MILEAGE}</dd>
+									<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd></dd><!-- ENDIF -->
+								</dl>
+							</li>
+						</ul>
+						<ul class="topiclist topics">
+							<!-- BEGIN service -->
+							<!-- IF service.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
+								<dl>
+									<dt class="row1" align="center"><span class="gensmall"><a href="{service_history.service.U_GARAGE}">{service_history.service.TITLE}</a></span></td>
+	  								<dd class="row1" align="center"><span class="gensmall">{service_history.service.TYPE}</span></td>
+									<dd class="row1" align="center"><span class="gensmall">{service_history.service.PRICE}</span></td>
+									<dd class="row1" align="center"><span class="gensmall">{service_history.service.RATING}</span></td>
+									<dd class="row1" align="center"><span class="gensmall">{service_history.service.MILEAGE}</span></td>
+									<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd class="row1" align="right"><span class="gensmall"><!-- IF service_history.service.U_EDIT --><a href="{service_history.service.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF service_history.service.U_DELETE--><a href="{service_history.service.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
+								</dl>
+							</li>
+							<!-- END service -->
+						</ul>
+					</div><span class="corners-bottom"><span></span></span>
+				</div>
 			<!-- END service_history -->
 			</div>
-			<span class="corners-bottom"><span></span></span>
 			</div>
 
 			<div class="garage_panel" id="options007" style="display: none;">
-			<span class="corners-top"><span></span></span>
 			<div class="tablewrap">
 			<!-- BEGIN blog -->
 			<form method="post" name="guestbook" action="{S_MODE_BLOG_ACTION}">
@@ -566,11 +572,9 @@ function jumpto_garage()
 			</form>
 			<!-- END blog -->
 			</div>
-			<span class="corners-bottom"><span></span></span>
 			</div>
 
 			<div class="garage_panel" id="options008" style="display: none;">
-			<span class="corners-top"><span></span></span>
 			<div class="tablewrap">
 			<!-- BEGIN guestbook -->
 			<form method="post" name="guestbook" action="{S_MODE_GUESTBOOK_ACTION}">
@@ -717,10 +721,12 @@ function jumpto_garage()
 			</form>
 			<!-- END guestbook -->
 			</div>
-			<span class="corners-bottom"><span></span></span>
 			</div>
 		
+			</div>
 		</div>
+	<span class="corners-bottom"><span></span></span>
+</div>
 
 <script type="text/javascript">
 <!--

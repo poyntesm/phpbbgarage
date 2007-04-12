@@ -17,78 +17,64 @@
 
 <div class="panel">
 	<div class="inner"><span class="corners-top"><span></span></span>
-			<table cellpadding="4" cellspacing="1" border="0" width="100%" class="tablebg">
-			<thead>
-     				<tr>
-      					<th height="25" colspan="2">{TRACK}</th>
-				</tr>
-			</thead>
-			<tbody>
-        			<tr>
-				<tr>
-       					<td class="row1" nowrap="nowrap"><span class="gen"><b>{L_TRACK}</b></span></td>
-       					<td class="row2"><span class="gen">{TRACK}</span></td>
-       				</tr>
-                    		<tr>
-                        		<td class="row1" nowrap="nowrap"><span class="gen"><b>{L_LENGTH}</b></span></td>
-					<td class="row2"><span class="gen">{LENGTH} {MILEAGE_UNIT}</span></td>
-				</tr>
-			</tbody>
-    			</table>
-			<br />
+		<h3>{TRACK}</h3>
+		<b>{L_TRACK}</b>{TRACK}<br />
+		<b>{L_LENGTH}</b>{LENGTH} {MILEAGE_UNIT}
+	</div><span class="corners-bottom"><span></span></span>
+</div>
 
-			<!-- IF S_DISPLAY_GALLERIES -->
-			<table width="100%" border="0" cellspacing="1" cellpadding="4" class="tablebg">
-			<thead>
-				<tr>
-      					<th height="25">{L_GALLERY}</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-      					<td class="cat" width="100%"><span class="gen">{L_TRACK_PICTURES}</span></td>
-     				</tr>
-        			<tr>
-					<td class="row1">
-						<!-- BEGIN track_image -->
-							<a href="{track_image.U_IMAGE}"><img hspace="5" vspace="5" name="{track_image.IMAGE_NAME}" src="{track_image.IMAGE_SOURCE}" /></a>
-						<!-- END track_image -->
-					</td>
-				</tr>
-			</tbody>
-    			</table>
-			<br />
-			<!-- ENDIF -->
 
-			<!-- IF S_DISPLAY_LAPS -->
-			<table width="100%" border="0" cellspacing="1" cellpadding="4" class="tablebg">
-			<thead>
-				<tr>
-					<th></td>
-					<th nowrap="nowrap">{L_USERNAME}</th>
-					<th nowrap="nowrap">{L_VEHICLE}</th>
-					<th><span class="gen">{L_CONDITION}</span></td>
-					<th><span class="gen">{L_TYPE}</span></td>
-					<th><span class="gen">{L_TIME}</span>&nbsp;<span class="gensmall">(M:S:MS)</span></td>
 
-				</tr>
-			</thead>
-			<tbody>
-				<!-- BEGIN lap -->
-				<!-- IF lap.ROW_NUMBER is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-	  				<td class="row1" align="center"><span class="gensmall"><!-- IF lap.U_IMAGE --><a href="{lap.U_IMAGE}" target="_blank">{lap.IMAGE}</a><!-- ENDIF --></span></td>
-					<td align="center"><span class="gen"><b><a href="{lap.U_VIEWPROFILE}"  <!-- IF lap.USERNAME_COLOUR --> style="color: {lap.USERNAME_COLOUR}"<!-- ENDIF -->>{lap.USERNAME}</a></b></span></td>
-					<td align="center"><span class="gen"><a href="{lap.U_VIEWVEHICLE}">{lap.VEHICLE}</a></span></td>
-					<td class="row1" align="center"><span class="gensmall">{lap.CONDITION}</span></td>
-					<td class="row1" align="center"><span class="gensmall">{lap.TYPE}</span></td>
-					<td class="row1" align="center"><span class="gensmall"><a href="{lap.U_LAP}">{lap.MINUTE}.{lap.SECOND}.{lap.MILLISECOND}</a></span></td>
-				</tr>
-				<!-- END lap -->
-			</tbody>
-    			</table>
-			<br />
-			<!-- ENDIF -->
-		</td>
+<!-- IF S_DISPLAY_GALLERIES -->
+<div class="panel">
+	<div class="inner"><span class="corners-top"><span></span></span>
+		<h3>{L_TRACK_PICTURES}</h3>
+		<div class="garage-image-gallery">
+			<!-- BEGIN track_image -->
+			<a href="{track_image.U_IMAGE}"><img hspace="5" vspace="5" name="{track_image.IMAGE_NAME}" src="{track_image.IMAGE_SOURCE}" /></a>
+			<!-- END track_image -->
+    		</div>
+	</div><span class="corners-bottom"><span></span></span>
+</div>
+<!-- ENDIF -->
+
+<!-- IF S_DISPLAY_LAPS -->
+<div class="panel">
+	<div class="inner"><span class="corners-top"><span></span></span>
+		<h3>{L_LAPS}</h3>
+		<div class="forabg">
+			<div class="inner"><span class="corners-top"><span></span></span>
+				<ul class="topiclist">
+					<li class="header">
+						<dl>
+							<dt></dt>
+							<dd>{L_USERNAME}</dd>
+							<dd>{L_VEHICLE}</dd>
+							<dd>{L_CONDITION}</dd>
+							<dd>{L_TYPE}</dd>
+							<dd>{L_TIME}&nbsp;<span class="gensmall">(M:S:MS)</span></dd>
+						</dl>
+					</li>
+				</ul>
+				<ul class="topiclist topics">
+					<!-- BEGIN lap -->
+					<!-- IF lap.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
+						<dl>
+	  						<dt><!-- IF lap.U_IMAGE --><a href="{lap.U_IMAGE}">{lap.IMAGE}</a><!-- ENDIF --></td>
+							<dd><b><a href="{lap.U_VIEWPROFILE}"  <!-- IF lap.USERNAME_COLOUR --> style="color: {lap.USERNAME_COLOUR}"<!-- ENDIF -->>{lap.USERNAME}</a></b></td>
+							<dd><a href="{lap.U_VIEWVEHICLE}">{lap.VEHICLE}</a></td>
+							<dd>{lap.CONDITION}</td>
+							<dd>{lap.TYPE}</td>
+							<dd><a href="{lap.U_LAP}">{lap.MINUTE}.{lap.SECOND}.{lap.MILLISECOND}</a></td>
+						</dl>
+					</li>
+					<!-- END lap -->
+				</ul>
+			</div><span class="corners-bottom"><span></span></span>
+		</div>
+	</div><span class="corners-bottom"><span></span></span>
+</div>
+<!-- ENDIF -->
 
 <!-- INCLUDE garage_footer.html -->
 

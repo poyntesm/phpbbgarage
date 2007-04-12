@@ -42,7 +42,7 @@ class acp_garage_quota
 		*/
 		$action	= request_var('action', '');
 		$update	= (isset($_POST['update'])) ? true : false;
-		$errors = $empty_add_groups = $empty_upload_groups = array();
+		$errors = $empty_add_groups = $empty_upload_groups = $upload_quota = $remote_quota = array();
 		$default_upload_quota = $default_remote_quota = $default_vehicle_quota = $upload_groups_value = $upload_groups_quotas_value = $remote_groups_value = $remote_groups_quotas_value = $add_groups_value = $add_groups_quotas_value = '' ;
 
 		/**

@@ -69,30 +69,18 @@
     			</table>
 			<br />
 
-			<!-- IF S_DISPLAY_GALLERIES -->
-			<table width="100%" border="0" cellspacing="1" cellpadding="4" class="tablebg">
-			<thead>
-				<tr>
-      					<th height="25">{L_GALLERY}</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-      					<td class="cat" width="100%"><span class="gen">{L_LAP_PICTURES}</span></td>
-     				</tr>
-        			<tr>
-					<td class="row1">
-						<!-- BEGIN lap_image -->
-							<a href="{lap_image.U_IMAGE}"><img hspace="5" vspace="5" name="{lap_image.IMAGE_NAME}" src="{lap_image.IMAGE_SOURCE}" /></a>
-						<!-- END lap_image -->
-					</td>
-				</tr>
-			</tbody>
-    			</table>
-			<br />
-			<!-- ENDIF -->
- 	
-		</td>
+<!-- IF S_DISPLAY_GALLERIES -->
+<div class="panel">
+	<div class="inner"><span class="corners-top"><span></span></span>
+		<h3>{L_LAP_PICTURES}</h3>
+		<div class="garage-image-gallery">
+			<!-- BEGIN lap_image -->
+			<a href="{lap_image.U_IMAGE}"><img hspace="5" vspace="5" name="{lap_image.IMAGE_NAME}" src="{lap_image.IMAGE_SOURCE}" /></a>
+			<!-- END lap_image -->
+    		</div>
+	</div><span class="corners-bottom"><span></span></span>
+</div>
+<!-- ENDIF -->
 
 <!-- INCLUDE garage_footer.html -->
 
