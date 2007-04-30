@@ -1851,7 +1851,7 @@ class garage_vehicle
 				'L_DESCRIPTION' => $lang['Description'],
 				'L_SEARCH_USER_GARAGE' => $lang['Search_User_Garage'],
 				'YEAR' => $vehicle_data['year'],
-				'MAKE' => $vehicle_data['make'],
+				'MAKE' => $vehicle_data['made_make'],
 				'MODEL' => $vehicle_data['model'],
 		       		'COLOUR' => $vehicle_data['color'],
 			       	'HILITE_IMAGE' => $hilite_image,
