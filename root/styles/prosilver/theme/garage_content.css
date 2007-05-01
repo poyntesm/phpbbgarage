@@ -13,7 +13,7 @@
 	width: 18px;
 	height: 19px;
 	float: right;
-	background-image: url(../imageset/garage-toggle.gif);
+	background-image: url("styles/prosilver/imageset/garage_toggle.gif");
 }
 
 /* Menu Panel */
@@ -41,36 +41,166 @@
 }
 
 
-.viewvehicle-icon, .viewvehicle-icon a		{ background: transparent none 0 0 no-repeat; }
-.editvehicle-icon, .editvehicle-icon a		{ background: transparent none 0 0 no-repeat; }
-.deletevehicle-icon, .deletevehicle-icon a	{ background: transparent none 0 0 no-repeat; }
-.mainvehicle-icon, .mainvehicle-icon a		{ background: transparent none 0 0 no-repeat; }
-.newmodification-icon, .newmodification-icon a	{ background: transparent none 0 0 no-repeat; }
-.newpremium-icon, .newpremium-icon a		{ background: transparent none 0 0 no-repeat; }
-.newquartermile-icon, .newquartermile-icon a	{ background: transparent none 0 0 no-repeat; }
-.newdynorun-icon, .newdynorun-icon a		{ background: transparent none 0 0 no-repeat; }
-.newlap-icon, .newlap-icon a			{ background: transparent none 0 0 no-repeat; }
+
+/* Icon used in viewtopic_body.html */
+.garage-icon, .garage-icon a	{ 
+					background: none top left no-repeat;
+					background-image: url("{IMG_GARAGE_ICON_GARAGE_SRC}"); 
+				}
+ul.profile-icons li.garage-icon	{ width: {IMG_GARAGE_ICON_GARAGE_WIDTH}px; height: {IMG_GARAGE_ICON_GARAGE_HEIGHT}px; }
+
+/* Icons used in overall_header.html */
+
+
+/* Icons used in garage_view_vehicle.html */
+
+/* Poster profile icons
+----------------------------------------*/
+ul.manage-vehicle-icons {
+	padding-top: 5px;
+	list-style: none;
+}
+
+/* Rollover state */
+ul.manage-vehicle-icons li {
+	float: left;
+	margin: 0 6px 3px 0;
+	background-position: 0 100%;
+}
+
+.rtl ul.manage-vehicle-icons li {
+	margin: 0 0 3px 6px;
+}
+
+/* Rolloff state */
+ul.manage-vehicle-icons li a {
+	display: block;
+	width: 100%;
+	height: 100%;
+	background-position: 0 0;
+}
+
+/* Hide <a> text and hide off-state image when rolling over (prevents flicker in IE) */
+ul.manage-vehicle-icons li span { display:none; }
+ul.manage-vehicle-icons li a:hover { background: none; }
+
+/* Positioning of moderator icons */
+.postbody ul.manage-vehicle-icons {
+	float: right;
+	width: auto;
+	padding: 0;
+}
+
+.postbody ul.manage-vehicle-icons li {
+	margin: 0 3px;
+}
+
+.newvehicle-icon, .newvehicle-icon a		{ 
+							background: transparent none 0 0 no-repeat; 
+						}
+ul.manage-vehicle-icons li.newvehicle-icon	{
+       							width: {IMG_GARAGE_CREATE_VEHICLE_WIDTH}px; height: {IMG_GARAGE_CREATE_VEHICLE_HEIGHT}px; 
+						}
+.viewvehicle-icon, .viewvehicle-icon a		{ 
+							background: transparent none 0 0 no-repeat; 
+						}
+ul.manage-vehicle-icons li.viewvehicle-icon	{ 
+							width: {IMG_GARAGE_VIEW_VEHICLE_WIDTH}px; height: {IMG_GARAGE_VIEW_VEHICLE_HEIGHT}px; 
+						}
+.editvehicle-icon, .editvehicle-icon a		{ 
+							background: transparent none 0 0 no-repeat; 
+						}
+ul.manage-vehicle-icons li.editvehicle-icon	{ 
+							width: {IMG_GARAGE_EDIT_VEHICLE_WIDTH}px; height: {IMG_GARAGE_EDIT_VEHICLE_HEIGHT}px; 
+						}
+.deletevehicle-icon, .deletevehicle-icon a	{ 
+							background: transparent none 0 0 no-repeat; 
+						}
+ul.manage-vehicle-icons li.deletevehicle-icon	{ 
+							width: {IMG_GARAGE_DELETE_VEHICLE_WIDTH}px; height: {IMG_GARAGE_DELETE_VEHICLE_HEIGHT}px; 
+						}
+.mainvehicle-icon, .mainvehicle-icon a		{ 
+							background: transparent none 0 0 no-repeat; 
+						}
+ul.manage-vehicle-icons li.mainvehicle-icon	{ 
+							width: {IMG_GARAGE_MAIN_VEHICLE_WIDTH}px; height: {IMG_GARAGE_MAIN_VEHICLE_HEIGHT}px; 
+						}
+.newmodification-icon, .newmodification-icon a	{ 
+							background: transparent none 0 0 no-repeat; 
+						}
+ul.manage-vehicle-icons li.newmodification-icon	{ 
+							width: {IMG_GARAGE_ADD_MODIFICATION_WIDTH}px; height: {IMG_GARAGE_ADD_MODIFICATION_HEIGHT}px; 
+						}
+.newpremium-icon, .newpremium-icon a		{ 
+							background: transparent none 0 0 no-repeat; 
+						}
+ul.manage-vehicle-icons li.newpremium-icon	{ 
+							width: {IMG_GARAGE_ADD_INSURANCE_WIDTH}px; height: {IMG_GARAGE_ADD_INSURANCE_HEIGHT}px; 
+						}
+.newquartermile-icon, .newquartermile-icon a	{ 
+							background: transparent none 0 0 no-repeat; 
+						}
+ul.manage-vehicle-icons li.newquartermile-icon	{ 
+							width: {IMG_GARAGE_ADD_QUARTERMILE_WIDTH}px; height: {IMG_GARAGE_ADD_QUARTERMILE_HEIGHT}px; 
+						}
+.newdynorun-icon, .newdynorun-icon a		{ 
+							background: transparent none 0 0 no-repeat; 
+						}
+ul.manage-vehicle-icons li.newdynorun-icon	{ 
+							width: {IMG_GARAGE_ADD_DYNORUN_WIDTH}px; height: {IMG_GARAGE_ADD_DYNORUN_HEIGHT}px; 
+						}
+.newlap-icon, .newlap-icon a			{ 
+							background: transparent none 0 0 no-repeat; 
+						}
+ul.manage-vehicle-icons li.newlap-icon		{ width: {IMG_GARAGE_ADD_LAP_WIDTH}px; height: {IMG_GARAGE_ADD_LAP_HEIGHT}px; }
 .newservice-icon, .newservice-icon a		{ background: transparent none 0 0 no-repeat; }
+ul.manage-vehicle-icons li.newservice-icon	{ width: {IMG_GARAGE_ADD_SERVICE_WIDTH}px; height: {IMG_GARAGE_ADD_SERVICE_HEIGHT}px; }
+.garage-edit-icon, .garage-edit-icon a		{ background: transparent none 0 0 no-repeat; }
+ul.manage-vehicle-icons li.garage-edit-icon	{ width: {IMG_GARAGE_EDIT_WIDTH}px; height: {IMG_GARAGE_EDIT_HEIGHT}px; }
+.garage-delete-icon, .garage-delete-icon a	{ background: transparent none 0 0 no-repeat; }
+ul.manage-vehicle-icons li.garage-delete-icon	{ width: {IMG_GARAGE_DELETE_WIDTH}px; height: {IMG_GARAGE_DELETE_HEIGHT}px; }
+.garage-camera-icon, .garage-camera-icon a	{ background: transparent none 0 0 no-repeat; }
+ul.manage-vehicle-icons li.garage-camera-icon	{ width: {IMG_GARAGE_IMG_ATTACHED_WIDTH}px; height: {IMG_GARAGE_IMG_ATTACHED_HEIGHT}px; }
+
+.newvehicle-icon, .newvehicle-icon a		{ background-image: url("{IMG_GARAGE_CREATE_VEHICLE_SRC}"); }
+.viewvehicle-icon, .viewvehicle-icon a		{ background-image: url("{IMG_GARAGE_VIEW_VEHICLE_SRC}"); }
+.editvehicle-icon, .editvehicle-icon a		{ background-image: url("{IMG_GARAGE_EDIT_VEHICLE_SRC}"); }
+.deletevehicle-icon, .deletevehicle-icon a	{ background-image: url("{IMG_GARAGE_DELETE_VEHICLE_SRC}"); }
+.mainvehicle-icon, .mainvehicle-icon a		{ background-image: url("{IMG_GARAGE_MAIN_VEHICLE_SRC}"); }
+.newmodification-icon, .newmodification-icon a	{ background-image: url("{IMG_GARAGE_ADD_MODIFICATION_SRC}"); }
+.newpremium-icon, .newpremium-icon a		{ background-image: url("{IMG_GARAGE_ADD_INSURANCE_SRC}"); }
+.newquartermile-icon, .newquartermile-icon a	{ background-image: url("{IMG_GARAGE_ADD_QUARTERMILE_SRC}"); }
+.newdynorun-icon, .newdynorun-icon a		{ background-image: url("{IMG_GARAGE_ADD_DYNORUN_SRC}"); }
+.newlap-icon, .newlap-icon a			{ background-image: url("{IMG_GARAGE_ADD_LAP_SRC}"); }
+.newservice-icon, .newservice-icon a		{ background-image: url("{IMG_GARAGE_ADD_SERVICE_SRC}"); }
+.garage-edit-icon, .garage-edit-icon a		{ background-image: url("{IMG_GARAGE_EDIT_SRC}"); }
+.garage-delete-icon, .garage-delete-icon a	{ background-image: url("{IMG_GARAGE_DELETE_SRC}"); }
+.garage-camera-icon, .garage-camera-icon a	{ background-image: url("{IMG_GARAGE_IMG_ATTACHED_SRC}"); }
 
 
-.buttons div.viewvehicle-icon		{ width: {IMG_BUTTON_PM_FORWARD_WIDTH}px; height: {IMG_BUTTON_PM_FORWARD_HEIGHT}px; }
-.buttons div.editvehicle-icon		{ width: {IMG_BUTTON_PM_FORWARD_WIDTH}px; height: {IMG_BUTTON_PM_FORWARD_HEIGHT}px; }
-.buttons div.deletevehicle-icon		{ width: {IMG_BUTTON_PM_FORWARD_WIDTH}px; height: {IMG_BUTTON_PM_FORWARD_HEIGHT}px; }
-.buttons div.mainvehicle-icon		{ width: {IMG_BUTTON_PM_FORWARD_WIDTH}px; height: {IMG_BUTTON_PM_FORWARD_HEIGHT}px; }
-.buttons div.newmodification-icon	{ width: {IMG_BUTTON_PM_FORWARD_WIDTH}px; height: {IMG_BUTTON_PM_FORWARD_HEIGHT}px; }
-.buttons div.newpremium-icon		{ width: {IMG_BUTTON_PM_FORWARD_WIDTH}px; height: {IMG_BUTTON_PM_FORWARD_HEIGHT}px; }
-.buttons div.newquartermile-icon	{ width: {IMG_BUTTON_PM_FORWARD_WIDTH}px; height: {IMG_BUTTON_PM_FORWARD_HEIGHT}px; }
-.buttons div.newdynorun-icon		{ width: {IMG_BUTTON_PM_FORWARD_WIDTH}px; height: {IMG_BUTTON_PM_FORWARD_HEIGHT}px; }
-.buttons div.newlap-icon		{ width: {IMG_BUTTON_PM_FORWARD_WIDTH}px; height: {IMG_BUTTON_PM_FORWARD_HEIGHT}px; }
-.buttons div.newservice-icon		{ width: {IMG_BUTTON_PM_FORWARD_WIDTH}px; height: {IMG_BUTTON_PM_FORWARD_HEIGHT}px; }
+.garage-mini {
+	background-color: #f9f9f9;
+	padding: 0 5px;
+	margin: 10px 15px 10px 5px;
+}
 
-.viewvehicle-icon, .viewvehicle-icon a		{ background-image: url("{IMG_BUTTON_TOPIC_LOCKED_SRC}"); }
-.editvehicle-icon, .editvehicle-icon a		{ background-image: url("{IMG_BUTTON_TOPIC_LOCKED_SRC}"); }
-.deletevehicle-icon, .deletevehicle-icon a	{ background-image: url("{IMG_BUTTON_TOPIC_LOCKED_SRC}"); }
-.mainvehicle-icon, .mainvehicle-icon a		{ background-image: url("{IMG_BUTTON_TOPIC_LOCKED_SRC}"); }
-.newmodification-icon, .newmodification-icon a	{ background-image: url("{IMG_BUTTON_TOPIC_LOCKED_SRC}"); }
-.newpremium-icon, .newpremium-icon a		{ background-image: url("{IMG_BUTTON_TOPIC_LOCKED_SRC}"); }
-.newquartermile-icon, .newquartermile-icon a	{ background-image: url("{IMG_BUTTON_TOPIC_LOCKED_SRC}"); }
-.newdynorun-icon, .newdynorun-icon a		{ background-image: url("{IMG_BUTTON_TOPIC_LOCKED_SRC}"); }
-.newlap-icon, .newlap-icon a			{ background-image: url("{IMG_BUTTON_TOPIC_LOCKED_SRC}"); }
-.newservice-icon, .newservice-icon a		{ background-image: url("{IMG_BUTTON_TOPIC_LOCKED_SRC}"); }
+.garage-mini span.corners-top, .garage-mini span.corners-bottom {
+	margin: 0 -5px;
+}
+
+
+.icon-garage, .icon-quartermile, .icon-dynorun{
+	background-position: 0 50%;
+	background-repeat: no-repeat;
+	background-image: none;
+	padding: 1px 0 0 17px;
+}
+
+.rtl .icon-garage, .rtl icon-quartermile, .rtl .icon-dynorun{
+	background-position: 100% 50%;
+	padding: 1px 17px 0 0;
+}
+
+.icon-garage		{ background-image: url("{T_THEME_PATH}/images/icon_garage.gif"); }
+.icon-quartermile	{ background-image: url("{T_THEME_PATH}/images/icon_quartermile.gif"); }
+.icon-dynorun		{ background-image: url("{T_THEME_PATH}/images/icon_dynorun.gif"); }

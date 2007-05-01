@@ -1100,7 +1100,7 @@ switch( $mode )
 	case 'edit_business':
 
 		//Let Check The User Is Allowed Perform This Action
-		if (!$auth->acl_get('m_garage'))
+		if (!$auth->acl_get('m_garage_edit'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
 		}
@@ -1153,7 +1153,7 @@ switch( $mode )
 	case 'update_business':
 
 		//Let Check The User Is Allowed Perform This Action
-		if (!$auth->acl_get('m_garage'))
+		if (!$auth->acl_get('m_garage_edit'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
 		}

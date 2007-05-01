@@ -904,6 +904,17 @@ class garage_vehicle
 		$required_position++;
 		return ;
 	}
+
+	/**
+	* Delete users vehicles
+	*
+	* @param int $user_id user id to delete all vehicles
+	*
+	*/
+	function delete_user_vehicles($user_id)
+	{
+		break;
+	}
 	
 	/**
 	* Delete a vehicle and EVERYTHING linked to to

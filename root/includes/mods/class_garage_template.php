@@ -848,7 +848,7 @@ class garage_template
 	*/
 	function vehicle_assignment($data, $block_name = 'vehicle')
 	{
-		global $template, $auth, $user, $garage_config;
+		global $template, $auth, $user, $garage_config, $phpEx;
 
 		for ($i = 0, $count = sizeof($data);$i < $count; $i++)
 		{

@@ -44,15 +44,15 @@
 					<!-- BEGIN vehicle -->
 					<!-- IF vehicle.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt><span class="gen"><!-- IF vehicle.U_IMAGE --><a href="{vehicle.U_IMAGE}" target="_blank">{vehicle.IMAGE}</a><!-- ENDIF --></span></dt>
-			  				<dd><span class="gensmall">{vehicle.YEAR}</span></dd>
-							<dd><span class="gensmall">{vehicle.MAKE}</span></dd>
-							<dd><span class="gensmall"><a href="{vehicle.U_VIEW_VEHICLE}">{vehicle.MODEL}</a></span></dd>
-							<dd><span class="gensmall">{vehicle.COLOUR}</span></dd>
-							<dd><span class="gen"><b><a href="{vehicle.U_VIEW_PROFILE}" <!-- IF vehicle.USERNAME_COLOUR --> style="color: {vehicle.USERNAME_COLOUR}"<!-- ENDIF -->>{vehicle.USERNAME}</a></b></span></dd>
-							<dd><span class="gensmall">{vehicle.VIEWS}</span></dd>
-							<dd><span class="gensmall">{vehicle.MODS}</span></dd>
-							<dd><span class="gensmall">{vehicle.UPDATED}</span></dd>
+							<dt><!-- IF vehicle.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{vehicle.U_IMAGE}"></a></div></div><!-- ENDIF --></dt>
+			  				<dd>{vehicle.YEAR}</dd>
+							<dd>{vehicle.MAKE}</dd>
+							<dd><a href="{vehicle.U_VIEW_VEHICLE}">{vehicle.MODEL}</a></dd>
+							<dd>{vehicle.COLOUR}</dd>
+							<dd><b><a href="{vehicle.U_VIEW_PROFILE}" <!-- IF vehicle.USERNAME_COLOUR --> style="color: {vehicle.USERNAME_COLOUR}"<!-- ENDIF -->>{vehicle.USERNAME}</a></b></dd>
+							<dd>{vehicle.VIEWS}</dd>
+							<dd>{vehicle.MODS}</dd>
+							<dd>{vehicle.UPDATED}</dd>
 						</dl>
 					</li>
 					<!-- BEGINELSE -->
@@ -103,13 +103,13 @@
 					<!-- BEGIN modification -->
 					<!-- IF modification.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt><span class="gen"><!-- IF modification.U_IMAGE --><a href="{modification.U_IMAGE}" target="_blank">{modification.IMAGE}</a><!-- ENDIF --></span></dt>
-			  				<dd><span class="gensmall"><a href="{modification.U_VIEW_VEHICLE}">{modification.VEHICLE}</a></span></dd>
-							<dd><span class="gensmall"><a href="{modification.U_VIEW_MODIFICATION}">{modification.MODIFICATION}</a></span></dd>
-							<dd><span class="gensmall">{modification.CATEGORY}</span></dd>
-							<dd><span class="gensmall"><b><a href="{modification.U_VIEW_PROFILE}" <!-- IF modification.USERNAME_COLOUR --> style="color: {modification.USERNAME_COLOUR}"<!-- ENDIF -->>{modification.USERNAME}</a></b></span></dd>
-							<dd><span class="gensmall">{modification.PRICE}</span></dd>
-							<dd><span class="gensmall">{modification.RATING}</span></dd>
+							<dt><!-- IF modification.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{modification.U_IMAGE}"></a><!-- ENDIF --></dt>
+			  				<dd><a href="{modification.U_VIEW_VEHICLE}">{modification.VEHICLE}</a></dd>
+							<dd><a href="{modification.U_VIEW_MODIFICATION}">{modification.MODIFICATION}</a></dd>
+							<dd>{modification.CATEGORY}</dd>
+							<dd><b><a href="{modification.U_VIEW_PROFILE}" <!-- IF modification.USERNAME_COLOUR --> style="color: {modification.USERNAME_COLOUR}"<!-- ENDIF -->>{modification.USERNAME}</a></b></span></dd>
+							<dd>{modification.PRICE}</dd>
+							<dd>{modification.RATING}</dd>
 						</dl>
 					</li>
 					<!-- BEGINELSE -->
@@ -163,13 +163,13 @@
 					<!-- BEGIN premium -->
 					<!-- IF premium.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt><span class="gensmall"><a href="{premium.U_VIEW_VEHICLE}">{premium.VEHICLE}</a></span></dt>
-							<dd><span class="gensmall">{premium.PRICE}</span></dd>
-							<dd><span class="gensmall">{premium.MOD_PRICE}</span></dd>
-							<dd><span class="gensmall"><b><a href="{premium.U_VIEW_PROFILE}" <!-- IF premium.USERNAME_COLOUR --> style="color: {premium.USERNAME_COLOUR}"<!-- ENDIF -->>{premium.USERNAME}</a></b></span></dd>
-							<dd><span class="gensmall">{premium.PREMIUM}</span></dd>
-							<dd><span class="gensmall">{premium.COVER_TYPE}</span></dd>
-							<dd><span class="gensmall"><a href="{premium.U_VIEW_BUSINESS}">{premium.BUSINESS}</a></span></dd>
+							<dt><a href="{premium.U_VIEW_VEHICLE}">{premium.VEHICLE}</a></dt>
+							<dd>{premium.PRICE}</dd>
+							<dd>{premium.MOD_PRICE}</dd>
+							<dd><b><a href="{premium.U_VIEW_PROFILE}" <!-- IF premium.USERNAME_COLOUR --> style="color: {premium.USERNAME_COLOUR}"<!-- ENDIF -->>{premium.USERNAME}</a></b></dd>
+							<dd>{premium.PREMIUM}</dd>
+							<dd>{premium.COVER_TYPE}</dd>
+							<dd><a href="{premium.U_VIEW_BUSINESS}">{premium.BUSINESS}</a></dd>
 						</dl>
 					</li>
 					<!-- BEGINELSE -->
@@ -223,15 +223,15 @@
 					<!-- BEGIN quartermile -->
 					<!-- IF quartermile.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt><span class="gen"><!-- IF quartermile.U_IMAGE --><a href="{quartermile.U_IMAGE}" target="_blank">{quartermile.IMAGE}</a><!-- ENDIF --></span></dt>
-							<dd><span class="gen"><b><a href="{quartermile.U_VIEWPROFILE}" <!-- IF quartermile.USERNAME_COLOUR --> style="color: {quartermile.USERNAME_COLOUR}"<!-- ENDIF -->>{quartermile.USERNAME}</a></b></span></dd>
-							<dd><span class="gen"><a href="{quartermile.U_VIEWVEHICLE}">{quartermile.VEHICLE}</a></span></dd>
-							<dd><span class="gensmall">{quartermile.RT}</span></dd>
-							<dd><span class="gensmall">{quartermile.SIXTY}</span></dd>
-							<dd><span class="gensmall">{quartermile.THREE}</span></dd>
-							<dd><span class="gensmall">{quartermile.EIGHTH}&nbsp;&#64;&nbsp;{quartermile.EIGHTHMPH}</span></dd>
-							<dd><span class="gensmall">{quartermile.THOU}</span></dd>
-							<dd><span class="gensmall"><a href="{quartermile.U_QUART}">{quartermile.QUART}&nbsp;&#64;&nbsp;{quartermile.QUARTMPH}</a></span></dd>
+							<dt><!-- IF quartermile.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{quartermile.U_IMAGE}"></a><!-- ENDIF --></span></dt>
+							<dd><b><a href="{quartermile.U_VIEWPROFILE}" <!-- IF quartermile.USERNAME_COLOUR --> style="color: {quartermile.USERNAME_COLOUR}"<!-- ENDIF -->>{quartermile.USERNAME}</a></b></dd>
+							<dd><a href="{quartermile.U_VIEWVEHICLE}">{quartermile.VEHICLE}</a></dd>
+							<dd>{quartermile.RT}</dd>
+							<dd>{quartermile.SIXTY}</dd>
+							<dd>{quartermile.THREE}</dd>
+							<dd>{quartermile.EIGHTH}&nbsp;&#64;&nbsp;{quartermile.EIGHTHMPH}</dd>
+							<dd>{quartermile.THOU}</dd>
+							<dd><a href="{quartermile.U_QUART}">{quartermile.QUART}&nbsp;&#64;&nbsp;{quartermile.QUARTMPH}</a></dd>
 						</dl>
 					</li>
 					<!-- BEGINELSE -->
@@ -285,15 +285,15 @@
 					<!-- BEGIN dynorun -->
 					<!-- IF dynorun.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt><span class="gen"><!-- IF dynorun.U_IMAGE --><a href="{dynorun.U_IMAGE}" target="_blank">{dynorun.IMAGE}</a><!-- ENDIF --></span></dt>
-							<dd><span class="gen"><b><a href="{dynorun.U_VIEWPROFILE}" <!-- IF dynorun.USERNAME_COLOUR --> style="color: {dynorun.USERNAME_COLOUR}"<!-- ENDIF -->>{dynorun.USERNAME}</a></b></span></dd>
-							<dd><span class="gen"><a href="{dynorun.U_VIEWVEHICLE}" >{dynorun.VEHICLE}</a></span></dd>
-							<dd><span class="gensmall">{dynorun.DYNOCENTRE}</span></dd>
-							<dd><span class="gensmall"><a href="{dynorun.U_BHP}">{dynorun.BHP}&nbsp;{dynorun.BHP_UNIT}</a></span></dd>
-							<dd><span class="gensmall">{dynorun.TORQUE}&nbsp;{dynorun.TORQUE_UNIT}</span></dd>
-							<dd><span class="gensmall">{dynorun.BOOST}&nbsp;{dynorun.BOOST_UNIT}</span></dd>
-							<dd><span class="gensmall">{dynorun.NITROUS}</span></dd>
-							<dd><span class="gensmall">{dynorun.PEAKPOINT}</span></dd>
+							<dt><!-- IF dynorun.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{dynorun.U_IMAGE}"></a><!-- ENDIF --></span></dt>
+							<dd><b><a href="{dynorun.U_VIEWPROFILE}" <!-- IF dynorun.USERNAME_COLOUR --> style="color: {dynorun.USERNAME_COLOUR}"<!-- ENDIF -->>{dynorun.USERNAME}</a></b></span></dd>
+							<dd><a href="{dynorun.U_VIEWVEHICLE}" >{dynorun.VEHICLE}</a></span></dd>
+							<dd>{dynorun.DYNOCENTRE}</span></dd>
+							<dd><a href="{dynorun.U_BHP}">{dynorun.BHP}&nbsp;{dynorun.BHP_UNIT}</a></span></dd>
+							<dd>{dynorun.TORQUE}&nbsp;{dynorun.TORQUE_UNIT}</span></dd>
+							<dd>{dynorun.BOOST}&nbsp;{dynorun.BOOST_UNIT}</span></dd>
+							<dd>{dynorun.NITROUS}</span></dd>
+							<dd>{dynorun.PEAKPOINT}</span></dd>
 						</dl>
 					</li>
 					<!-- BEGINELSE -->
@@ -337,7 +337,7 @@
 							<dd>{L_TRACK}</dd>
 							<dd>{L_CONDITION}</dd>
 							<dd>{L_TYPE}</dd>
-							<dd>{L_TIME}&nbsp;<span class="gensmall">(M:S:MS)</span></dd>
+							<dd>{L_TIME}&nbsp;(M:S:MS)</span></dd>
 						</dl>
 					</li>
 				</ul>
@@ -345,13 +345,13 @@
 					<!-- BEGIN lap -->
 					<!-- IF lap.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-  							<dt><span class="gensmall"><!-- IF lap.U_IMAGE --><a href="{lap.U_IMAGE}" target="_blank">{lap.IMAGE}</a><!-- ENDIF --></span></dt>
-							<dd><span class="gen"><b><a href="{lap.U_VIEWPROFILE}" <!-- IF lap.USERNAME_COLOUR --> style="color: {lap.USERNAME_COLOUR}"<!-- ENDIF -->>{lap.USERNAME}</a></b></span></dd>
-							<dd><span class="gen"><a href="{lap.U_VIEWVEHICLE}">{lap.VEHICLE}</a></span></dd>
-							<dd><span class="gensmall"><a href="{lap.U_TRACK}">{lap.TRACK}</a></span></dd>
-							<dd><span class="gensmall">{lap.CONDITION}</span></dd>
-							<dd><span class="gensmall">{lap.TYPE}</span></dd>
-							<dd><span class="gensmall"><a href="{lap.U_LAP}">{lap.MINUTE}.{lap.SECOND}.{lap.MILLISECOND}</a></span></dd>
+  							<dt><!-- IF lap.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{lap.U_IMAGE}"></a><!-- ENDIF --></span></dt>
+							<dd><b><a href="{lap.U_VIEWPROFILE}" <!-- IF lap.USERNAME_COLOUR --> style="color: {lap.USERNAME_COLOUR}"<!-- ENDIF -->>{lap.USERNAME}</a></b></span></dd>
+							<dd><a href="{lap.U_VIEWVEHICLE}">{lap.VEHICLE}</a></span></dd>
+							<dd><a href="{lap.U_TRACK}">{lap.TRACK}</a></span></dd>
+							<dd>{lap.CONDITION}</span></dd>
+							<dd>{lap.TYPE}</span></dd>
+							<dd><a href="{lap.U_LAP}">{lap.MINUTE}.{lap.SECOND}.{lap.MILLISECOND}</a></span></dd>
 						</dl>
 					</li>
 					<!-- BEGINELSE -->

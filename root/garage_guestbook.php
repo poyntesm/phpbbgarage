@@ -151,7 +151,7 @@ switch( $mode )
 			$delpost_img = '';
 			$delpost = '';
 
-		 	if ( $auth->acl_get('m_garage') )
+		 	if ( $auth->acl_get('m_garage_edit') )
 			{
 				$edit_img = $user->img('icon_post_edit', 'EDIT_POST');
 				$edit = '<a href="'. append_sid("{$phpbb_root_path}garage.$phpEx", "mode=edit_comment&amp;VID=$vid&amp;comment_id=" . $comment_data[$i]['comment_id'] . "&amp;sid=" . $user->data['session_id']) . '">' . $user->lang['EDIT_POST'] . '</a>';
@@ -288,7 +288,7 @@ switch( $mode )
 		/**
 		* Check authorisation to perform action, redirecting to error screen if not
 		*/
-		if (!$auth->acl_get('m_garage'))
+		if (!$auth->acl_get('m_garage_edit'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=13"));
 		}
@@ -318,7 +318,7 @@ switch( $mode )
 		/**
 		* Check authorisation to perform action, redirecting to error screen if not
 		*/
-		if (!$auth->acl_get('m_garage'))
+		if (!$auth->acl_get('m_garage_edit'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=13"));
 		}
@@ -360,7 +360,7 @@ switch( $mode )
 		/**
 		* Check authorisation to perform action, redirecting to error screen if not
 		*/
-		if (!$auth->acl_get('m_garage'))
+		if (!$auth->acl_get('m_garage_delete'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=13"));
 		}

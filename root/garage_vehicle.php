@@ -450,7 +450,7 @@ switch( $mode )
 		/**
 		* Check authorisation to perform action, redirecting to error screen if not
 		*/
-		if (!$auth->acl_get('m_garage'))
+		if (!$auth->acl_get('m_garage_edit'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
 		}
@@ -662,7 +662,7 @@ switch( $mode )
 		/**
 		* Check authorisation to perform action, redirecting to error screen if not
 		*/
-		if (!$auth->acl_get('m_garage'))
+		if (!$auth->acl_get('m_garage_reset_rating'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=17"));
 		}

@@ -26,9 +26,9 @@ $lang['permission_cat']['garage'] = 'Garage';
 /**
 * Adds thew new permission types 'ug_', 'mg_' & 'ag'
 */
-$lang['permission_type']['ug_'] = 'Garage user permissions';
-$lang['permission_type']['mg_'] = 'Garage moderator permissions';
-$lang['permission_type']['ag_'] = 'Garage admin permissions';
+//$lang['permission_type']['ug_'] = 'Garage user permissions';
+//$lang['permission_type']['mg_'] = 'Garage moderator permissions';
+//$lang['permission_type']['ag_'] = 'Garage admin permissions';
 
 /**
 * Adds the new user permission for phpBB Garage
@@ -70,7 +70,19 @@ $lang = array_merge($lang, array(
 * Adds the new moderator permission for phpBB Garage
 */
 $lang = array_merge($lang, array(
-	'acl_m_garage'	=> array('lang' => 'Can moderate the garage', 'cat' => 'garage'),
+	'acl_m_garage_edit'			=> array('lang' => 'Can edit vehicles and related items', 'cat' => 'garage'),
+	'acl_m_garage_delete'			=> array('lang' => 'Can delete vehicles and related items', 'cat' => 'garage'),
+	'acl_m_garage_rating'			=> array('lang' => 'Can delete/reset ratings', 'cat' => 'garage'),
+	'acl_m_garage_approve_vehicle'		=> array('lang' => 'Can approve vehicles', 'cat' => 'garage'),
+	'acl_m_garage_approve_make'		=> array('lang' => 'Can approve makes', 'cat' => 'garage'),
+	'acl_m_garage_approve_model'		=> array('lang' => 'Can approve models', 'cat' => 'garage'),
+	'acl_m_garage_approve_business'		=> array('lang' => 'Can approve business\'s', 'cat' => 'garage'),
+	'acl_m_garage_approve_quartermile'	=> array('lang' => 'Can approve quartermiles', 'cat' => 'garage'),
+	'acl_m_garage_approve_dynorun'		=> array('lang' => 'Can approve dynoruns', 'cat' => 'garage'),
+	'acl_m_garage_approve_guestbook'	=> array('lang' => 'Can approve guestbook comments', 'cat' => 'garage'),
+	'acl_m_garage_approve_lap'		=> array('lang' => 'Can approve laps', 'cat' => 'garage'),
+	'acl_m_garage_approve_track'		=> array('lang' => 'Can approve tracks', 'cat' => 'garage'),
+	'acl_m_garage_approve_product'		=> array('lang' => 'Can approve products', 'cat' => 'garage'),
 ));
 
 /**

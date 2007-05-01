@@ -94,27 +94,23 @@ function jumpto_garage()
 <div class="panel">
 	<div class="inner"><span class="corners-top"><span></span></span>
 		<h3>{YEAR}&nbsp;{MAKE}&nbsp;{MODEL}</h3>
-    			<table cellpadding="4" cellspacing="1" border="0" width="100%" class="tablebg">
-        			<tr>
-            				<td class="row1" width="59%" valign="top">
-                				<table width="100%" cellpadding="4" cellspacing="1" border="0">
 		    					<!-- IF ! U_VIEW_VEHICLE -->
 		    					<tr>
-   								<td class="row1"><span class="gen"><b>{L_OWNER}</b></span></td>
+   								<dd class="row1"><span class="gen"><strong>{L_OWNER}</strong></span></td>
 		    					</tr>
                     					<tr>
-								<td align="center">{AVATAR_IMG}<br /><span class="gen"><b><a href="{U_PROFILE}" <!-- IF USERNAME_COLOUR --> style="color: {USERNAME_COLOUR}"<!-- ENDIF -->>{USERNAME}</a></b></span></td>
+								<td align="center">{AVATAR_IMG}<br /><span class="gen"><strong><a href="{U_PROFILE}" <!-- IF USERNAME_COLOUR --> style="color: {USERNAME_COLOUR}"<!-- ENDIF -->>{USERNAME}</a></strong></span></td>
 		   					</tr>
 							<!-- IF U_HILITE_IMAGE -->
 							<tr>
-    								<td class="row1"><span class="gen"><b>{L_HILITE_IMAGE}</b></span></td>
+    								<td class="row1"><span class="gen"><strong>{L_HILITE_IMAGE}</strong></span></td>
 	           					</tr>
 							<tr>
                         					<td align="center"><a href="{U_HILITE_IMAGE}" title="{HILITE_IMAGE_TITLE}" target="_blank"><img hspace="5" vspace="5" src="{HILITE_IMAGE}" /></a><br /><span class="gensmall">{L_TOTAL_VIEWS}: {TOTAL_IMAGE_VIEWS}</span></td>
                     					</tr>
 							<!-- ENDIF -->
 			                                <tr>
-				                        	<td class="row1"><span class="gen"><b>{L_DESCRIPTION}</b></span></td>
+				                        	<dd class="row1"><span class="gen"><strong>{L_DESCRIPTION}</strong></span></td>
                                    			</tr> 
 			                                <tr>
 				                        	<td align="center"><span class="gen">{DESCRIPTION}</span></td>
@@ -126,75 +122,58 @@ function jumpto_garage()
 							</tr>
 							<!-- ENDIF -->
 							<!-- IF U_VIEW_VEHICLE -->
-                    					<tr>
-								<td align="center" >
-									<ul>
-									<!-- IF U_VIEW_VEHICLE --><div class="buttons"><div class="viewvehicle-icon"><a href="{U_VIEW_VEHICLE}" title="{L_VIEW_VEHICLE}"></a></div></div>&nbsp;<!-- ENDIF -->
-									<!-- IF U_EDIT_VEHICLE --><div class="buttons"><div class="editvehicle-icon"><a href="{U_EDIT_VEHICLE}" title="{L_EDIT_VEHICLE}"></a></div></div>&nbsp;<!-- ENDIF -->
-									<!-- IF U_DELETE_VEHICLE --><div class="buttons"><div class="deletevehicle-icon"><a href="{U_DELETE_VEHICLE}" title="{L_DELETE_VEHICLE}"></a></div></div>&nbsp;<!-- ENDIF -->
-									<!-- IF U_ADD_MODIFICATION --><div class="buttons"><div class="newmodification-icon"><a href="{U_ADD_MODIFICATION}" title="{L_ADD_MODIFICATION}"></a></div></div>&nbsp;<!-- ENDIF -->
-									<!-- IF U_ADD_INSURANCE --><div class="buttons"><div class="newpremium-icon"><a href="{U_ADD_INSURANCE}" title="{L_ADD_INSURANCE}"></a></div></div>&nbsp;<!-- ENDIF -->
-									<!-- IF U_ADD_QUARTERMILE --><div class="buttons"><div class="newquartermile-icon"><a href="{U_ADD_QUARTERMILE}" title="{L_ADD_QUARTERMILE}"></a></div></div>&nbsp;<!-- ENDIF -->
-									<!-- IF U_ADD_DYNORUN --><div class="buttons"><div class="newdynorun-icon"><a href="{U_ADD_DYNORUN}" title="{L_ADD_DYNORUN}"></a></div></div>&nbsp;<!-- ENDIF -->
-									<!-- IF U_ADD_LAP --><div class="buttons"><div class="newlap-icon"><a href="{U_ADD_LAP}" title="{L_ADD_LAP}"></a></div></div>&nbsp;<!-- ENDIF -->
-									<!-- IF U_ADD_SERVICE --><div class="buttons"><div class="newservice-icon"><a href="{U_ADD_SERVICE}" title="{L_ADD_SERVICE}"></a></div></div>&nbsp;<!-- ENDIF -->
-									<!-- IF U_SET_MAIN_VEHICLE --><div class="buttons"><div class="mainvehicle-icon"><a href="{U_SET_MAIN_VEHICLE}" title="{L_SET_MAIN_VEHICLE}"></a></div></div>&nbsp;<!-- ENDIF -->
+								<dd>
+									<ul class="manage-vehicle-icons">
+									<li></li>&nbsp;
+									<!-- IF U_VIEW_VEHICLE --><li class="viewvehicle-icon"><a href="{U_VIEW_VEHICLE}" title="{L_VIEW_VEHICLE}"></a></li>&nbsp;<!-- ENDIF -->
+									<!-- IF U_EDIT_VEHICLE --><li class="editvehicle-icon"><a href="{U_EDIT_VEHICLE}" title="{L_EDIT_VEHICLE}"></a></li>&nbsp;<!-- ENDIF -->
+									<!-- IF U_DELETE_VEHICLE --><li class="deletevehicle-icon"><a href="{U_DELETE_VEHICLE}" title="{L_DELETE_VEHICLE}"></a></li>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_MODIFICATION --><li class="newmodification-icon"><a href="{U_ADD_MODIFICATION}" title="{L_ADD_MODIFICATION}"></a></li>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_INSURANCE --><li class="newpremium-icon"><a href="{U_ADD_INSURANCE}" title="{L_ADD_INSURANCE}"></a></li>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_QUARTERMILE --><li class="newquartermile-icon"><a href="{U_ADD_QUARTERMILE}" title="{L_ADD_QUARTERMILE}"></a></li>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_DYNORUN --><li class="newdynorun-icon"><a href="{U_ADD_DYNORUN}" title="{L_ADD_DYNORUN}"></a></li>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_LAP --><li class="newlap-icon"><a href="{U_ADD_LAP}" title="{L_ADD_LAP}"></a></li>&nbsp;<!-- ENDIF -->
+									<!-- IF U_ADD_SERVICE --><li class="newservice-icon"><a href="{U_ADD_SERVICE}" title="{L_ADD_SERVICE}"></a></li>&nbsp;<!-- ENDIF -->
+									<!-- IF U_SET_MAIN_VEHICLE --><li class="mainvehicle-icon"><a href="{U_SET_MAIN_VEHICLE}" title="{L_SET_MAIN_VEHICLE}"></a></li>&nbsp;<!-- ENDIF -->
 									</ul>
+								<dd>
+
 									<br />
 									<!-- IF U_HILITE_IMAGE -->
 									<span class="gen"><a href="{U_HILITE_IMAGE}" title="{HILITE_IMAGE_TITLE}" target="_blank"><img hspace="5" vspace="5" src="{HILITE_IMAGE}" /></a>
 									<br /></span><span class="gensmall">{L_TOTAL_VIEWS}:&nbsp;{TOTAL_IMAGE_VIEWS}</span>
 									<!-- ENDIF -->
                         					</td>
-                    					</tr>
 							<!-- ENDIF -->
-                				</table>
-            				</td>
-            				<td class="row1" width="41%" valign="top">
-						<form method="post" name="view_vehicle" action="{S_MODE_ACTION}">
-                				<table cellpadding="4" cellspacing="1" width="100%">
-                    					<tr>
-                        					<td class="row1" ><span class="gen"><b>{L_VEHICLE}</b></span></td>
-                        					<td><span class="gen">{YEAR}&nbsp;{MAKE}&nbsp;{MODEL}</span></td>
-                    					</tr>
-                    					<tr>
-                        					<td class="row1" ><span class="gen"><b>{L_COLOUR}</b></span></td>
-                        					<td><span class="gen">{COLOUR}</span></td>
-                    					</tr>
-                    					<tr>
-                        					<td class="row1" ><span class="gen"><b>{L_UPDATED}</b></span></td>
-                        					<td><span class="gen">{DATE_UPDATED}</span></td>
-                    					</tr>
-                    					<tr>
-                        					<td class="row1" ><span class="gen"><b>{L_MILEAGE}</b></span></td>
-                        					<td><span class="gen">{MILEAGE}&nbsp;{MILEAGE_UNITS}</span></td>
-                    					</tr>
-                    					<tr>
-                        					<td class="row1" ><span class="gen"><b>{L_PRICE}</b></span></td>
-                        					<td><span class="gen">{PRICE}&nbsp;{CURRENCY}</span></td>
-                    					</tr>
-                    					<tr>
-                        					<td class="row1" ><span class="gen"><b>{L_TOTAL_MODS}</b></span></td>
-                        					<td><span class="gen">{TOTAL_MODS}</span></td>
-                    					</tr>
-                    					<tr>
-                        					<td class="row1" ><span class="gen"><b>{L_TOTAL_SPENT}</b></span></td>
-                        					<td><span class="gen">{TOTAL_SPENT}&nbsp;{CURRENCY}</span></td>
-                    					</tr>
-                    					<tr>
-                        					<td class="row1" ><span class="gen"><b>{L_TOTAL_VIEWS}</b></span></td>
+            				</dl>
+            				<dl>
+                        				<dd class="row1" ><span class="gen"><strong>{L_VEHICLE}</strong></span></td>
+                        				<td><span class="gen">{YEAR}&nbsp;{MAKE}&nbsp;{MODEL}</span></td>
+                        				<td class="row1" ><span class="gen"><strong>{L_COLOUR}</strong></span></td>
+                        				<td><span class="gen">{COLOUR}</span></td>
+                        				<td class="row1" ><span class="gen"><strong>{L_UPDATED}</strong></span></td>
+                        				<td><span class="gen">{DATE_UPDATED}</span></td>
+                        				<td class="row1" ><span class="gen"><strong>{L_MILEAGE}</strong></span></td>
+                        				<td><span class="gen">{MILEAGE}&nbsp;{MILEAGE_UNITS}</span></td>
+                        				<td class="row1" ><span class="gen"><strong>{L_PRICE}</strong></span></td>
+                        				<td><span class="gen">{PRICE}&nbsp;{CURRENCY}</span></td>
+                        				<td class="row1" ><span class="gen"><strong>{L_TOTAL_MODS}</strong></span></td>
+                        				<td><span class="gen">{TOTAL_MODS}</span></td>
+                        				<td class="row1" ><span class="gen"><strong>{L_TOTAL_SPENT}</strong></span></td>
+                        				<td><span class="gen">{TOTAL_SPENT}&nbsp;{CURRENCY}</span></td>
+                        					<td class="row1" ><span class="gen"><strong>{L_TOTAL_VIEWS}</strong></span></td>
                         					<td><span class="gen">{TOTAL_VIEWS}</span></td>
                     					</tr>
             	    					<tr>
-                        					<td class="row1" valign="top" nowrap="nowrap"><span class="gen"><b>{L_VEHICLE_RATING}</b></span></td>
+                        					<td class="row1" valign="top" nowrap="nowrap"><span class="gen"><strong>{L_VEHICLE_RATING}</strong></span></td>
                         					<td width="95%"><span class="gen">{RATING}</span></td>
 							</tr>
 							<!-- BEGIN custom_vehicle_fields -->
-								<br /><b>{custom_vehicle_fields.PROFILE_FIELD_NAME}:</b> {custom_vehicle_fields.PROFILE_FIELD_VALUE}
+								<br /><strong>{custom_vehicle_fields.PROFILE_FIELD_NAME}:</strong> {custom_vehicle_fields.PROFILE_FIELD_VALUE}
 							<!-- END custom_vehicle_fields -->
 							<!-- IF ! S_DISPLAY_VEHICLE_OWNER -->
             	    					<tr>
-                        					<td class="row1"  valign="top" ><span class="gen"><b>{L_PLEASE_RATE}</b></span></td>
+                        					<td class="row1"  valign="top" ><span class="gen"><strong>{L_PLEASE_RATE}</strong></span></td>
                         					<td width="85%"><select id="vehicle_rating" name="vehicle_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN rating --><option value="{rating.VALUE}" <!-- IF rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{rating.TEXT}</option><!-- END rating --></select>&nbsp;<input type="hidden" value="rate_vehicle" name="mode" /><input type="hidden" value="{VID}" name="VID" />
 								<!-- IF S_DISPLAY_RATE -->
 								<input name="submit" type="submit" value="{L_RATE}" class="liteoption" />
@@ -202,12 +181,7 @@ function jumpto_garage()
 								<span class="gensmall"><i> {L_RATING_NOTICE}</i></span></td>
                     					</tr>
 							<!-- ENDIF -->
-                				</table>
-						</form>
-            				</td>
-        			</tr>
-    			</table>
-			<br />
+                			</dl>
 			<span class="corners-bottom"><span></span></span>
 		</div>
 	</div>
@@ -229,7 +203,9 @@ function jumpto_garage()
 				</ul>
 			</div>
 
-			<div class="garage_panel" id="options000" style="display: none;">
+	
+
+			<div class="garage_panel bg3" id="options000" style="display: none;">
 			<div class="tablewrap">
 				<!-- IF S_DISPLAY_GALLERIES -->
 				<div class="panel">
@@ -304,14 +280,14 @@ function jumpto_garage()
 							<!-- BEGIN modification -->
 							<!-- IF modification.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 								<dl>
-									<dt class="row1"><span class="gen"><!-- IF category.modification.U_IMAGE --><a href="{category.modification.U_IMAGE}" target="_blank">{category.modification.IMAGE}</a><!-- ENDIF --></span></td>
-									<dd class="row1"><span class="gen">{category.modification.MODIFICATION}</span></td>
-									<dd class="row1" align="center"><span class="gensmall">{category.modification.RATING}</span></td>
-									<dd class="row1" align="center"><span class="gensmall">{category.modification.COST}</span></td>
-									<dd class="row1" align="center"><span class="gensmall">{category.modification.INSTALL}</span></td>
-									<dd class="row1" nowrap><span class="gensmall">{category.modification.CREATED}</span></td>
-									<dd class="row1" nowrap><span class="gensmall">{category.modification.UPDATED}</span></td>
-									<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd class="row1" align="right"><span class="gensmall"><!-- IF category.modification.U_EDIT --><a href="{category.modification.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF category.modification.U_DELETE--><a href="{category.modification.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
+									<dt><!-- IF category.modification.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{category.modification.U_IMAGE}"></a></div></div><!-- ENDIF --></dt>
+									<dd>{category.modification.MODIFICATION}</dd>
+									<dd>{category.modification.RATING}</dd>
+									<dd>{category.modification.COST}</dd>
+									<dd>{category.modification.INSTALL}</dd>
+									<dd>{category.modification.CREATED}</dd>
+									<dd>{category.modification.UPDATED}</dd>
+									<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd><!-- IF category.modification.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{category.modification.U_EDIT}"></a></div></div><!-- ENDIF -->&nbsp;<!-- IF category.modification.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{category.modification.U_DELETE}"></a></div></div><!-- ENDIF --></dd><!-- ENDIF -->
 								</dl>
 							</li>
 							<!-- END modification -->
@@ -348,16 +324,16 @@ function jumpto_garage()
 							<!-- BEGIN run -->
 							<!-- IF run.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 								<dl>
-					<dt class="row1" align="center"><span class="gensmall"><!-- IF quartermile.run.U_IMAGE --><a href="{quartermile.run.U_IMAGE}" target="_blank">{quartermile.run.IMAGE}</a><!-- ENDIF --></span></td>
-						  			<dd class="row1" align="center"><span class="gensmall">{quartermile.run.RT}</span></td>
-						  			<dd class="row1" align="center"><span class="gensmall">{quartermile.run.SIXTY}</span></td>
-									<dd class="row1" align="center"><span class="gensmall">{quartermile.run.THREE}</span></td>
-									<dd class="row1" align="center"><span class="gensmall">{quartermile.run.EIGHTH}</span></td>
-									<dd class="row1" align="center"><span class="gensmall">{quartermile.run.EIGHTHMPH}</span></td>
-									<dd class="row1" align="center"><span class="gensmall">{quartermile.run.THOU}</span></td>
-									<dd class="row1" align="center"><span class="gensmall"><a href="{quartermile.run.U_QUART}">{quartermile.run.QUART}</a></span></td>
-									<dd class="row1" align="center"><span class="gensmall">{quartermile.run.QUARTMPH}</span></td>
-									<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd class="row1" align="right"><span class="gensmall"><!-- IF quartermile.run.U_EDIT --><a href="{quartermile.run.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF quartermile.run.U_DELETE--><a href="{quartermile.run.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
+									<dt><!-- IF quartermile.run.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{quartermile.run.U_IMAGE}"></a></div></div><!-- ENDIF --></dt>
+						  			<dd>{quartermile.run.RT}</dd>
+						  			<dd>{quartermile.run.SIXTY}</dd>
+									<dd>{quartermile.run.THREE}</dd>
+									<dd>{quartermile.run.EIGHTH}</dd>
+									<dd>{quartermile.run.EIGHTHMPH}</dd>
+									<dd>{quartermile.run.THOU}</dd>
+									<dd><a href="{quartermile.run.U_QUART}">{quartermile.run.QUART}</a></dd>
+									<dd>{quartermile.run.QUARTMPH}</dd>
+									<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd><!-- IF quartermile.run.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{quartermile.run.U_EDIT}"></a></div></div><!-- ENDIF -->&nbsp;<!-- IF quartermile.run.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{quartermile.run.U_DELETE}"></a></div></div><!-- ENDIF --></dd><!-- ENDIF -->
 								</dl>
 							</li>
 							<!-- END run -->
@@ -395,17 +371,17 @@ function jumpto_garage()
 							<!-- BEGIN run -->
 							<!-- IF run.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 								<dl>
-	  								<dt class="row1" align="center"><span class="gensmall"><!-- IF dynorun.run.U_IMAGE --><a href="{dynorun.run.U_IMAGE}" target="_blank">{dynorun.run.IMAGE}</a><!-- ENDIF --></span></td>
-									<dd class="row1" align="center"><span class="gensmall">{dynorun.run.DYNOCENTER}</span></td>
-									<dd class="row1" align="center"><span class="gensmall"><a href="{dynorun.run.U_BHP}">{dynorun.run.BHP}</a></span></td>
-									<dd class="row1" align="center"><span class="gensmall">{dynorun.run.BHP_UNIT}</span></td>
-									<dd class="row1" align="center"><span class="gensmall">{dynorun.run.TORQUE}</span></td>
-									<dd class="row1" align="center"><span class="gensmall">{dynorun.run.TORQUE_UNIT}</span></td>				
-									<dd class="row1" align="center"><span class="gensmall">{dynorun.run.BOOST}</span></td>
-									<dd class="row1" align="center"><span class="gensmall">{dynorun.run.BOOST_UNIT}</span></td>
-									<dd class="row1" align="center"><span class="gensmall">{dynorun.run.NITROUS}</span></td>
-									<dd class="row1" align="center"><span class="gensmall">{dynorun.run.PEAKPOINT}</span></td>
-									<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd class="row1" align="right"><span class="gensmall"><!-- IF dynorun.run.U_EDIT --><a href="{dynorun.run.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF dynorun.run.U_DELETE--><a href="{dynorun.run.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
+									<dt><!-- IF dynorun.run.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{dynorun.run.U_IMAGE}"></a></div></div><!-- ENDIF --></dt>
+									<dd>{dynorun.run.DYNOCENTER}</dd>
+									<dd><a href="{dynorun.run.U_BHP}">{dynorun.run.BHP}</a></dd>
+									<dd>{dynorun.run.BHP_UNIT}</dd>
+									<dd>{dynorun.run.TORQUE}</dd>
+									<dd>{dynorun.run.TORQUE_UNIT}</dd>				
+									<dd>{dynorun.run.BOOST}</dd>
+									<dd>{dynorun.run.BOOST_UNIT}</dd>
+									<dd>{dynorun.run.NITROUS}</dd>
+									<dd>{dynorun.run.PEAKPOINT}</dd>
+									<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd><!-- IF dynorun.run.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{dynorun.run.U_EDIT}"></a></div></div><!-- ENDIF -->&nbsp;<!-- IF dynorun.run.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{dynorun.run.U_DELETE}"></a></div></div><!-- ENDIF --></dd><!-- ENDIF -->
 								</dl>
 							</li>
 							<!-- END run -->
@@ -438,12 +414,12 @@ function jumpto_garage()
 							<!-- BEGIN lap -->
 							<!-- IF lap.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 								<dl>
-					  				<dt class="row1" align="center"><span class="gensmall"><!-- IF tracktime.lap.U_IMAGE --><a href="{tracktime.lap.U_IMAGE}" target="_blank">{tracktime.lap.IMAGE}</a><!-- ENDIF --></span></td>
-									<dd class="row1" align="center"><span class="gensmall"><a href="{tracktime.lap.U_TRACK}">{tracktime.lap.TRACK}</a></span></td>
-									<dd class="row1" align="center"><span class="gensmall">{tracktime.lap.CONDITION}</span></td>
-									<dd class="row1" align="center"><span class="gensmall">{tracktime.lap.TYPE}</span></td>
-									<dd class="row1" align="center"><span class="gensmall"><a href="{tracktime.lap.U_LAP}">{tracktime.lap.MINUTE}.{tracktime.lap.SECOND}.{tracktime.lap.MILLISECOND}</a></span></td>
-									<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd class="row1" align="right"><span class="gensmall"><!-- IF tracktime.lap.U_EDIT --><a href="{tracktime.lap.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF tracktime.lap.U_DELETE--><a href="{tracktime.lap.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
+									<dt><!-- IF tracktime.lap.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{tracktime.lap.U_IMAGE}"></a></div></div><!-- ENDIF --></td>
+									<dd><a href="{tracktime.lap.U_TRACK}">{tracktime.lap.TRACK}</a></dd>
+									<dd>{tracktime.lap.CONDITION}</dd>
+									<dd>{tracktime.lap.TYPE}</dd>
+									<dd><a href="{tracktime.lap.U_LAP}">{tracktime.lap.MINUTE}.{tracktime.lap.SECOND}.{tracktime.lap.MILLISECOND}</a></dd>
+									<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd><!-- IF tracktime.lap.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{tracktime.lap.U_EDIT}"></a></div></div><!-- ENDIF -->&nbsp;<!-- IF tracktime.lap.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{tracktime.lap.U_DELETE}"></a></div></div><!-- ENDIF --></dd><!-- ENDIF -->
 								</dl>
 							</li>
 							<!-- END lap -->
@@ -474,10 +450,10 @@ function jumpto_garage()
 							<!-- BEGIN premium -->
 							<!-- IF premium.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 								<dl>
-									<dt class="row1" align="center"><span class="gensmall"><a href="{insurance.premium.U_INSURER}">{insurance.premium.INSURER}</a></span></td>
-					  				<dd class="row1" align="center"><span class="gensmall">{insurance.premium.PREMIUM}</span></td>
-									<dd class="row1" align="center"><span class="gensmall">{insurance.premium.COVER_TYPE}</span></td>
-									<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd class="row1" align="right"><span class="gensmall"><!-- IF insurance.premium.U_EDIT --><a href="{insurance.premium.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF insurance.premium.U_DELETE--><a href="{insurance.premium.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
+									<dt><a href="{insurance.premium.U_INSURER}">{insurance.premium.INSURER}</a></dt>
+					  				<dd>{insurance.premium.PREMIUM}</dd>
+									<dd>{insurance.premium.COVER_TYPE}</dd>
+									<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd><!-- IF insurance.premium.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{insurance.premium.U_EDIT}"></a></div><div><!-- ENDIF -->&nbsp;<!-- IF insurance.premium.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{insurance.premium.U_DELETE}"></a></div></div><!-- ENDIF --></dd><!-- ENDIF -->
 								</dl>
 							</li>
 							<!-- END premium -->
@@ -510,12 +486,12 @@ function jumpto_garage()
 							<!-- BEGIN service -->
 							<!-- IF service.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 								<dl>
-									<dt class="row1" align="center"><span class="gensmall"><a href="{service_history.service.U_GARAGE}">{service_history.service.TITLE}</a></span></td>
-	  								<dd class="row1" align="center"><span class="gensmall">{service_history.service.TYPE}</span></td>
-									<dd class="row1" align="center"><span class="gensmall">{service_history.service.PRICE}</span></td>
-									<dd class="row1" align="center"><span class="gensmall">{service_history.service.RATING}</span></td>
-									<dd class="row1" align="center"><span class="gensmall">{service_history.service.MILEAGE}</span></td>
-									<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd class="row1" align="right"><span class="gensmall"><!-- IF service_history.service.U_EDIT --><a href="{service_history.service.U_EDIT}">{EDIT}</a><!-- ENDIF -->&nbsp;<!-- IF service_history.service.U_DELETE--><a href="{service_history.service.U_DELETE}">{DELETE}</a><!-- ENDIF --></span></td><!-- ENDIF -->
+									<dt><a href="{service_history.service.U_GARAGE}">{service_history.service.TITLE}</a></dt>
+	  								<dd>{service_history.service.TYPE}</dd>
+									<dd>{service_history.service.PRICE}</dd>
+									<dd>{service_history.service.RATING}</dd>
+									<dd>{service_history.service.MILEAGE}</dd>
+									<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd><!-- IF service_history.service.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{service_history.service.U_EDIT}"></a></div></div><!-- ENDIF -->&nbsp;<!-- IF service_history.service.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{service_history.service.U_DELETE}"></a></div></div><!-- ENDIF --></span></dt><!-- ENDIF -->
 								</dl>
 							</li>
 							<!-- END service -->
@@ -595,7 +571,7 @@ function jumpto_garage()
 				<!-- ELSE -->
 
 						<td align="center" valign="middle">
-							<b class="postauthor" <!-- IF guestbook.comments.POST_AUTHOR_COLOUR -->style="color: {guestbook.comments.POST_AUTHOR_COLOUR}"<!-- ENDIF -->>{guestbook.comments.POST_AUTHOR}</b>
+							<b class="postauthor" <!-- IF guestbook.comments.POST_AUTHOR_COLOUR -->style="color: {guestbook.comments.POST_AUTHOR_COLOUR}"<!-- ENDIF -->>{guestbook.comments.POST_AUTHOR}</strong>
 						</td>
 						<td width="100%" height="25">
 							<table width="100%" cellspacing="0">
@@ -603,7 +579,7 @@ function jumpto_garage()
 							<!-- IF guestbook.comments.POST_ICON_IMG -->
 								<td><img src="{T_ICONS_PATH}{guestbook.comments.POST_ICON_IMG}" width="{guestbook.comments.POST_ICON_IMG_WIDTH}" height="{guestbook.comments.POST_ICON_IMG_HEIGHT}" alt="" title="" /></td>
 							<!-- ENDIF -->
-								<td class="gensmall" width="100%"><div style="float:right"><a href="{guestbook.comments.U_MINI_POST}">{guestbook.comments.MINI_POST_IMG}</a><b>{L_POSTED}:</b> {guestbook.comments.POST_DATE}&nbsp;</div></td>
+								<td class="gensmall" width="100%"><div style="float:right"><a href="{guestbook.comments.U_MINI_POST}">{guestbook.comments.MINI_POST_IMG}</a><strong>{L_POSTED}:</strong> {guestbook.comments.POST_DATE}&nbsp;</div></td>
 							</tr>
 							</table>
 						</td>
@@ -641,12 +617,12 @@ function jumpto_garage()
 				</table>
 
 				<span class="postdetails">
-					<!-- IF guestbook.comments.POSTER_JOINED --><br /><b>{L_JOINED}:</b> {guestbook.comments.POSTER_JOINED}<!-- ENDIF -->
-					<!-- IF guestbook.comments.POSTER_POSTS != '' --><br /><b>{L_POSTS}:</b> {guestbook.comments.POSTER_POSTS}<!-- ENDIF -->
-					<!-- IF guestbook.comments.POSTER_FROM --><br /><b>{L_LOCATION}:</b> {guestbook.comments.POSTER_FROM}<!-- ENDIF -->
+					<!-- IF guestbook.comments.POSTER_JOINED --><br /><strong>{L_JOINED}:</strong> {guestbook.comments.POSTER_JOINED}<!-- ENDIF -->
+					<!-- IF guestbook.comments.POSTER_POSTS != '' --><br /><strong>{L_POSTS}:</strong> {guestbook.comments.POSTER_POSTS}<!-- ENDIF -->
+					<!-- IF guestbook.comments.POSTER_FROM --><br /><strong>{L_LOCATION}:</strong> {guestbook.comments.POSTER_FROM}<!-- ENDIF -->
 
 					<!-- BEGIN custom_fields -->
-						<br /><b>{guestbook.comments.custom_fields.PROFILE_FIELD_NAME}:</b> {guestbook.comments.custom_fields.PROFILE_FIELD_VALUE}
+						<br /><strong>{guestbook.comments.custom_fields.PROFILE_FIELD_NAME}:</strong> {guestbook.comments.custom_fields.PROFILE_FIELD_VALUE}
 					<!-- END custom_fields -->
 				</span>
 

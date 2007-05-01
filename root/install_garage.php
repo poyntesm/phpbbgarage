@@ -541,14 +541,14 @@ $required_sql[] = "ALTER TABLE " . $table_prefix . "users ADD `user_garage_mod_e
 $required_sql[] = "ALTER TABLE " . $table_prefix . "users ADD `user_garage_mod_pm_optout` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0'";
 
 //Required SQL For Images
-$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_img_attached', 'garage_camera.gif', '', 40, 20, 1)";
+$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_img_attached', 'garage_camera.gif', '', 20, 20, 1)";
 $required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_img_attached', 'garage_camera.gif', '', 20, 20, 2)";
-$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_toggle', 'garage_toggle.gif', '' , 18, 36, 1)";
-$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_edit', 'garage_edit.gif', '' , 40, 20, 1)";
+$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_toggle', 'garage_toggle.gif', '' , 18, 18, 1)";
+$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_edit', 'garage_edit.gif', '' , 20, 20, 1)";
 $required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_edit', 'garage_edit.gif', '', 20, 20, 2)";
-$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_delete', 'garage_delete.gif', '', 40, 20, 1)";
+$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_delete', 'garage_delete.gif', '', 20, 20, 1)";
 $required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_delete', 'garage_delete.gif', '' , 20, 20, 2)";
-$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_icon_garage', 'icon_miniprofile_garage.gif', '', 40, 20, 1)";
+$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_icon_garage', 'icon_miniprofile_garage.gif', '', 20, 20, 1)";
 $required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_icon_garage', 'icon_garage.gif', 'en', 20, 72, 2)";
 $required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_main_menu', 'garage_main_menu.gif', 'en', 33, 130, 2)";
 $required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_browse', 'garage_browse.gif', 'en', 33, 130, 2)";
@@ -561,27 +561,27 @@ $required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_
 $required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_insurance_review', 'garage_insurance_review.gif', 'en', 33, 130, 2)";
 $required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_create_vehicle', 'garage_new_vehicle.gif', 'en', 50, 120, 1)";
 $required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_create_vehicle', 'garage_create_vehicle.gif', 'en', 33, 130, 2)";
-$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_edit_vehicle', 'garage_edit_vehicle.gif', 'en', 50, 120, 1)";
+$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_edit_vehicle', 'garage_edit_vehicle.gif', 'en', 25, 120, 1)";
 $required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_edit_vehicle', 'garage_edit_vehicle.gif', 'en', 33, 130, 2)";
-$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_delete_vehicle', 'garage_delete_vehicle.gif', 'en', 50, 135, 1)";
+$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_delete_vehicle', 'garage_delete_vehicle.gif', 'en', 25, 135, 1)";
 $required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_delete_vehicle', 'garage_delete_vehicle.gif', 'en', 33, 130, 2)";
-$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_view_vehicle', 'garage_view_vehicle.gif', 'en', 50, 120, 1)";
+$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_view_vehicle', 'garage_view_vehicle.gif', 'en', 25, 120, 1)";
 $required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_view_vehicle', 'garage_view_vehicle.gif', 'en', 33, 130, 2)";
-$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_add_modification', 'garage_new_modification.gif', 'en', 50, 135, 1)";
+$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_add_modification', 'garage_new_modification.gif', 'en', 25, 135, 1)";
 $required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_add_modification', 'garage_add_modification.gif', 'en', 33, 130, 2)";
-$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_add_insurance', 'garage_new_premium.gif', 'en', 50, 120, 1)";
+$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_add_insurance', 'garage_new_premium.gif', 'en', 25, 120, 1)";
 $required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_add_insurance', 'garage_add_insurance.gif', 'en', 33, 130, 2)";
-$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_add_dynorun', 'garage_new_dynorun.gif', 'en', 50, 120, 1)";
+$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_add_dynorun', 'garage_new_dynorun.gif', 'en', 25, 120, 1)";
 $required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_add_dynorun', 'garage_add_dynorun.gif', 'en', 33, 130, 2)";
-$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_add_quartermile', 'garage_new_quartermile.gif', 'en', 50, 135, 1)";
+$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_add_quartermile', 'garage_new_quartermile.gif', 'en', 25, 135, 1)";
 $required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_add_quartermile', 'garage_add_quartermile.gif', 'en', 33, 130, 2)";
-$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_add_lap', 'garage_new_lap.gif', 'en', 50, 120, 1)";
+$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_add_lap', 'garage_new_lap.gif', 'en', 25, 120, 1)";
 $required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_add_lap', 'garage_add_lap.gif', 'en', 33, 130, 2)";
-$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_add_service', 'garage_new_service.gif', 'en', 50, 120, 1)";
+$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_add_service', 'garage_new_service.gif', 'en', 25, 120, 1)";
 $required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_add_service', 'garage_add_service.gif', 'en', 33, 130, 2)";
-$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_main_vehicle', 'garage_main_vehicle.gif', 'en', 50, 120, 1)";
+$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_main_vehicle', 'garage_main_vehicle.gif', 'en', 25, 120, 1)";
 $required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_main_vehicle', 'garage_main_vehicle.gif', 'en', 130, 33, 2)";
-$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_no_thumb', 'garage_no_thumb.gif', 'en', 50, 96, 1)";
+$required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_no_thumb', 'garage_no_thumb.gif', 'en', 25, 96, 1)";
 $required_sql[] = "INSERT INTO " . $table_prefix . "styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_no_thumb', 'garage_no_thumb.gif', 'en', 33, 130, 2)";
 
 $categories_sql = array();
@@ -1576,7 +1576,19 @@ switch( $mode )
 				'u_garage_remote_image',
 				'u_garage_delete_image',
 				'u_garage_deny',
-				'm_garage',
+				'm_garage_edit',
+				'm_garage_delete',
+				'm_garage_rating',
+				'm_garage_approve_vehicle',
+				'm_garage_approve_make',
+				'm_garage_approve_model',
+				'm_garage_approve_business',
+				'm_garage_approve_quartermile',
+				'm_garage_approve_dynorun',
+				'm_garage_approve_guestbook',
+				'm_garage_approve_lap',
+				'm_garage_approve_track',
+				'm_garage_approve_product',
 			 	'a_garage_setting',
 			 	'a_garage_business',
 			 	'a_garage_category',
@@ -1607,21 +1619,21 @@ switch( $mode )
 		$role = get_role_by_name('ROLE_MOD_QUEUE');
 		if ($role)
 		{
-			acl_update_role($role['role_id'], array('m_garage'));
+			acl_update_role($role['role_id'], array('m_garage_approve_vehicle', 'm_garage_approve_make', 'm_garage_approve_model', 'm_garage_approve_business', 'm_garage_approve_quartermile', 'm_garage_approve_dynorun', 'm_garage_approve_guestbook', 'm_garage_approve_lap', 'm_garage_approve_track', 'm_garage_approve_product'));
 		}
 
 		//Standard Moderator Role
 		$role = get_role_by_name('ROLE_MOD_STANDARD');
 		if ($role)
 		{
-			acl_update_role($role['role_id'], array('m_garage'));
+			acl_update_role($role['role_id'], array('m_garage_edit', 'm_garage_delete', 'm_garage_rating', 'm_garage_approve_vehicle', 'm_garage_approve_make', 'm_garage_approve_model', 'm_garage_approve_business', 'm_garage_approve_quartermile', 'm_garage_approve_dynorun', 'm_garage_approve_guestbook', 'm_garage_approve_lap', 'm_garage_approve_track', 'm_garage_approve_product'));
 		}
 	
 		//Full Moderator Role
 		$role = get_role_by_name('ROLE_MOD_FULL');
 		if ($role)
 		{
-			acl_update_role($role['role_id'], array('m_garage'));
+			acl_update_role($role['role_id'], array('m_garage_edit', 'm_garage_delete', 'm_garage_rating', 'm_garage_approve_vehicle', 'm_garage_approve_make', 'm_garage_approve_model', 'm_garage_approve_business', 'm_garage_approve_quartermile', 'm_garage_approve_dynorun', 'm_garage_approve_guestbook', 'm_garage_approve_lap', 'm_garage_approve_track', 'm_garage_approve_product'));
 		}
 
 		//Standard Features User Role
@@ -1689,16 +1701,16 @@ switch( $mode )
 		$module_data[] = array('module_basename' => 'garage_track', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_management_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_TRACK', 'module_mode' => 'track', 'module_auth' => 'acl_a_garage_track');
 
 		//Define MCP Modules
-		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_VEHICLES', 'module_mode' => 'unapproved_vehicles', 'module_auth' => 'acl_m_garage');
-		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_MAKES', 'module_mode' => 'unapproved_makes', 'module_auth' => 'acl_m_garage');
-		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_MODELS', 'module_mode' => 'unapproved_models', 'module_auth' => 'acl_m_garage');
-		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_BUSINESS', 'module_mode' => 'unapproved_business', 'module_auth' => 'acl_m_garage');
-		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_QUARTERMILES', 'module_mode' => 'unapproved_quartermiles', 'module_auth' => 'acl_m_garage');
-		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_DYNORUNS', 'module_mode' => 'unapproved_dynoruns', 'module_auth' => 'acl_m_garage');
-		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_GUESTBOOK_COMMENTS', 'module_mode' => 'unapproved_guestbook_comments', 'module_auth' => 'acl_m_garage');
-		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_LAPS', 'module_mode' => 'unapproved_laps', 'module_auth' => 'acl_m_garage');
-		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_TRACKS', 'module_mode' => 'unapproved_tracks', 'module_auth' => 'acl_m_garage');
-		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_PRODUCTS', 'module_mode' => 'unapproved_products', 'module_auth' => 'acl_m_garage');
+		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_VEHICLES', 'module_mode' => 'unapproved_vehicles', 'module_auth' => 'acl_m_garage_approve_vehicle');
+		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_MAKES', 'module_mode' => 'unapproved_makes', 'module_auth' => 'acl_m_garage_approve_make');
+		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_MODELS', 'module_mode' => 'unapproved_models', 'module_auth' => 'acl_m_garage_approve_model');
+		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_BUSINESS', 'module_mode' => 'unapproved_business', 'module_auth' => 'acl_m_garage_approve_business');
+		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_QUARTERMILES', 'module_mode' => 'unapproved_quartermiles', 'module_auth' => 'acl_m_garage_approve_quartermile');
+		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_DYNORUNS', 'module_mode' => 'unapproved_dynoruns', 'module_auth' => 'acl_m_garage_approve_dynorun');
+		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_GUESTBOOK_COMMENTS', 'module_mode' => 'unapproved_guestbook_comments', 'module_auth' => 'acl_m_garage_approve_gustbook');
+		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_LAPS', 'module_mode' => 'unapproved_laps', 'module_auth' => 'acl_m_garage_approve_lap');
+		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_TRACKS', 'module_mode' => 'unapproved_tracks', 'module_auth' => 'acl_m_garage_approve_track');
+		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $mcp_parent, 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE_UNAPPROVED_PRODUCTS', 'module_mode' => 'unapproved_products', 'module_auth' => 'acl_m_garage_approve_product');
 
 		//Define UCP Modules
 		$module_data[] = array('module_basename' => 'garage', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $ucp_parent, 'module_class' => 'ucp', 'module_langname' => 'UCP_GARAGE_OPTIONS', 'module_mode' => 'options', 'module_auth' => '');

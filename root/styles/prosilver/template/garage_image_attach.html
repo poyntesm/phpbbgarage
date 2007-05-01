@@ -21,7 +21,7 @@
 				<!-- IF S_DISPLAY_UPLOAD_IMAGE -->
 				<dl>
 					<dt class="row1" width="32%" nowrap="nowrap"><span class="gen"><b>{L_IMAGE_ATTACH}<br />{L_MAXIMUM_IMAGE_FILE_SIZE} : {MAXIMUM_IMAGE_FILE_SIZE} {L_KBYTES}<br />{L_MAXIMUM_IMAGE_RESOLUTION} : {MAXIMUM_IMAGE_RESOLUTION}</b></span></dt>
-					<dd class="row2" colspan="3"><input class="post" size="30"  type="file" size="30" name="FILE_UPLOAD"/></dd>
+					<dd class="row2" colspan="3"><input type="file" name="fileupload" id="fileupload" maxlength="{FILESIZE}" value="" class="inputbox autowidth" /></dd>
 				</dl>
 				<!-- ENDIF -->
 				<!-- IF S_DISPLAY_REPLACE_REMOTE_IMAGE -->
@@ -33,7 +33,9 @@
 				<!-- IF S_DISPLAY_REMOTE_IMAGE -->
 				<dl>
 					<dt class="row1" width="32%"><span class="gen"><b>{L_ENTER_IMAGE_URL}</b></span></dt>
-					<dd class="row2" colspan="3"><input name="url_image" type="text" class="post" size="40" maxlength="255" value="http://" /></dd>
+					<dd class="row2" colspan="3"><input name="url_image" type="text" class="inputbox medium" value="http://" /></dd>
 				</dl>
 				<!-- ENDIF -->
 				<!-- ENDIF -->
+
+
