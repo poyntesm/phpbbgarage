@@ -4,8 +4,6 @@
 	<div id="pageheader">
 		<p class="linkmcp">[ <a href="{U_MCP}">{L_MCP}</a> ]</p>
 	</div>
-
-	<br clear="all" /><br />
 <!-- ENDIF -->
 
 <!-- INCLUDE garage_header.html -->
@@ -89,61 +87,59 @@ function jumpto_garage()
 </script>
 
 <div id="garage-main">
-<div id="cp-main">
-
-<div class="panel">
-	<div class="inner"><span class="corners-top"><span></span></span>
-		<h3>{YEAR}&nbsp;{MAKE}&nbsp;{MODEL}</h3>
-		    					<!-- IF ! U_VIEW_VEHICLE -->
-		    					<tr>
-   								<dd class="row1"><span class="gen"><strong>{L_OWNER}</strong></span></td>
-		    					</tr>
-                    					<tr>
-								<td align="center">{AVATAR_IMG}<br /><span class="gen"><strong><a href="{U_PROFILE}" <!-- IF USERNAME_COLOUR --> style="color: {USERNAME_COLOUR}"<!-- ENDIF -->>{USERNAME}</a></strong></span></td>
-		   					</tr>
-							<!-- IF U_HILITE_IMAGE -->
-							<tr>
-    								<td class="row1"><span class="gen"><strong>{L_HILITE_IMAGE}</strong></span></td>
-	           					</tr>
-							<tr>
-                        					<td align="center"><a href="{U_HILITE_IMAGE}" title="{HILITE_IMAGE_TITLE}" target="_blank"><img hspace="5" vspace="5" src="{HILITE_IMAGE}" /></a><br /><span class="gensmall">{L_TOTAL_VIEWS}: {TOTAL_IMAGE_VIEWS}</span></td>
-                    					</tr>
-							<!-- ENDIF -->
-			                                <tr>
-				                        	<dd class="row1"><span class="gen"><strong>{L_DESCRIPTION}</strong></span></td>
-                                   			</tr> 
-			                                <tr>
-				                        	<td align="center"><span class="gen">{DESCRIPTION}</span></td>
-							</tr> 
-							<!-- ENDIF -->
-							<!-- IF U_MODERATE_VEHICLE -->
-							<tr>
-								<td align="center"><span class="gen"><a href="{U_MODERATE_VEHICLE}">{MODERATE_VEHICLE}</a></span></td>
-							</tr>
-							<!-- ENDIF -->
-							<!-- IF U_VIEW_VEHICLE -->
-								<dd>
-									<ul class="manage-vehicle-icons">
-									<li></li>&nbsp;
-									<!-- IF U_VIEW_VEHICLE --><li class="viewvehicle-icon"><a href="{U_VIEW_VEHICLE}" title="{L_VIEW_VEHICLE}"></a></li>&nbsp;<!-- ENDIF -->
-									<!-- IF U_EDIT_VEHICLE --><li class="editvehicle-icon"><a href="{U_EDIT_VEHICLE}" title="{L_EDIT_VEHICLE}"></a></li>&nbsp;<!-- ENDIF -->
-									<!-- IF U_DELETE_VEHICLE --><li class="deletevehicle-icon"><a href="{U_DELETE_VEHICLE}" title="{L_DELETE_VEHICLE}"></a></li>&nbsp;<!-- ENDIF -->
-									<!-- IF U_ADD_MODIFICATION --><li class="newmodification-icon"><a href="{U_ADD_MODIFICATION}" title="{L_ADD_MODIFICATION}"></a></li>&nbsp;<!-- ENDIF -->
-									<!-- IF U_ADD_INSURANCE --><li class="newpremium-icon"><a href="{U_ADD_INSURANCE}" title="{L_ADD_INSURANCE}"></a></li>&nbsp;<!-- ENDIF -->
-									<!-- IF U_ADD_QUARTERMILE --><li class="newquartermile-icon"><a href="{U_ADD_QUARTERMILE}" title="{L_ADD_QUARTERMILE}"></a></li>&nbsp;<!-- ENDIF -->
-									<!-- IF U_ADD_DYNORUN --><li class="newdynorun-icon"><a href="{U_ADD_DYNORUN}" title="{L_ADD_DYNORUN}"></a></li>&nbsp;<!-- ENDIF -->
-									<!-- IF U_ADD_LAP --><li class="newlap-icon"><a href="{U_ADD_LAP}" title="{L_ADD_LAP}"></a></li>&nbsp;<!-- ENDIF -->
-									<!-- IF U_ADD_SERVICE --><li class="newservice-icon"><a href="{U_ADD_SERVICE}" title="{L_ADD_SERVICE}"></a></li>&nbsp;<!-- ENDIF -->
-									<!-- IF U_SET_MAIN_VEHICLE --><li class="mainvehicle-icon"><a href="{U_SET_MAIN_VEHICLE}" title="{L_SET_MAIN_VEHICLE}"></a></li>&nbsp;<!-- ENDIF -->
-									</ul>
-								<dd>
-
-									<br />
-									<!-- IF U_HILITE_IMAGE -->
-									<span class="gen"><a href="{U_HILITE_IMAGE}" title="{HILITE_IMAGE_TITLE}" target="_blank"><img hspace="5" vspace="5" src="{HILITE_IMAGE}" /></a>
-									<br /></span><span class="gensmall">{L_TOTAL_VIEWS}:&nbsp;{TOTAL_IMAGE_VIEWS}</span>
-									<!-- ENDIF -->
-                        					</td>
+	<div class="panel">
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
+			<h3>{YEAR}&nbsp;{MAKE}&nbsp;{MODEL}</h3>
+		    	<!-- IF ! U_VIEW_VEHICLE -->
+		    	<tr>
+   				<dd class="row1"><span class="gen"><strong>{L_OWNER}</strong></span></td>
+		    	</tr>
+                    	<tr>
+				<td align="center">{AVATAR_IMG}<br /><span class="gen"><strong><a href="{U_PROFILE}" <!-- IF USERNAME_COLOUR --> style="color: {USERNAME_COLOUR}"<!-- ENDIF -->>{USERNAME}</a></strong></span></td>
+		   	</tr>
+			<!-- IF U_HILITE_IMAGE -->
+			<tr>
+    				<td class="row1"><span class="gen"><strong>{L_HILITE_IMAGE}</strong></span></td>
+	           	</tr>
+			<tr>
+                        	<td align="center"><a href="{U_HILITE_IMAGE}" title="{HILITE_IMAGE_TITLE}" target="_blank"><img hspace="5" vspace="5" src="{HILITE_IMAGE}" /></a><br /><span class="gensmall">{L_TOTAL_VIEWS}: {TOTAL_IMAGE_VIEWS}</span></td>
+                    	</tr>
+			<!-- ENDIF -->
+			 <tr>
+				<dd class="row1"><span class="gen"><strong>{L_DESCRIPTION}</strong></span></td>
+			</tr> 
+			<tr>
+			       	<td align="center"><span class="gen">{DESCRIPTION}</span></td>
+			</tr> 
+			<!-- ENDIF -->
+			<!-- IF U_MODERATE_VEHICLE -->
+			<tr>
+				<td align="center"><span class="gen"><a href="{U_MODERATE_VEHICLE}">{MODERATE_VEHICLE}</a></span></td>
+			</tr>
+			<!-- ENDIF -->
+			<!-- IF U_VIEW_VEHICLE -->
+			<dd>
+				<ul class="manage-vehicle-icons">
+					<li></li>&nbsp;
+					<!-- IF U_VIEW_VEHICLE --><li class="viewvehicle-icon"><a href="{U_VIEW_VEHICLE}" title="{L_VIEW_VEHICLE}"></a></li>&nbsp;<!-- ENDIF -->
+					<!-- IF U_EDIT_VEHICLE --><li class="editvehicle-icon"><a href="{U_EDIT_VEHICLE}" title="{L_EDIT_VEHICLE}"></a></li>&nbsp;<!-- ENDIF -->
+					<!-- IF U_DELETE_VEHICLE --><li class="deletevehicle-icon"><a href="{U_DELETE_VEHICLE}" title="{L_DELETE_VEHICLE}"></a></li>&nbsp;<!-- ENDIF -->
+					<!-- IF U_ADD_MODIFICATION --><li class="newmodification-icon"><a href="{U_ADD_MODIFICATION}" title="{L_ADD_MODIFICATION}"></a></li>&nbsp;<!-- ENDIF -->
+					<!-- IF U_ADD_INSURANCE --><li class="newpremium-icon"><a href="{U_ADD_INSURANCE}" title="{L_ADD_INSURANCE}"></a></li>&nbsp;<!-- ENDIF -->
+					<!-- IF U_ADD_QUARTERMILE --><li class="newquartermile-icon"><a href="{U_ADD_QUARTERMILE}" title="{L_ADD_QUARTERMILE}"></a></li>&nbsp;<!-- ENDIF -->
+					<!-- IF U_ADD_DYNORUN --><li class="newdynorun-icon"><a href="{U_ADD_DYNORUN}" title="{L_ADD_DYNORUN}"></a></li>&nbsp;<!-- ENDIF -->
+					<!-- IF U_ADD_LAP --><li class="newlap-icon"><a href="{U_ADD_LAP}" title="{L_ADD_LAP}"></a></li>&nbsp;<!-- ENDIF -->
+					<!-- IF U_ADD_SERVICE --><li class="newservice-icon"><a href="{U_ADD_SERVICE}" title="{L_ADD_SERVICE}"></a></li>&nbsp;<!-- ENDIF -->
+					<!-- IF U_SET_MAIN_VEHICLE --><li class="mainvehicle-icon"><a href="{U_SET_MAIN_VEHICLE}" title="{L_SET_MAIN_VEHICLE}"></a></li>&nbsp;<!-- ENDIF -->
+					</ul>
+			<dd>
+			<br />
+			<!-- IF U_HILITE_IMAGE -->
+			<span class="gen"><a href="{U_HILITE_IMAGE}" title="{HILITE_IMAGE_TITLE}" target="_blank"><img hspace="5" vspace="5" src="{HILITE_IMAGE}" /></a>
+			<br /></span><span class="gensmall">{L_TOTAL_VIEWS}:&nbsp;{TOTAL_IMAGE_VIEWS}</span>
+			<!-- ENDIF -->
+                   					</td>
 							<!-- ENDIF -->
             				</dl>
             				<dl>
@@ -182,378 +178,363 @@ function jumpto_garage()
                     					</tr>
 							<!-- ENDIF -->
                 			</dl>
-			<span class="corners-bottom"><span></span></span>
+				<span class="corners-bottom"><span></span></span>
+			</div>
 		</div>
-	</div>
 
-	<div class="panel">
-	<div class="inner"><span class="corners-top"><span></span></span>
-		<div id="advanced00">
-			<div id="tabs">
-				<ul>
-					<!-- IF S_DISPLAY_IMAGE_TAB --><li class="garage_preset_yes" id="tab000"><a href="#images" onclick="swap_options('0','0','0');"><span class="tabbg">{L_IMAGES}</span></a></li><!-- ENDIF -->
-					<!-- IF S_DISPLAY_MODIFICATION_TAB --><li class="garage_preset_yes" id="tab001"><a href="#modifications" onclick="swap_options('0','0','1');"><span class="tabbg">{L_MODIFICATIONS}</span></a></li><!-- ENDIF -->
-					<!-- IF S_DISPLAY_QUARTERMILE_TAB --><li class="garage_preset_yes" id="tab002"><a href="#quartermiles" onclick="swap_options('0','0','2');"><span class="tabbg">&frac14; Miles</span></a></li><!-- ENDIF -->
-					<!-- IF S_DISPLAY_DYNORUN_TAB --><li class="garage_preset_yes" id="tab003"><a href="#dynoruns" onclick="swap_options('0','0','3');"><span class="tabbg">Dynoruns</span></a></li><!-- ENDIF -->
-					<!-- IF S_DISPLAY_LAP_TAB --><li class="garage_preset_yes" id="tab004"><a href="#laps" onclick="swap_options('0','0','4');"><span class="tabbg">Laps</span></a></li><!-- ENDIF -->
-					<!-- IF S_DISPLAY_PREMIUM_TAB --><li class="garage_preset_yes" id="tab005"><a href="#premiums" onclick="swap_options('0','0','5');"><span class="tabbg">Premiums</span></a></li><!-- ENDIF -->	
-					<!-- IF S_DISPLAY_SERVICE_TAB --><li class="garage_preset_yes" id="tab006"><a href="#services" onclick="swap_options('0','0','6');"><span class="tabbg">Services</span></a></li><!-- ENDIF -->
-					<!-- IF S_DISPLAY_BLOG_TAB --><li class="garage_preset_yes" id="tab007"><a href="#blog" onclick="swap_options('0','0','7');"><span class="tabbg">Blog</span></a></li><!-- ENDIF -->
-					<!-- IF S_DISPLAY_GUESTBOOK_TAB --><li class="garage_preset_yes" id="tab008"><a href="#guestbook" onclick="swap_options('0','0','8');"><span class="tabbg">Guestbook</span></a></li>	<!-- ENDIF -->
-				</ul>
-			</div>
-
-	
-
-			<div class="garage_panel bg3" id="options000" style="display: none;">
-			<div class="tablewrap">
-				<!-- IF S_DISPLAY_GALLERIES -->
-				<div class="panel">
-					<div class="inner"><span class="corners-top"><span></span></span>
-						<!-- IF S_DISPLAY_VEHICLE_IMAGES -->
-						<h3>{L_VEHICLE_PICTURES}</h3>
-						<div class="garage-image-gallery">
-							<!-- BEGIN vehicle_image -->
-							<a href="{vehicle_image.U_IMAGE}"><img hspace="5" vspace="5" name="{vehicle_image.IMAGE_NAME}" src="{vehicle_image.IMAGE_SOURCE}" /></a>
-							<!-- END vehicle_image -->
-						</div>
-						<!-- ENDIF -->
-						<!-- IF S_DISPLAY_MODIFICATION_IMAGES -->
-						<h3>{L_MODIFICATION_PICTURES}</h3>
-						<div class="garage-image-gallery">
-							<!-- BEGIN modification_image -->
-							<a href="{modification_image.U_IMAGE}"><img hspace="5" vspace="5" name="{modification_image.IMAGE_NAME}" src="{modification_image.IMAGE_SOURCE}" /></a>
-							<!-- END modification_image -->
-						</div>
-						<!-- ENDIF -->
-						<!-- IF S_DISPLAY_QUARTERMILE_IMAGES -->
-						<h3>{L_QUARTERMILE_PICTURES}</h3>
-						<div class="garage-image-gallery">
-							<!-- BEGIN quartermile_image -->
-							<a href="{quartermile_image.U_IMAGE}"><img hspace="5" vspace="5" name="{quartermile_image.IMAGE_NAME}" src="{quartermile_image.IMAGE_SOURCE}" /></a>
-							<!-- END quartermile_image -->
-				    		</div>
-						<!-- ENDIF -->
-						<!-- IF S_DISPLAY_DYNORUN_IMAGES -->
-						<h3>{L_DYNORUN_PICTURES}</h3>
-						<div class="garage-image-gallery">
-							<!-- BEGIN dynorun_image -->
-							<a href="{dynorun_image.U_IMAGE}"><img hspace="5" vspace="5" name="{dynorun_image.IMAGE_NAME}" src="{dynorun_image.IMAGE_SOURCE}" /></a>
-							<!-- END dynorun_image -->
-						</div>
-						<!-- ENDIF -->
-						<!-- IF S_DISPLAY_LAP_IMAGES -->
-						<h3>{L_LAP_PICTURES}</h3>
-						<div class="garage-image-gallery">
-							<!-- BEGIN lap_image -->
-							<a href="{lap_image.U_IMAGE}"><img hspace="5" vspace="5" name="{lap_image.IMAGE_NAME}" src="{lap_image.IMAGE_SOURCE}" /></a>
-							<!-- END lap_image -->
-						</div>
-						<!-- ENDIF -->
-					</div><span class="corners-bottom"><span></span></span>
+		<div class="panel">
+			<div class="inner">
+				<span class="corners-top"><span></span></span>
+				<div id="tabs">
+					<ul>
+						<!-- IF S_DISPLAY_IMAGE_TAB --><li class="garage_preset_yes" id="tab000"><a href="#images" onclick="swap_options('0','0','0');"><span class="tabbg">{L_IMAGES}</span></a></li><!-- ENDIF -->
+						<!-- IF S_DISPLAY_MODIFICATION_TAB --><li class="garage_preset_yes" id="tab001"><a href="#modifications" onclick="swap_options('0','0','1');"><span class="tabbg">{L_MODIFICATIONS}</span></a></li><!-- ENDIF -->
+						<!-- IF S_DISPLAY_QUARTERMILE_TAB --><li class="garage_preset_yes" id="tab002"><a href="#quartermiles" onclick="swap_options('0','0','2');"><span class="tabbg">&frac14; Miles</span></a></li><!-- ENDIF -->
+						<!-- IF S_DISPLAY_DYNORUN_TAB --><li class="garage_preset_yes" id="tab003"><a href="#dynoruns" onclick="swap_options('0','0','3');"><span class="tabbg">Dynoruns</span></a></li><!-- ENDIF -->
+						<!-- IF S_DISPLAY_LAP_TAB --><li class="garage_preset_yes" id="tab004"><a href="#laps" onclick="swap_options('0','0','4');"><span class="tabbg">Laps</span></a></li><!-- ENDIF -->
+						<!-- IF S_DISPLAY_PREMIUM_TAB --><li class="garage_preset_yes" id="tab005"><a href="#premiums" onclick="swap_options('0','0','5');"><span class="tabbg">Premiums</span></a></li><!-- ENDIF -->	
+						<!-- IF S_DISPLAY_SERVICE_TAB --><li class="garage_preset_yes" id="tab006"><a href="#services" onclick="swap_options('0','0','6');"><span class="tabbg">Services</span></a></li><!-- ENDIF -->
+						<!-- IF S_DISPLAY_BLOG_TAB --><li class="garage_preset_yes" id="tab007"><a href="#blog" onclick="swap_options('0','0','7');"><span class="tabbg">Blog</span></a></li><!-- ENDIF -->
+						<!-- IF S_DISPLAY_GUESTBOOK_TAB --><li class="garage_preset_yes" id="tab008"><a href="#guestbook" onclick="swap_options('0','0','8');"><span class="tabbg">Guestbook</span></a></li>	<!-- ENDIF -->
+					</ul>
 				</div>
-				<!-- ENDIF -->
-			</div>
-			</div>
 
-			<div class="garage_panel" id="options001" style="display: none;">
-			<div class="tablewrap">
-				<!-- BEGIN category -->
-				<h3>{category.CATEGORY_TITLE}&nbsp;{L_MODIFICATIONS}</h3>
-				<div class="forabg">
-					<div class="inner"><span class="corners-top"><span></span></span>
-						<ul class="topiclist">
-							<li class="header">
-								<dl>
-									<dt></dt>
-									<dd>{L_MODIFICATION}</dd>
-									<dd>{L_RATING}</dd>
-									<dd>{L_COST}</dd>
-									<dd>{L_INSTALL}</dd>
-									<dd>{L_CREATED}</dd>
-									<dd>{L_UPDATED}</dd>
-									<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd></dd><!-- ENDIF -->
-								</dl>
-							</li>
-						</ul>
-						<ul class="topiclist topics">
-							<!-- BEGIN modification -->
-							<!-- IF modification.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
-								<dl>
-									<dt><!-- IF category.modification.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{category.modification.U_IMAGE}"></a></div></div><!-- ENDIF --></dt>
-									<dd>{category.modification.MODIFICATION}</dd>
-									<dd>{category.modification.RATING}</dd>
-									<dd>{category.modification.COST}</dd>
-									<dd>{category.modification.INSTALL}</dd>
-									<dd>{category.modification.CREATED}</dd>
-									<dd>{category.modification.UPDATED}</dd>
-									<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd><!-- IF category.modification.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{category.modification.U_EDIT}"></a></div></div><!-- ENDIF -->&nbsp;<!-- IF category.modification.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{category.modification.U_DELETE}"></a></div></div><!-- ENDIF --></dd><!-- ENDIF -->
-								</dl>
-							</li>
-							<!-- END modification -->
-						</ul>
-					</div><span class="corners-bottom"><span></span></span>
-				</div>
-				<!-- END category -->
-			</div>
-			</div>
+				<div class="panel bg3">
+					<div class="inner">
+						<span class="corners-top"><span></span></span>
+
+						<div id="options000" style="display: none;">
+							<!-- IF S_DISPLAY_GALLERIES -->
+							<div class="panel">
+								<div class="inner">
+									<span class="corners-top"><span></span></span>
+									<!-- IF S_DISPLAY_VEHICLE_IMAGES -->
+									<h3>{L_VEHICLE_PICTURES}</h3>
+									<div class="garage-image-gallery">
+										<!-- BEGIN vehicle_image -->
+										<a href="{vehicle_image.U_IMAGE}"><img hspace="5" vspace="5" name="{vehicle_image.IMAGE_NAME}" src="{vehicle_image.IMAGE_SOURCE}" /></a>
+										<!-- END vehicle_image -->
+									</div>
+									<!-- ENDIF -->
+									<!-- IF S_DISPLAY_MODIFICATION_IMAGES -->
+									<h3>{L_MODIFICATION_PICTURES}</h3>
+									<div class="garage-image-gallery">
+										<!-- BEGIN modification_image -->
+										<a href="{modification_image.U_IMAGE}"><img hspace="5" vspace="5" name="{modification_image.IMAGE_NAME}" src="{modification_image.IMAGE_SOURCE}" /></a>
+										<!-- END modification_image -->
+									</div>
+									<!-- ENDIF -->
+									<!-- IF S_DISPLAY_QUARTERMILE_IMAGES -->
+									<h3>{L_QUARTERMILE_PICTURES}</h3>
+									<div class="garage-image-gallery">
+										<!-- BEGIN quartermile_image -->
+										<a href="{quartermile_image.U_IMAGE}"><img hspace="5" vspace="5" name="{quartermile_image.IMAGE_NAME}" src="{quartermile_image.IMAGE_SOURCE}" /></a>
+										<!-- END quartermile_image -->
+							    		</div>
+									<!-- ENDIF -->
+									<!-- IF S_DISPLAY_DYNORUN_IMAGES -->
+									<h3>{L_DYNORUN_PICTURES}</h3>
+									<div class="garage-image-gallery">
+										<!-- BEGIN dynorun_image -->
+										<a href="{dynorun_image.U_IMAGE}"><img hspace="5" vspace="5" name="{dynorun_image.IMAGE_NAME}" src="{dynorun_image.IMAGE_SOURCE}" /></a>
+										<!-- END dynorun_image -->
+									</div>
+									<!-- ENDIF -->
+									<!-- IF S_DISPLAY_LAP_IMAGES -->
+									<h3>{L_LAP_PICTURES}</h3>
+									<div class="garage-image-gallery">
+										<!-- BEGIN lap_image -->
+										<a href="{lap_image.U_IMAGE}"><img hspace="5" vspace="5" name="{lap_image.IMAGE_NAME}" src="{lap_image.IMAGE_SOURCE}" /></a>
+										<!-- END lap_image -->
+									</div>
+									<!-- ENDIF -->
+									<span class="corners-bottom"><span></span></span>
+								</div>
+							</div>
+							<!-- ENDIF -->
+						</div>
+
+						<div id="options001" style="display: none;">
+							<!-- BEGIN category -->
+							<h3>{category.CATEGORY_TITLE}&nbsp;{L_MODIFICATIONS}</h3>
+							<div class="forabg">
+								<div class="inner">
+									<span class="corners-top"><span></span></span>
+									<ul class="topiclist">
+										<li class="header">
+											<dl>
+												<dt></dt>
+												<dd>{L_MODIFICATION}</dd>
+												<dd>{L_RATING}</dd>
+												<dd>{L_COST}</dd>
+												<dd>{L_INSTALL}</dd>
+												<dd>{L_CREATED}</dd>
+												<dd>{L_UPDATED}</dd>
+												<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd></dd><!-- ENDIF -->
+											</dl>
+										</li>
+									</ul>
+									<ul class="topiclist topics">
+										<!-- BEGIN modification -->
+										<!-- IF modification.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
+											<dl>
+												<dt><!-- IF category.modification.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{category.modification.U_IMAGE}"></a></div></div><!-- ENDIF --></dt>
+												<dd>{category.modification.MODIFICATION}</dd>
+												<dd>{category.modification.RATING}</dd>
+												<dd>{category.modification.COST}</dd>
+												<dd>{category.modification.INSTALL}</dd>
+												<dd>{category.modification.CREATED}</dd>
+												<dd>{category.modification.UPDATED}</dd>
+												<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd><!-- IF category.modification.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{category.modification.U_EDIT}"></a></div></div><!-- ENDIF -->&nbsp;<!-- IF category.modification.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{category.modification.U_DELETE}"></a></div></div><!-- ENDIF --></dd><!-- ENDIF -->
+											</dl>
+										</li>
+										<!-- END modification -->
+									</ul>
+									<span class="corners-bottom"><span></span></span>
+								</div>
+							</div>
+							<!-- END category -->
+						</div>
 			
-			<div class="garage_panel" id="options002" style="display: none;">
-			<div class="tablewrap">
-				<!-- BEGIN quartermile -->
-				<h3>{L_QUARTER_MILE_TIMES}</h3>
-				<div class="forabg">
-					<div class="inner"><span class="corners-top"><span></span></span>
-						<ul class="topiclist">
-							<li class="header">
-								<dl>
-									<dt></dt>
-									<dd>{L_RT}</dd>
-									<dd>{L_SIXTY}</dd>
-									<dd>{L_THREE}</dd>
-									<dd>{L_EIGHTH}</dd>
-									<dd>{L_EIGHTHMPH}</dd>
-									<dd>{L_THOU}</dd>
-									<dd>{L_QUART}</dd>
-									<dd>{L_QUARTMPH}</dd>
-									<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd></dd><!-- ENDIF -->
-								</dl>
-							</li>
-						</ul>
-						<ul class="topiclist topics">
-							<!-- BEGIN run -->
-							<!-- IF run.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
-								<dl>
-									<dt><!-- IF quartermile.run.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{quartermile.run.U_IMAGE}"></a></div></div><!-- ENDIF --></dt>
-						  			<dd>{quartermile.run.RT}</dd>
-						  			<dd>{quartermile.run.SIXTY}</dd>
-									<dd>{quartermile.run.THREE}</dd>
-									<dd>{quartermile.run.EIGHTH}</dd>
-									<dd>{quartermile.run.EIGHTHMPH}</dd>
-									<dd>{quartermile.run.THOU}</dd>
-									<dd><a href="{quartermile.run.U_QUART}">{quartermile.run.QUART}</a></dd>
-									<dd>{quartermile.run.QUARTMPH}</dd>
-									<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd><!-- IF quartermile.run.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{quartermile.run.U_EDIT}"></a></div></div><!-- ENDIF -->&nbsp;<!-- IF quartermile.run.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{quartermile.run.U_DELETE}"></a></div></div><!-- ENDIF --></dd><!-- ENDIF -->
-								</dl>
-							</li>
-							<!-- END run -->
-						</ul>
-					</div><span class="corners-bottom"><span></span></span>
-				</div>
-				<!-- END quartermile -->
-			</div>
-			</div>
+						<div id="options002" style="display: none;">
+							<!-- BEGIN quartermile -->
+							<h3>{L_QUARTER_MILE_TIMES}</h3>
+							<div class="forabg">
+								<div class="inner"><span class="corners-top"><span></span></span>
+									<ul class="topiclist">
+										<li class="header">
+											<dl>
+												<dt></dt>
+												<dd>{L_RT}</dd>
+												<dd>{L_SIXTY}</dd>
+												<dd>{L_THREE}</dd>
+												<dd>{L_EIGHTH}</dd>
+												<dd>{L_EIGHTHMPH}</dd>
+												<dd>{L_THOU}</dd>
+												<dd>{L_QUART}</dd>
+												<dd>{L_QUARTMPH}</dd>
+												<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd></dd><!-- ENDIF -->
+											</dl>
+										</li>
+									</ul>
+									<ul class="topiclist topics">
+										<!-- BEGIN run -->
+										<!-- IF run.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
+											<dl>
+												<dt><!-- IF quartermile.run.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{quartermile.run.U_IMAGE}"></a></div></div><!-- ENDIF --></dt>
+									  			<dd>{quartermile.run.RT}</dd>
+									  			<dd>{quartermile.run.SIXTY}</dd>
+												<dd>{quartermile.run.THREE}</dd>
+												<dd>{quartermile.run.EIGHTH}</dd>
+												<dd>{quartermile.run.EIGHTHMPH}</dd>
+												<dd>{quartermile.run.THOU}</dd>
+												<dd><a href="{quartermile.run.U_QUART}">{quartermile.run.QUART}</a></dd>
+												<dd>{quartermile.run.QUARTMPH}</dd>
+												<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd><!-- IF quartermile.run.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{quartermile.run.U_EDIT}"></a></div></div><!-- ENDIF -->&nbsp;<!-- IF quartermile.run.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{quartermile.run.U_DELETE}"></a></div></div><!-- ENDIF --></dd><!-- ENDIF -->
+											</dl>
+										</li>
+										<!-- END run -->
+									</ul>
+								</div><span class="corners-bottom"><span></span></span>
+							</div>
+							<!-- END quartermile -->
+						</div>
 
-			<div class="garage_panel" id="options003" style="display: none;">
-			<div class="tablewrap">
-				<!-- BEGIN dynorun -->
-				<h3>{L_DYNORUNS}</h3>
-				<div class="forabg">
-					<div class="inner"><span class="corners-top"><span></span></span>
-						<ul class="topiclist">
-							<li class="header">
-								<dl>
-									<dt></dt>
-									<dd>{L_DYNOCENTRE}</dd>
-									<dd>{L_BHP}</dd>
-									<dd>{L_BHP_UNIT}</dd>
-									<dd>{L_TORQUE}</dd>
-									<dd>{L_TORQUE_UNIT}</dd>
-									<dd>{L_BOOST}</dd>
-									<dd>{L_BOOST_UNIT}</dd>
-									<dd>{L_NITROUS}</dd>
-									<dd>{L_PEAKPOINT}</dd>
-									<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd></dd><!-- ENDIF -->
-								</dl>
-							</li>
-						</ul>
-						<ul class="topiclist topics">
-							<!-- BEGIN run -->
-							<!-- IF run.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
-								<dl>
-									<dt><!-- IF dynorun.run.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{dynorun.run.U_IMAGE}"></a></div></div><!-- ENDIF --></dt>
-									<dd>{dynorun.run.DYNOCENTER}</dd>
-									<dd><a href="{dynorun.run.U_BHP}">{dynorun.run.BHP}</a></dd>
-									<dd>{dynorun.run.BHP_UNIT}</dd>
-									<dd>{dynorun.run.TORQUE}</dd>
-									<dd>{dynorun.run.TORQUE_UNIT}</dd>				
-									<dd>{dynorun.run.BOOST}</dd>
-									<dd>{dynorun.run.BOOST_UNIT}</dd>
-									<dd>{dynorun.run.NITROUS}</dd>
-									<dd>{dynorun.run.PEAKPOINT}</dd>
-									<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd><!-- IF dynorun.run.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{dynorun.run.U_EDIT}"></a></div></div><!-- ENDIF -->&nbsp;<!-- IF dynorun.run.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{dynorun.run.U_DELETE}"></a></div></div><!-- ENDIF --></dd><!-- ENDIF -->
-								</dl>
-							</li>
-							<!-- END run -->
-						</ul>
-					</div><span class="corners-bottom"><span></span></span>
-				</div>
-				<!-- END dynorun -->
-			</div>
-			</div>
+						<div id="options003" style="display: none;">
+							<!-- BEGIN dynorun -->
+							<h3>{L_DYNORUNS}</h3>
+							<div class="forabg">
+								<div class="inner"><span class="corners-top"><span></span></span>
+									<ul class="topiclist">
+										<li class="header">
+											<dl>
+												<dt></dt>
+												<dd>{L_DYNOCENTRE}</dd>
+												<dd>{L_BHP}</dd>
+												<dd>{L_BHP_UNIT}</dd>
+												<dd>{L_TORQUE}</dd>
+												<dd>{L_TORQUE_UNIT}</dd>
+												<dd>{L_BOOST}</dd>
+												<dd>{L_BOOST_UNIT}</dd>
+												<dd>{L_NITROUS}</dd>
+												<dd>{L_PEAKPOINT}</dd>
+												<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd></dd><!-- ENDIF -->
+											</dl>
+										</li>
+									</ul>
+									<ul class="topiclist topics">
+										<!-- BEGIN run -->
+										<!-- IF run.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
+											<dl>
+												<dt><!-- IF dynorun.run.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{dynorun.run.U_IMAGE}"></a></div></div><!-- ENDIF --></dt>
+												<dd>{dynorun.run.DYNOCENTER}</dd>
+												<dd><a href="{dynorun.run.U_BHP}">{dynorun.run.BHP}</a></dd>
+												<dd>{dynorun.run.BHP_UNIT}</dd>
+												<dd>{dynorun.run.TORQUE}</dd>
+												<dd>{dynorun.run.TORQUE_UNIT}</dd>				
+												<dd>{dynorun.run.BOOST}</dd>
+												<dd>{dynorun.run.BOOST_UNIT}</dd>
+												<dd>{dynorun.run.NITROUS}</dd>
+												<dd>{dynorun.run.PEAKPOINT}</dd>
+												<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd><!-- IF dynorun.run.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{dynorun.run.U_EDIT}"></a></div></div><!-- ENDIF -->&nbsp;<!-- IF dynorun.run.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{dynorun.run.U_DELETE}"></a></div></div><!-- ENDIF --></dd><!-- ENDIF -->
+											</dl>
+										</li>
+										<!-- END run -->
+									</ul>
+								</div><span class="corners-bottom"><span></span></span>
+							</div>
+							<!-- END dynorun -->
+						</div>
 
-			<div class="garage_panel" id="options004" style="display: none;">
-			<div class="tablewrap">
-				<!-- BEGIN tracktime -->
-				<h3>{L_LAPS}</h3>
-				<div class="forabg">
-					<div class="inner"><span class="corners-top"><span></span></span>
-						<ul class="topiclist">
-							<li class="header">
-								<dl>
-									<dt></dt>
-									<dd>{L_TRACK}</dd>
-									<dd>{L_CONDITION}</dd>
-									<dd>{L_TYPE}</dd>
-									<dd>{L_TIME}&nbsp;<span class="gensmall">(M:S:MS)</span></dd>
-									<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd></dd><!-- ENDIF -->
-								</dl>
-							</li>
-						</ul>
-						<ul class="topiclist topics">
-							<!-- BEGIN lap -->
-							<!-- IF lap.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
-								<dl>
-									<dt><!-- IF tracktime.lap.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{tracktime.lap.U_IMAGE}"></a></div></div><!-- ENDIF --></td>
-									<dd><a href="{tracktime.lap.U_TRACK}">{tracktime.lap.TRACK}</a></dd>
-									<dd>{tracktime.lap.CONDITION}</dd>
-									<dd>{tracktime.lap.TYPE}</dd>
-									<dd><a href="{tracktime.lap.U_LAP}">{tracktime.lap.MINUTE}.{tracktime.lap.SECOND}.{tracktime.lap.MILLISECOND}</a></dd>
-									<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd><!-- IF tracktime.lap.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{tracktime.lap.U_EDIT}"></a></div></div><!-- ENDIF -->&nbsp;<!-- IF tracktime.lap.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{tracktime.lap.U_DELETE}"></a></div></div><!-- ENDIF --></dd><!-- ENDIF -->
-								</dl>
-							</li>
-							<!-- END lap -->
-						</ul>
-					</div><span class="corners-bottom"><span></span></span>
-				</div>
-			<!-- END tracktime -->
-			</div>
-			</div>
+						<div id="options004" style="display: none;">
+							<!-- BEGIN tracktime -->
+							<h3>{L_LAPS}</h3>
+							<div class="forabg">
+								<div class="inner"><span class="corners-top"><span></span></span>
+									<ul class="topiclist">
+										<li class="header">
+											<dl>
+												<dt></dt>
+												<dd>{L_TRACK}</dd>
+												<dd>{L_CONDITION}</dd>
+												<dd>{L_TYPE}</dd>
+												<dd>{L_TIME}&nbsp;<span class="gensmall">(M:S:MS)</span></dd>
+												<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd></dd><!-- ENDIF -->
+											</dl>
+										</li>
+									</ul>
+									<ul class="topiclist topics">
+										<!-- BEGIN lap -->
+										<!-- IF lap.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
+											<dl>
+												<dt><!-- IF tracktime.lap.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{tracktime.lap.U_IMAGE}"></a></div></div><!-- ENDIF --></td>
+												<dd><a href="{tracktime.lap.U_TRACK}">{tracktime.lap.TRACK}</a></dd>
+												<dd>{tracktime.lap.CONDITION}</dd>
+												<dd>{tracktime.lap.TYPE}</dd>
+												<dd><a href="{tracktime.lap.U_LAP}">{tracktime.lap.MINUTE}.{tracktime.lap.SECOND}.{tracktime.lap.MILLISECOND}</a></dd>
+												<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd><!-- IF tracktime.lap.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{tracktime.lap.U_EDIT}"></a></div></div><!-- ENDIF -->&nbsp;<!-- IF tracktime.lap.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{tracktime.lap.U_DELETE}"></a></div></div><!-- ENDIF --></dd><!-- ENDIF -->
+											</dl>
+										</li>
+										<!-- END lap -->
+									</ul>
+								</div><span class="corners-bottom"><span></span></span>
+							</div>
+							<!-- END tracktime -->
+						</div>
 
-			<div class="garage_panel" id="options005" style="display: none;">
-			<div class="tablewrap">
-				<!-- BEGIN insurance -->
-				<h3>{L_INSURANCE_PREMIUMS}</h3>
-				<div class="forabg">
-					<div class="inner"><span class="corners-top"><span></span></span>
-						<ul class="topiclist">
-							<li class="header">
+						<div id="options005" style="display: none;">
+							<!-- BEGIN insurance -->
+							<h3>{L_INSURANCE_PREMIUMS}</h3>
+							<div class="forabg">
+								<div class="inner"><span class="corners-top"><span></span></span>
+									<ul class="topiclist">
+										<li class="header">
+											<dl>
+												<dt>{L_INSURANCE_COMPANY}</dt>
+												<dd>{L_PREMIUM}</dd>
+												<dd>{L_COVER_TYPE}</dd>
+												<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd></dd><!-- ENDIF -->
+											</dl>
+										</li>
+									</ul>
+									<ul class="topiclist topics">
+										<!-- BEGIN premium -->
+										<!-- IF premium.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
+											<dl>
+												<dt><a href="{insurance.premium.U_INSURER}">{insurance.premium.INSURER}</a></dt>
+								  				<dd>{insurance.premium.PREMIUM}</dd>
+												<dd>{insurance.premium.COVER_TYPE}</dd>
+												<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd><!-- IF insurance.premium.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{insurance.premium.U_EDIT}"></a></div><div><!-- ENDIF -->&nbsp;<!-- IF insurance.premium.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{insurance.premium.U_DELETE}"></a></div></div><!-- ENDIF --></dd><!-- ENDIF -->
+											</dl>
+										</li>
+										<!-- END premium -->
+									</ul>
+								</div><span class="corners-bottom"><span></span></span>
+							</div>
+							<!-- END insurance -->
+						</div>
+
+						<div id="options006" style="display: none;">
+							<!-- BEGIN service_history -->
+							<h3>{L_SERVICE_HISTORY}</h3>
+							<div class="forabg">
+								<div class="inner"><span class="corners-top"><span></span></span>
+									<ul class="topiclist">
+										<li class="header">
+											<dl>
+												<dt>{L_GARAGE}</dt>
+												<dd>{L_TYPE}</dd>
+												<dd>{L_COST}</dd>
+												<dd>{L_RATING}</dd>
+												<dd>{L_MILEAGE}</dd>
+												<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd></dd><!-- ENDIF -->
+											</dl>
+										</li>
+									</ul>
+									<ul class="topiclist topics">
+										<!-- BEGIN service -->
+										<!-- IF service.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
+											<dl>
+												<dt><a href="{service_history.service.U_GARAGE}">{service_history.service.TITLE}</a></dt>
+	  											<dd>{service_history.service.TYPE}</dd>
+												<dd>{service_history.service.PRICE}</dd>
+												<dd>{service_history.service.RATING}</dd>
+												<dd>{service_history.service.MILEAGE}</dd>
+												<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd><!-- IF service_history.service.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{service_history.service.U_EDIT}"></a></div></div><!-- ENDIF -->&nbsp;<!-- IF service_history.service.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{service_history.service.U_DELETE}"></a></div></div><!-- ENDIF --></span></dt><!-- ENDIF -->
+											</dl>
+										</li>
+										<!-- END service -->
+									</ul>
+								</div><span class="corners-bottom"><span></span></span>
+							</div>
+							<!-- END service_history -->
+						</div>
+
+						<div id="options007" style="display: none;">
+							<!-- BEGIN blog -->
+							<form method="post" name="guestbook" action="{S_MODE_BLOG_ACTION}">
+								<!-- IF S_DISPLAY_ENTRY_BLOG -->
+								<h3>{L_ADD_BLOG}</h3>
 								<dl>
-									<dt>{L_INSURANCE_COMPANY}</dt>
-									<dd>{L_PREMIUM}</dd>
-									<dd>{L_COVER_TYPE}</dd>
-									<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd></dd><!-- ENDIF -->
+									<dt>{L_BLOG_HEADER}</dt>
+									<dd><input name="blog_title" type="text" class="post" size="60" value="{}" /></dd>
 								</dl>
-							</li>
-						</ul>
-						<ul class="topiclist topics">
-							<!-- BEGIN premium -->
-							<!-- IF premium.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 								<dl>
-									<dt><a href="{insurance.premium.U_INSURER}">{insurance.premium.INSURER}</a></dt>
-					  				<dd>{insurance.premium.PREMIUM}</dd>
-									<dd>{insurance.premium.COVER_TYPE}</dd>
-									<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd><!-- IF insurance.premium.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{insurance.premium.U_EDIT}"></a></div><div><!-- ENDIF -->&nbsp;<!-- IF insurance.premium.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{insurance.premium.U_DELETE}"></a></div></div><!-- ENDIF --></dd><!-- ENDIF -->
+									<dt>{L_ADD_BLOG}</dt>
+									<dd><textarea name="blog_text" cols="70" rows="6" wrap="soft" class="post">{}</textarea></dd>
 								</dl>
-							</li>
-							<!-- END premium -->
-						</ul>
-					</div><span class="corners-bottom"><span></span></span>
-				</div>
-			<!-- END insurance -->
-			</div>
-			</div>
 
-			<div class="garage_panel" id="options006" style="display: none;">
-			<div class="tablewrap">
-				<!-- BEGIN service_history -->
-				<h3>{L_SERVICE_HISTORY}</h3>
-				<div class="forabg">
-					<div class="inner"><span class="corners-top"><span></span></span>
-						<ul class="topiclist">
-							<li class="header">
+								<fieldset>
+									<input type="hidden" value="{VID}" name="VID" />
+								</fieldset>
+
+								<fieldset class="submit-buttons">
+									<input type="submit" name="submit" value="{L_ADD_BLOG}" class="button1" />
+								</fieldset>
+								<!-- ENDIF -->
+
+								<!-- BEGIN entry -->
 								<dl>
-									<dt>{L_GARAGE}</dt>
-									<dd>{L_TYPE}</dd>
-									<dd>{L_COST}</dd>
-									<dd>{L_RATING}</dd>
-									<dd>{L_MILEAGE}</dd>
-									<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd></dd><!-- ENDIF -->
+									<dd><h3>{blog.entry.BLOG_TITLE}</h3>{blog.entry.BLOG_DATE}<br /><br />{blog.entry.BLOG_TEXT}</td>
 								</dl>
-							</li>
-						</ul>
-						<ul class="topiclist topics">
-							<!-- BEGIN service -->
-							<!-- IF service.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
+								<!-- BEGINELSE -->
 								<dl>
-									<dt><a href="{service_history.service.U_GARAGE}">{service_history.service.TITLE}</a></dt>
-	  								<dd>{service_history.service.TYPE}</dd>
-									<dd>{service_history.service.PRICE}</dd>
-									<dd>{service_history.service.RATING}</dd>
-									<dd>{service_history.service.MILEAGE}</dd>
-									<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd><!-- IF service_history.service.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{service_history.service.U_EDIT}"></a></div></div><!-- ENDIF -->&nbsp;<!-- IF service_history.service.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{service_history.service.U_DELETE}"></a></div></div><!-- ENDIF --></span></dt><!-- ENDIF -->
+									<dd>{L_ADD_FIRST_BLOG}</td>
 								</dl>
-							</li>
-							<!-- END service -->
-						</ul>
-					</div><span class="corners-bottom"><span></span></span>
-				</div>
-			<!-- END service_history -->
-			</div>
-			</div>
+								<!-- END entry -->
+							</form>
 
-			<div class="garage_panel" id="options007" style="display: none;">
-			<div class="tablewrap">
-			<!-- BEGIN blog -->
-			<form method="post" name="guestbook" action="{S_MODE_BLOG_ACTION}">
-			<table width="100%" cellspacing="1" cellpadding="3" border="0" class="tablebg">
-				<tr>
-					<th height="25" nowrap="nowrap" colspan="5">{L_BLOG}</th>
-				</tr>
-				<!-- IF S_DISPLAY_ENTRY_BLOG -->
-				<tr>
-					<td class="cat" align="center" height="28" colspan="5"><span class="gen">{L_ADD_BLOG}</span></td>
-				</tr>
-				<tr>
-					<td class="row1" width="20%"><span class="gen">{L_BLOG_HEADER}</span></td>
-					<td class="row2" colspan="1"><input name="blog_title" type="text" class="post" size="60" value="{}" /></td>
-				</tr>
-				<tr>
-					<td class="row1" width="20%"><span class="gen">{L_ADD_BLOG}</span></td>
-					<td class="row2" colspan="1"><textarea name="blog_text" cols="70" rows="6" wrap="soft" class="post">{}</textarea></td>
-				</tr>
-				<tr>
-					<td class="cat" align="center" height="28" colspan="5"><input type="hidden" value="{VID}" name="VID" /><input name="submit" type="submit" class="liteoption" value="{L_ADD_BLOG}"/></td>
-				</tr>
-				<!-- ENDIF -->
-				<!-- BEGIN entry -->
-				<tr>
-					<td class="row1" colspan="2"><h3>{blog.entry.BLOG_TITLE}</h3>{blog.entry.BLOG_DATE}<br /><br />{blog.entry.BLOG_TEXT}</td>
-				</tr>
-				<!-- BEGINELSE -->
-				<tr>
-					<td class="row1" align="center" height="28" colspan="5"><span class="gen">{L_ADD_FIRST_BLOG}</span></td>
-				</tr>
-				<!-- END entry -->
-			</table>
+							<!-- IF PAGINATION or TOTAL_BUSINESS -->
+							<div class="pagination">
+								{TOTAL_BUSINESS}
+								<!-- IF PAGE_NUMBER --><!-- IF PAGINATION --> &bull; <a href="#" onclick="jumpto(); return false;" title="{L_JUMP_TO_PAGE}">{PAGE_NUMBER}</a> &bull; <span>{PAGINATION}</span><!-- ELSE --> &bull; {PAGE_NUMBER}<!-- ENDIF --><!-- ENDIF -->
+							</div>
+							<!-- ENDIF -->
 
-			<table width="100%" cellspacing="1">
-			<tr>
-				<!-- IF TOTAL_BLOGS -->
-					<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
-					<td class="gensmall" nowrap="nowrap">&nbsp;[ {TOTAL_BLOGS} ]&nbsp;</td>
-					<td class="gensmall" width="100%" align="right" nowrap="nowrap"><!-- INCLUDE garage_pagination.html --></td>
-				<!-- ENDIF -->
-			</tr>
-			</table>
+							<!-- END blog -->
+						</div>
 
-			</form>
-			<!-- END blog -->
-			</div>
-			</div>
-
-			<div class="garage_panel" id="options008" style="display: none;">
-			<div class="tablewrap">
+			<div id="options008" style="display: none;">
 			<!-- BEGIN guestbook -->
 			<form method="post" name="guestbook" action="{S_MODE_GUESTBOOK_ACTION}">
 			<table width="100%" cellspacing="1" cellpadding="3" border="0" class="tablebg">
@@ -698,12 +679,12 @@ function jumpto_garage()
 
 			</form>
 			<!-- END guestbook -->
+					</div>
 			</div>
-			</div>
-		
-			</div>
+			<span class="corners-bottom"><span></span></span>
 		</div>
-	<span class="corners-bottom"><span></span></span>
+		<span class="corners-bottom"><span></span></span>
+	</div>
 </div>
 
 <script type="text/javascript">

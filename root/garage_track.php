@@ -56,9 +56,12 @@ $template->assign_block_vars('navlinks', array(
 /**
 * Display the moderator control panel link if authorised
 */
-$template->assign_vars(array(
-	'U_MCP'	=> ($auth->acl_get('m_garage')) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=garage', true, $user->session_id) : '')
-);
+if ($garage->mcp_access())
+{
+	$template->assign_vars(array(
+		'U_MCP'	=> append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=garage', true, $user->session_id),
+	));
+}
 
 /**
 * Perform a set action based on value for $mode

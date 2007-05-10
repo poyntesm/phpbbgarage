@@ -69,9 +69,12 @@ $template->assign_block_vars('navlinks', array(
 /**
 * Display the moderator control panel link if authorised
 */
-$template->assign_vars(array(
-	'U_MCP'	=> ($auth->acl_get('m_garage')) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=garage', true, $user->session_id) : '')
-);
+if ($garage->mcp_access())
+{
+	$template->assign_vars(array(
+		'U_MCP'	=> append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=garage', true, $user->session_id),
+	));
+}
 
 /**
 * Perform a set action based on value for $mode
@@ -305,9 +308,9 @@ switch( $mode )
 		for ($i = 0, $count = sizeof($gallery_data);$i < $count; $i++)
 		{
 			$template->assign_block_vars('pic_row', array(
-				'U_IMAGE'	=> (($gallery_data[$i]['attach_id']) AND ($data[$i]['attach_is_image']) AND (!empty($gallery_data[$i]['attach_thumb_location'])) AND (!empty($gallery_data[$i]['attach_location']))) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_image&amp;image_id=" . $gallery_data[$i]['attach_id']) : '',
+				'U_IMAGE'	=> (($gallery_data[$i]['attach_id']) AND ($gallery_data[$i]['attach_is_image']) AND (!empty($gallery_data[$i]['attach_thumb_location'])) AND (!empty($gallery_data[$i]['attach_location']))) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_image&amp;image_id=" . $gallery_data[$i]['attach_id']) : '',
 				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=remove_vehicle_image&amp;&amp;VID=$vid&amp;image_id=" . $gallery_data[$i]['attach_id']),
-				'U_SET_HILITE'	=> ($data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=set_vehicle_hilite&amp;image_id=" . $gallery_data[$i]['attach_id'] . "&amp;VID=$vid") : '',
+				'U_SET_HILITE'	=> ($gallery_data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=set_vehicle_hilite&amp;image_id=" . $gallery_data[$i]['attach_id'] . "&amp;VID=$vid") : '',
 				'IMAGE' 	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $gallery_data[$i]['attach_thumb_location'],
 				'IMAGE_TITLE' 	=> $gallery_data[$i]['attach_file'])
 			);
@@ -412,6 +415,35 @@ switch( $mode )
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_view_vehicle.html')
+		);
+		$garage_vehicle->display_vehicle('NO');
+		$garage_template->sidemenu();
+
+		/**
+		* Handle template declarations & assignments
+		*/
+		$garage->update_view_count(GARAGE_VEHICLES_TABLE, 'views', 'id', $vid);
+	break;
+
+	/**
+	* Display page to view vehicle
+	*/
+	case 'test':
+		/**
+		* Check authorisation to perform action, redirecting to error screen if not
+		*/
+		if (!$auth->acl_get('u_garage_browse'))
+		{
+			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=15"));
+		}
+
+		/**
+		* Handle template declarations & assignments
+		*/
+		page_header($user->lang['GARAGE']);
+		$template->set_filenames(array(
+			'header' => 'garage_header.html',
+			'body'   => 'garage_test.html')
 		);
 		$garage_vehicle->display_vehicle('NO');
 		$garage_template->sidemenu();
@@ -662,7 +694,7 @@ switch( $mode )
 		/**
 		* Check authorisation to perform action, redirecting to error screen if not
 		*/
-		if (!$auth->acl_get('m_garage_reset_rating'))
+		if (!$auth->acl_get('m_garage_rating'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=17"));
 		}
@@ -699,7 +731,7 @@ switch( $mode )
 		/**
 		* Check authorisation to perform action, redirecting to error screen if not
 		*/
-		if (!$auth->acl_get('m_garage'))
+		if (!$auth->acl_get('m_garage_rating'))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=17"));
 		}

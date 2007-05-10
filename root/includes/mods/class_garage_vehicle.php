@@ -433,7 +433,7 @@ class garage_vehicle
 	}
 
 	/**
-	* Check user owns vehicle or is allowed moderate
+	* Check user owns vehicle or has moderate permissions
 	*
 	* @param int $vid vehicle id to check ownership for
 	*
@@ -442,7 +442,7 @@ class garage_vehicle
 	{
 		global $user, $auth;
 
-	 	if ($auth->acl_get('m_garage'))
+	 	if ($auth->acl_get('m_garage_edit')||$auth->acl_get('m_garage_delete'))
 		{
 			return;
 		}

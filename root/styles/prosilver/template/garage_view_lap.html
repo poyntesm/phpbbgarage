@@ -4,8 +4,6 @@
 	<div id="pageheader">
 		<p class="linkmcp">[ <a href="{U_MCP}">{L_MCP}</a> ]</p>
 	</div>
-
-	<br clear="all" /><br />
 <!-- ENDIF -->
 
 <!-- INCLUDE garage_header.html -->
@@ -13,74 +11,53 @@
 <!-- INCLUDE garage_menu.html -->
 
 <div id="garage-main">
-<div id="cp-main">
 
 <div class="panel">
 	<div class="inner"><span class="corners-top"><span></span></span>
-			<table cellpadding="4" cellspacing="1" border="0" width="100%" class="tablebg">
-			<thead>
-     				<tr>
-      					<th height="25" colspan="2">{YEAR} {MAKE} {MODEL}</th>
-				</tr>
-			</thead>
-			<tbody>
-        			<tr>
-            				<td class="row1" width="40%" valign="top">
-						<table width="100%" cellpadding="4" cellspacing="1" border="0">
-						<tbody>
-                    					<tr>
-    								<td class="row1"><span class="gen"><b>{L_OWNER}</b></span></td>
-							</tr>
-                    					<tr>
-								<td align="center">{AVATAR_IMG}<br /><span class="normalname"><b><a href="{U_VIEW_PROFILE}" <!-- IF USERNAME_COLOUR --> style="color: {USERNAME_COLOUR}"<!-- ENDIF -->>{USERNAME}</a></b></span></td>
-								</td>
-							</tr>
-						<tbody>
-                				</table>
-            				</td>
-            				<td class="row1" valign="top">
-                				<table cellpadding="4" cellspacing="1" width="100%">
-						<tbody>
-                    					<tr>
-                        					<td class="row1" nowrap="nowrap"><span class="gen"><b>{L_VEHICLE}</b></span></td>
-                        					<td><span class="gen">{YEAR} {MAKE} {MODEL}</span></td>
-                    					</tr>
-                    					<tr>
-                        					<td class="row1" nowrap="nowrap"><span class="gen"><b>{L_TRACK}</b></span></td>
-								<td><span class="gen"><a href="{U_VIEW_TRACK}">{TRACK}</a></span></td>
-                    					</tr>
-                    					<tr>
-                        					<td class="row1" nowrap="nowrap"><span class="gen"><b>{L_TRACK_CONDITION}</b></span></td>
-								<td><span class="gen">{CONDITION}</a></span></td>
-                    					</tr>
-                    					<tr>
-                        					<td class="row1" nowrap="nowrap"><span class="gen"><b>{L_LAP_TYPE}</b></span></td>
-								<td><span class="gen">{TYPE}</span></td>
-                    					</tr>
-                    					<tr>
-								<td class="row1" nowrap="nowrap"><span class="gen"><b>{L_LAP_TIME}</b></span>&nbsp;<span class="gensmall">(M:S:MS)</span></td>
-								<td><span class="gen">{MINUTE}.{SECOND}.{MILLISECOND}</span></td>
-							</tr>
-						</tbody>
-                				</table>
-            				</td>
-				</tr>
-			</tbody>
-    			</table>
-			<br />
+		<h3>{VEHICLE} {L_LAP_TIME}</h3>
+		<fieldset>
+			<dl>
+                  		<dt><b>{L_VEHICLE}</b></dt>
+                     		<dd>{YEAR} {MAKE} {MODEL}</dd>
+			</dl>
+			<dl>
+                        	<dt><b>{L_OWNER}</b></span></dt>
+                        	<dd><b><a href="{U_VIEW_PROFILE}" <!-- IF USERNAME_COLOUR --> style="color: {USERNAME_COLOUR}"<!-- ENDIF -->>{USERNAME}</a></b></dd>
+			</dl>
+			<dl>
+                        	<dt><b>{L_TRACK}</b></dt>
+				<dd><a href="{U_VIEW_TRACK}">{TRACK}</a></dd>
+			</dl>
+			<dl>
+                        	<dt><b>{L_TRACK_CONDITION}</b></dt>
+				<dd>{CONDITION}</dd>
+			</dl>
+			<dl>
+				<dt><b>{L_LAP_TYPE}</b></dt>
+				<dd>{TYPE}</dd>
+			</dl>
+			<dl>
+				<dt><b>{L_LAP_TIME}</b>&nbsp;(M:S:MS)</dt>
+				<dd>{MINUTE}.{SECOND}.{MILLISECOND}</dd>
+			</dl>
+		</fieldset>
+		{AVATAR_IMG}
+		<br />
 
-<!-- IF S_DISPLAY_GALLERIES -->
-<div class="panel">
-	<div class="inner"><span class="corners-top"><span></span></span>
-		<h3>{L_LAP_PICTURES}</h3>
-		<div class="garage-image-gallery">
-			<!-- BEGIN lap_image -->
-			<a href="{lap_image.U_IMAGE}"><img hspace="5" vspace="5" name="{lap_image.IMAGE_NAME}" src="{lap_image.IMAGE_SOURCE}" /></a>
-			<!-- END lap_image -->
-    		</div>
+		<!-- IF S_DISPLAY_GALLERIES -->
+		<div class="panel">
+			<div class="inner"><span class="corners-top"><span></span></span>
+				<h3>{L_LAP_PICTURES}</h3>
+				<div class="garage-image-gallery">
+					<!-- BEGIN lap_image -->
+					<a href="{lap_image.U_IMAGE}"><img hspace="5" vspace="5" name="{lap_image.IMAGE_NAME}" src="{lap_image.IMAGE_SOURCE}" /></a>
+					<!-- END lap_image -->
+		    		</div>
+			</div><span class="corners-bottom"><span></span></span>
+		</div>
+		<!-- ENDIF -->
 	</div><span class="corners-bottom"><span></span></span>
 </div>
-<!-- ENDIF -->
 
 <!-- INCLUDE garage_footer.html -->
 

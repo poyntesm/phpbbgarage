@@ -1,10 +1,10 @@
-
+							
 			<div id="garage-toggle">						
 				<a id="garage-toggle-handle" accesskey="m" title="Hide or display the side menu" onclick="garage_switch_menu(); return false;" href="#"></a>
 			</div>
 
 			<div id="garage-menu">		
-				<div class="cp-mini">
+				<div class="vehicles-mini">
 					<div class="inner">
 						<span class="corners-top"><span></span></span>
 						<h3>{L_MY_VEHICLES}</h3>
@@ -16,17 +16,17 @@
 								</li>
 							</ul>
 							<!-- ENDIF -->
-							<ul>
+							<dl>
 								<!-- BEGIN user_vehicles -->
-								<li><a href="{user_vehicles.U_VIEW_VEHICLE}">{user_vehicles.VEHICLE}</a></li>
+								<dd><a href="{user_vehicles.U_VIEW_VEHICLE}">{user_vehicles.VEHICLE}</a></dd>
 								<!-- END user_vehicles -->
-							</ul>
+							</dl>
 						<!-- ENDIF -->
 						<span class="corners-bottom"><span></span></span>
 					</div>
 				</div>
 
-				<div class="cp-mini">
+				<div class="vehicles-mini">
 					<div class="inner">
 						<span class="corners-top"><span></span></span>
 						<h3>{L_LATEST_UPDATED}</h3>

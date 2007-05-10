@@ -38,8 +38,6 @@ function build_product_list()
 	<div id="pageheader">
 		<p class="linkmcp">[ <a href="{U_MCP}">{L_MCP}</a> ]</p>
 	</div>
-
-	<br clear="all" /><br />
 <!-- ENDIF -->
 
 <!-- INCLUDE garage_header.html -->
@@ -47,39 +45,38 @@ function build_product_list()
 <!-- INCLUDE garage_menu.html -->
 
 <div id="garage-main">
-<div id="cp-main">
 
-<div class="panel">
-	<div class="inner"><span class="corners-top"><span></span></span>
-		<form method="post" id="search_garage" name="search_garage" action="{S_MODE_ACTION_SEARCH}">
-			<h3>{L_SEARCH_GARAGE}</h3>
-			<fieldset>
-				<dl>
-					<dt><label for=""><b>{L_VEHICLE}&nbsp;{L_YEAR}</b></label></dd>
-					<dd><select id="made_year" name="made_year"><option value="">{L_SELECT_YEAR}</option><option value="">------</option><!-- BEGIN year--><option value="{year.VALUE}">{year.TEXT}</option><!-- END year --></select></dd>
-				</dl>
-				<dl>
-					<dt><label for=""><b>{L_VEHICLE}&nbsp;{L_MAKE}</b></label></dd>
+		<div class="panel">
+			<div class="inner"><span class="corners-top"><span></span></span>
+				<form method="post" id="search_garage" name="search_garage" action="{S_MODE_ACTION_SEARCH}">
+					<h3>{L_SEARCH_GARAGE}</h3>
+					<fieldset>
+						<dl>
+							<dt><input type="checkbox" name="search_year" value="1" />&nbsp;&nbsp;<label for=""><b>{L_VEHICLE}&nbsp;{L_YEAR}</b></label></dd>
+							<dd><select id="made_year" name="made_year"><option value="">{L_SELECT_YEAR}</option><option value="">------</option><!-- BEGIN year--><option value="{year.VALUE}">{year.TEXT}</option><!-- END year --></select></dd>
+						</dl>
+						<dl>
+					<dt><input type="checkbox" name="search_make" value="1" />&nbsp;&nbsp;<label for=""><b>{L_VEHICLE}&nbsp;{L_MAKE}</b></label></dd>
 					<dd><select id="make_id" name="make_id" onchange="get_model_list(this)" ><option value="{MAKE_ID}">{L_SELECT_MAKE}</option><option value="">------</option><!-- BEGIN make--><option value="{make.VALUE}">{make.TEXT}</option><!-- END make --></select></dd>
 				</dl>
 				<dl>
-					<dt><label for=""><b>{L_VEHICLE}&nbsp;{L_MODEL}</b></label></dd>
+					<dt><input type="checkbox" name="search_model" value="1" />&nbsp;&nbsp;<label for=""><b>{L_VEHICLE}&nbsp;{L_MODEL}</b></label></dd>
 					<dd><select id="model_id" name="model_id"><option value="">{L_SELECT_MODEL}</option><option value="">------</option></select></dd>
 				</dl>
 				<dl>
-					<dt><label for=""><b>{L_MODIFICATION}&nbsp;{L_CATEGORY}</b></label></dd>
+					<dt><input type="checkbox" name="search_category" value="1" />&nbsp;&nbsp;<label for=""><b>{L_MODIFICATION}&nbsp;{L_CATEGORY}</b></label></dd>
 					<dd><select id="category_id" name="category_id"><option value="">{L_SELECT_CATEGORY}</option><option value="">------</option><!-- BEGIN category--><option value="{category.VALUE}">{category.TEXT}</option><!-- END catgeory --></select></dd>
 				</dl>
 				<dl>
-					<dt><label for=""><b>{L_MODIFICATION}&nbsp;{L_MANUFACTURER}</b></label></dd>
+					<dt><input type="checkbox" name="search_manufacturer" value="1" />&nbsp;&nbsp;<label for=""><b>{L_MODIFICATION}&nbsp;{L_MANUFACTURER}</b></label></dd>
 					<dd><select id="manufacturer_id" name="manufacturer_id" onchange="get_product_list(this)" ><option value="">{L_SELECT_MANUFACTURER}</option><option value="">------</option><!-- BEGIN manufacturer--><option value="{manufacturer.VALUE}">{manufacturer.TEXT}</option><!-- END manufacturer --></select></dd>
 				</dl>
 				<dl>
-					<dt><label for=""><b>{L_MODIFICATION}&nbsp;{L_PRODUCT}</b></label></dd>
+					<dt><input type="checkbox" name="search_product" value="1" />&nbsp;&nbsp;<label for=""><b>{L_MODIFICATION}&nbsp;{L_PRODUCT}</b></label></dd>
 					<dd><select id="product_id" name="model_id"><option value="">{L_SELECT_PRODUCT}</option><option value="">------</option></select></dd>
 				</dl>
 				<dl>
-					<dt><label for=""><b>{L_MEMBER_NAME}</b></label></dd>
+					<dt><input type="checkbox" name="search_username" value="1" />&nbsp;&nbsp;<label for=""><b>{L_MEMBER_NAME}</b></label></dd>
 					<dd><input name="username" type="text" class="post" size="35" value="" />&nbsp;[&nbsp;<a href="{U_FIND_USERNAME}" onclick="find_username(); return false;">{L_FIND_USERNAME}</a>&nbsp;]</dd>
 				</dl>
 				<dl>
@@ -88,7 +85,7 @@ function build_product_list()
 				</dl>
 				<dl>
 					<dt><label for="vehicles"><b>{L_RESULTS_DISPLAY}</b></label></dd>
-					<dd><label for="vehicles">{L_VEHICLES}<input type="radio" class="radio" name="display_as" id="vehicles" value="vehicles" checked /></label>&nbsp;&nbsp;<label for="modifications">{L_MODIFICATIONS}<input name="display_as" type="radio" class="radio" id="modifications" value="modifications" /></label><!-- IF S_DISPLAY_SEARCH_INSURANCE -->&nbsp;&nbsp;<label for="premiums">{L_PREMIUMS}<input name="display_as" type="radio" class="radio" id="premiums" value="premiums" /></label><!-- ENDIF --><br /><label for="quartermiles">{L_QUARTERMILES}<input type="radio" class="radio" name="display_as" id="quartermiles" value="quartermiles" /></label>&nbsp;&nbsp;<label for="dynoruns">{L_DYNORUNS}<input type="radio" class="radio" name="display_as" id="dynoruns" value="dynoruns" />&nbsp;&nbsp;<label for="laps">{L_LAPS}<input type="radio" class="radio" name="display_as" id="laps" value="laps" /></label></dd>
+					<dd><label for="vehicles">{L_VEHICLES}&nbsp;<input type="radio" class="radio" name="display_as" id="vehicles" value="vehicles" checked /></label>&nbsp;&nbsp;<label for="modifications">{L_MODIFICATIONS}<input name="display_as" type="radio" class="radio" id="modifications" value="modifications" /></label><!-- IF S_DISPLAY_SEARCH_INSURANCE -->&nbsp;&nbsp;<label for="premiums">{L_PREMIUMS}<input name="display_as" type="radio" class="radio" id="premiums" value="premiums" /></label><!-- ENDIF --><br /><label for="quartermiles">{L_QUARTERMILES}<input type="radio" class="radio" name="display_as" id="quartermiles" value="quartermiles" /></label>&nbsp;&nbsp;<label for="dynoruns">{L_DYNORUNS}<input type="radio" class="radio" name="display_as" id="dynoruns" value="dynoruns" />&nbsp;&nbsp;<label for="laps">{L_LAPS}<input type="radio" class="radio" name="display_as" id="laps" value="laps" /></label></dd>
 				</dl>
 			</fieldset>
 
@@ -98,7 +95,9 @@ function build_product_list()
 			</fieldset>
 		</form>
 
-	<span class="corners-bottom"><span></span></span></div>
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
 </div>
 
 <!-- INCLUDE garage_footer.html -->

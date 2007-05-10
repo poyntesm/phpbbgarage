@@ -20,8 +20,13 @@
 #garage-menu {
 	float:left;
 	width: 19%;
-	margin-top: 1em;
+	margin-top: 0em;
 	margin-bottom: 5px;
+}
+
+#garage-main {
+	float: left;
+	width: 81%;
 }
 
 #garage-menu span.corners-top {
@@ -40,7 +45,31 @@
 	background-image: none;
 }
 
+#garage-main span.corners-top, #garage-menu span.corners-top {
+	background-image: url("{T_THEME_PATH}/images/corners_left2.gif");
+}
 
+#garage-main span.corners-top span, #garage-menu span.corners-top span {
+	background-image: url("{T_THEME_PATH}/images/corners_right2.gif");
+}
+
+#garage-main span.corners-bottom, #garage-menu span.corners-bottom {
+	background-image: url("{T_THEME_PATH}/images/corners_left2.gif");
+}
+
+#garage-main span.corners-bottom span, #garage-menu span.corners-bottom span {
+	background-image: url("{T_THEME_PATH}/images/corners_right2.gif");
+}
+
+.vehicles-mini {
+	background-color: #f9f9f9;
+	padding: 0 5px;
+	margin: 10px 15px 10px 5px;
+}
+
+.vehicles-mini span.corners-top, .vehicles-mini span.corners-bottom {
+	margin: 0 -5px;
+}
 
 /* Icon used in viewtopic_body.html */
 .garage-icon, .garage-icon a	{ 
@@ -48,9 +77,6 @@
 					background-image: url("{IMG_GARAGE_ICON_GARAGE_SRC}"); 
 				}
 ul.profile-icons li.garage-icon	{ width: {IMG_GARAGE_ICON_GARAGE_WIDTH}px; height: {IMG_GARAGE_ICON_GARAGE_HEIGHT}px; }
-
-/* Icons used in overall_header.html */
-
 
 /* Icons used in garage_view_vehicle.html */
 
@@ -95,72 +121,88 @@ ul.manage-vehicle-icons li a:hover { background: none; }
 	margin: 0 3px;
 }
 
-.newvehicle-icon, .newvehicle-icon a		{ 
-							background: transparent none 0 0 no-repeat; 
-						}
-ul.manage-vehicle-icons li.newvehicle-icon	{
-       							width: {IMG_GARAGE_CREATE_VEHICLE_WIDTH}px; height: {IMG_GARAGE_CREATE_VEHICLE_HEIGHT}px; 
-						}
-.viewvehicle-icon, .viewvehicle-icon a		{ 
-							background: transparent none 0 0 no-repeat; 
+.newvehicle-icon, .newvehicle-icon a { 
+	background: transparent none 0 0 no-repeat; 
+}
+
+ul.manage-vehicle-icons li.newvehicle-icon {
+	width: {IMG_GARAGE_CREATE_VEHICLE_WIDTH}px; height: {IMG_GARAGE_CREATE_VEHICLE_HEIGHT}px; 
+}
+.viewvehicle-icon, .viewvehicle-icon a { 
+	background: transparent none 0 0 no-repeat; 
 						}
 ul.manage-vehicle-icons li.viewvehicle-icon	{ 
-							width: {IMG_GARAGE_VIEW_VEHICLE_WIDTH}px; height: {IMG_GARAGE_VIEW_VEHICLE_HEIGHT}px; 
+	width: {IMG_GARAGE_VIEW_VEHICLE_WIDTH}px; height: {IMG_GARAGE_VIEW_VEHICLE_HEIGHT}px; 
 						}
 .editvehicle-icon, .editvehicle-icon a		{ 
-							background: transparent none 0 0 no-repeat; 
+	background: transparent none 0 0 no-repeat; 
 						}
 ul.manage-vehicle-icons li.editvehicle-icon	{ 
-							width: {IMG_GARAGE_EDIT_VEHICLE_WIDTH}px; height: {IMG_GARAGE_EDIT_VEHICLE_HEIGHT}px; 
+	width: {IMG_GARAGE_EDIT_VEHICLE_WIDTH}px; height: {IMG_GARAGE_EDIT_VEHICLE_HEIGHT}px; 
 						}
 .deletevehicle-icon, .deletevehicle-icon a	{ 
-							background: transparent none 0 0 no-repeat; 
+	background: transparent none 0 0 no-repeat; 
 						}
 ul.manage-vehicle-icons li.deletevehicle-icon	{ 
-							width: {IMG_GARAGE_DELETE_VEHICLE_WIDTH}px; height: {IMG_GARAGE_DELETE_VEHICLE_HEIGHT}px; 
+	width: {IMG_GARAGE_DELETE_VEHICLE_WIDTH}px; height: {IMG_GARAGE_DELETE_VEHICLE_HEIGHT}px; 
 						}
 .mainvehicle-icon, .mainvehicle-icon a		{ 
-							background: transparent none 0 0 no-repeat; 
+	background: transparent none 0 0 no-repeat; 
 						}
 ul.manage-vehicle-icons li.mainvehicle-icon	{ 
-							width: {IMG_GARAGE_MAIN_VEHICLE_WIDTH}px; height: {IMG_GARAGE_MAIN_VEHICLE_HEIGHT}px; 
+	width: {IMG_GARAGE_MAIN_VEHICLE_WIDTH}px; height: {IMG_GARAGE_MAIN_VEHICLE_HEIGHT}px; 
 						}
 .newmodification-icon, .newmodification-icon a	{ 
-							background: transparent none 0 0 no-repeat; 
+	background: transparent none 0 0 no-repeat; 
 						}
 ul.manage-vehicle-icons li.newmodification-icon	{ 
-							width: {IMG_GARAGE_ADD_MODIFICATION_WIDTH}px; height: {IMG_GARAGE_ADD_MODIFICATION_HEIGHT}px; 
+	width: {IMG_GARAGE_ADD_MODIFICATION_WIDTH}px; height: {IMG_GARAGE_ADD_MODIFICATION_HEIGHT}px; 
 						}
 .newpremium-icon, .newpremium-icon a		{ 
-							background: transparent none 0 0 no-repeat; 
+	background: transparent none 0 0 no-repeat; 
 						}
 ul.manage-vehicle-icons li.newpremium-icon	{ 
-							width: {IMG_GARAGE_ADD_INSURANCE_WIDTH}px; height: {IMG_GARAGE_ADD_INSURANCE_HEIGHT}px; 
+	width: {IMG_GARAGE_ADD_INSURANCE_WIDTH}px; height: {IMG_GARAGE_ADD_INSURANCE_HEIGHT}px; 
 						}
 .newquartermile-icon, .newquartermile-icon a	{ 
-							background: transparent none 0 0 no-repeat; 
+	background: transparent none 0 0 no-repeat; 
 						}
 ul.manage-vehicle-icons li.newquartermile-icon	{ 
-							width: {IMG_GARAGE_ADD_QUARTERMILE_WIDTH}px; height: {IMG_GARAGE_ADD_QUARTERMILE_HEIGHT}px; 
+	width: {IMG_GARAGE_ADD_QUARTERMILE_WIDTH}px; height: {IMG_GARAGE_ADD_QUARTERMILE_HEIGHT}px; 
 						}
 .newdynorun-icon, .newdynorun-icon a		{ 
-							background: transparent none 0 0 no-repeat; 
+	background: transparent none 0 0 no-repeat; 
 						}
 ul.manage-vehicle-icons li.newdynorun-icon	{ 
-							width: {IMG_GARAGE_ADD_DYNORUN_WIDTH}px; height: {IMG_GARAGE_ADD_DYNORUN_HEIGHT}px; 
+	width: {IMG_GARAGE_ADD_DYNORUN_WIDTH}px; height: {IMG_GARAGE_ADD_DYNORUN_HEIGHT}px; 
 						}
 .newlap-icon, .newlap-icon a			{ 
-							background: transparent none 0 0 no-repeat; 
+	background: transparent none 0 0 no-repeat; 
 						}
-ul.manage-vehicle-icons li.newlap-icon		{ width: {IMG_GARAGE_ADD_LAP_WIDTH}px; height: {IMG_GARAGE_ADD_LAP_HEIGHT}px; }
-.newservice-icon, .newservice-icon a		{ background: transparent none 0 0 no-repeat; }
-ul.manage-vehicle-icons li.newservice-icon	{ width: {IMG_GARAGE_ADD_SERVICE_WIDTH}px; height: {IMG_GARAGE_ADD_SERVICE_HEIGHT}px; }
-.garage-edit-icon, .garage-edit-icon a		{ background: transparent none 0 0 no-repeat; }
-ul.manage-vehicle-icons li.garage-edit-icon	{ width: {IMG_GARAGE_EDIT_WIDTH}px; height: {IMG_GARAGE_EDIT_HEIGHT}px; }
-.garage-delete-icon, .garage-delete-icon a	{ background: transparent none 0 0 no-repeat; }
-ul.manage-vehicle-icons li.garage-delete-icon	{ width: {IMG_GARAGE_DELETE_WIDTH}px; height: {IMG_GARAGE_DELETE_HEIGHT}px; }
+ul.manage-vehicle-icons li.newlap-icon		{ 
+	width: {IMG_GARAGE_ADD_LAP_WIDTH}px; height: {IMG_GARAGE_ADD_LAP_HEIGHT}px; 
+}
+.newservice-icon, .newservice-icon a		{ 
+	background: transparent none 0 0 no-repeat; 
+}
+ul.manage-vehicle-icons li.newservice-icon	{ 
+	width: {IMG_GARAGE_ADD_SERVICE_WIDTH}px; height: {IMG_GARAGE_ADD_SERVICE_HEIGHT}px; 
+}
+
+
+/* Garage Mini Icons */
 .garage-camera-icon, .garage-camera-icon a	{ background: transparent none 0 0 no-repeat; }
-ul.manage-vehicle-icons li.garage-camera-icon	{ width: {IMG_GARAGE_IMG_ATTACHED_WIDTH}px; height: {IMG_GARAGE_IMG_ATTACHED_HEIGHT}px; }
+.garage-camera-icon, .garage-camera-icon a	{ background-image: url("{IMG_GARAGE_IMG_ATTACHED_SRC}"); }
+.buttons div.garage-camera-icon			{ width: {IMG_GARAGE_IMG_ATTACHED_WIDTH}px; height: {IMG_GARAGE_IMG_ATTACHED_HEIGHT}px; }
+
+.garage-delete-icon, .garage-delete-icon a	{ background: transparent none 0 0 no-repeat; }
+.garage-delete-icon, .garage-delete-icon a	{ background-image: url("{IMG_GARAGE_DELETE_SRC}"); }
+.buttons div.garage-delete-icon			{ width: {IMG_GARAGE_DELETE_WIDTH}px; height: {IMG_GARAGE_DELETE_HEIGHT}px; }
+
+.garage-edit-icon, .garage-edit-icon a		{ background: transparent none 0 0 no-repeat; }
+.garage-edit-icon, .garage-edit-icon a		{ background-image: url("{IMG_GARAGE_EDIT_SRC}"); }
+.buttons div.garage-edit-icon			{ width: {IMG_GARAGE_EDIT_WIDTH}px; height: {IMG_GARAGE_EDIT_HEIGHT}px; }
+
 
 .newvehicle-icon, .newvehicle-icon a		{ background-image: url("{IMG_GARAGE_CREATE_VEHICLE_SRC}"); }
 .viewvehicle-icon, .viewvehicle-icon a		{ background-image: url("{IMG_GARAGE_VIEW_VEHICLE_SRC}"); }
@@ -173,10 +215,6 @@ ul.manage-vehicle-icons li.garage-camera-icon	{ width: {IMG_GARAGE_IMG_ATTACHED_
 .newdynorun-icon, .newdynorun-icon a		{ background-image: url("{IMG_GARAGE_ADD_DYNORUN_SRC}"); }
 .newlap-icon, .newlap-icon a			{ background-image: url("{IMG_GARAGE_ADD_LAP_SRC}"); }
 .newservice-icon, .newservice-icon a		{ background-image: url("{IMG_GARAGE_ADD_SERVICE_SRC}"); }
-.garage-edit-icon, .garage-edit-icon a		{ background-image: url("{IMG_GARAGE_EDIT_SRC}"); }
-.garage-delete-icon, .garage-delete-icon a	{ background-image: url("{IMG_GARAGE_DELETE_SRC}"); }
-.garage-camera-icon, .garage-camera-icon a	{ background-image: url("{IMG_GARAGE_IMG_ATTACHED_SRC}"); }
-
 
 .garage-mini {
 	background-color: #f9f9f9;
@@ -189,6 +227,7 @@ ul.manage-vehicle-icons li.garage-camera-icon	{ width: {IMG_GARAGE_IMG_ATTACHED_
 }
 
 
+/* Icons Used In overall_header.html */
 .icon-garage, .icon-quartermile, .icon-dynorun{
 	background-position: 0 50%;
 	background-repeat: no-repeat;

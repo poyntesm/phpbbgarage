@@ -4,8 +4,6 @@
 	<div id="pageheader">
 		<p class="linkmcp">[ <a href="{U_MCP}">{L_MCP}</a> ]</p>
 	</div>
-
-	<br clear="all" /><br />
 <!-- ENDIF -->
 
 <!-- INCLUDE garage_header.html -->
@@ -13,13 +11,20 @@
 <!-- INCLUDE garage_menu.html -->
 
 <div id="garage-main">
-<div id="cp-main">
 
 <div class="panel">
 	<div class="inner"><span class="corners-top"><span></span></span>
 		<h3>{TRACK}</h3>
-		<b>{L_TRACK}</b>{TRACK}<br />
-		<b>{L_LENGTH}</b>{LENGTH} {MILEAGE_UNIT}
+		<fieldset>
+			<dl>
+				<dt><b>{L_TRACK}</b></dt>
+				<dd>{TRACK}</dt>
+			</dl>
+			<dl>
+				<dt><b>{L_LENGTH}</b></dd>
+				<dd>{LENGTH} {MILEAGE_UNIT}</dd>
+			</dl>
+		</fieldset>
 	</div><span class="corners-bottom"><span></span></span>
 </div>
 

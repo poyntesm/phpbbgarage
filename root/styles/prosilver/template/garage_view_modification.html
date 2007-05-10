@@ -4,8 +4,6 @@
 	<div id="pageheader">
 		<p class="linkmcp">[ <a href="{U_MCP}">{L_MCP}</a> ]</p>
 	</div>
-
-	<br clear="all" /><br />
 <!-- ENDIF -->
 
 <!-- INCLUDE garage_header.html -->
@@ -13,7 +11,6 @@
 <!-- INCLUDE garage_menu.html -->
 
 <div id="garage-main">
-<div id="cp-main">
 
 <div class="panel">
 	<div class="inner"><span class="corners-top"><span></span></span>
@@ -93,18 +90,20 @@
     			</table>
 			<br />
 
-<!-- IF S_DISPLAY_GALLERIES -->
-<div class="panel">
-	<div class="inner"><span class="corners-top"><span></span></span>
-		<h3>{L_MODIFICATION_PICTURES}</h3>
-		<div class="garage-image-gallery">
-			<!-- BEGIN modification_image -->
-			<a href="{modification_image.U_IMAGE}"><img hspace="5" vspace="5" name="{modification_image.IMAGE_NAME}" src="{modification_image.IMAGE_SOURCE}" /></a>
-			<!-- END modification_image -->
-    		</div>
+		<!-- IF S_DISPLAY_GALLERIES -->
+		<div class="panel">
+			<div class="inner"><span class="corners-top"><span></span></span>
+				<h3>{L_MODIFICATION_PICTURES}</h3>
+				<div class="garage-image-gallery">
+					<!-- BEGIN modification_image -->
+					<a href="{modification_image.U_IMAGE}"><img hspace="5" vspace="5" name="{modification_image.IMAGE_NAME}" src="{modification_image.IMAGE_SOURCE}" /></a>
+					<!-- END modification_image -->
+    				</div>
+			</div><span class="corners-bottom"><span></span></span>
+		</div>
+		<!-- ENDIF -->
 	</div><span class="corners-bottom"><span></span></span>
 </div>
-<!-- ENDIF -->
 
 <!-- INCLUDE garage_footer.html -->
 

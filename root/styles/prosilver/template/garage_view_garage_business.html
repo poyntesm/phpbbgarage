@@ -4,33 +4,29 @@
 	<div id="pageheader">
 		<p class="linkmcp">[ <a href="{U_MCP}">{L_MCP}</a> ]</p>
 	</div>
-
-	<br clear="all" /><br />
-	<!-- ENDIF -->
+<!-- ENDIF -->
 
 <!-- INCLUDE garage_header.html -->
 
 <!-- INCLUDE garage_menu.html -->
 
 <div id="garage-main">
-<div id="cp-main">
 
 <div class="panel">
 	<!-- BEGIN business_row -->
 	<div class="inner"><span class="corners-top"><span></span></span>
 		<h3><a href="{business_row.U_VIEW_BUSINESS}">{business_row.TITLE}</a></h3>
-			<table width="100%" cellpadding="2" cellspacing="1" border="0" class="tablebg">
-			<tbody>
-				<tr>
-      					<td class="row1" height="25" colspan="8" ><span class="gen"><b>{L_BUSINESS_NAME} : </b><a href="{business_row.U_VIEW_BUSINESS}">{business_row.TITLE}</a></span>
-				<!-- BEGIN more_detail -->
-				<span class="gensmall">{L_CLICK_FOR_MORE_DETAIL}</span>
- 				<!-- END more_detail -->
-				<span class="gen"><br /><b>{L_ADDRESS} : </b>{business_row.ADDRESS}<br /><b>{L_TELEPHONE} : </b>{business_row.TELEPHONE}<br /><b>{L_FAX} :</b> {business_row.FAX}<br /><b>{L_WEBSITE} : </b><a href="{business_row.WEBSITE}">{business_row.WEBSITE}</a><br /><b>{L_EMAIL} : </b>{business_row.EMAIL}<br /><b>{L_OPENING_HOURS} : </b>{business_row.OPENING_HOURS}<br /><b>{L_RATING} : </b>{business_row.RATING} {L_OUT_OF} {business_row.MAX_RATING}</span></td>
-   				</tr>
-			</tbody>
- 			</table>
-
+		<dl>
+			<dt><b>{L_BUSINESS_NAME} : </b><a href="{business_row.U_VIEW_BUSINESS}">{business_row.TITLE}</a> <!-- BEGIN more_detail -->{L_CLICK_FOR_MORE_DETAIL}<!-- END more_detail --></dt>
+			<dd><b>{L_ADDRESS} : </b>{business_row.ADDRESS}</dd>
+			<dd><b>{L_TELEPHONE} : </b>{business_row.TELEPHONE}</dd>
+			<dd><b>{L_FAX} :</b> {business_row.FAX}</dd>
+			<dd><b>{L_WEBSITE} : </b><a href="{business_row.WEBSITE}">{business_row.WEBSITE}</a></dd>
+			<dd><b>{L_EMAIL} : </b>{business_row.EMAIL}</dd>
+			<dd><b>{L_OPENING_HOURS} : </b>{business_row.OPENING_HOURS}</dd>
+			<dd><b>{L_RATING} : </b>{business_row.RATING} {L_OUT_OF} {business_row.MAX_RATING}</dd>
+		</dl>
+					
 		<h3>{L_LAST_CUSTOMERS}</h3>
 		<div class="forabg">
 			<div class="inner"><span class="corners-top"><span></span></span>
@@ -50,10 +46,10 @@
 					<!-- BEGIN mod_row -->
 					<!-- IF mod_row.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt class="row1" align="center" nowrap><span class="gensmall"><b><a href="{business_row.mod_row.U_VIEW_PROFILE}" <!-- IF business_row.mod_row.USERNAME_COLOUR --> style="color: {business_row.mod_row.USERNAME_COLOUR}"<!-- ENDIF -->>{business_row.mod_row.USERNAME}</a></b></span></dt>
-							<dd class="row1" align="center" nowrap><span class="gensmall"><a href="{business_row.mod_row.U_VIEW_VEHICLE}">{business_row.mod_row.VEHICLE}</a></span></dd>
-							<dd class="row1" align="center" nowrap><span class="gensmall"><!-- IF business_row.mod_row.U_VIEW_ITEM --><a href="{business_row.mod_row.U_VIEW_ITEM}">{business_row.mod_row.ITEM}</a><!-- ELSE -->{business_row.mod_row.ITEM}<!-- ENDIF --></span></dd>
-							<dd class="row1" align="center" nowrap><span class="gensmall">{business_row.mod_row.RATING}</span></dd>
+							<dt><b><a href="{business_row.mod_row.U_VIEW_PROFILE}" <!-- IF business_row.mod_row.USERNAME_COLOUR --> style="color: {business_row.mod_row.USERNAME_COLOUR}"<!-- ENDIF -->>{business_row.mod_row.USERNAME}</a></b></dt>
+							<dd><a href="{business_row.mod_row.U_VIEW_VEHICLE}">{business_row.mod_row.VEHICLE}</a></dd>
+							<dd><!-- IF business_row.mod_row.U_VIEW_ITEM --><a href="{business_row.mod_row.U_VIEW_ITEM}">{business_row.mod_row.ITEM}</a><!-- ELSE -->{business_row.mod_row.ITEM}<!-- ENDIF --></dd>
+							<dd>{business_row.mod_row.RATING}</dd>
 						</dl>
 					</li>
 					<!-- END mod_row -->
@@ -65,7 +61,7 @@
 		<h3>{L_COMMENTS}</h3>
 		<!-- END comments -->
  		<!-- BEGIN customer_comments -->
-		<span class="gensmall">{business_row.customer_comments.COMMENTS}</span>
+		{business_row.customer_comments.COMMENTS}
 		<!-- END customer_comments -->
 
 		<span class="corners-bottom"><span></span></span>

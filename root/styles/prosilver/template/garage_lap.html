@@ -4,24 +4,21 @@
 	<div id="pageheader">
 		<p class="linkmcp">[ <a href="{U_MCP}">{L_MCP}</a> ]</p>
 	</div>
-
-	<br clear="all" /><br />
-
 <!-- ENDIF -->
 
 <!-- INCLUDE garage_header.html -->
 
 <!-- INCLUDE garage_menu.html -->
 
-		<script type="text/javascript" src="{T_TEMPLATE_PATH}/garage_functions.js"></script>
+<script type="text/javascript" src="{T_TEMPLATE_PATH}/garage_functions.js"></script>
+
 <div id="garage-main">
-<div id="cp-main">
 
 <div class="panel">
 	<div class="inner"><span class="corners-top"><span></span></span>
 
 			<div id="advanced00">
-			<div class="garage_cat">
+			<div id="tabs">
 				<ul>
 					<li class="garage_preset_yes" id="tab000"><a href="#data" onclick="swap_options('0','0','0');"><span class="tabbg">{L_LAP}</span></a></li>
 					<!-- IF U_MANAGE_GALLERY --><li class="garage_preset_yes" id="tab001"><a href="#images" onclick="swap_options('0','0','1');"><span class="tabbg">{L_IMAGES}</span></a></li><!-- ENDIF -->
@@ -74,17 +71,23 @@
 			<span class="corners-bottom"><span></span></span>
 			</div>
 
-			<div class="garage_panel" id="options001" style="display: none;">
-			<span class="corners-top"><span></span></span>
-			<div class="tablewrap">
-				<!-- INCLUDE garage_manage_gallery.html -->
-			</div>
-			<span class="corners-bottom"><span></span></span>
-			</div>
+					<div id="options001" style="display: none;">
 
+						<div class="panel">
+							<div class="inner">
+								<span class="corners-top"><span></span></span>
+								<!-- INCLUDE garage_manage_gallery.html -->
+								<span class="corners-bottom"><span></span></span>
+							</div>
+						</div>
+					</div>
+				<span class="corners-bottom"><span></span></span>
 			</div>
-			
-		</td>
+		</div>
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+
 <script type="text/javascript">
 <!--
 	var lowest_tab = '0';

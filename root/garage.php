@@ -21,11 +21,11 @@ $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
 include($phpbb_root_path . 'includes/bbcode.' . $phpEx);
 
-//Start Session Management
+/**
+* Setup user session, authorisation & language 
+*/
 $user->session_begin();
 $auth->acl($user->data);
-
-//Setup Lang Files
 $user->setup(array('mods/garage'));
 
 /**
@@ -47,19 +47,17 @@ require($phpbb_root_path . 'includes/mods/class_garage_service.' . $phpEx);
 //Set The Page Title
 $page_title = $user->lang['GARAGE'];
 
-//Get All String Parameters And Make Safe
-$params = array('mode' => 'mode', 'sort' => 'sort', 'start' => 'start', 'order' => 'order');
-while(list($var, $param) = @each($params))
-{
-	$$var = request_var($param, '');
-}
-
-//Get All Non-String Parameters
-$params = array('vid' => 'VID', 'eid' => 'EID', 'image_id' => 'image_id', 'bid' => 'BID');
-while(list($var, $param) = @each($params))
-{
-	$$var = request_var($param, '');
-}
+/**
+* Setup variables 
+*/
+$mode = request_var('mode', '');
+$sort = request_var('sort', '');
+$order = request_var('order', '');
+$start = request_var('start', '');
+$vid = request_var('VID', '');
+$eid = request_var('EID', '');
+$bid = request_var('BID', '');
+$image_id = request_var('image_id', '');
 
 /**
 * Build inital navlink..we use the standard phpBB3 breadcrumb process
@@ -72,9 +70,12 @@ $template->assign_block_vars('navlinks', array(
 /**
 * Display the moderator control panel link if authorised
 */
-$template->assign_vars(array(
-	'U_MCP'	=> ($auth->acl_get('m_garage')) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=garage', true, $user->session_id) : '')
-);
+if ($garage->mcp_access())
+{
+	$template->assign_vars(array(
+		'U_MCP'	=> append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=garage', true, $user->session_id),
+	));
+}
 
 /**
 * Perform a set action based on value for $mode

@@ -726,6 +726,23 @@ class garage
 	}
 
 	/**
+	* Return true|false if user has moderator acp allow MCP actions
+	*
+	* @return true|false 
+	*/
+	function mcp_access()
+	{
+		global $auth;
+
+		if ($auth->acl_get('m_garage_approve_vehicle')||$auth->acl_get('m_garage_approve_make')||$auth->acl_get('m_garage_approve_model')||$auth->acl_get('m_garage_approve_business')||$auth->acl_get('m_garage_approve_quartermile')||$auth->acl_get('m_garage_approve_dynorun')||$auth->acl_get('m_garage_approve_guestbook')||$auth->acl_get('m_garage_approve_lap')||$auth->acl_get('m_garage_approve_track')||$auth->acl_get('m_garage_approve_product'))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	* Return groups which have users with a quota based permission
 	*
 	* @return array

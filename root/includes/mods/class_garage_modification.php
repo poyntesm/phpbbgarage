@@ -489,7 +489,6 @@ class garage_modification
 				GARAGE_CATEGORIES_TABLE		=> 'c',
 				GARAGE_MAKES_TABLE		=> 'mk',
 				GARAGE_MODELS_TABLE		=> 'md',
-				GARAGE_BUSINESS_TABLE		=> array('b1', 'b2'),
 				USERS_TABLE			=> 'u',
 			),
 			'LEFT_JOIN'	=> array(
@@ -501,6 +500,14 @@ class garage_modification
 					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
 					'ON'	=> 'mg.image_id = i.attach_id'
 				)
+				,array(
+					'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b1'),
+					'ON'	=> 'm.shop_id = b1.id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b2'),
+					'ON'	=> 'm.installer_id = b2.id'
+				)
 			),
 			'WHERE'		=> "m.id = $mid 
 						AND v.id = m.vehicle_id
@@ -508,9 +515,7 @@ class garage_modification
 						AND m.category_id = c.id
 						AND (v.make_id = mk.id AND mk.pending = 0)
 						AND (v.model_id = md.id AND md.pending = 0)
-						AND v.user_id = u.user_id
-						AND m.shop_id = b1.id
-						AND m.installer_id = b2.id"
+						AND v.user_id = u.user_id"
 		));
 
       		$result = $db->sql_query($sql);
