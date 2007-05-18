@@ -1,4 +1,4 @@
-			<form enctype="multipart/form-data" method="post" name="manage_gallery" action="{S_IMAGE_MODE_ACTION}">
+			<form enctype="multipart/form-data" method="post" id="manage_gallery" action="{S_IMAGE_MODE_ACTION}">
 				<fieldset>
 					<!-- INCLUDE garage_image_attach.html -->
 				</fieldset>
@@ -28,7 +28,7 @@
 							<!-- BEGIN pic_row -->
 							<!-- IF pic_row.S_ROW_COUNT is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 								<dl>
-									<dd class="index_block"><a href="{pic_row.U_IMAGE}" title="{pic_row.IMAGE_TITLE}"><img valign="bottom" hspace="5" vspace="5" src="{pic_row.IMAGE}" /></a></dd>
+									<dd class="index_block"><a href="{pic_row.U_IMAGE}" title="{pic_row.IMAGE_TITLE}"><img src="{pic_row.IMAGE}" alt="" /></a></dd>
 									<dd class="index_block"><a href="{pic_row.U_REMOVE_IMAGE}">{L_REMOVE_IMAGE}</a></dd>
 									<!-- IF pic_row.U_SET_HILITE -->
 									<dd class="index_block"><a href="{pic_row.U_SET_HILITE}">{L_SET_HILITE_IMAGE}</a></dd>

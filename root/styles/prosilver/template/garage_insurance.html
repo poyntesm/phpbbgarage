@@ -15,7 +15,7 @@
 		<div class="inner">
 			<span class="corners-top"><span></span></span>
 	
-			<div id="tabs">
+			<div id="gtabs">
 				<ul>
 					<li class="activetab" id="tab000"><a href="#data"><span class="tabbg">{L_PREMIUM}</span></a></li>
 				</ul>
@@ -26,12 +26,11 @@
 					<span class="corners-top"><span></span></span>
 
 					<div id="options000" style="display: block;">
-
 						<div class="panel">
 							<div class="inner">
 								<span class="corners-top"><span></span></span>
 
-								<form enctype="multipart/form-data" method="post" name="insurance" action="{S_MODE_ACTION}">
+								<form enctype="multipart/form-data" method="post" id="insurance" action="{S_MODE_ACTION}">
 								<h3>{L_TITLE}</h3>
 								<fieldset>		
 									<dl>
@@ -48,7 +47,7 @@
 									</dl>
 									<dl>
 										<dt><b>{L_COMMENTS}</b></dt>
-										<dd><textarea name="comments" cols="60" rows="5" wrap="soft"   class="post">{COMMENTS}</textarea></dd>
+										<dd><textarea name="comments" cols="60" rows="5" class="post">{COMMENTS}</textarea></dd>
 									</dl>
 								</fieldset>		
 			
@@ -60,12 +59,13 @@
 									<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 
 									<input type="submit" name="submit" value="{L_BUTTON}" class="button1" />
 								</fieldset>
-							</form>
-							<span class="corners-bottom"><span></span></span>
+								</form>
+								<span class="corners-bottom"><span></span></span>
+							</div>
 						</div>
 					</div>
+					<span class="corners-bottom"><span></span></span>
 				</div>
-				<span class="corners-bottom"><span></span></span>
 			</div>
 		</div>
 		<span class="corners-bottom"><span></span></span>

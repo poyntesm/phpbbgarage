@@ -92,105 +92,99 @@ function jumpto_garage()
 			<span class="corners-top"><span></span></span>
 			<h3>{YEAR}&nbsp;{MAKE}&nbsp;{MODEL}</h3>
 			<fieldset>
-		    	<!-- IF ! U_VIEW_VEHICLE -->
-		    	<dl>
-   				<dt><strong>{L_OWNER}</strong></dt>
-				<dd>{AVATAR_IMG}<br /><span class="gen"><strong><a href="{U_PROFILE}" <!-- IF USERNAME_COLOUR --> style="color: {USERNAME_COLOUR}"<!-- ENDIF -->>{USERNAME}</a></strong></span></dd>
-		   	</dl>
-			<!-- IF U_HILITE_IMAGE -->
-			<dl>
-    				<dt><strong>{L_HILITE_IMAGE}</strong></dt>
-                        	<dd align="center"><a href="{U_HILITE_IMAGE}" title="{HILITE_IMAGE_TITLE}"><img src="{HILITE_IMAGE}" /></a><br /><span class="gensmall">{L_TOTAL_VIEWS}: {TOTAL_IMAGE_VIEWS}</span></dd>
-                    	</dl>
-			<!-- ENDIF -->
-			<dl>
-				<dt><strong>{L_DESCRIPTION}</strong></dt>
-			       	<dd>{DESCRIPTION}</dd>
-			</dl> 
-			<!-- ENDIF -->
-			<!-- IF U_MODERATE_VEHICLE -->
-			<dl>
-				<dd>
-					<ul class="manage-vehicle-icons">
-						<li></li>&nbsp;
-						<li class="moderatevehicle-icon"><a href="{U_MODERAOTE_VEHICLE}" title="{L_MODERATE_VEHICLE}"></a></li>
-					</ul>
-				</dd>
-			</dl>
+		    		<!-- IF ! U_VIEW_VEHICLE -->
+			    	<dl>
+   					<dt><strong>{L_OWNER}</strong></dt>
+					<dd>{AVATAR_IMG}<br /><span class="gen"><strong><a href="{U_PROFILE}" <!-- IF USERNAME_COLOUR --> style="color: {USERNAME_COLOUR}"<!-- ENDIF -->>{USERNAME}</a></strong></span></dd>
+		   		</dl>
+				<!-- IF U_HILITE_IMAGE -->
+				<dl>
+    					<dt><strong>{L_HILITE_IMAGE}</strong></dt>
+					<dd><a href="{U_HILITE_IMAGE}" title="{HILITE_IMAGE_TITLE}"><img src="{HILITE_IMAGE}" alt="{}" /></a><br /><span class="gensmall">{L_TOTAL_VIEWS}: {TOTAL_IMAGE_VIEWS}</span></dd>
+	                    	</dl>
+				<!-- ENDIF -->
+				<dl>
+					<dt><strong>{L_DESCRIPTION}</strong></dt>
+			       		<dd>{DESCRIPTION}</dd>
+				</dl> 
+				<!-- ENDIF -->
 			</fieldset>
-			<fieldset>
+
+			<!-- IF U_MODERATE_VEHICLE -->
+			<ul class="manage-vehicle-icons">
+				<li></li>&nbsp;
+				<li class="moderatevehicle-icon"><a href="{U_MODERAOTE_VEHICLE}" title="{L_MODERATE_VEHICLE}"></a></li>
+			</ul>
 			<!-- ENDIF -->
+
 			<!-- IF U_VIEW_VEHICLE -->
-			<dd>
 				<ul class="manage-vehicle-icons">
-					<li></li>&nbsp;
-					<!-- IF U_VIEW_VEHICLE --><li class="viewvehicle-icon"><a href="{U_VIEW_VEHICLE}" title="{L_VIEW_VEHICLE}"></a></li>&nbsp;<!-- ENDIF -->
-					<!-- IF U_EDIT_VEHICLE --><li class="editvehicle-icon"><a href="{U_EDIT_VEHICLE}" title="{L_EDIT_VEHICLE}"></a></li>&nbsp;<!-- ENDIF -->
-					<!-- IF U_DELETE_VEHICLE --><li class="deletevehicle-icon"><a href="{U_DELETE_VEHICLE}" title="{L_DELETE_VEHICLE}"></a></li>&nbsp;<!-- ENDIF -->
-					<!-- IF U_ADD_MODIFICATION --><li class="newmodification-icon"><a href="{U_ADD_MODIFICATION}" title="{L_ADD_MODIFICATION}"></a></li>&nbsp;<!-- ENDIF -->
-					<!-- IF U_ADD_INSURANCE --><li class="newpremium-icon"><a href="{U_ADD_INSURANCE}" title="{L_ADD_INSURANCE}"></a></li>&nbsp;<!-- ENDIF -->
-					<!-- IF U_ADD_QUARTERMILE --><li class="newquartermile-icon"><a href="{U_ADD_QUARTERMILE}" title="{L_ADD_QUARTERMILE}"></a></li>&nbsp;<!-- ENDIF -->
-					<!-- IF U_ADD_DYNORUN --><li class="newdynorun-icon"><a href="{U_ADD_DYNORUN}" title="{L_ADD_DYNORUN}"></a></li>&nbsp;<!-- ENDIF -->
-					<!-- IF U_ADD_LAP --><li class="newlap-icon"><a href="{U_ADD_LAP}" title="{L_ADD_LAP}"></a></li>&nbsp;<!-- ENDIF -->
-					<!-- IF U_ADD_SERVICE --><li class="newservice-icon"><a href="{U_ADD_SERVICE}" title="{L_ADD_SERVICE}"></a></li>&nbsp;<!-- ENDIF -->
-					<!-- IF U_SET_MAIN_VEHICLE --><li class="mainvehicle-icon"><a href="{U_SET_MAIN_VEHICLE}" title="{L_SET_MAIN_VEHICLE}"></a></li>&nbsp;<!-- ENDIF -->
+					<li></li>
+					<!-- IF U_VIEW_VEHICLE --><li class="viewvehicle-icon"><a href="{U_VIEW_VEHICLE}" title="{L_VIEW_VEHICLE}"></a></li><!-- ENDIF -->
+					<!-- IF U_EDIT_VEHICLE --><li class="editvehicle-icon"><a href="{U_EDIT_VEHICLE}" title="{L_EDIT_VEHICLE}"></a></li><!-- ENDIF -->
+					<!-- IF U_DELETE_VEHICLE --><li class="deletevehicle-icon"><a href="{U_DELETE_VEHICLE}" title="{L_DELETE_VEHICLE}"></a></li><!-- ENDIF -->
+					<!-- IF U_ADD_MODIFICATION --><li class="newmodification-icon"><a href="{U_ADD_MODIFICATION}" title="{L_ADD_MODIFICATION}"></a></li><!-- ENDIF -->
+					<!-- IF U_ADD_INSURANCE --><li class="newpremium-icon"><a href="{U_ADD_INSURANCE}" title="{L_ADD_INSURANCE}"></a></li><!-- ENDIF -->
+					<!-- IF U_ADD_QUARTERMILE --><li class="newquartermile-icon"><a href="{U_ADD_QUARTERMILE}" title="{L_ADD_QUARTERMILE}"></a></li><!-- ENDIF -->
+					<!-- IF U_ADD_DYNORUN --><li class="newdynorun-icon"><a href="{U_ADD_DYNORUN}" title="{L_ADD_DYNORUN}"></a></li><!-- ENDIF -->
+					<!-- IF U_ADD_LAP --><li class="newlap-icon"><a href="{U_ADD_LAP}" title="{L_ADD_LAP}"></a></li><!-- ENDIF -->
+					<!-- IF U_ADD_SERVICE --><li class="newservice-icon"><a href="{U_ADD_SERVICE}" title="{L_ADD_SERVICE}"></a></li><!-- ENDIF -->
+					<!-- IF U_SET_MAIN_VEHICLE --><li class="mainvehicle-icon"><a href="{U_SET_MAIN_VEHICLE}" title="{L_SET_MAIN_VEHICLE}"></a></li><!-- ENDIF -->
 					</ul>
-			<dd>
 			<br />
 			<!-- IF U_HILITE_IMAGE -->
-			<span class="gen"><a href="{U_HILITE_IMAGE}" title="{HILITE_IMAGE_TITLE}"><img src="{HILITE_IMAGE}" /></a>
-			<br /></span><span class="gensmall">{L_TOTAL_VIEWS}:&nbsp;{TOTAL_IMAGE_VIEWS}</span>
+			<a href="{U_HILITE_IMAGE}" title="{HILITE_IMAGE_TITLE}"><img src="{HILITE_IMAGE}" alt="{}" /></a>
+			<br />{L_TOTAL_VIEWS}:&nbsp;{TOTAL_IMAGE_VIEWS}
 			<!-- ENDIF -->
-                   					</td>
-							<!-- ENDIF -->
-            				</dl>
-            				<dl>
-						<dt><strong>{L_VEHICLE}</strong></dt>
-						<dd>{YEAR}&nbsp;{MAKE}&nbsp;{MODEL}</dd>
-					</dl>
-					<dl>
-                        			<dt><strong>{L_COLOUR}</strong></dt>
-                        			<dd>{COLOUR}</dd>
-					</dl>
-					<dl>
-                        			<dt><strong>{L_UPDATED}</strong></dt>
-                        			<dd>{DATE_UPDATED}</dd>
-					</dl>
-					<dl>
-                        			<dt><strong>{L_MILEAGE}</strong></dt>
-                        			<dd>{MILEAGE}&nbsp;{MILEAGE_UNITS}</dd>
-					</dl>
-					<dl>
-                        			<dt><strong>{L_PRICE}</strong></dt>
-                        			<dd>{PRICE}&nbsp;{CURRENCY}</dd>
-					</dl>
-					<dl>
-                        			<dt><strong>{L_TOTAL_MODS}</strong></dt>
-                        			<dd>{TOTAL_MODS}</dd>
-					</dl>
-					<dl>
-                        			<dt><strong>{L_TOTAL_SPENT}</strong></dt>
-                        			<dd>{TOTAL_SPENT}&nbsp;{CURRENCY}</dd>
-					</dl>
-					<dl>
-                        			<dt><strong>{L_TOTAL_VIEWS}</strong></dt>
-                        			<dd>{TOTAL_VIEWS}</dd>
-					</dl>
-					<dl>
-                        			<dt><strong>{L_VEHICLE_RATING}</strong></dt>
-                        			<dd>{RATING}</dd>
-					</dl>
-					<!-- IF ! S_DISPLAY_VEHICLE_OWNER -->
-            	    			<dl>
-                        			<dt><strong>{L_PLEASE_RATE}</strong></dt>
-                        			<dd><select id="vehicle_rating" name="vehicle_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN rating --><option value="{rating.VALUE}" <!-- IF rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{rating.TEXT}</option><!-- END rating --></select>&nbsp;<input type="hidden" value="rate_vehicle" name="mode" /><input type="hidden" value="{VID}" name="VID" />
-						<!-- IF S_DISPLAY_RATE -->
-						<input name="submit" type="submit" value="{L_RATE}" class="liteoption" />
-						<!-- ENDIF rate -->
-						<i> {L_RATING_NOTICE}</i></dd>
-                    			</dl>
+			<!-- ENDIF -->
+
+			<fieldset>
+            			<dl>
+					<dt><strong>{L_VEHICLE}</strong></dt>
+					<dd>{YEAR}&nbsp;{MAKE}&nbsp;{MODEL}</dd>
+				</dl>
+				<dl>
+                        		<dt><strong>{L_COLOUR}</strong></dt>
+                        		<dd>{COLOUR}</dd>
+				</dl>
+				<dl>
+                        		<dt><strong>{L_UPDATED}</strong></dt>
+                        		<dd>{DATE_UPDATED}</dd>
+				</dl>
+				<dl>
+                        		<dt><strong>{L_MILEAGE}</strong></dt>
+                        		<dd>{MILEAGE}&nbsp;{MILEAGE_UNITS}</dd>
+				</dl>
+				<dl>
+                        		<dt><strong>{L_PRICE}</strong></dt>
+                        		<dd>{PRICE}&nbsp;{CURRENCY}</dd>
+				</dl>
+				<dl>
+                        		<dt><strong>{L_TOTAL_MODS}</strong></dt>
+                        		<dd>{TOTAL_MODS}</dd>
+				</dl>
+				<dl>
+                        		<dt><strong>{L_TOTAL_SPENT}</strong></dt>
+                        		<dd>{TOTAL_SPENT}&nbsp;{CURRENCY}</dd>
+				</dl>
+				<dl>
+                        		<dt><strong>{L_TOTAL_VIEWS}</strong></dt>
+                        		<dd>{TOTAL_VIEWS}</dd>
+				</dl>
+				<dl>
+                        		<dt><strong>{L_VEHICLE_RATING}</strong></dt>
+                        		<dd>{RATING}</dd>
+				</dl>
+				<!-- IF ! S_DISPLAY_VEHICLE_OWNER -->
+            	    		<dl>
+                        		<dt><strong>{L_PLEASE_RATE}</strong></dt>
+                        		<dd><select id="vehicle_rating" name="vehicle_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN rating --><option value="{rating.VALUE}" <!-- IF rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{rating.TEXT}</option><!-- END rating --></select>&nbsp;<input type="hidden" value="rate_vehicle" name="mode" /><input type="hidden" value="{VID}" name="VID" />
+					<!-- IF S_DISPLAY_RATE -->
+					<input name="submit" type="submit" value="{L_RATE}" class="liteoption" />
 					<!-- ENDIF -->
-                			</dl>
+					<i> {L_RATING_NOTICE}</i></dd>
+                    		</dl>
+				<!-- ENDIF -->
 				</fieldset>
 				<span class="corners-bottom"><span></span></span>
 			</div>
@@ -199,34 +193,34 @@ function jumpto_garage()
 		<div class="panel">
 			<div class="inner">
 				<span class="corners-top"><span></span></span>
-				<div id="tabs">
-					<ul>
-						<!-- IF S_DISPLAY_IMAGE_TAB --><li class="garage_preset_yes" id="tab000"><a href="#images" onclick="swap_options('0','0','0');"><span class="tabbg">{L_IMAGES}</span></a></li><!-- ENDIF -->
-						<!-- IF S_DISPLAY_MODIFICATION_TAB --><li class="garage_preset_yes" id="tab001"><a href="#modifications" onclick="swap_options('0','0','1');"><span class="tabbg">{L_MODIFICATIONS}</span></a></li><!-- ENDIF -->
-						<!-- IF S_DISPLAY_QUARTERMILE_TAB --><li class="garage_preset_yes" id="tab002"><a href="#quartermiles" onclick="swap_options('0','0','2');"><span class="tabbg">&frac14; Miles</span></a></li><!-- ENDIF -->
-						<!-- IF S_DISPLAY_DYNORUN_TAB --><li class="garage_preset_yes" id="tab003"><a href="#dynoruns" onclick="swap_options('0','0','3');"><span class="tabbg">Dynoruns</span></a></li><!-- ENDIF -->
-						<!-- IF S_DISPLAY_LAP_TAB --><li class="garage_preset_yes" id="tab004"><a href="#laps" onclick="swap_options('0','0','4');"><span class="tabbg">Laps</span></a></li><!-- ENDIF -->
-						<!-- IF S_DISPLAY_PREMIUM_TAB --><li class="garage_preset_yes" id="tab005"><a href="#premiums" onclick="swap_options('0','0','5');"><span class="tabbg">Premiums</span></a></li><!-- ENDIF -->	
-						<!-- IF S_DISPLAY_SERVICE_TAB --><li class="garage_preset_yes" id="tab006"><a href="#services" onclick="swap_options('0','0','6');"><span class="tabbg">Services</span></a></li><!-- ENDIF -->
-						<!-- IF S_DISPLAY_BLOG_TAB --><li class="garage_preset_yes" id="tab007"><a href="#blog" onclick="swap_options('0','0','7');"><span class="tabbg">Blog</span></a></li><!-- ENDIF -->
-						<!-- IF S_DISPLAY_GUESTBOOK_TAB --><li class="garage_preset_yes" id="tab008"><a href="#guestbook" onclick="swap_options('0','0','8');"><span class="tabbg">Guestbook</span></a></li>	<!-- ENDIF -->
-					</ul>
-				</div>
+			<div id="gtabs">
+				<ul>
+					<!-- IF S_DISPLAY_IMAGE_TAB --><li class="garage_preset_yes" id="tab000"><a href="#images" onclick="swap_options('0','0','0');"><span class="tabbg">{L_IMAGES}</span></a></li><!-- ENDIF -->
+					<!-- IF S_DISPLAY_MODIFICATION_TAB --><li class="garage_preset_yes" id="tab001"><a href="#modifications" onclick="swap_options('0','0','1');"><span class="tabbg">{L_MODIFICATIONS}</span></a></li><!-- ENDIF -->
+					<!-- IF S_DISPLAY_QUARTERMILE_TAB --><li class="garage_preset_yes" id="tab002"><a href="#quartermiles" onclick="swap_options('0','0','2');"><span class="tabbg">&frac14; Miles</span></a></li><!-- ENDIF -->
+					<!-- IF S_DISPLAY_DYNORUN_TAB --><li class="garage_preset_yes" id="tab003"><a href="#dynoruns" onclick="swap_options('0','0','3');"><span class="tabbg">Dynoruns</span></a></li><!-- ENDIF -->
+					<!-- IF S_DISPLAY_LAP_TAB --><li class="garage_preset_yes" id="tab004"><a href="#laps" onclick="swap_options('0','0','4');"><span class="tabbg">Laps</span></a></li><!-- ENDIF -->
+					<!-- IF S_DISPLAY_PREMIUM_TAB --><li class="garage_preset_yes" id="tab005"><a href="#premiums" onclick="swap_options('0','0','5');"><span class="tabbg">Premiums</span></a></li><!-- ENDIF -->	
+					<!-- IF S_DISPLAY_SERVICE_TAB --><li class="garage_preset_yes" id="tab006"><a href="#services" onclick="swap_options('0','0','6');"><span class="tabbg">Services</span></a></li><!-- ENDIF -->
+					<!-- IF S_DISPLAY_BLOG_TAB --><li class="garage_preset_yes" id="tab007"><a href="#blog" onclick="swap_options('0','0','7');"><span class="tabbg">Blog</span></a></li><!-- ENDIF -->
+					<!-- IF S_DISPLAY_GUESTBOOK_TAB --><li class="garage_preset_yes" id="tab008"><a href="#guestbook" onclick="swap_options('0','0','8');"><span class="tabbg">Guestbook</span></a></li>	<!-- ENDIF -->
+				</ul>
+			</div>
 
-				<div class="panel bg3">
-					<div class="inner">
-						<span class="corners-top"><span></span></span>
+			<div class="panel bg3">
+				<div class="inner">
+					<span class="corners-top"><span></span></span>
 
-						<div id="options000" style="display: none;">
-							<!-- IF S_DISPLAY_GALLERIES -->
-							<div class="panel">
-								<div class="inner">
-									<span class="corners-top"><span></span></span>
-									<!-- IF S_DISPLAY_VEHICLE_IMAGES -->
-									<h3>{L_VEHICLE_PICTURES}</h3>
-									<div class="garage-image-gallery">
-										<!-- BEGIN vehicle_image -->
-										<a href="{vehicle_image.U_IMAGE}"><img hspace="5" vspace="5" name="{vehicle_image.IMAGE_NAME}" src="{vehicle_image.IMAGE_SOURCE}" /></a>
+					<div id="options000" style="display: none;">
+						<!-- IF S_DISPLAY_GALLERIES -->
+						<div class="panel">
+							<div class="inner">
+								<span class="corners-top"><span></span></span>
+								<!-- IF S_DISPLAY_VEHICLE_IMAGES -->
+								<h3>{L_VEHICLE_PICTURES}</h3>
+								<div class="garage-image-gallery">
+									<!-- BEGIN vehicle_image -->
+									<a href="{vehicle_image.U_IMAGE}"><img alt="{vehicle_image.IMAGE_NAME}" src="{vehicle_image.IMAGE_SOURCE}" /></a>
 										<!-- END vehicle_image -->
 									</div>
 									<!-- ENDIF -->
@@ -234,7 +228,7 @@ function jumpto_garage()
 									<h3>{L_MODIFICATION_PICTURES}</h3>
 									<div class="garage-image-gallery">
 										<!-- BEGIN modification_image -->
-										<a href="{modification_image.U_IMAGE}"><img hspace="5" vspace="5" name="{modification_image.IMAGE_NAME}" src="{modification_image.IMAGE_SOURCE}" /></a>
+										<a href="{modification_image.U_IMAGE}"><img alt="{modification_image.IMAGE_NAME}" src="{modification_image.IMAGE_SOURCE}" /></a>
 										<!-- END modification_image -->
 									</div>
 									<!-- ENDIF -->
@@ -242,7 +236,7 @@ function jumpto_garage()
 									<h3>{L_QUARTERMILE_PICTURES}</h3>
 									<div class="garage-image-gallery">
 										<!-- BEGIN quartermile_image -->
-										<a href="{quartermile_image.U_IMAGE}"><img hspace="5" vspace="5" name="{quartermile_image.IMAGE_NAME}" src="{quartermile_image.IMAGE_SOURCE}" /></a>
+										<a href="{quartermile_image.U_IMAGE}"><img alt="{quartermile_image.IMAGE_NAME}" src="{quartermile_image.IMAGE_SOURCE}" /></a>
 										<!-- END quartermile_image -->
 							    		</div>
 									<!-- ENDIF -->
@@ -250,7 +244,7 @@ function jumpto_garage()
 									<h3>{L_DYNORUN_PICTURES}</h3>
 									<div class="garage-image-gallery">
 										<!-- BEGIN dynorun_image -->
-										<a href="{dynorun_image.U_IMAGE}"><img hspace="5" vspace="5" name="{dynorun_image.IMAGE_NAME}" src="{dynorun_image.IMAGE_SOURCE}" /></a>
+										<a href="{dynorun_image.U_IMAGE}"><img alt="{dynorun_image.IMAGE_NAME}" src="{dynorun_image.IMAGE_SOURCE}" /></a>
 										<!-- END dynorun_image -->
 									</div>
 									<!-- ENDIF -->
@@ -258,7 +252,7 @@ function jumpto_garage()
 									<h3>{L_LAP_PICTURES}</h3>
 									<div class="garage-image-gallery">
 										<!-- BEGIN lap_image -->
-										<a href="{lap_image.U_IMAGE}"><img hspace="5" vspace="5" name="{lap_image.IMAGE_NAME}" src="{lap_image.IMAGE_SOURCE}" /></a>
+										<a href="{lap_image.U_IMAGE}"><img alt="{lap_image.IMAGE_NAME}" src="{lap_image.IMAGE_SOURCE}" /></a>
 										<!-- END lap_image -->
 									</div>
 									<!-- ENDIF -->
@@ -442,7 +436,7 @@ function jumpto_garage()
 										<!-- BEGIN lap -->
 										<!-- IF lap.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 											<dl>
-												<dt><!-- IF tracktime.lap.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{tracktime.lap.U_IMAGE}"></a></div></div><!-- ENDIF --></td>
+												<dt><!-- IF tracktime.lap.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{tracktime.lap.U_IMAGE}"></a></div></div><!-- ENDIF --></dt>
 												<dd><a href="{tracktime.lap.U_TRACK}">{tracktime.lap.TRACK}</a></dd>
 												<dd>{tracktime.lap.CONDITION}</dd>
 												<dd>{tracktime.lap.TYPE}</dd>
@@ -485,7 +479,7 @@ function jumpto_garage()
 												<dt><a href="{insurance.premium.U_INSURER}">{insurance.premium.INSURER}</a></dt>
 								  				<dd>{insurance.premium.PREMIUM}</dd>
 												<dd>{insurance.premium.COVER_TYPE}</dd>
-												<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd><!-- IF insurance.premium.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{insurance.premium.U_EDIT}"></a></div><div><!-- ENDIF -->&nbsp;<!-- IF insurance.premium.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{insurance.premium.U_DELETE}"></a></div></div><!-- ENDIF --></dd><!-- ENDIF -->
+												<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd><!-- IF insurance.premium.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{insurance.premium.U_EDIT}"></a></div></div><!-- ENDIF -->&nbsp;<!-- IF insurance.premium.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{insurance.premium.U_DELETE}"></a></div></div><!-- ENDIF --></dd><!-- ENDIF -->
 											</dl>
 										</li>
 										<!-- END premium -->
@@ -528,7 +522,7 @@ function jumpto_garage()
 														<dd>{service_history.service.PRICE}</dd>
 														<dd>{service_history.service.RATING}</dd>
 														<dd>{service_history.service.MILEAGE}</dd>
-														<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd><!-- IF service_history.service.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{service_history.service.U_EDIT}"></a></div></div><!-- ENDIF -->&nbsp;<!-- IF service_history.service.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{service_history.service.U_DELETE}"></a></div></div><!-- ENDIF --></span></dt><!-- ENDIF -->
+														<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd><!-- IF service_history.service.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{service_history.service.U_EDIT}"></a></div></div><!-- ENDIF -->&nbsp;<!-- IF service_history.service.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{service_history.service.U_DELETE}"></a></div></div><!-- ENDIF --></dd><!-- ENDIF -->
 													</dl>
 												</li>
 												<!-- END service -->
@@ -547,7 +541,7 @@ function jumpto_garage()
 								<div class="inner">
 									<span class="corners-top"><span></span></span>
 									<!-- BEGIN blog -->
-									<form method="post" name="guestbook" action="{S_MODE_BLOG_ACTION}">
+									<form method="post" id="blog" action="{S_MODE_BLOG_ACTION}">
 									<!-- IF S_DISPLAY_ENTRY_BLOG -->
 									<h3>{L_ADD_BLOG}</h3>
 									<dl>
@@ -556,7 +550,7 @@ function jumpto_garage()
 									</dl>
 									<dl>
 										<dt>{L_ADD_BLOG}</dt>
-										<dd><textarea name="blog_text" cols="70" rows="6" wrap="soft" class="post">{}</textarea></dd>
+										<dd><textarea name="blog_text" cols="70" rows="6" class="post">{}</textarea></dd>
 									</dl>
 	
 									<fieldset>
@@ -570,7 +564,7 @@ function jumpto_garage()
 
 									<!-- BEGIN entry -->
 									<dl>
-										<dd><h3>{blog.entry.BLOG_TITLE}</h3>{blog.entry.BLOG_DATE}<br /><br />{blog.entry.BLOG_TEXT}</td>
+										<dd><h3>{blog.entry.BLOG_TITLE}</h3>{blog.entry.BLOG_DATE}<br /><br />{blog.entry.BLOG_TEXT}</dd>
 									</dl>
 									<!-- BEGINELSE -->
 									<dl>
@@ -595,15 +589,16 @@ function jumpto_garage()
 						<div id="options008" style="display: none;">
 							<div class="panel">
 								<div class="inner">
-							<span class="corners-top"><span></span></span>
-							<!-- BEGIN guestbook -->
-							<!-- END guestbook -->
-							<span class="corners-bottom"><span></span></span>
+								<span class="corners-top"><span></span></span>
+								<!-- BEGIN guestbook -->
+								<!-- END guestbook -->
+								<span class="corners-bottom"><span></span></span>
+							</div>
 						</div>
 					</div>
+					<span class="corners-bottom"><span></span></span>
 				</div>
 			</div>
-			<span class="corners-bottom"><span></span></span>
 		</div>
 		<span class="corners-bottom"><span></span></span>
 	</div>

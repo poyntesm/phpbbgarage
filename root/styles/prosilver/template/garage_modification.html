@@ -28,7 +28,7 @@ function get_product_list(sel)
 	document.getElementById('product_id').options.length = 0;
 
 	//Call Script To Run Products Based On Category & Manufacturer
-	ajax.requestFile = 'garage.php?mode=get_product_list&category_id='+category_id+'&manufacturer_id='+manufacturer_id;
+	ajax.requestFile = 'garage.php?mode=get_product_list&amp;category_id='+category_id+'&amp;manufacturer_id='+manufacturer_id;
 	ajax.onCompletion = build_product_list;
 	ajax.runAJAX();
 }
@@ -37,7 +37,7 @@ function get_product_list(sel)
 function update_product_list(category_id, manufacturer_id, product_id)
 {
 	document.getElementById('product_id').options.length = 0;
-	ajax.requestFile = 'garage.php?mode=get_product_list&category_id='+category_id+'&manufacturer_id='+manufacturer_id+'&product_id='+product_id;
+	ajax.requestFile = 'garage.php?mode=get_product_list&amp;category_id='+category_id+'&amp;manufacturer_id='+manufacturer_id+'&amp;product_id='+product_id;
 	ajax.onCompletion = build_product_list;
 	ajax.runAJAX();
 }
@@ -52,7 +52,7 @@ function category_change(sel)
 	if (category_id > 0 && manufacturer_id > 0)
 	{
 		document.getElementById('product_id').options.length = 0;
-		ajax.requestFile = 'garage.php?mode=get_product_list&category_id='+category_id+'&manufacturer_id='+manufacturer_id;
+		ajax.requestFile = 'garage.php?mode=get_product_list&amp;category_id='+category_id+'&amp;manufacturer_id='+manufacturer_id;
 		ajax.onCompletion = build_product_list;
 		ajax.runAJAX();
 	}
@@ -82,7 +82,7 @@ function build_product_list()
 		<div class="inner">
 			<span class="corners-top"><span></span></span>
 	
-			<div id="tabs">
+			<div id="gtabs">
 				<ul>
 					<li id="tab000"><a href="#data" onclick="swap_options('0','0','0');"><span class="tabbg">{L_MODIFICATION}</span></a></li>
 					<!-- IF U_MANAGE_GALLERY --><li id="tab001"><a href="#images" onclick="swap_options('0','0','1');"><span class="tabbg">{L_IMAGES}</span></a></li><!-- ENDIF -->
@@ -98,7 +98,7 @@ function build_product_list()
 							<div class="inner">
 								<span class="corners-top"><span></span></span>
 
-								<form id="modification" enctype="multipart/form-data" method="post" name="modification" action="{S_MODE_ACTION}">
+								<form id="modification" enctype="multipart/form-data" method="post" action="{S_MODE_ACTION}">
 								<h3>{L_TITLE}</h3>
 								<fieldset>
 									<dl>
@@ -107,35 +107,35 @@ function build_product_list()
 									</dl>
 									<dl>
 										<dt><b>{L_MANUFACTURER}</b><span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
-										<dd><select id="manufacturer_id" name="manufacturer_id" onchange="get_product_list(this)" ><option value="">{L_SELECT_MANUFACTURER}</option><option value="">------</option><!-- BEGIN manufacturer--><option value="{manufacturer.VALUE}" <!-- IF manufacturer.S_SELECTED -->selected="selected"<!-- ENDIF -->>{manufacturer.TEXT}</option><!-- END manufacturer --></select>&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS_PRODUCT}">{L_HERE}</a></span></dd>
+										<dd><select id="manufacturer_id" name="manufacturer_id" onchange="get_product_list(this)" ><option value="">{L_SELECT_MANUFACTURER}</option><option value="">------</option><!-- BEGIN manufacturer--><option value="{manufacturer.VALUE}" <!-- IF manufacturer.S_SELECTED -->selected="selected"<!-- ENDIF -->>{manufacturer.TEXT}</option><!-- END manufacturer --></select>&nbsp;{L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS_PRODUCT}">{L_HERE}</a></dd>
 									</dl>
 									<dl>
 										<dt><b>{L_PRODUCT}</b><span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
-										<dd><select id="product_id" name="product_id"><option value="">{L_SELECT_PRODUCT}</option><option value="">------</option></select>&nbsp;<span class="gensmall">&nbsp;{L_NOT_LISTED_YET}<a href="{U_SUBMIT_PRODUCT}">{L_HERE}</a>&nbsp;&nbsp;&nbsp;<span class="gen"><b>{L_RATING}</b>&nbsp;</span><span class="gensmall"><select id="product_rating" name="product_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN product_rating --><option value="{product_rating.VALUE}" <!-- IF product_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{product_rating.TEXT}</option><!-- END product_rating --></select></span></dd>
+										<dd><select id="product_id" name="product_id"><option value="">{L_SELECT_PRODUCT}</option><option value="">------</option></select>&nbsp;&nbsp;{L_NOT_LISTED_YET}<a href="{U_SUBMIT_PRODUCT}">{L_HERE}</a>&nbsp;&nbsp;&nbsp;<b>{L_RATING}</b>&nbsp;<select id="product_rating" name="product_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN product_rating --><option value="{product_rating.VALUE}" <!-- IF product_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{product_rating.TEXT}</option><!-- END product_rating --></select></dd>
 									</dl>
 									<dl>
 										<dt><b>{L_PURCHASED_FROM}</b></dt>
-									  	<dd><select id="shop_id" name="shop_id"><option value="">{L_SELECT_SHOP}</option><option value="">------</option><!-- BEGIN shop --><option value="{shop.VALUE}" <!-- IF shop.S_SELECTED -->selected="selected"<!-- ENDIF -->>{shop.TEXT}</option><!-- END shop --></select>&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS_SHOP}">{L_HERE}</a></span></dd>
+									  	<dd><select id="shop_id" name="shop_id"><option value="">{L_SELECT_SHOP}</option><option value="">------</option><!-- BEGIN shop --><option value="{shop.VALUE}" <!-- IF shop.S_SELECTED -->selected="selected"<!-- ENDIF -->>{shop.TEXT}</option><!-- END shop --></select>&nbsp;{L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS_SHOP}">{L_HERE}</a></dd>
 									</dl>
 									<dl>
 										<dt><b>{L_PURCHASED_PRICE}</b></dt>
-										<dd><input name="price" type="text" class="post" size="10" value="{PRICE}" /><span class="gen">&nbsp;<b>{L_PURCHASE_RATING}</b>&nbsp;<select id="purchase_rating" name="purchase_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN purchase_rating --><option value="{purchase_rating.VALUE}" <!-- IF purchase_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{purchase_rating.TEXT}</option><!-- END purchase_rating --></select></dd>
+										<dd><input name="price" type="text" class="post" size="10" value="{PRICE}" />&nbsp;<b>{L_PURCHASE_RATING}</b>&nbsp;<select id="purchase_rating" name="purchase_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN purchase_rating --><option value="{purchase_rating.VALUE}" <!-- IF purchase_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{purchase_rating.TEXT}</option><!-- END purchase_rating --></select></dd>
 									</dl>	
 									<dl>
 										<dt><b>{L_INSTALLED_BY}</b></dt>
-									  	<dd><select id="installer_id" name="installer_id"><option value="">{L_SELECT_GARAGE}</option><option value="">------</option><!-- BEGIN garage --><option value="{garage.VALUE}" <!-- IF garage.S_SELECTED -->selected="selected"<!-- ENDIF -->>{garage.TEXT}</option><!-- END garage --></select>&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS_GARAGE}">{L_HERE}</a></span></dd>
+									  	<dd><select id="installer_id" name="installer_id"><option value="">{L_SELECT_GARAGE}</option><option value="">------</option><!-- BEGIN garage --><option value="{garage.VALUE}" <!-- IF garage.S_SELECTED -->selected="selected"<!-- ENDIF -->>{garage.TEXT}</option><!-- END garage --></select>&nbsp;{L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS_GARAGE}">{L_HERE}</a></dd>
 									</dl>
 									<dl>
 										<dt><b>{L_INSTALLATION_PRICE}</b></dt>
-										<dd><input name="install_price" type="text" class="post" size="10" value="{INSTALL_PRICE}" /><span class="gen">&nbsp;<b>{L_INSTALLATION_RATING}</b>&nbsp;<select id="install_rating" name="install_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN install_rating --><option value="{install_rating.VALUE}" <!-- IF install_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{install_rating.TEXT}</option><!-- END install_rating --></select></dd>
+										<dd><input name="install_price" type="text" class="post" size="10" value="{INSTALL_PRICE}" />&nbsp;<b>{L_INSTALLATION_RATING}</b>&nbsp;<select id="install_rating" name="install_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN install_rating --><option value="{install_rating.VALUE}" <!-- IF install_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{install_rating.TEXT}</option><!-- END install_rating --></select></dd>
 									</dl>
 									<dl>
 										<dt><b>{L_DESCRIPTION}</b></dt>
-										<dd><textarea name="comments" cols="60" rows="4" wrap="soft"   class="post">{COMMENTS}</textarea></dd>
+										<dd><textarea name="comments" cols="60" rows="4" class="post">{COMMENTS}</textarea></dd>
 									</dl>
 									<dl>
 										<dt><b>{L_INSTALL_COMMENTS}</b><br />{L_ONLY_SHOW_IN_REVIEW}</dt>
-										<dd><textarea name="install_comments" cols="60" rows="4" wrap="soft"   class="post">{INSTALL_COMMENTS}</textarea></dd>
+										<dd><textarea name="install_comments" cols="60" rows="4" class="post">{INSTALL_COMMENTS}</textarea></dd>
 									</dl>
 
 									<!-- IF ! MID -->
@@ -158,8 +158,8 @@ function build_product_list()
 						</div>
 					</div>
 
+					<!-- IF MID -->
 					<div id="options001" style="display: none;">
-
 						<div class="panel">
 							<div class="inner">
 								<span class="corners-top"><span></span></span>
@@ -168,14 +168,16 @@ function build_product_list()
 							</div>
 						</div>
 					</div>
-				<span class="corners-bottom"><span></span></span>
+					<!-- ENDIF -->
+					<span class="corners-bottom"><span></span></span>
+				</div>
 			</div>
 		</div>
 		<span class="corners-bottom"><span></span></span>
 	</div>
 </div>
 
-<script language="JavaScript" type="text/javascript">
+<script type="text/javascript">
 <!--
 //Fill The Product Dropdown If We Are Editing + Select Correct One
 update_product_list('{CATEGORY_ID}', '{MANUFACTURER_ID}', '{PRODUCT_ID}');

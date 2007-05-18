@@ -15,9 +15,9 @@
 		<div class="inner">
 			<span class="corners-top"><span></span></span>
 	
-			<div id="tabs">
+			<div id="gtabs">
 				<ul>
-					<liid="tab000"><a href="#data" onclick="swap_options('0','0','0');"><span class="tabbg">{L_DYNORUN}</span></a></li>
+					<li id="tab000"><a href="#data" onclick="swap_options('0','0','0');"><span class="tabbg">{L_DYNORUN}</span></a></li>
 					<!-- IF U_MANAGE_GALLERY --><li id="tab001"><a href="#images" onclick="swap_options('0','0','1');"><span class="tabbg">{L_IMAGES}</span></a></li><!-- ENDIF -->
 				</ul>
 			</div>
@@ -31,7 +31,7 @@
 							<div class="inner">
 								<span class="corners-top"><span></span></span>
 
-								<form enctype="multipart/form-data" method="post" name="rollingroad" action="{S_MODE_ACTION}">
+								<form enctype="multipart/form-data" method="post" id="rollingroad" action="{S_MODE_ACTION}">
 								<h3>{L_TITLE}</h3>
 								<fieldset>
 									<dl>
@@ -55,7 +55,7 @@
 										<dd><select id="nitrous" name="nitrous"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN nitrous --><option value="{nitrous.VALUE}" <!-- IF nitrous.S_SELECTED -->selected="selected"<!-- ENDIF -->>{nitrous.TEXT}</option><!-- END nitrous --></select></dd>
 									</dl>
 									<dl>
-										<dt>{L_PEAKPOINT_EXPLAIN}</span></dt>
+										<dt>{L_PEAKPOINT_EXPLAIN}</dt>
 										<dd><input name="peakpoint" type="text" class="post" size="15" value ="{PEAKPOINT}" /></dd>
 									</dl>
 
@@ -63,7 +63,7 @@
 										<!-- INCLUDE garage_image_attach.html -->
 									<!-- ENDIF -->
 
-								<fieldset>
+								</fieldset>
 		
 								<fieldset>
 									<input type="hidden" value="{VID}" name="VID" /><input type="hidden" value="{DID}" name="DID" /><input type="hidden" value="{PENDING_REDIRECT}" name="pending_redirect" />
@@ -80,6 +80,7 @@
 						</div>
 					</div>
 
+					<!-- IF DID -->
 					<div id="options001" style="display: none;">
 						<div class="panel">
 							<div class="inner">
@@ -89,7 +90,9 @@
 							</div>
 						</div>
 					</div>
-				<span class="corners-bottom"><span></span></span>
+					<!-- ENDIF -->
+					<span class="corners-bottom"><span></span></span>
+				</div>
 			</div>
 		</div>
 		<span class="corners-bottom"><span></span></span>

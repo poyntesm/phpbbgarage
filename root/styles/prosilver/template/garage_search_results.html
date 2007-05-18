@@ -19,7 +19,7 @@
 			<h3>{SEARCH_MESSAGE}</h3>
 			<!-- ENDIF -->
 
-			<form name="search_results" method="post" action="{S_MODE_ACTION}">
+			<form id="search_results" method="post" action="{S_MODE_ACTION}">
 
 			<!-- IF S_DISPLAY_VEHICLE_RESULTS -->
 			<div class="forabg">
@@ -44,7 +44,7 @@
 					<!-- BEGIN vehicle -->
 					<!-- IF vehicle.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt class="image_attached"><!-- IF vehicle.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{vehicle.U_IMAGE}"></a></div></div><!-- ENDIF --></dt>
+							<!-- IF vehicle.U_IMAGE --><dt style="background-image: url({T_ICONS_PATH}{topicrow.TOPIC_ICON_IMG});" title="{topicrow.TOPIC_FOLDER_IMG_ALT}"><a href="{vehicle.U_IMAGE}">{NEWEST_POST_IMG}</a></dt><!-- ELSE --><dt></dt><!-- ENDIF -->
 			  				<dd>{vehicle.YEAR}</dd>
 							<dd>{vehicle.MAKE}</dd>
 							<dd><a href="{vehicle.U_VIEW_VEHICLE}">{vehicle.MODEL}</a></dd>
@@ -105,7 +105,7 @@
 			  				<dd><a href="{modification.U_VIEW_VEHICLE}">{modification.VEHICLE}</a></dd>
 							<dd><a href="{modification.U_VIEW_MODIFICATION}">{modification.MODIFICATION}</a></dd>
 							<dd>{modification.CATEGORY}</dd>
-							<dd><b><a href="{modification.U_VIEW_PROFILE}" <!-- IF modification.USERNAME_COLOUR --> style="color: {modification.USERNAME_COLOUR}"<!-- ENDIF -->>{modification.USERNAME}</a></b></span></dd>
+							<dd><b><a href="{modification.U_VIEW_PROFILE}" <!-- IF modification.USERNAME_COLOUR --> style="color: {modification.USERNAME_COLOUR}"<!-- ENDIF -->>{modification.USERNAME}</a></b></dd>
 							<dd>{modification.PRICE}</dd>
 							<dd>{modification.RATING}</dd>
 						</dl>
@@ -217,7 +217,7 @@
 					<!-- BEGIN quartermile -->
 					<!-- IF quartermile.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt><!-- IF quartermile.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{quartermile.U_IMAGE}"></a><!-- ENDIF --></span></dt>
+							<dt><!-- IF quartermile.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{quartermile.U_IMAGE}"></a><!-- ENDIF --></dt>
 							<dd><b><a href="{quartermile.U_VIEWPROFILE}" <!-- IF quartermile.USERNAME_COLOUR --> style="color: {quartermile.USERNAME_COLOUR}"<!-- ENDIF -->>{quartermile.USERNAME}</a></b></dd>
 							<dd><a href="{quartermile.U_VIEWVEHICLE}">{quartermile.VEHICLE}</a></dd>
 							<dd>{quartermile.RT}</dd>
@@ -277,15 +277,15 @@
 					<!-- BEGIN dynorun -->
 					<!-- IF dynorun.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt><!-- IF dynorun.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{dynorun.U_IMAGE}"></a><!-- ENDIF --></span></dt>
-							<dd><b><a href="{dynorun.U_VIEWPROFILE}" <!-- IF dynorun.USERNAME_COLOUR --> style="color: {dynorun.USERNAME_COLOUR}"<!-- ENDIF -->>{dynorun.USERNAME}</a></b></span></dd>
-							<dd><a href="{dynorun.U_VIEWVEHICLE}" >{dynorun.VEHICLE}</a></span></dd>
-							<dd>{dynorun.DYNOCENTRE}</span></dd>
-							<dd><a href="{dynorun.U_BHP}">{dynorun.BHP}&nbsp;{dynorun.BHP_UNIT}</a></span></dd>
-							<dd>{dynorun.TORQUE}&nbsp;{dynorun.TORQUE_UNIT}</span></dd>
-							<dd>{dynorun.BOOST}&nbsp;{dynorun.BOOST_UNIT}</span></dd>
-							<dd>{dynorun.NITROUS}</span></dd>
-							<dd>{dynorun.PEAKPOINT}</span></dd>
+							<dt><!-- IF dynorun.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{dynorun.U_IMAGE}"></a><!-- ENDIF --></dt>
+							<dd><b><a href="{dynorun.U_VIEWPROFILE}" <!-- IF dynorun.USERNAME_COLOUR --> style="color: {dynorun.USERNAME_COLOUR}"<!-- ENDIF -->>{dynorun.USERNAME}</a></b></dd>
+							<dd><a href="{dynorun.U_VIEWVEHICLE}" >{dynorun.VEHICLE}</a></dd>
+							<dd>{dynorun.DYNOCENTRE}</dd>
+							<dd><a href="{dynorun.U_BHP}">{dynorun.BHP}&nbsp;{dynorun.BHP_UNIT}</a></dd>
+							<dd>{dynorun.TORQUE}&nbsp;{dynorun.TORQUE_UNIT}</dd>
+							<dd>{dynorun.BOOST}&nbsp;{dynorun.BOOST_UNIT}</dd>
+							<dd>{dynorun.NITROUS}</dd>
+							<dd>{dynorun.PEAKPOINT}</dd>
 						</dl>
 					</li>
 					<!-- BEGINELSE -->
@@ -327,7 +327,7 @@
 							<dd>{L_TRACK}</dd>
 							<dd>{L_CONDITION}</dd>
 							<dd>{L_TYPE}</dd>
-							<dd>{L_TIME}&nbsp;(M:S:MS)</span></dd>
+							<dd>{L_TIME}&nbsp;(M:S:MS)</dd>
 						</dl>
 					</li>
 				</ul>
@@ -335,13 +335,13 @@
 					<!-- BEGIN lap -->
 					<!-- IF lap.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-  							<dt><!-- IF lap.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{lap.U_IMAGE}"></a><!-- ENDIF --></span></dt>
-							<dd><b><a href="{lap.U_VIEWPROFILE}" <!-- IF lap.USERNAME_COLOUR --> style="color: {lap.USERNAME_COLOUR}"<!-- ENDIF -->>{lap.USERNAME}</a></b></span></dd>
-							<dd><a href="{lap.U_VIEWVEHICLE}">{lap.VEHICLE}</a></span></dd>
-							<dd><a href="{lap.U_TRACK}">{lap.TRACK}</a></span></dd>
-							<dd>{lap.CONDITION}</span></dd>
-							<dd>{lap.TYPE}</span></dd>
-							<dd><a href="{lap.U_LAP}">{lap.MINUTE}.{lap.SECOND}.{lap.MILLISECOND}</a></span></dd>
+  							<dt><!-- IF lap.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{lap.U_IMAGE}"></a><!-- ENDIF --></dt>
+							<dd><b><a href="{lap.U_VIEWPROFILE}" <!-- IF lap.USERNAME_COLOUR --> style="color: {lap.USERNAME_COLOUR}"<!-- ENDIF -->>{lap.USERNAME}</a></b></dd>
+							<dd><a href="{lap.U_VIEWVEHICLE}">{lap.VEHICLE}</a></dd>
+							<dd><a href="{lap.U_TRACK}">{lap.TRACK}</a></dd>
+							<dd>{lap.CONDITION}</dd>
+							<dd>{lap.TYPE}</dd>
+							<dd><a href="{lap.U_LAP}">{lap.MINUTE}.{lap.SECOND}.{lap.MILLISECOND}</a></dd>
 						</dl>
 					</li>
 					<!-- BEGINELSE -->
@@ -372,25 +372,28 @@
 
 		<!-- ENDIF -->
 
-		<input type="hidden" value="{SEARCH_YEAR}" name="search_year" />
-		<input type="hidden" value="{SEARCH_MAKE}" name="search_make" />
-		<input type="hidden" value="{SEARCH_MODEL}" name="search_model" />
-		<input type="hidden" value="{SEARCH_CATEGORY}" name="search_category" />
-		<input type="hidden" value="{SEARCH_MANUFACTURER}" name="search_manufacturer" />
-		<input type="hidden" value="{SEARCH_PRODUCT}" name="search_product" />
-		<input type="hidden" value="{SEARCH_USERNAME}" name="search_username" />
-		<input type="hidden" value="{DISPLAY_AS}" name="display_as" />
-		<input type="hidden" value="{MADE_YEAR}" name="made_year" />
-		<input type="hidden" value="{MAKE_ID}" name="make_id" />
-		<input type="hidden" value="{MODEL_ID}" name="model_id" />
-		<input type="hidden" value="{CATEGORY_ID}" name="category_id" />
-		<input type="hidden" value="{MANUFACTURER_ID}" name="manufacturer_id" />
-		<input type="hidden" value="{PRODUCT_ID}" name="product_id" />
-		<input type="hidden" value="{USERNAME}" name="username'" />
+				<fieldset>
+					<input type="hidden" value="{SEARCH_YEAR}" name="search_year" />
+					<input type="hidden" value="{SEARCH_MAKE}" name="search_make" />
+					<input type="hidden" value="{SEARCH_MODEL}" name="search_model" />
+					<input type="hidden" value="{SEARCH_CATEGORY}" name="search_category" />
+					<input type="hidden" value="{SEARCH_MANUFACTURER}" name="search_manufacturer" />
+					<input type="hidden" value="{SEARCH_PRODUCT}" name="search_product" />
+					<input type="hidden" value="{SEARCH_USERNAME}" name="search_username" />
+					<input type="hidden" value="{DISPLAY_AS}" name="display_as" />
+					<input type="hidden" value="{MADE_YEAR}" name="made_year" />
+					<input type="hidden" value="{MAKE_ID}" name="make_id" />
+					<input type="hidden" value="{MODEL_ID}" name="model_id" />
+					<input type="hidden" value="{CATEGORY_ID}" name="category_id" />
+					<input type="hidden" value="{MANUFACTURER_ID}" name="manufacturer_id" />
+					<input type="hidden" value="{PRODUCT_ID}" name="product_id" />
+					<input type="hidden" value="{USERNAME}" name="username'" />
+				</fieldset>
 
-	</form>
+			</form>
 
-		<span class="corners-bottom"><span></span></span>
+			<span class="corners-bottom"><span></span></span>
+		</div>
 	</div>
 </div>
 

@@ -15,7 +15,7 @@
 		<div class="inner">
 			<span class="corners-top"><span></span></span>
 	
-			<div id="tabs">
+			<div id="gtabs">
 				<ul>
 					<li id="tab000"><a href="#data" onclick="swap_options('0','0','0');"><span class="tabbg">{L_LAP}</span></a></li>
 					<!-- IF U_MANAGE_GALLERY --><li id="tab001"><a href="#images" onclick="swap_options('0','0','1');"><span class="tabbg">{L_IMAGES}</span></a></li><!-- ENDIF -->
@@ -31,7 +31,7 @@
 							<div class="inner">
 								<span class="corners-top"><span></span></span>
 
-								<form id="edit_vehicle" enctype="multipart/form-data" method="post" name="edit_lap" action="{S_MODE_ACTION}">
+								<form id="edit_lap" enctype="multipart/form-data" method="post" action="{S_MODE_ACTION}">
 								<h3>{L_TITLE}</h3>
 								<fieldset>
 									<dl>
@@ -47,7 +47,7 @@
 										<dd><select id="condition_id" name="condition_id" ><option value="">{L_SELECT_CONDITION}</option><option value="">------</option><!-- BEGIN condition --><option value="{condition.VALUE}" <!-- IF condition.S_SELECTED -->selected="selected"<!-- ENDIF -->>{condition.TEXT}</option><!-- END condition --></select></dd>
 									</dl>
 									<dl>
-										<dt><b>{L_LAP_TYPE}</b></span>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
+										<dt><b>{L_LAP_TYPE}</b>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
 										<dd><select id="type_id" name="type_id" ><option value="">{L_SELECT_TYPE}</option><option value="">------</option><!-- BEGIN type --><option value="{type.VALUE}" <!-- IF type.S_SELECTED -->selected="selected"<!-- ENDIF -->>{type.TEXT}</option><!-- END type --></select></dd>
 									</dl>
 									<dl>
@@ -75,8 +75,8 @@
 						</div>
 					</div>
 
+					<!-- IF LID -->
 					<div id="options001" style="display: none;">
-
 						<div class="panel">
 							<div class="inner">
 								<span class="corners-top"><span></span></span>
@@ -85,7 +85,9 @@
 							</div>
 						</div>
 					</div>
-				<span class="corners-bottom"><span></span></span>
+					<!-- ENDIF -->
+					<span class="corners-bottom"><span></span></span>
+				</div>
 			</div>
 		</div>
 		<span class="corners-bottom"><span></span></span>

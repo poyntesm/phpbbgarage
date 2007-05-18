@@ -8,7 +8,7 @@ function get_model_list(sel)
 {
 	var make_id = sel.options[sel.selectedIndex].value;
 	document.getElementById('model_id').options.length = 0;
-	ajax.requestFile = 'garage.php?mode=get_model_list&make_id='+make_id;
+	ajax.requestFile = 'garage.php?mode=get_model_list&amp;make_id='+make_id;
 	ajax.onCompletion = build_model_list;
 	ajax.runAJAX();
 }
@@ -16,7 +16,7 @@ function get_model_list(sel)
 function update_model_list(make_id, model_id)
 {
 	document.getElementById('model_id').options.length = 0;
-	ajax.requestFile = 'garage.php?mode=get_model_list&model_id='+model_id+'&make_id='+make_id;
+	ajax.requestFile = 'garage.php?mode=get_model_list&amp;model_id='+model_id+'&amp;make_id='+make_id;
 	ajax.onCompletion = build_model_list;
 	ajax.runAJAX();
 }
@@ -45,10 +45,10 @@ function build_model_list()
 		<div class="inner">
 			<span class="corners-top"><span></span></span>
 	
-			<div id="tabs">
+			<div id="gtabs">
 				<ul>
-					<li class="garage_preset_yes" id="tab000"><a href="#data" onclick="swap_options('0','0','0');"><span class="tabbg">{L_VEHICLE}</span></a></li>
-					<!-- IF U_MANAGE_GALLERY --><li class="garage_preset_yes" id="tab001"><a href="#images" onclick="swap_options('0','0','1');"><span class="tabbg">{L_IMAGES}</span></a></li><!-- ENDIF -->
+					<li id="tab000"><a href="#data" onclick="swap_options('0','0','0');"><span class="tabbg">{L_VEHICLE}</span></a></li>
+					<!-- IF U_MANAGE_GALLERY --><li id="tab001"><a href="#images" onclick="swap_options('0','0','1');"><span class="tabbg">{L_IMAGES}</span></a></li><!-- ENDIF -->
 				</ul>
 			</div>
 
@@ -62,70 +62,72 @@ function build_model_list()
 							<div class="inner">
 								<span class="corners-top"><span></span></span>
 
-								<form id="edit_vehicle" enctype="multipart/form-data" method="post" name="edit_vehicle" action="{S_MODE_ACTION}">
-						<h3>{L_TITLE}</h3>
-						<fieldset>
-							<dl>
-								<dt><b>{L_YEAR}</b></span>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
-								<dd><select id="made_year" name="made_year"><option value="">{L_SELECT_YEAR}</option><option value="">------</option><!-- BEGIN year --><option value="{year.VALUE}" <!-- IF year.S_SELECTED -->selected="selected"<!-- ENDIF -->>{year.TEXT}</option><!-- END year --></select></dd>
-							</dl>
-							<dl>
-								<dt><b>{L_MAKE}</b></span>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
-								<dd><select id="make_id" name="make_id" onchange="get_model_list(this)" ><option value="">{L_SELECT_MAKE}</option><option value="">------</option><!-- BEGIN make --><option value="{make.VALUE}" <!-- IF make.S_SELECTED -->selected="selected"<!-- ENDIF -->>{make.TEXT}</option><!-- END make --></select>
-								<!-- IF S_DISPLAY_SUBMIT_MAKE -->
-									&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="{U_USER_SUBMIT_MAKE}">{L_HERE}</a></span>
-									<!-- ENDIF -->
-								</dd>
-							</dl>
-							<dl>
-								<dt><b>{L_MODEL}</b></span>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
-								<dd><select id="model_id" name="model_id"></select>
-								<!-- IF S_DISPLAY_SUBMIT_MODEL -->
-									&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="{U_USER_SUBMIT_MODEL}">{L_HERE}</a></span>
-								<!-- ENDIF -->
-								</dd>
-							</dl>
-							<dl>
-								<dt><b>{L_ENGINE_TYPE}</b></span></dt>
-								<dd><select id="engine_type" name="engine_type"><option value="">{L_SELECT_ENGINE_TYPE}</option><option value="">------</option><!-- BEGIN engine --><option value="{engine.VALUE}" <!-- IF engine.S_SELECTED -->selected="selected"<!-- ENDIF -->>{engine.TEXT}</option><!-- END engine --></select></dd>
-							</dl>
-							<dl>
-								<dt><b>{L_COLOUR}</b></span></dt>
-								<dd class="row2"><input name="colour" type="text" class="post" size="35" value="{COLOUR}" /></dd>
-							</dl>
-							<dl>
-								<dt><b>{L_MILEAGE}</b></span></dt>
-								<dd><input name="mileage" type="text" class="post" size="15" value="{MILEAGE}" />&nbsp;<select id="mileage_units" name="mileage_units"><option value="">{L_SELECT_MILEAGE_UNIT}</option><option value="">------</option><!-- BEGIN mileage --><option value="{mileage.VALUE}" <!-- IF mileage.S_SELECTED -->selected="selected"<!-- ENDIF -->>{mileage.TEXT}</option><!-- END mileage --></select></dd>
-							</dl>
-							<dl>
-								<dt><b>{L_PURCHASED_PRICE}</b></span></dt>
-								<dd><input name="price" type="text" class="post" size="10" value="{PRICE}" /><span class="gen">&nbsp;{L_CURRENCY}:&nbsp;</span><select id="currency" name="currency"><option value="">{L_SELECT_CURRENCY_UNIT}</option><option value="">------</option><!-- BEGIN currency --><option value="{currency.VALUE}" <!-- IF currency.S_SELECTED -->selected="selected"<!-- ENDIF -->>{currency.TEXT}</option><!-- END currency --></select></dd>
-							</dl>
-							<dl>
-								<dt><b>{L_DESCRIPTION}</b></span></dt>
-								<dd><textarea name="comments" cols="60" rows="5" wrap="soft" class="post" value="{COMMENTS}">{COMMENTS}</textarea></dd>
-							</dl>
+								<form id="edit_vehicle" enctype="multipart/form-data" method="post" action="{S_MODE_ACTION}">
+									<h3>{L_TITLE}</h3>
+									<fieldset>
+										<dl>
+											<dt><b>{L_YEAR}</b>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
+											<dd><select id="made_year" name="made_year"><option value="">{L_SELECT_YEAR}</option><option value="">------</option><!-- BEGIN year --><option value="{year.VALUE}" <!-- IF year.S_SELECTED -->selected="selected"<!-- ENDIF -->>{year.TEXT}</option><!-- END year --></select></dd>
+										</dl>
+										<dl>
+											<dt><b>{L_MAKE}</b>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
+											<dd><select id="make_id" name="make_id" onchange="get_model_list(this)" ><option value="">{L_SELECT_MAKE}</option><option value="">------</option><!-- BEGIN make --><option value="{make.VALUE}" <!-- IF make.S_SELECTED -->selected="selected"<!-- ENDIF -->>{make.TEXT}</option><!-- END make --></select>
+												<!-- IF S_DISPLAY_SUBMIT_MAKE -->
+													&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="{U_USER_SUBMIT_MAKE}">{L_HERE}</a></span>
+												<!-- ENDIF -->
+											</dd>
+										</dl>
+										<dl>
+											<dt><b>{L_MODEL}</b>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
+											<dd><select id="model_id" name="model_id"><option value="">------</option></select>
+											<!-- IF S_DISPLAY_SUBMIT_MODEL -->
+												&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="{U_USER_SUBMIT_MODEL}">{L_HERE}</a></span>
+											<!-- ENDIF -->
+											</dd>
+										</dl>
+										<dl>
+											<dt><b>{L_ENGINE_TYPE}</b></dt>
+											<dd><select id="engine_type" name="engine_type"><option value="">{L_SELECT_ENGINE_TYPE}</option><option value="">------</option><!-- BEGIN engine --><option value="{engine.VALUE}" <!-- IF engine.S_SELECTED -->selected="selected"<!-- ENDIF -->>{engine.TEXT}</option><!-- END engine --></select></dd>
+										</dl>
+										<dl>
+											<dt><b>{L_COLOUR}</b></dt>
+											<dd><input name="colour" type="text" class="post" size="35" value="{COLOUR}" /></dd>
+										</dl>
+										<dl>
+											<dt><b>{L_MILEAGE}</b></dt>
+											<dd><input name="mileage" type="text" class="post" size="15" value="{MILEAGE}" />&nbsp;<select id="mileage_units" name="mileage_units"><option value="">{L_SELECT_MILEAGE_UNIT}</option><option value="">------</option><!-- BEGIN mileage --><option value="{mileage.VALUE}" <!-- IF mileage.S_SELECTED -->selected="selected"<!-- ENDIF -->>{mileage.TEXT}</option><!-- END mileage --></select></dd>
+										</dl>
+										<dl>
+											<dt><b>{L_PURCHASED_PRICE}</b></dt>
+											<dd><input name="price" type="text" class="post" size="10" value="{PRICE}" />&nbsp;{L_CURRENCY}:&nbsp;<select id="currency" name="currency"><option value="">{L_SELECT_CURRENCY_UNIT}</option><option value="">------</option><!-- BEGIN currency --><option value="{currency.VALUE}" <!-- IF currency.S_SELECTED -->selected="selected"<!-- ENDIF -->>{currency.TEXT}</option><!-- END currency --></select></dd>
+										</dl>
+										<dl>
+											<dt><b>{L_DESCRIPTION}</b></dt>
+											<dd><textarea name="comments" cols="60" rows="5" class="post" >{COMMENTS}</textarea></dd>
+										</dl>
 		
-							<!-- IF ! VID -->
-								<!-- INCLUDE garage_image_attach.html -->
-							<!-- ENDIF -->
-						<fieldset>
+										<!-- IF ! VID -->
+											<!-- INCLUDE garage_image_attach.html -->
+										<!-- ENDIF -->
+									</fieldset>
 
-						<fieldset>
-							<input type="hidden" value="{VID}" name="VID" />
-						</fieldset>
+									<fieldset>
+										<input type="hidden" value="{VID}" name="VID" />
+									</fieldset>
 
 
-						<fieldset class="submit-buttons">
-							<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 
-							<input type="submit" name="submit" value="{L_BUTTON}" class="button1" />
-						</fieldset>
-					</form>
+									<fieldset class="submit-buttons">
+										<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 
+										<input type="submit" name="submit" value="{L_BUTTON}" class="button1" />
+									</fieldset>
+								</form>
 
-						<span class="corners-bottom"><span></span></span></div>
+								<span class="corners-bottom"><span></span></span>
+							</div>
+						</div>
 					</div>
-					</div>
 
+					<!-- IF VID -->
 					<div id="options001" style="display: none;">
 
 						<div class="panel">
@@ -136,21 +138,23 @@ function build_model_list()
 							</div>
 						</div>
 					</div>
-				<span class="corners-bottom"><span></span></span>
+					<!-- ENDIF -->
+					<span class="corners-bottom"><span></span></span>
+				</div>
 			</div>
 		</div>
 		<span class="corners-bottom"><span></span></span>
 	</div>
 </div>
 
-<script language="JavaScript1.1" type="text/javascript">
+<script type="text/javascript">
 <!--
 //Fill The Model Dropdown If We Are Editing + Select Correct One
 update_model_list('{MAKE_ID}', '{MODEL_ID}');
 //-->
 </script>
 
-<script language="JavaScript" type="text/javascript">
+<script type="text/javascript">
 <!--
 function add_model ()
 {

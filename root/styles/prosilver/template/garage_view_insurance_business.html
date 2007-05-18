@@ -43,12 +43,13 @@
 					<ul class="topiclist topics">
   					<!-- BEGIN cover_row -->
 						<!-- IF cover_row.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
-   						<dl>
-		      					<dt>{business_row.cover_row.COVER_TYPE}</dt>
-      							<dd>{business_row.cover_row.MINIMUM}</dd>
-      							<dd>{business_row.cover_row.AVERAGE}</dd>
-      							<dd>{business_row.cover_row.MAXIMUM}</dd>
-	   					</dl>
+   							<dl>
+			      					<dt>{business_row.cover_row.COVER_TYPE}</dt>
+      								<dd>{business_row.cover_row.MINIMUM}</dd>
+      								<dd>{business_row.cover_row.AVERAGE}</dd>
+      								<dd>{business_row.cover_row.MAXIMUM}</dd>
+	   						</dl>
+						</li>
 					<!-- END cover_row -->
 					</ul>
 					<span class="corners-bottom"><span></span></span>
@@ -73,12 +74,13 @@
 					<ul class="topiclist topics">
 					<!-- BEGIN premiums -->
 						<!-- IF premiums.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
-						<dl>
-							<dt><b><a href="{business_row.insurance_detail.premiums.U_VIEW_PROFILE}" <!-- IF business_row.insurance_detail.premiums.USERNAME_COLOUR --> style="color: {business_row.insurance_detail.premiums.USERNAME_COLOUR}"<!-- ENDIF -->>{business_row.insurance_detail.premiums.USERNAME}</a></b></dt>
-							<dd><a href="{business_row.insurance_detail.premiums.U_VIEW_VEHICLE}">{business_row.insurance_detail.premiums.VEHICLE}</a></dd>
-							<dd>{business_row.insurance_detail.premiums.PREMIUM}</dd>
-							<dd>{business_row.insurance_detail.premiums.COVER_TYPE}</dd>
-						</dl>
+							<dl>
+								<dt><b><a href="{business_row.insurance_detail.premiums.U_VIEW_PROFILE}" <!-- IF business_row.insurance_detail.premiums.USERNAME_COLOUR --> style="color: {business_row.insurance_detail.premiums.USERNAME_COLOUR}"<!-- ENDIF -->>{business_row.insurance_detail.premiums.USERNAME}</a></b></dt>
+								<dd><a href="{business_row.insurance_detail.premiums.U_VIEW_VEHICLE}">{business_row.insurance_detail.premiums.VEHICLE}</a></dd>
+								<dd>{business_row.insurance_detail.premiums.PREMIUM}</dd>
+								<dd>{business_row.insurance_detail.premiums.COVER_TYPE}</dd>
+							</dl>
+						</li>
 					<!-- END premiums -->
 					</ul>
 					<span class="corners-bottom"><span></span></span>
