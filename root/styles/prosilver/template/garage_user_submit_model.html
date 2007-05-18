@@ -11,22 +11,22 @@
 <!-- INCLUDE garage_menu.html -->
 
 <div id="garage-main">
-
-<div class="panel">
-	<div class="inner"><span class="corners-top"><span></span></span>
-		<form action="{S_GARAGE_ACTION}" method="post">
+	<div class="panel">
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
+			<form action="{S_GARAGE_ACTION}" method="post">
 			<h3>{L_ADD_MODEL}</h3>
 			<!-- IF S_DISPLAY_PENDING -->
 			<h4>{L_PENDING_NOTICE}</h4>
 			<!-- ENDIF -->
 			<fieldset>
 				<dl>
-					<dt class="row1" width="20%"><span class="gen">{L_VEHICLE_MAKE}</span></dt>
-					<dd class="row2" align="left" nowrap="nowrap"><span class="gen">{MAKE}</span></dd>
+					<dt>{L_VEHICLE_MAKE}</dt>
+					<dd>{MAKE}</span></dd>
 				</dl>
 				<dl>
-					<dt class="row1" width="20%"><span class="gen">{L_VEHICLE_MODEL}</span></dt>
-					<dd class="row2"><input name="model" type="text" class="post" size="35" value="{S_MODEL}" /></dd>
+					<dt>{L_VEHICLE_MODEL}</dt>
+					<dd><input name="model" type="text" class="post" size="35" value="{S_MODEL}" /></dd>
 				</dl>
 			</fieldset>
 
@@ -39,7 +39,8 @@
 				<input type="submit" name="submit" value="{L_ADD_MODEL_BUTTON}" class="button1" />
 			</fieldset>
 		</form>
-	<span class="corners-bottom"><span></span></span></div>
+		<span class="corners-bottom"><span></span></span>
+	</div>
 </div>
 
 <!-- INCLUDE garage_footer.html -->

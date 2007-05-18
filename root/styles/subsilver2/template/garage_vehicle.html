@@ -89,17 +89,6 @@ function build_model_list()
 						<td class="row2"><textarea name="comments" cols="60" rows="5" wrap="soft" class="post" value="{COMMENTS}">{COMMENTS}</textarea></td>
 					</tr>
 
-					<!-- BEGIN custom_vehicle_fields -->
-					<tr>
-						<td class="row1" width="35%">
-							<b class="genmed">{custom_vehicle_fields.LANG_NAME}: </b>
-							<!-- IF custom_vehicle_fields.S_REQUIRED --><b>*</b><!-- ENDIF -->
-							<!-- IF custom_vehicle_fields.LANG_EXPLAIN --><br /><span class="gensmall">{custom_vehicle_fields.LANG_EXPLAIN}</span><!-- ENDIF -->
-						</td>
-					<td class="row2">{custom_vehicle_fields.FIELD}<!-- IF custom_vehicle_fields.ERROR --><br /><span class="gensmall" style="color:red">{custom_vehicle_fields.ERROR}</span><!-- ENDIF --></td>
-					</tr>
-					<!-- END custom_vehicle_fields -->
-				
 					<!-- IF ! VID -->
 						<!-- INCLUDE garage_image_attach.html -->
 					<!-- ENDIF -->

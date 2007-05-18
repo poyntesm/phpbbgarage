@@ -2,38 +2,38 @@
 				<h3>{L_IMAGE_ATTACHMENTS}</h3>
 				<!-- IF S_DISPLAY_KEEP_IMAGE -->
 				<dl>
-					<dt class="row2"><input type="radio" name="editupload" value="keep" checked />&nbsp;<span class="gen"><b>{L_KEEP_CURRENT_IMAGE}</b> ( {CURRENT_IMAGE} )</span></dt>
-					<dd class="row2" rowspan="2"><a href="{U_IMAGE}" title="{IMAGE_TITLE}"><img hspace="2" vspace="2" src="{IMAGE}" /></a></dd>
+					<dt><input type="radio" name="editupload" value="keep" checked />&nbsp;<b>{L_KEEP_CURRENT_IMAGE}</b> ( {CURRENT_IMAGE} )</dt>
+					<dd><a href="{U_IMAGE}" title="{IMAGE_TITLE}"><img hspace="2" vspace="2" src="{IMAGE}" /></a></dd>
 				</dl>
 				<!-- ENDIF -->
 				<!-- IF S_DISPLAY_REMOVE_IMAGE -->
 				<dl>
-			             <dt class="row2"><span class="gen"><b>{L_REMOVE_IMAGE}</b></span></dt>
-			             <dd class="row2"><input type="radio" name="editupload" value="delete" /><input type="hidden" value="{allow_images.remove_image.IMAGE_ID}" name="image_id" /></dd>
+			             <dt><b>{L_REMOVE_IMAGE}</b></dt>
+			             <dd><input type="radio" name="editupload" value="delete" /><input type="hidden" value="{allow_images.remove_image.IMAGE_ID}" name="image_id" /></dd>
 		        	</dl>
 				<!-- ENDIF -->
 				<!-- IF S_DISPLAY_REPLACE_UPLOAD_IMAGE -->
 				<dl>
-					<dt class="row1" width="32%"><span class="gen"><b>{L_IMAGE_ATTACH}<br />{L_MAXIMUM_IMAGE_FILE_SIZE} : {MAXIMUM_IMAGE_FILE_SIZE} {L_KBYTES}<br />{L_MAXIMUM_IMAGE_RESOLUTION} : {MAXIMUM_IMAGE_RESOLUTION}</b></span></dt>
-					<dd class="row2" colspan="3"><span class="gen"><input type="radio" name="editupload" value="new" />&nbsp;<b>{L_REPLACE_WITH_NEW_IMAGE}</span><br /><input class="post" size="30"  type="file" size="30" name="FILE_UPLOAD"/></td>
+					<dt><b>{L_IMAGE_ATTACH}<br />{L_MAXIMUM_IMAGE_FILE_SIZE} : {MAXIMUM_IMAGE_FILE_SIZE} {L_KBYTES}<br />{L_MAXIMUM_IMAGE_RESOLUTION} : {MAXIMUM_IMAGE_RESOLUTION}</b></dt>
+					<dd><input type="radio" name="editupload" value="new" />&nbsp;<b>{L_REPLACE_WITH_NEW_IMAGE}<br /><input class="post" size="30"  type="file" size="30" name="FILE_UPLOAD"/></td>
 				</dl>
 				<!-- ENDIF -->
 				<!-- IF S_DISPLAY_UPLOAD_IMAGE -->
 				<dl>
-					<dt class="row1" width="32%" nowrap="nowrap"><span class="gen"><b>{L_IMAGE_ATTACH}<br />{L_MAXIMUM_IMAGE_FILE_SIZE} : {MAXIMUM_IMAGE_FILE_SIZE} {L_KBYTES}<br />{L_MAXIMUM_IMAGE_RESOLUTION} : {MAXIMUM_IMAGE_RESOLUTION}</b></span></dt>
-					<dd class="row2" colspan="3"><input type="file" name="fileupload" id="fileupload" maxlength="{FILESIZE}" value="" class="inputbox autowidth" /></dd>
+					<dt><b>{L_IMAGE_ATTACH}<br />{L_MAXIMUM_IMAGE_FILE_SIZE} :</b> {MAXIMUM_IMAGE_FILE_SIZE} {L_KBYTES}<br /><b>{L_MAXIMUM_IMAGE_RESOLUTION} :</b> {MAXIMUM_IMAGE_RESOLUTION}</dt>
+					<dd><input type="file" name="fileupload" id="fileupload" maxlength="{FILESIZE}" value="" class="inputbox autowidth" /></dd>
 				</dl>
 				<!-- ENDIF -->
 				<!-- IF S_DISPLAY_REPLACE_REMOTE_IMAGE -->
 				<dl>
-					<dt class="row1" width="32%"><span class="gen"></b></span></dt>
-					<dd class="row2" colspan="3"><span class="gen"><input type="radio" name="editupload" value="new" />&nbsp;<b>{L_REPLACE_WITH_NEW_REMOTE_IMAGE}</span><br /><input name="url_image" type="text" class="post" size="40" maxlength="255" value="http://" /></dd>
+					<dt></dt>
+					<dd><input type="radio" name="editupload" value="new" />&nbsp;<b>{L_REPLACE_WITH_NEW_REMOTE_IMAGE}</span><br /><input name="url_image" type="text" class="post" size="40" maxlength="255" value="http://" /></dd>
 				</dl>
 				<!-- ENDIF -->
 				<!-- IF S_DISPLAY_REMOTE_IMAGE -->
 				<dl>
-					<dt class="row1" width="32%"><span class="gen"><b>{L_ENTER_IMAGE_URL}</b></span></dt>
-					<dd class="row2" colspan="3"><input name="url_image" type="text" class="inputbox medium" value="http://" /></dd>
+					<dt><b>{L_ENTER_IMAGE_URL}</b></dt>
+					<dd><input name="url_image" type="text" class="inputbox medium" value="http://" /></dd>
 				</dl>
 				<!-- ENDIF -->
 				<!-- ENDIF -->

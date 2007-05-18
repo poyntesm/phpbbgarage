@@ -336,7 +336,7 @@ switch( $mode )
 		$vehicle_data 	= $garage_vehicle->get_vehicle($vid);
 		$data 		= $garage_track->get_lap($lid);
 		$tracks 	= $garage_track->get_all_tracks();
-		$galley_data 	= $garage_image->get_lap_gallery($vid, $lid);
+		$gallery_data 	= $garage_image->get_lap_gallery($vid, $lid);
 
 		/**
 		* Handle template declarations & assignments

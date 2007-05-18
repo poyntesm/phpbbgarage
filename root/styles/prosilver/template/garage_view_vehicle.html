@@ -91,32 +91,34 @@ function jumpto_garage()
 		<div class="inner">
 			<span class="corners-top"><span></span></span>
 			<h3>{YEAR}&nbsp;{MAKE}&nbsp;{MODEL}</h3>
+			<fieldset>
 		    	<!-- IF ! U_VIEW_VEHICLE -->
-		    	<tr>
-   				<dd class="row1"><span class="gen"><strong>{L_OWNER}</strong></span></td>
-		    	</tr>
-                    	<tr>
-				<td align="center">{AVATAR_IMG}<br /><span class="gen"><strong><a href="{U_PROFILE}" <!-- IF USERNAME_COLOUR --> style="color: {USERNAME_COLOUR}"<!-- ENDIF -->>{USERNAME}</a></strong></span></td>
-		   	</tr>
+		    	<dl>
+   				<dt><strong>{L_OWNER}</strong></dt>
+				<dd>{AVATAR_IMG}<br /><span class="gen"><strong><a href="{U_PROFILE}" <!-- IF USERNAME_COLOUR --> style="color: {USERNAME_COLOUR}"<!-- ENDIF -->>{USERNAME}</a></strong></span></dd>
+		   	</dl>
 			<!-- IF U_HILITE_IMAGE -->
-			<tr>
-    				<td class="row1"><span class="gen"><strong>{L_HILITE_IMAGE}</strong></span></td>
-	           	</tr>
-			<tr>
-                        	<td align="center"><a href="{U_HILITE_IMAGE}" title="{HILITE_IMAGE_TITLE}" target="_blank"><img hspace="5" vspace="5" src="{HILITE_IMAGE}" /></a><br /><span class="gensmall">{L_TOTAL_VIEWS}: {TOTAL_IMAGE_VIEWS}</span></td>
-                    	</tr>
+			<dl>
+    				<dt><strong>{L_HILITE_IMAGE}</strong></dt>
+                        	<dd align="center"><a href="{U_HILITE_IMAGE}" title="{HILITE_IMAGE_TITLE}"><img src="{HILITE_IMAGE}" /></a><br /><span class="gensmall">{L_TOTAL_VIEWS}: {TOTAL_IMAGE_VIEWS}</span></dd>
+                    	</dl>
 			<!-- ENDIF -->
-			 <tr>
-				<dd class="row1"><span class="gen"><strong>{L_DESCRIPTION}</strong></span></td>
-			</tr> 
-			<tr>
-			       	<td align="center"><span class="gen">{DESCRIPTION}</span></td>
-			</tr> 
+			<dl>
+				<dt><strong>{L_DESCRIPTION}</strong></dt>
+			       	<dd>{DESCRIPTION}</dd>
+			</dl> 
 			<!-- ENDIF -->
 			<!-- IF U_MODERATE_VEHICLE -->
-			<tr>
-				<td align="center"><span class="gen"><a href="{U_MODERATE_VEHICLE}">{MODERATE_VEHICLE}</a></span></td>
-			</tr>
+			<dl>
+				<dd>
+					<ul class="manage-vehicle-icons">
+						<li></li>&nbsp;
+						<li class="moderatevehicle-icon"><a href="{U_MODERAOTE_VEHICLE}" title="{L_MODERATE_VEHICLE}"></a></li>
+					</ul>
+				</dd>
+			</dl>
+			</fieldset>
+			<fieldset>
 			<!-- ENDIF -->
 			<!-- IF U_VIEW_VEHICLE -->
 			<dd>
@@ -136,48 +138,60 @@ function jumpto_garage()
 			<dd>
 			<br />
 			<!-- IF U_HILITE_IMAGE -->
-			<span class="gen"><a href="{U_HILITE_IMAGE}" title="{HILITE_IMAGE_TITLE}" target="_blank"><img hspace="5" vspace="5" src="{HILITE_IMAGE}" /></a>
+			<span class="gen"><a href="{U_HILITE_IMAGE}" title="{HILITE_IMAGE_TITLE}"><img src="{HILITE_IMAGE}" /></a>
 			<br /></span><span class="gensmall">{L_TOTAL_VIEWS}:&nbsp;{TOTAL_IMAGE_VIEWS}</span>
 			<!-- ENDIF -->
                    					</td>
 							<!-- ENDIF -->
             				</dl>
             				<dl>
-                        				<dd class="row1" ><span class="gen"><strong>{L_VEHICLE}</strong></span></td>
-                        				<td><span class="gen">{YEAR}&nbsp;{MAKE}&nbsp;{MODEL}</span></td>
-                        				<td class="row1" ><span class="gen"><strong>{L_COLOUR}</strong></span></td>
-                        				<td><span class="gen">{COLOUR}</span></td>
-                        				<td class="row1" ><span class="gen"><strong>{L_UPDATED}</strong></span></td>
-                        				<td><span class="gen">{DATE_UPDATED}</span></td>
-                        				<td class="row1" ><span class="gen"><strong>{L_MILEAGE}</strong></span></td>
-                        				<td><span class="gen">{MILEAGE}&nbsp;{MILEAGE_UNITS}</span></td>
-                        				<td class="row1" ><span class="gen"><strong>{L_PRICE}</strong></span></td>
-                        				<td><span class="gen">{PRICE}&nbsp;{CURRENCY}</span></td>
-                        				<td class="row1" ><span class="gen"><strong>{L_TOTAL_MODS}</strong></span></td>
-                        				<td><span class="gen">{TOTAL_MODS}</span></td>
-                        				<td class="row1" ><span class="gen"><strong>{L_TOTAL_SPENT}</strong></span></td>
-                        				<td><span class="gen">{TOTAL_SPENT}&nbsp;{CURRENCY}</span></td>
-                        					<td class="row1" ><span class="gen"><strong>{L_TOTAL_VIEWS}</strong></span></td>
-                        					<td><span class="gen">{TOTAL_VIEWS}</span></td>
-                    					</tr>
-            	    					<tr>
-                        					<td class="row1" valign="top" nowrap="nowrap"><span class="gen"><strong>{L_VEHICLE_RATING}</strong></span></td>
-                        					<td width="95%"><span class="gen">{RATING}</span></td>
-							</tr>
-							<!-- BEGIN custom_vehicle_fields -->
-								<br /><strong>{custom_vehicle_fields.PROFILE_FIELD_NAME}:</strong> {custom_vehicle_fields.PROFILE_FIELD_VALUE}
-							<!-- END custom_vehicle_fields -->
-							<!-- IF ! S_DISPLAY_VEHICLE_OWNER -->
-            	    					<tr>
-                        					<td class="row1"  valign="top" ><span class="gen"><strong>{L_PLEASE_RATE}</strong></span></td>
-                        					<td width="85%"><select id="vehicle_rating" name="vehicle_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN rating --><option value="{rating.VALUE}" <!-- IF rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{rating.TEXT}</option><!-- END rating --></select>&nbsp;<input type="hidden" value="rate_vehicle" name="mode" /><input type="hidden" value="{VID}" name="VID" />
-								<!-- IF S_DISPLAY_RATE -->
-								<input name="submit" type="submit" value="{L_RATE}" class="liteoption" />
-								<!-- ENDIF rate -->
-								<span class="gensmall"><i> {L_RATING_NOTICE}</i></span></td>
-                    					</tr>
-							<!-- ENDIF -->
+						<dt><strong>{L_VEHICLE}</strong></dt>
+						<dd>{YEAR}&nbsp;{MAKE}&nbsp;{MODEL}</dd>
+					</dl>
+					<dl>
+                        			<dt><strong>{L_COLOUR}</strong></dt>
+                        			<dd>{COLOUR}</dd>
+					</dl>
+					<dl>
+                        			<dt><strong>{L_UPDATED}</strong></dt>
+                        			<dd>{DATE_UPDATED}</dd>
+					</dl>
+					<dl>
+                        			<dt><strong>{L_MILEAGE}</strong></dt>
+                        			<dd>{MILEAGE}&nbsp;{MILEAGE_UNITS}</dd>
+					</dl>
+					<dl>
+                        			<dt><strong>{L_PRICE}</strong></dt>
+                        			<dd>{PRICE}&nbsp;{CURRENCY}</dd>
+					</dl>
+					<dl>
+                        			<dt><strong>{L_TOTAL_MODS}</strong></dt>
+                        			<dd>{TOTAL_MODS}</dd>
+					</dl>
+					<dl>
+                        			<dt><strong>{L_TOTAL_SPENT}</strong></dt>
+                        			<dd>{TOTAL_SPENT}&nbsp;{CURRENCY}</dd>
+					</dl>
+					<dl>
+                        			<dt><strong>{L_TOTAL_VIEWS}</strong></dt>
+                        			<dd>{TOTAL_VIEWS}</dd>
+					</dl>
+					<dl>
+                        			<dt><strong>{L_VEHICLE_RATING}</strong></dt>
+                        			<dd>{RATING}</dd>
+					</dl>
+					<!-- IF ! S_DISPLAY_VEHICLE_OWNER -->
+            	    			<dl>
+                        			<dt><strong>{L_PLEASE_RATE}</strong></dt>
+                        			<dd><select id="vehicle_rating" name="vehicle_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN rating --><option value="{rating.VALUE}" <!-- IF rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{rating.TEXT}</option><!-- END rating --></select>&nbsp;<input type="hidden" value="rate_vehicle" name="mode" /><input type="hidden" value="{VID}" name="VID" />
+						<!-- IF S_DISPLAY_RATE -->
+						<input name="submit" type="submit" value="{L_RATE}" class="liteoption" />
+						<!-- ENDIF rate -->
+						<i> {L_RATING_NOTICE}</i></dd>
+                    			</dl>
+					<!-- ENDIF -->
                 			</dl>
+				</fieldset>
 				<span class="corners-bottom"><span></span></span>
 			</div>
 		</div>
@@ -255,6 +269,9 @@ function jumpto_garage()
 						</div>
 
 						<div id="options001" style="display: none;">
+							<div class="panel">
+								<div class="inner">
+									<span class="corners-top"><span></span></span>
 							<!-- BEGIN category -->
 							<h3>{category.CATEGORY_TITLE}&nbsp;{L_MODIFICATIONS}</h3>
 							<div class="forabg">
@@ -294,9 +311,15 @@ function jumpto_garage()
 								</div>
 							</div>
 							<!-- END category -->
+									<span class="corners-bottom"><span></span></span>
+								</div>
+							</div>
 						</div>
 			
 						<div id="options002" style="display: none;">
+							<div class="panel">
+								<div class="inner">
+									<span class="corners-top"><span></span></span>
 							<!-- BEGIN quartermile -->
 							<h3>{L_QUARTER_MILE_TIMES}</h3>
 							<div class="forabg">
@@ -338,9 +361,15 @@ function jumpto_garage()
 								</div><span class="corners-bottom"><span></span></span>
 							</div>
 							<!-- END quartermile -->
+									<span class="corners-bottom"><span></span></span>
+								</div>
+							</div>
 						</div>
 
 						<div id="options003" style="display: none;">
+							<div class="panel">
+								<div class="inner">
+									<span class="corners-top"><span></span></span>
 							<!-- BEGIN dynorun -->
 							<h3>{L_DYNORUNS}</h3>
 							<div class="forabg">
@@ -384,9 +413,15 @@ function jumpto_garage()
 								</div><span class="corners-bottom"><span></span></span>
 							</div>
 							<!-- END dynorun -->
+									<span class="corners-bottom"><span></span></span>
+								</div>
+							</div>
 						</div>
 
 						<div id="options004" style="display: none;">
+							<div class="panel">
+								<div class="inner">
+									<span class="corners-top"><span></span></span>
 							<!-- BEGIN tracktime -->
 							<h3>{L_LAPS}</h3>
 							<div class="forabg">
@@ -420,9 +455,15 @@ function jumpto_garage()
 								</div><span class="corners-bottom"><span></span></span>
 							</div>
 							<!-- END tracktime -->
+									<span class="corners-bottom"><span></span></span>
+								</div>
+							</div>
 						</div>
 
 						<div id="options005" style="display: none;">
+							<div class="panel">
+								<div class="inner">
+									<span class="corners-top"><span></span></span>
 							<!-- BEGIN insurance -->
 							<h3>{L_INSURANCE_PREMIUMS}</h3>
 							<div class="forabg">
@@ -452,234 +493,115 @@ function jumpto_garage()
 								</div><span class="corners-bottom"><span></span></span>
 							</div>
 							<!-- END insurance -->
+									<span class="corners-bottom"><span></span></span>
+								</div>
+							</div>
 						</div>
 
 						<div id="options006" style="display: none;">
-							<!-- BEGIN service_history -->
-							<h3>{L_SERVICE_HISTORY}</h3>
-							<div class="forabg">
-								<div class="inner"><span class="corners-top"><span></span></span>
-									<ul class="topiclist">
-										<li class="header">
-											<dl>
-												<dt>{L_GARAGE}</dt>
-												<dd>{L_TYPE}</dd>
-												<dd>{L_COST}</dd>
-												<dd>{L_RATING}</dd>
-												<dd>{L_MILEAGE}</dd>
-												<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd></dd><!-- ENDIF -->
-											</dl>
-										</li>
-									</ul>
-									<ul class="topiclist topics">
-										<!-- BEGIN service -->
-										<!-- IF service.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
-											<dl>
-												<dt><a href="{service_history.service.U_GARAGE}">{service_history.service.TITLE}</a></dt>
-	  											<dd>{service_history.service.TYPE}</dd>
-												<dd>{service_history.service.PRICE}</dd>
-												<dd>{service_history.service.RATING}</dd>
-												<dd>{service_history.service.MILEAGE}</dd>
-												<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd><!-- IF service_history.service.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{service_history.service.U_EDIT}"></a></div></div><!-- ENDIF -->&nbsp;<!-- IF service_history.service.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{service_history.service.U_DELETE}"></a></div></div><!-- ENDIF --></span></dt><!-- ENDIF -->
-											</dl>
-										</li>
-										<!-- END service -->
-									</ul>
-								</div><span class="corners-bottom"><span></span></span>
+							<div class="panel">
+								<div class="inner">
+									<span class="corners-top"><span></span></span>
+									<!-- BEGIN service_history -->
+									<h3>{L_SERVICE_HISTORY}</h3>
+									<div class="forabg">
+										<div class="inner">
+											<span class="corners-top"><span></span></span>
+											<ul class="topiclist">
+												<li class="header">
+													<dl>
+														<dt>{L_GARAGE}</dt>
+														<dd>{L_TYPE}</dd>
+														<dd>{L_COST}</dd>
+														<dd>{L_RATING}</dd>
+														<dd>{L_MILEAGE}</dd>
+														<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd></dd><!-- ENDIF -->
+													</dl>
+												</li>
+											</ul>
+											<ul class="topiclist topics">
+												<!-- BEGIN service -->
+												<!-- IF service.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
+													<dl>
+														<dt><a href="{service_history.service.U_GARAGE}">{service_history.service.TITLE}</a></dt>
+	  													<dd>{service_history.service.TYPE}</dd>
+														<dd>{service_history.service.PRICE}</dd>
+														<dd>{service_history.service.RATING}</dd>
+														<dd>{service_history.service.MILEAGE}</dd>
+														<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd><!-- IF service_history.service.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{service_history.service.U_EDIT}"></a></div></div><!-- ENDIF -->&nbsp;<!-- IF service_history.service.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{service_history.service.U_DELETE}"></a></div></div><!-- ENDIF --></span></dt><!-- ENDIF -->
+													</dl>
+												</li>
+												<!-- END service -->
+											</ul>
+										</div>
+										<span class="corners-bottom"><span></span></span>
+									</div>
+									<!-- END service_history -->
+									<span class="corners-bottom"><span></span></span>
+								</div>
 							</div>
-							<!-- END service_history -->
 						</div>
 
 						<div id="options007" style="display: none;">
-							<!-- BEGIN blog -->
-							<form method="post" name="guestbook" action="{S_MODE_BLOG_ACTION}">
-								<!-- IF S_DISPLAY_ENTRY_BLOG -->
-								<h3>{L_ADD_BLOG}</h3>
-								<dl>
-									<dt>{L_BLOG_HEADER}</dt>
-									<dd><input name="blog_title" type="text" class="post" size="60" value="{}" /></dd>
-								</dl>
-								<dl>
-									<dt>{L_ADD_BLOG}</dt>
-									<dd><textarea name="blog_text" cols="70" rows="6" wrap="soft" class="post">{}</textarea></dd>
-								</dl>
+							<div class="panel">
+								<div class="inner">
+									<span class="corners-top"><span></span></span>
+									<!-- BEGIN blog -->
+									<form method="post" name="guestbook" action="{S_MODE_BLOG_ACTION}">
+									<!-- IF S_DISPLAY_ENTRY_BLOG -->
+									<h3>{L_ADD_BLOG}</h3>
+									<dl>
+										<dt>{L_BLOG_HEADER}</dt>
+										<dd><input name="blog_title" type="text" class="post" size="60" value="{}" /></dd>
+									</dl>
+									<dl>
+										<dt>{L_ADD_BLOG}</dt>
+										<dd><textarea name="blog_text" cols="70" rows="6" wrap="soft" class="post">{}</textarea></dd>
+									</dl>
+	
+									<fieldset>
+										<input type="hidden" value="{VID}" name="VID" />
+									</fieldset>
+	
+									<fieldset class="submit-buttons">
+										<input type="submit" name="submit" value="{L_ADD_BLOG}" class="button1" />
+									</fieldset>
+									<!-- ENDIF -->
 
-								<fieldset>
-									<input type="hidden" value="{VID}" name="VID" />
-								</fieldset>
+									<!-- BEGIN entry -->
+									<dl>
+										<dd><h3>{blog.entry.BLOG_TITLE}</h3>{blog.entry.BLOG_DATE}<br /><br />{blog.entry.BLOG_TEXT}</td>
+									</dl>
+									<!-- BEGINELSE -->
+									<dl>
+										<dd>{L_ADD_FIRST_BLOG}</td>
+									</dl>
+									<!-- END entry -->
+								</form>
 
-								<fieldset class="submit-buttons">
-									<input type="submit" name="submit" value="{L_ADD_BLOG}" class="button1" />
-								</fieldset>
-								<!-- ENDIF -->
-
-								<!-- BEGIN entry -->
-								<dl>
-									<dd><h3>{blog.entry.BLOG_TITLE}</h3>{blog.entry.BLOG_DATE}<br /><br />{blog.entry.BLOG_TEXT}</td>
-								</dl>
-								<!-- BEGINELSE -->
-								<dl>
-									<dd>{L_ADD_FIRST_BLOG}</td>
-								</dl>
-								<!-- END entry -->
-							</form>
-
-							<!-- IF PAGINATION or TOTAL_BUSINESS -->
-							<div class="pagination">
-								{TOTAL_BUSINESS}
+								<!-- IF PAGINATION or TOTAL_BUSINESS -->
+								<div class="pagination">
+									{TOTAL_BUSINESS}
 								<!-- IF PAGE_NUMBER --><!-- IF PAGINATION --> &bull; <a href="#" onclick="jumpto(); return false;" title="{L_JUMP_TO_PAGE}">{PAGE_NUMBER}</a> &bull; <span>{PAGINATION}</span><!-- ELSE --> &bull; {PAGE_NUMBER}<!-- ENDIF --><!-- ENDIF -->
 							</div>
 							<!-- ENDIF -->
 
 							<!-- END blog -->
+									<span class="corners-bottom"><span></span></span>
+								</div>
+							</div>
 						</div>
 
-			<div id="options008" style="display: none;">
-			<!-- BEGIN guestbook -->
-			<form method="post" name="guestbook" action="{S_MODE_GUESTBOOK_ACTION}">
-			<table width="100%" cellspacing="1" cellpadding="3" border="0" class="tablebg">
-			<!-- BEGIN comments -->
-			<!-- IF guestbook.comments.S_FIRST_ROW -->
-				<tr>
-					<th>{L_AUTHOR}</th>
-					<th>{L_MESSAGE}</th>
-				</tr>
-				<!-- ENDIF -->
-				<!-- IF guestbook.comments.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-
-				<!-- IF guestbook.comments.S_IGNORE_POST -->
-						<td class="gensmall" colspan="2" height="25" align="center"><!-- IF guestbook.comments.S_FIRST_UNREAD --><a name="unread"></a><!-- ENDIF --><a name="p{guestbook.comments.POST_ID}"></a>{guestbook.comments.L_IGNORE_POST}</td>
-				<!-- ELSE -->
-
-						<td align="center" valign="middle">
-							<b class="postauthor" <!-- IF guestbook.comments.POST_AUTHOR_COLOUR -->style="color: {guestbook.comments.POST_AUTHOR_COLOUR}"<!-- ENDIF -->>{guestbook.comments.POST_AUTHOR}</strong>
-						</td>
-						<td width="100%" height="25">
-							<table width="100%" cellspacing="0">
-							<tr>
-							<!-- IF guestbook.comments.POST_ICON_IMG -->
-								<td><img src="{T_ICONS_PATH}{guestbook.comments.POST_ICON_IMG}" width="{guestbook.comments.POST_ICON_IMG_WIDTH}" height="{guestbook.comments.POST_ICON_IMG_HEIGHT}" alt="" title="" /></td>
-							<!-- ENDIF -->
-								<td class="gensmall" width="100%"><div style="float:right"><a href="{guestbook.comments.U_MINI_POST}">{guestbook.comments.MINI_POST_IMG}</a><strong>{L_POSTED}:</strong> {guestbook.comments.POST_DATE}&nbsp;</div></td>
-							</tr>
-							</table>
-						</td>
-					</tr>
-		
-					<!-- IF guestbook.comments.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-
-						<td valign="top">
-							<table cellspacing="4" align="center" width="150">
-						<!-- IF guestbook.comments.ONLINE_IMG -->
-							<tr>
-								<td>{guestbook.comments.ONLINE_IMG}</td>
-				</tr>
-			<!-- ENDIF -->
-			<!-- IF guestbook.comments.RANK_TITLE -->
-				<tr>
-					<td class="postdetails">{guestbook.comments.RANK_TITLE}</td>
-				</tr>
-			<!-- ENDIF -->
-			<!-- IF guestbook.comments.RANK_IMG -->
-				<tr>
-					<td>{guestbook.comments.RANK_IMG}</td>
-				</tr>
-			<!-- ENDIF -->
-			<!-- IF guestbook.comments.POSTER_AVATAR -->
-				<tr>
-					<td>{guestbook.comments.POSTER_AVATAR}</td>
-				</tr>
-			<!-- ENDIF -->
-			<!-- IF guestbook.comments.U_VEHICLE -->
-				<tr>
-					<td class="postdetails"><a href={guestbook.comments.U_VEHICLE}>{guestbook.comments.POSTER_CAR_YEAR} {guestbook.comments.POSTER_CAR_MARK} {guestbook.comments.POSTER_CAR_MODEL}</a></td>
-				</tr>
-			<!-- ENDIF -->
-				</table>
-
-				<span class="postdetails">
-					<!-- IF guestbook.comments.POSTER_JOINED --><br /><strong>{L_JOINED}:</strong> {guestbook.comments.POSTER_JOINED}<!-- ENDIF -->
-					<!-- IF guestbook.comments.POSTER_POSTS != '' --><br /><strong>{L_POSTS}:</strong> {guestbook.comments.POSTER_POSTS}<!-- ENDIF -->
-					<!-- IF guestbook.comments.POSTER_FROM --><br /><strong>{L_LOCATION}:</strong> {guestbook.comments.POSTER_FROM}<!-- ENDIF -->
-
-					<!-- BEGIN custom_fields -->
-						<br /><strong>{guestbook.comments.custom_fields.PROFILE_FIELD_NAME}:</strong> {guestbook.comments.custom_fields.PROFILE_FIELD_VALUE}
-					<!-- END custom_fields -->
-				</span>
-
-			</td>
-			<td valign="top">
-				<table width="100%" cellspacing="5">
-				<tr>
-					<td>
-						<div class="postbody">{guestbook.comments.MESSAGE}</div>
-
-					<!-- IF guestbook.comments.SIGNATURE -->
-						<span class="postbody"><br />_________________<br />{guestbook.comments.SIGNATURE}</span>
-					<!-- ENDIF -->
-
-					<!-- IF not guestbook.comments.S_HAS_ATTACHMENTS --><br clear="all" /><br /><!-- ENDIF -->
-									<table width="100%" cellspacing="0">
-									<tr valign="middle">
-										<td class="gensmall" align="right">
-										<!-- IF not S_IS_BOT -->
-											<!-- IF guestbook.comments.U_INFO --><a href="{guestbook.comments.U_INFO}">{INFO_IMG}</a> <!-- ENDIF --> 
-											<!-- IF guestbook.comments.U_WARN --><a href="{guestbook.comments.U_WARN}">{WARN_IMG}</a> <!-- ENDIF --> 
-											<!-- IF guestbook.comments.U_DELETE --><a href="{guestbook.comments.U_DELETE}">{DELETE_IMG}</a> <!-- ENDIF -->
-										<!-- ENDIF -->
-										</td>
-									</tr>
-									</table>
-								</td>
-							</tr>
-							</table>
-						</td>
-					</tr>
-
-					<!-- IF guestbook.comments.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
-
-						<td nowrap="nowrap">&nbsp;</td>
-						<td><div class="gensmall" style="float: left;">&nbsp;<!-- IF guestbook.comments.U_PROFILE --><a href="{guestbook.comments.U_PROFILE}">{PROFILE_IMG}</a> <!-- ENDIF --> <!-- IF guestbook.comments.U_PM --><a href="{guestbook.comments.U_PM}">{PM_IMG}</a> <!-- ENDIF --> <!-- IF guestbook.comments.U_EMAIL --><a href="{guestbook.comments.U_EMAIL}">{EMAIL_IMG}</a> <!-- ENDIF -->&nbsp;</div> <div class="gensmall" style="float:right"><!-- IF not S_IS_BOT --><!-- IF guestbook.comments.U_EDIT --><a href="{guestbook.comments.U_EDIT}">{EDIT_IMG}</a> <!-- ENDIF --> <!-- IF guestbook.comments.U_QUOTE --><a href="{guestbook.comments.U_QUOTE}">{QUOTE_IMG}</a> <!-- ENDIF --> <!-- ENDIF -->&nbsp;</div></td>
-					</tr>
-
-				<!-- ENDIF -->
-	
-				<tr>
-					<td class="spacer" colspan="2" height="1"><img src="images/spacer.gif" alt="" width="1" height="1" /></td>
-				</tr>
-				<!-- BEGINELSE -->
-				<tr>
-					<td class="row1" align="center" height="28" colspan="5"><span class="gen">{L_ADD_FIRST_COMMENT}</span></td>
-				</tr>
-				<!-- END comments -->
-
-				<!-- IF S_DISPLAY_LEAVE_COMMENT -->
-				<tr>
-					<td class="cat" align="center" height="28" colspan="5"><span class="gen">{L_ADD_COMMENT}</span></td>
-				</tr>
-				<tr>
-					<td class="row1" width="20%"><span class="gen">{L_ADD_COMMENT}</span></td>
-					<td class="row2" colspan="4"><textarea name="comments" cols="70" rows="7" wrap="soft" class="post">{COMMENTS}</textarea></td>
-				</tr>
-				<tr>
-					<td class="cat" align="center" height="28" colspan="5"><input type="hidden" value="insert_comment" name="mode" /><input type="hidden" value="{VID}" name="VID" /><input name="submit" type="submit" value="{L_POST_COMMENT}" class="liteoption" /></td>
-				</tr>
-				<!-- ENDIF -->
-			</table>
-
-			<table width="100%" cellspacing="1">
-			<tr>
-				<!-- IF TOTAL_COMMENTS -->
-					<td class="nav" valign="middle" nowrap="nowrap">&nbsp;{PAGE_NUMBER}<br /></td>
-					<td class="gensmall" nowrap="nowrap">&nbsp;[ {TOTAL_COMMENTS} ]&nbsp;</td>
-					<td class="gensmall" width="100%" align="right" nowrap="nowrap"><!-- INCLUDE garage_pagination.html --></td>
-				<!-- ENDIF -->
-			</tr>
-			</table>
-
-			</form>
-			<!-- END guestbook -->
+						<div id="options008" style="display: none;">
+							<div class="panel">
+								<div class="inner">
+							<span class="corners-top"><span></span></span>
+							<!-- BEGIN guestbook -->
+							<!-- END guestbook -->
+							<span class="corners-bottom"><span></span></span>
+						</div>
 					</div>
+				</div>
 			</div>
 			<span class="corners-bottom"><span></span></span>
 		</div>

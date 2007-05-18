@@ -65,11 +65,15 @@
 	background-color: #f9f9f9;
 	padding: 0 5px;
 	margin: 10px 15px 10px 5px;
+	width: auto;
+	white-space: nowrap;
 }
 
 .vehicles-mini span.corners-top, .vehicles-mini span.corners-bottom {
 	margin: 0 -5px;
 }
+
+
 
 /* Icon used in viewtopic_body.html */
 .garage-icon, .garage-icon a	{ 
@@ -243,3 +247,16 @@ ul.manage-vehicle-icons li.newservice-icon	{
 .icon-garage		{ background-image: url("{T_THEME_PATH}/images/icon_garage.gif"); }
 .icon-quartermile	{ background-image: url("{T_THEME_PATH}/images/icon_quartermile.gif"); }
 .icon-dynorun		{ background-image: url("{T_THEME_PATH}/images/icon_dynorun.gif"); }
+
+dt.index_block_header, dd.index_block_header {
+	width: 33%;
+	text-align: center;
+	line-height: 2.2em;
+	font-size: 1.2em;
+}
+
+dt.index_block, dd.index_block {
+	width: 33%;
+	text-align: center;
+	font-size: 1.0em;
+}

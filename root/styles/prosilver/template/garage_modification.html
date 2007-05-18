@@ -77,80 +77,86 @@ function build_product_list()
 
 <!-- INCLUDE garage_menu.html -->
 
-		<script type="text/javascript" src="{T_TEMPLATE_PATH}/garage_functions.js"></script>
 <div id="garage-main">
-
-<div class="panel">
-	<div class="inner"><span class="corners-top"><span></span></span>
-
-		<div id="advanced00">
+	<div class="panel">
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
+	
 			<div id="tabs">
 				<ul>
-					<li class="garage_preset_yes" id="tab000"><a href="#data" onclick="swap_options('0','0','0');"><span class="tabbg">{L_MODIFICATION}</span></a></li>
-					<!-- IF U_MANAGE_GALLERY --><li class="garage_preset_yes" id="tab001"><a href="#images" onclick="swap_options('0','0','1');"><span class="tabbg">{L_IMAGES}</span></a></li><!-- ENDIF -->
+					<li id="tab000"><a href="#data" onclick="swap_options('0','0','0');"><span class="tabbg">{L_MODIFICATION}</span></a></li>
+					<!-- IF U_MANAGE_GALLERY --><li id="tab001"><a href="#images" onclick="swap_options('0','0','1');"><span class="tabbg">{L_IMAGES}</span></a></li><!-- ENDIF -->
 				</ul>
 			</div>
 
-			<div class="garage_panel" id="options000" style="display: none;">
-			<span class="corners-top"><span></span></span>
-			<div class="tablewrap">
-				<form id="modification" enctype="multipart/form-data" method="post" name="modification" action="{S_MODE_ACTION}">
-				<h3>{L_TITLE}</h3>
-				<fieldset>
-					<dl>
-						<dt class="row1" width="30%"><span class="gen"><b>{L_CATEGORY}</b></span><span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></dt>
-						<dd class="row2" colspan="2"><select id="category_id" name="category_id" onchange="category_change(this)" ><option value="">{L_SELECT_CATEGORY}</option><option value="">------</option><!-- BEGIN category--><option value="{category.VALUE}" <!-- IF category.S_SELECTED -->selected="selected"<!-- ENDIF -->>{category.TEXT}</option><!-- END category --></select>&nbsp;</dd>
-					</dl>
-					<dl>
-						<dt class="row1" width="30%"><span class="gen"><b>{L_MANUFACTURER}</b></span><span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></dt>
-						<dd class="row2" colspan="2"><select id="manufacturer_id" name="manufacturer_id" onchange="get_product_list(this)" ><option value="">{L_SELECT_MANUFACTURER}</option><option value="">------</option><!-- BEGIN manufacturer--><option value="{manufacturer.VALUE}" <!-- IF manufacturer.S_SELECTED -->selected="selected"<!-- ENDIF -->>{manufacturer.TEXT}</option><!-- END manufacturer --></select>&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS_PRODUCT}">{L_HERE}</a></span></dd>
-					</dl>
-					<dl>
-						<dt class="row1" width="30%"><span class="gen"><b>{L_PRODUCT}</b></span><span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></dt>
-						<dd class="row2" colspan="2"><select id="product_id" name="product_id"><option value="">{L_SELECT_PRODUCT}</option><option value="">------</option></select>&nbsp;<span class="gensmall">&nbsp;{L_NOT_LISTED_YET}<a href="{U_SUBMIT_PRODUCT}">{L_HERE}</a>&nbsp;&nbsp;&nbsp;<span class="gen"><b>{L_RATING}</b>&nbsp;</span><span class="gensmall"><select id="product_rating" name="product_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN product_rating --><option value="{product_rating.VALUE}" <!-- IF product_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{product_rating.TEXT}</option><!-- END product_rating --></select></span></dd>
-					</dl>
-					<dl>
-						<dt class="row1" width="30%"><span class="gen"><b>{L_PURCHASED_FROM}</b></span></dt>
-					  	<dd class="row2" colspan="2"><select id="shop_id" name="shop_id"><option value="">{L_SELECT_SHOP}</option><option value="">------</option><!-- BEGIN shop --><option value="{shop.VALUE}" <!-- IF shop.S_SELECTED -->selected="selected"<!-- ENDIF -->>{shop.TEXT}</option><!-- END shop --></select>&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS_SHOP}">{L_HERE}</a></span></dd>
-					</dl>
-					<dl>
-						<dt class="row1" width="30%"><span class="gen"><b>{L_PURCHASED_PRICE}</b></span></dt>
-						<dd class="row2" colspan="2"><input name="price" type="text" class="post" size="10" value="{PRICE}" /><span class="gen">&nbsp;<b>{L_PURCHASE_RATING}</b>&nbsp;<select id="purchase_rating" name="purchase_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN purchase_rating --><option value="{purchase_rating.VALUE}" <!-- IF purchase_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{purchase_rating.TEXT}</option><!-- END purchase_rating --></select></dd>
-					</dl>	
-					<dl>
-						<dt class="row1" width="30%"><span class="gen"><b>{L_INSTALLED_BY}</b></span></dt>
-					  	<dd class="row2" colspan="2"><select id="installer_id" name="installer_id"><option value="">{L_SELECT_GARAGE}</option><option value="">------</option><!-- BEGIN garage --><option value="{garage.VALUE}" <!-- IF garage.S_SELECTED -->selected="selected"<!-- ENDIF -->>{garage.TEXT}</option><!-- END garage --></select>&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS_GARAGE}">{L_HERE}</a></span></dd>
-					</dl>
-					<dl>
-						<dt class="row1" width="30%"><span class="gen"><b>{L_INSTALLATION_PRICE}</b></span></dt>
-						<dd class="row2" colspan="2"><input name="install_price" type="text" class="post" size="10" value="{INSTALL_PRICE}" /><span class="gen">&nbsp;<b>{L_INSTALLATION_RATING}</b>&nbsp;<select id="install_rating" name="install_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN install_rating --><option value="{install_rating.VALUE}" <!-- IF install_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{install_rating.TEXT}</option><!-- END install_rating --></select></dd>
-					</dl>
-					<dl>
-						<dt class="row1" width="30%"><span class="gen"><b>{L_DESCRIPTION}</b></span></dt>
-						<dd class="row2" colspan="2"><textarea name="comments" cols="60" rows="4" wrap="soft"   class="post">{COMMENTS}</textarea></dd>
-					</dl>
-					<dl>
-						<dt class="row1" width="30%"><span class="gen"><b>{L_INSTALL_COMMENTS}</b></span><br/><span class="gensmall">{L_ONLY_SHOW_IN_REVIEW}</span></dt>
-						<dd class="row2" colspan="2"><textarea name="install_comments" cols="60" rows="4" wrap="soft"   class="post">{INSTALL_COMMENTS}</textarea></dd>
-					</dl>
+			<div class="panel bg3">
+				<div class="inner">
+					<span class="corners-top"><span></span></span>
 
-					<!-- IF ! MID -->
-						<!-- INCLUDE garage_image_attach.html -->
-					<!-- ENDIF -->
+					<div id="options000" style="display: none;">
+						<div class="panel">
+							<div class="inner">
+								<span class="corners-top"><span></span></span>
 
-				</fieldset>
+								<form id="modification" enctype="multipart/form-data" method="post" name="modification" action="{S_MODE_ACTION}">
+								<h3>{L_TITLE}</h3>
+								<fieldset>
+									<dl>
+										<dt><b>{L_CATEGORY}</b><span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
+										<dd><select id="category_id" name="category_id" onchange="category_change(this)" ><option value="">{L_SELECT_CATEGORY}</option><option value="">------</option><!-- BEGIN category--><option value="{category.VALUE}" <!-- IF category.S_SELECTED -->selected="selected"<!-- ENDIF -->>{category.TEXT}</option><!-- END category --></select>&nbsp;</dd>
+									</dl>
+									<dl>
+										<dt><b>{L_MANUFACTURER}</b><span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
+										<dd><select id="manufacturer_id" name="manufacturer_id" onchange="get_product_list(this)" ><option value="">{L_SELECT_MANUFACTURER}</option><option value="">------</option><!-- BEGIN manufacturer--><option value="{manufacturer.VALUE}" <!-- IF manufacturer.S_SELECTED -->selected="selected"<!-- ENDIF -->>{manufacturer.TEXT}</option><!-- END manufacturer --></select>&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS_PRODUCT}">{L_HERE}</a></span></dd>
+									</dl>
+									<dl>
+										<dt><b>{L_PRODUCT}</b><span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
+										<dd><select id="product_id" name="product_id"><option value="">{L_SELECT_PRODUCT}</option><option value="">------</option></select>&nbsp;<span class="gensmall">&nbsp;{L_NOT_LISTED_YET}<a href="{U_SUBMIT_PRODUCT}">{L_HERE}</a>&nbsp;&nbsp;&nbsp;<span class="gen"><b>{L_RATING}</b>&nbsp;</span><span class="gensmall"><select id="product_rating" name="product_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN product_rating --><option value="{product_rating.VALUE}" <!-- IF product_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{product_rating.TEXT}</option><!-- END product_rating --></select></span></dd>
+									</dl>
+									<dl>
+										<dt><b>{L_PURCHASED_FROM}</b></dt>
+									  	<dd><select id="shop_id" name="shop_id"><option value="">{L_SELECT_SHOP}</option><option value="">------</option><!-- BEGIN shop --><option value="{shop.VALUE}" <!-- IF shop.S_SELECTED -->selected="selected"<!-- ENDIF -->>{shop.TEXT}</option><!-- END shop --></select>&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS_SHOP}">{L_HERE}</a></span></dd>
+									</dl>
+									<dl>
+										<dt><b>{L_PURCHASED_PRICE}</b></dt>
+										<dd><input name="price" type="text" class="post" size="10" value="{PRICE}" /><span class="gen">&nbsp;<b>{L_PURCHASE_RATING}</b>&nbsp;<select id="purchase_rating" name="purchase_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN purchase_rating --><option value="{purchase_rating.VALUE}" <!-- IF purchase_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{purchase_rating.TEXT}</option><!-- END purchase_rating --></select></dd>
+									</dl>	
+									<dl>
+										<dt><b>{L_INSTALLED_BY}</b></dt>
+									  	<dd><select id="installer_id" name="installer_id"><option value="">{L_SELECT_GARAGE}</option><option value="">------</option><!-- BEGIN garage --><option value="{garage.VALUE}" <!-- IF garage.S_SELECTED -->selected="selected"<!-- ENDIF -->>{garage.TEXT}</option><!-- END garage --></select>&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS_GARAGE}">{L_HERE}</a></span></dd>
+									</dl>
+									<dl>
+										<dt><b>{L_INSTALLATION_PRICE}</b></dt>
+										<dd><input name="install_price" type="text" class="post" size="10" value="{INSTALL_PRICE}" /><span class="gen">&nbsp;<b>{L_INSTALLATION_RATING}</b>&nbsp;<select id="install_rating" name="install_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN install_rating --><option value="{install_rating.VALUE}" <!-- IF install_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{install_rating.TEXT}</option><!-- END install_rating --></select></dd>
+									</dl>
+									<dl>
+										<dt><b>{L_DESCRIPTION}</b></dt>
+										<dd><textarea name="comments" cols="60" rows="4" wrap="soft"   class="post">{COMMENTS}</textarea></dd>
+									</dl>
+									<dl>
+										<dt><b>{L_INSTALL_COMMENTS}</b><br />{L_ONLY_SHOW_IN_REVIEW}</dt>
+										<dd><textarea name="install_comments" cols="60" rows="4" wrap="soft"   class="post">{INSTALL_COMMENTS}</textarea></dd>
+									</dl>
 
-				<fieldset>
-					<input type="hidden" value="" name="redirect" /><input type="hidden" value="{VID}" name="VID" /><input type="hidden" value="{MID}" name="MID" />
-				</fieldset>
+									<!-- IF ! MID -->
+										<!-- INCLUDE garage_image_attach.html -->
+									<!-- ENDIF -->
 
-				<fieldset class="submit-buttons">
-					<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 
-					<input type="submit" name="submit2" value="{L_BUTTON}" class="button1" />
-				</fieldset>
-			</div>
-			<span class="corners-bottom"><span></span></span>
-			</div>
+								</fieldset>
+
+								<fieldset>
+									<input type="hidden" value="" name="redirect" /><input type="hidden" value="{VID}" name="VID" /><input type="hidden" value="{MID}" name="MID" />
+								</fieldset>
+	
+								<fieldset class="submit-buttons">
+									<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 
+									<input type="submit" name="submit2" value="{L_BUTTON}" class="button1" />
+								</fieldset>
+								</form>
+								<span class="corners-bottom"><span></span></span>
+							</div>
+						</div>
+					</div>
 
 					<div id="options001" style="display: none;">
 

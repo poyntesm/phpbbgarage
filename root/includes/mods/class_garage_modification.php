@@ -481,7 +481,7 @@ class garage_modification
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'm.*, v.made_year, v.id, v.currency, i.*, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.title as business_title, b2.title as install_business_title, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, p.title, u.user_avatar_width, u.user_avatar_height, u.user_colour',
+			'SELECT'	=> 'm.*, v.made_year, v.id, v.currency, i.*, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.title as manufacturer, b2.title as business_title, b3.title as install_business_title, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, p.title, u.user_avatar_width, u.user_avatar_height, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE		=> 'v',
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
@@ -489,6 +489,7 @@ class garage_modification
 				GARAGE_CATEGORIES_TABLE		=> 'c',
 				GARAGE_MAKES_TABLE		=> 'mk',
 				GARAGE_MODELS_TABLE		=> 'md',
+				GARAGE_BUSINESS_TABLE		=> 'b1',
 				USERS_TABLE			=> 'u',
 			),
 			'LEFT_JOIN'	=> array(
@@ -501,18 +502,19 @@ class garage_modification
 					'ON'	=> 'mg.image_id = i.attach_id'
 				)
 				,array(
-					'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b1'),
-					'ON'	=> 'm.shop_id = b1.id'
+					'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b2'),
+					'ON'	=> 'm.shop_id = b2.id'
 				)
 				,array(
-					'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b2'),
-					'ON'	=> 'm.installer_id = b2.id'
+					'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b3'),
+					'ON'	=> 'm.installer_id = b3.id'
 				)
 			),
 			'WHERE'		=> "m.id = $mid 
 						AND v.id = m.vehicle_id
 						AND m.product_id = p.id
 						AND m.category_id = c.id
+						AND m.manufacturer_id = b1.id
 						AND (v.make_id = mk.id AND mk.pending = 0)
 						AND (v.model_id = md.id AND md.pending = 0)
 						AND v.user_id = u.user_id"

@@ -254,7 +254,7 @@ switch( $mode )
 			'body'   => 'garage_dynorun.html')
 		);
 		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $vehicle_data['vehicle'],
+			'FORUM_NAME'	=> $vehicle['vehicle'],
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"))
 		);
 		$template->assign_block_vars('navlinks', array(

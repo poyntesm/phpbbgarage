@@ -219,7 +219,7 @@ class garage_vehicle
 	*/
 	function update_vehicle($data)
 	{
-		global $vid, $db, $garage_config, $user;
+		global $vid, $db, $garage_config;
 
 		$update_sql = array(
 			'made_year'		=> $data['made_year'],
@@ -728,8 +728,8 @@ class garage_vehicle
 		for ($i = 0; $i < count($vehicle_data); $i++)
 	 	{
 			$template->assign_block_vars($template_block_row, array(
-				'U_COLUMN_1' 		=> append_sid("garage_vehicle.$phpEx", "mode=view_vehicle&VID=" . $vehicle_data[$i]['id'], true),
-				'U_COLUMN_2' 		=> append_sid("memberlist.$phpEx", "mode=viewprofile&u=" . $vehicle_data[$i]['user_id'], true),
+				'U_COLUMN_1' 		=> append_sid("garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=" . $vehicle_data[$i]['id']),
+				'U_COLUMN_2' 		=> append_sid("memberlist.$phpEx", "mode=viewprofile&amp;u=" . $vehicle_data[$i]['user_id']),
 				'COLUMN_1_TITLE'	=> $vehicle_data[$i]['vehicle'],
 				'COLUMN_2_TITLE'	=> $vehicle_data[$i]['username'],
 				'COLUMN_3_TITLE'	=> $user->format_date($vehicle_data[$i]['date_updated']),

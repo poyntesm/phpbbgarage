@@ -19,6 +19,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
+	'TOGGLE_MENU'			=> 'Hide or display the side menu',
 	'YOUR_GARAGE'			=> 'Your Garage',
 	'MODERATE_VEHICLE'		=> 'Moderate Vehicle',
 	'EDIT_MODIFICATION'		=> 'Edit modification',

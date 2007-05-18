@@ -39,8 +39,8 @@ function build_model_list()
 <!-- INCLUDE garage_menu.html -->
 
 <script type="text/javascript" src="{T_TEMPLATE_PATH}/garage_functions.js"></script>
-<div id="garage-main">
 
+<div id="garage-main">
 	<div class="panel">
 		<div class="inner">
 			<span class="corners-top"><span></span></span>
@@ -58,10 +58,11 @@ function build_model_list()
 	
 					<div id="options000" style="display: none;">
 
-					<div class="panel">
-						<div class="inner"><span class="corners-top"><span></span></span>
+						<div class="panel">
+							<div class="inner">
+								<span class="corners-top"><span></span></span>
 
-						<form id="edit_vehicle" enctype="multipart/form-data" method="post" name="edit_vehicle" action="{S_MODE_ACTION}">
+								<form id="edit_vehicle" enctype="multipart/form-data" method="post" name="edit_vehicle" action="{S_MODE_ACTION}">
 						<h3>{L_TITLE}</h3>
 						<fieldset>
 							<dl>
@@ -109,6 +110,11 @@ function build_model_list()
 								<!-- INCLUDE garage_image_attach.html -->
 							<!-- ENDIF -->
 						<fieldset>
+
+						<fieldset>
+							<input type="hidden" value="{VID}" name="VID" />
+						</fieldset>
+
 
 						<fieldset class="submit-buttons">
 							<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 

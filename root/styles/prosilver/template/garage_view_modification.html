@@ -11,98 +11,82 @@
 <!-- INCLUDE garage_menu.html -->
 
 <div id="garage-main">
-
-<div class="panel">
-	<div class="inner"><span class="corners-top"><span></span></span>
-			<table cellpadding="4" cellspacing="1" border="0" width="100%" class="tablebg">
-			<thead>
-     				<tr>
-      					<th height="25" colspan="2">{YEAR} {MAKE} {MODEL}</th>
-				</tr>
-			</thead>
-			<tbody>
-        			<tr>
-            				<td class="row1" width="40%" valign="top">
-						<table width="100%" cellpadding="4" cellspacing="1" border="0">
-						<tbody>
-                    					<tr>
-    								<td class="row1"><span class="gen"><b>{L_OWNER}</b></span></td>
-							</tr>
-                    					<tr>
-								<td align="center">{AVATAR_IMG}<br /><span class="normalname"><b><a href="{U_VIEW_PROFILE}" <!-- IF USERNAME_COLOUR --> style="color: {USERNAME_COLOUR}"<!-- ENDIF -->>{USERNAME}</a></b></span></td>
-								</td>
-							</tr>
-						</tbody>
-                				</table>
-            				</td>
-            				<td class="row1" valign="top">
-						<table cellpadding="4" cellspacing="1" width="100%">
-						<tbody>
-                    					<tr>
-                        					<td class="row1" nowrap="nowrap"><span class="gen"><b>{L_MODIFICATION}</b></span></td>
-                        					<td><span class="gen">{TITLE}</span></td>
-                    					</tr>
-                    					<tr>
-                        					<td class="row1" nowrap="nowrap"><span class="gen"><b>{L_CATEGORY}</b></span></td>
-                        					<td><span class="gen">{CATEGORY}</span></td>
-                    					</tr>
-                    					<tr>
-                        					<td class="row1" nowrap="nowrap"><span class="gen"><b>{L_VEHICLE}</b></span></td>
-                        					<td><span class="gen">{YEAR} {MAKE} {MODEL}</span></td>
-                    					</tr>
-                    					<tr>
-                        					<td class="row1" nowrap="nowrap"><span class="gen"><b>{L_UPDATED}</b></span></td>
-                        					<td><span class="gen">{DATE_UPDATED}</span></td>
-                    					</tr>
-                    					<tr>
-                        					<td class="row1" nowrap="nowrap"><span class="gen"><b>{L_PURCHASED_FROM}</b></span></td>
-                        					<td><span class="gen"><a href="{U_VIEW_SHOP_BUSINESS}">{BUSINESS_NAME}</a></span></td>
-                    					</tr>
-                    					<tr>
-                        					<td class="row1" nowrap="nowrap"><span class="gen"><b>{L_PURCHASED_PRICE}</b></span></td>
-                        					<td><span class="gen">{PRICE} {CURRENCY}</span></td>
-                    					</tr>
-                    					<tr>
-                        					<td class="row1" nowrap="nowrap"><span class="gen"><b>{L_PRODUCT_RATING}</b></span></td>
-                        					<td><span class="gen">{PRODUCT_RATING}</span></td>
-                    					</tr>
-                    					<tr>
-                        					<td class="row1" nowrap="nowrap"><span class="gen"><b>{L_INSTALLED_BY}</b></span></td>
-                        					<td><span class="gen"><a href="{U_VIEW_GARAGE_BUSINESS}">{BUSINESS}</a></span></td>
-                    					</tr>
-                    					<tr>
-                        					<td class="row1" nowrap="nowrap"><span class="gen"><b>{L_INSTALLATION_PRICE}</b></span></td>
-                        					<td><span class="gen">{INSTALL_PRICE} {CURRENCY}</span></td>
-                    					</tr>
-                    					<tr>
-                        					<td class="row1" nowrap="nowrap"><span class="gen"><b>{L_INSTALLATION_RATING}</b></span></td>
-                        					<td><span class="gen">{INSTALL_RATING}</span></td>
-                    					</tr>
-                    					<tr>
-                        					<td class="row1" nowrap="nowrap"><span class="gen"><b>{L_COMMENTS}</b></span></td>
-                        					<td><span class="gen">{COMMENTS}</span></td>
-							</tr>
-						</tbody>
-                				</table>
-            				</td>
-				</tr>
-			</tbody>
-    			</table>
-			<br />
-
-		<!-- IF S_DISPLAY_GALLERIES -->
-		<div class="panel">
-			<div class="inner"><span class="corners-top"><span></span></span>
-				<h3>{L_MODIFICATION_PICTURES}</h3>
-				<div class="garage-image-gallery">
-					<!-- BEGIN modification_image -->
-					<a href="{modification_image.U_IMAGE}"><img hspace="5" vspace="5" name="{modification_image.IMAGE_NAME}" src="{modification_image.IMAGE_SOURCE}" /></a>
-					<!-- END modification_image -->
-    				</div>
-			</div><span class="corners-bottom"><span></span></span>
+	<div class="panel">
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
+			<h3>{VEHICLE} {L_MODIFICATION}</h3>
+			<fieldset>
+				<dl>
+                  			<dt><b>{L_VEHICLE}</b></dt>
+                     			<dd>{YEAR} {MAKE} {MODEL}</dd>
+				</dl>
+				<dl>
+                	        	<dt><b>{L_OWNER}</b></dt>
+                        		<dd><b><a href="{U_VIEW_PROFILE}" <!-- IF USERNAME_COLOUR --> style="color: {USERNAME_COLOUR}"<!-- ENDIF -->>{USERNAME}</a></b></dd>
+				</dl>
+				<dl>
+                  			<dt><b>{L_MODIFICATION}</b></dt>
+					<dd>{MANUFACTURER} {TITLE}</dd>
+				</dl>
+				<dl>
+                  			<dt><b>{L_PRODUCT_RATING}</b></dt>
+                     			<dd>{PRODUCT_RATING}</dd>
+				</dl>
+				<dl>
+                  			<dt><b>{L_CATEGORY}</b></dt>
+                     			<dd>{CATEGORY}</dd>
+				</dl>
+				<dl>
+                  			<dt><b>{L_UPDATED}</b></dt>
+					<dd>{DATE_UPDATED}</dd>
+				</dl>
+				<dl>
+                  			<dt><b>{L_PURCHASED_FROM}</b></dt>
+					<dd><a href="{U_VIEW_SHOP_BUSINESS}">{BUSINESS_NAME}</a></dd>
+				</dl>
+				<dl>
+                  			<dt><b>{L_PURCHASED_PRICE}</b></dt>
+					<dd>{PRICE} {CURRENCY}</dd>
+				</dl>
+				<dl>
+                  			<dt><b>{L_PURCHASE_RATING}</b></dt>
+					<dd>{PURCHASE_RATING}</dd>
+				</dl>
+				<dl>
+                  			<dt><b>{L_INSTALLED_BY}</b></dt>
+					<dd><a href="{U_VIEW_GARAGE_BUSINESS}">{BUSINESS}</a></dd>
+				</dl>
+				<dl>
+                  			<dt><b>{L_INSTALLATION_PRICE}</b></dt>
+					<dd>{INSTALL_PRICE} {CURRENCY}</dd>
+				</dl>
+				<dl>
+                  			<dt><b>{L_INSTALLATION_RATING}</b></dt>
+					<dd>{INSTALL_RATING}</dd>
+				</dl>
+				<dl>
+                  			<dt><b>{L_COMMENTS}</b></dt>
+					<dd>{COMMENTS}</dd>
+				</dl>
+			</fieldset>
+			<span class="corners-bottom"><span></span></span>
 		</div>
-		<!-- ENDIF -->
-	</div><span class="corners-bottom"><span></span></span>
+	</div>
+
+	<!-- IF S_DISPLAY_GALLERIES -->
+	<div class="panel">
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
+			<h3>{L_MODIFICATION_PICTURES}</h3>
+			<div class="garage-image-gallery">
+				<!-- BEGIN modification_image -->
+				<a href="{modification_image.U_IMAGE}"><img hspace="5" vspace="5" name="{modification_image.IMAGE_NAME}" src="{modification_image.IMAGE_SOURCE}" /></a>
+				<!-- END modification_image -->
+    			</div>
+			<span class="corners-bottom"><span></span></span>
+		</div>
+	</div>
+	<!-- ENDIF -->
 </div>
 
 <!-- INCLUDE garage_footer.html -->

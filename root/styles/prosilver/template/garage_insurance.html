@@ -11,54 +11,66 @@
 <!-- INCLUDE garage_menu.html -->
 
 <div id="garage-main">
-
-<div class="panel">
-	<div class="inner"><span class="corners-top"><span></span></span>
-
+	<div class="panel">
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
+	
 			<div id="tabs">
 				<ul>
-					<li class="garage_preset_yes activetab" id="tab000"><a href="#data"><span class="tabbg">{L_PREMIUM}</span></a></li>
+					<li class="activetab" id="tab000"><a href="#data"><span class="tabbg">{L_PREMIUM}</span></a></li>
 				</ul>
 			</div>
 
-			<div class="garage_panel" id="options000" style="display: block;">
-			<span class="corners-top"><span></span></span>
-			<div class="tablewrap">
-				<form enctype="multipart/form-data" method="post" name="insurance" action="{S_MODE_ACTION}">
-				<h3>{L_TITLE}</h3>
-				<fieldset>		
-					<dl>
-						<dt class="row1" width="35%"><span class="gen"><b>{L_INSURANCE_COMPANY}</b></span>&nbsp;<span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></dt>
-	  					<dd class="row2"><select id="business_id" name="business_id"><option value="">{L_SELECT_INSURER}</option><option value="">------</option><!-- BEGIN insurer --><option value="{insurer.VALUE}" <!-- IF insurer.S_SELECTED -->selected="selected"<!-- ENDIF -->>{insurer.TEXT}</option><!-- END insurer --></select>&nbsp;<span class="gensmall">&nbsp;{L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS}">{L_HERE}</a></span></dd>
-					</dl>
-					<dl>
-						<dt class="row1" width="30%"><span class="gen"><b>{L_PREMIUM_PRICE}</b></span>&nbsp;<span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></dt>
-						<dd class="row2"><input name="premium" type="text" class="post" size="15" value="{PREMIUM}" /></dd>
-					</dl>
-					<dl>
-						<dt class="row1" width="35%"><span class="gen"><b>{L_COVER_TYPE}</b></span>&nbsp;<span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></dt>
-					  	<dd class="row2"><select id="cover_type" name="cover_type"><option value="">{L_SELECT_COVER}</option><option value="">------</option><!-- BEGIN cover --><option value="{cover.VALUE}" <!-- IF cover.S_SELECTED -->selected="selected"<!-- ENDIF -->>{cover.TEXT}</option><!-- END cover --></select></dd>
-					</dl>
-					<dl>
-						<dt class="row1" width="30%"><span class="gen"><b>{L_COMMENTS}</b></span></dt>
-						<dd class="row2"><textarea name="comments" cols="60" rows="5" wrap="soft"   class="post">{COMMENTS}</textarea></dd>
-					</dl>
-				</fieldset>		
+			<div class="panel bg3">
+				<div class="inner">
+					<span class="corners-top"><span></span></span>
 
-				<fieldset>
-					<input type="hidden" value="{VID}" name="VID" /><input type="hidden" value="{INS_ID}" name="INS_ID" />
-				</fieldset>
+					<div id="options000" style="display: block;">
 
-				<fieldset class="submit-buttons">
-					<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 
-					<input type="submit" name="submit" value="{L_BUTTON}" class="button1" />
-				</fieldset>
-			</form>
+						<div class="panel">
+							<div class="inner">
+								<span class="corners-top"><span></span></span>
 
+								<form enctype="multipart/form-data" method="post" name="insurance" action="{S_MODE_ACTION}">
+								<h3>{L_TITLE}</h3>
+								<fieldset>		
+									<dl>
+										<dt><b>{L_INSURANCE_COMPANY}</b>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
+	  									<dd><select id="business_id" name="business_id"><option value="">{L_SELECT_INSURER}</option><option value="">------</option><!-- BEGIN insurer --><option value="{insurer.VALUE}" <!-- IF insurer.S_SELECTED -->selected="selected"<!-- ENDIF -->>{insurer.TEXT}</option><!-- END insurer --></select>&nbsp;&nbsp;{L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS}">{L_HERE}</a></dd>
+									</dl>
+									<dl>
+										<dt><b>{L_PREMIUM_PRICE}</b>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
+										<dd><input name="premium" type="text" class="post" size="15" value="{PREMIUM}" /></dd>
+									</dl>
+									<dl>
+										<dt><b>{L_COVER_TYPE}</b>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
+									  	<dd><select id="cover_type" name="cover_type"><option value="">{L_SELECT_COVER}</option><option value="">------</option><!-- BEGIN cover --><option value="{cover.VALUE}" <!-- IF cover.S_SELECTED -->selected="selected"<!-- ENDIF -->>{cover.TEXT}</option><!-- END cover --></select></dd>
+									</dl>
+									<dl>
+										<dt><b>{L_COMMENTS}</b></dt>
+										<dd><textarea name="comments" cols="60" rows="5" wrap="soft"   class="post">{COMMENTS}</textarea></dd>
+									</dl>
+								</fieldset>		
+			
+								<fieldset>
+									<input type="hidden" value="{VID}" name="VID" /><input type="hidden" value="{INS_ID}" name="INS_ID" />
+								</fieldset>
+
+								<fieldset class="submit-buttons">
+									<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 
+									<input type="submit" name="submit" value="{L_BUTTON}" class="button1" />
+								</fieldset>
+							</form>
+							<span class="corners-bottom"><span></span></span>
+						</div>
+					</div>
+				</div>
+				<span class="corners-bottom"><span></span></span>
 			</div>
-			<span class="corners-bottom"><span></span></span>
-
-			</div>
+		</div>
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
 
 <!-- INCLUDE garage_footer.html -->
 

@@ -11,47 +11,46 @@
 <!-- INCLUDE garage_menu.html -->
 
 <div id="garage-main">
-
-<div class="panel">
-	<div class="inner"><span class="corners-top"><span></span></span>
-		<form enctype="multipart/form-data" method="post" name="user_submit" action="{S_MODE_ACTION}">
+	<div class="panel">
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
+			<form enctype="multipart/form-data" method="post" name="user_submit" action="{S_MODE_ACTION}">
 			<h3>{L_TITLE}</h3>
 			<!-- IF S_DISPLAY_PENDING -->
 			<h4>{L_BUSINESS_NOTICE}</h4>
 			<!-- ENDIF -->
 			<fieldset>
-
 				<dl>
-					<dt class="row1" width="20%"><span class="gen"><b>{L_BUSINESS_NAME}</b></span></dt>
-					<dd class="row2"><input name="title" type="text" class="post" size="35" value="{TITLE}" /> <span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></dd>
+					<dt><b>{L_BUSINESS_NAME}</b></dt>
+					<dd><input name="title" type="text" class="post" size="35" value="{TITLE}" /> <span style="color:#FF0000">[{L_REQUIRED}]</span></dd>
 				</dl>
 				<dl>
-					<dt class="row1" width="35%"><span class="gen"><b>{L_ADDRESS}</b></span></dt>
-					<dd class="row2"><textarea name="address" cols="40" rows="4" wrap="soft"   class="post">{ADDRESS}</textarea></dd>
+					<dt><b>{L_ADDRESS}</b></dt>
+					<dd><textarea name="address" cols="40" rows="4" wrap="soft" class="post">{ADDRESS}</textarea></dd>
 				</dl>
 				<dl>
-					<dt class="row1" width="20%"><span class="gen"><b>{L_TELEPHONE}</b></span></dt>
-					<dd class="row2"><input name="telephone" type="text" class="post" size="35" value="{TELEPHONE}" /></dd>
+					<dt><b>{L_TELEPHONE}</b></dt>
+					<dd><input name="telephone" type="text" class="post" size="35" value="{TELEPHONE}" /></dd>
 				</dl>
 				<dl>
-					<dt class="row1" width="20%"><span class="gen"><b>{L_FAX}</b></span></dt>
-					<dd class="row2"><input name="fax" type="text" class="post" size="35" value="{FAX}" /></dd>
+					<dt><b>{L_FAX}</b></dt>
+					<dd><input name="fax" type="text" class="post" size="35" value="{FAX}" /></dd>
 				</dl>
 				<dl>
-					<dt class="row1" width="20%"><span class="gen"><b>{L_WEBSITE}</b></span></dt>
-					<dd class="row2"><input name="website" type="text" class="post" size="35" value="{WEBSITE}" /></dd>
+					<dt><b>{L_WEBSITE}</b></dt>
+					<dd><input name="website" type="text" class="post" size="35" value="{WEBSITE}" /></dd>
 				</dl>
 				<dl>
-					<dt class="row1" width="20%"><span class="gen"><b>{L_EMAIL}</b></span></dt>
-					<dd class="row2"><input name="email" type="text" class="post" size="35" value="{EMAIL}" /></dd>
+					<dt><b>{L_EMAIL}</b></dt>
+					<dd><input name="email" type="text" class="post" size="35" value="{EMAIL}" /></dd>
 				</dl>
 				<dl>
-					<dt class="row1" width="35%"><span class="gen"><b>{L_OPENING_HOURS}</b></span></dt>
-					<dd class="row2"><textarea name="opening_hours" cols="40" rows="4" wrap="soft" class="post">{OPENING_HOURS}</textarea></dd>
+					<dt><b>{L_OPENING_HOURS}</b></dt>
+					<dd><textarea name="opening_hours" cols="40" rows="4" wrap="soft" class="post">{OPENING_HOURS}</textarea></dd>
 				</dl>
 				<dl>
-					<dt class="row1" width="20%"><span class="gen"><b>{L_TYPE}</b></span></dt>
-					<dd class="row2">{L_INSURANCE}&nbsp;:&nbsp;<input type="checkbox" name="insurance" value="1" <!-- IF S_BUSINESS_INSURANCE -->checked="checked"<!-- ENDIF --> /><br />{L_GARAGE}&nbsp;:&nbsp;<input type="checkbox" name="garage" value="1" <!-- IF S_BUSINESS_GARAGE-->checked="checked"<!-- ENDIF --> /><br />{L_RETAIL}&nbsp;:&nbsp;<input type="checkbox" name="retail" value="1" <!-- IF S_BUSINESS_RETAIL -->checked="checked"<!-- ENDIF --> /><br />{L_PRODUCT_MANUFACTURER}&nbsp;:&nbsp;<input type="checkbox" name="product" value="1" <!-- IF S_BUSINESS_PRODUCT -->checked="checked"<!-- ENDIF --> /><br />{L_DYNOCENTRE}&nbsp;:&nbsp;<input type="checkbox" name="dynocentre" value="1" <!-- IF S_BUSINESS_DYNOCENTRE -->checked="checked"<!-- ENDIF --> /></dd>
+					<dt><b>{L_TYPE}</b></dt>
+					<dd>{L_INSURANCE}&nbsp;:&nbsp;<input type="checkbox" name="insurance" value="1" <!-- IF S_BUSINESS_INSURANCE -->checked="checked"<!-- ENDIF --> /><br />{L_GARAGE}&nbsp;:&nbsp;<input type="checkbox" name="garage" value="1" <!-- IF S_BUSINESS_GARAGE-->checked="checked"<!-- ENDIF --> /><br />{L_RETAIL}&nbsp;:&nbsp;<input type="checkbox" name="retail" value="1" <!-- IF S_BUSINESS_RETAIL -->checked="checked"<!-- ENDIF --> /><br />{L_PRODUCT_MANUFACTURER}&nbsp;:&nbsp;<input type="checkbox" name="product" value="1" <!-- IF S_BUSINESS_PRODUCT -->checked="checked"<!-- ENDIF --> /><br />{L_DYNOCENTRE}&nbsp;:&nbsp;<input type="checkbox" name="dynocentre" value="1" <!-- IF S_BUSINESS_DYNOCENTRE -->checked="checked"<!-- ENDIF --> /></dd>
 				</dl>
 			</fieldset>
 
@@ -63,8 +62,10 @@
 				<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 
 				<input type="submit" name="submit" value="{L_BUTTON}" class="button1" />
 			</fieldset>
-		</form>
-	<span class="corners-bottom"><span></span></span></div>
+			</form>
+			<span class="corners-bottom"><span></span></span>
+		</div>
+	</div>
 </div>
 
 <!-- INCLUDE garage_footer.html -->

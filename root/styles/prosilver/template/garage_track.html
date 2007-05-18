@@ -11,33 +11,32 @@
 <!-- INCLUDE garage_menu.html -->
 
 <div id="garage-main">
-		<div class="panel">
-			<div class="inner">
-				<span class="corners-top"><span></span></span>
-				<form id="edit_track" enctype="multipart/form-data" method="post" name="edit_track" action="{S_MODE_ACTION}">
-					<h3>{L_TITLE}</h3>
-					<fieldset>
-						<dl>
-							<dt><b>{L_TRACK}</b>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
-							<dd><input name="title" type="text" class="post" size="35" value="{TITLE}" /></dd>
-						</dl>
-						<dl>
-							<dt><b>{L_LENGTH}</b></span></dt>
-							<dd><input name="length" type="text" class="post" size="15" value="{LENGTH}" />&nbsp;<select id="mileage_unit" name="mileage_unit"><option value="">{L_SELECT_MILEAGE_UNIT}</option><option value="">------</option><!-- BEGIN mileage --><option value="{mileage.VALUE}" <!-- IF mileage.S_SELECTED -->selected="selected"<!-- ENDIF -->>{mileage.TEXT}</option><!-- END mileage --></select></dd>
-						</dl>
-					</fieldset>
+	<div class="panel">
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
+			<form id="edit_track" enctype="multipart/form-data" method="post" name="edit_track" action="{S_MODE_ACTION}">
+				<h3>{L_TITLE}</h3>
+				<fieldset>
+					<dl>
+						<dt><b>{L_TRACK}</b>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
+						<dd><input name="title" type="text" class="post" size="35" value="{TITLE}" /></dd>
+					</dl>
+					<dl>
+						<dt><b>{L_LENGTH}</b></dt>
+						<dd><input name="length" type="text" class="post" size="15" value="{LENGTH}" />&nbsp;<select id="mileage_unit" name="mileage_unit"><option value="">{L_SELECT_MILEAGE_UNIT}</option><option value="">------</option><!-- BEGIN mileage --><option value="{mileage.VALUE}" <!-- IF mileage.S_SELECTED -->selected="selected"<!-- ENDIF -->>{mileage.TEXT}</option><!-- END mileage --></select></dd>
+					</dl>
+				</fieldset>
 
-					<fieldset>
-						<input type="hidden" value="{REDIRECT}" name="REDIRECT" /><input type="hidden" value="{VID}" name="VID" />
-					</fieldset>
+				<fieldset>
+					<input type="hidden" value="{REDIRECT}" name="REDIRECT" /><input type="hidden" value="{VID}" name="VID" />
+				</fieldset>
 
-					<fieldset class="submit-buttons">
-						<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 
-						<input type="submit" name="submit" value="{L_BUTTON}" class="button1" />
-					</fieldset>
-				</form>
-				<span class="corners-bottom"><span></span></span>
-			</div>
+				<fieldset class="submit-buttons">
+					<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 
+					<input type="submit" name="submit" value="{L_BUTTON}" class="button1" />
+				</fieldset>
+			</form>
+			<span class="corners-bottom"><span></span></span>
 		</div>
 	</div>
 </div>

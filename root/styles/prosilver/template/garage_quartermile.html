@@ -10,83 +10,88 @@
 
 <!-- INCLUDE garage_menu.html -->
 
-		<script type="text/javascript" src="{T_TEMPLATE_PATH}/garage_functions.js"></script>
 <div id="garage-main">
-
-<div class="panel">
-	<div class="inner"><span class="corners-top"><span></span></span>
-
-			<div id="advanced00">
+	<div class="panel">
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
+	
 			<div id="tabs">
 				<ul>
-					<li class="garage_preset_yes" id="tab000"><a href="#data" onclick="swap_options('0','0','0');"><span class="tabbg">{L_QUARTERMILE}</span></a></li>
-					<!-- IF U_MANAGE_GALLERY --><li class="garage_preset_yes" id="tab001"><a href="#images" onclick="swap_options('0','0','1');"><span class="tabbg">{L_IMAGES}</span></a></li><!-- ENDIF -->
+					<li id="tab000"><a href="#data" onclick="swap_options('0','0','0');"><span class="tabbg">{L_QUARTERMILE}</span></a></li>
+					<!-- IF U_MANAGE_GALLERY --><li id="tab001"><a href="#images" onclick="swap_options('0','0','1');"><span class="tabbg">{L_IMAGES}</span></a></li><!-- ENDIF -->
 				</ul>
 			</div>
 
-			<div class="garage_panel" id="options000" style="display: none;">
-			<span class="corners-top"><span></span></span>
-			<div class="tablewrap">
-				<form enctype="multipart/form-data" method="post" name="quartermile" action="{S_MODE_ACTION}">
-				<h3>{L_TITLE}</h3>
-				<fieldset>
-					<dl>
-						<dt class="row1" width="35%"><span class="gen">{L_RT_EXPLAIN}</span></dt>
-						<dd class="row2"><input name="rt" type="text" class="post" size="15" value="{RT}" /></dd>
-					</dl>
-					<dl>
-						<dt class="row1" width="35%"><span class="gen">{L_SIXTY_EXPLAIN}</span></dt>
-						<dd class="row2"><input name="sixty" type="text" class="post" size="15" value="{SIXTY}" /></dd>
-					</dl>
-					<dl>
-						<dt class="row1" width="35%"><span class="gen">{L_THREE_EXPLAIN}</span></dt>
-						<dd class="row2"><input name="three" type="text" class="post" size="15" value="{THREE}" /></dd>
-					</dl>
-					<dl>
-						<dt class="row1" width="35%"><span class="gen">{L_EIGHTH_EXPLAIN}</span></dt>
-						<dd class="row2"><input name="eighth" type="text" class="post" size="15" value="{EIGHTH}" /></dd>
-					</dl>
-					<dl>
-						<dt class="row1" width="35%"><span class="gen">{L_EIGHTHMPH_EXPLAIN}</span></dt>
-						<dd class="row2"><input name="eighthmph" type="text" class="post" size="15" value="{EIGHTHMPH}" /></dd>
-					</dl>
-					<dl>
-						<dt class="row1" width="35%"><span class="gen">{L_THOU_EXPLAIN}</span></dt>
-						<dd class="row2"><input name="thou" type="text" class="post" size="15" value="{THOU}" /></dd>
-					</dl>
-					<dl>
-						<dt class="row1" width="35%"><span class="gen">{L_QUART_EXPLAIN}</span></dt>
-						<dd class="row2"><input name="quart" type="text" class="post" size="15" value="{QUART}" /> <span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></dd>
-					</dl>
-					<dl>
-						<dt class="row1" width="35%"><span class="gen">{L_QUARTMPH_EXPLAIN}</span></dt>
-						<dd class="row2"><input name="quartmph" type="text" class="post" size="15" value="{QUARTMPH}"/> </dd>
-					</dl>
-					<!-- IF S_DISPLAY_DYNORUNS -->
-					<dl>
-						<dt class="row1" width="35%"><span class="gen"><b>{L_LINK_TO_RR}</b></span></dt>
-		  				<dd class="row2"><select id="dynorun_id" name="dynorun_id"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN dynorun --><option value="{dynorun.VALUE}" <!-- IF dynorun.S_SELECTED -->selected="selected"<!-- ENDIF -->>{dynorun.TEXT}</option><!-- END dynorun --></select></dd>
-					</dl>
-					<!-- ENDIF -->
+			<div class="panel bg3">
+				<div class="inner">
+					<span class="corners-top"><span></span></span>
 
-					<!-- IF ! QMID -->
-						<!-- INCLUDE garage_image_attach.html -->
-					<!-- ENDIF -->
+					<div id="options000" style="display: none;">
+						<div class="panel">
+							<div class="inner">
+								<span class="corners-top"><span></span></span>
+								<form enctype="multipart/form-data" method="post" name="quartermile" action="{S_MODE_ACTION}">
+								<h3>{L_TITLE}</h3>
+								<fieldset>
+									<dl>
+										<dt>{L_RT_EXPLAIN}</dt>
+										<dd><input name="rt" type="text" class="post" size="15" value="{RT}" /></dd>
+									</dl>
+									<dl>
+										<dt>{L_SIXTY_EXPLAIN}</dt>
+										<dd><input name="sixty" type="text" class="post" size="15" value="{SIXTY}" /></dd>
+									</dl>
+									<dl>
+										<dt>{L_THREE_EXPLAIN}</dt>
+										<dd><input name="three" type="text" class="post" size="15" value="{THREE}" /></dd>
+									</dl>
+									<dl>
+										<dt>{L_EIGHTH_EXPLAIN}</dt>
+										<dd><input name="eighth" type="text" class="post" size="15" value="{EIGHTH}" /></dd>
+									</dl>
+									<dl>
+										<dt>{L_EIGHTHMPH_EXPLAIN}</dt>
+										<dd><input name="eighthmph" type="text" class="post" size="15" value="{EIGHTHMPH}" /></dd>
+									</dl>
+									<dl>
+										<dt>{L_THOU_EXPLAIN}</dt>
+										<dd><input name="thou" type="text" class="post" size="15" value="{THOU}" /></dd>
+									</dl>
+									<dl>
+										<dt>{L_QUART_EXPLAIN}</dt>
+										<dd><input name="quart" type="text" class="post" size="15" value="{QUART}" /> <span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></dd>
+									</dl>
+									<dl>
+										<dt>{L_QUARTMPH_EXPLAIN}</dt>
+										<dd><input name="quartmph" type="text" class="post" size="15" value="{QUARTMPH}"/> </dd>
+									</dl>
+				
+									<!-- IF S_DISPLAY_DYNORUNS -->
+									<dl>
+										<dt><b>{L_LINK_TO_RR}</b></dt>
+		  								<dd><select id="dynorun_id" name="dynorun_id"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN dynorun --><option value="{dynorun.VALUE}" <!-- IF dynorun.S_SELECTED -->selected="selected"<!-- ENDIF -->>{dynorun.TEXT}</option><!-- END dynorun --></select></dd>
+									</dl>
+									<!-- ENDIF -->
 
-				</fieldset>
+									<!-- IF ! QMID -->
+									<!-- INCLUDE garage_image_attach.html -->
+									<!-- ENDIF -->
 
-				<fieldset>
-					<input type="hidden" value="{VID}" name="VID" /><input type="hidden" value="{QMID}" name="QMID" /><input type="hidden" value="{PENDING_REDIRECT}" name="pending_redirect" />
-				</fieldset>
+								</fieldset>
 
-				<fieldset class="submit-buttons">
-					<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 
-					<input type="submit" name="submit" value="{L_BUTTON}" class="button1" />
-				</fieldset>
-				</form>
-			</div>
-			<span class="corners-bottom"><span></span></span>
-			</div>
+								<fieldset>
+									<input type="hidden" value="{VID}" name="VID" /><input type="hidden" value="{QMID}" name="QMID" /><input type="hidden" value="{PENDING_REDIRECT}" name="pending_redirect" />
+								</fieldset>
+
+								<fieldset class="submit-buttons">
+									<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 
+									<input type="submit" name="submit" value="{L_BUTTON}" class="button1" />
+								</fieldset>
+								</form>
+								<span class="corners-bottom"><span></span></span>
+							</div>
+						</div>
+					</div>
 
 					<div id="options001" style="display: none;">
 

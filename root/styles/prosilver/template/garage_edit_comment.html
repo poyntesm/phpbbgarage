@@ -11,28 +11,30 @@
 <!-- INCLUDE garage_menu.html -->
 
 <div id="garage-main">
+	<div class="panel">
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
+			<form method="post" name="edit_comment" action="{S_MODE_ACTION}">
+				<h3>{L_GUESTBOOK_TITLE}</h3>
+				<fieldset>		
+					<dl>
+						<dt>{L_EDIT_COMMENT}</dt>
+						<dd><textarea name="comments" cols="70" rows="7" wrap="soft" class="post">{COMMENTS}</textarea></dd>
+					</dl>
+				</fieldset>
+	
+				<fieldset>
+					<input type="hidden" value="update_comment" name="mode" /><input type="hidden" value="{VID}" name="VID" /><input type="hidden" value="{COMMENT_ID}" name="CMT_ID" />
+				</fieldset>
 
-<div class="panel">
-	<div class="inner"><span class="corners-top"><span></span></span>
-		<form method="post" name="edit_comment" action="{S_MODE_ACTION}">
-			<h3>{L_GUESTBOOK_TITLE}</h3>
-			<fieldset>		
-				<dl>
-					<dt class="row1" width="20%"><span class="gen">{L_EDIT_COMMENT}</span></dt>
-					<dd class="row2" colspan="4"><textarea name="comments" cols="70" rows="7" wrap="soft" class="post">{COMMENTS}</textarea></dd>
-				</dl>
-			</fieldset>
-
-			<fieldset>
-				<input type="hidden" value="update_comment" name="mode" /><input type="hidden" value="{VID}" name="VID" /><input type="hidden" value="{COMMENT_ID}" name="CMT_ID" />
-			</fieldset>
-
-			<fieldset class="submit-buttons">
-				<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 
-				<input type="submit" name="submit" value="{L_EDIT_COMMENT}" class="button1" />
-			</fieldset>
-		</form>
-	<span class="corners-bottom"><span></span></span></div>
+				<fieldset class="submit-buttons">
+					<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 
+					<input type="submit" name="submit" value="{L_EDIT_COMMENT}" class="button1" />
+				</fieldset>
+			</form>
+			<span class="corners-bottom"><span></span></span>
+		</div>
+	</div>
 </div>
 
 <!-- INCLUDE garage_footer.html -->

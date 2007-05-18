@@ -160,7 +160,7 @@ class garage_blog
 		}
 
 		$template->assign_vars(array(
-			'S_MODE_BLOG_ACTION' 	=> append_sid("{$phpbb_root_path}garage_blog.$phpEx", "mode=insert_blog&VID=$vehicle_id"))
+			'S_MODE_BLOG_ACTION' 	=> append_sid("{$phpbb_root_path}garage_blog.$phpEx", "mode=insert_blog&amp;VID=$vehicle_id"))
 		);
 	}
 }

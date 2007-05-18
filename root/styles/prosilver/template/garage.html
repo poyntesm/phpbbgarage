@@ -1,9 +1,9 @@
 <!-- INCLUDE overall_header.html -->
 
 <!-- IF U_MCP -->
-	<div id="pageheader">
-		<p class="linkmcp">[ <a href="{U_MCP}">{L_MCP}</a> ]</p>
-	</div>
+<div id="pageheader">
+	<p class="linkmcp">[ <a href="{U_MCP}">{L_MCP}</a> ]</p>
+</div>
 <!-- ENDIF -->
 
 <!-- INCLUDE garage_header.html -->
@@ -11,65 +11,61 @@
 <!-- INCLUDE garage_menu.html -->
 
 <div id="garage-main">
-
 <div class="panel">
-	<div class="inner"><span class="corners-top"><span></span></span>
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
 
 			<h3>{L_WELCOME}</h3>
 			<table width="100%" border="0" cellspacing="1" cellpadding="4" class="tablebg">
-			<tbody>
 				<tr>
 					<!-- IF S_FEATURED_VEHICLE -->
-					<td width="45%" class="row1" align="center">
+					<td class="row1" align="center">
 						<table cellpadding="3" cellspacing="1" border="0" class="tablebg">
-						<thead>
-							<tr>
-								<th class="thHead" height="25" align="center" colspan="2">{L_FEATURED_VEHICLE}</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td class="row1" nowrap align="center"><span align="center" class="genmed">{FEATURED_DESCRIPTION}<br /><a href="{U_VIEW_IMAGE}" title="{IMAGE_TITLE}" target="_blank"><img hspace="5" vspace="5" src="{FEATURED_THUMB}" /></a><br /><a href="{U_VIEW_VEHICLE}">{VEHICLE}</a><br />{L_OWNER}:<b><a href="{U_VIEW_PROFILE}" <!-- IF USERNAME_COLOUR --> style="color: {USERNAME_COLOUR}"<!-- ENDIF -->>{USERNAME}</a></b></span></td>
-							</tr>
-						</tbody>
+						<tr>
+							<th class="thHead" align="center" colspan="2">{L_FEATURED_VEHICLE}</th>
+						</tr>
+						<tr>
+							<td class="row1" align="center">{FEATURED_DESCRIPTION}<br /><a href="{U_VIEW_IMAGE}" title="{IMAGE_TITLE}"><img src="{FEATURED_THUMB}" alt="" /></a><br /><a href="{U_VIEW_VEHICLE}">{VEHICLE}</a><br />{L_OWNER}:<b><a href="{U_VIEW_PROFILE}" <!-- IF USERNAME_COLOUR --> style="color: {USERNAME_COLOUR}"<!-- ENDIF -->>{USERNAME}</a></b></td>
+						</tr>
 						</table>
 					</td>
-					<td class="row1"><span class="genmed">{L_WELCOME_TEXT}<br /><br />{L_TOTAL_VEHICLES}:<b>{TOTAL_VEHICLES}</b><br />{L_TOTAL_MODIFICATIONS}:<b>{TOTAL_MODIFICATIONS}</b><br />{L_TOTAL_COMMENTS}:<b>{TOTAL_COMMENTS}</b><br />{L_TOTAL_VIEWS}:<b>{TOTAL_VIEWS}</b></span></td>
+					<td class="row1">{L_WELCOME_TEXT}<br /><br />{L_TOTAL_VEHICLES}:<b>{TOTAL_VEHICLES}</b><br />{L_TOTAL_MODIFICATIONS}:<b>{TOTAL_MODIFICATIONS}</b><br />{L_TOTAL_COMMENTS}:<b>{TOTAL_COMMENTS}</b><br />{L_TOTAL_VIEWS}:<b>{TOTAL_VIEWS}</b></td>
 					<!-- ELSE -->
-					<td class="row1"><span class="genmed">{L_WELCOME_TEXT}<br /><br />{L_TOTAL_VEHICLES}:<b>{TOTAL_VEHICLES}</b><br />{L_TOTAL_MODIFICATIONS}:<b>{TOTAL_MODIFICATIONS}</b><br />{L_TOTAL_COMMENTS}:<b>{TOTAL_COMMENTS}</b><br />{L_TOTAL_VIEWS}:<b>{TOTAL_VIEWS}</b></span></td>
+					<td class="row1">{L_WELCOME_TEXT}<br /><br />{L_TOTAL_VEHICLES}:<b>{TOTAL_VEHICLES}</b><br />{L_TOTAL_MODIFICATIONS}:<b>{TOTAL_MODIFICATIONS}</b><br />{L_TOTAL_COMMENTS}:<b>{TOTAL_COMMENTS}</b><br />{L_TOTAL_VIEWS}:<b>{TOTAL_VIEWS}</b></td>
 					<!-- ENDIF -->
 				</tr>
-			</tbody>
 			</table>
 
-	<span class="corners-bottom"><span></span></span></div>
-</div>
+			<span class="corners-bottom"><span></span></span>
+		</div>
+	</div>
 
-<div class="panel">
-	<div class="inner"><span class="corners-top"><span></span></span>
+	<div class="panel">
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
 		<!-- BEGIN block_1 -->
 		<h3>{block_1.BLOCK_TITLE}</h3>
 		<div class="forabg">
 			<div class="inner"><span class="corners-top"><span></span></span>
 				<ul class="topiclist">
 					<li class="header">
-						<dl class="icon">
-							<dt>{block_1.COLUMN_1_TITLE}</dt>
-							<dd class="topics">{block_1.COLUMN_2_TITLE}</dd>
-							<dd class="posts">{block_1.COLUMN_3_TITLE}</dd>
+						<dl>
+							<dd class="index_block_header">{block_1.COLUMN_1_TITLE}</dd>
+							<dd class="index_block_header">{block_1.COLUMN_2_TITLE}</dd>
+							<dd class="index_block_header">{block_1.COLUMN_3_TITLE}</dd>
 						</dl>
 					</li>
 				</ul>
 				<ul class="topiclist forums">
 					<!-- BEGIN row -->
-					<!-- IF block_1.row.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
+					<!-- IF block_1.row.S_ROW_COUNT is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></span></dt>
-							<dd class="row1" align="center" valign="middle"><span class="gensmall"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></span></dd>
+							<dd class="index_block"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></dd>
+							<dd class="index_block"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></dd>
 							<!-- IF block_1.row.U_COLUMN_3 -->
-							<dd class="row1" align="center" valign="middle" nowrap><span class="gensmall"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></span></dd>
+							<dd class="index_block"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></dd>
 							<!-- ELSE -->
-							<dd class="row1" align="center" valign="middle" nowrap><span class="gensmall">{block_1.row.COLUMN_3_TITLE}</span></dd>
+							<dd class="index_block">{block_1.row.COLUMN_3_TITLE}</dd>
 							<!-- ENDIF -->
 						</dl>
 					</li>
@@ -96,23 +92,23 @@
 			<div class="inner"><span class="corners-top"><span></span></span>
 				<ul class="topiclist">
 					<li class="header">
-						<dl class="icon">
-							<dt>{block_2.COLUMN_1_TITLE}</dt>
-							<dd class="topics">{block_2.COLUMN_2_TITLE}</dd>
-							<dd class="posts">{block_2.COLUMN_3_TITLE}</dd>
+						<dl>
+							<dd class="index_block_header">{block_2.COLUMN_1_TITLE}</dd>
+							<dd class="index_block_header">{block_2.COLUMN_2_TITLE}</dd>
+							<dd class="index_block_header">{block_2.COLUMN_3_TITLE}</dd>
 						</dl>
 					</li>
 				</ul>
 				<ul class="topiclist forums">
 					<!-- BEGIN row -->
-					<!-- IF block_2.row.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
+					<!-- IF block_2.row.S_ROW_COUNT is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></span></dt>
-							<dd class="row1" align="center" valign="middle"><span class="gensmall"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></span></dd>
+							<dd class="index_block"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></dd>
+							<dd class="index_block"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></dd>
 							<!-- IF block_1.row.U_COLUMN_3 -->
-							<dd class="row1" align="center" valign="middle" nowrap><span class="gensmall"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></span></dd>
+							<dd class="index_block"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></dd>
 							<!-- ELSE -->
-							<dd class="row1" align="center" valign="middle" nowrap><span class="gensmall">{block_1.row.COLUMN_3_TITLE}</span></dd>
+							<dd class="index_block">{block_1.row.COLUMN_3_TITLE}</dd>
 							<!-- ENDIF -->
 						</dl>
 					</li>
@@ -139,23 +135,23 @@
 			<div class="inner"><span class="corners-top"><span></span></span>
 				<ul class="topiclist">
 					<li class="header">
-						<dl class="icon">
-							<dt>{block_3.COLUMN_1_TITLE}</dt>
-							<dd class="topics">{block_3.COLUMN_2_TITLE}</dd>
-							<dd class="posts">{block_3.COLUMN_3_TITLE}</dd>
+						<dl>
+							<dd class="index_block_header">{block_3.COLUMN_1_TITLE}</dd>
+							<dd class="index_block_header">{block_3.COLUMN_2_TITLE}</dd>
+							<dd class="index_block_header">{block_3.COLUMN_3_TITLE}</dd>
 						</dl>
 					</li>
 				</ul>
 				<ul class="topiclist forums">
 					<!-- BEGIN row -->
-					<!-- IF block_3.row.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
+					<!-- IF block_3.row.S_ROW_COUNT is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></span></dt>
-							<dd class="row1" align="center" valign="middle"><span class="gensmall"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></span></dd>
+							<dd class="index_block"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></dd>
+							<dd class="index_block"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></dd>
 							<!-- IF block_1.row.U_COLUMN_3 -->
-							<dd class="row1" align="center" valign="middle" nowrap><span class="gensmall"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></span></dd>
+							<dd class="index_block"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></dd>
 							<!-- ELSE -->
-							<dd class="row1" align="center" valign="middle" nowrap><span class="gensmall">{block_1.row.COLUMN_3_TITLE}</span></dd>
+							<dd class="index_block">{block_1.row.COLUMN_3_TITLE}</dd>
 							<!-- ENDIF -->
 						</dl>
 					</li>
@@ -182,23 +178,23 @@
 			<div class="inner"><span class="corners-top"><span></span></span>
 				<ul class="topiclist">
 					<li class="header">
-						<dl class="icon">
-							<dt>{block_4.COLUMN_1_TITLE}</dt>
-							<dd class="topics">{block_4.COLUMN_2_TITLE}</dd>
-							<dd class="posts">{block_4.COLUMN_3_TITLE}</dd>
+						<dl>
+							<dd class="index_block_header">{block_4.COLUMN_1_TITLE}</dd>
+							<dd class="index_block_header">{block_4.COLUMN_2_TITLE}</dd>
+							<dd class="index_block_header">{block_4.COLUMN_3_TITLE}</dd>
 						</dl>
 					</li>
 				</ul>
 				<ul class="topiclist forums">
 					<!-- BEGIN row -->
-					<li class="row">
+					<!-- IF block_4.row.S_ROW_COUNT is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></span></dt>
-							<dd class="row1" align="center" valign="middle"><span class="gensmall"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></span></dd>
+							<dd class="index_block"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></dd>
+							<dd class="index_block"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></dd>
 							<!-- IF block_1.row.U_COLUMN_3 -->
-							<dd class="row1" align="center" valign="middle" nowrap><span class="gensmall"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></span></dd>
+							<dd class="index_block"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></dd>
 							<!-- ELSE -->
-							<dd class="row1" align="center" valign="middle" nowrap><span class="gensmall">{block_1.row.COLUMN_3_TITLE}</span></dd>
+							<dd class="index_block">{block_1.row.COLUMN_3_TITLE}</dd>
 							<!-- ENDIF -->
 						</dl>
 					</li>
@@ -225,23 +221,23 @@
 			<div class="inner"><span class="corners-top"><span></span></span>
 				<ul class="topiclist">
 					<li class="header">
-						<dl class="icon">
-							<dt>{block_5.COLUMN_1_TITLE}</dt>
-							<dd class="topics">{block_5.COLUMN_2_TITLE}</dd>
-							<dd class="posts">{block_5.COLUMN_3_TITLE}</dd>
+						<dl>
+							<dd class="index_block_header">{block_5.COLUMN_1_TITLE}</dd>
+							<dd class="index_block_header">{block_5.COLUMN_2_TITLE}</dd>
+							<dd class="index_block_header">{block_5.COLUMN_3_TITLE}</dd>
 						</dl>
 					</li>
 				</ul>
 				<ul class="topiclist forums">
 					<!-- BEGIN row -->
-					<li class="row">
+					<!-- IF block_5.row.S_ROW_COUNT is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></span></dt>
-							<dd class="row1" align="center" valign="middle"><span class="gensmall"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></span></dd>
+							<dd class="index_block"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></dd>
+							<dd class="index_block"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></dd>
 							<!-- IF block_1.row.U_COLUMN_3 -->
-							<dd class="row1" align="center" valign="middle" nowrap><span class="gensmall"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></span></dd>
+							<dd class="index_block"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></dd>
 							<!-- ELSE -->
-							<dd class="row1" align="center" valign="middle" nowrap><span class="gensmall">{block_1.row.COLUMN_3_TITLE}</span></dd>
+							<dd class="index_block">{block_1.row.COLUMN_3_TITLE}</dd>
 							<!-- ENDIF -->
 						</dl>
 					</li>
@@ -268,23 +264,23 @@
 			<div class="inner"><span class="corners-top"><span></span></span>
 				<ul class="topiclist">
 					<li class="header">
-						<dl class="icon">
-							<dt>{block_6.COLUMN_1_TITLE}</dt>
-							<dd class="topics">{block_6.COLUMN_2_TITLE}</dd>
-							<dd class="posts">{block_6.COLUMN_3_TITLE}</dd>
+						<dl>
+							<dd class="index_block_header">{block_6.COLUMN_1_TITLE}</dd>
+							<dd class="index_block_header">{block_6.COLUMN_2_TITLE}</dd>
+							<dd class="index_block_header">{block_6.COLUMN_3_TITLE}</dd>
 						</dl>
 					</li>
 				</ul>
 				<ul class="topiclist forums">
 					<!-- BEGIN row -->
-					<li class="row">
+					<!-- IF block_6.row.S_ROW_COUNT is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></span></dt>
-							<dd class="row1" align="center" valign="middle"><span class="gensmall"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></span></dd>
+							<dd class="index_block"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></dd>
+							<dd class="index_block"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></dd>
 							<!-- IF block_1.row.U_COLUMN_3 -->
-							<dd class="row1" align="center" valign="middle" nowrap><span class="gensmall"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></span></dd>
+							<dd class="index_block"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></dd>
 							<!-- ELSE -->
-							<dd class="row1" align="center" valign="middle" nowrap><span class="gensmall">{block_1.row.COLUMN_3_TITLE}</span></dd>
+							<dd class="index_block">{block_1.row.COLUMN_3_TITLE}</dd>
 							<!-- ENDIF -->
 						</dl>
 					</li>
@@ -311,23 +307,23 @@
 			<div class="inner"><span class="corners-top"><span></span></span>
 				<ul class="topiclist">
 					<li class="header">
-						<dl class="icon">
-							<dt>{block_7.COLUMN_1_TITLE}</dt>
-							<dd class="topics">{block_7.COLUMN_2_TITLE}</dd>
-							<dd class="posts">{block_7.COLUMN_3_TITLE}</dd>
+						<dl>
+							<dd class="index_block_header">{block_7.COLUMN_1_TITLE}</dd>
+							<dd class="index_block_header">{block_7.COLUMN_2_TITLE}</dd>
+							<dd class="index_block_header">{block_7.COLUMN_3_TITLE}</dd>
 						</dl>
 					</li>
 				</ul>
 				<ul class="topiclist forums">
 					<!-- BEGIN row -->
-					<li class="row">
+					<!-- IF block_7.row.S_ROW_COUNT is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></span></dt>
-							<dd class="row1" align="center" valign="middle"><span class="gensmall"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></span></dd>
+							<dd class="index_block"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></dd>
+							<dd class="index_block"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></dd>
 							<!-- IF block_1.row.U_COLUMN_3 -->
-							<dd class="row1" align="center" valign="middle" nowrap><span class="gensmall"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></span></dd>
+							<dd class="index_block"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></dd>
 							<!-- ELSE -->
-							<dd class="row1" align="center" valign="middle" nowrap><span class="gensmall">{block_1.row.COLUMN_3_TITLE}</span></dd>
+							<dd class="index_block">{block_1.row.COLUMN_3_TITLE}</dd>
 							<!-- ENDIF -->
 						</dl>
 					</li>
@@ -354,30 +350,30 @@
 			<div class="inner"><span class="corners-top"><span></span></span>
 				<ul class="topiclist">
 					<li class="header">
-						<dl class="icon">
-							<dt>{block_8.COLUMN_1_TITLE}</dt>
-							<dd class="topics">{block_8.COLUMN_2_TITLE}</dd>
-							<dd class="posts">{block_8.COLUMN_3_TITLE}</dd>
+						<dl>
+							<dd class="index_block_header">{block_8.COLUMN_1_TITLE}</dd>
+							<dd class="index_block_header">{block_8.COLUMN_2_TITLE}</dd>
+							<dd class="index_block_header">{block_8.COLUMN_3_TITLE}</dd>
 						</dl>
 					</li>
 				</ul>
 				<ul class="topiclist forums">
 					<!-- BEGIN row -->
-					<li class="row">
+					<!-- IF block_8.row.S_ROW_COUNT is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></span></dt>
-							<dd class="row1" align="center" valign="middle"><span class="gensmall"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></span></dd>
+							<dd class="index_block"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></dd>
+							<dd class="index_block"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></dd>
 							<!-- IF block_1.row.U_COLUMN_3 -->
-							<dd class="row1" align="center" valign="middle" nowrap><span class="gensmall"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></span></dd>
+							<dd class="index_block"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></dd>
 							<!-- ELSE -->
-							<dd class="row1" align="center" valign="middle" nowrap><span class="gensmall">{block_1.row.COLUMN_3_TITLE}</span></dd>
+							<dd class="index_block">{block_1.row.COLUMN_3_TITLE}</dd>
 							<!-- ENDIF -->
 						</dl>
 					</li>
 					<!-- BEGINELSE -->
 					<li class="row bg1">
 						<dl>
-							<dt>{L_NO_ITEM_TO_LIST}</dt>
+							<dd class="index_block_header">{L_NO_ITEM_TO_LIST}</dd>
 						</dl>
 					</li>
 					<!-- END row -->
@@ -397,30 +393,30 @@
 			<div class="inner"><span class="corners-top"><span></span></span>
 				<ul class="topiclist">
 					<li class="header">
-						<dl class="icon">
-							<dt>{block_9.COLUMN_1_TITLE}</dt>
-							<dd class="topics">{block_9.COLUMN_2_TITLE}</dd>
-							<dd class="posts">{block_9.COLUMN_3_TITLE}</dd>
+						<dl>
+							<dd class="index_block_header">{block_9.COLUMN_1_TITLE}</dd>
+							<dd class="index_block_header">{block_9.COLUMN_2_TITLE}</dd>
+							<dd class="index_block_header">{block_9.COLUMN_3_TITLE}</dd>
 						</dl>
 					</li>
 				</ul>
 				<ul class="topiclist forums">
 					<!-- BEGIN row -->
-					<li class="row">
+					<!-- IF block_9.row.S_ROW_COUNT is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></span></dt>
-							<dd class="row1" align="center" valign="middle"><span class="gensmall"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></span></dd>
+							<dd class="index_block"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></dd>
+							<dd class="index_block"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></dd>
 							<!-- IF block_1.row.U_COLUMN_3 -->
-							<dd class="row1" align="center" valign="middle" nowrap><span class="gensmall"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></span></dd>
+							<dd class="index_block"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></dd>
 							<!-- ELSE -->
-							<dd class="row1" align="center" valign="middle" nowrap><span class="gensmall">{block_1.row.COLUMN_3_TITLE}</span></dd>
+							<dd class="index_block">{block_1.row.COLUMN_3_TITLE}</dd>
 							<!-- ENDIF -->
 						</dl>
 					</li>
 					<!-- BEGINELSE -->
 					<li class="row bg1">
 						<dl>
-							<dt>{L_NO_ITEM_TO_LIST}</dt>
+							<dd class="index_block_header">{L_NO_ITEM_TO_LIST}</dd>
 						</dl>
 					</li>
 					<!-- END row -->
@@ -440,30 +436,30 @@
 			<div class="inner"><span class="corners-top"><span></span></span>
 				<ul class="topiclist">
 					<li class="header">
-						<dl class="icon">
-							<dt>{block_10.COLUMN_1_TITLE}</dt>
-							<dd class="topics">{block_10.COLUMN_2_TITLE}</dd>
-							<dd class="posts">{block_10.COLUMN_3_TITLE}</dd>
+						<dl>
+							<dd class="index_block_header">{block_10.COLUMN_1_TITLE}</dd>
+							<dd class="index_block_header">{block_10.COLUMN_2_TITLE}</dd>
+							<dd class="index_block_header">{block_10.COLUMN_3_TITLE}</dd>
 						</dl>
 					</li>
 				</ul>
 				<ul class="topiclist forums">
 					<!-- BEGIN row -->
-					<li class="row">
+					<!-- IF block_10.row.S_ROW_COUNT is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></span></dt>
-							<dd class="row1" align="center" valign="middle"><span class="gensmall"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></span></dd>
+							<dd class="index_block"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></dd>
+							<dd class="index_block"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></dd>
 							<!-- IF block_1.row.U_COLUMN_3 -->
-							<dd class="row1" align="center" valign="middle" nowrap><span class="gensmall"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></span></dd>
+							<dd class="index_block"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></dd>
 							<!-- ELSE -->
-							<dd class="row1" align="center" valign="middle" nowrap><span class="gensmall">{block_1.row.COLUMN_3_TITLE}</span></dd>
+							<dd class="index_block">{block_1.row.COLUMN_3_TITLE}</dd>
 							<!-- ENDIF -->
 						</dl>
 					</li>
 					<!-- BEGINELSE -->
 					<li class="row bg1">
 						<dl>
-							<dt>{L_NO_ITEM_TO_LIST}</dt>
+							<dd class="index_block_header">{L_NO_ITEM_TO_LIST}</dd>
 						</dl>
 					</li>
 					<!-- END row -->
@@ -483,30 +479,30 @@
 			<div class="inner"><span class="corners-top"><span></span></span>
 				<ul class="topiclist">
 					<li class="header">
-						<dl class="icon">
-							<dt>{block_11.COLUMN_1_TITLE}</dt>
-							<dd class="topics">{block_11.COLUMN_2_TITLE}</dd>
-							<dd class="posts">{block_11.COLUMN_3_TITLE}</dd>
+						<dl>
+							<dd class="index_block_header">{block_11.COLUMN_1_TITLE}</dd>
+							<dd class="index_block_header">{block_11.COLUMN_2_TITLE}</dd>
+							<dd class="index_block_header">{block_11.COLUMN_3_TITLE}</dd>
 						</dl>
 					</li>
 				</ul>
 				<ul class="topiclist forums">
 					<!-- BEGIN row -->
-					<li class="row">
+					<!-- IF block_11.row.S_ROW_COUNT is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></span></dt>
-							<dd class="row1" align="center" valign="middle"><span class="gensmall"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></span></dd>
+							<dd class="index_block"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></dd>
+							<dd class="index_block"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></dd>
 							<!-- IF block_1.row.U_COLUMN_3 -->
-							<dd class="row1" align="center" valign="middle" nowrap><span class="gensmall"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></span></dd>
+							<dd class="index_block"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></dd>
 							<!-- ELSE -->
-							<dd class="row1" align="center" valign="middle" nowrap><span class="gensmall">{block_1.row.COLUMN_3_TITLE}</span></dd>
+							<dd class="index_block">{block_1.row.COLUMN_3_TITLE}</dd>
 							<!-- ENDIF -->
 						</dl>
 					</li>
 					<!-- BEGINELSE -->
 					<li class="row bg1">
 						<dl>
-							<dt>{L_NO_ITEM_TO_LIST}</dt>
+							<dd class="index_block_header">{L_NO_ITEM_TO_LIST}</dd>
 						</dl>
 					</li>
 					<!-- END row -->
@@ -526,30 +522,30 @@
 			<div class="inner"><span class="corners-top"><span></span></span>
 				<ul class="topiclist">
 					<li class="header">
-						<dl class="icon">
-							<dt>{block_12.COLUMN_1_TITLE}</dt>
-							<dd class="topics">{block_12.COLUMN_2_TITLE}</dd>
-							<dd class="posts">{block_12.COLUMN_3_TITLE}</dd>
+						<dl>
+							<dd class="index_block_header">{block_12.COLUMN_1_TITLE}</dd>
+							<dd class="index_block_header">{block_12.COLUMN_2_TITLE}</dd>
+							<dd class="index_block_header">{block_12.COLUMN_3_TITLE}</dd>
 						</dl>
 					</li>
 				</ul>
 				<ul class="topiclist forums">
 					<!-- BEGIN row -->
-					<!-- IF block_12.row.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
+					<!-- IF block_12.row.S_ROW_COUNT is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt class="row1" align="center" valign="middle"><span class="gensmall"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></span></dt>
-							<dd class="row1" align="center" valign="middle"><span class="gensmall"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></span></dd>
+							<dd class="index_block"><a href ="{block_1.row.U_COLUMN_1}">{block_1.row.COLUMN_1_TITLE}</a></dd>
+							<dd class="index_block"><b><a href ="{block_1.row.U_COLUMN_2}" <!-- IF block_1.row.USERNAME_COLOUR --> style="color: {block_1.row.USERNAME_COLOUR}"<!-- ENDIF -->>{block_1.row.COLUMN_2_TITLE}</a></b></dd>
 							<!-- IF block_1.row.U_COLUMN_3 -->
-							<dd class="row1" align="center" valign="middle" nowrap><span class="gensmall"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></span></dd>
+							<dd class="index_block"><a href ="{block_1.row.U_COLUMN_3}">{block_1.row.COLUMN_3_TITLE}</a></dd>
 							<!-- ELSE -->
-							<dd class="row1" align="center" valign="middle" nowrap><span class="gensmall">{block_1.row.COLUMN_3_TITLE}</span></dd>
+							<dd class="index_block">{block_1.row.COLUMN_3_TITLE}</dd>
 							<!-- ENDIF -->
 						</dl>
 					</li>
 					<!-- BEGINELSE -->
 					<li class="row bg1">
 						<dl>
-							<dt>{L_NO_ITEM_TO_LIST}</dt>
+							<dd class="index_block_header">{L_NO_ITEM_TO_LIST}</dd>
 						</dl>
 					</li>
 					<!-- END row -->
@@ -559,9 +555,10 @@
 		</div>
 		<!-- END block_12 -->
 
-			<span class="corners-bottom"><span></span></span></div>
+			<span class="corners-bottom"><span></span></span>
 		</div>
 	</div>
+</div>
 
 <!-- INCLUDE garage_footer.html -->
 

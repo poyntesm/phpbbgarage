@@ -11,75 +11,81 @@
 <!-- INCLUDE garage_menu.html -->
 
 <div id="garage-main">
-
-<div class="panel">
-	<div class="inner"><span class="corners-top"><span></span></span>
-		<h3>{TRACK}</h3>
-		<fieldset>
-			<dl>
-				<dt><b>{L_TRACK}</b></dt>
-				<dd>{TRACK}</dt>
-			</dl>
-			<dl>
-				<dt><b>{L_LENGTH}</b></dd>
-				<dd>{LENGTH} {MILEAGE_UNIT}</dd>
-			</dl>
-		</fieldset>
-	</div><span class="corners-bottom"><span></span></span>
-</div>
-
-
-
-<!-- IF S_DISPLAY_GALLERIES -->
-<div class="panel">
-	<div class="inner"><span class="corners-top"><span></span></span>
-		<h3>{L_TRACK_PICTURES}</h3>
-		<div class="garage-image-gallery">
-			<!-- BEGIN track_image -->
-			<a href="{track_image.U_IMAGE}"><img hspace="5" vspace="5" name="{track_image.IMAGE_NAME}" src="{track_image.IMAGE_SOURCE}" /></a>
-			<!-- END track_image -->
-    		</div>
-	</div><span class="corners-bottom"><span></span></span>
-</div>
-<!-- ENDIF -->
-
-<!-- IF S_DISPLAY_LAPS -->
-<div class="panel">
-	<div class="inner"><span class="corners-top"><span></span></span>
-		<h3>{L_LAPS}</h3>
-		<div class="forabg">
-			<div class="inner"><span class="corners-top"><span></span></span>
-				<ul class="topiclist">
-					<li class="header">
-						<dl>
-							<dt></dt>
-							<dd>{L_USERNAME}</dd>
-							<dd>{L_VEHICLE}</dd>
-							<dd>{L_CONDITION}</dd>
-							<dd>{L_TYPE}</dd>
-							<dd>{L_TIME}&nbsp;<span class="gensmall">(M:S:MS)</span></dd>
-						</dl>
-					</li>
-				</ul>
-				<ul class="topiclist topics">
-					<!-- BEGIN lap -->
-					<!-- IF lap.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
-						<dl>
-	  						<dt><!-- IF lap.U_IMAGE --><a href="{lap.U_IMAGE}">{lap.IMAGE}</a><!-- ENDIF --></td>
-							<dd><b><a href="{lap.U_VIEWPROFILE}"  <!-- IF lap.USERNAME_COLOUR --> style="color: {lap.USERNAME_COLOUR}"<!-- ENDIF -->>{lap.USERNAME}</a></b></td>
-							<dd><a href="{lap.U_VIEWVEHICLE}">{lap.VEHICLE}</a></td>
-							<dd>{lap.CONDITION}</td>
-							<dd>{lap.TYPE}</td>
-							<dd><a href="{lap.U_LAP}">{lap.MINUTE}.{lap.SECOND}.{lap.MILLISECOND}</a></td>
-						</dl>
-					</li>
-					<!-- END lap -->
-				</ul>
-			</div><span class="corners-bottom"><span></span></span>
+	<div class="panel">
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
+			<h3>{TRACK}</h3>
+			<fieldset>
+				<dl>
+					<dt><b>{L_TRACK}</b></dt>
+					<dd>{TRACK}</dt>
+				</dl>
+				<dl>
+					<dt><b>{L_LENGTH}</b></dd>
+					<dd>{LENGTH} {MILEAGE_UNIT}</dd>
+				</dl>
+			</fieldset>
+			<span class="corners-bottom"><span></span></span>
 		</div>
-	</div><span class="corners-bottom"><span></span></span>
+	</div>
+
+	<!-- IF S_DISPLAY_GALLERIES -->
+	<div class="panel">
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
+			<h3>{L_TRACK_PICTURES}</h3>
+			<div class="garage-image-gallery">
+				<!-- BEGIN track_image -->
+				<a href="{track_image.U_IMAGE}"><img hspace="5" vspace="5" name="{track_image.IMAGE_NAME}" src="{track_image.IMAGE_SOURCE}" /></a>
+				<!-- END track_image -->
+    			</div>
+			<span class="corners-bottom"><span></span></span>
+		</div>
+	</div>
+	<!-- ENDIF -->
+
+	<!-- IF S_DISPLAY_LAPS -->
+	<div class="panel">
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
+			<h3>{L_LAPS}</h3>
+			<div class="forabg">
+				<div class="inner">
+					<span class="corners-top"><span></span></span>
+					<ul class="topiclist">
+						<li class="header">
+							<dl>
+								<dt></dt>
+								<dd>{L_USERNAME}</dd>
+								<dd>{L_VEHICLE}</dd>
+								<dd>{L_CONDITION}</dd>
+								<dd>{L_TYPE}</dd>
+								<dd>{L_TIME}&nbsp;(M:S:MS)</dd>
+							</dl>
+						</li>
+					</ul>
+					<ul class="topiclist topics">
+						<!-- BEGIN lap -->
+						<!-- IF lap.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
+							<dl>
+	  							<dt><!-- IF lap.U_IMAGE --><a href="{lap.U_IMAGE}">{lap.IMAGE}</a><!-- ENDIF --></dt>
+								<dd><b><a href="{lap.U_VIEWPROFILE}"  <!-- IF lap.USERNAME_COLOUR --> style="color: {lap.USERNAME_COLOUR}"<!-- ENDIF -->>{lap.USERNAME}</a></b></dd>
+								<dd><a href="{lap.U_VIEWVEHICLE}">{lap.VEHICLE}</a></dd>
+								<dd>{lap.CONDITION}</dd>
+								<dd>{lap.TYPE}</dd>
+								<dd><a href="{lap.U_LAP}">{lap.MINUTE}.{lap.SECOND}.{lap.MILLISECOND}</a></dd>
+							</dl>
+						</li>
+						<!-- END lap -->
+					</ul>
+					<span class="corners-bottom"><span></span></span>
+				</div>
+			</div>
+			<span class="corners-bottom"><span></span></span>
+		</div>
+	</div>
+	<!-- ENDIF -->
 </div>
-<!-- ENDIF -->
 
 <!-- INCLUDE garage_footer.html -->
 

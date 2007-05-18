@@ -11,26 +11,26 @@
 <!-- INCLUDE garage_menu.html -->
 
 <div id="garage-main">
-
-<div class="panel">
-	<div class="inner"><span class="corners-top"><span></span></span>
-		<form action="{S_GARAGE_ACTION}" method="post">
+	<div class="panel">
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
+			<form action="{S_GARAGE_ACTION}" method="post">
 			<h3>{L_ADD_PRODUCT}</h3>
 			<!-- IF S_DISPLAY_PENDING -->
 			<h4>{L_PENDING_NOTICE}</h4>
 			<!-- ENDIF -->
 			<fieldset>
 				<dl>
-					<dt class="row1" width="20%"><span class="gen"><b>{L_MODIFICATION}&nbsp;{L_CATEGORY}</b></span></dt>
-					<dd class="row2" align="left" nowrap="nowrap"><span class="gen">{CATEGORY}</span></dd>
+					<dt><b>{L_MODIFICATION}&nbsp;{L_CATEGORY}</b></dt>
+					<dd>{CATEGORY}</dd>
 				</dl>
 				<dl>
-					<dt class="row1" width="20%"><span class="gen"><b>{L_MODIFICATION}&nbsp;{L_MANUFACTURER}</b></span></dt>
-					<dd class="row2" align="left" nowrap="nowrap"><span class="gen">{MANUFACTURER}</span></dd>
+					<dt><b>{L_MODIFICATION}&nbsp;{L_MANUFACTURER}</b></dt>
+					<dd>{MANUFACTURER}</dd>
 				</dl>
 				<dl>
-					<dt class="row1" width="20%"><span class="gen"><b>{L_MODIFICATION}&nbsp;{L_PRODUCT}</b></span></dt>
-					<dd class="row2"><input name="title" type="text" class="post" size="35" value="" /></dd>
+					<dt><b>{L_MODIFICATION}&nbsp;{L_PRODUCT}</b></dt>
+					<dd><input name="title" type="text" class="post" size="35" value="" /></dd>
 				</dl>
 			</fieldset>
 
@@ -42,8 +42,10 @@
 				<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 
 				<input type="submit" name="submit" value="{L_ADD_PRODUCT_BUTTON}" class="button1" />
 			</fieldset>
-		</form>
-	<span class="corners-bottom"><span></span></span></div>
+			</form>
+			<span class="corners-bottom"><span></span></span>
+		</div>
+	</div>
 </div>
 
 <!-- INCLUDE garage_footer.html -->

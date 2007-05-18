@@ -10,69 +10,77 @@
 
 <!-- INCLUDE garage_menu.html -->
 
-<script type="text/javascript" src="{T_TEMPLATE_PATH}/garage_functions.js"></script>
 <div id="garage-main">
-
-<div class="panel">
-	<div class="inner"><span class="corners-top"><span></span></span>
+	<div class="panel">
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
+	
 			<div id="tabs">
 				<ul>
-					<li class="garage_preset_yes" id="tab000"><a href="#data" onclick="swap_options('0','0','0');"><span class="tabbg">{L_DYNORUN}</span></a></li>
-					<!-- IF U_MANAGE_GALLERY --><li class="garage_preset_yes" id="tab001"><a href="#images" onclick="swap_options('0','0','1');"><span class="tabbg">{L_IMAGES}</span></a></li><!-- ENDIF -->
+					<liid="tab000"><a href="#data" onclick="swap_options('0','0','0');"><span class="tabbg">{L_DYNORUN}</span></a></li>
+					<!-- IF U_MANAGE_GALLERY --><li id="tab001"><a href="#images" onclick="swap_options('0','0','1');"><span class="tabbg">{L_IMAGES}</span></a></li><!-- ENDIF -->
 				</ul>
 			</div>
-			
-			<div class="garage_panel" id="options000" style="display: none;">
-			<span class="corners-top"><span></span></span>
-				<form enctype="multipart/form-data" method="post" name="rollingroad" action="{S_MODE_ACTION}">
-				<h3>{L_TITLE}</h3>
-				<fieldset>
-					<dl>
-						<dt class="row1" width="35%"><span class="gen"><b>{L_DYNOCENTRE}</b></span></dt>
-						<dd class="row2"><select id="dynocentre_id" name="dynocentre_id"><option value="">{L_SELECT_DYNOCENTRE}</option><option value="">------</option><!-- BEGIN dynocentre--><option value="{dynocentre.VALUE}" <!-- IF dynocentre.S_SELECTED -->selected="selected"<!-- ENDIF -->>{dynocentre.TEXT}</option><!-- END dynocentre --></select>&nbsp;<span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span>&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS_DYNOCENTRE}">{L_HERE}</a></span></dd>
-					</dl>
-					<dl>
-						<dt class="row1" width="35%"><span class="gen">{L_BHP_EXPLAIN}</span></dt>
-						<dd class="row2"><input name="bhp" type="text" class="post" size="15" value ="{BHP}" />&nbsp;<select id="bhp_unit" name="bhp_unit"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN bhp_unit --><option value="{bhp_unit.VALUE}" <!-- IF bhp_unit.S_SELECTED -->selected="selected"<!-- ENDIF -->>{bhp_unit.TEXT}</option><!-- END bhp_unit --></select>&nbsp;<span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span</dd>
-					</dl>
-					<dl>
-						<dt class="row1" width="35%"><span class="gen">{L_TORQUE_EXPLAIN}</span></dt>
-						<dd class="row2"><input name="torque" type="text" class="post" size="15" value ="{TORQUE}" />&nbsp;<select id="torque_unit" name="torque_unit"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN torque_unit --><option value="{torque_unit.VALUE}" <!-- IF torque_unit.S_SELECTED -->selected="selected"<!-- ENDIF -->>{torque_unit.TEXT}</option><!-- END torque_unit --></select></dd>
-					</dl>
-					<dl>
-						<dt class="row1" width="35%"><span class="gen">{L_BOOST_EXPLAIN}</span></dt>
-						<dd class="row2"><input name="boost" type="text" class="post" size="15" value ="{BOOST}" />&nbsp;<select id="boost_unit" name="boost_unit"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN boost --><option value="{boost.VALUE}" <!-- IF boost.S_SELECTED -->selected="selected"<!-- ENDIF -->>{boost.TEXT}</option><!-- END boost --></select></dd>
-					</dl>
-					<dl>
-						<dt class="row1" width="35%"><span class="gen">{L_NITROUS_EXPLAIN}</span></dt>
-						<dd class="row2"><select id="nitrous" name="nitrous"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN nitrous --><option value="{nitrous.VALUE}" <!-- IF nitrous.S_SELECTED -->selected="selected"<!-- ENDIF -->>{nitrous.TEXT}</option><!-- END nitrous --></select></dd>
-					</dl>
-					<dl>
-						<dt class="row1" width="35%"><span class="gen">{L_PEAKPOINT_EXPLAIN}</span></dt>
-						<dd class="row2"><input name="peakpoint" type="text" class="post" size="15" value ="{PEAKPOINT}" /></dd>
-					</dl>
 
-					<!-- IF ! DID -->
-						<!-- INCLUDE garage_image_attach.html -->
-					<!-- ENDIF -->
+			<div class="panel bg3">
+				<div class="inner">
+					<span class="corners-top"><span></span></span>
 
-				<fieldset>
+					<div id="options000" style="display: none;">
+						<div class="panel">
+							<div class="inner">
+								<span class="corners-top"><span></span></span>
+
+								<form enctype="multipart/form-data" method="post" name="rollingroad" action="{S_MODE_ACTION}">
+								<h3>{L_TITLE}</h3>
+								<fieldset>
+									<dl>
+										<dt><b>{L_DYNOCENTRE}</b></dt>
+										<dd><select id="dynocentre_id" name="dynocentre_id"><option value="">{L_SELECT_DYNOCENTRE}</option><option value="">------</option><!-- BEGIN dynocentre--><option value="{dynocentre.VALUE}" <!-- IF dynocentre.S_SELECTED -->selected="selected"<!-- ENDIF -->>{dynocentre.TEXT}</option><!-- END dynocentre --></select>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span>&nbsp;{L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS_DYNOCENTRE}">{L_HERE}</a></dd>
+									</dl>
+									<dl>
+										<dt>{L_BHP_EXPLAIN}</dt>
+										<dd><input name="bhp" type="text" class="post" size="15" value ="{BHP}" />&nbsp;<select id="bhp_unit" name="bhp_unit"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN bhp_unit --><option value="{bhp_unit.VALUE}" <!-- IF bhp_unit.S_SELECTED -->selected="selected"<!-- ENDIF -->>{bhp_unit.TEXT}</option><!-- END bhp_unit --></select>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span></dd>
+									</dl>
+									<dl>
+										<dt>{L_TORQUE_EXPLAIN}</dt>
+										<dd><input name="torque" type="text" class="post" size="15" value ="{TORQUE}" />&nbsp;<select id="torque_unit" name="torque_unit"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN torque_unit --><option value="{torque_unit.VALUE}" <!-- IF torque_unit.S_SELECTED -->selected="selected"<!-- ENDIF -->>{torque_unit.TEXT}</option><!-- END torque_unit --></select></dd>
+									</dl>
+									<dl>
+										<dt>{L_BOOST_EXPLAIN}</dt>
+										<dd><input name="boost" type="text" class="post" size="15" value ="{BOOST}" />&nbsp;<select id="boost_unit" name="boost_unit"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN boost --><option value="{boost.VALUE}" <!-- IF boost.S_SELECTED -->selected="selected"<!-- ENDIF -->>{boost.TEXT}</option><!-- END boost --></select></dd>
+									</dl>
+									<dl>
+										<dt>{L_NITROUS_EXPLAIN}</dt>
+										<dd><select id="nitrous" name="nitrous"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN nitrous --><option value="{nitrous.VALUE}" <!-- IF nitrous.S_SELECTED -->selected="selected"<!-- ENDIF -->>{nitrous.TEXT}</option><!-- END nitrous --></select></dd>
+									</dl>
+									<dl>
+										<dt>{L_PEAKPOINT_EXPLAIN}</span></dt>
+										<dd><input name="peakpoint" type="text" class="post" size="15" value ="{PEAKPOINT}" /></dd>
+									</dl>
+
+									<!-- IF ! DID -->
+										<!-- INCLUDE garage_image_attach.html -->
+									<!-- ENDIF -->
+
+								<fieldset>
 		
-				<fieldset>
-					<input type="hidden" value="{VID}" name="VID" /><input type="hidden" value="{DID}" name="DID" /><input type="hidden" value="{PENDING_REDIRECT}" name="pending_redirect" />
-				</fieldset>
+								<fieldset>
+									<input type="hidden" value="{VID}" name="VID" /><input type="hidden" value="{DID}" name="DID" /><input type="hidden" value="{PENDING_REDIRECT}" name="pending_redirect" />
+								</fieldset>
+			
+								<fieldset class="submit-buttons">
+									<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 
+									<input type="submit" name="submit" value="{L_BUTTON}" class="button1" />
+								</fieldset>
+								</form>
 
-				<fieldset class="submit-buttons">
-					<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 
-					<input type="submit" name="submit" value="{L_BUTTON}" class="button1" />
-				</fieldset>
-				</form>
-			</div>
-			<span class="corners-bottom"><span></span></span>
-			</div>
+								<span class="corners-bottom"><span></span></span>
+							</div>
+						</div>
+					</div>
 
 					<div id="options001" style="display: none;">
-
 						<div class="panel">
 							<div class="inner">
 								<span class="corners-top"><span></span></span>
@@ -113,7 +121,7 @@
 	}
 
 	var id = '000';
-	active_tab.setAttribute("class", "garage_preset_yes activetab");
+	active_tab.setAttribute("class", "activetab");
 
 //-->
 </script>

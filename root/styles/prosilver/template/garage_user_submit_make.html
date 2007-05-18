@@ -11,31 +11,33 @@
 <!-- INCLUDE garage_menu.html -->
 
 <div id="garage-main">
+	<div class="panel">
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
+			<form action="{S_GARAGE_ACTION}" method="post">
+				<h3>{L_ADD_MAKE}</h3>
+				<!-- IF S_DISPLAY_PENDING -->
+				<h4>{L_PENDING_NOTICE}</h4>
+				<!-- ENDIF -->
+				<fieldset>
+					<dl>
+						<dt>{L_VEHICLE_MAKE}</dt>
+						<dd><input name="make" type="text" class="post" size="35" value="{MAKE}" /></dd>
+					</dl>
+				</fieldset>
+	
+				<fieldset>
+					<input type="hidden" value="insert_make" name="mode" /><input type="hidden" value="{YEAR}" name="made_year" />
+				</fieldset>
 
-<div class="panel">
-	<div class="inner"><span class="corners-top"><span></span></span>
-		<form action="{S_GARAGE_ACTION}" method="post">
-			<h3>{L_ADD_MAKE}</h3>
-			<!-- IF S_DISPLAY_PENDING -->
-			<h4>{L_PENDING_NOTICE}</h4>
-			<!-- ENDIF -->
-			<fieldset>
-				<dl>
-					<dt class="row1" width="20%"><span class="gen">{L_VEHICLE_MAKE}</span></dt>
-					<dd class="row2"><input name="make" type="text" class="post" size="35" value="{MAKE}" /></dd>
-				</dl>
-			</fieldset>
-
-			<fieldset>
-				<input type="hidden" value="insert_make" name="mode" /><input type="hidden" value="{YEAR}" name="made_year" />
-			</fieldset>
-
-			<fieldset class="submit-buttons">
-				<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 
-				<input type="submit" name="submit" value="{L_ADD_MALE_BUTTON}" class="button1" />
-			</fieldset>
-		</form>
-	<span class="corners-bottom"><span></span></span></div>
+				<fieldset class="submit-buttons">
+					<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 
+					<input type="submit" name="submit" value="{L_ADD_MALE_BUTTON}" class="button1" />
+				</fieldset>
+			</form>
+			<span class="corners-bottom"><span></span></span>
+		</div>
+	</div>
 </div>
 
 <!-- INCLUDE garage_footer.html -->

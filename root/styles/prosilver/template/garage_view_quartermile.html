@@ -11,67 +11,71 @@
 <!-- INCLUDE garage_menu.html -->
 
 <div id="garage-main">
-
-<div class="panel">
-	<div class="inner"><span class="corners-top"><span></span></span>
-		<h3>{YEAR} {MAKE} {MODEL} - {L_QUARTERMILE}</h3>
-		<fieldset>
-               		<dl>
-                        	<dt><b>{L_VEHICLE}</b></dt>
-                        	<dd>{YEAR} {MAKE} {MODEL}</dd>
-                    	</dl>
-                    	<dl>
-    				<dt><b>{L_OWNER}</b></span></dt>
-				<dd><b><a href="{U_VIEW_PROFILE}" <!-- IF USERNAME_COLOUR --> style="color: {USERNAME_COLOUR}"<!-- ENDIF -->>{USERNAME}</a></b></dd>
-                    	</dl>
-                    	<dl>
-                        	<dt><b>{L_RT}</b></dt>
-                        	<dd>{RT}</dd>
-                    	</dl>
-                    	<dl>
-                        	<dt><b>{L_SIXTY}</b></dt>
-				<dd>{SIXTY}</a></dd>
-                    	</dl>
-                    	<dl>
-                        	<dt><b>{L_THREE}</b></dt>
-                        	<dd>{THREE}</dd>
-                    	</dl>
-                    	<dl>
-                        	<dt><b>{L_EIGHTH}</b></dt>
-                        	<dd>{EIGHTH}</dd>
-                    	</dl>
-                    	<dl>
-                        	<dt><b>{L_EIGHTHMPH}</b></dt>
-                        	<dd>{EIGHTH}</dd>
-                    	</dl>
-                    	<dl>
-                        	<dt><b>{L_THOU}</b></dt>
-                        	<dd>{THOU}</dd>
-                    	</dl>
-                    	<dl>
-                        	<dt><b>{L_QUART}</b></dt>
-                        	<dd>{QUART}</dd>
-                    	</dl>
-                    	<dl>
-                        	<dt><b>{L_QUARTMPH}</b></dt>
-                        	<dd>{QUARTMPH}</dd>
-			</dl>
-		</fieldset>
-		{AVATAR_IMG}
-
-		<!-- IF S_DISPLAY_GALLERIES -->
-		<div class="panel">
-			<div class="inner"><span class="corners-top"><span></span></span>
-				<h3>{L_QUARTERMILE_PICTURES}</h3>
-				<div class="garage-image-gallery">
-					<!-- BEGIN quartermile_image -->
-					<a href="{quartermile_image.U_IMAGE}"><img hspace="5" vspace="5" name="{quartermile_image.IMAGE_NAME}" src="{quartermile_image.IMAGE_SOURCE}" /></a>
-					<!-- END quartermile_image -->
-		    		</div>
-			</div><span class="corners-bottom"><span></span></span>
+	<div class="panel">
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
+			<h3>{VEHICLE} {L_DYNORUN}</h3>
+			<fieldset>
+				<dl>
+                  			<dt><b>{L_VEHICLE}</b></dt>
+                     			<dd>{YEAR} {MAKE} {MODEL}</dd>
+				</dl>
+				<dl>
+                	        	<dt><b>{L_OWNER}</b></dt>
+                        		<dd><b><a href="{U_VIEW_PROFILE}" <!-- IF USERNAME_COLOUR --> style="color: {USERNAME_COLOUR}"<!-- ENDIF -->>{USERNAME}</a></b></dd>
+				</dl>
+                    		<dl>
+	                        	<dt><b>{L_RT}</b></dt>
+        	                	<dd>{RT}</dd>
+                	    	</dl>
+                    		<dl>
+                        		<dt><b>{L_SIXTY}</b></dt>
+					<dd>{SIXTY}</a></dd>
+        	            	</dl>
+                	    	<dl>
+                        		<dt><b>{L_THREE}</b></dt>
+                        		<dd>{THREE}</dd>
+	                    	</dl>
+        	            	<dl>
+                	        	<dt><b>{L_EIGHTH}</b></dt>
+                        		<dd>{EIGHTH}</dd>
+	                    	</dl>
+        	            	<dl>
+                	        	<dt><b>{L_EIGHTHMPH}</b></dt>
+                        		<dd>{EIGHTH}</dd>
+	                    	</dl>
+        	            	<dl>
+                	        	<dt><b>{L_THOU}</b></dt>
+                        		<dd>{THOU}</dd>
+	                    	</dl>
+        	            	<dl>
+                	        	<dt><b>{L_QUART}</b></dt>
+                        		<dd>{QUART}</dd>
+	                    	</dl>
+        	            	<dl>
+                	        	<dt><b>{L_QUARTMPH}</b></dt>
+                        		<dd>{QUARTMPH}</dd>
+				</dl>
+			</fieldset>
+			{AVATAR_IMG}
+			<span class="corners-bottom"><span></span></span>
 		</div>
-		<!-- ENDIF -->
-	</div><span class="corners-bottom"><span></span></span>
+	</div>
+
+	<!-- IF S_DISPLAY_GALLERIES -->
+	<div class="panel">
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
+			<h3>{L_QUARTERMILE_PICTURES}</h3>
+			<div class="garage-image-gallery">
+				<!-- BEGIN quartermile_image -->
+				<a href="{quartermile_image.U_IMAGE}"><img hspace="5" vspace="5" name="{quartermile_image.IMAGE_NAME}" src="{quartermile_image.IMAGE_SOURCE}" /></a>
+				<!-- END quartermile_image -->
+		    	</div>
+			<span class="corners-bottom"><span></span></span>
+		</div>
+	</div>
+	<!-- ENDIF -->
 </div>
 
 <!-- INCLUDE garage_footer.html -->

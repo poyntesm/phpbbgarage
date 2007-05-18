@@ -11,77 +11,81 @@
 <!-- INCLUDE garage_menu.html -->
 
 <div id="garage-main">
+	<div class="panel">
+		<!-- BEGIN business_row -->
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
+			<h3><a href="{business_row.U_VIEW_BUSINESS}">{business_row.TITLE}</a></h3>
+			<dl>
+				<dt><b>{L_BUSINESS_NAME} : </b><a href="{business_row.U_VIEW_BUSINESS}">{business_row.TITLE}</a> <!-- BEGIN more_detail -->{L_CLICK_FOR_MORE_DETAIL}<!-- END more_detail --></dt>
+				<dd><b>{L_ADDRESS} : </b>{business_row.ADDRESS}</dd>
+				<dd><b>{L_TELEPHONE} : </b>{business_row.TELEPHONE}</dd>
+				<dd><b>{L_FAX} :</b> {business_row.FAX}</dd>
+				<dd><b>{L_WEBSITE} : </b><a href="{business_row.WEBSITE}">{business_row.WEBSITE}</a></dd>
+				<dd><b>{L_EMAIL} : </b>{business_row.EMAIL}</dd>
+				<dd><b>{L_OPENING_HOURS} : </b>{business_row.OPENING_HOURS}</dd>
+				<dd><b>{L_RATING} : </b>{business_row.RATING} {L_OUT_OF} {business_row.MAX_RATING}</dd>
+			</dl>
 
-<div class="panel">
-	<!-- BEGIN business_row -->
-	<div class="inner"><span class="corners-top"><span></span></span>
-		<h3><a href="{business_row.U_VIEW_BUSINESS}">{business_row.TITLE}</a></h3>
-		<dl>
-			<dt><b>{L_BUSINESS_NAME} : </b><a href="{business_row.U_VIEW_BUSINESS}">{business_row.TITLE}</a> <!-- BEGIN more_detail -->{L_CLICK_FOR_MORE_DETAIL}<!-- END more_detail --></dt>
-			<dd><b>{L_ADDRESS} : </b>{business_row.ADDRESS}</dd>
-			<dd><b>{L_TELEPHONE} : </b>{business_row.TELEPHONE}</dd>
-			<dd><b>{L_FAX} :</b> {business_row.FAX}</dd>
-			<dd><b>{L_WEBSITE} : </b><a href="{business_row.WEBSITE}">{business_row.WEBSITE}</a></dd>
-			<dd><b>{L_EMAIL} : </b>{business_row.EMAIL}</dd>
-			<dd><b>{L_OPENING_HOURS} : </b>{business_row.OPENING_HOURS}</dd>
-			<dd><b>{L_RATING} : </b>{business_row.RATING} {L_OUT_OF} {business_row.MAX_RATING}</dd>
-		</dl>
+			<h3>{L_LAST_CUSTOMERS}</h3>
+			<div class="forabg">
+				<div class="inner">
+					<span class="corners-top"><span></span></span>
+					<!-- BEGIN customers -->
+					<ul class="topiclist">
+						<li class="header">
+							<dl>
+								<dt>{L_OWNER}</dt>
+								<dd>{L_VEHICLE}</dd>
+								<dd>{L_MODIFICATION}</dd>
+								<dd>{L_PURCHASE_RATING}</dd>
+								<dd>{L_PRODUCT_RATING}</dd>
+								<dd>{L_PRICE}</dd>
+							</dl>
+						</li>
+					</ul>
+					<ul class="topiclist topics">
+					<!-- END customers --> 				
+					<!-- BEGIN mod_row -->
+						<!-- IF mod_row.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
+							<dl>
+								<dt><b><a href="{business_row.mod_row.U_VIEW_PROFILE}" <!-- IF business_row.mod_row.USERNAME_COLOUR --> style="color: {business_row.mod_row.USERNAME_COLOUR}"<!-- ENDIF -->>{business_row.mod_row.USERNAME}</a></b></dt>
+								<dd><a href="{business_row.mod_row.U_VIEW_VEHICLE}">{business_row.mod_row.VEHICLE}</a></dd>
+								<dd><a href="{business_row.mod_row.U_VIEW_MODIFICATION}">{business_row.mod_row.MODIFICATION}</a></dd>
+								<dd>{business_row.mod_row.PURCHASE_RATING}</dd>
+								<dd>{business_row.mod_row.PRODUCT_RATING}</dd>
+								<dd>{business_row.mod_row.PRICE}</dd>
+							</dl>
+						</li>
+					<!-- END mod_row -->
+					</ul>
+					<span class="corners-bottom"><span></span></span>
+				</div>
+			</div>
 
-		<h3>{L_LAST_CUSTOMERS}</h3>
-		<div class="forabg">
-			<div class="inner"><span class="corners-top"><span></span></span>
-				<!-- BEGIN customers -->
-				<ul class="topiclist">
-					<li class="header">
-						<dl>
-							<dt>{L_OWNER}</dt>
-							<dd>{L_VEHICLE}</dd>
-							<dd>{L_MODIFICATION}</dd>
-							<dd>{L_PURCHASE_RATING}</dd>
-							<dd>{L_PRODUCT_RATING}</dd>
-							<dd>{L_PRICE}</dd>
-						</dl>
-					</li>
-				</ul>
-				<ul class="topiclist topics">
-				<!-- END customers --> 				
-				<!-- BEGIN mod_row -->
-					<!-- IF mod_row.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
-						<dl>
-							<dt><b><a href="{business_row.mod_row.U_VIEW_PROFILE}" <!-- IF business_row.mod_row.USERNAME_COLOUR --> style="color: {business_row.mod_row.USERNAME_COLOUR}"<!-- ENDIF -->>{business_row.mod_row.USERNAME}</a></b></dt>
-							<dd><a href="{business_row.mod_row.U_VIEW_VEHICLE}">{business_row.mod_row.VEHICLE}</a></dd>
-							<dd><a href="{business_row.mod_row.U_VIEW_MODIFICATION}">{business_row.mod_row.MODIFICATION}</a></dd>
-							<dd>{business_row.mod_row.PURCHASE_RATING}</dd>
-							<dd>{business_row.mod_row.PRODUCT_RATING}</dd>
-							<dd>{business_row.mod_row.PRICE}</dd>
-						</dl>
-					</li>
-				<!-- END mod_row -->
-				</ul>
-			</div><span class="corners-bottom"><span></span></span>
+ 			<!-- BEGIN comments -->
+			<h3>{L_COMMENTS}</h3>
+			<!-- END comments -->
+ 			<!-- BEGIN customer_comments -->
+			{business_row.customer_comments.COMMENTS}
+			<!-- END customer_comments -->
+
+			<span class="corners-bottom"><span></span></span>
 		</div>
-
- 		<!-- BEGIN comments -->
-		<h3>{L_COMMENTS}</h3>
-		<!-- END comments -->
- 		<!-- BEGIN customer_comments -->
-		{business_row.customer_comments.COMMENTS}
-		<!-- END customer_comments -->
-
-		<span class="corners-bottom"><span></span></span>
+		<!-- END business_row -->
 	</div>
-	<!-- END business_row -->
-</div>
 
-<div class="panel">
-	<div class="inner"><span class="corners-top"><span></span></span>
-		<!-- IF PAGINATION or TOTAL_BUSINESS -->
-		<div class="pagination">
-			{TOTAL_BUSINESS}
-			<!-- IF PAGE_NUMBER --><!-- IF PAGINATION --> &bull; <a href="#" onclick="jumpto(); return false;" title="{L_JUMP_TO_PAGE}">{PAGE_NUMBER}</a> &bull; <span>{PAGINATION}</span><!-- ELSE --> &bull; {PAGE_NUMBER}<!-- ENDIF --><!-- ENDIF -->
+	<div class="panel">
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
+			<!-- IF PAGINATION or TOTAL_BUSINESS -->
+			<div class="pagination">
+				{TOTAL_BUSINESS}
+				<!-- IF PAGE_NUMBER --><!-- IF PAGINATION --> &bull; <a href="#" onclick="jumpto(); return false;" title="{L_JUMP_TO_PAGE}">{PAGE_NUMBER}</a> &bull; <span>{PAGINATION}</span><!-- ELSE --> &bull; {PAGE_NUMBER}<!-- ENDIF --><!-- ENDIF -->
+			</div>
+			<!-- ENDIF -->
+			<span class="corners-bottom"><span></span></span>
 		</div>
-		<!-- ENDIF -->
-		<span class="corners-bottom"><span></span></span>
 	</div>
 </div>
 
