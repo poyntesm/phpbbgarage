@@ -2,76 +2,76 @@
 <?xml-stylesheet type="text/xsl" href="./../modx.prosilver.en.xsl"?>
 <!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
 <mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.0.xsd">
-  <header>
-    <license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2 or any later version</license>
-    <title lang="en-gb">phpBB Garage 2.0.0</title>
-    <description lang="en-gb">
-This mod allows users of your forum to add details about their vehicles.
-</description>
-    <author-notes lang="en-gb"><![CDATA[
-- Support is given for both prosilver & subsilver2 templates
-- If you only plan on using prosilver you can omit edits to subsilver2 and vica-versa
+	<header>
+		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2 or any later version</license>
+    		<title lang="en-gb">phpBB Garage</title>
+    		<description lang="en-gb">This mod allows users of your forum to add details about their vehicles.</description>
+    		<author-notes lang="en-gb"><![CDATA[- Support is given for both prosilver & subsilver2 templates
 ]]></author-notes>
-    <author-group>
-      <author>
-        <realname>Esmond Poynton</realname>
-        <email>esmond.poynton[at]gmail[dot]com</email>
-        <username>poyntesm</username>
-        <homepage>http://forums.phpbbgarage.com/</homepage>
-        <contributions />
-      </author>
-    </author-group>
-    <mod-version>
-      <major>2</major>
-      <minor>0</minor>
-      <revision>0</revision>
-    </mod-version>
-    <installation>
-      <level>easy</level>
-      <time>2725</time>
-      <target-version>
-        <target-primary>2.0.0</target-primary>
-        <target-major allow="exact">2</target-major>
-        <target-minor allow="exact">0</target-minor>
-      </target-version>
-    </installation>
-    <history>
-      <entry>
-        <date>2006-02-27</date>
-        <rev-version>
-          <major>2</major>
-          <minor>0</minor>
-          <revision>0</revision>
-        </rev-version>
-        <changelog lang="en-gb">
-          <change> First phpBB3 version of phpBB Garage for phpBB3</change>
-        </changelog>
-      </entry>
-    </history>
-    <meta name="generator" content="Phpbb.ModTeam.Tools (c#)" />
-  </header>
-  <action-group>
-    <copy>
-      <file from="root/*.*" to="*.*" />
-    </copy>
-    <open src="styles/subsilver2/imageset/imageset.cfg">
-      <edit>
-        <find>img_icon_topic_unapproved = icon_topic_unapproved.gif*18*19
-</find>
-        <action type="after-add">//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+
+		<author-group>
+			<author>
+				<realname>Esmond Poynton</realname>
+				<email>esmond.poynton[at]gmail[dot]com</email>
+				<username>poyntesm</username>
+				<homepage>http://forums.phpbbgarage.com/</homepage>
+			</author>
+		</author-group>
+
+		<mod-version>
+			<major>2</major>
+			<minor>0</minor>
+			<revision>B1</revision>
+		</mod-version>
+
+		<installation>
+			<level>easy</level>
+			<time>2725</time>
+			<target-version>
+				<target-primary>3.0.RC1</target-primary>
+				<target-major allow="exact">3</target-major>
+				<target-minor allow="exact">0</target-minor>
+				<target-revision allow="exact">RC1</target-revision>
+			</target-version>
+		</installation>
+
+		<history>
+			<entry>
+        			<date>2006-02-27</date>
+			        <rev-version>
+					<major>2</major>
+					<minor>0</minor>
+					<revision>B1</revision>
+				</rev-version>
+				<changelog lang="en-gb">
+					<change>First phpBB3 version of phpBB Garage for phpBB3.</change>
+				</changelog>
+			</entry>
+		</history>
+	</header>
+
+	<action-group>
+		<copy>
+			<file from="./root/styles/subsilver2/*.*" to="./styles/subsilver/" />
+		</copy>
+
+		<open src="styles/subsilver2/imageset/imageset.cfg">
+			<edit>
+				<find>img_icon_topic_unapproved = icon_topic_unapproved.gif*18*19</find>
+				<action type="after-add">//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 img_garage_img_attached		= garage_camera.gif*20*20
 img_garage_edit			= garage_edit.gif*20*20
 img_garage_delete		= garage_delete.gif*20*20
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 </action>
-      </edit>
-    </open>
-    <open src="styles/subsilver2/imageset/en/imageset.cfg">
-      <edit>
-        <find>img_button_topic_reply = button_topic_reply.gif
-</find>
-        <action type="after-add">//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+			</edit>
+		</open>
+
+		<open src="styles/subsilver2/imageset/en/imageset.cfg">
+			<edit>
+				<find>img_button_topic_reply = button_topic_reply.gif</find>
+				<action type="after-add">//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 img_garage_icon_garage		= icon_garage.gif*
 img_garage_main_menu		= garage_main_menu.gif
@@ -97,105 +97,99 @@ img_garage_main_vehicle		= garage_main_vehicle.gif
 img_garage_no_thumb		= garage_no_thumb.gif
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 </action>
-      </edit>
-    </open>
-    <open src="styles/subsilver2/templates/memberlist_body.html">
-      <edit>
-        <find><![CDATA[	<th nowrap="nowrap" width="11%"><a href="{U_SORT_WEBSITE}">{L_WEBSITE}</a></th>
+			</edit>
+		</open>
+
+		<open src="styles/subsilver2/templates/memberlist_body.html">
+			<edit>
+				<find><![CDATA[	<th nowrap="nowrap" width="11%"><a href="{U_SORT_WEBSITE}">{L_WEBSITE}</a></th>
 ]]></find>
-        <action type="after-add"><![CDATA[	<!-- IF S_DISPLAY_GARAGE_MEMBERLIST --><th nowrap="nowrap" width="11%"><a href="{U_SORT_GARAGE}">{L_GARAGE}</a></th><!-- ENDIF -->
+				<action type="after-add"><![CDATA[	<!-- IF S_DISPLAY_GARAGE_MEMBERLIST --><th nowrap="nowrap" width="11%"><a href="{U_SORT_GARAGE}">{L_GARAGE}</a></th><!-- ENDIF -->
 ]]></action>
-      </edit>
-      <edit>
-        <find><![CDATA[		<td class="gen" align="center">&nbsp;<!-- IF memberrow.U_WWW --><a href="{memberrow.U_WWW}">{WWW_IMG}</a><!-- ENDIF -->&nbsp;</td>
+			</edit>
+			<edit>
+				<find><![CDATA[		<td class="gen" align="center">&nbsp;<!-- IF memberrow.U_WWW --><a href="{memberrow.U_WWW}">{WWW_IMG}</a><!-- ENDIF -->&nbsp;</td>
 ]]></find>
-        <action type="after-add"><![CDATA[		<td class="gen" align="center">&nbsp;<!-- IF memberrow.U_GARAGE and S_DISPLAY_GARAGE_MEMBERLIST --><a href="{memberrow.U_GARAGE}">{GARAGE_IMG}</a><!-- ENDIF -->&nbsp;</td>
+				<action type="after-add"><![CDATA[		<td class="gen" align="center">&nbsp;<!-- IF memberrow.U_GARAGE and S_DISPLAY_GARAGE_MEMBERLIST --><a href="{memberrow.U_GARAGE}">{GARAGE_IMG}</a><!-- ENDIF -->&nbsp;</td>
 
 ]]></action>
-      </edit>
-      <edit>
-        <find><![CDATA[		<td class="row1" colspan="<!-- IF S_SEARCH_USER and S_FORM_NAME -->9<!-- ELSE -->8<!-- ENDIF -->" align="center">
+			</edit>
+			<edit>
+				<find><![CDATA[		<td class="row1" colspan="<!-- IF S_SEARCH_USER and S_FORM_NAME -->9<!-- ELSE -->8<!-- ENDIF -->" align="center">
 ]]></find>
-        <inline-edit>
-          <inline-find><![CDATA[<!-- IF S_SEARCH_USER and S_FORM_NAME -->9<!-- ELSE -->8<!-- ENDIF -->
-]]></inline-find>
-          <inline-action type="replace-with"><![CDATA[<!-- IF S_SEARCH_USER and S_FORM_NAME and !S_DISPLAY_GARAGE_MEMBERLIST-->9<!-- ELSEIF S_SEARCH_USER and S_FORM_NAME and S_DISPLAY_GARAGE_MEMBERLIST-->10<!-- ELSEIF S_DISPLAY_GARAGE_MEMBERLIST -->9<!-- ELSE -->8<!-- ENDIF -->
+				<inline-edit>
+					<inline-find><![CDATA[<!-- IF S_SEARCH_USER and S_FORM_NAME -->9<!-- ELSE -->8<!-- ENDIF -->]]></inline-find>
+					<inline-action type="replace-with"><![CDATA[<!-- IF S_SEARCH_USER and S_FORM_NAME and !S_DISPLAY_GARAGE_MEMBERLIST-->9<!-- ELSEIF S_SEARCH_USER and S_FORM_NAME and S_DISPLAY_GARAGE_MEMBERLIST-->10<!-- ELSEIF S_DISPLAY_GARAGE_MEMBERLIST -->9<!-- ELSE -->8<!-- ENDIF -->
 ]]></inline-action>
-        </inline-edit>
-      </edit>
-      <edit>
-        <find><![CDATA[	<td class="cat" colspan="<!-- IF S_SEARCH_USER and S_FORM_NAME -->9<!-- ELSE -->8<!-- ENDIF -->
-]]></find>
-        <inline-edit>
-          <inline-find><![CDATA[<!-- IF S_SEARCH_USER and S_FORM_NAME -->9<!-- ELSE -->8<!-- ENDIF -->
-]]></inline-find>
-          <inline-action type="replace-with"><![CDATA[<!-- IF S_SEARCH_USER and S_FORM_NAME and !S_DISPLAY_GARAGE_MEMBERLIST-->9<!-- ELSEIF S_SEARCH_USER and S_FORM_NAME and S_DISPLAY_GARAGE_MEMBERLIST-->10<!-- ELSEIF S_DISPLAY_GARAGE_MEMBERLIST -->9<!-- ELSE -->8<!-- ENDIF -->
+				</inline-edit>
+			</edit>
+			<edit>
+				<find><![CDATA[	<td class="cat" colspan="<!-- IF S_SEARCH_USER and S_FORM_NAME -->9<!-- ELSE -->8<!-- ENDIF -->]]></find>
+				<inline-edit>
+					<inline-find><![CDATA[<!-- IF S_SEARCH_USER and S_FORM_NAME -->9<!-- ELSE -->8<!-- ENDIF -->]]></inline-find>
+					<inline-action type="replace-with"><![CDATA[<!-- IF S_SEARCH_USER and S_FORM_NAME and !S_DISPLAY_GARAGE_MEMBERLIST-->9<!-- ELSEIF S_SEARCH_USER and S_FORM_NAME and S_DISPLAY_GARAGE_MEMBERLIST-->10<!-- ELSEIF S_DISPLAY_GARAGE_MEMBERLIST -->9<!-- ELSE -->8<!-- ENDIF -->
 ]]></inline-action>
-        </inline-edit>
-      </edit>
-    </open>
-    <open src="styles/subsilver2/templates/memberlist_view.html">
-      <edit>
-        <find><![CDATA[				<td><!-- IF U_WWW --><b><a class="genmed" href="{U_WWW}">{U_WWW}</a></b><!-- ENDIF --></td>
-			</tr>
-]]></find>
-        <action type="after-add"><![CDATA[			<!-- IF S_DISPLAY_GARAGE_PROFILE -->
+				</inline-edit>
+			</edit>
+		</open>
+
+		<open src="styles/subsilver2/templates/memberlist_view.html">
+			<edit>
+				<find><![CDATA[				<td><!-- IF U_WWW --><b><a class="genmed" href="{U_WWW}">{U_WWW}</a></b><!-- ENDIF --></td>
+			</tr>]]></find>
+				<action type="after-add"><![CDATA[			<!-- IF S_DISPLAY_GARAGE_PROFILE -->
 			<tr>
 				<td class="gen" align="right" nowrap="nowrap">{L_GARAGE}: </td>
 				<td><a class="genmed" href="{U_GARAGE_USER_SEARCH}" >{L_VIEW_USERS_GARAGE}</a></td>
 			</tr>
 			<!-- ENDIF -->
 ]]></action>
-      </edit>
-      <edit>
-        <find><![CDATA[			<td class="row1" colspan="2"><div class="postbody" style="padding: 10px;">{SIGNATURE}</div></td>
+			</edit>
+			<edit>
+				<find><![CDATA[			<td class="row1" colspan="2"><div class="postbody" style="padding: 10px;">{SIGNATURE}</div></td>
 		</tr>
 	<!-- ENDIF -->
 ]]></find>
-        <action type="after-add"><![CDATA[
+				<action type="after-add"><![CDATA[
 	<!-- INCLUDE garage_profile_integration.html -->
 ]]></action>
-      </edit>
-    </open>
-    <open src="styles/subsilver2/templates/viewtopic_body.html">
-      <edit>
-        <find><![CDATA[					<td>{postrow.POSTER_AVATAR}</td>
+			</edit>
+		</open>
+		
+		<open src="styles/subsilver2/templates/viewtopic_body.html">
+			<edit>
+				<find><![CDATA[					<td>{postrow.POSTER_AVATAR}</td>
 				</tr>
 			<!-- ENDIF -->
 ]]></find>
-        <action type="after-add"><![CDATA[			<!-- IF postrow.U_VEHICLE and postrow.S_DISPLAY_GARAGE_VIEWTOPIC -->
+				<action type="after-add"><![CDATA[			<!-- IF postrow.U_VEHICLE and postrow.S_DISPLAY_GARAGE_VIEWTOPIC -->
 				<tr>
 					<td class="postdetails"><a href={postrow.U_VEHICLE}>{postrow.VEHICLE}</a></td>
 				</tr>
 			<!-- ENDIF -->
 ]]></action>
-      </edit>
-      <edit>
-        <find><![CDATA[			<td><div class="gensmall" style="float: {S_CONTENT_FLOW_BEGIN};">
+			</edit>
+			<edit>
+				<find><![CDATA[			<td><div class="gensmall" style="float: {S_CONTENT_FLOW_BEGIN};">
 ]]></find>
-        <inline-edit>
-          <inline-find><![CDATA[{EMAIL_IMG}</a> <!-- ENDIF -->&nbsp;
+				<inline-edit>
+					<inline-find><![CDATA[{EMAIL_IMG}</a> <!-- ENDIF -->&nbsp;
 ]]></inline-find>
-          <inline-action type="after-add"><![CDATA[<!-- IF postrow.U_GARAGE --><a href="{postrow.U_GARAGE}">{GARAGE_IMG}</a> <!-- ENDIF -->&nbsp;
+					<inline-action type="after-add"><![CDATA[<!-- IF postrow.U_GARAGE --><a href="{postrow.U_GARAGE}">{GARAGE_IMG}</a> <!-- ENDIF -->&nbsp;
 ]]></inline-action>
-        </inline-edit>
-      </edit>
-    </open>
-    <open src="styles/subsilver2/templates/overall_header.html">
-      <edit>
-        <find><![CDATA[			<td class="genmed" align="{S_CONTENT_FLOW_END}">
+				</inline-edit>
+			</edit>
+		</open>
+
+		<open src="styles/subsilver2/templates/overall_header.html">
+			<edit>
+				<find><![CDATA[			<td class="genmed" align="{S_CONTENT_FLOW_END}">
 ]]></find>
-        <action type="after-add"><![CDATA[				<!-- IF S_DISPLAY_GARAGE --><a href="{U_GARAGE}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_garage.gif" width="12" height="13" border="0" alt="{L_GARAGE}" hspace="3" /> {L_GARAGE}</a>&nbsp; &nbsp;<!-- ENDIF -->
+				<action type="after-add"><![CDATA[				<!-- IF S_DISPLAY_GARAGE --><a href="{U_GARAGE}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_garage.gif" width="12" height="13" border="0" alt="{L_GARAGE}" hspace="3" /> {L_GARAGE}</a>&nbsp; &nbsp;<!-- ENDIF -->
 				<!-- IF S_DISPLAY_QUARTERMILE --><a href="{U_QUARTERMILE}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_quartermile.gif" width="12" height="13" border="0" alt="{L_QUARTERMILE}" hspace="3" /> {L_QUARTERMILE}</a>&nbsp; &nbsp;<!-- ENDIF -->
 				<!-- IF S_DISPLAY_DYNORUN --><a href="{U_DYNORUN}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_dynorun.gif" width="12" height="13" border="0" alt="{L_DYNORUN}" hspace="3" /> {L_DYNORUN}</a>&nbsp; &nbsp;<!-- ENDIF -->
 ]]></action>
-      </edit>
-    </open>
-    <diy-instructions lang="en-gb">Chmod ./garage/ to 755
-Chmod ./garage/upload to 777
-Open your web browser and run install_garage.php
-Delete install_garage.php if it ran succesfully
-</diy-instructions>
-  </action-group>
+			</edit>
+		</open>
+	</action-group>
 </mod>
-
