@@ -1,119 +1,129 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<?xml-stylesheet type="text/xsl" href="modx.subsilver.en.xsl"?>
+<?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
 <!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
 <mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.0.xsd">
-	<header>
-		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2 or any later version</license>
-		<title lang="en-gb">phpBB Garage 2.0.0</title>
-		<description lang="en-gb"><![CDATA[This mod allows users of your forum to add details about their vehicles.]]></description>
-		<author-notes><![CDATA[- This Mod Was Inspired By IPB Based Garage By Matthew C. Veno]]></author-notes>
-		<author-group>
-			<author>
-				<realname>Esmond Poynton</realname>
-				<email>esmond.poynton[at]gmail[dot]com</email>
-				<username>poyntesm</username>
-				<homepage>http://forums.phpbbgarage.com/</homepage>
-				<contributions />
-			</author>
-		</author-group>
-		<mod-version>
-			<major>2</major>
-			<minor>0</minor>
-			<revision>0</revision>
-		</mod-version>
-		<installation>
-			<level>Medium</level>
-			<time>1200</time>
-			<target-version>
-				<target-primary>2.0</target-primary>
-				<target-major allow="exact">2</target-major>
-				<target-minor allow="exact">0</target-minor>
-			</target-version>
-		</installation>
-		<history>
-			<entry>
-				<date></date>
-				<rev-version>
-					<major>0</major>
-					<minor>0</minor>
-					<revision></revision>
-				</rev-version>
-				<changelog lang="en-gb">
-				</changelog>
-			</entry>
-		</history>
-	</header>
-	<action-group>
-		<copy>
-			<file from="root/*.*"  to="*.*" />
-		</copy>
-		<diy-instructions><![CDATA[Chmod ./garage/ to 755
-Chmod ./garage/upload to 777
-Open your web browser and run install_garage.php
-Delete install_garage.php if it ran succesfully]]></diy-instructions>
-		<open src="common.php">
-			<edit>
-				<find><![CDATA[<?php
+  <header>
+    <license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2 or any later version</license>
+    <title lang="en-gb">phpBB Garage 2.0.0</title>
+    <description lang="en-gb">
+This mod allows users of your forum to add details about their vehicles.
+</description>
+    <author-notes lang="en-gb"><![CDATA[
+- Support is given for both prosilver & subsilver2 templates
+- If you only plan on using prosilver you can omit edits to subsilver2 and vica-versa
+]]></author-notes>
+    <author-group>
+      <author>
+        <realname>Esmond Poynton</realname>
+        <email>esmond.poynton[at]gmail[dot]com</email>
+        <username>poyntesm</username>
+        <homepage>http://forums.phpbbgarage.com/</homepage>
+        <contributions />
+      </author>
+    </author-group>
+    <mod-version>
+      <major>2</major>
+      <minor>0</minor>
+      <revision>0</revision>
+    </mod-version>
+    <installation>
+      <level>easy</level>
+      <time>2725</time>
+      <target-version>
+        <target-primary>2.0.0</target-primary>
+        <target-major allow="exact">2</target-major>
+        <target-minor allow="exact">0</target-minor>
+      </target-version>
+    </installation>
+    <history>
+      <entry>
+        <date>2006-02-27</date>
+        <rev-version>
+          <major>2</major>
+          <minor>0</minor>
+          <revision>0</revision>
+        </rev-version>
+        <changelog lang="en-gb">
+          <change> First phpBB3 version of phpBB Garage for phpBB3</change>
+        </changelog>
+      </entry>
+    </history>
+    <meta name="generator" content="Phpbb.ModTeam.Tools (c#)" />
+  </header>
+  <action-group>
+    <copy>
+      <file from="root/*.*" to="*.*" />
+    </copy>
+    <open src="common.php">
+      <edit>
+        <find><![CDATA[<?php
 ]]></find>
-				<action type="after-add"><![CDATA[//-- mod : Garage ----------------------------------------------------------------------------------------------------------
-]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[$config = $cache->obtain_config();
+        <action type="after-add">//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+</action>
+      </edit>
+      <edit>
+        <find><![CDATA[$config = $cache->obtain_config();
 ]]></find>
-				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+        <action type="after-add">//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-]]></action>
-			</edit>
-		</open>
-		<open src="memberlist.php">
-			<edit>
-				<find><![CDATA[<?php
+</action>
+      </edit>
+    </open>
+    <open src="memberlist.php">
+      <edit>
+        <find><![CDATA[<?php
 ]]></find>
-				<action type="after-add"><![CDATA[//-- mod : Garage ----------------------------------------------------------------------------------------------------------
-]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA['k' => $user->lang['JABBER']
+        <action type="after-add">//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+</action>
+      </edit>
+      <edit>
+        <find><![CDATA['k' => $user->lang['JABBER']
 ]]></find>
-				<inline-edit>
-					<inline-find><![CDATA['k' => $user->lang['JABBER'] ]]></inline-find>
-					<inline-action type="after-add"><![CDATA[, 'o' => $user->lang['GARAGE'] ]]></inline-action>
-				</inline-edit>
-			</edit>
-			<edit>
-				<find><![CDATA['k' => 'u.user_jabber'
+        <inline-edit>
+          <inline-find><![CDATA['k' => $user->lang['JABBER']
+]]></inline-find>
+          <inline-action type="after-add"><![CDATA[, 'o' => $user->lang['GARAGE']
+]]></inline-action>
+        </inline-edit>
+      </edit>
+      <edit>
+        <find><![CDATA['k' => 'u.user_jabber'
 ]]></find>
-				<inline-edit>
-					<inline-find><![CDATA['k' => 'u.user_jabber' ]]></inline-find>
-					<inline-action type="after-add"><![CDATA[, 'o' => 'u.garage_id' ]]></inline-action>
-				</inline-edit>
-			</edit>
-			<edit>
-				<find><![CDATA[			'SELECT'	=> 'u.user_id, u.group_id as default_group, u.username, u.username_clean, u.user_colour, u.user_rank, u.user_posts, u.user_allow_pm, g.group_id, g.group_name, g.group_colour, g.group_type, ug.user_id as ug_user_id',
+        <inline-edit>
+          <inline-find><![CDATA['k' => 'u.user_jabber'
+]]></inline-find>
+          <inline-action type="after-add"><![CDATA[, 'o' => 'u.garage_id'
+]]></inline-action>
+        </inline-edit>
+      </edit>
+      <edit>
+        <find><![CDATA[			'SELECT'	=> 'u.user_id, u.group_id as default_group, u.username, u.username_clean, u.user_colour, u.user_rank, u.user_posts, u.user_allow_pm, g.group_id, g.group_name, g.group_colour, g.group_type, ug.user_id as ug_user_id',
 ]]></find>
-				<inline-edit>
-					<inline-find><![CDATA[ug.user_id as ug_user_id ]]></inline-find>
-					<inline-action type="after-add"><![CDATA[, g.id as garage_id ]]></inline-action>
-				</inline-edit>
-			</edit>
-			<edit>
-				<find><![CDATA[			),
+        <inline-edit>
+          <inline-find>ug.user_id as ug_user_id
+</inline-find>
+          <inline-action type="after-add">, v.id as vid
+</inline-action>
+        </inline-edit>
+      </edit>
+      <edit>
+        <find><![CDATA[			),
+
 			'WHERE'		=> $db->sql_in_set('u.user_id', array_unique(array_merge($admin_id_ary, $mod_id_ary))) . '
 ]]></find>
-				<action type="before-add"><![CDATA[				,array(
-					'FROM'	=> array(GARAGE__VEHICLES_TABLE => 'g'),
-					'ON'	=> 'g.user_id = u.user_id AND g.main_vehicle = 1'
+        <action type="before-add"><![CDATA[				,array(
+					'FROM'	=> array(GARAGE__VEHICLES_TABLE => 'v'),
+					'ON'	=> 'v.user_id = u.user_id AND v.main_vehicle = 1'
 				)
 ]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[		// Custom Profile Fields
+      </edit>
+      <edit>
+        <find>		// Custom Profile Fields
 		$profile_fields = array();
-]]></find>
-				<action type="before-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+</find>
+        <action type="before-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 		if ($garage_config['integrate_profile'])
 		{
@@ -122,77 +132,132 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 		}
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 ]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[			'S_SHOW_GROUP'		=> ($mode == 'group') ? true : false,
+      </edit>
+      <edit>
+        <find><![CDATA[			'S_SHOW_GROUP'		=> ($mode == 'group') ? true : false,
 ]]></find>
-				<action type="before-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+        <action type="before-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 			'U_SORT_GARAGE'			=> $pagination_url . '&amp;sk=o&amp;sd=' . (($sort_key == 'o' && $sort_dir == 'a') ? 'd' : 'a'),
 			'S_DISPLAY_GARAGE_MEMBERLIST'	=> ($garage_config['integrate_memberlist']) ? true : false,
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 ]]></action>
-			</edit>
-		</open>
-		<open src="viewonline.php">
-			<edit>
-				<find><![CDATA[<?php
+      </edit>
+    </open>
+    <open src="viewonline.php">
+      <edit>
+        <find><![CDATA[<?php
 ]]></find>
-				<action type="after-add"><![CDATA[//-- mod : Garage ----------------------------------------------------------------------------------------------------------
-]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[		case 'report':
+        <action type="after-add">//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+</action>
+      </edit>
+      <edit>
+        <find><![CDATA[		case 'report':
 			$location = $user->lang['REPORTING_POST'];
 			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
 		break;
 ]]></find>
-				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+        <action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 		case 'garage':
+			$url_params = array(
+				'mode=register'		=> 'VIEWING_REGISTER',
+				'i=pm&mode=compose'	=> 'POSTING_PRIVATE_MESSAGE',
+				'i=pm&'			=> 'VIEWING_PRIVATE_MESSAGES',
+				'i=profile&'		=> 'CHANGING_PROFILE',
+				'i=prefs&'		=> 'CHANGING_PREFERENCES',
+			);
+
+			foreach ($url_params as $param => $lang)
+			{
+				if (strpos($row['session_page'], $param) !== false)
+				{
+					$location = $user->lang[$lang];
+					break;
+				}
+			}
+
+			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
+		break;
+
 		case 'garage_blog':
+			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
+		break;
+
 		case 'garage_dynorun':
+			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
+		break;
+
 		case 'garage_guestbook':
+			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
+		break;
+
 		case 'garage_modification':
+			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
+		break;
+
 		case 'garage_premium':
+			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
+		break;
+
 		case 'garage_quartermile':
+			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
+		break;
+
 		case 'garage_service':
+			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
+		break;
+
 		case 'garage_track':
+			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
+		break;
+
 		case 'garage_vehicle':
 			$location = $user->lang['VIEWING_GARAGE'];
-			$location_url = append_sid("{$phpbb_root_path}garage.$phpEx");
+			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
 		break;
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 ]]></action>
-			</edit>
-		</open>
-		<open src="viewtopic.php">
-			<edit>
-				<find><![CDATA[<?php
+      </edit>
+    </open>
+    <open src="viewtopic.php">
+      <edit>
+        <find><![CDATA[<?php
 ]]></find>
-				<action type="after-add"><![CDATA[//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+        <action type="after-add">//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+</action>
+      </edit>
+      <edit>
+        <find><![CDATA[	'WARN_IMG'			=> $user->img('icon_user_warn', 'WARN_USER'),
+]]></find>
+        <action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+	'GARAGE_IMG'			=> $user->img('garage_icon_garage', 'USERS_GARAGE'),
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 ]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[$sql = $db->sql_build_query('SELECT', array(
+      </edit>
+      <edit>
+        <find><![CDATA[$sql = $db->sql_build_query('SELECT', array(
 ]]></find>
-				<action type="before-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+        <action type="before-add">//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- modify
-]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[	'SELECT'	=> 'u.*, z.friend, z.foe, p.*',
+</action>
+      </edit>
+      <edit>
+        <find><![CDATA[	'SELECT'	=> 'u.*, z.friend, z.foe, p.*',
 ]]></find>
-				<inline-edit>
-					<inline-find><![CDATA[p.* ]]></inline-find>
-					<inline-action type="after-add"><![CDATA[, g.id as garage_id, CONCAT_WS(' ', g.made_year, makes.make, models.model) AS vehicle ]]></inline-action>
-				</inline-edit>
-			</edit>
-			<edit>
-				<find><![CDATA[			'ON'	=> 'z.user_id = ' . $user->data['user_id'] . ' AND z.zebra_id = p.poster_id'
+        <inline-edit>
+          <inline-find>p.*
+</inline-find>
+          <inline-action type="after-add">, g.id as garage_id, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle
+</inline-action>
+        </inline-edit>
+      </edit>
+      <edit>
+        <find><![CDATA[			'ON'	=> 'z.user_id = ' . $user->data['user_id'] . ' AND z.zebra_id = p.poster_id'
 		)
 ]]></find>
-				<action type="after-add"><![CDATA[		,array(
+        <action type="after-add"><![CDATA[		,array(
 			'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'g'),
 			'ON'	=> 'g.user_id = p.poster_id and g.main_vehicle = 1'
 		)
@@ -205,58 +270,61 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 			'ON'	=> 'g.model_id = models.id and models.pending = 0'
 		)
 ]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[	'WHERE'		=> $db->sql_in_set('p.post_id', $post_list) . '
+      </edit>
+      <edit>
+        <find><![CDATA[	'WHERE'		=> $db->sql_in_set('p.post_id', $post_list) . '
 		AND u.user_id = p.poster_id'
 ));
 ]]></find>
-				<action type="after-add"><![CDATA[//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[				'age'				=> '',
+        <action type="after-add">//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+</action>
+      </edit>
+      <edit>
+        <find><![CDATA[				'age'				=> '',
 ]]></find>
-				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+        <action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 				'vehicle'			=> '',
 				'garage_id'			=> '',
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 ]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[				'age'			=> '',
+        <comment lang="en-gb">First Finds Anonymous User</comment>
+      </edit>
+      <edit>
+        <find><![CDATA[				'age'			=> '',
 ]]></find>
-				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+        <action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 				'vehicle'		=> $row['vehicle'],
 				'garage_id'		=> $row['garage_id'],
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 ]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[	$postrow = array(
-]]></find>
-				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+        <comment lang="en-gb">Second Finds Normal User</comment>
+      </edit>
+      <edit>
+        <find>	$postrow = array(
+</find>
+        <action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 		'VEHICLE'			=> $user_cache[$poster_id]['vehicle'],
 		'U_VEHICLE'			=> (isset($user_cache[$poster_id]['garage_id'])) ? append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", 'mode=view_vehicle&amp;VID=' . $user_cache[$poster_id]['garage_id']) : '',
+		'U_GARAGE'			=> (isset($user_cache[$poster_id]['garage_id'])) ? append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=dispay_results&amp;username=' . $user_cache[$poster_id]['username']) : '',
 		'S_DISPLAY_GARAGE_VIEWTOPIC'	=> ($garage_config['integrate_viewtopic']) ? true : false,
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 ]]></action>
-			</edit>
-		</open>
-		<open src="adm/index.php">
-			<edit>
-				<find><![CDATA[<?php
+      </edit>
+    </open>
+    <open src="adm/index.php">
+      <edit>
+        <find><![CDATA[<?php
 ]]></find>
-				<action type="after-add"><![CDATA[//-- mod : Garage ----------------------------------------------------------------------------------------------------------
-]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[		'ICON_DISAPPROVE_DISABLED'		=> '<img src="' . $phpbb_admin_path . 'images/icon_garage_disapprove_disabled.gif" alt="' . $user->lang['DISAPPROVE'] . '" title="' . $user->lang['DISAPPROVE'] . '" />',
+        <action type="after-add">//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+</action>
+      </edit>
+      <edit>
+        <find><![CDATA[		'ICON_SYNC_DISABLED'		=> '<img src="' . $phpbb_admin_path . 'images/icon_sync_disabled.gif" alt="' . $user->lang['RESYNC'] . '" title="' . $user->lang['RESYNC'] . '" />',
 ]]></find>
-				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+        <action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 		'ICON_APPROVE'			=> '<img src="' . $phpbb_admin_path . 'images/icon_garage_approve.gif" alt="' . $user->lang['APPROVE'] . '" title="' . $user->lang['APPROVE'] . '" />',
 		'ICON_APPROVE_DISABLED'		=> '<img src="' . $phpbb_admin_path . 'images/icon_garage_approve_disabled.gif" alt="' . $user->lang['APPROVE'] . '" title="' . $user->lang['APPROVE'] . '" />',
@@ -264,27 +332,27 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 		'ICON_DISAPPROVE_DISABLED'	=> '<img src="' . $phpbb_admin_path . 'images/icon_garage_disapprove_disabled.gif" alt="' . $user->lang['DISAPPROVE'] . '" title="' . $user->lang['DISAPPROVE'] . '" />',
 //-- mod finish : Garage ----------------------------------------------------------------------------------------------------
 ]]></action>
-			</edit>
-		</open>
-		<open src="includes/functions.php">
-			<edit>
-				<find><![CDATA[<?php
+      </edit>
+    </open>
+    <open src="includes/functions.php">
+      <edit>
+        <find><![CDATA[<?php
 ]]></find>
-				<action type="after-add"><![CDATA[//-- mod : Garage ----------------------------------------------------------------------------------------------------------
-]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[	global $db, $config, $template, $SID, $_SID, $user, $auth, $phpEx, $phpbb_root_path;]]></find>
-				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+        <action type="after-add">//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+</action>
+      </edit>
+      <edit>
+        <find>	global $db, $config, $template, $SID, $_SID, $user, $auth, $phpEx, $phpbb_root_path;</find>
+        <action type="after-add">//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 	global $garage_config;
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[		'U_FAQ'					=> append_sid("{$phpbb_root_path}faq.$phpEx"),
+</action>
+      </edit>
+      <edit>
+        <find><![CDATA[		'U_FAQ'					=> append_sid("{$phpbb_root_path}faq.$phpEx"),
 ]]></find>
-				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+        <action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 		'U_GARAGE' 			=> append_sid("{$phpbb_root_path}garage.$phpEx"),
 		'U_QUARTERMILE' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=quartermile_table'),
@@ -294,516 +362,64 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 		'S_DISPLAY_DYNORUN'		=> ($garage_config['enable_dynorun_header']) ? 1 : 0,
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 ]]></action>
-			</edit>
-		</open>
-		<open src="includes/acp/acp_styles.php">
-			<edit>
-				<find><![CDATA[<?php
+      </edit>
+    </open>
+    <open src="includes/functions.php">
+      <edit>
+        <find><![CDATA[<?php
 ]]></find>
-				<action type="after-add"><![CDATA[//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+        <action type="after-add">//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+</action>
+      </edit>
+      <edit>
+        <find><![CDATA[		set_config('num_users', $config['num_users'] - 1, true);
+	}
+
+	$db->sql_transaction('commit');
+]]></find>
+        <action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+	include($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
+	$garage_vehicle->delete_user_vehicles($user_id);
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 ]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[			'polls'		=> array(
+      </edit>
+    </open>
+    <open src="includes/acp/acp_styles.php">
+      <edit>
+        <find><![CDATA[<?php
+]]></find>
+        <action type="after-add">//-- mod : Garage ----------------------------------------------------------------------------------------------------------
+</action>
+      </edit>
+      <edit>
+        <find>, 'button_topic_new', 'button_topic_reply',
+</find>
+        <action type="after-add">//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+				'garage_icon_garage', 'garage_main_menu', 'garage_browse', 'garage_search', 'garage_quartermile_table', 'garage_dynorun_table', 'garage_lap_table', 'garage_garage_review', 'garage_shop_review', 'garage_insurance_review', 'garage_create_vehicle', 'garage_edit_vehicle', 'garage_delete_vehicle', 'garage_view_vehicle', 'garage_add_modification', 'garage_add_insurance', 'garage_add_dynorun', 'garage_add_quartermile', 'garage_add_lap', 'garage_add_service', 'garage_main_vehicle', 'garage_no_thumb',
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+</action>
+      </edit>
+      <edit>
+        <find><![CDATA[			'polls'		=> array(
 				'poll_left', 'poll_center', 'poll_right',
 			),
 ]]></find>
-				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+        <action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 			'garage'	=> array(
-				'garage_vehicle_img_attached', 'garage_slip_img_attached', 'garage_icon_garage', 'garage_main_menu', 'garage_browse', 'garage_search', 'garage_quartermile_table', 'garage_dynorun_table', 'garage_lap_table', 'garage_garage_review', 'garage_shop_review', 'garage_insurance_review', 'garage_create_vehicle', 'garage_edit_vehicle', 'garage_delete_vehicle', 'garage_view_vehicle', 'garage_add_modification', 'garage_add_insurance', 'garage_add_dynorun', 'garage_add_quartermile', 'garage_add_lap', 'garage_add_service', 'garage_manage_gallery', 'garage_edit', 'garage_delete', 'garage_main_vehicle', 'garage_no_thumb', 'garage_show_details', 'garage_hide_details', 'garage_move_up', 'garage_move_down', 'garage_set_approved', 'garage_set_pending',
+				'garage_img_attached', 'garage_edit', 'garage_delete', 'garage_toggle',
 			),
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 ]]></action>
-			</edit>
-		</open>
-		<open src="language/en/common.php">
-			<edit>
-				<find><![CDATA[<?php
-]]></find>
-				<action type="after-add"><![CDATA[//-- mod : Garage ----------------------------------------------------------------------------------------------------------]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[$lang = array_merge($lang, array(
-]]></find>
-				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-	'GARAGE'				=> 'Garage',
-	'QUARTERMILE'				=> '&frac14; Mile',
-	'DYNORUN'				=> 'Dynorun',
-	'PENDING_GARAGE_ITEMS'			=> 'Pending Garage Items',
-	'VIEWING_GARAGE'			=> 'Viewing Garage',
-	'VIEW_USERS_GARAGE'			=> 'View user's Garage',
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-]]></action>
-			</edit>
-		</open>
-		<open src="language/en/mcp.php">
-			<edit>
-				<find><![CDATA[<?php
-]]></find>
-				<action type="after-add"><![CDATA[//-- mod : Garage ----------------------------------------------------------------------------------------------------------
-]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[$lang = array_merge($lang, array(
-]]></find>
-				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-	'MCP_GARAGE'					=> 'Garage',
-	'MCP_GARAGE_UNAPPROVED_VEHICLES'		=> 'Vehicles awaiting approval',
-	'MCP_GARAGE_UNAPPROVED_GUESTBOOK_COMMENTS'	=> 'Comments awaiting approval',
-	'MCP_GARAGE_UNAPPROVED_MAKES'			=> 'Makes awaiting approval',
-	'MCP_GARAGE_UNAPPROVED_MODELS'			=> 'Models awaiting approval',
-	'MCP_GARAGE_UNAPPROVED_BUSINESS'		=> 'Business's awaiting approval',
-	'MCP_GARAGE_UNAPPROVED_QUARTERMILES'		=> '&frac14; miles awaiting approval',
-	'MCP_GARAGE_UNAPPROVED_DYNORUNS'		=> 'Dynoruns awaiting approval',
-	'MCP_GARAGE_UNAPPROVED_LAPS'			=> 'Laps awaiting approval',
-	'MCP_GARAGE_UNAPPROVED_TRACKS'			=> 'Tracks awaiting approval', 
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-]]></action>
-			</edit>
-		</open>
-		<open src="language/en/ucp.php">
-			<edit>
-				<find><![CDATA[<?php
-]]></find>
-				<action type="after-add"><![CDATA[//-- mod : Garage ----------------------------------------------------------------------------------------------------------
-]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[// Common language entries
-$lang = array_merge($lang, array(
-]]></find>
-				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-	'UCP_GARAGE'				=> 'Garage',
-	'UCP_GARAGE_OPTIONS'			=> 'Edit global settings',
-	'UCP_GARAGE_MODERATION'			=> 'Edit moderator notification settings',
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-]]></action>
-			</edit>
-		</open>
-		<open src="language/en/acp/common.php">
-			<edit>
-				<find><![CDATA[<?php
-]]></find>
-				<action type="after-add"><![CDATA[//-- mod : Garage ----------------------------------------------------------------------------------------------------------
-
-]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[$lang = array_merge($lang, array(
-]]></find>
-				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-	'ACP_GARAGE'				=> 'Garage',
-	'ACP_GARAGE_BUSINESS'			=> 'Business's',
-	'ACP_GARAGE_BUSINESS_MANAGEMENT'	=> 'Garage business management',
-	'ACP_GARAGE_CATEGORIES'			=> 'Categories',
-	'ACP_GARAGE_CATEGORY_MANAGEMENT'	=> 'Garage category management',
-	'ACP_GARAGE_MODELS'	 		=> 'Makes/models',
-	'ACP_GARAGE_MODEL_MANAGEMENT'	 	=> 'Garage make/model managment',
-	'ACP_GARAGE_PRODUCTS'	 		=> 'Products',
-	'ACP_GARAGE_PRODUCT_MANAGEMENT'		=> 'Garage modification managment',
-	'ACP_GARAGE_QUOTAS'			=> 'Quotas',
-	'ACP_GARAGE_QUOTA_MANAGEMENT'		=> 'Garage quotas',
-	'ACP_GARAGE_TOOLS'			=> 'Tools',
-	'ACP_GARAGE_TOOL_MANAGEMENT'		=> 'Garage Tools',
-	'ACP_GARAGE_TRACK'			=> 'Tracks',
-	'ACP_GARAGE_TRACK_MANAGEMENT'		=> 'Garage track managment',
-	'ACP_GARAGE_SETTINGS'			=> 'Garage settings',
-	'ACP_GARAGE_MANAGEMENT'			=> 'Garage management',
-	'ACP_GARAGE_GENERAL_SETTINGS'		=> 'General settings',
-	'ACP_GARAGE_MENU_SETTINGS'		=> 'Menu settings',
-	'ACP_GARAGE_INDEX_SETTINGS'		=> 'Index page settings',
-	'ACP_GARAGE_IMAGES_SETTINGS'		=> 'Image settings',
-	'ACP_GARAGE_QUARTERMILE_SETTINGS'	=> '&frac14; mile settings',
-	'ACP_GARAGE_DYNORUN_SETTINGS'		=> 'Dynorun settings',
-	'ACP_GARAGE_TRACK_SETTINGS'		=> 'Track/lap settings',
-	'ACP_GARAGE_INSURANCE_SETTINGS'		=> 'Insurance settings',
-	'ACP_GARAGE_BUSINESS_SETTINGS'		=> 'Business settings',
-	'ACP_GARAGE_RATING_SETTINGS'		=> 'Rating settings',
-	'ACP_GARAGE_GUESTBOOK_SETTINGS'		=> 'Guestbook settings',
-	'ACP_GARAGE_PRODUCT_SETTINGS'		=> 'Product settings',
-	'ACP_GARAGE_SERVICE_SETTINGS'		=> 'Service history settings',
-	'ACP_GARAGE_BLOG_SETTINGS'		=> 'Blog settings',
-	'APPROVE'				=> 'Approve',
-	'DISAPPROVE'				=> 'Disapprove',
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-]]></action>
-			</edit>
-		</open>
-		<open src="language/en/acp/styles.php">
-			<edit>
-				<find><![CDATA[<?php
-]]></find>
-				<action type="after-add"><![CDATA[//-- mod : Garage ----------------------------------------------------------------------------------------------------------
-]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[	'IMG_CAT_USER'			=> 'Additional images',
-]]></find>
-				<action type="after-add"><![CDATA[
-//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-	'IMG_CAT_GARAGE'		=> 'phpBB Garage images',
-	'IMG_GARAGE_VEHICLE_IMG_ATTACHED'=> 'Vehicle with image',
-	'IMG_GARAGE_SLIP_IMG_ATTACHED'	=> 'Slip with image',
-	'IMG_GARAGE_ICON_GARAGE'	=> 'Garage icon',
-	'IMG_GARAGE_MAIN_MENU'		=> 'Index menu',
-	'IMG_GARAGE_BROWSE'		=> 'Browse menu',
-	'IMG_GARAGE_SEARCH'		=> 'Search menu',
-	'IMG_GARAGE_QUARTERMILE_TABLE'	=> '&frac14; mile table',
-	'IMG_GARAGE_DYNORUN_TABLE'	=> 'Dynorun table',
-	'IMG_GARAGE_LAP_TABLE'		=> 'Lap table',
-	'IMG_GARAGE_GARAGE_REVIEW'	=> 'Garage review',
-	'IMG_GARAGE_SHOP_REVIEW'	=> 'Shop review',
-	'IMG_GARAGE_INSURANCE_REVIEW'	=> 'Insurance review',
-	'IMG_GARAGE_CREATE_VEHICLE'	=> 'Create vehicle',
-	'IMG_GARAGE_EDIT_VEHICLE'	=> 'Edit vehicle',
-	'IMG_GARAGE_DELETE_VEHICLE'	=> 'Delete vehicle',
-	'IMG_GARAGE_VIEW_VEHICLE'	=> 'View vehicle',
-	'IMG_GARAGE_ADD_MODIFICATION'	=> 'Add modification',
-	'IMG_GARAGE_ADD_INSURANCE'	=> 'Add insurance',
-	'IMG_GARAGE_ADD_DYNORUN'	=> 'Add dynorun',
-	'IMG_GARAGE_ADD_LAP'		=> 'Add lap',
-	'IMG_GARAGE_ADD_SERVICE'	=> 'Add service',
-	'IMG_GARAGE_ADD_QUARTERMILE'	=> 'Add &frac14; mile',
-	'IMG_GARAGE_MANAGE_GALLERY'	=> 'Manage vehicle gallery',
-	'IMG_GARAGE_EDIT'		=> 'Edit',
-	'IMG_GARAGE_DELETE'		=> 'Delete',
-	'IMG_GARAGE_MAIN_VEHICLE'	=> 'Main vehicle',
-	'IMG_GARAGE_NO_THUMB'		=> 'No thumb',
-	'IMG_GARAGE_SHOW_DETAILS'	=> 'Show details',
-	'IMG_GARAGE_HIDE_DETAILS'	=> 'Hide details',
-	'IMG_GARAGE_MOVE_UP'		=> 'Move up',
-	'IMG_GARAGE_MOVE_DOWN'		=> 'Move down',
-	'IMG_GARAGE_SET_APPROVED'	=> 'Approve',
-	'IMG_GARAGE_SET_PENDING'	=> 'Pending',
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-]]></action>
-			</edit>
-		</open>
-		<open src="styles/subSilver/imageset/imageset.cfg">
-			<edit>
-				<find><![CDATA[img_button_topic_reply = {LANG}/button_topic_reply.gif*27*97
-]]></find>
-				<action type="after-add"><![CDATA[
-//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-img_garage_vehicle_img_attached	= garage_camera.gif*13*18
-img_garage_slip_img_attached	= garage_slip.gif*13*12
-img_garage_icon_garage		= {LANG}/icon_garage.gif*18*59
-img_garage_main_menu		= {LANG}/garage_main_menu.gif*33*130
-img_garage_browse		= {LANG}/garage_browse.gif*33*130
-img_garage_search		= {LANG}/garage_search.gif*33*130
-img_garage_quartermile_table	= {LANG}/garage_quartermile_table.gif*33*130
-img_garage_dynorun_table	= {LANG}/garage_dynorun_table.gif*33*130
-img_garage_lap_table		= {LANG}/garage_lap_table.gif*33*130
-img_garage_garage_review	= {LANG}/garage_garage_review.gif*33*130
-img_garage_shop_review		= {LANG}/garage_shop_review.gif*33*130
-img_garage_insurance_review	= {LANG}/garage_insurance_review.gif*33*130
-img_garage_create_vehicle	= {LANG}/garage_create_vehicle.gif*33*130
-img_garage_edit_vehicle		= {LANG}/garage_edit_vehicle.gif*33*130
-img_garage_delete_vehicle	= {LANG}/garage_delete_vehicle.gif*33*130
-img_garage_view_vehicle		= {LANG}/garage_view_vehicle.gif*33*130
-img_garage_add_modification	= {LANG}/garage_add_modification.gif*33*130
-img_garage_add_insurance	= {LANG}/garage_add_insurance.gif*33*130
-img_garage_add_dynorun		= {LANG}/garage_add_dynorun.gif*33*130
-img_garage_add_quartermile	= {LANG}/garage_add_quartermile.gif*33*130
-img_garage_add_lap		= {LANG}/garage_add_lap.gif*33*130
-img_garage_add_service		= {LANG}/garage_add_service.gif*33*130
-img_garage_manage_gallery	= {LANG}/garage_manage_gallery.gif*33*130
-img_garage_edit			= {LANG}/garage_edit.gif*16*16
-img_garage_delete		= {LANG}/garage_delete.gif*16*16
-img_garage_main_vehicle		= {LANG}/garage_main_vehicle.gif*33*130
-img_garage_no_thumb		= {LANG}/garage_no_thumb.gif*33*130
-img_garage_show_details		= {LANG}/garage_show_details.gif*21*34
-img_garage_hide_details		= {LANG}/garage_hide_details.gif*21*34
-img_garage_move_up		= {LANG}/garage_move_up.gif*16*16
-img_garage_move_down		= {LANG}/garage_move_down.gif*16*16
-img_garage_set_approved		= {LANG}/garage_set_approved.gif*21*34
-img_garage_set_pending		= {LANG}/garage_set_pending.gif*21*34
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-]]></action>
-			</edit>
-		</open>
-		<open src="styles/subSilver/templates/memberlist_body.html">
-			<edit>
-				<find><![CDATA[	<th nowrap="nowrap" width="11%"><a href="{U_SORT_WEBSITE}">{L_WEBSITE}</a></th>
-]]></find>
-				<action type="after-add"><![CDATA[	<!-- IF S_DISPLAY_GARAGE_MEMBERLIST --><th nowrap="nowrap" width="11%"><a href="{U_SORT_GARAGE}">{L_GARAGE}</a></th><!-- ENDIF -->
-]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[		<td class="gen" align="center">&nbsp;<!-- IF memberrow.U_WWW --><a href="{memberrow.U_WWW}">{WWW_IMG}</a><!-- ENDIF -->&nbsp;</td>
-]]></find>
-				<action type="after-add"><![CDATA[		<td class="gen" align="center">&nbsp;<!-- IF memberrow.U_GARAGE and S_DISPLAY_GARAGE_MEMBERLIST --><a href="{memberrow.U_GARAGE}">{GARAGE_IMG}</a><!-- ENDIF -->&nbsp;</td>
-
-]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[		<td class="row1" colspan="<!-- IF S_SEARCH_USER and S_FORM_NAME -->9<!-- ELSE -->8<!-- ENDIF -->" align="center">
-]]></find>
-				<inline-edit>
-					<inline-find><![CDATA[<!-- IF S_SEARCH_USER and S_FORM_NAME -->9<!-- ELSE -->8<!-- ENDIF --> ]]></inline-find>
-					<inline-action type="replace-with"><![CDATA[<!-- IF S_SEARCH_USER and S_FORM_NAME and !S_DISPLAY_GARAGE_MEMBERLIST-->9<!-- ELSEIF S_SEARCH_USER and S_FORM_NAME and S_DISPLAY_GARAGE_MEMBERLIST-->10<!-- ELSEIF S_DISPLAY_GARAGE_MEMBERLIST -->9<!-- ELSE -->8<!-- ENDIF --> ]]></inline-action>
-				</inline-edit>
-			</edit>
-			<edit>
-				<find><![CDATA[	<td class="cat" colspan="<!-- IF S_SEARCH_USER and S_FORM_NAME -->9<!-- ELSE -->8<!-- ENDIF -->
-]]></find>
-				<inline-edit>
-					<inline-find><![CDATA[<!-- IF S_SEARCH_USER and S_FORM_NAME -->9<!-- ELSE -->8<!-- ENDIF --> ]]></inline-find>
-					<inline-action type="replace-with"><![CDATA[<!-- IF S_SEARCH_USER and S_FORM_NAME and !S_DISPLAY_GARAGE_MEMBERLIST-->9<!-- ELSEIF S_SEARCH_USER and S_FORM_NAME and S_DISPLAY_GARAGE_MEMBERLIST-->10<!-- ELSEIF S_DISPLAY_GARAGE_MEMBERLIST -->9<!-- ELSE -->8<!-- ENDIF --> ]]></inline-action>
-				</inline-edit>
-			</edit>
-		</open>
-		<open src="styles/subSilver/templates/memberlist_view.html">
-			<edit>
-				<find><![CDATA[				<td><!-- IF U_WWW --><b><a class="genmed" href="{U_WWW}" target="_userwww">{U_WWW}</a></b><!-- ENDIF --></td>
-			</tr>
-]]></find>
-				<action type="after-add"><![CDATA[			<!-- IF S_DISPLAY_GARAGE_PROFILE -->
-			<tr>
-				<td class="gen" align="right" nowrap="nowrap">{L_GARAGE}: </td>
-				<td><a class="genmed" href="{U_GARAGE_USER_SEARCH}" >{L_VIEW_USERS_GARAGE}</a></td>
-			</tr>
-			<!-- ENDIF -->
-]]></action>
-			</edit>
-			<edit>
-				<find><![CDATA[			<td class="row1" colspan="2"><div class="postbody" style="padding: 10px;">{SIGNATURE}</div></td>
-		</tr>
-	<!-- ENDIF -->
-]]></find>
-				<action type="after-add"><![CDATA[
-	<!-- INCLUDE garage_profile_integration.html -->
-]]></action>
-			</edit>
-		</open>
-		<open src="styles/subSilver/templates/viewtopic_body.html">
-			<edit>
-				<find><![CDATA[					<td>{postrow.POSTER_AVATAR}</td>
-				</tr>
-			<!-- ENDIF -->
-]]></find>
-				<action type="after-add"><![CDATA[			<!-- IF postrow.U_VEHICLE and postrow.S_DISPLAY_GARAGE_VIEWTOPIC -->
-				<tr>
-					<td class="postdetails"><a href={postrow.U_VEHICLE}>{postrow.VEHICLE}</a></td>
-				</tr>
-			<!-- ENDIF -->]]></action>
-			</edit>
-		</open>
-		<open src="styles/subSilver/templates/overall_header.html">
-			<edit>
-				<find><![CDATA[<td class="genmed" align="right">
-]]></find>
-				<inline-edit>
-					<inline-find><![CDATA[<td class="genmed" align="right"> ]]></inline-find>
-					<inline-action type="after-add"><![CDATA[<!-- IF S_DISPLAY_GARAGE --><a href="{U_GARAGE}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_GARAGE}" hspace="3" /> {L_GARAGE}</a>&nbsp; &nbsp;<!-- ENDIF --><!-- IF S_DISPLAY_QUARTERMILE --><a href="{U_QUARTERMILE}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_QUARTERMILE}" hspace="3" /> {L_QUARTERMILE}</a>&nbsp; &nbsp;<!-- ENDIF --><!-- IF S_DISPLAY_DYNORUN --><a href="{U_DYNORUN}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_members.gif" width="12" height="13" border="0" alt="{L_DYNORUN}" hspace="3" /> {L_DYNORUN}</a>&nbsp; &nbsp;<!-- ENDIF -->  ]]></inline-action>
-				</inline-edit>
-			</edit>
-		</open>
-		<open src="styles/subSilver/theme/stylesheet.css">
-			<edit>
-				<find><![CDATA[.nowrap {
-	white-space: nowrap;
-}
-]]></find>
-				<action type="after-add"><![CDATA[/* Garage Tabbed Interface
-   Based on: http://www.alistapart.com/articles/slidingdoors2/
-   Images by phpBB: http://www.phpbb.com 
----------------------------------------- */
-
-/* Tabbed menu */
-.garage_cat {
-	line-height: normal;
-	margin: 0 0 0 7px;
-	min-width: 570px;
-	font-size: 1em;
-}
-
-.rtl .garage_cat {
-	margin: 0 7px 0 0;
-}
-
-.garage_cat ul {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
-.garage_cat li {
-	display: inline;
-	margin: 0;
-	padding: 0;
-	font-size: 1em;
-	font-weight: bold;
-}
-
-.garage_cat a {
-	float: left;
-	background: url("./images/bg_tabs1.gif") no-repeat 0% -35px;
-	margin: 0 1px 0 0;
-	padding: 0 0 0 6px;
-	text-decoration: none;
-	position: relative;
-}
-
-.rtl .garage_cat a {
-	float: right;
-	margin: 0 0 0 1px;
-	padding: 0 6px 0 0;
-}
-
-.garage_cat a span.tabbg {
-	float: left;
-	display: block;
-	background: url("./images/bg_tabs2.gif") no-repeat 100% -35px;
-	padding: 7px 12px 6px 6px;
-	color: #536482;
-	white-space: nowrap;
-}
-
-.rtl .garage_cat a span.tabbg {
-	float: left;
-	padding: 7px 6px 6px 12px;
-}
-
-/* Commented Backslash Hack hides rule from IE5-Mac */
-.garage_cat a span.tabbg, .rtl .garage_cat a span.tabbg { float: none;}
-/* End hack */
-
-.garage_cat a:hover span.tabbg {
-	color: #DD6900;
-}
-
-.garage_cat .activetab a {
-	background-position: 0 0px;
-}
-
-.garage_cat .activetab a span.tabbg {
-	background-position: 100% 0px;
-	padding-bottom: 7px;
-	color: #333333;
-}
-
-.garage_cat a:hover {
-	background-position: 0 -70px;
-}
-
-.garage_cat a:hover span.tabbg {
-	background-position: 100% -70px;
-}
-
-.garage_cat .activetab a:hover span.tabbg {
-	color: #333333;
-	background-position: 100% 0px;
-}
-
-.garage_cat .activetab a:hover {
-	background-position: 0 0px;
-}
-
-.garage_cat a span.colour {
-	border: 1px solid #536482;
-	display: block;
-	float: left;
-	width: 10px;
-	height: 10px;
-	margin: 0 5px 0 0;
-}
-
-.rtl .garage_cat a span.colour {
-	float: right;
-	margin: 0 0 0 5px;
-}
-
-.garage_cat .activetab span.colour {
-	border-color: #333333;
-}
-
-.garage_cat a:hover span.colour {
-	border-color: #DD6900;
-}
-
-.garage_cat .activetab a:hover span.colour {
-	border-color: #333333;
-}
-
-.garage_panel {
-	float: left;
-	background-color: #FFF;
-	width: 100%;
-	border: 1px solid #A9B8C2;
-	margin-top: -1px;
-}
-
-.rtl .garage_panel {
-	float: right;
-}
-
-.garage_panel span.corners-top {
-	background-image: url("./images/corners_left2.gif");
-}
-
-.garage_panel span.corners-top span {
-	background-image: url("./images/corners_right2.gif");
-}
-
-.garage_panel span.corners-bottom {
-	background-image: url("./images/corners_left2.gif");
-}
-
-.garage_panel span.corners-bottom span {
-	background-image: url("./images/corners_right2.gif");
-}
-
-.garage_panel span.corners-top, .garage_panel span.corners-bottom, 
-.garage_panel span.corners-top span, .garage_panel span.corners-bottom span {
-	font-size: 1px;
-	line-height: 1px;
-	display: block;
-	height: 5px;
-	background-repeat: no-repeat;
-}
-
-.garage_panel span.corners-top {
-	background-image: url("./images/corners_left2.gif");
-	background-position: 0 0;
-	margin: 0 0;
-}
-
-.garage_panel span.corners-top span {
-	background-image: url("../images/corners_right2.gif");
-	background-position: 100% 0;
-}
-
-.garage_panel span.corners-bottom {
-	background-image: url("./images/corners_left2.gif");
-	background-position: 0 100%;
-	margin: 0 0;
-	clear: both;
-}
-
-.garage_panel span.corners-bottom span {
-	background-image: url("./images/corners_right2.gif");
-	background-position: 100% 100%;
-}
-
-.garage_panel .tablewrap {
-	margin: 0 5px;
-}
-
-.garage_panel table {
-	width: 100%;
-}
-
-]]></action>
-			</edit>
-		</open>
-	</action-group>
+      </edit>
+    </open>
+    <diy-instructions lang="en-gb">Chmod ./garage/ to 755
+Chmod ./garage/upload to 777
+Open your web browser and run install_garage.php
+Delete install_garage.php if it ran succesfully
+</diy-instructions>
+  </action-group>
 </mod>
 

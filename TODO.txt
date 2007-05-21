@@ -1,0 +1,6 @@
+TODO: Fill out $garage_vehicle->delete_user_vehicles($user_id)
+TODO: Make memberlist display garage button - template side done
+TODO: Events system
+TODO: Add vehicle status
+TODO: Make viewonline know exactly what you are doing..not just view garage
+TODO: Force a theme & imageset refresh after install
