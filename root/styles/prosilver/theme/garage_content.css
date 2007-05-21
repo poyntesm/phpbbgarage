@@ -260,3 +260,102 @@ dt.index_block, dd.index_block {
 	text-align: center;
 	font-size: 1.0em;
 }
+
+
+/* Second Set Of Tabs */
+#gtabs {
+	line-height: normal;
+	margin: 20px 0 -1px 7px;
+	min-width: 570px;
+}
+
+#gtabs ul {
+	margin:0;
+	padding: 0;
+	list-style: none;
+}
+
+#gtabs li {
+	display: inline;
+	margin: 0;
+	padding: 0;
+	font-size: 1em;
+	font-weight: bold;
+}
+
+#gtabs a {
+	float: left;
+	background: none no-repeat 0% -35px;
+	margin: 0 1px 0 0;
+	padding: 0 0 0 5px;
+	text-decoration: none;
+	position: relative;
+	cursor: pointer;
+}
+
+#gtabs a span {
+	float: left;
+	display: block;
+	background: none no-repeat 100% -35px;
+	padding: 6px 10px 6px 5px;
+	color: #828282;
+	white-space: nowrap;
+}
+
+#gtabs a:hover span {
+	color: #bcbcbc;
+}
+
+#gtabs .activetab a {
+	background-position: 0 0;
+	border-bottom: 1px solid #ebebeb;
+}
+
+#gtabs .activetab a span {
+	background-position: 100% 0;
+	padding-bottom: 7px;
+	color: #333333;
+}
+
+#gtabs a:hover {
+	background-position: 0 -70px;
+}
+
+#gtabs a:hover span {
+	background-position:100% -70px;
+}
+
+#gtabs .activetab a:hover {
+	background-position: 0 0;
+}
+
+#gtabs .activetab a:hover span {
+	color: #000000;
+	background-position: 100% 0;
+}
+
+#gtabs a {
+	background-image: url("{T_THEME_PATH}/images/bg_tabs1.gif");
+}
+
+#gtabs a span {
+	background-image: url("{T_THEME_PATH}/images/bg_tabs2.gif");
+	color: #536482;
+}
+
+#gtabs a:hover span {
+	color: #BC2A4D;
+}
+
+#gtabs .activetab a {
+	border-bottom-color: #CADCEB;
+}
+
+#gtabs .activetab a span {
+	color: #333333;
+}
+
+#gtabs .activetab a:hover span {
+	color: #000000;
+}
+
