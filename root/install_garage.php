@@ -26,7 +26,7 @@ $user->setup('mods/garage');
 //Get Mode Required For Page
 $mode	= request_var('mode', '');
 
-$page_title = 'Installing Vehicle Garage Version 2.0.0';
+$page_title = 'Installing Vehicle Garage Version 2.0';
 
 // Output the page
 page_header($page_title);
@@ -386,7 +386,7 @@ $params = array(
 	'enable_user_submit_make' 		=> '1',
 	'enable_user_submit_model' 		=> '1',
 	'dateformat' 				=> 'd M Y H:i',
-	'version' 				=> '2.0.0',
+	'version' 				=> '2.0.B1',
 	'default_make_id'			=> '',
        	'default_model_id' 			=> '',
        	'integrate_memberlist' 			=> '1',
