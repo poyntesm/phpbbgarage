@@ -112,6 +112,7 @@ switch( $mode )
 		$template->assign_vars(array(
 			'L_TITLE'  			=> $user->lang['ADD_SERVICE'],
 			'L_BUTTON'  			=> $user->lang['ADD_SERVICE'],
+			'U_SUBMIT_BUSINESS_GARAGE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;VID=$vid&amp;redirect=add_service&amp;BUSINESS=". BUSINESS_GARAGE),
 			'VID' 				=> $vid,
 			'S_MODE_ACTION' 		=> append_sid("{$phpbb_root_path}garage_service.$phpEx", "mode=insert_service"))
          	);
@@ -206,6 +207,7 @@ switch( $mode )
 		$template->assign_vars(array(
 			'L_TITLE'		=> $user->lang['EDIT_SERVICE'],
 			'L_BUTTON'		=> $user->lang['EDIT_SERVICE'],
+			'U_SUBMIT_BUSINESS_GARAGE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;VID=$vid&amp;redirect=edit_service&amp;BUSINESS=". BUSINESS_GARAGE),
 			'PRICE'			=> $data['price'],
 			'MILEAGE'		=> $data['mileage'],
 			'VID'			=> $vid,

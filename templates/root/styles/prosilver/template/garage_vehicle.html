@@ -8,7 +8,7 @@ function get_model_list(sel)
 {
 	var make_id = sel.options[sel.selectedIndex].value;
 	document.getElementById('model_id').options.length = 0;
-	ajax.requestFile = 'garage.php?mode=get_model_list&amp;make_id='+make_id;
+	ajax.requestFile = 'garage.php?mode=get_model_list&make_id='+make_id;
 	ajax.onCompletion = build_model_list;
 	ajax.runAJAX();
 }
@@ -16,7 +16,7 @@ function get_model_list(sel)
 function update_model_list(make_id, model_id)
 {
 	document.getElementById('model_id').options.length = 0;
-	ajax.requestFile = 'garage.php?mode=get_model_list&amp;model_id='+model_id+'&amp;make_id='+make_id;
+	ajax.requestFile = 'garage.php?mode=get_model_list&model_id='+model_id+'&make_id='+make_id;
 	ajax.onCompletion = build_model_list;
 	ajax.runAJAX();
 }
@@ -47,8 +47,8 @@ function build_model_list()
 	
 			<div id="gtabs">
 				<ul>
-					<li id="tab000"><a href="#data" onclick="swap_options('0','0','0');"><span class="tabbg">{L_VEHICLE}</span></a></li>
-					<!-- IF U_MANAGE_GALLERY --><li id="tab001"><a href="#images" onclick="swap_options('0','0','1');"><span class="tabbg">{L_IMAGES}</span></a></li><!-- ENDIF -->
+					<li class="garage_tab" id="tab000"><a href="#data" onclick="swap_options('0','0','0');"><span class="tabbg">{L_VEHICLE}</span></a></li>
+					<!-- IF U_MANAGE_GALLERY --><li class="garage_tab" id="tab001"><a href="#images" onclick="swap_options('0','0','1');"><span class="tabbg">{L_IMAGES}</span></a></li><!-- ENDIF -->
 				</ul>
 			</div>
 
@@ -193,7 +193,7 @@ function add_make ()
 	}
 
 	var id = '000';
-	active_tab.setAttribute("class", "activetab");
+	active_tab.setAttribute("class", "garage_tab activetab");
 
 //-->
 </script>

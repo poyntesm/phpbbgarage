@@ -90,8 +90,8 @@ function build_product_list()
 	
 			<div id="gtabs">
 				<ul>
-					<li id="tab000"><a href="#data" onclick="swap_options('0','0','0');"><span class="tabbg">{L_MODIFICATION}</span></a></li>
-					<!-- IF U_MANAGE_GALLERY --><li id="tab001"><a href="#images" onclick="swap_options('0','0','1');"><span class="tabbg">{L_IMAGES}</span></a></li><!-- ENDIF -->
+					<li class="garage_tab" id="tab000"><a href="#data" onclick="swap_options('0','0','0');"><span class="tabbg">{L_MODIFICATION}</span></a></li>
+					<!-- IF U_MANAGE_GALLERY --><li class="garage_tab" id="tab001"><a href="#images" onclick="swap_options('0','0','1');"><span class="tabbg">{L_IMAGES}</span></a></li><!-- ENDIF -->
 				</ul>
 			</div>
 
@@ -223,7 +223,7 @@ function add_product (redirect)
 	}
 
 	var id = '000';
-	active_tab.setAttribute("class", "garage_preset_yes activetab");
+	active_tab.setAttribute("class", "garage_tab activetab");
 
 //-->
 </script>

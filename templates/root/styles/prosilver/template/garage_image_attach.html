@@ -3,7 +3,7 @@
 				<!-- IF S_DISPLAY_KEEP_IMAGE -->
 				<dl>
 					<dt><input type="radio" name="editupload" value="keep" checked />&nbsp;<b>{L_KEEP_CURRENT_IMAGE}</b> ( {CURRENT_IMAGE} )</dt>
-					<dd><a href="{U_IMAGE}" title="{IMAGE_TITLE}"><img hspace="2" vspace="2" src="{IMAGE}" /></a></dd>
+					<dd><a href="{U_IMAGE}" title="{IMAGE_TITLE}"><img src="{IMAGE}" alt="{}" /></a></dd>
 				</dl>
 				<!-- ENDIF -->
 				<!-- IF S_DISPLAY_REMOVE_IMAGE -->
@@ -21,7 +21,7 @@
 				<!-- IF S_DISPLAY_UPLOAD_IMAGE -->
 				<dl>
 					<dt><b>{L_IMAGE_ATTACH}<br />{L_MAXIMUM_IMAGE_FILE_SIZE} :</b> {MAXIMUM_IMAGE_FILE_SIZE} {L_KBYTES}<br /><b>{L_MAXIMUM_IMAGE_RESOLUTION} :</b> {MAXIMUM_IMAGE_RESOLUTION}</dt>
-					<dd><input type="file" name="fileupload" id="fileupload" maxlength="{FILESIZE}" value="" class="inputbox autowidth" /></dd>
+					<dd><input type="file" name="FILE_UPLOAD" id="FILE_UPLOAD" maxlength="{FILESIZE}" value="" class="inputbox autowidth" /></dd>
 				</dl>
 				<!-- ENDIF -->
 				<!-- IF S_DISPLAY_REPLACE_REMOTE_IMAGE -->
