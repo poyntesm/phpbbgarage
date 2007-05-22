@@ -798,7 +798,7 @@ class garage
 			'FROM'		=> array(
 				USERS_TABLE	=> 'u',
 			),
-			'WHERE'		=> $db->sql_in_set('u.user_id', $moderators[0]['m_garage']) . ' AND u.user_garage_mod_email_optout = 0'
+			'WHERE'		=> $db->sql_in_set('u.user_id', $moderators) . ' AND u.user_garage_mod_email_optout = 0'
 		));
 
 		$result = $db->sql_query($sql);
@@ -830,7 +830,7 @@ class garage
 			'FROM'		=> array(
 				USERS_TABLE	=> 'u',
 			),
-			'WHERE'  	=> $db->sql_in_set('u.user_id', $moderators[0]['m_garage']) . ' AND u.user_garage_mod_pm_optout = 0'
+			'WHERE'  	=> $db->sql_in_set('u.user_id', $moderators) . ' AND u.user_garage_mod_pm_optout = 0'
 		));
 
 		$result = $db->sql_query($sql);
@@ -857,13 +857,15 @@ class garage
 		if ( $garage_config['enable_email_pending_notify'] OR $garage_config['enable_pm_pending_notify'] )
 		{
 			$garage_moderators = $auth->acl_get_list(false, array('m_garage_approve_vehicle', 'm_garage_approve_make', 'm_garage_approve_model', 'm_garage_approve_business', 'm_garage_approve_quartermile', 'm_garage_approve_dynorun', 'm_garage_approve_guestbook', 'm_garage_approve_lap', 'm_garage_approve_track', 'm_garage_approve_product'), false);
+			//Merge All Moderators With Permissions & Unique Them.
+			$moderators = array_unique(array_merge($garage_moderators[0]['m_garage_approve_vehicle'], $garage_moderators[0]['m_garage_approve_make'], $garage_moderators[0]['m_garage_approve_model'], $garage_moderators[0]['m_garage_approve_business'], $garage_moderators[0]['m_garage_approve_quartermile'], $garage_moderators[0]['m_garage_approve_dynorun'], $garage_moderators[0]['m_garage_approve_guestbook'], $garage_moderators[0]['m_garage_approve_lap'], $garage_moderators[0]['m_garage_approve_track'], $garage_moderators[0]['m_garage_approve_product']));
 		}
 
 		//Do We Send Email && Jabber Notifications On Pending Items?
 		if ($garage_config['enable_email_pending_notify'])
 		{
 			//Get All Garage Moderators To Notify Via Email
-			$moderators_to_email = $garage->moderators_requiring_email($garage_moderators, $garage_config['enable_email_pending_notify_optout'] );
+			$moderators_to_email = $garage->moderators_requiring_email($moderators, $garage_config['enable_email_pending_notify_optout'] );
 
 			//Process All Moderator Returned And Send Them Notification Via There Perferred Methods (Email/Jabber)
 			for ($i = 0, $count = sizeof($moderators_to_email);$i < $count; $i++)
@@ -889,7 +891,7 @@ class garage
 		if ($garage_config['enable_pm_pending_notify'])
 		{
 			//Get All Garage Moderators To Notify Via PM
-			$moderators_to_pm = $garage->moderators_requiring_pm($garage_moderators, $garage_config['enable_pm_pending_notify_optout']);
+			$moderators_to_pm = $garage->moderators_requiring_pm($moderators, $garage_config['enable_pm_pending_notify_optout']);
 
 			//Process All Moderator Returned And Send Them Notification Via Private Message
 			for ($i = 0, $count = sizeof($moderators_to_pm);$i < $count; $i++)

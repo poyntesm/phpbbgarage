@@ -397,7 +397,7 @@ $params = array(
 	'enable_email_pending_notify'		=> '1',
 	'enable_pm_pending_notify_optout'	=> '1',
 	'enable_email_pending_notify_optout'	=> '1',
-	'enable_vehicle_approval'		=> '1',
+	'enable_vehicle_approval'		=> '0',
 
 //Menu Config Data
 	'enable_index_menu' 			=> '1',
@@ -472,21 +472,21 @@ $params = array(
 
 //Quartermile Config Data
 	'enable_quartermile' 			=> '1',
-	'enable_quartermile_approval' 		=> '1',
+	'enable_quartermile_approval' 		=> '0',
 	'enable_quartermile_image_required'	=> '1',
 	'quartermile_image_required_limit'	=> '13',
 
 //Dynorun Config Data
 	'enable_dynorun' 			=> '1',
-	'enable_dynorun_approval' 		=> '1',
+	'enable_dynorun_approval' 		=> '0',
 	'enable_dynorun_image_required' 	=> '1',
 	'dynorun_image_required_limit' 		=> '300',
 
 //Track & Lap Config Data
 	'enable_tracktime' 			=> '1',
 	'enable_user_add_track'			=> '1',
-	'enable_track_approval' 		=> '1',
-	'enable_lap_approval' 			=> '1',
+	'enable_track_approval' 		=> '0',
+	'enable_lap_approval' 			=> '0',
 
 //Insurance Config Data
 	'enable_insurance' 			=> '1',
@@ -494,7 +494,7 @@ $params = array(
 
 //Business Config Data
 	'enable_user_submit_business' 		=> '1',
-	'enable_business_approval' 		=> '1',
+	'enable_business_approval' 		=> '0',
 
 //Ratings Config Data
 	'rating_permanent' 			=> '0',
@@ -504,11 +504,11 @@ $params = array(
 //Guestbook Config Data
 	'enable_guestbooks' 			=> '1',
 	'enable_guestbooks_bbcode' 		=> '1',
-	'enable_guestbooks_comment_approval' 	=> '1',
+	'enable_guestbooks_comment_approval' 	=> '0',
 
 //Product Config Data
 	'enable_user_submit_product'		=> '1',
-	'enable_product_approval'		=> '1',
+	'enable_product_approval'		=> '0',
 	'enable_product_search'			=> '1',
 
 //Service History Config Data

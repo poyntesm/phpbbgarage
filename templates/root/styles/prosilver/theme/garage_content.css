@@ -359,3 +359,17 @@ dt.index_block, dd.index_block {
 	color: #000000;
 }
 
+/* Nice method for clearing floated blocks without having to insert any extra markup (like spacer above)
+   From http://www.positioniseverything.net/easyclearing.html */
+#gtabs:after, .post:after, .navbar:after, fieldset dl:after, ul.topiclist dl:after, ul.linklist:after, dl.polls:after {
+	content: "."; 
+	display: block; 
+	height: 0; 
+	clear: both; 
+	visibility: hidden;
+}
+
+#gtabs, .post, .navbar, fieldset dl, ul.topiclist dl, ul.linklist, dl.polls {
+	height: 1%;
+}
+

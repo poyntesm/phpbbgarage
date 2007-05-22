@@ -127,13 +127,11 @@ class garage_modification
 	{
 		global $vid, $db, $garage_vehicle, $garage_config;
 
-		$pending = ($data['pending'] == 0) ? 0 : $garage_config['enable_product_approval'];
-
 		$sql = 'INSERT INTO ' . GARAGE_PRODUCTS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 			'category_id'		=> $data['category_id'],
 			'business_id'		=> $data['manufacturer_id'],
 			'title'			=> $data['title'],
-			'pending'		=> $pending,
+			'pending'		=> $garage_config['enable_product_approval'],
 		));
 
 		$db->sql_query($sql);

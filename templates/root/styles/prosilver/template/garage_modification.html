@@ -6,11 +6,15 @@ var ajax = new sack();
 //Function To Build Product Dropdown
 function get_product_list(sel)
 {
+	//Setup Form Object
+	var modification = document.getElementById("modification");
+
 	//Get Selected Product Manufacturer
 	var manufacturer_id = sel.options[sel.selectedIndex].value;
 
 	//We Need To Make Sure A Category Is Selected
-	if (document.modification.elements['category_id'].value < 1)
+	var category_id = document.getElementById("category_id");
+	if (category_id.value < 1)
 	{
 		formErrors = "{L_EMPTY_TITLE}";
 		if (formErrors) 
@@ -22,13 +26,13 @@ function get_product_list(sel)
 	}
 
 	//Since We Know We Have A Valid Category Selected Save It
-	var category_id = document.modification.elements['category_id'].value;
+	var category_id_value = category_id.value;
 
 	//Set The Product List To Empty Ready To Recieve Options
 	document.getElementById('product_id').options.length = 0;
 
 	//Call Script To Run Products Based On Category & Manufacturer
-	ajax.requestFile = 'garage.php?mode=get_product_list&amp;category_id='+category_id+'&amp;manufacturer_id='+manufacturer_id;
+	ajax.requestFile = 'garage.php?mode=get_product_list&category_id='+category_id_value+'&manufacturer_id='+manufacturer_id;
 	ajax.onCompletion = build_product_list;
 	ajax.runAJAX();
 }
@@ -36,8 +40,9 @@ function get_product_list(sel)
 //Function Used For Inital Page Display On Editting Modification To Build Correctly Selected Dropdowns
 function update_product_list(category_id, manufacturer_id, product_id)
 {
+
 	document.getElementById('product_id').options.length = 0;
-	ajax.requestFile = 'garage.php?mode=get_product_list&amp;category_id='+category_id+'&amp;manufacturer_id='+manufacturer_id+'&amp;product_id='+product_id;
+	ajax.requestFile = 'garage.php?mode=get_product_list&category_id='+category_id+'&manufacturer_id='+manufacturer_id+'&product_id='+product_id;
 	ajax.onCompletion = build_product_list;
 	ajax.runAJAX();
 }
@@ -46,13 +51,14 @@ function update_product_list(category_id, manufacturer_id, product_id)
 function category_change(sel)
 {
 	var category_id = sel.options[sel.selectedIndex].value;
-	var manufacturer_id = document.modification.elements['manufacturer_id'].value;
+	var manufacturer_id = document.getElementById("manufacturer_id");
+	var manufacturer_id_value = manufacturer_id.value;
 
 	//If We Have Two Valid Selections Update Prouct List
 	if (category_id > 0 && manufacturer_id > 0)
 	{
 		document.getElementById('product_id').options.length = 0;
-		ajax.requestFile = 'garage.php?mode=get_product_list&amp;category_id='+category_id+'&amp;manufacturer_id='+manufacturer_id;
+		ajax.requestFile = 'garage.php?mode=get_product_list&category_id='+category_id+'&manufacturer_id='+manufacturer_id_value;
 		ajax.onCompletion = build_product_list;
 		ajax.runAJAX();
 	}
@@ -184,9 +190,10 @@ update_product_list('{CATEGORY_ID}', '{MANUFACTURER_ID}', '{PRODUCT_ID}');
 
 function add_product (redirect)
 {
-	document.modification.redirect.value = redirect;
-	document.modification.action = '{S_MODE_ACTION_PRODUCT}';
-	document.modification.submit() ;
+	var modification = document.getElementById("modification");
+	modification.redirect.value = redirect;
+	modification.action = '{S_MODE_ACTION_PRODUCT}';
+	modification.submit() ;
 }
 //-->
 </script>
