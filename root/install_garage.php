@@ -335,15 +335,15 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_blog (
 	)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_custom_fields (
 		field_id mediumint(8) unsigned NOT NULL auto_increment,
-		field_name varchar(255) collate utf8_bin NOT NULL default '',
+		field_name varchar(255) NOT NULL default '',
 		field_type tinyint(4) NOT NULL default '0',
-		field_ident varchar(20) collate utf8_bin NOT NULL default '',
-		field_length varchar(20) collate utf8_bin NOT NULL default '',
-		field_minlen varchar(255) collate utf8_bin NOT NULL default '',
-		field_maxlen varchar(255) collate utf8_bin NOT NULL default '',
-		field_novalue varchar(255) collate utf8_bin NOT NULL default '',
-		field_default_value varchar(255) collate utf8_bin NOT NULL default '',
-		field_validation varchar(20) collate utf8_bin NOT NULL default '',
+		field_ident varchar(20) NOT NULL default '',
+		field_length varchar(20) NOT NULL default '',
+		field_minlen varchar(255) NOT NULL default '',
+		field_maxlen varchar(255) NOT NULL default '',
+		field_novalue varchar(255) NOT NULL default '',
+		field_default_value varchar(255) NOT NULL default '',
+		field_validation varchar(20) NOT NULL default '',
 		field_required tinyint(1) unsigned NOT NULL default '0',
 		field_show_on_reg tinyint(1) unsigned NOT NULL default '0',
 		field_hide tinyint(1) unsigned NOT NULL default '0',
@@ -357,7 +357,7 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_custom_fields (
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_custom_fields_data (
 		user_id mediumint(8) unsigned NOT NULL default '0',
 		gf_number bigint(20) default NULL,
-		gf_text varchar(255) collate utf8_bin default NULL,
+		gf_text varchar(255) default NULL,
 		PRIMARY KEY  (user_id)
 	)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_custom_fields_lang (
@@ -365,15 +365,15 @@ $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_custom_fields_lang (
 		lang_id mediumint(8) unsigned NOT NULL default '0',
 		option_id mediumint(8) unsigned NOT NULL default '0',
 		field_type tinyint(4) NOT NULL default '0',
-		lang_value varchar(255) collate utf8_bin NOT NULL default '',
+		lang_value varchar(255) NOT NULL default '',
 		PRIMARY KEY  (field_id,lang_id,option_id)
 	)";
 $required_sql[] = "CREATE TABLE " . $table_prefix . "garage_fields_lang (
 		field_id mediumint(8) unsigned NOT NULL default '0',
 		lang_id mediumint(8) unsigned NOT NULL default '0',
-		lang_name varchar(255) collate utf8_bin NOT NULL default '',
-		lang_explain text collate utf8_bin NOT NULL,
-		lang_default_value varchar(255) collate utf8_bin NOT NULL default '',
+		lang_name varchar(255) NOT NULL default '',
+		lang_explain text NOT NULL,
+		lang_default_value varchar(255) NOT NULL default '',
 		PRIMARY KEY  (`field_id`,`lang_id`)
 	)";
 

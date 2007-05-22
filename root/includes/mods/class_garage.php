@@ -856,7 +856,7 @@ class garage
 		//Get All Users With The Rights To Approve Items If We Need To
 		if ( $garage_config['enable_email_pending_notify'] OR $garage_config['enable_pm_pending_notify'] )
 		{
-			$garage_moderators = $auth->acl_get_list(false, array('m_garage'), false);
+			$garage_moderators = $auth->acl_get_list(false, array('m_garage_approve_vehicle', 'm_garage_approve_make', 'm_garage_approve_model', 'm_garage_approve_business', 'm_garage_approve_quartermile', 'm_garage_approve_dynorun', 'm_garage_approve_guestbook', 'm_garage_approve_lap', 'm_garage_approve_track', 'm_garage_approve_product'), false);
 		}
 
 		//Do We Send Email && Jabber Notifications On Pending Items?

@@ -191,5 +191,9 @@ img_garage_no_thumb		= garage_no_thumb.gif
 ]]></action>
 			</edit>
 		</open>
+
+
+		<diy-instructions lang="en-gb"><![CDATA[Refresh theme & imageset & template cache in ACP]]>
+		</diy-instructions>
 	</action-group>
 </mod>

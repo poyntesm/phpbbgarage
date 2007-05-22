@@ -57,7 +57,7 @@
 
 		<open src="styles/prosilver/imageset/imageset.cfg">
 			<edit>
-				<find>img_icon_topic_unapproved = icon_topic_unapproved.gif*18*19</find>
+				<find>img_icon_user_warn = icon_user_warn.gif*20*20</find>
 				<action type="after-add">//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 img_garage_img_attached		= garage_camera.gif*20*20
@@ -142,5 +142,8 @@ img_garage_no_thumb		= garage_no_thumb.gif*25*120
 				</action>
 			</edit>
 		</open>
+
+		<diy-instructions lang="en-gb"><![CDATA[Refresh theme & imagest & template cache in ACP]]>
+		</diy-instructions>
 	</action-group>
 </mod>

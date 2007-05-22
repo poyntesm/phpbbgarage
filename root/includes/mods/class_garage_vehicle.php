@@ -1172,7 +1172,7 @@ class garage_vehicle
 	               			'UPDATED' 	=> $user->format_date($modification_data[$j]['date_updated']),
 	               			'MODIFICATION' 	=> '<a href="' . append_sid("garage_modification.$phpEx?mode=view_modification&amp;VID=$vid&amp;MID=" . $modification_data[$j]['id']) . '">' . $modification_data[$j]['title'] . '</a>',
 					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage_modification.$phpEx?mode=edit_modification&amp;MID=". $modification_data[$j]['id'] . "&amp;VID=$vid") : '',
-					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_modification'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_mod(' . $vid . ',' . $modification_data[$j]['id'] . ')' : '')
+					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_modification'))) OR ($auth->acl_get('m_garage_delete'))) ) ? 'javascript:confirm_delete_mod(' . $vid . ',' . $modification_data[$j]['id'] . ')' : '')
 				);
 
 				//Increment Modification Image Count If Image Exists
@@ -1221,7 +1221,7 @@ class garage_vehicle
 					'PREMIUM' 	=> $insurance_data[$i]['premium'],
 					'COVER_TYPE' 	=> $insurance_data[$i]['cover_type'],
 					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage_premium.$phpEx?mode=edit_premium&amp;INS_ID=".$insurance_data[$i]['id']."&amp;VID=$vid") : '',
-					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_insurance'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_insurance(' . $vid . ',' . $insurance_data[$i]['id'] . ')' : '',
+					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_insurance'))) OR ($auth->acl_get('m_garage_delete'))) ) ? 'javascript:confirm_delete_insurance(' . $vid . ',' . $insurance_data[$i]['id'] . ')' : '',
 					'U_INSURER' 	=> append_sid("garage.$phpEx", "mode=insurance_review&amp;business_id=".$insurance_data[$i]['business_id']),
 				));
 			}
@@ -1253,7 +1253,7 @@ class garage_vehicle
 					'IMAGE'		=> $user->img('garage_img_attached', 'IMAGE_ATTACHED'),
 					'U_QUART'	=> append_sid("garage_quartermile.$phpEx?mode=view_quartermile&amp;QMID=".$quartermile_data[$i]['id']."&amp;VID=$vid"),
 					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage_quartermile.$phpEx?mode=edit_quartermile&amp;QMID=".$quartermile_data[$i]['id']."&amp;VID=$vid") : '',
-					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_quartermile'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_quartermile(' . $vid . ',' . $quartermile_data[$i]['id'] . ')' : '')
+					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_quartermile'))) OR ($auth->acl_get('m_garage_delete'))) ) ? 'javascript:confirm_delete_quartermile(' . $vid . ',' . $quartermile_data[$i]['id'] . ')' : '')
 				);
 
 				//Increment Modification Image Count If Image Exists
@@ -1311,7 +1311,7 @@ class garage_vehicle
 					'IMAGE'		=> $user->img('garage_img_attached', 'IMAGE_ATTACHED'),
 					'U_BHP'		=> append_sid("garage_dynorun.$phpEx?mode=view_dynorun&amp;DID=".$dynorun_data[$i]['did']."&amp;VID=$vid"),
 					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage_dynorun.$phpEx?mode=edit_dynorun&amp;DID=".$dynorun_data[$i]['did']."&amp;VID=$vid") : '',
-					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_dynorun'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_dynorun(' . $vid . ',' . $dynorun_data[$i]['id'] . ')' : '')
+					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_dynorun'))) OR ($auth->acl_get('m_garage_delete'))) ) ? 'javascript:confirm_delete_dynorun(' . $vid . ',' . $dynorun_data[$i]['id'] . ')' : '')
 				);
 
 				//Increment Modification Image Count If Image Exists
@@ -1367,7 +1367,7 @@ class garage_vehicle
 					'U_TRACK'	=> append_sid("garage_track.$phpEx?mode=view_track&amp;TID=".$lap_data[$i]['track_id']."&amp;VID=$vid"),
 					'U_LAP'		=> append_sid("garage_track.$phpEx?mode=view_lap&amp;LID=".$lap_data[$i]['lid']."&amp;VID=$vid"),
 					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage_track.$phpEx?mode=edit_lap&amp;LID=".$lap_data[$i]['lid']."&amp;VID=$vid") : '',
-					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_lap'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_lap(' . $vid . ',' . $lap_data[$i]['lid'] . ')' : '')
+					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_lap'))) OR ($auth->acl_get('m_garage_delete'))) ) ? 'javascript:confirm_delete_lap(' . $vid . ',' . $lap_data[$i]['lid'] . ')' : '')
 				);
 
 				//Increment Modification Image Count If Image Exists
@@ -1419,7 +1419,7 @@ class garage_vehicle
 					'MILEAGE'	=> $service_data[$i]['mileage'],
 					'U_GARAGE'	=> append_sid("garage.$phpEx?mode=garage_review&amp;BID=".$service_data[$i]['garage_id']."&amp;VID=$vid"),
 					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage_service.$phpEx?mode=edit_service&amp;SVID=".$service_data[$i]['id']."&amp;VID=$vid") : '',
-					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_lap'))) OR ($auth->acl_get('m_garage'))) ) ? 'javascript:confirm_delete_service(' . $vid . ',' . $service_data[$i]['id'] . ')' : '')
+					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_lap'))) OR ($auth->acl_get('m_garage_delete'))) ) ? 'javascript:confirm_delete_service(' . $vid . ',' . $service_data[$i]['id'] . ')' : '')
 				);
 			}
 		}
@@ -1469,7 +1469,7 @@ class garage_vehicle
             		'U_PROFILE' 			=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$vehicle['user_id']),
             		'U_VIEW_VEHICLE' 		=> ( $owned == 'YES' ) ? append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;VID=$vid") : '',
             		'U_EDIT_VEHICLE' 		=> ( $owned == 'YES' ) ? append_sid("garage_vehicle.$phpEx?mode=edit_vehicle&amp;VID=$vid") : '',
-            		'U_DELETE_VEHICLE' 		=> ( ($owned == 'YES' AND $auth->acl_get('u_garage_delete_vehicle')) OR ($auth->acl_get('m_garage'))) ? 'javascript:confirm_delete_vehicle(' . $vid . ')' : '',
+            		'U_DELETE_VEHICLE' 		=> ( ($owned == 'YES' AND $auth->acl_get('u_garage_delete_vehicle')) OR ($auth->acl_get('m_garage_delete'))) ? 'javascript:confirm_delete_vehicle(' . $vid . ')' : '',
             		'U_ADD_MODIFICATION' 		=> ( $owned == 'YES' ) ? append_sid("garage_modification.$phpEx?mode=add_modification&amp;VID=$vid") : '',
             		'U_ADD_INSURANCE' 		=> ( $owned == 'YES' AND $garage_config['enable_insurance'] ) ? append_sid("garage_premium.$phpEx?mode=add_premium&amp;VID=$vid") : '',
             		'U_ADD_QUARTERMILE' 		=> ( $owned == 'YES' AND $garage_config['enable_quartermile'] ) ? append_sid("garage_quartermile.$phpEx?mode=add_quartermile&amp;VID=$vid") : '',
@@ -1478,7 +1478,7 @@ class garage_vehicle
             		'U_ADD_SERVICE' 		=> ( $owned == 'YES' AND $garage_config['enable_service'] ) ? append_sid("garage_service.$phpEx?mode=add_service&amp;VID=$vid") : '',
             		'U_MANAGE_VEHICLE_GALLERY'	=> ( $owned == 'YES' ) ? append_sid("garage_vehicle.$phpEx?mode=manage_vehicle_gallery&amp;VID=$vid") : '',
 			'U_SET_MAIN_VEHICLE' 		=> ( ($owned == 'YES' OR $owned == 'MODERATE') AND ($vehicle['main_vehicle'] == 0) ) ?  append_sid("garage_vehicle.$phpEx?mode=set_main_vehicle&amp;VID=$vid"): '' ,
-			'U_MODERATE_VEHICLE' 		=> ( $owned == 'NO' AND $auth->acl_get('m_garage')) ?  append_sid("garage_vehicle.$phpEx?mode=moderate_vehicle&amp;VID=$vid"): '' ,
+			'U_MODERATE_VEHICLE' 		=> ( $owned == 'NO' AND $auth->acl_get('m_garage_delete')) ?  append_sid("garage_vehicle.$phpEx?mode=moderate_vehicle&amp;VID=$vid"): '' ,
 			'U_HILITE_IMAGE' 		=> ( ($vehicle['attach_id']) AND ($vehicle['attach_is_image']) AND (!empty($vehicle['attach_thumb_location'])) AND (!empty($vehicle['attach_location'])) ) ?  append_sid("garage.$phpEx?mode=view_image&amp;image_id=". $vehicle['attach_id']): '' ,
 
 			'S_DISPLAY_VEHICLE_OWNER'	=> ($owned == 'MODERATE' || $owned == 'YES') ? 1 : 0,
@@ -1814,7 +1814,7 @@ class garage_vehicle
 				USERS_TABLE		=> 'u',
 			),
 			'WHERE'		=> "r.vehicle_id = $vid
-						AND r.vehicle_id = g.id
+						AND r.vehicle_id = v.id
 						AND r.user_id = u.user_id"
 		));
 

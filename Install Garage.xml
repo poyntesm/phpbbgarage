@@ -54,6 +54,12 @@
 		<copy>
 			<file from="./root/*.*" to="./" />
 		</copy>
+
+		<diy-instructions lang="en-gb"><![CDATA[<a href="http://en.wikipedia.org/wiki/Chmod">Chmod</a> ./garage/ to 755
+Chmod ./garage/upload to 777
+Open your web browser and run install_garage.php
+Delete install_garage.php if it ran succesfully]]>
+		</diy-instructions>
 	    
 		<open src="common.php">
 			<edit>
@@ -100,7 +106,7 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 
 			'WHERE'		=> $db->sql_in_set('u.user_id', array_unique(array_merge($admin_id_ary, $mod_id_ary))) . ']]></find>
 				<action type="before-add"><![CDATA[				,array(
-					'FROM'	=> array(GARAGE__VEHICLES_TABLE => 'v'),
+					'FROM'	=> array(GARAGE_VEHICLES_TABLE => 'v'),
 					'ON'	=> 'v.user_id = u.user_id AND v.main_vehicle = 1'
 				)]]></action>
 			</edit>
@@ -139,60 +145,52 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 		case 'garage':
-			$url_params = array(
-				'mode=register'		=> 'VIEWING_REGISTER',
-				'i=pm&mode=compose'	=> 'POSTING_PRIVATE_MESSAGE',
-				'i=pm&'			=> 'VIEWING_PRIVATE_MESSAGES',
-				'i=profile&'		=> 'CHANGING_PROFILE',
-				'i=prefs&'		=> 'CHANGING_PREFERENCES',
-			);
-
-			foreach ($url_params as $param => $lang)
-			{
-				if (strpos($row['session_page'], $param) !== false)
-				{
-					$location = $user->lang[$lang];
-					break;
-				}
-			}
-
+			$location = $user->lang['GARAGE'];
 			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
 		break;
 
 		case 'garage_blog':
+			$location = $user->lang['GARAGE_BLOG'];
 			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
 		break;
 
 		case 'garage_dynorun':
+			$location = $user->lang['GARAGE_DYNORUN'];
 			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
 		break;
 
 		case 'garage_guestbook':
+			$location = $user->lang['GARAGE_GUESTBOOK'];
 			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
 		break;
 
 		case 'garage_modification':
+			$location = $user->lang['GARAGE_MODIFICATION'];
 			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
 		break;
 
 		case 'garage_premium':
+			$location = $user->lang['GARAGE_PREMIUM'];
 			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
 		break;
 
 		case 'garage_quartermile':
+			$location = $user->lang['GARAGE_QUARTERMILE'];
 			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
 		break;
 
 		case 'garage_service':
+			$location = $user->lang['GARAGE_SERVICE'];
 			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
 		break;
 
 		case 'garage_track':
+			$location = $user->lang['GARAGE_TRACK'];
 			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
 		break;
 
 		case 'garage_vehicle':
-			$location = $user->lang['VIEWING_GARAGE'];
+			$location = $user->lang['GARAGE_VEHICLE'];
 			$location_url = append_sid("{$phpbb_root_path}index.$phpEx");
 		break;
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------]]></action>
@@ -316,7 +314,7 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 			</edit>
 		</open>
 
-		<open src="includes/functions.php">
+		<open src="includes/functions_user.php">
 			<edit>
 				<find><![CDATA[<?php]]></find>
 				<action type="after-add">//-- mod : Garage ----------------------------------------------------------------------------------------------------------</action>
@@ -515,10 +513,5 @@ $lang = array_merge($lang, array(</find>
 			</edit>
 		</open>
 
-		<diy-instructions lang="en-gb"><![CDATA[<a href="http://en.wikipedia.org/wiki/Chmod">Chmod</a> ./garage/ to 755
-Chmod ./garage/upload to 777
-Open your web browser and run install_garage.php
-Delete install_garage.php if it ran succesfully]]>
-		</diy-instructions>
 	</action-group>
 </mod>
