@@ -68,7 +68,7 @@
 						<!-- BEGIN lap -->
 						<!-- IF lap.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 							<dl>
-	  							<dt><!-- IF lap.U_IMAGE --><a href="{lap.U_IMAGE}">{lap.IMAGE}</a><!-- ENDIF --></dt>
+								<dt><!-- IF lap.U_IMAGE --><a href="{lap.U_IMAGE}" alt="{}" class="garage-camera-icon"></a><!-- ENDIF --></dt>
 								<dd><b><a href="{lap.U_VIEWPROFILE}"  <!-- IF lap.USERNAME_COLOUR --> style="color: {lap.USERNAME_COLOUR}"<!-- ENDIF -->>{lap.USERNAME}</a></b></dd>
 								<dd><a href="{lap.U_VIEWVEHICLE}">{lap.VEHICLE}</a></dd>
 								<dd>{lap.CONDITION}</dd>

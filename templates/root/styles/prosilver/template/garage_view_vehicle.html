@@ -281,7 +281,7 @@ function jumpto_garage()
 												<dd>{L_INSTALL}</dd>
 												<dd>{L_CREATED}</dd>
 												<dd>{L_UPDATED}</dd>
-												<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd></dd><!-- ENDIF -->
+												<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd></dd><dd></dd><!-- ENDIF -->
 											</dl>
 										</li>
 									</ul>
@@ -289,14 +289,14 @@ function jumpto_garage()
 										<!-- BEGIN modification -->
 										<!-- IF modification.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 											<dl>
-												<dt><!-- IF category.modification.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{category.modification.U_IMAGE}"></a></div></div><!-- ENDIF --></dt>
+												<dt><!-- IF category.modification.U_IMAGE --><a href="{category.modification.U_IMAGE}" class="garage-camera-icon"></a><!-- ENDIF --></dt>
 												<dd>{category.modification.MODIFICATION}</dd>
 												<dd>{category.modification.RATING}</dd>
 												<dd>{category.modification.COST}</dd>
 												<dd>{category.modification.INSTALL}</dd>
 												<dd>{category.modification.CREATED}</dd>
 												<dd>{category.modification.UPDATED}</dd>
-												<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd><!-- IF category.modification.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{category.modification.U_EDIT}"></a></div></div><!-- ENDIF -->&nbsp;<!-- IF category.modification.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{category.modification.U_DELETE}"></a></div></div><!-- ENDIF --></dd><!-- ENDIF -->
+												<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd><!-- IF category.modification.U_EDIT --><a href="{category.modification.U_EDIT}" class="garage-edit-icon"></a><!-- ENDIF --></dd><dd><!-- IF category.modification.U_DELETE--><a href="{category.modification.U_DELETE}" class="garage-delete-icon"></a><!-- ENDIF --></dd><!-- ENDIF -->
 											</dl>
 										</li>
 										<!-- END modification -->
@@ -330,7 +330,7 @@ function jumpto_garage()
 												<dd>{L_THOU}</dd>
 												<dd>{L_QUART}</dd>
 												<dd>{L_QUARTMPH}</dd>
-												<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd></dd><!-- ENDIF -->
+												<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd></dd><dd></dd><!-- ENDIF -->
 											</dl>
 										</li>
 									</ul>
@@ -338,7 +338,7 @@ function jumpto_garage()
 										<!-- BEGIN run -->
 										<!-- IF run.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 											<dl>
-												<dt><!-- IF quartermile.run.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{quartermile.run.U_IMAGE}"></a></div></div><!-- ENDIF --></dt>
+												<dt><!-- IF quartermile.run.U_IMAGE --><a href="{quartermile.run.U_IMAGE}" class="garage-camera-icon"></a><!-- ENDIF --></dt>
 									  			<dd>{quartermile.run.RT}</dd>
 									  			<dd>{quartermile.run.SIXTY}</dd>
 												<dd>{quartermile.run.THREE}</dd>
@@ -347,7 +347,7 @@ function jumpto_garage()
 												<dd>{quartermile.run.THOU}</dd>
 												<dd><a href="{quartermile.run.U_QUART}">{quartermile.run.QUART}</a></dd>
 												<dd>{quartermile.run.QUARTMPH}</dd>
-												<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd><!-- IF quartermile.run.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{quartermile.run.U_EDIT}"></a></div></div><!-- ENDIF -->&nbsp;<!-- IF quartermile.run.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{quartermile.run.U_DELETE}"></a></div></div><!-- ENDIF --></dd><!-- ENDIF -->
+												<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd><!-- IF quartermile.run.U_EDIT --><a href="{quartermile.run.U_EDIT}" class="garage-edit-icon"></a><!-- ENDIF --></dd><dd><!-- IF quartermile.run.U_DELETE--><a href="{quartermile.run.U_DELETE}" class="garage-delete-icon"></a><!-- ENDIF --></dd><!-- ENDIF -->
 											</dl>
 										</li>
 										<!-- END run -->
@@ -381,7 +381,7 @@ function jumpto_garage()
 												<dd>{L_BOOST_UNIT}</dd>
 												<dd>{L_NITROUS}</dd>
 												<dd>{L_PEAKPOINT}</dd>
-												<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd></dd><!-- ENDIF -->
+												<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd></dd><dd></dd><!-- ENDIF -->
 											</dl>
 										</li>
 									</ul>
@@ -389,7 +389,7 @@ function jumpto_garage()
 										<!-- BEGIN run -->
 										<!-- IF run.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 											<dl>
-												<dt><!-- IF dynorun.run.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{dynorun.run.U_IMAGE}"></a></div></div><!-- ENDIF --></dt>
+												<dt><!-- IF dynorun.run.U_IMAGE --><a href="{dynorun.run.U_IMAGE}" class="garage-camera-icon"></a><!-- ENDIF --></dt>
 												<dd>{dynorun.run.DYNOCENTER}</dd>
 												<dd><a href="{dynorun.run.U_BHP}">{dynorun.run.BHP}</a></dd>
 												<dd>{dynorun.run.BHP_UNIT}</dd>
@@ -399,7 +399,7 @@ function jumpto_garage()
 												<dd>{dynorun.run.BOOST_UNIT}</dd>
 												<dd>{dynorun.run.NITROUS}</dd>
 												<dd>{dynorun.run.PEAKPOINT}</dd>
-												<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd><!-- IF dynorun.run.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{dynorun.run.U_EDIT}"></a></div></div><!-- ENDIF -->&nbsp;<!-- IF dynorun.run.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{dynorun.run.U_DELETE}"></a></div></div><!-- ENDIF --></dd><!-- ENDIF -->
+												<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd><!-- IF dynorun.run.U_EDIT --><a href="{dynorun.run.U_EDIT}" class="garage-edit-icon"></a><!-- ENDIF --></dd><dd><!-- IF dynorun.run.U_DELETE--><a href="{dynorun.run.U_DELETE}" class="garage-delete-icon"></a><!-- ENDIF --></dd><!-- ENDIF -->
 											</dl>
 										</li>
 										<!-- END run -->
@@ -428,7 +428,7 @@ function jumpto_garage()
 												<dd>{L_CONDITION}</dd>
 												<dd>{L_TYPE}</dd>
 												<dd>{L_TIME}&nbsp;<span class="gensmall">(M:S:MS)</span></dd>
-												<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd></dd><!-- ENDIF -->
+												<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd></dd><dd></dd><!-- ENDIF -->
 											</dl>
 										</li>
 									</ul>
@@ -436,12 +436,12 @@ function jumpto_garage()
 										<!-- BEGIN lap -->
 										<!-- IF lap.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 											<dl>
-												<dt><!-- IF tracktime.lap.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{tracktime.lap.U_IMAGE}"></a></div></div><!-- ENDIF --></dt>
+												<dt><!-- IF tracktime.lap.U_IMAGE --><a href="{tracktime.lap.U_IMAGE}" class="garage-camera-icon"></a><!-- ENDIF --></dt>
 												<dd><a href="{tracktime.lap.U_TRACK}">{tracktime.lap.TRACK}</a></dd>
 												<dd>{tracktime.lap.CONDITION}</dd>
 												<dd>{tracktime.lap.TYPE}</dd>
 												<dd><a href="{tracktime.lap.U_LAP}">{tracktime.lap.MINUTE}.{tracktime.lap.SECOND}.{tracktime.lap.MILLISECOND}</a></dd>
-												<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd><!-- IF tracktime.lap.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{tracktime.lap.U_EDIT}"></a></div></div><!-- ENDIF -->&nbsp;<!-- IF tracktime.lap.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{tracktime.lap.U_DELETE}"></a></div></div><!-- ENDIF --></dd><!-- ENDIF -->
+												<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd><!-- IF tracktime.lap.U_EDIT --><a href="{tracktime.lap.U_EDIT}" class="garage-edit-icon"></a><!-- ENDIF --></dd><dd><!-- IF tracktime.lap.U_DELETE--><a href="{tracktime.lap.U_DELETE}" class="garage-delete-icon"></a><!-- ENDIF --></dd><!-- ENDIF -->
 											</dl>
 										</li>
 										<!-- END lap -->
@@ -468,7 +468,7 @@ function jumpto_garage()
 												<dt>{L_INSURANCE_COMPANY}</dt>
 												<dd>{L_PREMIUM}</dd>
 												<dd>{L_COVER_TYPE}</dd>
-												<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd></dd><!-- ENDIF -->
+												<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd></dd><dd></dd><!-- ENDIF -->
 											</dl>
 										</li>
 									</ul>
@@ -479,7 +479,7 @@ function jumpto_garage()
 												<dt><a href="{insurance.premium.U_INSURER}">{insurance.premium.INSURER}</a></dt>
 								  				<dd>{insurance.premium.PREMIUM}</dd>
 												<dd>{insurance.premium.COVER_TYPE}</dd>
-												<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd><!-- IF insurance.premium.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{insurance.premium.U_EDIT}"></a></div></div><!-- ENDIF -->&nbsp;<!-- IF insurance.premium.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{insurance.premium.U_DELETE}"></a></div></div><!-- ENDIF --></dd><!-- ENDIF -->
+												<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd><!-- IF insurance.premium.U_EDIT --><a href="{insurance.premium.U_EDIT}" class="garage-edit-icon"></a><!-- ENDIF --></dd><dd><!-- IF insurance.premium.U_DELETE--><a href="{insurance.premium.U_DELETE}" class="garage-delete-icon"></a><!-- ENDIF --></dd><!-- ENDIF -->
 											</dl>
 										</li>
 										<!-- END premium -->
@@ -509,7 +509,7 @@ function jumpto_garage()
 														<dd>{L_COST}</dd>
 														<dd>{L_RATING}</dd>
 														<dd>{L_MILEAGE}</dd>
-														<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd></dd><!-- ENDIF -->
+														<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd></dd><dd></dd><!-- ENDIF -->
 													</dl>
 												</li>
 											</ul>
@@ -522,7 +522,7 @@ function jumpto_garage()
 														<dd>{service_history.service.PRICE}</dd>
 														<dd>{service_history.service.RATING}</dd>
 														<dd>{service_history.service.MILEAGE}</dd>
-														<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd><!-- IF service_history.service.U_EDIT --><div class="buttons"><div class="garage-edit-icon"><a href="{service_history.service.U_EDIT}"></a></div></div><!-- ENDIF -->&nbsp;<!-- IF service_history.service.U_DELETE--><div class="buttons"><div class="garage-delete-icon"><a href="{service_history.service.U_DELETE}"></a></div></div><!-- ENDIF --></dd><!-- ENDIF -->
+														<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd><!-- IF service_history.service.U_EDIT --><a href="{service_history.service.U_EDIT}" class="garage-edit-icon"></a><!-- ENDIF --></dd><dd><!-- IF service_history.service.U_DELETE--><a href="{service_history.service.U_DELETE}" class="garage-delete-icon"></a><!-- ENDIF --></dd><!-- ENDIF -->
 													</dl>
 												</li>
 												<!-- END service -->

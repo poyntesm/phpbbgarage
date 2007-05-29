@@ -25,26 +25,26 @@
 			<div class="forabg">
 				<div class="inner">
 					<span class="corners-top"><span></span></span>
-					<ul class="topiclist">
-					<li class="header">
-						<dl class="icon">
-							<dt class="image_attached"></dt>
-							<dd>{L_YEAR}</dd>
-							<dd>{L_MAKE}</dd>
-							<dd>{L_MODEL}</dd>
-							<dd>{L_COLOUR}</dd>
-							<dd>{L_OWNER}</dd>
-							<dd>{L_VIEWS}</dd>
-							<dd>{L_MODS}</dd>
-							<dd>{L_UPDATED}</dd>
-						</dl>
-					</li>
-				</ul>
-				<ul class="topiclist forums">
+					<ul class="garage_list">
+						<li class="header">
+							<dl>
+								<dt class="image_attached"></dt>
+								<dd>{L_YEAR}</dd>
+								<dd>{L_MAKE}</dd>
+								<dd>{L_MODEL}</dd>
+								<dd>{L_COLOUR}</dd>
+								<dd>{L_OWNER}</dd>
+								<dd>{L_VIEWS}</dd>
+								<dd>{L_MODS}</dd>
+								<dd>{L_UPDATED}</dd>
+							</dl>
+						</li>
+					</ul>
+					<ul class="garage_list">
 					<!-- BEGIN vehicle -->
 					<!-- IF vehicle.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<!-- IF vehicle.U_IMAGE --><dt style="background-image: url({T_ICONS_PATH}{topicrow.TOPIC_ICON_IMG});" title="{topicrow.TOPIC_FOLDER_IMG_ALT}"><a href="{vehicle.U_IMAGE}">{NEWEST_POST_IMG}</a></dt><!-- ELSE --><dt></dt><!-- ENDIF -->
+							<dt class="image_attached"><!-- IF vehicle.U_IMAGE --><a href="{vehicle.U_IMAGE}" class="garage-camera-icon"></a><!-- ENDIF --></dt>
 			  				<dd>{vehicle.YEAR}</dd>
 							<dd>{vehicle.MAKE}</dd>
 							<dd><a href="{vehicle.U_VIEW_VEHICLE}">{vehicle.MODEL}</a></dd>
@@ -84,9 +84,9 @@
 		<!-- IF S_DISPLAY_MODIFICATION_RESULTS -->
 		<div class="forabg">
 			<div class="inner"><span class="corners-top"><span></span></span>
-				<ul class="topiclist">
+				<ul class="garage_list">
 					<li class="header">
-						<dl class="icon">
+						<dl>
 							<dt></dt>
 							<dd>{L_VEHICLE}</dd>
 							<dd>{L_MODIFICATION}</dd>
@@ -97,11 +97,11 @@
 						</dl>
 					</li>
 				</ul>
-				<ul class="topiclist forums">
+				<ul class="garage_list">
 					<!-- BEGIN modification -->
 					<!-- IF modification.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt><!-- IF modification.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{modification.U_IMAGE}"></a><!-- ENDIF --></dt>
+							<dt><!-- IF modification.U_IMAGE --><a href="{modification.U_IMAGE}" class="garage-camera-icon"></a></div></div><!-- ENDIF --></dt>
 			  				<dd><a href="{modification.U_VIEW_VEHICLE}">{modification.VEHICLE}</a></dd>
 							<dd><a href="{modification.U_VIEW_MODIFICATION}">{modification.MODIFICATION}</a></dd>
 							<dd>{modification.CATEGORY}</dd>
@@ -142,9 +142,9 @@
 		<!-- IF S_DISPLAY_PREMIUM_RESULTS -->
 		<div class="forabg">
 			<div class="inner"><span class="corners-top"><span></span></span>
-				<ul class="topiclist">
+				<ul class="garage_list">
 					<li class="header">
-						<dl class="icon">
+						<dl>
 							<dt>{L_VEHICLE}</dt>
 							<dd>{L_PRICE}</dd>
 							<dd>{L_MOD_PRICE}</dd>
@@ -155,7 +155,7 @@
 						</dl>
 					</li>
 				</ul>
-				<ul class="topiclist forums">
+				<ul class="garage_list">
 					<!-- BEGIN premium -->
 					<!-- IF premium.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
@@ -198,9 +198,9 @@
 		<!-- IF S_DISPLAY_QUARTERMILE_RESULTS -->
 		<div class="forabg">
 			<div class="inner"><span class="corners-top"><span></span></span>
-				<ul class="topiclist">
+				<ul class="garage_list">
 					<li class="header">
-						<dl class="icon">
+						<dl>
 							<dt></dt>
 							<dd>{L_USERNAME}</dd>
 							<dd>{L_VEHICLE}</dd>
@@ -213,11 +213,11 @@
 						</dl>
 					</li>
 				</ul>
-				<ul class="topiclist forums">
+				<ul class="garage_list">
 					<!-- BEGIN quartermile -->
 					<!-- IF quartermile.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt><!-- IF quartermile.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{quartermile.U_IMAGE}"></a><!-- ENDIF --></dt>
+							<dt><!-- IF quartermile.U_IMAGE --><a href="{quartermile.U_IMAGE}" class="garage-camera-icon"></a><!-- ENDIF --></dt>
 							<dd><b><a href="{quartermile.U_VIEWPROFILE}" <!-- IF quartermile.USERNAME_COLOUR --> style="color: {quartermile.USERNAME_COLOUR}"<!-- ENDIF -->>{quartermile.USERNAME}</a></b></dd>
 							<dd><a href="{quartermile.U_VIEWVEHICLE}">{quartermile.VEHICLE}</a></dd>
 							<dd>{quartermile.RT}</dd>
@@ -258,9 +258,9 @@
 		<!-- IF S_DISPLAY_DYNORUN_RESULTS -->
 		<div class="forabg">
 			<div class="inner"><span class="corners-top"><span></span></span>
-				<ul class="topiclist">
+				<ul class="garage_list">
 					<li class="header">
-						<dl class="icon">
+						<dl>
 							<dt></dt>
 							<dd>{L_USERNAME}</dd>
 							<dd>{L_VEHICLE}</dd>
@@ -273,11 +273,11 @@
 						</dl>
 					</li>
 				</ul>
-				<ul class="topiclist forums">
+				<ul class="garage_list">
 					<!-- BEGIN dynorun -->
 					<!-- IF dynorun.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt><!-- IF dynorun.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{dynorun.U_IMAGE}"></a><!-- ENDIF --></dt>
+							<dt><!-- IF dynorun.U_IMAGE --><a href="{dynorun.U_IMAGE}" class="garage-camera-icon"></a><!-- ENDIF --></dt>
 							<dd><b><a href="{dynorun.U_VIEWPROFILE}" <!-- IF dynorun.USERNAME_COLOUR --> style="color: {dynorun.USERNAME_COLOUR}"<!-- ENDIF -->>{dynorun.USERNAME}</a></b></dd>
 							<dd><a href="{dynorun.U_VIEWVEHICLE}" >{dynorun.VEHICLE}</a></dd>
 							<dd>{dynorun.DYNOCENTRE}</dd>
@@ -318,9 +318,9 @@
 		<!-- IF S_DISPLAY_LAP_RESULTS -->
 		<div class="forabg">
 			<div class="inner"><span class="corners-top"><span></span></span>
-				<ul class="topiclist">
+				<ul class="garage_list">
 					<li class="header">
-						<dl class="icon">
+						<dl>
 							<dt></dt>
 							<dd>{L_USERNAME}</dd>
 							<dd>{L_VEHICLE}</dd>
@@ -331,11 +331,11 @@
 						</dl>
 					</li>
 				</ul>
-				<ul class="topiclist forums">
+				<ul class="garage_list">
 					<!-- BEGIN lap -->
 					<!-- IF lap.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-  							<dt><!-- IF lap.U_IMAGE --><div class="buttons"><div class="garage-camera-icon"><a href="{lap.U_IMAGE}"></a><!-- ENDIF --></dt>
+							<dt><!-- IF lap.U_IMAGE --><a href="{lap.U_IMAGE}" class="garage-camera-icon"></a><!-- ENDIF --></dt>
 							<dd><b><a href="{lap.U_VIEWPROFILE}" <!-- IF lap.USERNAME_COLOUR --> style="color: {lap.USERNAME_COLOUR}"<!-- ENDIF -->>{lap.USERNAME}</a></b></dd>
 							<dd><a href="{lap.U_VIEWVEHICLE}">{lap.VEHICLE}</a></dd>
 							<dd><a href="{lap.U_TRACK}">{lap.TRACK}</a></dd>

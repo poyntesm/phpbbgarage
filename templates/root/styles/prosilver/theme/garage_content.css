@@ -21,7 +21,6 @@
 	float:left;
 	width: 19%;
 	margin-top: 0em;
-	margin-bottom: 5px;
 }
 
 #garage-main {
@@ -71,6 +70,10 @@
 
 .vehicles-mini span.corners-top, .vehicles-mini span.corners-bottom {
 	margin: 0 -5px;
+}
+
+.vehicle-mini dl.mini {
+	width: auto;
 }
 
 
@@ -192,21 +195,6 @@ ul.manage-vehicle-icons li.newlap-icon		{
 ul.manage-vehicle-icons li.newservice-icon	{ 
 	width: {IMG_GARAGE_ADD_SERVICE_WIDTH}px; height: {IMG_GARAGE_ADD_SERVICE_HEIGHT}px; 
 }
-
-
-/* Garage Mini Icons */
-.garage-camera-icon, .garage-camera-icon a	{ background: transparent none 0 0 no-repeat; }
-.garage-camera-icon, .garage-camera-icon a	{ background-image: url("{IMG_GARAGE_IMG_ATTACHED_SRC}"); }
-.buttons div.garage-camera-icon			{ width: {IMG_GARAGE_IMG_ATTACHED_WIDTH}px; height: {IMG_GARAGE_IMG_ATTACHED_HEIGHT}px; }
-
-.garage-delete-icon, .garage-delete-icon a	{ background: transparent none 0 0 no-repeat; }
-.garage-delete-icon, .garage-delete-icon a	{ background-image: url("{IMG_GARAGE_DELETE_SRC}"); }
-.buttons div.garage-delete-icon			{ width: {IMG_GARAGE_DELETE_WIDTH}px; height: {IMG_GARAGE_DELETE_HEIGHT}px; }
-
-.garage-edit-icon, .garage-edit-icon a		{ background: transparent none 0 0 no-repeat; }
-.garage-edit-icon, .garage-edit-icon a		{ background-image: url("{IMG_GARAGE_EDIT_SRC}"); }
-.buttons div.garage-edit-icon			{ width: {IMG_GARAGE_EDIT_WIDTH}px; height: {IMG_GARAGE_EDIT_HEIGHT}px; }
-
 
 .newvehicle-icon, .newvehicle-icon a		{ background-image: url("{IMG_GARAGE_CREATE_VEHICLE_SRC}"); }
 .viewvehicle-icon, .viewvehicle-icon a		{ background-image: url("{IMG_GARAGE_VIEW_VEHICLE_SRC}"); }
@@ -361,7 +349,7 @@ dt.index_block, dd.index_block {
 
 /* Nice method for clearing floated blocks without having to insert any extra markup (like spacer above)
    From http://www.positioniseverything.net/easyclearing.html */
-#gtabs:after, .post:after, .navbar:after, fieldset dl:after, ul.topiclist dl:after, ul.linklist:after, dl.polls:after {
+#gtabs:after, .post:after, .navbar:after, fieldset dl:after, ul.garage_list dl:after, ul.linklist:after, dl.polls:after {
 	content: "."; 
 	display: block; 
 	height: 0; 
@@ -369,7 +357,105 @@ dt.index_block, dd.index_block {
 	visibility: hidden;
 }
 
-#gtabs, .post, .navbar, fieldset dl, ul.topiclist dl, ul.linklist, dl.polls {
+#gtabs, .post, .navbar, fieldset dl, ul.garage_list dl, ul.linklist, dl.polls {
 	height: 1%;
+}
+
+
+/* List Styling */
+* html ul.garage_list li { position: relative; }
+
+ul.garage_list li {
+	color: #4C5D77;
+}
+
+ul.garage_list dd {
+	border-left-color: #FFFFFF;
+}
+
+ul.garage_list {
+	display: block;
+	list-style-type: none;
+	margin: 0;
+}
+
+ul.garage_list li {
+	display: block;
+	list-style-type: none;
+	color: #777777;
+	margin: 0;
+}
+
+ul.garage_list dl {
+	position: relative;
+}
+
+ul.garage_list li.row dl {
+	padding: 2px 0;
+}
+
+ul.garage_list dt {
+	display: block;
+	float: left;
+	font-size: 1.1em;
+	padding-left: 4px;
+}
+
+ul.garage_list dd {
+	display: block;
+	float: left;
+	border-left: 1px solid #FFFFFF;
+	padding: 4px 0;
+}
+
+ul.garage_list dfn {
+	/* Labels for post/view counts */
+	display: none;
+}
+
+ul.garage_list li.row dt a.subforum {
+	background-image: none;
+	background-position: 0 50%;
+	background-repeat: no-repeat;
+	position: relative;
+	white-space: nowrap;
+	padding: 0 0 0 12px;
+}
+
+ul.garage_list dt.image_attached, ul.garage_list dd.image_attached {
+	width: 22px;
+}
+
+
+/*Garage Rollover Images For Camera, Edit & Delete */
+a.garage-camera-icon, a.garage-delete-icon, a.garage-edit-icon {
+	background-image: none;
+	width: 20px;
+}
+a.garage-camera-icon, a.garage-delete-icon, a.garage-edit-icon {
+	display: block;
+	overflow: hidden;
+	height: 20px;
+	text-indent: -5000px;
+	text-align: left;
+	background-repeat: no-repeat;
+}
+a.garage-camera-icon {
+	background-image: url("{IMG_GARAGE_IMG_ATTACHED_SRC}");
+}
+a.garage-delete-icon { 
+	background-image: url("{IMG_GARAGE_DELETE_SRC}"); 
+}
+a.garage-edit-icon {
+	background-image: url("{IMG_GARAGE_EDIT_SRC}"); 
+}
+a.garage-camera-icon:hover, a.garage-delete-icon:hover, a.garage-edit-icon:hover {
+	background-position: 0 -20px;
+}
+
+#garage-copyright {
+	display: block;
+	text-align: center;
+	vertical-align: bottom
 }
 

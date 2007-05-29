@@ -1187,7 +1187,7 @@ class garage_vehicle
 				}
 	
 				//See If Mod Has An Image Attached And Display Gallery If Enabled & Below Limits
-				if ( (($garage_config['enable_mod_gallery'] == 1) AND ( $modification_data[$j]['attach_is_image'] )) AND ($garage_config['mod_gallery_limit'] >= $mod_images_found OR !$garage_config['mod_gallery_limit']) )
+				if ( (($garage_config['enable_mod_gallery'] == 1) AND ( $modification_data[$j]['attach_is_image'] )) AND ($garage_config['gallery_limit'] >= $mod_images_found OR !$garage_config['gallery_limit']) )
 				{
 					$mod_images_displayed = $mod_images_found;
 	                		//Do we have a thumbnail?  If so, our job is simple here :)
@@ -1268,7 +1268,7 @@ class garage_vehicle
 				}
 	
 				//See If Mod Has An Image Attached And Display Gallery If Enabled & Below Limits
-				if ( (($garage_config['enable_quartermile_gallery'] == 1) AND ( $quartermile_data[$i]['attach_is_image'] )) AND ($garage_config['mod_gallery_limit'] >= $quartermile_images_found OR !$garage_config['mod_gallery_limit']) )
+				if ( (($garage_config['enable_quartermile_gallery'] == 1) AND ( $quartermile_data[$i]['attach_is_image'] )) AND ($garage_config['gallery_limit'] >= $quartermile_images_found OR !$garage_config['gallery_limit']) )
 				{
 					$quartermile_images_displayed = $quartermile_images_found;
 	                		//Do we have a thumbnail?  If so, our job is simple here :)
@@ -1326,7 +1326,7 @@ class garage_vehicle
 				}
 	
 				//See If Mod Has An Image Attached And Display Gallery If Enabled & Below Limits
-				if ( (($garage_config['enable_dynorun_gallery'] == 1) AND ( $dynorun_data[$i]['attach_is_image'] )) AND ($garage_config['mod_gallery_limit'] >= $dynorun_images_found OR !$garage_config['mod_gallery_limit']) )
+				if ( (($garage_config['enable_dynorun_gallery'] == 1) AND ( $dynorun_data[$i]['attach_is_image'] )) AND ($garage_config['gallery_limit'] >= $dynorun_images_found OR !$garage_config['gallery_limit']) )
 				{
 					$dynorun_images_displayed = $dynorun_images_found;
 	                		//Do we have a thumbnail?  If so, our job is simple here :)
@@ -1382,7 +1382,7 @@ class garage_vehicle
 				}
 	
 				//See If Mod Has An Image Attached And Display Gallery If Enabled & Below Limits
-				if ( (($garage_config['enable_lap_gallery'] == 1) AND ( $lap_data[$i]['attach_is_image'] )) AND ($garage_config['mod_gallery_limit'] >= $lap_images_found OR !$garage_config['mod_gallery_limit']) )
+				if ( (($garage_config['enable_lap_gallery'] == 1) AND ( $lap_data[$i]['attach_is_image'] )) AND ($garage_config['gallery_limit'] >= $lap_images_found OR !$garage_config['gallery_limit']) )
 				{
 					$lap_images_displayed = $lap_images_found;
 	                		//Do we have a thumbnail?  If so, our job is simple here :)
@@ -2119,7 +2119,7 @@ class garage_vehicle
 		$vehicle_images_found = null;
 		$hilite_image = null;
 
-		if ( count($vehicle_data) > 0 )
+		if (!empty($vehicle_data))
 		{
 			$total_spent = $vehicle_data['total_spent'] ? $vehicle_data['total_spent'] : 0;
 

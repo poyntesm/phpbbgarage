@@ -1,6 +1,6 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!-- MODX by the phpBB MOD Team XSL file v1.0 copyright 2005-2007 the phpBB MOD Team. 
-	$Id: modx.prosilver.en.xsl,v 1.3 2007/05/20 09:31:00 vic Exp $ -->
+	$Id: modx.prosilver.en.xsl,v 1.4 2007/05/28 09:57:46 paul999 Exp $ -->
 <!DOCTYPE xsl:stylesheet[
 	<!ENTITY nbsp "&#160;">
 ]>
@@ -794,7 +794,8 @@ function xslLangEl(langCode, element)
 		  {
 			  try
 			  {
-				  if (currentEl.childNodes[i].lang.toLowerCase() == langCode.toLowerCase())
+					split = currentEl.childNodes[i].lang.toLowerCase().split('-')[0];			  	
+				  if (currentEl.childNodes[i].lang.toLowerCase() == langCode.toLowerCase() || split == langCode.toLowerCase())
 				  {
 					  currentEl.childNodes[i].style.display = 'inline';
 				  }

@@ -386,7 +386,7 @@ $params = array(
 	'enable_user_submit_make' 		=> '1',
 	'enable_user_submit_model' 		=> '1',
 	'dateformat' 				=> 'd M Y H:i',
-	'version' 				=> '2.0.B1',
+	'version' 				=> '2.0.B2-DEV',
 	'default_make_id'			=> '',
        	'default_model_id' 			=> '',
        	'integrate_memberlist' 			=> '1',
@@ -1656,8 +1656,8 @@ switch( $mode )
 		$module_data = $errors = array();
 
 		//Define ACP Garage Module Categories
-		$module_data[] = array('module_basename' => '', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => '24', 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_SETTINGS', 'module_mode' => '', 'module_auth' => '' );
-		$module_data[] = array('module_basename' => '', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => '24', 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_MANAGEMENT', 'module_mode' => '', 'module_auth' => '' );
+		$module_data[] = array('module_basename' => '', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => '31', 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_SETTINGS', 'module_mode' => '', 'module_auth' => '' );
+		$module_data[] = array('module_basename' => '', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => '31', 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_MANAGEMENT', 'module_mode' => '', 'module_auth' => '' );
 
 		//Define MCP Garage Module Categories
 		$module_data[] = array('module_basename' => '', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => '0', 'module_class' => 'mcp', 'module_langname' => 'MCP_GARAGE', 'module_mode' => '', 'module_auth' => '' );

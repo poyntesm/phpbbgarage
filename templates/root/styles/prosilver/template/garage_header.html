@@ -20,7 +20,7 @@ function garage_switch_menu(T_IMAGESET_PATH)
 	{	
 		//hidden
 		case 'shown':
-			main.style.width = 'auto';
+			main.style.width = '100%';
 			menu.style.display = 'none';
 			menu_state = 'hidden';
 			toggle.style.left = '0';
@@ -31,7 +31,7 @@ function garage_switch_menu(T_IMAGESET_PATH)
 			break;
 		//shown
 		case 'hidden':
-			main.style.width = '100%';
+			main.style.width = '81%';
 			menu.style.display = 'block';			
 			menu_state = 'shown';
 			toggle.style.left = '16%';
@@ -62,7 +62,6 @@ function garage_switch_menu(T_IMAGESET_PATH)
 	</div>
 
 	<div class="panel bg3">
-		<div class="inner">
-			<span class="corners-top"><span></span></span>
+		<div class="inner"><span class="corners-top"><span></span></span>
 			<div style="width: 100%;">
 
