@@ -1,10 +1,9 @@
 /* Toggle */
 #garage-toggle {
-	padding: 5px;
+	padding: 0px;
 	width: 16%;
 	height: 10px;
 	left: 16%;
-	top: 10px;
 	margin-left: 2px;
 }
 
@@ -63,7 +62,7 @@
 .vehicles-mini {
 	background-color: #f9f9f9;
 	padding: 0 5px;
-	margin: 10px 15px 10px 5px;
+	margin: 0px 10px 10px 0px;
 	width: auto;
 	white-space: nowrap;
 }
@@ -253,7 +252,7 @@ dt.index_block, dd.index_block {
 /* Second Set Of Tabs */
 #gtabs {
 	line-height: normal;
-	margin: 20px 0 -1px 7px;
+	margin: 5px 0 -1px 7px;
 	min-width: 570px;
 }
 
