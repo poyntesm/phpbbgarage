@@ -116,17 +116,6 @@ ul.manage-vehicle-icons li a {
 ul.manage-vehicle-icons li span { display:none; }
 ul.manage-vehicle-icons li a:hover { background: none; }
 
-/* Positioning of moderator icons */
-.postbody ul.manage-vehicle-icons {
-	float: right;
-	width: auto;
-	padding: 0;
-}
-
-.postbody ul.manage-vehicle-icons li {
-	margin: 0 3px;
-}
-
 .newvehicle-icon, .newvehicle-icon a { 
 	background: transparent none 0 0 no-repeat; 
 }

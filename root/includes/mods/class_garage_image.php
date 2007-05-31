@@ -647,6 +647,9 @@ class garage_image
 				$data['thumb_width'] = '145';
 				$data['thumb_height'] = '35';
 			}
+
+			//Filesize Is Zero Since Its Remote
+			$data['filesize'] = '0';
 	
 			//Insert The Image Into The DB Now We Are Finished
 			$image_id = $this->insert_image($data);

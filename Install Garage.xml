@@ -122,14 +122,42 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 		}
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------]]></action>
 			</edit>
+
+			<edit>
+				<find><![CDATA[				$sql = 'SELECT *
+					FROM ' . USERS_TABLE . '
+					WHERE ' . $db->sql_in_set('user_id', $user_list);]]></find>
+				<action type="replace-with"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- modify
+				$sql = 'SELECT u.*, v.id as vid
+					FROM ' . USERS_TABLE . ' u
+					LEFT JOIN ' . GARAGE_VEHICLES_TABLE . ' v
+						ON (
+							v.user_id = u.user_id AND v.main_vehicle = 1
+						)
+						WHERE ' . $db->sql_in_set('u.user_id', $user_list);
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------]]></action>
+			</edit>
+
 			<edit>
 				<find><![CDATA[			'S_SHOW_GROUP'		=> ($mode == 'group') ? true : false,]]></find>
 				<action type="before-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 			'U_SORT_GARAGE'			=> $pagination_url . '&amp;sk=o&amp;sd=' . (($sort_key == 'o' && $sort_dir == 'a') ? 'd' : 'a'),
 			'S_DISPLAY_GARAGE_MEMBERLIST'	=> ($garage_config['integrate_memberlist']) ? true : false,
+			'GARAGE_IMG'			=> $user->img('garage_icon_garage', $user->lang['USERS_GARAGE']),
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------]]></action>
 			</edit>
+
+			<edit>
+				<find><![CDATA[		'U_WWW'			=> (!empty($data['user_website'])) ? $data['user_website'] : '',]]></find>
+				<action type="before-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+		'U_GARAGE'		=> (!empty($data['vid'])) ? append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=dispay_results&amp;username=' . $data['username']) : '',
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------]]></action>
+			</edit>
+
+
 		</open>
 		
 		<open src="viewonline.php">

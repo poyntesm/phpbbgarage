@@ -1485,7 +1485,7 @@ class garage_vehicle
 			'S_DISPLAY_ENTRY_BLOG'		=> ($owned == 'MODERATE' || $owned == 'YES') ? 1 : 0,
 			'S_DISPLAY_GUESTBOOK'		=> ($garage_config['enable_guestbooks']) ? 1 : 0,
 			'S_DISPLAY_GALLERIES'		=> ($vehicle_images_found > 0 || $mod_images_displayed > 0 || $quartermile_images_displayed > 0 || $dynorun_images_displayed > 0 || $lap_images_displayed > 0) ? 1 : 0,
-			'S_LOWEST_TAB_AVAILABLE'	=> min($lowest_tab),
+			'S_LOWEST_TAB_AVAILABLE'	=> (!empty($lowest_tab)) ? min($lowest_tab) : null,
 
             		'EDIT' 				=> ($garage_config['enable_images']) ? $user->img('garage_edit', 'EDIT') : $user->lang['EDIT'],
             		'DELETE' 			=> ($garage_config['enable_images']) ? $user->img('garage_delete', 'DELETE') : $user->lang['DELETE'],

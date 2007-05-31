@@ -115,19 +115,19 @@ img_garage_no_thumb		= garage_no_thumb.gif
 ]]></action>
 			</edit>
 			<edit>
-				<find><![CDATA[		<td class="row1" colspan="<!-- IF S_SEARCH_USER and S_FORM_NAME -->9<!-- ELSE -->8<!-- ENDIF -->" align="center">
+				<find><![CDATA[		<td class="row1" colspan="<!-- IF S_IN_SEARCH_POPUP -->9<!-- ELSE -->8<!-- ENDIF -->" align="center">
 ]]></find>
 				<inline-edit>
-					<inline-find><![CDATA[<!-- IF S_SEARCH_USER and S_FORM_NAME -->9<!-- ELSE -->8<!-- ENDIF -->]]></inline-find>
-					<inline-action type="replace-with"><![CDATA[<!-- IF S_SEARCH_USER and S_FORM_NAME and !S_DISPLAY_GARAGE_MEMBERLIST-->9<!-- ELSEIF S_SEARCH_USER and S_FORM_NAME and S_DISPLAY_GARAGE_MEMBERLIST-->10<!-- ELSEIF S_DISPLAY_GARAGE_MEMBERLIST -->9<!-- ELSE -->8<!-- ENDIF -->
+					<inline-find><![CDATA[<!-- IF S_IN_SEARCH_POPUP -->9<!-- ELSE -->8<!-- ENDIF -->]]></inline-find>
+					<inline-action type="replace-with"><![CDATA[<!-- IF S_IN_SEARCH_POPUP and !S_DISPLAY_GARAGE_MEMBERLIST-->9<!-- ELSEIF S_IN_SEARCH_POPUP and S_DISPLAY_GARAGE_MEMBERLIST-->10<!-- ELSEIF S_DISPLAY_GARAGE_MEMBERLIST -->9<!-- ELSE -->8<!-- ENDIF -->
 ]]></inline-action>
 				</inline-edit>
 			</edit>
 			<edit>
-				<find><![CDATA[	<td class="cat" colspan="<!-- IF S_SEARCH_USER and S_FORM_NAME -->9<!-- ELSE -->8<!-- ENDIF -->]]></find>
+				<find><![CDATA[	<td class="cat" colspan="<!-- IF S_IN_SEARCH_POPUP -->9<!-- ELSE -->8<!-- ENDIF -->" align="center"><!-- IF S_IN_SEARCH_POPUP and not S_SELECT_SINGLE -->]]></find>
 				<inline-edit>
-					<inline-find><![CDATA[<!-- IF S_SEARCH_USER and S_FORM_NAME -->9<!-- ELSE -->8<!-- ENDIF -->]]></inline-find>
-					<inline-action type="replace-with"><![CDATA[<!-- IF S_SEARCH_USER and S_FORM_NAME and !S_DISPLAY_GARAGE_MEMBERLIST-->9<!-- ELSEIF S_SEARCH_USER and S_FORM_NAME and S_DISPLAY_GARAGE_MEMBERLIST-->10<!-- ELSEIF S_DISPLAY_GARAGE_MEMBERLIST -->9<!-- ELSE -->8<!-- ENDIF -->
+					<inline-find><![CDATA[<!-- IF S_IN_SEARCH_POPUP -->9<!-- ELSE -->8<!-- ENDIF -->]]></inline-find>
+					<inline-action type="replace-with"><![CDATA[<!-- IF S_IN_SEARCH_POPUP and !S_DISPLAY_GARAGE_MEMBERLIST-->9<!-- ELSEIF S_IN_SEARCH_POPUP and S_DISPLAY_GARAGE_MEMBERLIST-->10<!-- ELSEIF S_DISPLAY_GARAGE_MEMBERLIST -->9<!-- ELSE -->8<!-- ENDIF -->
 ]]></inline-action>
 				</inline-edit>
 			</edit>
