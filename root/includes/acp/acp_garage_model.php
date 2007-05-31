@@ -28,6 +28,7 @@ class acp_garage_model
 		*/
 		require($phpbb_root_path . 'includes/mods/class_garage_model.' . $phpEx);
 		require($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
+		require($phpbb_root_path . 'includes/mods/class_garage_template.' . $phpEx);
 
 		/**
 		* Setup page variables such as title, template & available language strings
