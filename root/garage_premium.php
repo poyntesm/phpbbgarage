@@ -113,6 +113,7 @@ switch( $mode )
 		$template->assign_vars(array(
 			'L_TITLE' 		=> $user->lang['ADD_PREMIUM'],
 			'L_BUTTON' 		=> $user->lang['ADD_PREMIUM'],
+			'CURRENCY'		=> $vehicle['currency'],
 			'U_SUBMIT_BUSINESS' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;VID=$vid&amp;redirect=add_premium&amp;BUSINESS=" . BUSINESS_INSURANCE),
 			'VID' 			=> $vid,
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_premium.$phpEx", "mode=insert_premium"))
@@ -189,7 +190,7 @@ switch( $mode )
 		/**
 		* Handle template declarations & assignments
 		*/
-		page_header($$user->lang['GARAGE']);
+		page_header($user->lang['GARAGE']);
 		$template->set_filenames(array(
 			'header' => 'garage_header.html',
 			'body'   => 'garage_insurance.html')
@@ -207,6 +208,7 @@ switch( $mode )
 		$template->assign_vars(array(
 			'L_TITLE' 		=> $user->lang['EDIT_PREMIUM'],
 			'L_BUTTON' 		=> $user->lang['EDIT_PREMIUM'],
+			'CURRENCY'		=> $vehicle_data['currency'],
 			'INS_ID' 		=> $ins_id,
 			'VID' 			=> $vid,
 			'PREMIUM' 		=> $data['premium'],

@@ -106,7 +106,7 @@ function build_product_list()
 					</tr>
 					<tr>
 						<td class="row1" width="30%"><span class="gen"><b>{L_PURCHASED_PRICE}</b></span></td>
-						<td class="row2" colspan="2"><input name="price" type="text" class="post" size="10" value="{PRICE}" /><span class="gen">&nbsp;<b>{L_PURCHASE_RATING}</b>&nbsp;<select id="purchase_rating" name="purchase_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN purchase_rating --><option value="{purchase_rating.VALUE}" <!-- IF purchase_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{purchase_rating.TEXT}</option><!-- END purchase_rating --></select></td>
+						<td class="row2" colspan="2">{CURRENCY}:<input name="price" type="text" class="post" size="10" value="{PRICE}" /><span class="gen">&nbsp;<b>{L_PURCHASE_RATING}</b>&nbsp;<select id="purchase_rating" name="purchase_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN purchase_rating --><option value="{purchase_rating.VALUE}" <!-- IF purchase_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{purchase_rating.TEXT}</option><!-- END purchase_rating --></select></td>
 					</tr>	
 					<tr>
 						<td class="row1" width="30%"><span class="gen"><b>{L_INSTALLED_BY}</b></span></td>
@@ -114,7 +114,7 @@ function build_product_list()
 					</tr>
 					<tr>
 						<td class="row1" width="30%"><span class="gen"><b>{L_INSTALLATION_PRICE}</b></span></td>
-						<td class="row2" colspan="2"><input name="install_price" type="text" class="post" size="10" value="{INSTALL_PRICE}" /><span class="gen">&nbsp;<b>{L_INSTALLATION_RATING}</b>&nbsp;<select id="install_rating" name="install_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN install_rating --><option value="{install_rating.VALUE}" <!-- IF install_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{install_rating.TEXT}</option><!-- END install_rating --></select></td>
+						<td class="row2" colspan="2">{CURRENCY}:<input name="install_price" type="text" class="post" size="10" value="{INSTALL_PRICE}" /><span class="gen">&nbsp;<b>{L_INSTALLATION_RATING}</b>&nbsp;<select id="install_rating" name="install_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN install_rating --><option value="{install_rating.VALUE}" <!-- IF install_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{install_rating.TEXT}</option><!-- END install_rating --></select></td>
 					</tr>
 					<tr>
 						<td class="row1" width="30%"><span class="gen"><b>{L_DESCRIPTION}</b></span></td>

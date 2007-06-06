@@ -114,6 +114,7 @@ switch( $mode )
 			'L_BUTTON'  			=> $user->lang['ADD_SERVICE'],
 			'U_SUBMIT_BUSINESS_GARAGE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;VID=$vid&amp;redirect=add_service&amp;BUSINESS=". BUSINESS_GARAGE),
 			'VID' 				=> $vid,
+			'CURRENCY'			=> $vehicle['currency'],
 			'S_MODE_ACTION' 		=> append_sid("{$phpbb_root_path}garage_service.$phpEx", "mode=insert_service"))
          	);
 		$garage_template->sidemenu();
@@ -210,6 +211,7 @@ switch( $mode )
 			'U_SUBMIT_BUSINESS_GARAGE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;VID=$vid&amp;redirect=edit_service&amp;BUSINESS=". BUSINESS_GARAGE),
 			'PRICE'			=> $data['price'],
 			'MILEAGE'		=> $data['mileage'],
+			'CURRENCY'		=> $vehicle['currency'],
 			'VID'			=> $vid,
 			'SVID'			=> $svid,
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_service.$phpEx", "mode=update_service"))

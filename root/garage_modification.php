@@ -101,7 +101,7 @@ switch( $mode )
 		/**
 		* Get vehicle, catgories, shops, garages & manufacturers data from DB
 		*/
-		$vehicle=$garage_vehicle->get_vehicle($vid);
+		$vehicle	= $garage_vehicle->get_vehicle($vid);
 		$categories 	= $garage->get_categories();
 		$shops	 	= $garage_business->get_business_by_type(BUSINESS_RETAIL);
 		$garages 	= $garage_business->get_business_by_type(BUSINESS_GARAGE);
@@ -148,6 +148,7 @@ switch( $mode )
 			'CATEGORY_ID' 			=> $data['category_id'],
 			'MANUFACTURER_ID' 		=> $data['manufacturer_id'],
 			'PRODUCT_ID' 			=> $data['product_id'],
+			'CURRENCY'			=> $vehicle['currency'],
 			'S_DISPLAY_SUBMIT_BUSINESS'	=> ($garage_config['enable_user_submit_business'] && $auth->acl_get('u_garage_add_business')) ? true : false,
 			'S_MODE_ACTION_PRODUCT' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_product"),
 			'S_MODE_ACTION'			=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=insert_modification&amp;VID=$vid"))
@@ -296,6 +297,7 @@ switch( $mode )
 			'PRODUCT_ID' 		=> $data['product_id'],
 			'COMMENTS' 		=> $data['comments'],
 			'INSTALL_COMMENTS' 	=> $data['install_comments'],
+			'CURRENCY'		=> $vehicle_data['currency'],
 			'S_DISPLAY_SUBMIT_BUS'	=> $garage_config['enable_user_submit_business'],
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=update_modification"),
 			'S_IMAGE_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=insert_modification_image"),
