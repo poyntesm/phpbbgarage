@@ -903,7 +903,7 @@ class garage_modification
 			'WHERE'		=> "b.id = $bid 
 						AND b.id = p.business_id
 						AND c.id = p.category_id",
-			'ODRDER_BY'	=> 'c.field_order DESC'
+			'ORDER_BY'	=> 'c.field_order DESC'
 		));
 
 	      	$result = $db->sql_query($sql);

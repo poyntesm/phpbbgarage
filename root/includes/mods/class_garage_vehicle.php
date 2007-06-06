@@ -375,10 +375,11 @@ class garage_vehicle
 		// Get the total count of vehicles and views in the garage
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'COUNT(g.id) as total',
+			'SELECT'	=> 'COUNT(v.id) as total',
 			'FROM'		=> array(
-				GARAGE_VEHICLES_TABLE	=> 'g',
-			)
+				GARAGE_VEHICLES_TABLE	=> 'v',
+			),
+			'WHERE'		=> 'v.pending = 0'
 		));
 
 		$result = $db->sql_query($sql);
@@ -480,224 +481,228 @@ class garage_vehicle
 	{
 		global $user, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
 	
-		if ( $garage_config['enable_featured_vehicle'] == 1 )
-		{
-			$template->assign_vars(array(
-				'S_FEATURED_VEHICLE' => true,
-			));
 
-			//Start To Build SQl For Selecting Featured Vehicle..We Will Extend This Array Based On User Options
-			$sql_array = array(
-				'SELECT'	=> 'v.id, v.made_year, vg.image_id, v.user_id, mk.make, md.model, images.attach_id, images.attach_hits, images.attach_thumb_location, u.username, images.attach_is_image, images.attach_location, COUNT(mods.id) AS mod_count, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, images.attach_file, (SUM(mods.install_price) + SUM(mods.price)) AS money_spent, sum( r.rating ) AS rating, u.user_colour',
+		//Start To Build SQl For Selecting Featured Vehicle..We Will Extend This Array Based On User Options
+		$sql_array = array(
+			'SELECT'	=> 'v.id, v.made_year, vg.image_id, v.user_id, mk.make, md.model, images.attach_id, images.attach_hits, images.attach_thumb_location, u.username, images.attach_is_image, images.attach_location, COUNT(mods.id) AS mod_count, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, images.attach_file, (SUM(mods.install_price) + SUM(mods.price)) AS money_spent, sum( r.rating ) AS rating, u.user_colour',
+			'FROM'		=> array(
+				GARAGE_VEHICLES_TABLE	=> 'v',
+				GARAGE_MAKES_TABLE	=> 'mk',
+				GARAGE_MODELS_TABLE	=> 'md',
+				USERS_TABLE		=> 'u',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_VEHICLE_GALLERY_TABLE => 'vg'),
+					'ON'	=> 'v.id = vg.vehicle_id AND vg.hilite = 1',
+				)
+				,array(
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'images'),
+					'ON'	=> 'images.attach_id = vg.image_id',
+				)
+				,array(
+					'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'mods'),
+					'ON'	=> 'v.id = mods.vehicle_id ',
+				)
+				,array(
+					'FROM'	=> array(GARAGE_RATINGS_TABLE => 'r'),
+					'ON'	=> 'v.id = r.vehicle_id ',
+				)
+			),
+			'WHERE'		=> 'v.make_id = mk.id
+						AND v.model_id = md.id
+						AND v.user_id = u.user_id'
+		);
+
+		$total_vehicles = null;
+
+		//Check For Disabled & Return
+		if ( $garage_config['enable_featured_vehicle'] == 0 )
+		{
+			return;
+		}
+		else if ( $garage_config['enable_featured_vehicle'] == 1 )
+		{
+			$featured_vehicle_id = null;
+			$featured_vehicle_id = $garage_config['featured_vehicle_id'];
+			//Make sure the vehicle exists if entered in ACP..
+			$sql = $db->sql_build_query('SELECT', 
+				array(
+				'SELECT'	=> 'COUNT(v.id) as num_vehicle',
 				'FROM'		=> array(
 					GARAGE_VEHICLES_TABLE	=> 'v',
-					GARAGE_MAKES_TABLE	=> 'mk',
-					GARAGE_MODELS_TABLE	=> 'md',
-					USERS_TABLE		=> 'u',
 				),
-				'LEFT_JOIN'	=> array(
-					array(
-						'FROM'	=> array(GARAGE_VEHICLE_GALLERY_TABLE => 'vg'),
-						'ON'	=> 'v.id = vg.vehicle_id AND vg.hilite = 1',
-					)
-					,array(
-						'FROM'	=> array(GARAGE_IMAGES_TABLE => 'images'),
-						'ON'	=> 'images.attach_id = vg.image_id',
-					)
-					,array(
-						'FROM'	=> array(GARAGE_MODIFICATIONS_TABLE => 'mods'),
-						'ON'	=> 'v.id = mods.vehicle_id ',
-					)
-					,array(
-						'FROM'	=> array(GARAGE_RATINGS_TABLE => 'r'),
-						'ON'	=> 'v.id = r.vehicle_id ',
-					)
+				'WHERE'		=> "v.id = ". $featured_vehicle_id,
+			));
+			$result = $db->sql_query($sql);
+			$total_vehicles = (int) $db->sql_fetchfield('num_vehicle');
+			$db->sql_freeresult($result);
+
+			$sql_array['WHERE'] .= " AND v.id = " . $garage_config['featured_vehicle_id'];
+			$sql_array['GROUP_BY'] = "v.id";
+			$sql_array['ORDER_BY'] = "v.id DESC";
+		}
+		//We are using random, go fetch!
+		else if ( $garage_config['enable_featured_vehicle'] == 2 )
+		{
+			$sql = $db->sql_build_query('SELECT', 
+			array(
+				'SELECT'	=> 'g.id',
+				'FROM'		=> array(
+					GARAGE_VEHICLES_TABLE		=> 'v',
+					GARAGE_MAKES_TABLE		=> 'mk',
+					GARAGE_MODELS_TABLE		=> 'md',
+					GARAGE_VEHICLE_GALLERY_TABLE	=> 'vg',
 				),
-				'WHERE'		=> 'v.make_id = mk.id
-							AND v.model_id = md.id
-							AND v.user_id = u.user_id'
-			);
+				'WHERE'		=> "v.make_id = mk.id AND mk.pending = 0 
+							AND v.model_id = md.id AMD md.pending = 0 
+							AND v.id = vg.vehicle_id AND vg.hilite = 1
+							and v.pending = 0",
+				'ORDER_BY'	=> "rand()"
+			));
 
-			//If we are using random, go fetch!
-			$featured_vehicle_id = null;
-			$total_vehicles = null;
-	       		if ( $garage_config['featured_vehicle_random'] == 'on' )
+   				$result = $db->sql_query_limit($sql, 1);
+			$vehicle_data = $db->sql_fetchrow($result);
+			$db->sql_freeresult($result);
+
+			//Update SQL Array With Required Statements
+			$featured_vehicle_id = $vehicle_data['id'];
+			$sql_array['WHERE'] .= " AND v.id =" . $vehicle_data['id'];
+			$sql_array['GROUP_BY'] = "v.id";
+			$sql_array['ORDER_BY'] = "v.id ASC";
+		}
+		else if ( $garage_config['enable_featured_vehicle'] == 4 )
+		{
+			if ( $garage_config['featured_vehicle_from_block'] == 1 )
 			{
-				$sql = $db->sql_build_query('SELECT', 
-				array(
-					'SELECT'	=> 'g.id',
-					'FROM'		=> array(
-						GARAGE_VEHICLES_TABLE		=> 'v',
-						GARAGE_MAKES_TABLE		=> 'mk',
-						GARAGE_MODELS_TABLE		=> 'md',
-						GARAGE_VEHICLE_GALLERY_TABLE	=> 'vg',
-					),
-					'WHERE'		=> "v.make_id = mk.id AND mk.pending = 0 
-								AND v.model_id = md.id AMD md.pending = 0 
-								AND v.id = vg.vehicle_id AND vg.hilite = 1",
-					'ORDER_BY'	=> "rand()"
-				));
-
-    				$result = $db->sql_query_limit($sql, 1);
-				$vehicle_data = $db->sql_fetchrow($result);
-				$db->sql_freeresult($result);
-
-				//Update SQL Array With Required Statements
-				$featured_vehicle_id = $vehicle_data['id'];
-				$sql_array['WHERE'] .= " AND v.id =" . $vehicle_data['id'];
-				$sql_array['GROUP_BY'] = "v.id";
-				$sql_array['ORDER_BY'] = "v.id ASC";
-	 	 	}
-			else if ( $garage_config['featured_vehicle_from_block'] == $lang['NEWEST_vEHICLES'] )
-			{
-				$sql_array['WHERE'] .= " AND makes.pending = 0 and models.pending = 0";
+				$sql_array['WHERE'] .= " AND mk.pending = 0 and md.pending = 0";
 				$sql_array['GROUP_BY'] = "v.id";
 				$sql_array['ORDER_BY'] = "v.date_created DESC";
 			}
-			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Last_Updated_Vehicles'] )
+			else if ( $garage_config['featured_vehicle_from_block'] == 2 )
 			{
-				$sql_array['WHERE'] .= " AND makes.pending = 0 and models.pending = 0";
+				$sql_array['WHERE'] .= " AND mk.pending = 0 and md.pending = 0";
 				$sql_array['GROUP_BY'] = "v.id";
 				$sql_array['ORDER_BY'] = "v.date_updated DESC";
 			}
-			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Newest_Modifications'] )
+			else if ( $garage_config['featured_vehicle_from_block'] == 3 )
 			{
-				$sql_array['WHERE'] .= "makes.pending = 0 and models.pending = 0";
+				$sql_array['WHERE'] .= " AND mk.pending = 0 and md.pending = 0";
 				$sql_array['GROUP_BY'] = "v.id";
 				$sql_array['ORDER_BY'] = "mods.date_created DESC";
 			}
-			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Last_Updated_Modifications'] )
+			else if ( $garage_config['featured_vehicle_from_block'] == 4 )
 			{
-				$sql_array['WHERE'] .= " AND makes.pending = 0 and models.pending = 0";
+				$sql_array['WHERE'] .= " AND mk.pending = 0 and md.pending = 0";
 				$sql_array['GROUP_BY'] = "v.id";
 				$sql_array['ORDER_BY'] = "mods.date_updated";
 			}
-			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Most_Modified_Vehicle'] )
+			else if ( $garage_config['featured_vehicle_from_block'] == 5 )
 			{
-				$sql_array['WHERE'] .= " AND makes.pending = 0 and models.pending = 0";
+				$sql_array['WHERE'] .= " AND mk.pending = 0 and md.pending = 0";
 				$sql_array['GROUP_BY'] = "v.id";
 				$sql_array['ORDER_BY'] = "mod_count DESC";
 			}
-			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Most_Money_Spent'] )
+			else if ( $garage_config['featured_vehicle_from_block'] == 6 )
 			{
-				$sql_array['WHERE'] .= " AND makes.pending = 0 and models.pending = 0";
+				$sql_array['WHERE'] .= " AND mk.pending = 0 and md.pending = 0";
 				$sql_array['GROUP_BY'] = "v.id";
 				$sql_array['ORDER_BY'] = "money_spent DESC";
 			}
-			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Most_Viewed_Vehicle'] )
+			else if ( $garage_config['featured_vehicle_from_block'] == 7 )
 			{
-				$sql_array['WHERE'] .= " AND makes.pending = 0 and models.pending = 0";
+				$sql_array['WHERE'] .= " AND mk.pending = 0 and md.pending = 0";
 				$sql_array['GROUP_BY'] = "v.id";
 				$sql_array['ORDER_BY'] = "v.views DESC";
 			}
-			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Latest_Vehicle_Comments'] )
+			else if ( $garage_config['featured_vehicle_from_block'] == 8 )
 			{
 				$sql_array['LEFT_JOIN'] .= array(array(
 								'FROM'	=> array(GARAGE_GUESTBOOKS_TABLE => 'gb'),	
 								'ON'	=> 'g.id = gb.vehicle_id'
 							));
-				$sql_array['WHERE'] .= " AND makes.pending = 0 and models.pending = 0";
+				$sql_array['WHERE'] .= " AND mk.pending = 0 and md.pending = 0";
 				$sql_array['GROUP_BY'] = "v.id";
 				$sql_array['ORDER_BY'] = "gb.post_date DESC";
 			}
-			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Top_Quartermile_Runs'] )
+			else if ( $garage_config['featured_vehicle_from_block'] == 9 )
 			{
 				$sql_array['LEFT_JOIN'] .= array(array(
 								'FROM'	=> array(GARAGE_QUARTERMILES_TABLE => 'qm'),	
 								'ON'	=> 'v.id = qm.vehicle_id'
 							));
-				$sql_array['WHERE'] .= " AND makes.pending = 0 and models.pending = 0";
+				$sql_array['WHERE'] .= " AND mk.pending = 0 and md.pending = 0";
 				$sql_array['GROUP_BY'] = "v.id";
 				$sql_array['ORDER_BY'] = "qm.quart ASC";
 			}
-			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Top_Dyno_Runs'] )
+			else if ( $garage_config['featured_vehicle_from_block'] == 10 )
 			{
 				$sql_array['LEFT_JOIN'] .= array(array(
 								'FROM'	=> array(GARAGE_DYNORUNS_TABLE => 'rr'),	
 								'ON'	=> 'v.id = rr.vehicle_id'
 							));
-				$sql_array['WHERE'] .= " AND makes.pending = 0 and models.pending = 0";
+				$sql_array['WHERE'] .= " AND mk.pending = 0 and md.pending = 0";
 				$sql_array['GROUP_BY'] = "v.id";
 				$sql_array['ORDER_BY'] = "rr.bhp DESC";
 			}
-			else if ( $garage_config['featured_vehicle_from_block'] == $lang['Top_Rated_Vehicles'] )
+			else if ( $garage_config['featured_vehicle_from_block'] == 11 )
 			{
-				$sql_array['WHERE'] .= " AND makes.pending = 0 and models.pending = 0";
+				$sql_array['WHERE'] .= " AND mk.pending = 0 and md.pending = 0";
 				$sql_array['GROUP_BY'] = "v.id";
 				$sql_array['ORDER_BY'] = "rating DESC";
 			}
-			else
+		}
+
+		if ( $total_vehicles > 0 OR (!empty($garage_config['featured_vehicle_from_block'])) )
+	        {
+			//Build Complete SQL Statement Now With All Options
+			$sql = $db->sql_build_query('SELECT', array(
+				'SELECT'	=> $sql_array['SELECT'],
+				'FROM'		=> $sql_array['FROM'],
+				'LEFT_JOIN'	=> $sql_array['LEFT_JOIN'],
+				'WHERE'		=> $sql_array['WHERE'],
+				'GROUP_BY'	=> $sql_array['GROUP_BY'],
+				'ORDER_BY'	=> $sql_array['ORDER_BY'],
+			));
+
+			$result = $db->sql_query_limit($sql, 1);
+        	    	$vehicle_data = $db->sql_fetchrow($result);
+			$db->sql_freeresult($result);
+
+			$thumb_image = null;
+			// Do we have a hilite image?  If so, prep the HTML
+			if ( (empty($vehicle_data['attach_id']) == false) AND ($vehicle_data['attach_is_image'] == 1) ) 
 			{
-				$featured_vehicle_id = $garage_config['featured_vehicle_id'];
-				//Make sure the vehicle exists if entered in ACP..
-				$sql = $db->sql_build_query('SELECT', 
-					array(
-					'SELECT'	=> 'COUNT(v.id) as num_vehicle',
-					'FROM'		=> array(
-						GARAGE_VEHICLES_TABLE	=> 'v',
-					),
-					'WHERE'		=> "v.id = ". $featured_vehicle_id,
-				));
-				$result = $db->sql_query($sql);
-				$total_vehicles = (int) $db->sql_fetchfield('num_vehicle');
-				$db->sql_freeresult($result);
+                		// Do we have a thumbnail?  If so, our job is simple here :)
+		                if ( (empty($vehicle_data['attach_thumb_location']) == false) AND ($vehicle_data['attach_thumb_location'] != $vehicle_data['attach_location']) AND (@file_exists($phpbb_root_path . GARAGE_UPLOAD_PATH."/".$vehicle_data['attach_thumb_location'])) )
+                		{
+					// Yippie, our thumbnail is already made for us :)
+				   	$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $vehicle_data['attach_thumb_location'];
+					if (!empty($absolute_url))
+					{
+						$thumb_image = $absolute_url . GARAGE_UPLOAD_PATH . $vehicle_data['attach_thumb_location'];
+					}
+                		} 
+        		}
+			$template->assign_vars(array(
+				'S_FEATURED_VEHICLE'	=> true,
+				'FEATURED_DESCRIPTION' 	=> $garage_config['featured_vehicle_description'],
+				'FEATURED_THUMB' 	=> $thumb_image,
+				'VEHICLE' 		=> $vehicle_data['vehicle'],
+				'USERNAME' 		=> $vehicle_data['username'],
+				'IMAGE_TITLE'		=> $vehicle_data['attach_file'],
+				'U_VIEW_IMAGE'		=> append_sid($absolute_url."garage.$phpEx?mode=view_image&amp;image_id=".$vehicle_data['attach_id']),
+				'U_VIEW_VEHICLE' 	=> append_sid($absolute_url."garage_vehicle.$phpEx?mode=view_vehicle&amp;VID=".$vehicle_data['id']),
+				'U_VIEW_PROFILE' 	=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']),
+				'USERNAME_COLOUR'	=> get_username_string('colour', $vehicle_data['user_id'], $vehicle_data['username'], $vehicle_data['user_colour']),
+			));
 
-				$sql_array['WHERE'] .= " AND v.id = " . $garage_config['featured_vehicle_id'];
-				$sql_array['GROUP_BY'] = "v.id";
-				$sql_array['ORDER_BY'] = "v.id DESC";
-			}
-
-		        if ( $total_vehicles > 0 OR (!empty($garage_config['featured_vehicle_from_block'])) )
-	        	{
-				//Build Complete SQL Statement Now With All Options
-				$sql = $db->sql_build_query('SELECT', array(
-					'SELECT'	=> $sql_array['SELECT'],
-					'FROM'		=> $sql_array['FROM'],
-					'LEFT_JOIN'	=> $sql_array['LEFT_JOIN'],
-					'WHERE'		=> $sql_array['WHERE'],
-					'GROUP_BY'	=> $sql_array['GROUP_BY'],
-					'ORDER_BY'	=> $sql_array['ORDER_BY'],
-				));
-	
-				$result = $db->sql_query_limit($sql, 1);
-	        	    	$vehicle_data = $db->sql_fetchrow($result);
-				$db->sql_freeresult($result);
-	
-				$thumb_image = null;
-				// Do we have a hilite image?  If so, prep the HTML
-				if ( (empty($vehicle_data['attach_id']) == false) AND ($vehicle_data['attach_is_image'] == 1) ) 
-				{
-	                		// Do we have a thumbnail?  If so, our job is simple here :)
-			                if ( (empty($vehicle_data['attach_thumb_location']) == false) AND ($vehicle_data['attach_thumb_location'] != $vehicle_data['attach_location']) AND (@file_exists($phpbb_root_path . GARAGE_UPLOAD_PATH."/".$vehicle_data['attach_thumb_location'])) )
-	                		{
-						// Yippie, our thumbnail is already made for us :)
-					   	$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $vehicle_data['attach_thumb_location'];
-						if (!empty($absolute_url))
-						{
-							$thumb_image = $absolute_url . GARAGE_UPLOAD_PATH . $vehicle_data['attach_thumb_location'];
-						}
-	                		} 
-	        		}
-				$template->assign_vars(array(
-					'S_FEATURED_VEHICLE'	=> true,
-					'FEATURED_DESCRIPTION' 	=> $garage_config['featured_vehicle_description'],
-					'FEATURED_THUMB' 	=> $thumb_image,
-					'VEHICLE' 		=> $vehicle_data['vehicle'],
-					'USERNAME' 		=> $vehicle_data['username'],
-					'IMAGE_TITLE'		=> $vehicle_data['attach_file'],
-					'U_VIEW_IMAGE'		=> append_sid($absolute_url."garage.$phpEx?mode=view_image&amp;image_id=".$vehicle_data['attach_id']),
-					'U_VIEW_VEHICLE' 	=> append_sid($absolute_url."garage_vehicle.$phpEx?mode=view_vehicle&amp;VID=".$vehicle_data['id']),
-					'U_VIEW_PROFILE' 	=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']),
-					'USERNAME_COLOUR'	=> get_username_string('colour', $vehicle_data['user_id'], $vehicle_data['username'], $vehicle_data['user_colour']),
-				));
-			}
+			return;
 		}
 		else
 		{
-			$template->assign_block_vars('no_featured_vehicle', array());
+	        	return ;
 		}
-	
-	        return ;
 	}
 	
 	/**
@@ -1486,7 +1491,7 @@ class garage_vehicle
 			'S_DISPLAY_GUESTBOOK'		=> ($garage_config['enable_guestbooks']) ? 1 : 0,
 			'S_DISPLAY_GALLERIES'		=> ($vehicle_images_found > 0 || $mod_images_displayed > 0 || $quartermile_images_displayed > 0 || $dynorun_images_displayed > 0 || $lap_images_displayed > 0) ? 1 : 0,
 			'S_LOWEST_TAB_AVAILABLE'	=> (!empty($lowest_tab)) ? min($lowest_tab) : null,
-
+			'S_MODE_ACTION'			=> append_sid("garage_vehicle.$phpEx", "mode=rate_vehicle"),
             		'EDIT' 				=> ($garage_config['enable_images']) ? $user->img('garage_edit', 'EDIT') : $user->lang['EDIT'],
             		'DELETE' 			=> ($garage_config['enable_images']) ? $user->img('garage_delete', 'DELETE') : $user->lang['DELETE'],
             		'VIEW_VEHICLE' 			=> ($garage_config['enable_images']) ? $user->img('garage_view_vehicle', 'VIEW_VEHICLE') : $user->lang['VIEW_VEHICLE'],
@@ -1852,7 +1857,7 @@ class garage_vehicle
 			'WHERE'		=> "v.user_id = u.user_id	
 						AND (v.make_id = mk.id AND mk.pending = 0)
 						AND (v.model_id = md.id AND md.pending = 0)",
-			'ODRDER_BY'	=> "POI DESC"
+			'ORDER_BY'	=> "POI DESC"
 		));
 
 	 	$result = $db->sql_query_limit($sql, $limit);
@@ -1889,7 +1894,7 @@ class garage_vehicle
 			'WHERE'		=> "v.user_id = u.user_id
 						AND (v.make_id = mk.id AND mk.pending = 0)
 						AND (v.model_id = md.id AND md.pending = 0)",
-			'ODRDER_BY'	=> "v.weighted_rating DESC"
+			'ORDER_BY'	=> "v.weighted_rating DESC"
 		));
 
 	 	$result = $db->sql_query_limit($sql, $limit);
@@ -1926,7 +1931,7 @@ class garage_vehicle
 			'WHERE'		=> "v.user_id = u.user_id
 						AND (v.make_id = mk.id AND mk.pending = 0)
 						AND (v.model_id = md.id AND md.pending = 0)",
-			'ODRDER_BY'	=> "POI DESC"
+			'ORDER_BY'	=> "POI DESC"
 		));
 
 	 	$result = $db->sql_query_limit($sql, $limit);
@@ -1966,7 +1971,7 @@ class garage_vehicle
 						AND v.model_id = md.id AND md.pending = 0
 						AND v.user_id = u.user_id',
 			'GROUP_BY'	=> 'v.id',
-			'ODRDER_BY'	=> 'POI DESC'
+			'ORDER_BY'	=> 'POI DESC'
 		));
 
 	 	$result = $db->sql_query_limit($sql, $limit);
@@ -1999,7 +2004,7 @@ class garage_vehicle
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 			),
 			'WHERE'		=> "m.vehicle_id = $vid AND m.category_id = c.id",
-			'ODRDER_BY'	=> 'c.field_order DESC'
+			'ORDER_BY'	=> 'c.field_order DESC'
 		));
 
 	      	$result = $db->sql_query($sql);

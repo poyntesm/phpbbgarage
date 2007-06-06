@@ -27,6 +27,7 @@ class acp_garage_category
 		* Build All Garage Classes e.g $garage_images->
 		*/
 		require($phpbb_root_path . 'includes/mods/class_garage_admin.' . $phpEx);
+		require($phpbb_root_path . 'includes/mods/class_garage_template.' . $phpEx);
 
 		/**
 		* Setup page variables such as title, template & available language strings

@@ -158,11 +158,11 @@ function jumpto_garage()
 				<!-- IF ! S_DISPLAY_VEHICLE_OWNER -->
             	    		<dl>
                         		<dt><strong>{L_PLEASE_RATE}</strong></dt>
-                        		<dd><select id="vehicle_rating" name="vehicle_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN rating --><option value="{rating.VALUE}" <!-- IF rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{rating.TEXT}</option><!-- END rating --></select>&nbsp;<input type="hidden" value="rate_vehicle" name="mode" /><input type="hidden" value="{VID}" name="VID" />
+					<dd><form method="post" name="view_vehicle" action="{S_MODE_ACTION}"><select id="vehicle_rating" name="vehicle_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN rating --><option value="{rating.VALUE}" <!-- IF rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{rating.TEXT}</option><!-- END rating --></select>&nbsp;<input type="hidden" value="rate_vehicle" name="mode" /><input type="hidden" value="{VID}" name="VID" />
 					<!-- IF S_DISPLAY_RATE -->
 					<input name="submit" type="submit" value="{L_RATE}" class="liteoption" />
 					<!-- ENDIF -->
-					<i> {L_RATING_NOTICE}</i></dd>
+					<i> {L_RATING_NOTICE}</i></form></dd>
                     		</dl>
 				<!-- ENDIF -->
 			</fieldset>
