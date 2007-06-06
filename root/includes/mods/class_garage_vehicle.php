@@ -200,7 +200,7 @@ class garage_vehicle
 			'FROM'		=> array(
 				GARAGE_RATINGS_TABLE	=> 'r',
 			),
-			'WHERE'		=> "r.user_id = " . $user->data['user_id'] ." AND vehicle_id = $vid",
+			'WHERE'		=> "r.user_id = " . $user->data['user_id'] ." AND r.vehicle_id = $vid",
 			'GROUP_BY'	=> 'r.id'
 		));
 
@@ -209,6 +209,26 @@ class garage_vehicle
 		$db->sql_freeresult($result);
 
 		return $data;
+	}
+
+	/**
+	* Return true|false
+	*
+	* @param int $vid vehicle id to return rating for
+	*
+	*/
+	function user_already_rated_vehicle($vid)
+	{
+		global $user, $db;
+
+		$data = $this->get_user_vehicle_rating($vid);
+
+		if ($data['total'] > 0)
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -547,7 +567,7 @@ class garage_vehicle
 		{
 			$sql = $db->sql_build_query('SELECT', 
 			array(
-				'SELECT'	=> 'g.id',
+				'SELECT'	=> 'v.id',
 				'FROM'		=> array(
 					GARAGE_VEHICLES_TABLE		=> 'v',
 					GARAGE_MAKES_TABLE		=> 'mk',
@@ -555,7 +575,7 @@ class garage_vehicle
 					GARAGE_VEHICLE_GALLERY_TABLE	=> 'vg',
 				),
 				'WHERE'		=> "v.make_id = mk.id AND mk.pending = 0 
-							AND v.model_id = md.id AMD md.pending = 0 
+							AND v.model_id = md.id AND md.pending = 0 
 							AND v.id = vg.vehicle_id AND vg.hilite = 1
 							and v.pending = 0",
 				'ORDER_BY'	=> "rand()"

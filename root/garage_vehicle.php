@@ -666,13 +666,13 @@ switch( $mode )
 		/**
 		* Perform required DB work to insert or update vehicle rating
 		*/
-		if ( $garage_vehicle->count_user_vehicle_ratings($data['user_id']) < 1 )
+		if ($garage_vehicle->user_already_rated_vehicle($vid))
 		{
-			$garage_vehicle->insert_vehicle_rating($data);
+			$garage_vehicle->update_vehicle_rating($data);
 		}
 		else
 		{
-			$garage_vehicle->update_vehicle_rating($data);
+			$garage_vehicle->insert_vehicle_rating($data);
 		}
 
 		/**
