@@ -901,27 +901,29 @@ class garage_image
 	* @param int $user_id user id to get space usage for
 	*
 	*/
-	function get_image_space_used($user_id)
+	function get_user_space_used($user_id)
 	{
-		//Set Inital Counter To Zero
-		$space = 0;
+		global $db;
 
-		//Get All Space Used By Uploaded & Remote Images
-		$uploaded_image_data 	= $this->get_user_upload_images($user_id);
-		$remote_image_data 	= $this->get_user_remote_images($user_id);
+		$data = null;
 
-		//For Uploaded Images We Need The Image + Thumbnail Size
-		for ($i = 0, $count = sizeof($uploaded_image_data); $i < $count; $i++)
-		{
-			$space =  $space + ( $uploaded_image_data[$i]['attach_filesize'] + $uploaded_image_data[$i]['attach_thumb_filesize'] );
-		}
-		//For Remote Images We Only Have Thumbnails To Factor In
-		for ($i = 0, $count = sizeof($remote_image_data); $i < $count; $i++)
-		{
-			$space =  $space + $remote_image_data[$i]['attach_thumb_filesize'] ;
-		}
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'SUM(i.attach_filesize + i.attach_thumb_filessize) as space_used',
+			'FROM'		=> array(
+				GARAGE_IMAGES_TABLE	=> 'i',
+				GARAGE_VEHICLES_TABLE	=> 'v',
+			),
+			'WHERE'		=>  "i.attach_is_image = 1
+						AND i.vehicle_id = v.id
+						AND v.user_id = $user_id",
+			'ORDER_BY'	=>  "i.attach_id ASC"
+		));
+
+		$result = $db->sql_query_limit($sql, $limit, $start);
+		$data = $db->sql_fetchrow($result);
 	
-		return $space;
+		return $data['space_used'];
 	}
 	
 	/**

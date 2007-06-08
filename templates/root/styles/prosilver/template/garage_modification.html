@@ -125,7 +125,7 @@ function build_product_list()
 									</dl>
 									<dl>
 										<dt><b>{L_PURCHASED_PRICE}</b></dt>
-										<dd>{CURRENCY}:<input name="price" type="text" class="post" size="10" value="{PRICE}" />&nbsp;<b>{L_PURCHASE_RATING}</b>&nbsp;<select id="purchase_rating" name="purchase_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN purchase_rating --><option value="{purchase_rating.VALUE}" <!-- IF purchase_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{purchase_rating.TEXT}</option><!-- END purchase_rating --></select></dd>
+										<dd>{CURRENCY}:<input name="price" type="text" class="inputbox autowidth" size="10" value="{PRICE}" />&nbsp;<b>{L_PURCHASE_RATING}</b>&nbsp;<select id="purchase_rating" name="purchase_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN purchase_rating --><option value="{purchase_rating.VALUE}" <!-- IF purchase_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{purchase_rating.TEXT}</option><!-- END purchase_rating --></select></dd>
 									</dl>	
 									<dl>
 										<dt><b>{L_INSTALLED_BY}</b></dt>
@@ -133,15 +133,15 @@ function build_product_list()
 									</dl>
 									<dl>
 										<dt><b>{L_INSTALLATION_PRICE}</b></dt>
-										<dd>{CURRENCY}:<input name="install_price" type="text" class="post" size="10" value="{INSTALL_PRICE}" />&nbsp;<b>{L_INSTALLATION_RATING}</b>&nbsp;<select id="install_rating" name="install_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN install_rating --><option value="{install_rating.VALUE}" <!-- IF install_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{install_rating.TEXT}</option><!-- END install_rating --></select></dd>
+										<dd>{CURRENCY}:<input name="install_price" type="text" class="inputbox autowidth" size="10" value="{INSTALL_PRICE}" />&nbsp;<b>{L_INSTALLATION_RATING}</b>&nbsp;<select id="install_rating" name="install_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN install_rating --><option value="{install_rating.VALUE}" <!-- IF install_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{install_rating.TEXT}</option><!-- END install_rating --></select></dd>
 									</dl>
 									<dl>
 										<dt><b>{L_DESCRIPTION}</b></dt>
-										<dd><textarea name="comments" cols="60" rows="4" class="post">{COMMENTS}</textarea></dd>
+										<dd><textarea name="comments" cols="60" rows="4" class="inputbox">{COMMENTS}</textarea></dd>
 									</dl>
 									<dl>
 										<dt><b>{L_INSTALL_COMMENTS}</b><br />{L_ONLY_SHOW_IN_REVIEW}</dt>
-										<dd><textarea name="install_comments" cols="60" rows="4" class="post">{INSTALL_COMMENTS}</textarea></dd>
+										<dd><textarea name="install_comments" cols="60" rows="4" class="inputbox">{INSTALL_COMMENTS}</textarea></dd>
 									</dl>
 
 									<!-- IF ! MID -->

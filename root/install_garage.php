@@ -1650,6 +1650,9 @@ switch( $mode )
 			acl_update_role($role['role_id'], array('u_garage_browse', 'u_garage_search', 'u_garage_add_vehicle', 'u_garage_delete_vehicle', 'u_garage_add_modification', 'u_garage_delete_modification', 'u_garage_add_quartermile', 'u_garage_delete_quartermile', 'u_garage_add_lap', 'u_garage_delete_lap', 'u_garage_add_track', 'u_garage_delete_track', 'u_garage_add_dynorun', 'u_garage_delete_dynorun', 'u_garage_add_insurance', 'u_garage_delete_insurance', 'u_garage_add_service', 'u_garage_delete_service', 'u_garage_add_blog', 'u_garage_delete_blog', 'u_garage_add_business', 'u_garage_add_make_model', 'u_garage_add_product', 'u_garage_rate', 'u_garage_comment', 'u_garage_upload_image', 'u_garage_remote_image', 'u_garage_delete_image', 'u_garage_deny'));
 		}
 
+		//Set Anonymous User Permissions
+		acl_update_user(ANONYMOUS, array('u_garage_browse'));
+
 		//Lets Add Automatically The Modules
 		require($phpbb_root_path . 'includes/acp/acp_modules.' . $phpEx);
 		$modules = new acp_modules();
@@ -1821,18 +1824,6 @@ function create_modules($module_data)
 
 	for ($i = 0, $count = sizeof($module_data);$i < $count; $i++)
 	{
-		if ($module_data[$i]['module_class'] == 'acp')
-		{
-			$modules->module_class = 'acp';
-		}
-		if ($module_data[$i]['module_class'] == 'mcp')
-		{
-			$modules->module_class = 'mcp';
-		}
-		if ($module_data[$i]['module_class'] == 'ucp')
-		{
-			$modules->module_class = 'ucp';
-		}
 		$errors = $modules->update_module_data($module_data[$i]);
 		if (!sizeof($errors))
 		{
@@ -1912,6 +1903,52 @@ function acl_update_role($role_id, $auth_options, $auth_setting = ACL_YES)
 	}
 
 	$db->sql_multi_insert(ACL_ROLES_DATA_TABLE, $sql_ary);
+
+	$cache->destroy('acl_options');
+	$auth->acl_clear_prefetch();
+}
+
+/**
+* Set user specific ACL options without deleting enter existing options. If option already set it will NOT be updated.
+* 
+* @param int $user_id user id to update (a user_id has to be specified)
+* @param mixed $auth_options auth_options to grant (a auth_option has to be specified)
+* @param ACL_YES|ACL_NO|ACL_NEVER $auth_setting defines the mode acl_options are getting set with
+ *
+*/
+function acl_update_user($user_id, $auth_options, $auth_setting = ACL_YES)
+{
+	global $db, $cache, $auth;
+
+	$acl_options_ids = get_acl_option_ids($auth_options);
+
+	$user_options = array();
+	$sql = "SELECT auth_option_id
+		FROM " . ACL_USERS_TABLE . "
+		WHERE user_id = " . (int) $user_id . "
+		GROUP BY auth_option_id";
+	$result = $db->sql_query($sql);
+	while ($row = $db->sql_fetchrow($result))
+	{
+		$user_options[] = $row;
+	}
+	$db->sql_freeresult($result);
+
+	$sql_ary = array();
+	for ($i = 0, $count = sizeof($acl_options_ids);$i < $count; $i++)
+	{
+		if (in_array($acl_options_ids[$i]['auth_option_id'], $user_options))
+		{
+			continue;
+		}
+		$sql_ary[] = array(
+			'user_id'		=> (int) $user_id,
+			'auth_option_id'	=> (int) $acl_options_ids[$i]['auth_option_id'],
+			'auth_setting'		=> $auth_setting, 
+		);
+	}
+
+	$db->sql_multi_insert(ACL_USERS_TABLE, $sql_ary);
 
 	$cache->destroy('acl_options');
 	$auth->acl_clear_prefetch();
