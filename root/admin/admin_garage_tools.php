@@ -4,6 +4,7 @@
  *                            -------------------
  *   begin                : Friday, 06 May 2005
  *   copyright            : (C) Esmond Poynton
+ *   copyright            : (C) phpBB Group For DB Backup & Restore Section
  *   email                : esmond.poynton@gmail.com
  *   description          : Provides Vehicle Garage System For phpBB
  *

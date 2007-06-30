@@ -1307,7 +1307,7 @@ class garage_image
 				else
 				{
 	                        	// Tell them that the remote file doesn't exists
-	                        	$output[] = "<b><font color='red'>ERROR</font></b>".$lang['File_Does_Not_Exist']."(".$image_row['attach_file'].")";
+	                        	$output[] = '<b><span class="gen" style="color:#FF0000">ERROR</span></b>'.$lang['File_Does_Not_Exist']."(".$image_row['attach_file'].")";
 	                        	$garage->write_logfile($log_file, $log_type, $lang['File_Does_Not_Exist'], 1);
 	                    	}
 	                }

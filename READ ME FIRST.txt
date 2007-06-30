@@ -3,49 +3,11 @@ Please read this file carefully. It will try explain some of the most common que
 TOP LEVEL FILES
   1. File 'READ ME FIRST.txt'  - This file!!
   2. File 'Install Garage phpBB.txt' - This is the main phpBB install instruction file. All actions/edits from this need to be completed.to install phpBB Garage on phpBB.
-  3. File 'Install Garage phpNuke.txt' - This is the main phpBBNuke install instruction file. All actions/edits from this need to be completed.to install phpBB Garage on phpBBNuke.
-  4. File 'Upgrade Garage.txt' - This provides details on which upgrade files to following depending on your current version.
+  3. File 'Upgrade Garage.txt' - This provides details on which upgrade files to following depending on your current version.
 
 DIRECTORIES
   1. Directory `/root` - Holds all the required files, e.g. *.php, *.tpl, *.gif
 
 If you are upgrading from any version please use the 'Upgrade Garage.txt' instruction file.
-
-There is also an update included in the contrib directory that contains the 'Thumbnails in Browse' add-on ported to the phpNuke version of phpBBGarage.
-
-Note:  I have not tried EasyMOD or any other MOD installer with the phpNuke
-MOD installation file.  Do so at your own risk
-
-Installation direction for phpNuke 7.7 - 7.9, nukeEvo 2.0.x:
--------------------------------------------------------------
-1) The first step is to install phpBBGarage
-   Follow the instructions in './Install Garage phpNuke.txt'.
-
-2) If you would like the 'Thumbnails' add-on, simply copy the files in 
-   contrib/thumbnail_mod/root/*.*' to your 'modules/Forums' 
-   directory
-
-Install notes for phpNuke 7.6, phpNuke Platinum
-------------------------------------------------------------
-1) Follow the installation directions for phpNuke 7.7 - 7.9
-
-2) In mainfile.php, find "$dbi = sql_connect($dbhost, $dbuname, $dbpass, $dbname);" and before it add:
-define('NUKE_FILE', true);
-
-This must be done before you open browser to http://<yoursite>/modules.php?name=Forums&file=install_garage
-
-3) In modules/Forums/garage.php, remove this block of code:from the top
-
-if ( defined('NUKE_FILE') && !defined('MODULE_FILE') )
-{
-	die("You can't access this file directly...");
-}
-
-and replace it with
-
-if (!eregi("modules.php", $_SERVER['PHP_SELF']))
-{
-        die ("You can't access this file directly...");
-}
 
 Enjoy phpBB Garage!! Support can be obtained from http://www.phpbbgarage.com or http://forums.phpbbgarage.com

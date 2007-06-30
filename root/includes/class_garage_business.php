@@ -316,7 +316,7 @@ class garage_business
 			}
 			
 			$template->assign_block_vars('business_pending.row', array(
-				'ROW_NUMBER' => $i + ( $HTTP_GET_VARS['start'] + 1 ),
+				'ROW_NUMBER' => $i + (intval($HTTP_GET_VARS['start'] + 1 )),
 				'ROW_CLASS' => ( !($i % 2) ) ? $theme['td_class1'] : $theme['td_class2'],
 				'BUSID' => $row['id'],
 				'NAME' => $row['title'],
