@@ -44,7 +44,7 @@
 				<!-- BEGIN remove_image -->
 				<tr>
 					<td class="row1"></td>
-			             	<td class="row2" width="100%"><input type="radio" name="editupload" value="delete">&nbsp;<span class="gen"><b>{L_REMOVE_IMAGE}</b></span><input type="hidden" value="{allow_images.remove_image.IMAGE_ID}" name="image_id" /></td>
+			             	<td class="row2" width="100%"><input type="radio" name="editupload" value="delete" />&nbsp;<span class="gen"><b>{L_REMOVE_IMAGE}</b></span><input type="hidden" value="{allow_images.remove_image.IMAGE_ID}" name="image_id" /></td>
 			        </tr>
 				<!-- END remove_image -->
 				<!-- BEGIN replace_image_upload -->

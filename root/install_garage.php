@@ -18,48 +18,12 @@
  *
  ***************************************************************************/
 
-if ( defined('NUKE_FILE') && !defined('MODULE_FILE') )
-{
-	die("You can't access this file directly...");
-}
 define('IN_PHPBB', true);
-
 $phpbb_root_path = './';
-$phpbb_inc_path = './';
-$nuke_popup= '';
-
-if ( defined('NUKE_FILE') )
-{
-	if ($popup != "1")
-	{
-		$module_name = basename(dirname(__FILE__));
-		require("modules/".$module_name."/nukebb.php");
-	}
-	else
-	{
-		$phpbb_root_path = 'modules/Forums/';
-	}
-
-	$phpbb_inc_path = '';
-	$nuke_popup= '&amp;popup=1';
-}
-
 include($phpbb_root_path . 'extension.inc');
 include($phpbb_root_path . 'common.'.$phpEx);
 
-//
-// Start session management
-//
-if ( defined('NUKE_FILE') )
-{
-	// phpNuke has a username argument
-	$userdata = session_pagestart($user_ip, PAGE_GARAGE, $nukeuser);
-
-}
-else
-{
-	$userdata = session_pagestart($user_ip, PAGE_GARAGE);
-}
+$userdata = session_pagestart($user_ip, PAGE_GARAGE);
 init_userprefs($userdata);
 
 if( !$userdata['session_logged_in'] )
@@ -76,7 +40,7 @@ if( $userdata['user_level'] != ADMIN )
 
 
 $page_title = 'Installing Vehicle Garage Version 1.2.0';
-include($phpbb_inc_path . 'includes/page_header.'.$phpEx);
+include($phpbb_root_path . 'includes/page_header.'.$phpEx);
 
 echo '<table width="100%" cellspacing="1" cellpadding="2" border="0" class="forumline">';
 echo '<tr><th>Installing Vehicle Garage Version 1.2.0</th></tr><tr><td class="row1" ><span class="genmed"><ul type="circle">';

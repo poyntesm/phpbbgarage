@@ -137,7 +137,7 @@ class garage
 		{
 			if (empty($data[$param]))
 			{
-				redirect(append_sid("garage.$phpEx?mode=error&EID=3", true), false);
+				redirect(append_sid("garage.$phpEx?mode=error&EID=3", true));
 			}
 		}
 
@@ -330,7 +330,7 @@ class garage
 					//You Were Found To Be A Member Of A Denied Group And We Know Where To Send You
 					if (!empty($redirect_url))
 					{
-						redirect(append_sid($redirect_url, true), false);
+						redirect(append_sid($redirect_url, true));
 					}
 					//You Were Found To Be A Member Of A Denied Group But No URL So Return False
 					else
@@ -381,7 +381,7 @@ class garage
 		//Looks Like You Are Out Of Look...You Are Not Allowed Perform The Action You Requested...
 		if (!empty($redirect_url))
 		{
-			redirect(append_sid("$redirect_url", true), false);
+			redirect(append_sid("$redirect_url", true));
 		}
 		//No URL To Redirect So We Will Just Return FALSE
 		else

@@ -393,18 +393,18 @@ class garage_image
 		//Lets Check Directory Exists...And If Not Let User Know To Contact Administrator With Helpful Pointer
 		if (!file_exists($phpbb_root_path. GARAGE_UPLOAD_PATH))
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=24", true), false);
+			redirect(append_sid("garage.$phpEx?mode=error&EID=24", true));
 		}
 		//Lets Check Its Writeable '16895' Is Octal For drwxrwxrwx Thats What We Need.....And If Not Let User Know To Contact Administrator With Helpful Pointer
 		if ( !fileperms($phpbb_root_path. GARAGE_UPLOAD_PATH) == '16895')
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=25", true), false);
+			redirect(append_sid("garage.$phpEx?mode=error&EID=25", true));
 		}
 
 		//Check We Not Both A Remote Image & Image Upload..Not Allowed
 		if ( ($this->image_is_remote()) AND ($this->image_is_local()) )
 		{
-			redirect(append_sid("garage.$phpEx?mode=error&EID=11", true), false);
+			redirect(append_sid("garage.$phpEx?mode=error&EID=11", true));
 		}
 		//Process The Remote Image
 		else if ( $this->image_is_remote() )
@@ -414,7 +414,7 @@ class garage_image
 			//Stop dynamic images and display correct error message
 			if ( preg_match( "/[?&;]/", $data['location'] ) )
 			{
-				redirect(append_sid("garage.$phpEx?mode=error&EID=9", true), false);
+				redirect(append_sid("garage.$phpEx?mode=error&EID=9", true));
 			}
 	
 			$data['date'] = time();
@@ -437,13 +437,13 @@ class garage_image
 					$data['is_image'] = '1';
 					break;
 				default:
-					redirect(append_sid("garage.$phpEx?mode=error&EID=12", true), false);
+					redirect(append_sid("garage.$phpEx?mode=error&EID=12", true));
 			}
 	
 			//Does Remote File Exist?
 			if ( !$this->remote_file_exists($data['location']) ) 
 			{
-				redirect(append_sid("garage.$phpEx?mode=error&EID=10", true), false);
+				redirect(append_sid("garage.$phpEx?mode=error&EID=10", true));
 			}
 
 			//Build File Name	
@@ -517,12 +517,12 @@ class garage_image
 	
 			if ($data['filesize'] == 0) 
 			{
-				redirect(append_sid("garage.$phpEx?mode=error&EID=6", true), false);
+				redirect(append_sid("garage.$phpEx?mode=error&EID=6", true));
 			}
 	
 			if ($data['filesize'] / 1024 > $garage_config['max_image_kbytes'])
 			{
-				redirect(append_sid("garage.$phpEx?mode=error&EID=7", true), false);
+				redirect(append_sid("garage.$phpEx?mode=error&EID=7", true));
 			}
 	
 			//Check File Type 
@@ -596,7 +596,7 @@ class garage_image
 			if ( ($data['width'] > $garage_config['max_image_resolution']) or ($data['height'] > $garage_config['max_image_resolution']) )
 			{
 				@unlink($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['location']);
-				redirect(append_sid("garage.$phpEx?mode=error&EID=8", true), false);
+				redirect(append_sid("garage.$phpEx?mode=error&EID=8", true));
 			}
 
 			//Create The Thumbnail For This Image

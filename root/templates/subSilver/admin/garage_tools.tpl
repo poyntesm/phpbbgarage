@@ -87,7 +87,7 @@
 	</tr>
 	<tr>
 		<td class="row1" width="25%">{L_SELECT_FILE}</td>
-		<td class="row1">&nbsp;<input type="file" name="backup_file"></td>
+		<td class="row1">&nbsp;<input type="file" name="backup_file" /></td>
 	</tr>
 	<tr>
 		<td class="catBottom" colspan="2" align="center"><input type="hidden" name="mode" value="restore" /><input type="submit" name="restore_start" value="{L_START_RESTORE}" class="liteoption" />&nbsp;</td>
