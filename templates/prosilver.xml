@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <?xml-stylesheet type="text/xsl" href="./../modx.prosilver.en.xsl"?>
 <!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
-<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.0.xsd">
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.0.1.xsd">
 	<header>
-		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2 or any later version</license>
+		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
     		<title lang="en-gb">phpBB Garage</title>
     		<description lang="en-gb">This mod allows users of your forum to add details about their vehicles.</description>
     		<author-notes lang="en-gb"><![CDATA[- Support is given for both prosilver & subsilver2 templates
@@ -21,21 +21,43 @@
 		<mod-version>
 			<major>2</major>
 			<minor>0</minor>
-			<revision>B1</revision>
+			<revision>B3</revision>
 		</mod-version>
 
 		<installation>
 			<level>easy</level>
 			<time>2725</time>
 			<target-version>
-				<target-primary>3.0.RC1</target-primary>
+				<target-primary>3.0.RC3</target-primary>
 				<target-major allow="exact">3</target-major>
 				<target-minor allow="exact">0</target-minor>
-				<target-revision allow="exact">RC1</target-revision>
+            			<target-revision allow="after-equal" stage="release-candidate">3</target-revision>
 			</target-version>
 		</installation>
 
 		<history>
+			<entry>
+        			<date>2007-xx-xx</date>
+			        <rev-version>
+					<major>2</major>
+					<minor>0</minor>
+					<revision>B3</revision>
+				</rev-version>
+				<changelog lang="en-gb">
+					<change>Third BETA release.</change>
+				</changelog>
+			</entry>
+			<entry>
+        			<date>2007-06-08</date>
+			        <rev-version>
+					<major>2</major>
+					<minor>0</minor>
+					<revision>B2</revision>
+				</rev-version>
+				<changelog lang="en-gb">
+					<change>Second BETA release.</change>
+				</changelog>
+			</entry>
 			<entry>
         			<date>2006-02-27</date>
 			        <rev-version>

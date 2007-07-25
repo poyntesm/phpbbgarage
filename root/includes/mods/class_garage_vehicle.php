@@ -490,6 +490,145 @@ class garage_vehicle
 	
 		return;
 	}
+
+	/**
+	* Get top rated vehicle for specific month & year
+	*
+	*/
+	function get_earliest_rating()
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'r.rate_date',
+			'FROM'		=> array(
+				GARAGE_RATINGS_TABLE	=> 'r',
+			),
+			'ORDER_BY'	=> "r.rate_date ASC"
+		));
+
+	 	$result = $db->sql_query_limit($sql, 1, 0);
+		$data = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+
+	/**
+	* Get top rated vehicle for specific month & year
+	*
+	* @param int $month value for month JAN = 1, FEB = 2 ... etc
+	* @param int $year four digit value representing year
+	*
+	*/
+	function get_month_toprated_vehicle($month, $year)
+	{
+		global $db;
+
+		$data = array();
+
+		$time = localtime(time(), 1) ;
+		if (empty($year))
+		{
+			$year = $time['tm_year'] + 1900;
+		}
+
+		if (empty($month))
+		{
+			//We Add 1 To Month As Janurary is 0 For This Function
+			$month = $time['tm_mon'] + 1;
+		}
+
+		$rate_start_date = mktime(0, 0, 0, $month, 1, $year);
+		$rate_end_date = mktime(23, 59, 59, $month + 1, 0, $year);
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'v.id as vehicle_id, SUM(r.rating)as total_ratings, u.username, v.made_year, mk.make, md.model, u.user_colour, u.user_id, images.*',
+			'FROM'		=> array(
+				GARAGE_VEHICLES_TABLE	=> 'v',
+				GARAGE_RATINGS_TABLE	=> 'r',
+				GARAGE_MAKES_TABLE	=> 'mk',
+				GARAGE_MODELS_TABLE	=> 'md',
+				USERS_TABLE		=> 'u',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_VEHICLE_GALLERY_TABLE => 'vg'),
+					'ON'	=> 'v.id = vg.vehicle_id AND vg.hilite = 1',
+				)
+				,array(
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'images'),
+					'ON'	=> 'images.attach_id = vg.image_id',
+				)
+			),
+			'WHERE'		=> "v.pending = 0
+						AND v.user_id = u.user_id
+						AND v.id = r.vehicle_id
+						AND (r.rate_date >= $rate_start_date AND r.rate_date <= $rate_end_date)
+						AND (v.make_id = mk.id AND mk.pending = 0)
+						AND (v.model_id = md.id AND md.pending = 0)",
+			'GROUP_BY'	=> "r.id",
+			'ORDER_BY'	=> "total_ratings DESC"
+		));
+
+	 	$result = $db->sql_query_limit($sql, 1, 0);
+		$data = $db->sql_fetchrow($result);
+		if (!empty($data))
+		{
+			$data['vehicle'] = "{$data['made_year']} {$data['make']} {$data['model']}";
+		}
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/**
+	* Assign template variables to show top rated vehicle for specific month
+	*
+	* @param int $month value for month JAN = 1, FEB = 2 ... etc
+	* @param int $year four digit value representing year
+	*
+	*/
+	function show_month_toprated_vehicle($month = NULL, $year = NULL)
+	{
+		global $user, $template, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config;
+
+		$data = null;
+
+		$vehicle_data = $this->get_month_toprated_vehicle($month, $year);
+
+		$thumb_image = null;
+		// Do we have a hilite image?  If so, prep the HTML
+		if ( (empty($vehicle_data['attach_id']) == false) AND ($vehicle_data['attach_is_image'] == 1) ) 
+		{
+               		// Do we have a thumbnail?  If so, our job is simple here :)
+	                if ( (empty($vehicle_data['attach_thumb_location']) == false) AND ($vehicle_data['attach_thumb_location'] != $vehicle_data['attach_location']) AND (@file_exists($phpbb_root_path . GARAGE_UPLOAD_PATH."/".$vehicle_data['attach_thumb_location'])) )
+               		{
+				// Yippie, our thumbnail is already made for us :)
+			   	$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $vehicle_data['attach_thumb_location'];
+               		} 
+		}
+		if (!empty($vehicle_data))
+		{
+			$template->assign_vars(array(
+				'S_MONTH_TOPRATED'			=> true,
+				'MONTH_TOPRATED_THUMB' 			=> $thumb_image,
+				'MONTH_TOPRATED_VEHICLE'		=> $vehicle_data['vehicle'],
+				'MONTH_TOPRATED_USERNAME' 		=> $vehicle_data['username'],
+				'MONTH_TOPRATED_IMAGE_TITLE'		=> $vehicle_data['attach_file'],
+				'MONTH_TOPRATED_U_VIEW_IMAGE'		=> append_sid("garage.$phpEx?mode=view_image&amp;image_id=".$vehicle_data['attach_id']),
+				'MONTH_TOPRATED_U_VIEW_VEHICLE' 	=> append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;VID=".$vehicle_data['vehicle_id']),
+				'MONTH_TOPRATED_U_VIEW_PROFILE' 	=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']),
+				'MONTH_TOPRATED_USERNAME_COLOUR'	=> get_username_string('colour', $vehicle_data['user_id'], $vehicle_data['username'], $vehicle_data['user_colour']),
+				'MONTH_TOPRATED_RATING'			=> $vehicle_data['total_ratings'],
+			));
+		}
+	}
 	
 	/**
 	* Assign template variables to show featured vehicle
@@ -504,7 +643,7 @@ class garage_vehicle
 
 		//Start To Build SQl For Selecting Featured Vehicle..We Will Extend This Array Based On User Options
 		$sql_array = array(
-			'SELECT'	=> 'v.id, v.made_year, vg.image_id, v.user_id, mk.make, md.model, images.attach_id, images.attach_hits, images.attach_thumb_location, u.username, images.attach_is_image, images.attach_location, COUNT(mods.id) AS mod_count, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, images.attach_file, (SUM(mods.install_price) + SUM(mods.price)) AS money_spent, sum( r.rating ) AS rating, u.user_colour',
+			'SELECT'	=> 'v.id, v.made_year, vg.image_id, v.user_id, mk.make, md.model, images.attach_id, images.attach_hits, images.attach_thumb_location, u.username, images.attach_is_image, images.attach_location, COUNT(mods.id) AS mod_count, v.made_year, mk.make, md.model, images.attach_file, (SUM(mods.install_price) + SUM(mods.price)) AS money_spent, sum( r.rating ) AS rating, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'v',
 				GARAGE_MAKES_TABLE	=> 'mk',
@@ -686,7 +825,11 @@ class garage_vehicle
 			));
 
 			$result = $db->sql_query_limit($sql, 1);
-        	    	$vehicle_data = $db->sql_fetchrow($result);
+			$vehicle_data = $db->sql_fetchrow($result);
+			if (!empty($vehicle_data))
+			{
+				$vehicle_data['vehicle'] = "{$vehicle_data['made_year']} {$vehicle_data['make']} {$vehicle_data['model']}";
+			}
 			$db->sql_freeresult($result);
 
 			$thumb_image = null;
@@ -1042,26 +1185,6 @@ class garage_vehicle
 		//Get Vehicle Information	
 		$vehicle = $this->get_vehicle($vid);
 
-		$vehicle['avatar'] 	= null;
-		if ($owned == 'NO' && $vehicle['user_avatar_type'])
-		{
-			//Build The Owners Avatar Image If Any...
-			if ($vehicle['user_avatar'] AND $user->optionget('viewavatars'))
-			{
-				switch( $vehicle['user_avatar_type'] )
-				{
-					case AVATAR_UPLOAD:
-						$avatar_img = $config['avatar_path'] . '/' . $vehicle['user_avatar'];
-					break;
-	
-					case AVATAR_GALLERY:
-						$avatar_img = $config['avatar_gallery_path'] . '/' . $vehicle['user_avatar'];
-					break;
-				}
-				$vehicle['avatar'] = '<img src="' . $avatar_img . '" width="' . $vehicle['user_avatar_width'] . '" height="' . $vehicle['user_avatar_height'] . '" alt="" />';
-			}
-		}
-		
 		//We Are Moderating...So Show Options Required
 		if ( $owned == 'MODERATE' )
 		{
@@ -1492,19 +1615,19 @@ class garage_vehicle
 			'U_DELETE_VEHICLE2' 		=> append_sid("garage_vehicle.$phpEx?mode=delete_vehicle"),
 			'U_GUESTBOOK' 			=> append_sid("garage_guestbook.$phpEx?mode=view_guestbook&amp;VID=$vid"),
             		'U_PROFILE' 			=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$vehicle['user_id']),
-            		'U_VIEW_VEHICLE' 		=> ( $owned == 'YES' ) ? append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;VID=$vid") : '',
-            		'U_EDIT_VEHICLE' 		=> ( $owned == 'YES' ) ? append_sid("garage_vehicle.$phpEx?mode=edit_vehicle&amp;VID=$vid") : '',
-            		'U_DELETE_VEHICLE' 		=> ( ($owned == 'YES' AND $auth->acl_get('u_garage_delete_vehicle')) OR ($auth->acl_get('m_garage_delete'))) ? 'javascript:confirm_delete_vehicle(' . $vid . ')' : '',
-            		'U_ADD_MODIFICATION' 		=> ( $owned == 'YES' ) ? append_sid("garage_modification.$phpEx?mode=add_modification&amp;VID=$vid") : '',
-            		'U_ADD_INSURANCE' 		=> ( $owned == 'YES' AND $garage_config['enable_insurance'] ) ? append_sid("garage_premium.$phpEx?mode=add_premium&amp;VID=$vid") : '',
-            		'U_ADD_QUARTERMILE' 		=> ( $owned == 'YES' AND $garage_config['enable_quartermile'] ) ? append_sid("garage_quartermile.$phpEx?mode=add_quartermile&amp;VID=$vid") : '',
-            		'U_ADD_DYNORUN' 		=> ( $owned == 'YES' AND $garage_config['enable_dynorun'] ) ? append_sid("garage_dynorun.$phpEx?mode=add_dynorun&amp;VID=$vid") : '',
-            		'U_ADD_LAP' 		=> ( $owned == 'YES' AND $garage_config['enable_tracktime'] ) ? append_sid("garage_track.$phpEx?mode=add_lap&amp;VID=$vid") : '',
-            		'U_ADD_SERVICE' 		=> ( $owned == 'YES' AND $garage_config['enable_service'] ) ? append_sid("garage_service.$phpEx?mode=add_service&amp;VID=$vid") : '',
-            		'U_MANAGE_VEHICLE_GALLERY'	=> ( $owned == 'YES' ) ? append_sid("garage_vehicle.$phpEx?mode=manage_vehicle_gallery&amp;VID=$vid") : '',
-			'U_SET_MAIN_VEHICLE' 		=> ( ($owned == 'YES' OR $owned == 'MODERATE') AND ($vehicle['main_vehicle'] == 0) ) ?  append_sid("garage_vehicle.$phpEx?mode=set_main_vehicle&amp;VID=$vid"): '' ,
-			'U_MODERATE_VEHICLE' 		=> ( $owned == 'NO' AND $auth->acl_get('m_garage_delete')) ?  append_sid("garage_vehicle.$phpEx?mode=moderate_vehicle&amp;VID=$vid"): '' ,
-			'U_HILITE_IMAGE' 		=> ( ($vehicle['attach_id']) AND ($vehicle['attach_is_image']) AND (!empty($vehicle['attach_thumb_location'])) AND (!empty($vehicle['attach_location'])) ) ?  append_sid("garage.$phpEx?mode=view_image&amp;image_id=". $vehicle['attach_id']): '' ,
+            		'U_VIEW_VEHICLE' 		=> ($owned == 'YES' ) ? append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;VID=$vid") : '',
+            		'U_EDIT_VEHICLE' 		=> ($owned == 'YES' ) ? append_sid("garage_vehicle.$phpEx?mode=edit_vehicle&amp;VID=$vid") : '',
+            		'U_DELETE_VEHICLE' 		=> (($owned == 'YES' AND $auth->acl_get('u_garage_delete_vehicle')) OR ($auth->acl_get('m_garage_delete'))) ? 'javascript:confirm_delete_vehicle(' . $vid . ')' : '',
+            		'U_ADD_MODIFICATION' 		=> ($owned == 'YES' ) ? append_sid("garage_modification.$phpEx?mode=add_modification&amp;VID=$vid") : '',
+            		'U_ADD_INSURANCE' 		=> ($owned == 'YES' AND $garage_config['enable_insurance'] ) ? append_sid("garage_premium.$phpEx?mode=add_premium&amp;VID=$vid") : '',
+            		'U_ADD_QUARTERMILE' 		=> ($owned == 'YES' AND $garage_config['enable_quartermile'] ) ? append_sid("garage_quartermile.$phpEx?mode=add_quartermile&amp;VID=$vid") : '',
+            		'U_ADD_DYNORUN' 		=> ($owned == 'YES' AND $garage_config['enable_dynorun'] ) ? append_sid("garage_dynorun.$phpEx?mode=add_dynorun&amp;VID=$vid") : '',
+            		'U_ADD_LAP' 			=> ($owned == 'YES' AND $garage_config['enable_tracktime'] ) ? append_sid("garage_track.$phpEx?mode=add_lap&amp;VID=$vid") : '',
+            		'U_ADD_SERVICE' 		=> ($owned == 'YES' AND $garage_config['enable_service'] ) ? append_sid("garage_service.$phpEx?mode=add_service&amp;VID=$vid") : '',
+            		'U_MANAGE_VEHICLE_GALLERY'	=> ($owned == 'YES' ) ? append_sid("garage_vehicle.$phpEx?mode=manage_vehicle_gallery&amp;VID=$vid") : '',
+			'U_SET_MAIN_VEHICLE' 		=> (($owned == 'YES' OR $owned == 'MODERATE') AND ($vehicle['main_vehicle'] == 0) ) ?  append_sid("garage_vehicle.$phpEx?mode=set_main_vehicle&amp;VID=$vid"): '' ,
+			'U_MODERATE_VEHICLE' 		=> ($owned == 'NO' AND $auth->acl_get('m_garage_delete')) ?  append_sid("garage_vehicle.$phpEx?mode=moderate_vehicle&amp;VID=$vid"): '' ,
+			'U_HILITE_IMAGE' 		=> (($vehicle['attach_id']) AND ($vehicle['attach_is_image']) AND (!empty($vehicle['attach_thumb_location'])) AND (!empty($vehicle['attach_location'])) ) ?  append_sid("garage.$phpEx?mode=view_image&amp;image_id=". $vehicle['attach_id']): '' ,
 
 			'S_DISPLAY_VEHICLE_OWNER'	=> ($owned == 'MODERATE' || $owned == 'YES') ? 1 : 0,
 			'S_DISPLAY_ENTRY_BLOG'		=> ($owned == 'MODERATE' || $owned == 'YES') ? 1 : 0,
@@ -1543,7 +1666,7 @@ class garage_vehicle
             		'COLOUR' 			=> $vehicle['colour'],
             		'HILITE_IMAGE' 			=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $vehicle['attach_thumb_location'] ,
             		'HILITE_IMAGE_TITLE' 		=> $vehicle['attach_file'],
-            		'AVATAR_IMG' 			=> $vehicle['avatar'],
+            		'AVATAR_IMG' 			=> ($user->optionget('viewavatars')) ? get_user_avatar($vehicle['user_avatar'], $vehicle['user_avatar_type'], $vehicle['user_avatar_width'], $vehicle['user_avatar_height']) : '',
             		'DATE_UPDATED' 			=> $user->format_date($vehicle['date_updated']),
             		'MILEAGE' 			=> $vehicle['mileage'],
             		'MILEAGE_UNITS' 		=> $vehicle['mileage_unit'],
@@ -1576,7 +1699,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'v.*, ROUND(v.weighted_rating, 2) as weighted_rating, images.*, mk.make, md.model, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, u.username, u.user_avatar_type, u.user_avatar, u.user_id, u.user_avatar_width, u.user_avatar_height, u.user_colour, u.user_id',
+			'SELECT'	=> 'v.*, ROUND(v.weighted_rating, 2) as weighted_rating, images.*, mk.make, md.model, v.made_year, mk.make, md.model, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, u.username, u.user_avatar_type, u.user_avatar, u.user_id, u.user_avatar_width, u.user_avatar_height, u.user_colour, u.user_id',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'v',
 				GARAGE_MAKES_TABLE	=> 'mk',
@@ -1606,6 +1729,10 @@ class garage_vehicle
 
       		$result = $db->sql_query($sql);
 		$data = $db->sql_fetchrow($result);
+		if (!empty($data))
+		{
+			$data['vehicle'] = "{$data['made_year']} {$data['make']} {$data['model']}";
+		}
 		$db->sql_freeresult($result);
 
 		return $data;
@@ -1622,7 +1749,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> "v.*, ROUND(v.weighted_rating, 2) as weighted_rating, i.*, mk.make, md.model, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, u.username, u.user_avatar_type, u.user_avatar, u.user_id, u.user_colour",
+			'SELECT'	=> "v.*, ROUND(v.weighted_rating, 2) as weighted_rating, i.*, mk.make, md.model, v.made_year, mk.make, md.model, u.username, u.user_avatar_type, u.user_avatar, u.user_id, u.user_colour",
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'v',
 				GARAGE_MAKES_TABLE	=> 'mk',
@@ -1649,6 +1776,10 @@ class garage_vehicle
       		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result) )
 		{
+			if (!empty($row))
+			{
+				$row['vehicle'] = "{$row['made_year']} {$row['make']} {$row['model']}";
+			}
 			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
@@ -1795,7 +1926,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'v.id, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle',
+			'SELECT'	=> 'v.id, v.made_year, mk.make, md.model',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'v',
 				GARAGE_MAKES_TABLE	=> 'mk',
@@ -1811,6 +1942,10 @@ class garage_vehicle
       		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
+			if (!empty($row))
+			{
+				$row['vehicle'] = "{$row['made_year']} {$row['make']} {$row['model']}";
+			}
 			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
@@ -1867,7 +2002,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'v.id, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, v.user_id, v.date_created AS POI, u.username, u.user_colour, u.user_id',
+			'SELECT'	=> 'v.id, v.made_year, mk.make, md.model, v.user_id, v.date_created AS POI, u.username, u.user_colour, u.user_id',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'v',
 				GARAGE_MAKES_TABLE	=> 'mk',
@@ -1883,6 +2018,10 @@ class garage_vehicle
 	 	$result = $db->sql_query_limit($sql, $limit);
 		while ($row = $db->sql_fetchrow($result))
 		{
+			if (!empty($row))
+			{
+				$row['vehicle'] = "{$row['made_year']} {$row['make']} {$row['model']}";
+			}
 			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
@@ -1904,7 +2043,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'v.id, v.user_id, ROUND(v.weighted_rating, 2) as weighted_rating, u.username, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, u.user_colour, u.user_id',
+			'SELECT'	=> 'v.id, v.user_id, ROUND(v.weighted_rating, 2) as weighted_rating, u.username, v.made_year, mk.make, md.model, u.user_colour, u.user_id',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'v',
 				GARAGE_MAKES_TABLE	=> 'mk',
@@ -1920,6 +2059,10 @@ class garage_vehicle
 	 	$result = $db->sql_query_limit($sql, $limit);
 		while ($row = $db->sql_fetchrow($result))
 		{
+			if (!empty($row))
+			{
+				$row['vehicle'] = "{$row['made_year']} {$row['make']} {$row['model']}";
+			}
 			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
@@ -1941,7 +2084,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'v.id, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, v.user_id, v.views AS POI, u.username, u.user_colour, u.user_id',
+			'SELECT'	=> 'v.id, v.made_year, mk.make, md.model, v.user_id, v.views AS POI, u.username, u.user_colour, u.user_id',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'v',
 				GARAGE_MAKES_TABLE	=> 'mk',
@@ -1957,6 +2100,10 @@ class garage_vehicle
 	 	$result = $db->sql_query_limit($sql, $limit);
 		while ($row = $db->sql_fetchrow($result))
 		{
+			if (!empty($row))
+			{
+				$row['vehicle'] = "{$row['made_year']} {$row['make']} {$row['model']}";
+			}
 			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
@@ -1978,7 +2125,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'v.id, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, v.user_id, (SUM(m.install_price) + SUM(m.price)) AS POI, u.username, v.currency, u.user_colour, u.user_id',
+			'SELECT'	=> 'v.id, v.made_year, mk.make, md.model, v.user_id, (SUM(m.install_price) + SUM(m.price)) AS POI, u.username, v.currency, u.user_colour, u.user_id',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE		=> 'v',
 				GARAGE_MAKES_TABLE		=> 'mk',
@@ -1997,6 +2144,10 @@ class garage_vehicle
 	 	$result = $db->sql_query_limit($sql, $limit);
 		while ($row = $db->sql_fetchrow($result) )
 		{
+			if (!empty($row))
+			{
+				$row['vehicle'] = "{$row['made_year']} {$row['make']} {$row['model']}";
+			}
 			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
@@ -2051,7 +2202,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'v.id, v.made_year, v.user_id, v.date_updated, u.username, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, u.user_colour',
+			'SELECT'	=> 'v.id, v.made_year, v.user_id, v.date_updated, u.username, v.made_year, mk.make, md.model, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'v',
 				GARAGE_MAKES_TABLE	=> 'mk',
@@ -2067,6 +2218,10 @@ class garage_vehicle
       		$result = $db->sql_query_limit($sql, $limit);
 		while ($row = $db->sql_fetchrow($result) )
 		{
+			if (!empty($row))
+			{
+				$row['vehicle'] = "{$row['made_year']} {$row['make']} {$row['model']}";
+			}
 			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
@@ -2088,7 +2243,7 @@ class garage_vehicle
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'g.*, images.*, mk.make, md.model, CONCAT_WS(\' \', g.made_year, mk.make, md.model) AS vehicle, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, u.username, u.user_avatar_type, u.user_avatar, u.user_id, u.user_colour',
+			'SELECT'	=> 'g.*, images.*, mk.make, md.model, g.made_year, mk.make, md.model, count(mods.id) AS total_mods, ( SUM(mods.price) + SUM(mods.install_price) ) AS total_spent, u.username, u.user_avatar_type, u.user_avatar, u.user_id, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE	=> 'g',
 				GARAGE_MAKES_TABLE	=> 'mk',
@@ -2119,6 +2274,10 @@ class garage_vehicle
 
       		$result = $db->sql_query($sql);
 		$data = $db->sql_fetchrow($result);
+		if (!empty($data))
+		{
+			$data['vehicle'] = "{$data['made_year']} {$data['make']} {$data['model']}";
+		}
 		$db->sql_freeresult($result);
 
 		return $data;
@@ -2218,7 +2377,7 @@ class garage_vehicle
 		        	'TOTAL_VIEWS' 			=> $vehicle_data['views'],
 			        'DESCRIPTION' 			=> $vehicle_data['comments'],
 			        'GARAGE_IMG' 			=> $user->img('ICON_GARAGE', ''),
-				'U_GARAGE_USER_SEARCH' 		=> append_sid("garage.$phpEx?mode=search_results&amp;search_username=1;username={$member['username']}"))
+				'U_GARAGE_USER_SEARCH' 		=> append_sid("garage.$phpEx?mode=search_results&amp;search_username=1&amp;username={$member['username']}"))
 			);
 
 		}

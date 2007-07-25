@@ -57,7 +57,7 @@ class acp_garage_category
 				* Update an existing category
 				*/
 				case 'edit':
-					$title	= request_var('title', '');
+					$title	= request_var('title', '', true);
 
 					if(!$title)
 					{
@@ -100,7 +100,7 @@ class acp_garage_category
 			case 'add':
 				$count = $garage_admin->count_categories();
 		
-				$data['title'] = request_var('category', '');
+				$data['title'] = request_var('category', '', true);
 				$data['field_order'] = $count + 1;
 
 				if(!$data['title'])

@@ -21,13 +21,14 @@ class acp_garage_business
 		* Setup global variables such as $db 
 		*/
 		global $db, $user, $auth, $template, $cache, $garage, $garage_config;
-		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx, $garage_business, $garage_template;
+		global $config, $phpbb_admin_path, $phpbb_root_path, $phpEx, $garage_business, $garage_template, $garage_image;
 
 		/**
 		* Build All Garage Classes e.g $garage_images->
 		*/
 		require($phpbb_root_path . 'includes/mods/class_garage_business.' . $phpEx);
 		require($phpbb_root_path . 'includes/mods/class_garage_template.' . $phpEx);
+		require($phpbb_root_path . 'includes/mods/class_garage_image.' . $phpEx);
 
 		/**
 		* Setup page variables such as title, template & available language strings
@@ -57,8 +58,10 @@ class acp_garage_business
 				* Add a new business & log it
 				*/
 				case 'add':
-					$params = array('title' => '', 'address' => '', 'telephone' => '', 'fax' => '', 'website' => '', 'email' => '', 'opening_hours' => '', 'insurance' => '', 'garage' => '', 'retail'  => '', 'product' => '', 'dynocentre'  => '', 'pending' => '0');
+					$params = array('telephone' => '', 'fax' => '', 'website' => '', 'email' => '', 'insurance' => '', 'garage' => '', 'retail'  => '', 'product' => '', 'dynocentre'  => '', 'pending' => '0');
 					$data = $garage->process_vars($params);
+					$params = array('title' => '', 'address' => '', 'opening_hours' => '');
+					$data += $garage->process_mb_vars($params);
 
 					if ( (!preg_match( "/^http:\/\//i", $data['website'])) AND (!empty($data['website'])) )
 					{
@@ -75,8 +78,10 @@ class acp_garage_business
 				* Update an existing business & log it
 				*/
 				case 'edit':
-					$params = array('title' => '', 'address' => '', 'telephone' => '', 'fax' => '', 'website' => '', 'email' => '', 'opening_hours' => '', 'insurance' => '', 'garage' => '', 'retail'  => '', 'product' => '', 'dynocentre'  => '', 'pending' => '0');
+					$params = array('telephone' => '', 'fax' => '', 'website' => '', 'email' => '', 'insurance' => '', 'garage' => '', 'retail'  => '', 'product' => '', 'dynocentre'  => '', 'pending' => '0');
 					$data = $garage->process_vars($params);
+					$params = array('title' => '', 'address' => '', 'opening_hours' => '');
+					$data += $garage->process_mb_vars($params);
 					$data['id'] = $business_id;
 
 					if(!$data['title'])

@@ -21,6 +21,7 @@ $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
 include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 include($phpbb_root_path . 'includes/bbcode.' . $phpEx);
+require($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 
 /**
 * Setup user session, authorisation & language 
@@ -102,23 +103,6 @@ switch( $mode )
 			$poster_car_model = ( $comment_data[$i]['model'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? ' ' . $comment_data[$i]['model'] : '';
 			$poster_joined = ( $comment_data[$i]['user_id'] != ANONYMOUS ) ? $user->lang['JOINED'] . ': ' . $user->format_date($comment_data[$i]['user_regdate']) : '';
 
-			$poster_avatar = '';
-			if ( $comment_data[$i]['user_avatar'] AND $user->optionget('viewavatars') )
-			{
-				$avatar_img = '';
-				switch( $comment_data[$i]['user_avatar_type'] )
-				{
-					case AVATAR_UPLOAD:
-						$avatar_img = $config['avatar_path'] . '/' . $comment_data[$i]['user_avatar'];
-					break;
-
-					case AVATAR_GALLERY:
-						$avatar_img = $config['avatar_gallery_path'] . '/' . $comment_data[$i]['user_avatar'];
-					break;
-				}
-				$poster_avatar = '<img src="' . $avatar_img . '" width="' . $comment_data[$i]['user_avatar_width'] . '" height="' . $comment_data[$i]['user_avatar_height'] . '" alt="" />';
-			}
-
 			if ( $comment_data[$i]['user_id'] == ANONYMOUS && $comment_data[$i]['post_username'] != '' )
 			{
 				$poster = $comment_data[$i]['post_username'];
@@ -173,7 +157,7 @@ switch( $mode )
 				'POSTER_CAR_MODEL' 	=> $poster_car_model,
 				'POSTER_CAR_YEAR' 	=> $poster_car_year,
 				'VIEW_POSTER_CARPROFILE'=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;VID=$garage_id"),
-				'POSTER_AVATAR' 	=> $poster_avatar,
+				'POSTER_AVATAR' 	=> ($user->optionget('viewavatars')) ? get_user_avatar($comment_data[$i]['user_avatar'], $comment_data[$i]['user_avatar_type'], $comment_data[$i]['user_avatar_width'], $comment_data[$i]['user_avatar_height']) : '',
 				'PROFILE_IMG' 		=> $user->img('icon_user_profile', 'READ_PROFILE'),
 				'PROFILE' 		=> $profile,
 				'PM_IMG' 		=> $user->img('icon_contact_pm', 'SEND_PRIVATE_MESSAGE'),

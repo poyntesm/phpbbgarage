@@ -94,7 +94,7 @@ class acp_garage_model
 				*/
 				case 'make_edit':
 					$params = array('make' => '');
-					$data = $garage->process_vars($params);
+					$data = $garage->process_mb_vars($params);
 					$data['id'] = $make_id;
 		
 					$garage_model->update_make($data);
@@ -107,7 +107,7 @@ class acp_garage_model
 				*/
 				case 'model_edit':
 					$params = array('model' => '');
-					$data = $garage->process_vars($params);
+					$data = $garage->process_mb_vars($params);
 					$data['id'] = $model_id;
 		
 					$garage_model->update_model($data);
@@ -127,7 +127,7 @@ class acp_garage_model
 			*/
 			case 'make_add':
 				$params = array('make' => '');
-				$data = $garage->process_vars($params);
+				$data = $garage->process_mb_vars($params);
 
 				if(!$data['make'])
 				{
@@ -288,8 +288,10 @@ class acp_garage_model
 
 				if ($action == 'model_add')
 				{
-					$params = array('model' => '', 'make_id' => '');
+					$params = array('make_id' => '');
 					$data = $garage->process_vars($params);
+					$params = array('model' => '');
+					$data += $garage->process_mb_vars($params);
 	
 					if(!$data['model'])
 					{

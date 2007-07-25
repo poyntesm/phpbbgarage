@@ -46,6 +46,27 @@ define('LAP_TRACKDAY', 3);
 define('SERVICE_MAJOR', 1);
 define('SERVICE_MINOR', 2);
 
+
+//Define Engien Type Constants For Vehicle Engine Type
+define('2_CYLINDER_FI', 1);
+define('2_CYLINDER_NA', 2);
+define('3_CYLINDER_FI', 3);
+define('3_CYLINDER_NA', 4);
+define('4_CYLINDER_FI', 5);
+define('4_CYLINDER_NA', 6);
+define('5_CYLINDER_FI', 7);
+define('5_CYLINDER_NA', 8);
+define('6_CYLINDER_FI', 9);
+define('6_CYLINDER_NA', 10);
+define('8_CYLINDER_FI', 11);
+define('8_CYLINDER_NA', 12);
+define('10_CYLINDER_FI', 13);
+define('10_CYLINDER_NA', 14);
+define('12_CYLINDER_FI', 15);
+define('12_CYLINDER_NA', 16);
+define('16_CYLINDER_FI', 17);
+define('16_CYLINDER_NA', 18);
+
 //Define Garage Tables Constants
 define('GARAGE_VEHICLES_TABLE', $table_prefix . 'garage_vehicles');
 define('GARAGE_CONFIG_TABLE', $table_prefix . 'garage_config');

@@ -64,6 +64,23 @@ class garage
 	}
 
 	/**
+	* Wrapper for request_var() for multibtye input
+	*
+	* @param array $params multi-dimensional array holding the requested vars & defaults.
+	*
+	* @return mixed
+	*/
+	function process_mb_vars($params = array())
+	{
+		while(list($var, $param) = @each($params) )
+		{
+			$data[$var] = request_var($var, $param, true);
+		}
+
+		return $data;
+	}
+
+	/**
 	* Checks all required data is present. If any required data is missing 
 	* the user is redirected to an informational error page
 	*
@@ -382,7 +399,7 @@ class garage
 			$garage_template->order_dropdown($order);
 
 			$sql_array = array(
-				'SELECT'	=> "m.*, m.id as modification_id, v.id as vehicle_id, v.made_year, v.currency, i.*, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.title as business_title, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, CONCAT_WS(' ', b1.title, p.title) as modification_title, u.user_colour",
+				'SELECT'	=> "m.*, m.id as modification_id, v.id as vehicle_id, v.made_year, v.currency, i.*, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.title as business_title, v.made_year, mk.make, md.model, b1.title as business_title, p.title as product_title, u.user_colour",
 				'SELECT_COUNT'	=> "COUNT(m.id) AS total",
 				'FROM'		=> array(
 					GARAGE_MODIFICATIONS_TABLE	=> 'm',
@@ -445,7 +462,7 @@ class garage
 			$garage_template->order_dropdown($order);
 
 			$sql_array = array(
-				'SELECT'	=> "p.*, v.*, b.title, b.id as business_id, mk.make, md.model, u.username, u.user_id, ( SUM(m.price) + SUM(m.install_price) ) AS total_spent, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, u.user_colour",
+				'SELECT'	=> "p.*, v.*, b.title, b.id as business_id, mk.make, md.model, u.username, u.user_id, ( SUM(m.price) + SUM(m.install_price) ) AS total_spent, v.made_year, mk.make, md.model, u.user_colour",
 				'SELECT_COUNT'	=> "COUNT(DISTINCT p.id) AS total",
 				'FROM'		=> array(
 					GARAGE_PREMIUMS_TABLE	=> 'p',
@@ -498,7 +515,7 @@ class garage
 			$garage_template->order_dropdown($order);
 
 			$sql_array = array(
-				'SELECT'	=> "v.id, v.user_id, q.id as qmid, qg.image_id, i.attach_id, i.attach_file, u.username, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.dynorun_id, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, d.vehicle_id, u.user_colour",
+				'SELECT'	=> "v.id, v.user_id, q.id as qmid, qg.image_id, i.attach_id, i.attach_file, u.username, v.made_year, mk.make, md.model, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.dynorun_id, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, d.vehicle_id, u.user_colour",
 				'SELECT_COUNT'	=> "COUNT(q.id) AS total",
 				'FROM'		=> array(
 					GARAGE_QUARTERMILES_TABLE	=> 'q',
@@ -555,7 +572,7 @@ class garage
 			$garage_template->order_dropdown($order);
 
 			$sql_array = array(
-				'SELECT'	=> "v.id, v.made_year, v.user_id, mk.make, md.model, b.title, d.*, i.*, d.id as did, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, u.username, d.vehicle_id, u.user_colour",
+				'SELECT'	=> "v.id, v.made_year, v.user_id, mk.make, md.model, b.title, d.*, i.*, d.id as did, v.made_year, mk.make, md.model, u.username, d.vehicle_id, u.user_colour",
 				'SELECT_COUNT'	=> "COUNT(d.id) AS total",
 				'FROM'		=> array(
 					GARAGE_DYNORUNS_TABLE	=> 'd',
@@ -612,7 +629,7 @@ class garage
 			$garage_template->order_dropdown($order);
 
 			$sql_array = array(
-				'SELECT'	=> "v.id, v.made_year, v.user_id, mk.make, md.model, l.*, i.*, l.id as lid, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, u.username, t.title, v.id as vehicle_id, u.user_colour",
+				'SELECT'	=> "v.id, v.made_year, v.user_id, mk.make, md.model, l.*, i.*, l.id as lid, v.made_year, mk.make, md.model, u.username, t.title, v.id as vehicle_id, u.user_colour",
 				'SELECT_COUNT'	=> "COUNT(l.id) AS total",
 				'FROM'		=> array(
 					GARAGE_LAPS_TABLE	=> 'l',
@@ -645,7 +662,7 @@ class garage
 		/**
 		* Add Modifications Tabe To Query So We Can Do Where Statement On It Only If Needed..Else It Produces Too Many Rows Since Its A Left Join
 		*/	
-		if (($search_options['search_category'] OR $search_options['search_manufacturer'] OR $search_options['search_product']) AND !($search_options['display_as'] == 'vehicles' OR $search_options['display_as'] == 'premiums'))
+		if (($search_options['search_category'] OR $search_options['search_manufacturer'] OR $search_options['search_product']) AND !($search_options['display_as'] == 'vehicles' OR $search_options['display_as'] == 'premiums' OR $search_options['display_as'] == 'modifications'))
 		{
 			array_push($sql_array['LEFT_JOIN'], array('FROM' => array(GARAGE_MODIFICATIONS_TABLE => 'm'), 'ON' => 'v.id = m.vehicle_id'));
 		}
@@ -704,6 +721,15 @@ class garage
 		$result = $db->sql_query_limit($sql, $garage_config['cars_per_page'], $start);
 		while ($row = $db->sql_fetchrow($result) )
 		{
+			$data[] = $row;
+			if (!empty($row))
+			{
+				$row['vehicle'] = "{$row['made_year']} {$row['make']} {$row['model']}";
+			}
+			if (!empty($row['modification_title']))
+			{
+				$row['modification_title'] = "{$row['business_title']} {$row['modification_title']}";
+			}
 			$data[] = $row;
 		}
 		$db->sql_freeresult($result);

@@ -141,8 +141,10 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('business_id' => '', 'premium' => '', 'cover_type' => '', 'comments' => '');
+		$params = array('business_id' => '', 'premium' => '', 'cover_type' => '');
 		$data 	= $garage->process_vars($params);
+		$params = array('comments' => '');
+		$data 	+= $garage->process_mb_vars($params);
 		$params = array('business_id', 'premium', 'cover_type');
 		$garage->check_required_vars($params);
 
@@ -230,15 +232,17 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('business_id' => '', 'premium' => '', 'cover_type' => '', 'comments' => '');
+		$params = array('business_id' => '', 'premium' => '', 'cover_type' => '');
 		$data = $garage->process_vars($params);
+		$params = array('comments' => '');
+		$data += $garage->process_mb_vars($params);
 		$params = array('business_id', 'premium', 'cover_type');
 		$garage->check_required_vars($params);
 
 		/**
 		* Perform required DB work to update premium
 		*/
-		$garage_insurnace->update_premium($data);
+		$garage_insurance->update_premium($data);
 
 		/**
 		* Updates timestamp on vehicle, indicating it has been updated.

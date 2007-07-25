@@ -803,6 +803,9 @@ $lang = array_merge($lang, array(
 	'VIEW_COMMENT'			=> '1 comment',
 	'VIEW_COMMENTS'			=> '%d comments',
 
+
+	'MONTH_TOPRATED_VEHICLE'	=> 'Month Top Rated',
+	'VIEW_USERS_GARAGE'		=> 'View users garage',
 ));
 
 ?>

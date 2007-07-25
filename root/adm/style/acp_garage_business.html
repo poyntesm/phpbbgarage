@@ -159,7 +159,7 @@
 
 
 
-	<fieldset class="perm nolegend">
+	<fieldset>
 
 		<div id="advanced00">
 			<div class="permissions-category">
@@ -175,11 +175,15 @@
 				<span class="corners-top"><span></span></span>
 				<div class="tablewrap">
 					<table id="table00{type.S_ROW_COUNT}" cellspacing="1">
+		<tr>
+			<th class="name" scope="col">{L_NAME}</th>
+			<th class="value" scope="col">{L_ACTION}</th>
+		</tr>
 					<tbody>
 					<!-- BEGIN business -->
 					<tr class="row1">
-						<td class="permission_name<!-- IF auth.mask.S_ROW_COUNT is even --> row4<!-- ELSE --> row3<!-- ENDIF -->" style="text-align: left;">{business.TITLE}</td>
-						<td style="vertical-align: top; width: 100px; text-align: right; white-space: nowrap;">
+						<td class="<!-- IF type.business.S_ROW_COUNT is even --> row4<!-- ELSE --> row3<!-- ENDIF -->" style="text-align: left; width: 88%;">{business.TITLE}</td>
+						<td class="<!-- IF type.business.S_ROW_COUNT is even --> row2<!-- ELSE --> row2<!-- ENDIF -->" style="vertical-align: top; width: 80px; text-align: right; white-space: nowrap;">
 						<!-- IF business.S_DISAPPROVED -->
 							{ICON_DISAPPROVE_DISABLED}
 							<a href="{business.U_APPROVE}">{ICON_APPROVE}</a>

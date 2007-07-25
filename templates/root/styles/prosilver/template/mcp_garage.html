@@ -2,7 +2,7 @@
 
 <form method="post" id="mcp" action="{S_MCP_ACTION}">
 
-	<div class="panel">
+<div class="panel">
 
 	<div class="inner"><span class="corners-top"><span></span></span>
 
@@ -87,7 +87,7 @@
 	<fieldset class="display-actions">
 		<input class="button2" type="submit" name="action[approve_vehicle]" value="{L_APPROVE}" />
 		&nbsp;<input class="button1" type="submit" name="action[disapprove_vehicle]" value="{L_DISAPPROVE}" />
-		<div><a href="#" onclick="marklist('mcp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '', false); return false;">{L_UNMARK_ALL}</a></div>
+		<div><a href="#" onclick="marklist('mcp', 'vehicle_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'vehicle_id_list', false); return false;">{L_UNMARK_ALL}</a></div>
 	</fieldset>
 
 	<!-- ELSEIF S_UNAPPROVED_MAKE -->
@@ -118,7 +118,7 @@
 	<fieldset class="display-actions">
 		<input class="button2" type="submit" name="action[approve_make]" value="{L_APPROVE}" />
 		&nbsp;<input class="button1" type="submit" name="action[disapprove_make_confirm]" value="{L_DISAPPROVE}" />
-		<div><a href="#" onclick="marklist('mcp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '', false); return false;">{L_UNMARK_ALL}</a></div>
+		<div><a href="#" onclick="marklist('mcp', 'make_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'make_id_list', false); return false;">{L_UNMARK_ALL}</a></div>
 	</fieldset>
 
 	<!-- ELSEIF S_UNAPPROVED_MODEL -->
@@ -151,7 +151,7 @@
 	<fieldset class="display-actions">
 		<input class="button2" type="submit" name="action[approve_model]" value="{L_APPROVE}" />
 		&nbsp;<input class="button1" type="submit" name="action[disapprove_model_confirm]" value="{L_DISAPPROVE}" />
-		<div><a href="#" onclick="marklist('mcp', 'mark', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'mark', false); return false;">{L_UNMARK_ALL}</a></div>
+		<div><a href="#" onclick="marklist('mcp', 'model_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'model_id_list', false); return false;">{L_UNMARK_ALL}</a></div>
 	</fieldset>
 
 	<!-- ELSEIF S_UNAPPROVED_BUSINESS -->
@@ -194,7 +194,7 @@
 	<fieldset class="display-actions">
 		<input class="button2" type="submit" name="action[approve_business]" value="{L_APPROVE}" />
 		&nbsp;<input class="button1" type="submit" name="action[disapprove_business_confirm]" value="{L_DISAPPROVE}" />
-		<div><a href="#" onclick="marklist('mcp', 'mark', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'mark', false); return false;">{L_UNMARK_ALL}</a></div>
+		<div><a href="#" onclick="marklist('mcp', 'business_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'business_id_list', false); return false;">{L_UNMARK_ALL}</a></div>
 	</fieldset>
 
 <!-- ELSEIF S_UNAPPROVED_QUARTERMILE -->
@@ -243,7 +243,7 @@
 	<fieldset class="display-actions">
 		<input class="button2" type="submit" name="action[approve_quartermile]" value="{L_APPROVE}" />
 		&nbsp;<input class="button1" type="submit" name="action[disapprove_quartermile]" value="{L_DISAPPROVE}" />
-		<div><a href="#" onclick="marklist('mcp', 'mark', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'mark', false); return false;">{L_UNMARK_ALL}</a></div>
+		<div><a href="#" onclick="marklist('mcp', 'quartermile_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'quartermile_id_list', false); return false;">{L_UNMARK_ALL}</a></div>
 	</fieldset>
 
 	<!-- ELSEIF S_UNAPPROVED_DYNORUN -->
@@ -292,7 +292,7 @@
 	<fieldset class="display-actions">
 		<input class="button2" type="submit" name="action[approve_dynorun]" value="{L_APPROVE}" />
 		&nbsp;<input class="button1" type="submit" name="action[disapprove_dynorun]" value="{L_DISAPPROVE}" />
-		<div><a href="#" onclick="marklist('mcp', 'mark', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'mark', false); return false;">{L_UNMARK_ALL}</a></div>
+		<div><a href="#" onclick="marklist('mcp', 'dynorun_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'dynorun_id_list', false); return false;">{L_UNMARK_ALL}</a></div>
 	</fieldset>
 
 	<!-- ELSEIF S_UNAPPROVED_COMMENT -->
@@ -318,7 +318,7 @@
 			<td>{comment_row.AUTHOR}</td>
 			<td>{comment_row.POST_TIME}</td>
 			<td align="center"><a href="{comment_row.U_EDIT}">{comment_row.EDIT}</a></td>
-			<td align="center"><input type="checkbox" class="radio" name="track_id_list[]" value="{comment_row.ID}" /></td>
+			<td align="center"><input type="checkbox" class="radio" name="comment_id_list[]" value="{comment_row.ID}" /></td>
 		</tr>
 		<!-- BEGINELSE -->
 		<tr>
@@ -331,7 +331,7 @@
 	<fieldset class="display-actions">
 		<input class="button2" type="submit" name="action[approve_comment]" value="{L_APPROVE}" />
 		&nbsp;<input class="button1" type="submit" name="action[disapprove_comment]" value="{L_DISAPPROVE}" />
-		<div><a href="#" onclick="marklist('mcp', 'mark', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'mark', false); return false;">{L_UNMARK_ALL}</a></div>
+		<div><a href="#" onclick="marklist('mcp', 'comment_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'comment_id_list', false); return false;">{L_UNMARK_ALL}</a></div>
 	</fieldset>
 
 	<!-- ELSEIF S_UNAPPROVED_LAP -->
@@ -376,7 +376,7 @@
 	<fieldset class="display-actions">
 		<input class="button2" type="submit" name="action[approve_lap]" value="{L_APPROVE}" />
 		&nbsp;<input class="button1" type="submit" name="action[disapprove_lap]" value="{L_DISAPPROVE}" />
-		<div><a href="#" onclick="marklist('mcp', 'mark', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'mark', false); return false;">{L_UNMARK_ALL}</a></div>
+		<div><a href="#" onclick="marklist('mcp', 'lap_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'lap_id_list', false); return false;">{L_UNMARK_ALL}</a></div>
 	</fieldset>
 
 	<!-- ELSEIF S_UNAPPROVED_TRACK -->
@@ -409,7 +409,7 @@
 	<fieldset class="display-actions">
 		<input class="button2" type="submit" name="action[approve_track]" value="{L_APPROVE}" />
 		&nbsp;<input class="button1" type="submit" name="action[disapprove_track_confirm]" value="{L_DISAPPROVE}" />
-		<div><a href="#" onclick="marklist('mcp', 'mark', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'mark', false); return false;">{L_UNMARK_ALL}</a></div>
+		<div><a href="#" onclick="marklist('mcp', 'track_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'track_id_list', false); return false;">{L_UNMARK_ALL}</a></div>
 	</fieldset>
 
 <!-- ELSEIF S_UNAPPROVED_PRODUCT -->
@@ -444,7 +444,7 @@
 	<fieldset class="display-actions">
 		<input class="button2" type="submit" name="action[approve_product]" value="{L_APPROVE}" />
 		&nbsp;<input class="button1" type="submit" name="action[disapprove_product_confirm]" value="{L_DISAPPROVE}" />
-		<div><a href="#" onclick="marklist('mcp', 'mark', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'mark', false); return false;">{L_UNMARK_ALL}</a></div>
+		<div><a href="#" onclick="marklist('mcp', 'product_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'product_id_list', false); return false;">{L_UNMARK_ALL}</a></div>
 	</fieldset>
 <!-- ENDIF -->
 

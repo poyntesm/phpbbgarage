@@ -99,7 +99,7 @@ class garage_dynorun
 	{
 		global $vid, $garage_image, $garage;
 	
-		$images	= $garage_image->get_dynorun_gallery($vid, $did);
+		$images	= $garage_image->get_dynorun_gallery($did);
 	
 		for ($i = 0, $count = sizeof($images);$i < $count; $i++)
 		{
@@ -204,7 +204,7 @@ class garage_dynorun
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'u.*, v.id, v.made_year, v.user_id, mk.make, md.model, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, d.peakpoint, i.attach_id as image_id, i.attach_file, d.id as did, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, b.title, d.dynocentre_id',
+			'SELECT'	=> 'u.*, v.id, v.made_year, v.user_id, mk.make, md.model, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, d.peakpoint, i.attach_id as image_id, i.attach_file, d.id as did, v.made_year, mk.make, md.model, b.title, d.dynocentre_id',
 
 			'FROM'		=> array(
 				GARAGE_DYNORUNS_TABLE	=> 'd',
@@ -234,6 +234,10 @@ class garage_dynorun
 
 		$result = $db->sql_query($sql);
 		$data = $db->sql_fetchrow($result);
+		if (!empty($data))
+		{
+			$data['vehicle'] = "{$data['made_year']} {$data['make']} {$data['model']}";
+		}
 		$db->sql_freeresult($result);
 
 		return $data;
@@ -250,7 +254,7 @@ class garage_dynorun
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'v.id, v.made_year, v.user_id, mk.make, md.model, u.username, u.user_id, b.title, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, round(d.peakpoint,0) as peakpoint, i.attach_id as image_id, d.id as did, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle',
+			'SELECT'	=> 'v.id, v.made_year, v.user_id, mk.make, md.model, u.username, u.user_id, b.title, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, round(d.peakpoint,0) as peakpoint, i.attach_id as image_id, d.id as did, v.made_year, mk.make, md.model',
 			'FROM'		=> array(
 				GARAGE_DYNORUNS_TABLE	=> 'd',
 				GARAGE_VEHICLES_TABLE	=> 'v',
@@ -280,6 +284,10 @@ class garage_dynorun
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
+			if (!empty($row))
+			{
+				$row['vehicle'] = "{$row['made_year']} {$row['make']} {$row['model']}";
+			}
 			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
@@ -302,7 +310,7 @@ class garage_dynorun
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'd.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, round(d.peakpoint,0) as peakpoint, v.id, v.made_year, v.user_id, mk.make, md.model, u.username, u.user_colour, b.title,  i.attach_id as image_id, d.id as did, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle',
+			'SELECT'	=> 'd.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, round(d.peakpoint,0) as peakpoint, v.id, v.made_year, v.user_id, mk.make, md.model, u.username, u.user_colour, b.title,  i.attach_id as image_id, d.id as did, v.made_year, mk.make, md.model',
 			'FROM'		=> array(
 				GARAGE_DYNORUNS_TABLE	=> 'd',
 				GARAGE_VEHICLES_TABLE	=> 'v',
@@ -332,6 +340,10 @@ class garage_dynorun
 
 		$result = $db->sql_query($sql);
 		$data = $db->sql_fetchrow($result);
+		if (!empty($data))
+		{
+			$data['vehicle'] = "{$data['made_year']} {$data['make']} {$data['model']}";
+		}
 		$db->sql_freeresult($result);
 
 		return $data;

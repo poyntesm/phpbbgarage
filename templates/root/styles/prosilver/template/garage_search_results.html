@@ -29,14 +29,14 @@
 						<li class="header">
 							<dl>
 								<dt class="image_attached"></dt>
-								<dd>{L_YEAR}</dd>
-								<dd>{L_MAKE}</dd>
-								<dd>{L_MODEL}</dd>
-								<dd>{L_COLOUR}</dd>
-								<dd>{L_OWNER}</dd>
-								<dd>{L_VIEWS}</dd>
-								<dd>{L_MODS}</dd>
-								<dd>{L_UPDATED}</dd>
+								<dd class="gwidth-10">{L_YEAR}</dd>
+								<dd class="gwidth-10">{L_MAKE}</dd>
+								<dd class="gwidth-10">{L_MODEL}</dd>
+								<dd class="gwidth-10">{L_COLOUR}</dd>
+								<dd class="gwidth-10">{L_OWNER}</dd>
+								<dd class="gwidth-5">{L_VIEWS}</dd>
+								<dd class="gwidth-5">{L_MODS}</dd>
+								<dd class="gwidth-10">{L_UPDATED}</dd>
 							</dl>
 						</li>
 					</ul>
@@ -45,14 +45,14 @@
 					<!-- IF vehicle.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
 							<dt class="image_attached"><!-- IF vehicle.U_IMAGE --><a href="{vehicle.U_IMAGE}" class="garage-camera-icon"></a><!-- ENDIF --></dt>
-			  				<dd>{vehicle.YEAR}</dd>
-							<dd>{vehicle.MAKE}</dd>
-							<dd><a href="{vehicle.U_VIEW_VEHICLE}">{vehicle.MODEL}</a></dd>
-							<dd>{vehicle.COLOUR}</dd>
-							<dd><b><a href="{vehicle.U_VIEW_PROFILE}" <!-- IF vehicle.USERNAME_COLOUR --> style="color: {vehicle.USERNAME_COLOUR}"<!-- ENDIF -->>{vehicle.USERNAME}</a></b></dd>
-							<dd>{vehicle.VIEWS}</dd>
-							<dd>{vehicle.MODS}</dd>
-							<dd>{vehicle.UPDATED}</dd>
+			  				<dd class="gwidth-10">{vehicle.YEAR}</dd>
+							<dd class="gwidth-10">{vehicle.MAKE}</dd>
+							<dd class="gwidth-10"><a href="{vehicle.U_VIEW_VEHICLE}">{vehicle.MODEL}</a></dd>
+							<dd class="gwidth-10">{vehicle.COLOUR}</dd>
+							<dd class="gwidth-10"><b><a href="{vehicle.U_VIEW_PROFILE}" <!-- IF vehicle.USERNAME_COLOUR --> style="color: {vehicle.USERNAME_COLOUR}"<!-- ENDIF -->>{vehicle.USERNAME}</a></b></dd>
+							<dd class="gwidth-5">{vehicle.VIEWS}</dd>
+							<dd class="gwidth-5">{vehicle.MODS}</dd>
+							<dd class="gwidth-10">{vehicle.UPDATED}</dd>
 						</dl>
 					</li>
 					<!-- BEGINELSE -->

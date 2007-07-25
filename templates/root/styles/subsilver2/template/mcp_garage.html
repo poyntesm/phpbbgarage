@@ -1,7 +1,8 @@
 <!-- INCLUDE mcp_header.html -->
 
-<!-- IF S_UNAPPROVED_VEHICLE -->
 <form name="mcp" id="mcp" method="post" action="{S_MCP_ACTION}">
+
+<!-- IF S_UNAPPROVED_VEHICLE -->
 
 <table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
 <tr> 
@@ -35,16 +36,13 @@
 </tr>
 </table>
 
-</form>
-
 <table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
 <tr>
-	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '', false); return false;">{L_UNMARK_ALL}</a></b></td>
+	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', 'vehicle_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'vehicle_id_list', false); return false;">{L_UNMARK_ALL}</a></b></td>
 </tr>
 </table>
 
 <!-- ELSEIF S_UNAPPROVED_MAKE -->
-<form name="mcp" id="mcp" method="post" action="{S_MCP_ACTION}">
 
 <table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
 <tr> 
@@ -67,16 +65,13 @@
 </tr>
 </table>
 
-</form>
-
 <table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
 <tr>
-	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '', false); return false;">{L_UNMARK_ALL}</a></b></td>
+	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', 'make_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'make_id_list', false); return false;">{L_UNMARK_ALL}</a></b></td>
 </tr>
 </table>
 
 <!-- ELSEIF S_UNAPPROVED_MODEL -->
-<form name="mcp" id="mcp" method="post" action="{S_MCP_ACTION}">
 
 <table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
 <tr> 
@@ -100,16 +95,14 @@
 	<td class="cat" colspan="3" align="center"><input class="btnmain" type="submit" name="action[approve_model]" value="{L_APPROVE}" />&nbsp;&nbsp;<input class="btnlite" type="submit" name="action[disapprove_model_confirm]" value="{L_DISAPPROVE}" /></td>
 </tr>
 </table>
-</form>
 
 <table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
 <tr>
-	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '', false); return false;">{L_UNMARK_ALL}</a></b></td>
+	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', 'model_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'model_id_list', false); return false;">{L_UNMARK_ALL}</a></b></td>
 </tr>
 </table>
 
 <!-- ELSEIF S_UNAPPROVED_BUSINESS -->
-<form name="mcp" id="mcp" method="post" action="{S_MCP_ACTION}">
 
 <table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
 <tr> 
@@ -146,16 +139,13 @@
 </tr>
 </table>
 
-</form>
-
 <table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
 <tr>
-	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '', false); return false;">{L_UNMARK_ALL}</a></b></td>
+	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', 'business_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'business_id_list', false); return false;">{L_UNMARK_ALL}</a></b></td>
 </tr>
 </table>
 
 <!-- ELSEIF S_UNAPPROVED_QUARTERMILE -->
-<form name="mcp" id="mcp" method="post" action="{S_MCP_ACTION}">
 
 <table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
 <tr> 
@@ -196,16 +186,13 @@
 </tr>
 </table>
 
-</form>
-
 <table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
 <tr>
-	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '', false); return false;">{L_UNMARK_ALL}</a></b></td>
+	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', 'quartermile_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'quartermile_id_list', false); return false;">{L_UNMARK_ALL}</a></b></td>
 </tr>
 </table>
 
 <!-- ELSEIF S_UNAPPROVED_DYNORUN -->
-<form name="mcp" id="mcp" method="post" action="{S_MCP_ACTION}">
 
 <table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
 <tr> 
@@ -246,16 +233,14 @@
 </tr>
 </table>
 
-</form>
 
 <table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
 <tr>
-	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '', false); return false;">{L_UNMARK_ALL}</a></b></td>
+	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', 'dynorun_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'dynorun_id_list', false); return false;">{L_UNMARK_ALL}</a></b></td>
 </tr>
 </table>
 
 <!-- ELSEIF S_UNAPPROVED_COMMENT -->
-<form name="mcp" id="mcp" method="post" action="{S_MCP_ACTION}">
 
 <table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
 <tr> 
@@ -271,7 +256,7 @@
 		<!-- IF comment_row.S_ROW_COUNT is even --><tr class="row1"><!-- ELSE --><tr class="row2"><!-- ENDIF -->
 			<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap">{comment_row.TITLE}</td>
 			<td class="postdetails" style="padding: 4px;" align="left" valign="top" nowrap="nowrap"><a href="{comment_row.U_EDIT}">{comment_row.EDIT}</a></td>
-			<td align="center"><input type="checkbox" class="radio" name="track_id_list[]" value="{comment_row.ID}" /></td>
+			<td align="center"><input type="checkbox" class="radio" name="commment_id_list[]" value="{comment_row.ID}" /></td>
 		</tr>
 		<!-- BEGINELSE -->
 			<tr>
@@ -283,16 +268,13 @@
 </tr>
 </table>
 
-</form>
-
 <table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
 <tr>
-	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '', false); return false;">{L_UNMARK_ALL}</a></b></td>
+	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', 'commment_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'commment_id_list', false); return false;">{L_UNMARK_ALL}</a></b></td>
 </tr>
 </table>
 
 <!-- ELSEIF S_UNAPPROVED_LAP -->
-<form name="mcp" id="mcp" method="post" action="{S_MCP_ACTION}">
 
 <table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
 <tr> 
@@ -328,16 +310,13 @@
 </tr>
 </table>
 
-</form>
-
 <table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
 <tr>
-	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '', false); return false;">{L_UNMARK_ALL}</a></b></td>
+	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', 'lap_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'lap_id_list', false); return false;">{L_UNMARK_ALL}</a></b></td>
 </tr>
 </table>
 
 <!-- ELSEIF S_UNAPPROVED_TRACK -->
-<form name="mcp" id="mcp" method="post" action="{S_MCP_ACTION}">
 
 <table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
 <tr> 
@@ -361,16 +340,13 @@
 </tr>
 </table>
 
-</form>
-
 <table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
 <tr>
-	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '', false); return false;">{L_UNMARK_ALL}</a></b></td>
+	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', 'track_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'track_id_list', false); return false;">{L_UNMARK_ALL}</a></b></td>
 </tr>
 </table>
 
 <!-- ELSEIF S_UNAPPROVED_PRODUCT -->
-<form name="mcp" id="mcp" method="post" action="{S_MCP_ACTION}">
 
 <table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
 <tr> 
@@ -396,11 +372,9 @@
 </tr>
 </table>
 
-</form>
-
 <table width="100%" cellspacing="2" cellpadding="2" border="0" align="center">
 <tr>
-	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', '', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', '', false); return false;">{L_UNMARK_ALL}</a></b></td>
+	<td align="right" valign="top" nowrap="nowrap"><b class="gensmall"><a href="#" onclick="marklist('mcp', 'product_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'product_id_list', false); return false;">{L_UNMARK_ALL}</a></b></td>
 </tr>
 </table>
 <!-- ENDIF -->
@@ -410,8 +384,6 @@
 	<h1>{L_BUSINESS_DELETE}</h1>
 
 	<p>{L_BUSINESS_DELETE_EXPLAIN}</p>
-
-	<form id="mcp_business" method="post" action="{U_ACTION}">
 
 	<table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
 	<tr> 
@@ -464,15 +436,11 @@
 	</tr>
 	</table>
 
-	</form>
-
 <!-- ELSEIF S_DELETE_MAKE -->
 
 	<h1>{L_MAKE_DELETE}</h1>
 
 	<p>{L_MAKE_DELETE_EXPLAIN}</p>
-
-	<form id="mcp_category" method="post" action="{U_ACTION}">
 
 	<table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
 	<tr> 
@@ -494,15 +462,11 @@
 	</tr>
 	</table>
 
-	</form>
-
 <!-- ELSEIF S_DELETE_MODEL -->
 
 	<h1>{L_MODEL_DELETE}</h1>
 
 	<p>{L_MODEL_DELETE_EXPLAIN}</p>
-
-	<form id="mcp_category" method="post" action="{U_ACTION}">
 
 	<table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
 	<tr> 
@@ -524,15 +488,11 @@
 	</tr>
 	</table>
 
-	</form>
-
 <!-- ELSEIF S_DELETE_PRODUCT -->
 
 	<h1>{L_PRODUCT_DELETE}</h1>
 
 	<p>{L_PRODUCT_DELETE_EXPLAIN}</p>
-
-	<form id="mcp_product" method="post" action="{U_ACTION}">
 
 	<table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
 	<tr> 
@@ -554,15 +514,11 @@
 	</tr>
 	</table>
 
-	</form>
-
 <!-- ELSEIF S_DELETE_TRACK -->
 
 	<h1>{L_TRACK_DELETE}</h1>
 
 	<p>{L_TRACK_DELETE_EXPLAIN}</p>
-
-	<form id="mcp_track" method="post" action="{U_ACTION}">
 
 	<table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
 	<tr> 
@@ -584,8 +540,8 @@
 	</tr>
 	</table>
 
-	</form>
+	<!-- ENDIF -->
 
-<!-- ENDIF -->
+	</form>
 
 <!-- INCLUDE mcp_footer.html -->

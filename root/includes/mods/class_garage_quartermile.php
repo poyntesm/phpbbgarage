@@ -96,7 +96,7 @@ class garage_quartermile
 	{
 		global $vid, $garage, $garage_image;
 	
-		$images	= $garage_image->get_quartermile_gallery($vid, $qmid);
+		$images	= $garage_image->get_quartermile_gallery($qmid);
 	
 		for ($i = 0, $count = sizeof($images);$i < $count; $i++)
 		{
@@ -211,7 +211,7 @@ class garage_quartermile
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'v.id, v.user_id, q.id as qmid, qg.image_id, u.username, u.user_colour, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.dynorun_id, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous',
+			'SELECT'	=> 'v.id, v.user_id, q.id as qmid, qg.image_id, u.username, u.user_colour, v.made_year, mk.make, md.model, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.dynorun_id, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous',
 			'FROM'		=> array(
 				GARAGE_QUARTERMILES_TABLE	=> 'q',
 				GARAGE_VEHICLES_TABLE		=> 'v',
@@ -243,6 +243,10 @@ class garage_quartermile
 
 		$result = $db->sql_query($sql);
 		$data = $db->sql_fetchrow($result);
+		if (!empty($data))
+		{
+			$data['vehicle'] = "{$data['made_year']} {$data['make']} {$data['model']}";
+		}
 		$db->sql_freeresult($result);
 
 		return $data;
@@ -259,7 +263,7 @@ class garage_quartermile
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'v.id as vehicle_id, u.user_id, v.user_id, q.id as qmid, qg.image_id, u.username, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.dynorun_id',
+			'SELECT'	=> 'v.id as vehicle_id, u.user_id, v.user_id, q.id as qmid, qg.image_id, u.username, v.made_year, mk.make, md.model, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.dynorun_id',
 			'FROM'		=> array(
 				GARAGE_QUARTERMILES_TABLE	=> 'q',
 				GARAGE_VEHICLES_TABLE		=> 'v',
@@ -287,6 +291,10 @@ class garage_quartermile
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
+			if (!empty($row))
+			{
+				$row['vehicle'] = "{$row['made_year']} {$row['make']} {$row['model']}";
+			}
 			$data[] = $row;
 		}
 
@@ -309,7 +317,7 @@ class garage_quartermile
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'q.*, d.id, d.bhp, d.bhp_unit, i.*, v.made_year, mk.make, md.model, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, u.*',
+			'SELECT'	=> 'q.*, d.id, d.bhp, d.bhp_unit, i.*, v.made_year, mk.make, md.model, v.made_year, mk.make, md.model, u.*',
 			'FROM'		=> array(
 				GARAGE_QUARTERMILES_TABLE	=> 'q',
 				GARAGE_VEHICLES_TABLE		=> 'v',
@@ -340,6 +348,10 @@ class garage_quartermile
 
       		$result = $db->sql_query($sql);
 		$data = $db->sql_fetchrow($result);
+		if (!empty($data))
+		{
+			$data['vehicle'] = "{$data['made_year']} {$data['make']} {$data['model']}";
+		}
 		$db->sql_freeresult($result);
 
 		return $data;

@@ -232,21 +232,11 @@ class mcp_garage
 			* Moderators will have chosen to delete or move linked items
 			*/
 			case 'disapprove_make':
-				$id_list 	= request_var('make_id_list', array(0));
+				$make_id 	= request_var('make_id', '');
 				$action_make	= request_var('action_make', '');
 				$make_to_id	= request_var('make_to_id', 0);
 
-				if (!sizeof($id_list))
-				{
-					trigger_error('NO_MAKE_SELECTED');
-				}
-
-				if (sizeof($id_list) != 1)
-				{
-					trigger_error('SELECT_ONE_ONLY');
-				}
-
-				$garage_model->disapprove_make($id_list[0], $action_make, $make_to_id);
+				$garage_model->disapprove_make($make_id, $action_make, $make_to_id);
 			break;
 			
 			/**
@@ -254,21 +244,11 @@ class mcp_garage
 			* Moderators will have chosen to delete or move linked items
 			*/
 			case 'disapprove_model':
-				$id_list 	= request_var('model_id_list', array(0));
+				$model_id 	= request_var('model_id', '');
 				$action_model	= request_var('action_model', '');
 				$model_to_id	= request_var('model_to_id', 0);
 
-				if (!sizeof($id_list))
-				{
-					trigger_error('NO_MODEL_SELECTED');
-				}
-
-				if (sizeof($id_list) != 1)
-				{
-					trigger_error('SELECT_ONE_ONLY');
-				}
-
-				$garage_model->disapprove_model($id_list[0], $action_model, $model_to_id);
+				$garage_model->disapprove_model($model_id, $action_model, $model_to_id);
 			break;
 			
 			/**
@@ -276,7 +256,7 @@ class mcp_garage
 			* Moderators will have chosen to delete or move linked items
 			*/
 			case 'disapprove_business':
-				$id_list 		= request_var('business_id_list', array(0));
+				$business_id 		= request_var('business_id', '');
 				$action_garage		= request_var('action_garage', '');
 				$action_insurance	= request_var('action_insurance', '');
 				$action_dynocentre	= request_var('action_dynocentre', '');
@@ -288,17 +268,7 @@ class mcp_garage
 				$retail_to_id		= request_var('retail_to_id', 0);
 				$product_to_id		= request_var('product_to_id', 0);
 
-				if (!sizeof($id_list))
-				{
-					trigger_error('NO_BUSINESS_SELECTED');
-				}
-
-				if (sizeof($id_list) != 1)
-				{
-					trigger_error('SELECT_ONE_ONLY');
-				}
-
-				$garage_business->disapprove_business($id_list[0], $action_garage, $garage_to_id, $action_insurance, $insurance_to_id, $action_dynocentre, $dynocentre_to_id, $action_retail, $retail_to_id, $action_product, $product_to_id);
+				$garage_business->disapprove_business($business_id, $action_garage, $garage_to_id, $action_insurance, $insurance_to_id, $action_dynocentre, $dynocentre_to_id, $action_retail, $retail_to_id, $action_product, $product_to_id);
 			break;
 			
 			/**
@@ -366,21 +336,11 @@ class mcp_garage
 			* Moderators will have chosen to delete or move linked items
 			*/
 			case 'disapprove_track':
-				$id_list 	= request_var('track_id_list', array(0));
+				$track_id 	= request_var('track_id', '');
 				$action_laps	= request_var('action_laps', '');
 				$laps_to_id	= request_var('laps_to_id', 0);
 
-				if (!sizeof($id_list))
-				{
-					trigger_error('NO_TRACK_SELECTED');
-				}
-
-				if (sizeof($id_list) != 1)
-				{
-					trigger_error('SELECT_ONE_ONLY');
-				}
-
-				$garage_track->disapprove_track($id_list[0], $action_laps, $laps_to_id);
+				$garage_track->disapprove_track($track_id, $action_laps, $laps_to_id);
 			break;
 
 			/**
@@ -388,22 +348,11 @@ class mcp_garage
 			* Moderators will have chosen to delete or move linked items
 			*/
 			case 'disapprove_product':
-				$id_list 		= request_var('product_id_list', array(0));
+				$product_id 		= request_var('product_id', '');
 				$action_modifications	= request_var('action_modifications', '');
 				$product_to_id		= request_var('modifications_to_id', 0);
 
-
-				if (!sizeof($id_list))
-				{
-					trigger_error('NO_PRODUCT_SELECTED');
-				}
-
-				if (sizeof($id_list) != 1)
-				{
-					trigger_error('SELECT_ONE_ONLY');
-				}
-
-				$garage_modification->disapprove_product($id_list[0], $action_modifications, $product_to_id);
+				$garage_modification->disapprove_product($product_id, $action_modifications, $product_to_id);
 			break;
 		}
 
@@ -728,7 +677,7 @@ class mcp_garage
 				$select_to = $garage_template->build_move_to($makes_data, $id_list[0], 'make');
 
 				$template->assign_vars(array(
-					'U_ACTION'		=> $this->u_action . "&amp;action=make_delete&amp;make_id=" . $id_list[0],
+					'S_MCP_ACTION'		=> $this->u_action . "&amp;action=disapprove_make&amp;make_id=" . $id_list[0],
 					'S_DELETE_MAKE'		=> true,
 					'S_MOVE'		=> (!empty($select_to)) ? true : false ,
 					'S_MOVE_OPTIONS'	=> $select_to,
@@ -759,7 +708,7 @@ class mcp_garage
 				$select_to = $garage_template->build_move_to($models_data, $id_list[0], 'model');
 
 				$template->assign_vars(array(
-					'U_ACTION'		=> $this->u_action . "&amp;action=model_delete&amp;model_id=".$id_list[0]."&amp;make_id=" . $model_data['make_id'],
+					'S_MCP_ACTION'		=> $this->u_action . "&amp;action=disapprove_model&amp;model_id=".$id_list[0]."&amp;make_id=" . $model_data['make_id'],
 					'S_DELETE_MODEL'	=> true,
 					'S_MOVE'		=> (!empty($select_to)) ? true : false ,
 					'S_MOVE_OPTIONS'	=> $select_to,
@@ -843,7 +792,7 @@ class mcp_garage
 
 				$template->assign_vars(array(
 					'S_DELETE_BUSINESS'		=> true,
-					'U_ACTION'			=> $this->u_action . "&amp;action=delete&amp;id=$business_id",
+					'S_MCP_ACTION'			=> $this->u_action . "&amp;action=disapprove_business&amp;bid=$business_id",
 					'BUSINESS_NAME'			=> $business_data['title'],
 				));
 			break;
@@ -875,7 +824,7 @@ class mcp_garage
 					'S_MOVE'		=> (!empty($select_to)) ? true : false,
 					'S_MOVE_OPTIONS'	=> $select_to,
 					'S_DELETE_TRACK'	=> true,
-					'U_ACTION'		=> $this->u_action . "&amp;action=delete&amp;id=$track_id",
+					'S_MCP_ACTION'		=> $this->u_action . "&amp;action=disapprove_track&amp;id=$track_id",
 					'TRACK_NAME'		=> $track_data['title'],
 				));
 			break;
@@ -907,7 +856,7 @@ class mcp_garage
 					'S_DELETE_PRODUCT'	=> true,
 					'S_MOVE'		=> (!empty($select_to)) ? true : false ,
 					'S_MOVE_OPTIONS'	=> $select_to,
-					'U_ACTION'		=> $this->u_action . "&amp;action=product_delete&amp;product_id=$product_id",
+					'S_MCP_ACTION'		=> $this->u_action . "&amp;action=disapprove_product&amp;product_id=$product_id",
 					'PRODUCT'		=> $product_data['title'],
 				));
 			break;

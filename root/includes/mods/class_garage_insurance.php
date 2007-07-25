@@ -102,7 +102,7 @@ class garage_insurance
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> "p.*, b.title, v.made_year, mk.make, md.model, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle",
+			'SELECT'	=> "p.*, b.title, v.made_year, mk.make, md.model, v.made_year, mk.make, md.model",
 			'FROM'		=> array(
 				GARAGE_PREMIUMS_TABLE	=> 'p',
 				GARAGE_VEHICLES_TABLE 	=> 'v',
@@ -119,6 +119,10 @@ class garage_insurance
 
       		$result = $db->sql_query($sql);
 		$data = $db->sql_fetchrow($result);
+		if (!empty($data))
+		{
+			$data['vehicle'] = "{$data['made_year']} {$data['make']} {$data['model']}";
+		}
 		$db->sql_freeresult($result);
 
 		return $data;
@@ -138,7 +142,7 @@ class garage_insurance
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'i.*, v.made_year, b.title, b.id as business_id, mk.make, md.model, u.username, u.user_id, u.user_colour, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle',
+			'SELECT'	=> 'i.*, v.made_year, b.title, b.id as business_id, mk.make, md.model, u.username, u.user_id, u.user_colour, v.made_year, mk.make, md.model',
 			'FROM'		=> array(
 				GARAGE_PREMIUMS_TABLE	=> 'i',
 				GARAGE_VEHICLES_TABLE 	=> 'v',
@@ -161,6 +165,10 @@ class garage_insurance
 	   	$result = $db->sql_query($sql);
 		while($row = $db->sql_fetchrow($result))
 		{
+			if (!empty($row))
+			{
+				$row['vehicle'] = "{$row['made_year']} {$row['make']} {$row['model']}";
+			}
 			$data[] = $row;
 		}
       		$db->sql_freeresult($result);

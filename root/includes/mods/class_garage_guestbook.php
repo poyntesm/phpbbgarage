@@ -148,7 +148,7 @@ class garage_guestbook
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, gb.bbcode_uid, gb.bbcode_bitfield, gb.bbcode_flags, u.username, u.user_id, u.user_posts, u.user_from, u.user_website, u.user_email, u.user_icq, u.user_aim, u.user_yim, u.user_regdate, u.user_msnm, u.user_allow_viewemail, u.user_rank, u.user_sig, u.user_sig_bbcode_uid, u.user_avatar, u.user_avatar_type, u.user_allow_viewonline, v.made_year, v.id as vehicle_id, mk.make, md.model, u.user_avatar, u.user_colour',
+			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, gb.bbcode_uid, gb.bbcode_bitfield, gb.bbcode_flags, u.username, u.user_id, u.user_posts, u.user_from, u.user_website, u.user_email, u.user_icq, u.user_aim, u.user_yim, u.user_regdate, u.user_msnm, u.user_allow_viewemail, u.user_rank, u.user_sig, u.user_sig_bbcode_uid, u.user_avatar, u.user_avatar_type, u.user_allow_viewonline, v.made_year, v.id as vehicle_id, mk.make, md.model, u.user_avatar, u.user_colour, u.user_avatar_width, u.user_avatar_height',
 			'FROM'		=> array(
 				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
 				GARAGE_VEHICLES_TABLE	=> 'v',
@@ -293,7 +293,7 @@ class garage_guestbook
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'gb.vehicle_id AS id, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, gb.author_id AS author_id, gb.post_date, u.username, u.user_colour',
+			'SELECT'	=> 'gb.vehicle_id AS id, v.made_year, mk.make, md.model, gb.author_id AS author_id, gb.post_date, u.username, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
 				GARAGE_VEHICLES_TABLE	=> 'v',
@@ -311,6 +311,10 @@ class garage_guestbook
 	 	$result = $db->sql_query_limit($sql, $limit);
 		while ($row = $db->sql_fetchrow($result) )
 		{
+			if (!empty($row))
+			{
+				$row['vehicle'] = "{$row['made_year']} {$row['make']} {$row['model']}";
+			}
 			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
@@ -332,7 +336,7 @@ class garage_guestbook
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, gb.vehicle_id, v.made_year, mk.make, md.model, u.username, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle',
+			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, gb.vehicle_id, v.made_year, mk.make, md.model, u.username, v.made_year, mk.make, md.model',
 			'FROM'		=> array(
 				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
 				GARAGE_VEHICLES_TABLE	=> 'v',
@@ -349,6 +353,10 @@ class garage_guestbook
 
               	$result = $db->sql_query($sql);
 		$data = $db->sql_fetchrow($result);
+		if (!empty($data))
+		{
+			$data['vehicle'] = "{$data['made_year']} {$data['make']} {$data['model']}";
+		}
 		$db->sql_freeresult($result);
 
 		return $data;
@@ -457,23 +465,6 @@ class garage_guestbook
 			$poster_car_model = ( $comment_data[$i]['model'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? ' ' . $comment_data[$i]['model'] : '';
 			$poster_joined = ( $comment_data[$i]['user_id'] != ANONYMOUS ) ? $user->lang['JOINED'] . ': ' . $user->format_date($comment_data[$i]['user_regdate']) : '';
 
-			$poster_avatar = '';
-			if ( $comment_data[$i]['user_avatar'] AND $user->optionget('viewavatars') )
-			{
-				$avatar_img = '';
-				switch( $comment_data[$i]['user_avatar_type'] )
-				{
-					case AVATAR_UPLOAD:
-						$avatar_img = $config['avatar_path'] . '/' . $comment_data[$i]['user_avatar'];
-					break;
-
-					case AVATAR_GALLERY:
-						$avatar_img = $config['avatar_gallery_path'] . '/' . $comment_data[$i]['user_avatar'];
-					break;
-				}
-				$poster_avatar = '<img src="' . $avatar_img . '" width="' . $comment_data[$i]['user_avatar_width'] . '" height="' . $comment_data[$i]['user_avatar_height'] . '" alt="" />';
-			}
-
 			// Handle anon users posting with usernames
 			if ( $comment_data[$i]['user_id'] == ANONYMOUS && $comment_data[$i]['post_username'] != '' )
 			{
@@ -540,7 +531,7 @@ class garage_guestbook
 				'POSTER_CAR_MODEL' 	=> $poster_car_model,
 				'POSTER_CAR_YEAR' 	=> $poster_car_year,
 				'U_VEHICLE'		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_vehicle&amp;VID=$vehicle_id"),
-				'POSTER_AVATAR' 	=> $poster_avatar,
+				'POSTER_AVATAR' 	=> ($user->optionget('viewavatars')) ? get_user_avatar($comment_data[$i]['user_avatar'], $comment_data[$i]['user_avatar_type'], $comment_data[$i]['user_avatar_width'], $comment_data[$i]['user_avatar_height']) : '',
 				'POST_AUTHOR_COLOUR'	=> get_username_string('colour', $comment_data[$i]['user_id'], $comment_data[$i]['username'], $comment_data[$i]['user_colour']),
 				'PROFILE_IMG' 		=> $user->img('icon_user_profile', 'READ_PROFILE'),
 				'PROFILE' 		=> $profile,

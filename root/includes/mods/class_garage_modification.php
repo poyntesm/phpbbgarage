@@ -105,7 +105,7 @@ class garage_modification
 	{
 		global $vid, $garage, $garage_image;
 	
-		$images	= $garage_image->get_modification_gallery($vid, $mid);
+		$images	= $garage_image->get_modification_gallery($mid);
 	
 		for ($i = 0, $count = sizeof($images);$i < $count; $i++)
 		{
@@ -438,7 +438,7 @@ class garage_modification
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'v.id, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, v.user_id, COUNT(m.id) AS POI, u.username, u.user_colour',
+			'SELECT'	=> 'v.id, v.made_year, mk.make, md.model, v.user_id, COUNT(m.id) AS POI, u.username, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 				GARAGE_VEHICLES_TABLE		=> 'v',
@@ -457,6 +457,10 @@ class garage_modification
 	 	$result = $db->sql_query_limit($sql, $limit);
 		while ($row = $db->sql_fetchrow($result))
 		{
+			if (!empty($row))
+			{
+				$row['vehicle'] = "{$row['made_year']} {$row['make']} {$row['model']}";
+			}
 			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
@@ -479,7 +483,7 @@ class garage_modification
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'm.*, v.made_year, v.id, v.currency, i.*, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.title as manufacturer, b2.title as business_title, b3.title as install_business_title, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, p.title, u.user_avatar_width, u.user_avatar_height, u.user_colour',
+			'SELECT'	=> 'm.*, v.made_year, v.id, v.currency, i.*, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.title as manufacturer, b2.title as business_title, b3.title as install_business_title, v.made_year, mk.make, md.model, p.title, u.user_avatar_width, u.user_avatar_height, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE		=> 'v',
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
@@ -520,6 +524,10 @@ class garage_modification
 
       		$result = $db->sql_query($sql);
 		$data = $db->sql_fetchrow($result);
+		if (!empty($data))
+		{
+			$data['vehicle'] = "{$data['made_year']} {$data['make']} {$data['model']}";
+		}
 		$db->sql_freeresult($result);
 
 		return $data;
@@ -618,6 +626,141 @@ class garage_modification
 	}
 
 	/**
+	* Return data for specific shop
+	*
+	* @param int $retail_id retail id to return data for
+	*
+	*/
+	function get_modifications_by_retail_id($retail_id)
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'm.*, i.*, p.title',
+			'FROM'		=> array(
+				GARAGE_MODIFICATIONS_TABLE	=> 'm',
+				GARAGE_PRODUCTS_TABLE		=> 'p',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_MODIFICATION_GALLERY_TABLE => 'mg'),
+					'ON'	=> 'm.id = mg.modification_id AND mg.hilite = 1',
+				)
+				,array(
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
+					'ON'	=> 'mg.image_id = i.attach_id'
+				)
+			),
+			'WHERE'		=> "m.shop_id = $retail_id
+						AND m.product_id = p.id",
+			'ORDER_BY'	=> "p.title ASC"
+		));
+
+      		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$data[] = $row;
+		}
+
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/**
+	* Return data for specific manufacturer
+	*
+	* @param int $manufacturer_id manufacturer id to return data for
+	*
+	*/
+	function get_modifications_by_manufacturer_id($manufacturer_id)
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'm.*, i.*, p.title',
+			'FROM'		=> array(
+				GARAGE_MODIFICATIONS_TABLE	=> 'm',
+				GARAGE_PRODUCTS_TABLE		=> 'p',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_MODIFICATION_GALLERY_TABLE => 'mg'),
+					'ON'	=> 'm.id = mg.modification_id AND mg.hilite = 1',
+				)
+				,array(
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
+					'ON'	=> 'mg.image_id = i.attach_id'
+				)
+			),
+			'WHERE'		=> "m.manufacturer_id = $manufacturer_id
+						AND m.product_id = p.id",
+			'ORDER_BY'	=> "p.title ASC"
+		));
+
+      		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$data[] = $row;
+		}
+
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/**
+	* Return data for specific product
+	*
+	* @param int $product_id product id to return data for
+	*
+	*/
+	function get_modifications_by_product_id($product_id)
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'm.*, i.*, p.title',
+			'FROM'		=> array(
+				GARAGE_MODIFICATIONS_TABLE	=> 'm',
+				GARAGE_PRODUCTS_TABLE		=> 'p',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_MODIFICATION_GALLERY_TABLE => 'mg'),
+					'ON'	=> 'm.id = mg.modification_id AND mg.hilite = 1',
+				)
+				,array(
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
+					'ON'	=> 'mg.image_id = i.attach_id'
+				)
+			),
+			'WHERE'		=> "p.id = $product_id
+						AND m.product_id = p.id",
+			'ORDER_BY'	=> "p.title ASC"
+		));
+
+      		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$data[] = $row;
+		}
+
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/**
 	* Return limited modification data for specific installation business
 	*
 	* @param int $business_id business id to return modification data for
@@ -633,7 +776,7 @@ class garage_modification
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> "m.id, m.vehicle_id, p.title AS mod_title, m.install_price, m.install_rating, m.install_comments, u.username, u.user_id, mk.make, md.model, v.made_year, b.id as business_id, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle, u.user_colour",
+			'SELECT'	=> "m.id, m.vehicle_id, p.title AS mod_title, m.install_price, m.install_rating, m.install_comments, u.username, u.user_id, mk.make, md.model, v.made_year, b.id as business_id, v.made_year, mk.make, md.model, u.user_colour",
 			'FROM'		=> array(
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 				GARAGE_BUSINESS_TABLE		=> 'b',
@@ -659,6 +802,10 @@ class garage_modification
       		$result = $db->sql_query_limit($sql, $limit, $start);
 		while ($row = $db->sql_fetchrow($result))
 		{
+			if (!empty($row))
+			{
+				$row['vehicle'] = "{$row['made_year']} {$row['make']} {$row['model']}";
+			}
 			$data[] = $row;
 		}
 
@@ -683,7 +830,7 @@ class garage_modification
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'm.id, m.vehicle_id, p.title AS mod_title, m.price, m.purchase_rating, m.product_rating, m.comments, u.username, u.user_id, mk.make, md.model, v.made_year, b.id as business_id, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, u.user_colour',
+			'SELECT'	=> 'm.id, m.vehicle_id, p.title AS mod_title, m.price, m.purchase_rating, m.product_rating, m.comments, u.username, u.user_id, mk.make, md.model, v.made_year, b.id as business_id, v.made_year, mk.make, md.model, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 				GARAGE_BUSINESS_TABLE		=> 'b',
@@ -708,6 +855,10 @@ class garage_modification
       		$result = $db->sql_query_limit($sql, $limit, $start);
 		while ($row = $db->sql_fetchrow($result))
 		{
+			if (!empty($row))
+			{
+				$row['vehicle'] = "{$row['made_year']} {$row['make']} {$row['model']}";
+			}
 			$data[] = $row;
 		}
 
@@ -922,7 +1073,7 @@ class garage_modification
 	* @param array $id_list single-dimension array holding the product ids to approve
 	*
 	*/
-	function approve_dynorun($id_list)
+	function approve_product($id_list)
 	{
 		global $phpbb_root_path, $phpEx, $garage;
 
@@ -940,7 +1091,7 @@ class garage_modification
 	* @param array $id_list sigle-dimension array holding the product ids to disapprove
 	*
 	*/
-	function disapprove_dynorun($id_list)
+	function disapprove_product($id_list)
 	{
 		global $phpbb_root_path, $phpEx;
 
@@ -950,6 +1101,96 @@ class garage_modification
 		}
 
 		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_products"));
+	}
+
+	/**
+	* Delete a product
+	*
+	* @param int $make_id make id to delete
+	* @param string $action_make delete|move linked vehicles
+	* @param int $make_to_id move to make id
+	*
+	*/
+	function delete_product($product_id, $action_product = 'delete', $product_to_id = 0)
+	{
+		global $db, $user, $cache, $garage;
+
+		$product = $this->get_product($product_id);
+
+		$errors = array();
+
+		if ($action_product == 'delete')
+		{
+			$this->delete_product_content($product_id);
+			add_log('admin', 'LOG_GARAGE_DELETE_PRODUCT_MODIFICATIONS', $product['title']);
+		}
+		else if ($action_make == 'move')
+		{
+			if (!$make_to_id)
+			{
+				$errors[] = $user->lang['NO_DESTINATION_PRODUCT'];
+			}
+			else
+			{
+				$row = $this->get_product($product_to_id);
+
+				if (!$row)
+				{
+					$errors[] = $user->lang['NO_PRODUCT'];
+				}
+				else
+				{
+					$to_name = $row['title'];
+					$from_name = $product['title'];
+					$this->move_product_content($product_id, $to_id);
+					add_log('admin', 'LOG_GARAGE_MOVED_PRODUCT', $from_name, $to_name);
+				}
+			}
+		}
+
+		$garage->delete_rows(GARAGE_PRODUCTS_TABLE, 'id', $product_id);
+		add_log('admin', 'LOG_GARAGE_DELETE_PRODUCT', $product['title']);
+
+		if (sizeof($errors))
+		{
+			return $errors;
+		}
+	}
+
+	/**
+	* Delete product & linked modifications
+	*
+	* @param int $product_id product id to delete all modifications
+	*
+	*/
+	function delete_product_content($product_id)
+	{
+		global $db, $config, $phpbb_root_path, $phpEx, $garage, $garage_vehicle;
+
+		$modifications = $this->get_modifications_by_product_id($product_id);
+		for ($i = 0, $count = sizeof($modifications);$i < $count; $i++)
+		{
+			$this->delete_modification($modifications[$i]['id']);
+		}
+		$garage->delete_rows(GARAGE_PRODUCTS_TABLE, 'id', $product_id);
+
+		return;
+	}
+
+	/**
+	* Move modifications to new product
+	*
+	* @param int $from_id product id to move from
+	* @param int $to_id product id to move to
+	*
+	*/
+	function move_product_content($from_id, $to_id)
+	{
+		global $garage;
+
+		$garage->update_single_field(GARAGE_MODIFICATIONS_TABLE, 'product_id', $to_id, 'product_id', $from_id);
+
+		return;
 	}
 }
 

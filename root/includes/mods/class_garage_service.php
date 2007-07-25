@@ -193,7 +193,7 @@ class garage_service
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> "s.*, u.username, u.user_id, u.user_colour, mk.make, md.model, v.made_year, b.id as business_id, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle",
+			'SELECT'	=> "s.*, u.username, u.user_id, u.user_colour, mk.make, md.model, v.made_year, b.id as business_id, v.made_year, mk.make, md.model",
 			'FROM'		=> array(
 				GARAGE_SERVICE_HISTORY_TABLE	=> 's',
 				GARAGE_BUSINESS_TABLE		=> 'b',
@@ -216,6 +216,10 @@ class garage_service
       		$result = $db->sql_query_limit($sql, $limit, $start);
 		while ($row = $db->sql_fetchrow($result))
 		{
+			if (!empty($row))
+			{
+				$row['vehicle'] = "{$row['made_year']} {$row['make']} {$row['model']}";
+			}
 			$data[] = $row;
 		}
 

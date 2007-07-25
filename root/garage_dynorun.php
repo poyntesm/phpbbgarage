@@ -20,6 +20,7 @@ $phpbb_root_path = './';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
 include($phpbb_root_path . 'includes/bbcode.' . $phpEx);
+require($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 
 /**
 * Setup user session, authorisation & language 
@@ -243,7 +244,7 @@ switch( $mode )
 		$vehicle	= $garage_vehicle->get_vehicle($vid);
 		$data		= $garage_dynorun->get_dynorun($did);
 		$dynocentres 	= $garage_business->get_business_by_type(BUSINESS_DYNOCENTRE);
-		$gallery_data 	= $garage_image->get_dynorun_gallery($vid, $did);
+		$gallery_data 	= $garage_image->get_dynorun_gallery($did);
 
 		/**
 		* Handle template declarations & assignments
@@ -503,7 +504,7 @@ switch( $mode )
 		* Get dynorun & gallery data from DB
 		*/
 		$data = $garage_dynorun->get_dynorun($did);
-		$gallery_data = $garage_image->get_dynorun_gallery($vid, $did);
+		$gallery_data = $garage_image->get_dynorun_gallery($did);
 
 		/**
 		* Handle template declarations & assignments
@@ -532,22 +533,6 @@ switch( $mode )
 				);
                		} 
 	       	}
-		$data['avatar'] = '';
-		if ($data['user_avatar'] AND $user->optionget('viewavatars'))
-		{
-			$avatar_img = '';
-			switch( $data['user_avatar_type'] )
-			{
-				case AVATAR_UPLOAD:
-					$avatar_img = $config['avatar_path'] . '/' . $data['user_avatar'];
-				break;
-
-				case AVATAR_GALLERY:
-					$avatar_img = $config['avatar_gallery_path'] . '/' . $data['user_avatar'];
-				break;
-			}
-			$data['avatar'] = '<img src="' . $avatar_img . '" width="' . $data['user_avatar_width'] . '" height="' . $data['user_avatar_height'] . '" alt="" />';
-		}
 		$template->assign_vars(array(
 			'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $data['user_id']),
 			'YEAR' 			=> $data['made_year'],
@@ -555,7 +540,7 @@ switch( $mode )
 			'MODEL' 		=> $data['model'],
 			'USERNAME' 		=> $data['username'],
 			'USERNAME_COLOUR'	=> get_username_string('colour', $data['user_id'], $data['username'], $data['user_colour']),
-            		'AVATAR_IMG' 		=> $data['avatar'],
+            		'AVATAR_IMG' 		=> ($user->optionget('viewavatars')) ? get_user_avatar($data['user_avatar'], $data['user_avatar_type'], $data['user_avatar_width'], $data['user_avatar_height']) : '',
             		'DYNOCENTRE' 		=> $data['title'],
             		'BHP' 			=> $data['bhp'],
             		'BHP_UNIT'	 	=> $data['bhp_unit'],

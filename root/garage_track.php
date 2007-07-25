@@ -20,6 +20,7 @@ $phpbb_root_path = './';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
 include($phpbb_root_path . 'includes/bbcode.' . $phpEx);
+require($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 
 /**
 * Setup user session, authorisation & language 
@@ -289,8 +290,10 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('title' => '', 'length' => '', 'mileage_unit' => '');
+		$params = array('length' => '', 'mileage_unit' => '');
 		$data 	= $garage->process_vars($params);
+		$params = array('title');
+		$data 	+= $garage->process_mb_vars($params);
 		$params = array('title');
 		$garage->check_required_vars($params);
 
@@ -336,7 +339,7 @@ switch( $mode )
 		$vehicle_data 	= $garage_vehicle->get_vehicle($vid);
 		$data 		= $garage_track->get_lap($lid);
 		$tracks 	= $garage_track->get_all_tracks();
-		$gallery_data 	= $garage_image->get_lap_gallery($vid, $lid);
+		$gallery_data 	= $garage_image->get_lap_gallery($lid);
 
 		/**
 		* Handle template declarations & assignments
@@ -592,7 +595,7 @@ switch( $mode )
 		* Get lap & gallery data from DB
 		*/
 		$data = $garage_track->get_lap($lid);
-		$gallery_data = $garage_image->get_lap_gallery($vid, $lid);
+		$gallery_data = $garage_image->get_lap_gallery($lid);
 
 		/**
 		* Handle template declarations & assignments
@@ -620,23 +623,8 @@ switch( $mode )
 					'IMAGE_SOURCE'	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $gallery_data[$i]['attach_thumb_location'])
 				);
                		} 
-	       	}
-		$data['avatar'] = '';
-		if ($data['user_avatar'] AND $user->optionget('viewavatars'))
-		{
-			$avatar_img = '';
-			switch( $data['user_avatar_type'] )
-			{
-				case AVATAR_UPLOAD:
-					$avatar_img = $config['avatar_path'] . '/' . $data['user_avatar'];
-				break;
-
-				case AVATAR_GALLERY:
-					$avatar_img = $config['avatar_gallery_path'] . '/' . $data['user_avatar'];
-				break;
-			}
-			$data['avatar'] = '<img src="' . $avatar_img . '" width="' . $data['user_avatar_width'] . '" height="' . $data['user_avatar_height'] . '" alt="" />';
 		}
+
 		$template->assign_vars(array(
 			'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $data['user_id']),
 			'U_VIEW_TRACK' 		=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=view_track&amp;TID=" . $data['track_id']),
@@ -651,7 +639,7 @@ switch( $mode )
 			'MODEL' 		=> $data['model'],
 			'USERNAME' 		=> $data['username'],
 			'USERNAME_COLOUR'	=> get_username_string('colour', $data['user_id'], $data['username'], $data['user_colour']),
-            		'AVATAR_IMG' 		=> $data['avatar'],
+            		'AVATAR_IMG' 		=> ($user->optionget('viewavatars')) ? get_user_avatar($data['user_avatar'], $data['user_avatar_type'], $data['user_avatar_width'], $data['user_avatar_height']) : '',
          	));
 		$garage_template->sidemenu();
 	break;

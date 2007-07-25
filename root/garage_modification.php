@@ -20,6 +20,7 @@ $phpbb_root_path = './';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
 include($phpbb_root_path . 'includes/bbcode.' . $phpEx);
+require($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 
 /**
 * Setup user session, authorisation & language 
@@ -184,8 +185,10 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('category_id' => '' , 'manufacturer_id' => '', 'product_id' =>'', 'price' => '', 'shop_id' => '', 'installer_id' => '', 'install_price' => '', 'install_rating' => '', 'product_rating' => '', 'comments' => '', 'install_comments' => '', 'purchase_rating' => '');
+		$params = array('category_id' => '' , 'manufacturer_id' => '', 'product_id' =>'', 'price' => '', 'shop_id' => '', 'installer_id' => '', 'install_price' => '', 'install_rating' => '', 'product_rating' => '', 'purchase_rating' => '');
 		$data	= $garage->process_vars($params);
+		$params = array('comments' => '', 'install_comments' => '');
+		$data	+= $garage->process_mb_vars($params);
 		$params = array('category_id', 'manufacturer_id', 'product_id');
 		$garage->check_required_vars($params);
 
@@ -246,7 +249,7 @@ switch( $mode )
 		$vehicle_data 	= $garage_vehicle->get_vehicle($vid);
 		$data 		= $garage_modification->get_modification($mid);
 		$categories 	= $garage->get_categories();
-		$gallery_data 	= $garage_image->get_modification_gallery($vid, $mid);
+		$gallery_data 	= $garage_image->get_modification_gallery($mid);
 		$shops 		= $garage_business->get_business_by_type(BUSINESS_RETAIL);
 		$garages 	= $garage_business->get_business_by_type(BUSINESS_GARAGE);
 		$manufacturers 	= $garage_business->get_business_by_type(BUSINESS_PRODUCT);
@@ -335,8 +338,10 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('category_id' => '', 'manufacturer_id' => '', 'product_id' => '', 'price' => '', 'shop_id' => '', 'installer_id' => '', 'install_price' => '', 'install_rating' => '', 'product_rating' => '', 'comments' => '', 'install_comments' => '', 'editupload' => '', 'image_id' => '', 'purchase_rating' => '');
+		$params = array('category_id' => '', 'manufacturer_id' => '', 'product_id' => '', 'price' => '', 'shop_id' => '', 'installer_id' => '', 'install_price' => '', 'install_rating' => '', 'product_rating' => '', 'editupload' => '', 'image_id' => '', 'purchase_rating' => '');
 		$data	= $garage->process_vars($params);
+		$params = array('comments' => '', 'install_comments' => '');
+		$data	+= $garage->process_mb_vars($params);
 		$params = array('category_id', 'manufacturer_id', 'product_id');
 		$garage->check_required_vars($params);
 
@@ -407,7 +412,7 @@ switch( $mode )
 		* Get modification & gallery data from DB
 		*/
 		$data = $garage_modification->get_modification($mid);
-		$gallery_data = $garage_image->get_modification_gallery($vid, $mid);
+		$gallery_data = $garage_image->get_modification_gallery($mid);
 
 		/**
 		* Handle template declarations & assignments
@@ -435,23 +440,8 @@ switch( $mode )
 					'IMAGE_SOURCE'	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $gallery_data[$i]['attach_thumb_location'])
 				);
                		} 
-	       	}
-		$data['avatar'] = '';
-		if ($data['user_avatar'] AND $user->optionget('viewavatars'))
-		{
-			$avatar_img = '';
-			switch( $data['user_avatar_type'] )
-			{
-				case AVATAR_UPLOAD:
-					$avatar_img = $config['avatar_path'] . '/' . $data['user_avatar'];
-				break;
-
-				case AVATAR_GALLERY:
-					$avatar_img = $config['avatar_gallery_path'] . '/' . $data['user_avatar'];
-				break;
-			}
-			$data['avatar'] = '<img src="' . $avatar_img . '" width="' . $data['user_avatar_width'] . '" height="' . $data['user_avatar_height'] . '" alt="" />';
 		}
+
 		$template->assign_vars(array(
 			'U_VIEW_PROFILE' 	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $data['user_id']),
 			'U_VIEW_GARAGE_BUSINESS'=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=garage_review&amp;business_id=" . $data['installer_id']),
@@ -466,7 +456,7 @@ switch( $mode )
 			'BUSINESS' 		=> $data['install_business_title'],
 			'USERNAME' 		=> $data['username'],
 			'USERNAME_COLOUR'	=> get_username_string('colour', $data['user_id'], $data['username'], $data['user_colour']),
-            		'AVATAR_IMG' 		=> $data['avatar'],
+            		'AVATAR_IMG' 		=> ($user->optionget('viewavatars')) ? get_user_avatar($data['user_avatar'], $data['user_avatar_type'], $data['user_avatar_width'], $data['user_avatar_height']) : '',
             		'DATE_UPDATED' 		=> $user->format_date($data['date_updated']),
             		'MANUFACTURER' 		=> $data['manufacturer'],
             		'TITLE' 		=> $data['title'],

@@ -1221,7 +1221,7 @@ class garage_image
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> "i.*, u.*, CONCAT_WS(' ', v.made_year, mk.make, md.model) AS vehicle",
+			'SELECT'	=> "i.*, u.*, v.made_year, mk.make, md.model",
 			'FROM'		=> array(
 				GARAGE_IMAGES_TABLE	=> 'i',
 				GARAGE_VEHICLES_TABLE	=> 'v',
@@ -1239,6 +1239,10 @@ class garage_image
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
+			if (!empty($row))
+			{
+				$row['vehicle'] = "{$row['made_year']} {$row['make']} {$row['model']}";
+			}
 			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
@@ -1283,11 +1287,10 @@ class garage_image
 	/**
 	* Return array of specific modification gallery images
 	*
-	* @param int $vid vehicle id to get images for
 	* @param int $mid modification id to get images for
 	*
 	*/
-	function get_modification_gallery($vid, $mid)
+	function get_modification_gallery($mid)
 	{
 		global $db;
 
@@ -1300,7 +1303,7 @@ class garage_image
 				GARAGE_MODIFICATION_GALLERY_TABLE	=> 'mg',
 				GARAGE_IMAGES_TABLE			=> 'i',
 			),
-			'WHERE'		=>  "mg.vehicle_id = $vid AND mg.modification_id = $mid
+			'WHERE'		=>  "mg.modification_id = $mid
 						AND i.attach_id = mg.image_id",
 			'GROUP_BY'	=>  "mg.id"
 		));
@@ -1318,11 +1321,10 @@ class garage_image
 	/**
 	* Return array of specific quartermile gallery images
 	*
-	* @param int $vid vehicle id to get images for
 	* @param int $qmid quartermile id to get images for
 	*
 	*/
-	function get_quartermile_gallery($vid, $qmid)
+	function get_quartermile_gallery($qmid)
 	{
 		global $db;
 
@@ -1335,7 +1337,7 @@ class garage_image
 				GARAGE_QUARTERMILE_GALLERY_TABLE	=> 'qg',
 				GARAGE_IMAGES_TABLE			=> 'i',
 			),
-			'WHERE'		=>  "qg.vehicle_id = $vid AND qg.quartermile_id = $qmid
+			'WHERE'		=>  "qg.quartermile_id = $qmid
 						AND i.attach_id = qg.image_id",
 			'GROUP_BY'	=>  "qg.id"
 		));
@@ -1353,11 +1355,10 @@ class garage_image
 	/**
 	* Return array of specific dynorun gallery images
 	*
-	* @param int $vid vehicle id to get images for
 	* @param int $did dynorun id to get images for
 	*
 	*/
-	function get_dynorun_gallery($vid, $did)
+	function get_dynorun_gallery($did)
 	{
 		global $db;
 
@@ -1370,7 +1371,7 @@ class garage_image
 				GARAGE_DYNORUN_GALLERY_TABLE	=> 'dg',
 				GARAGE_IMAGES_TABLE		=> 'i',
 			),
-			'WHERE'		=>  "dg.vehicle_id = $vid AND dg.dynorun_id = $did
+			'WHERE'		=>  "dg.dynorun_id = $did
 						AND i.attach_id = dg.image_id",
 			'GROUP_BY'	=>  "dg.id"
 		));
@@ -1388,11 +1389,10 @@ class garage_image
 	/**
 	* Return array of specific lap gallery images
 	*
-	* @param int $vid vehicle id to get images for
 	* @param int $lid lap id to get images for
 	*
 	*/
-	function get_lap_gallery($vid, $lid)
+	function get_lap_gallery($lid)
 	{
 		global $db;
 
@@ -1405,7 +1405,7 @@ class garage_image
 				GARAGE_LAP_GALLERY_TABLE	=> 'lg',
 				GARAGE_IMAGES_TABLE		=> 'i',
 			),
-			'WHERE'		=>  "lg.vehicle_id = $vid AND lg.lap_id = $lid
+			'WHERE'		=>  "lg.lap_id = $lid
 						AND i.attach_id = lg.image_id",
 			'GROUP_BY'	=>  "lg.id"
 		));

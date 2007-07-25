@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!-- MODX by the phpBB MOD Team XSL file v1.0 copyright 2005-2007 the phpBB MOD Team. 
-	$Id: modx.prosilver.en.xsl,v 1.4 2007/05/28 09:57:46 paul999 Exp $ -->
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- MODX by the phpBB MOD Team XSL file v1.0.1 copyright 2005-2007 the phpBB MOD Team. 
+	$Id: modx.prosilver.en.xsl,v 1.1 2007/07/16 03:52:00 smithy_dll Exp $ -->
 <!DOCTYPE xsl:stylesheet[
 	<!ENTITY nbsp "&#160;">
 ]>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" xmlns:mod="http://www.phpbb.com/mods/xml/modx-1.0.xsd">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0" xmlns:mod="http://www.phpbb.com/mods/xml/modx-1.0.1.xsd">
 	<xsl:output method="html" omit-xml-declaration="no" indent="yes" />
 <xsl:variable name="title" select="mod:mod/mod:header/mod:title" />
 <xsl:variable name="version">
@@ -630,7 +630,7 @@ var enStrings = "h1=Installation Instructions for \n" +
 "il=Installation Level:\n" +
 "ile=Easy\n" +
 "ili=Intermediate\n" +
-"ilh=Hard\n" +
+"ila=Advanced\n" +
 "au=Author\n" +
 "aus=Authors\n" +
 "a-un=Username:\n" +
@@ -1015,24 +1015,40 @@ function select_text(id)
 	{
 		return;
 	}
-	var r, s;
-	if( document.selection && !SXBB_IsIEMac() )
+	
+  // Not IE
+	if (window.getSelection)
 	{
-		// Works on: IE5+
-		// To be confirmed: IE4? / IEMac fails?
-		r = document.body.createTextRange();
-		r.moveToElementText(o);
-		r.select();
+		var s = window.getSelection();
+		// Safari
+		if (s.setBaseAndExtent)
+		{
+			s.setBaseAndExtent(o, 0, o, o.innerText.length - 1);
+		}
+		// Firefox and Opera
+		else
+		{
+			var r = document.createRange();
+			r.selectNodeContents(o);
+			s.removeAllRanges();
+			s.addRange(r);
+		}
 	}
-	else if( document.createRange && (document.getSelection || window.getSelection) )
+	// Some older browsers
+	else if (document.getSelection)
 	{
-		// Works on: Netscape/Mozilla/Konqueror/Safari
-		// To be confirmed: Konqueror/Safari use window.getSelection ?
-		r = document.createRange();
+		var s = document.getSelection();
+		var r = document.createRange();
 		r.selectNodeContents(o);
-		s = window.getSelection ? window.getSelection() : document.getSelection();
 		s.removeAllRanges();
 		s.addRange(r);
+	}
+	// IE
+	else if (document.selection)
+	{
+		var r = document.body.createTextRange();
+		r.moveToElementText(o);
+		r.select();
 	}
 
 	find_selected(id);
@@ -1210,7 +1226,7 @@ function mod_doKeyPress(e)
 					    <dl id="description">
 						    <xsl:for-each select="mod:description">
 								  <dt><xsl:value-of select="@lang" /></dt>
-                  <dd style='white-space:pre;' lang="{@lang}"><p>
+                  <dd lang="{@lang}"><p>
 								   <xsl:call-template name="add-line-breaks">
 								    <xsl:with-param name="string">
 									   <xsl:value-of select="current()" />
@@ -1341,13 +1357,15 @@ function mod_doKeyPress(e)
           <p>
             <span id="lang-ontt2">This MOD was designed for phpBB</span><xsl:value-of select="mod:installation/mod:target-version/mod:target-primary" /><span id="lang-ontt3"> and may not function as stated on other phpBB versions. MODs for phpBB3.0 will <strong>not</strong> work on phpBB2.0 and vice versa.</span>
           </p>
-          <xsl:if test="./mod:mod-version/mod:minor mod 2 != 0 or ./mod:mod-version/mod:major = 0">
+          <xsl:for-each select="./mod:mod-version">
+          <xsl:if test="mod:minor mod 2 != 0 or mod:major = 0 or (@stage != '' and @stage != 'stable')">
             <p>
               <strong class="red">
                 <span id="lang-onttq">This MOD is development quality. It is not recommended that you install it on a live forum.</span>
               </strong>
             </p>
           </xsl:if>
+          </xsl:for-each>
           <span class="corners-bottom">
             <span></span>
           </span>
@@ -1415,7 +1433,22 @@ function mod_doKeyPress(e)
 		</dl>
 		<br />
 	</xsl:template>
-	<xsl:template name="give-version"><xsl:value-of select="concat(mod:major, '.', mod:minor, '.', mod:revision, mod:release)" /></xsl:template>
+	<xsl:template name="give-version">
+    <xsl:choose>
+      <xsl:when test="@stage = 'beta'">
+        <xsl:value-of select="concat(mod:major, '.', mod:minor, ' ', 'Beta ', mod:revision, mod:release)" />
+      </xsl:when>
+      <xsl:when test="@stage = 'alpha'">
+        <xsl:value-of select="concat(mod:major, '.', mod:minor, ' ', 'Alpha ', mod:revision, mod:release)" />
+      </xsl:when>
+      <xsl:when test="@stage = 'release-candidate'">
+        <xsl:value-of select="concat(mod:major, '.', mod:minor, ' ', 'RC', mod:revision, mod:release)" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="concat(mod:major, '.', mod:minor, '.', mod:revision, mod:release)" />
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 	<xsl:template name="give-installation">
 		<dt id="lang-il">Installation Level:</dt>
 		<dd class="mod-about">
@@ -1423,7 +1456,7 @@ function mod_doKeyPress(e)
 				<span class="corners-top"><span></span></span>
 			<xsl:if test="mod:level='easy'"><p id="lang-ile">Easy</p></xsl:if>
 			<xsl:if test="mod:level='intermediate'"><p id="lang-ili">Intermediate</p></xsl:if>
-			<xsl:if test="mod:level='hard'"><p id="lang-ilh">Hard</p></xsl:if>
+			<xsl:if test="mod:level='advanced'"><p id="lang-ila">Advanced</p></xsl:if>
         <span class="corners-bottom"><span></span></span>
       </div>
     </dd>

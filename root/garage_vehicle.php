@@ -44,6 +44,7 @@ require($phpbb_root_path . 'includes/mods/class_garage_model.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_track.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_service.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_blog.' . $phpEx);
+require($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 
 /**
 * Setup variables 
@@ -189,8 +190,10 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params	= array('made_year' => '', 'make_id' => '', 'model_id' => '', 'colour' => '', 'mileage' => '', 'mileage_units' => '', 'price' => '', 'currency' => '', 'comments' => '', 'engine_type' => '');
+		$params	= array('made_year' => '', 'make_id' => '', 'model_id' => '', 'mileage' => '', 'mileage_units' => '', 'price' => '', 'currency' => '', 'engine_type' => '');
 		$data	= $garage->process_vars($params);
+		$params	= array('colour' => '', 'comments' => '');
+		$data	+= $garage->process_mb_vars($params);
 		$params = array('made_year', 'make_id', 'model_id');
 		$garage->check_required_vars($params);
 
@@ -310,7 +313,7 @@ switch( $mode )
 			$template->assign_block_vars('pic_row', array(
 				'U_IMAGE'	=> (($gallery_data[$i]['attach_id']) AND ($gallery_data[$i]['attach_is_image']) AND (!empty($gallery_data[$i]['attach_thumb_location'])) AND (!empty($gallery_data[$i]['attach_location']))) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=view_image&amp;image_id=" . $gallery_data[$i]['attach_id']) : '',
 				'U_REMOVE_IMAGE'=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=remove_vehicle_image&amp;&amp;VID=$vid&amp;image_id=" . $gallery_data[$i]['attach_id']),
-				'U_SET_HILITE'	=> ($gallery_data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage.$phpEx", "mode=set_vehicle_hilite&amp;image_id=" . $gallery_data[$i]['attach_id'] . "&amp;VID=$vid") : '',
+				'U_SET_HILITE'	=> ($gallery_data[$i]['hilite'] == 0) ? append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=set_vehicle_hilite&amp;image_id=" . $gallery_data[$i]['attach_id'] . "&amp;VID=$vid") : '',
 				'IMAGE' 	=> $phpbb_root_path . GARAGE_UPLOAD_PATH . $gallery_data[$i]['attach_thumb_location'],
 				'IMAGE_TITLE' 	=> $gallery_data[$i]['attach_file'])
 			);
@@ -338,8 +341,10 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('made_year' => '', 'make_id' => '', 'model_id' => '', 'colour' => '', 'mileage' => '', 'mileage_units' => '', 'price' => '', 'currency' => '', 'comments' => '', 'engine_type' => '');
+		$params = array('made_year' => '', 'make_id' => '', 'model_id' => '', 'mileage' => '', 'mileage_units' => '', 'price' => '', 'currency' => '', 'engine_type' => '');
 		$data = $garage->process_vars($params);
+		$params = array('colour' => '', 'comments' => '');
+		$data += $garage->process_mb_vars($params);
 		$params = array('made_year', 'make_id', 'model_id');
 		$garage->check_required_vars($params);
 
@@ -583,7 +588,7 @@ switch( $mode )
 		/**
 		* Perform required DB work to set hightlight image
 		*/
-		$garage->update_single_field(GARAGE_VEHICLE_GALLERY_TABLE, 'hilite', 0, 'garage_id', $vid);
+		$garage->update_single_field(GARAGE_VEHICLE_GALLERY_TABLE, 'hilite', 0, 'vehicle_id', $vid);
 		$garage->update_single_field(GARAGE_VEHICLE_GALLERY_TABLE, 'hilite', 1, 'image_id', $image_id);
 
 		/**
@@ -756,6 +761,93 @@ switch( $mode )
 		*/
 		redirect(append_sid("garage_vehicle.$phpEx", "mode=moderate_vehicle&amp;VID=$vid", true));
 	break;
+
+	/**
+	* Vehicle Of The Month
+	*/
+	case 'votm':
+		/**
+		* Check authorisation to perform action, redirecting to error screen if not
+		*/
+		if (!$auth->acl_get('u_garage_browse'))
+		{
+			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=17"));
+		}
+
+		/**
+		* Get make, model & year data from web server
+		* If no make or model use default configuration
+		*/
+		$year	= request_var('YEAR', '');
+
+		/**
+		* Handle template declarations & assignments
+		*/
+		page_header($user->lang['GARAGE']);
+		$template->set_filenames(array(
+			'header' 	=> 'garage_header.html',
+			'body'   	=> 'garage_votm.html')
+		);
+
+		$first_rating = $garage_vehicle->get_earliest_rating();
+
+		$time = localtime(time(), 1) ;
+		$start_year =date("Y", $first_rating['rate_date']);
+		$current_year = $time['tm_year'] + 1900;
+
+		if ( $start_year > $current_year ) 
+		{
+			echo "OH NO TIME MACHINE";
+			return;
+		}	
+		
+		$tab_id = 0;	
+		for ( $year = $current_year; $year >= $start_year; $year-- ) 
+		{
+			$template->assign_block_vars('year', array(
+				'YEAR'		=> $year,
+				'TAB_ID'	=> $tab_id,
+			));
+
+			if($tab_id == 0)
+			{
+				$template->assign_vars(array(
+					'S_LOWEST_TAB_AVAILABLE'	=> 0,
+				));
+			}
+
+			for ( $month = 12; $month >= 1; $month-- )
+			{
+				$vehicle_data = $garage_vehicle->get_month_toprated_vehicle($month, $year);
+
+				$thumb_image = null;
+				if ( (empty($vehicle_data['attach_id']) == false) AND ($vehicle_data['attach_is_image'] == 1) ) 
+				{
+	        		        if ( (empty($vehicle_data['attach_thumb_location']) == false) AND ($vehicle_data['attach_thumb_location'] != $vehicle_data['attach_location']) AND (@file_exists($phpbb_root_path . GARAGE_UPLOAD_PATH."/".$vehicle_data['attach_thumb_location'])) )
+		               		{
+					   	$thumb_image = $phpbb_root_path . GARAGE_UPLOAD_PATH . $vehicle_data['attach_thumb_location'];
+               				} 
+				}
+				$template->assign_block_vars('year.month', array(
+					'MONTH'			=> $month,
+					'THUMB' 		=> $thumb_image,
+					'VEHICLE'		=> $vehicle_data['vehicle'],
+					'USERNAME' 		=> $vehicle_data['username'],
+					'IMAGE_TITLE'		=> $vehicle_data['attach_file'],
+					'U_VIEW_IMAGE'		=> append_sid("garage.$phpEx?mode=view_image&amp;image_id=".$vehicle_data['attach_id']),
+					'U_VIEW_VEHICLE' 	=> append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;VID=".$vehicle_data['vehicle_id']),
+					'U_VIEW_PROFILE' 	=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']),
+					'USERNAME_COLOUR'	=> get_username_string('colour', $vehicle_data['user_id'], $vehicle_data['username'], $vehicle_data['user_colour']),
+					'RATING'		=> $vehicle_data['total_ratings'],
+				));
+			}
+			$tab_id++;
+		}
+
+		$garage_template->sidemenu();
+
+	break;
+
 }
 $garage_template->version_notice();
 

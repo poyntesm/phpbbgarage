@@ -60,8 +60,10 @@ class acp_garage_product
 				* Insert product into database
 				*/
 				case 'add_product':
-					$params = array('title' => '', 'category_id' => '', 'manufacturer_id' => $manufacturer_id, 'pending' => '0');
+					$params = array('category_id' => '', 'manufacturer_id' => $manufacturer_id, 'pending' => '0');
 					$data = $garage->process_vars($params);
+					$params = array('title' => '');
+					$data += $garage->process_mb_vars($params);
 
 					$garage_modification->insert_product($data);
 					add_log('admin', 'LOG_GARAGE_PRODUCT_CREATED', $data['title']);
@@ -73,8 +75,10 @@ class acp_garage_product
 				* Update an existing product
 				*/
 				case 'edit_product':
-					$params = array('title' => '', 'category_id' => '', 'manufacturer_id' => $manufacturer_id, 'product_id' => $product_id);
+					$params = array('category_id' => '', 'manufacturer_id' => $manufacturer_id, 'product_id' => $product_id);
 					$data = $garage->process_vars($params);
+					$params = array('title' => '');
+					$data += $garage->process_mb_vars($params);
 
 					$garage_modification->update_product($data);
 					add_log('admin', 'LOG_GARAGE_PRODUCT_UPDATED', $data['title']);

@@ -7,7 +7,7 @@ function get_model_list(sel)
 {
 	var make_id = sel.options[sel.selectedIndex].value;
 	document.getElementById('model_id').options.length = 0;
-	ajax.requestFile = 'garage.php?mode=get_model_list&amp;make_id='+make_id;
+	ajax.requestFile = 'garage.php?mode=get_model_list&make_id='+make_id;
 	ajax.onCompletion = build_model_list;
 	ajax.runAJAX();
 }
@@ -16,7 +16,7 @@ function get_product_list(sel)
 {
 	var make_id = sel.options[sel.selectedIndex].value;
 	document.getElementById('product_id').options.length = 0;
-	ajax.requestFile = 'garage.php?mode=get_product_list&amp;manufacturer_id='+make_id;
+	ajax.requestFile = 'garage.php?mode=get_product_list&manufacturer_id='+make_id;
 	ajax.onCompletion = build_product_list;
 	ajax.runAJAX();
 }

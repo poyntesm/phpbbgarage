@@ -212,8 +212,10 @@ switch( $mode )
 		}
 
 		//Get All Data Posted And Make It Safe To Use
-		$params	= array('search_year' => '', 'search_make' => '', 'search_model' => '', 'search_category' => '', 'search_manufacturer' => '', 'search_product' => '', 'search_username' => '', 'display_as' => $default_display, 'made_year' => '', 'make_id' => '', 'model_id' => '', 'category_id' => '', 'manufacturer_id' => '', 'product_id' => '', 'username' => '');
+		$params	= array('search_year' => '', 'search_make' => '', 'search_model' => '', 'search_category' => '', 'search_manufacturer' => '', 'search_product' => '', 'search_username' => '', 'display_as' => $default_display, 'made_year' => '', 'make_id' => '', 'model_id' => '', 'category_id' => '', 'manufacturer_id' => '', 'product_id' => '');
 		$data 	= $garage->process_vars($params);
+		$params	= array('username' => '');
+		$data 	+= $garage->process_mb_vars($params);
 
 		//Set Required Values To Defaults If They Are Empty
 		$start	= (empty($start)) ? '0' : $start;
@@ -475,7 +477,7 @@ switch( $mode )
 					break;
 
 			                default:
-						$watermakr = false;
+						$watermark = false;
 					break;
 			        }
 
@@ -1054,8 +1056,10 @@ switch( $mode )
 		}
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('redirect' => '', 'title' => '', 'address' => '', 'telephone' => '', 'fax' => '', 'website' => '', 'email' => '', 'opening_hours' => '', 'product' => '', 'insurance' => '', 'garage' => '', 'retail' => '', 'dynocentre' => '');
+		$params = array('redirect' => '', 'telephone' => '', 'fax' => '', 'website' => '', 'email' => '', 'product' => '', 'insurance' => '', 'garage' => '', 'retail' => '', 'dynocentre' => '');
 		$data 	= $garage->process_vars($params);
+		$params = array('title' => '', 'address' => '', 'opening_hours' => '');
+		$data 	+= $garage->process_mb_vars($params);
 
 		//Check They Entered http:// In The Front Of The Link
 		if ((!preg_match( "/^http:\/\//i", $data['website'])) AND (!empty($data['website'])))
@@ -1160,8 +1164,10 @@ switch( $mode )
 		}
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('id' => '', 'title' => '', 'address' => '', 'telephone' => '', 'fax' => '', 'website' => '', 'email' => '', 'opening_hours' => '', 'product' => '', 'insurance' => '', 'garage' => '', 'retail' => '', 'dynocentre' => '');
+		$params = array('id' => '', 'telephone' => '', 'fax' => '', 'website' => '', 'email' => '', 'product' => '', 'insurance' => '', 'garage' => '', 'retail' => '', 'dynocentre' => '');
 		$data 	= $garage->process_vars($params);
+		$params = array('title' => '', 'address' => '', 'opening_hours' => '');
+		$data 	+= $garage->process_mb_vars($params);
 
 		//Check They Entered http:// In The Front Of The Link
 		if ( (!preg_match( "/^http:\/\//i", $data['website'])) AND (!empty($data['website'])) )
@@ -1240,8 +1246,10 @@ switch( $mode )
 		}
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('make' => '', 'made_year' => '');
+		$params = array('made_year' => '');
 		$data = $garage->process_vars($params);
+		$params = array('make' => '');
+		$data += $garage->process_mb_vars($params);
 
 		//Checks All Required Data Is Present
 		$params = array('make', 'made_year');
@@ -1391,8 +1399,10 @@ switch( $mode )
 		}
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('make' => '', 'make_id' => '', 'model' => '', 'made_year' => '');
+		$params = array('make_id' => '', 'made_year' => '');
 		$data = $garage->process_vars($params);
+		$params = array('make' => '', 'model' => '');
+		$data += $garage->process_mb_vars($params);
 
 		//Checks All Required Data Is Present
 		$params = array('make', 'make_id', 'model');
@@ -1423,8 +1433,10 @@ switch( $mode )
 		}
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('title' => '', 'category_id' => '', 'manufacturer_id' => '', 'vehicle_id' => '');
+		$params = array('category_id' => '', 'manufacturer_id' => '', 'vehicle_id' => '');
 		$data = $garage->process_vars($params);
+		$params = array('title' => '');
+		$data += $garage->process_mb_vars($params);
 
 		//Checks All Required Data Is Present
 		$params = array('title', 'category_id', 'manufacturer_id', 'vehicle_id');
@@ -1614,6 +1626,9 @@ switch( $mode )
 		$garage_dynorun->show_topdynorun();
 		$garage_vehicle->show_toprated();
 		$garage_track->show_toplap();
+
+		//Show Top Rated Month Vehicle
+		$garage_vehicle->show_month_toprated_vehicle();
 
 		$template->assign_vars(array(
 			'S_INDEX_COLUMNS' 	=> ($garage_config['enable_user_index_columns'] && ($user->data['user_garage_index_columns'] != $garage_config['index_columns'])) ? $user->data['user_garage_index_columns'] : $garage_config['index_columns'],

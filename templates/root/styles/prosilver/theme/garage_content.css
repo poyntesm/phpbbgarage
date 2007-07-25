@@ -447,3 +447,27 @@ a.garage-camera-icon:hover, a.garage-delete-icon:hover, a.garage-edit-icon:hover
 	vertical-align: bottom
 }
 
+/* Set Width */
+.gwidth-5 {
+	width: 5%;
+}
+.gwidth-10 {
+	width: 10%;
+}
+
+.gwidth-20 {
+	width: 20%;
+}
+
+.gwidth-30 {
+	width: 30%;
+}
+
+.gwidth-40 {
+	width: 40%;
+}
+
+.gwidth-50 {
+	width: 50%;
+}
+

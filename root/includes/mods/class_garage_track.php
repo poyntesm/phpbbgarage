@@ -139,7 +139,7 @@ class garage_track
 	{
 		global $vid, $garage_image, $garage;
 	
-		$images	= $garage_image->get_lap_gallery($vid, $lid);
+		$images	= $garage_image->get_lap_gallery($lid);
 	
 		for ($i = 0, $count = sizeof($images);$i < $count; $i++)
 		{
@@ -212,7 +212,7 @@ class garage_track
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'u.*, v.id, v.made_year, v.user_id, mk.make, md.model, l.*, i.attach_id as image_id, i.attach_file, l.id as lid, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, t.title',
+			'SELECT'	=> 'u.*, v.id, v.made_year, v.user_id, mk.make, md.model, l.*, i.attach_id as image_id, i.attach_file, l.id as lid, v.made_year, mk.make, md.model, t.title',
 
 			'FROM'		=> array(
 				GARAGE_LAPS_TABLE	=> 'l',
@@ -242,6 +242,10 @@ class garage_track
 
 		$result = $db->sql_query($sql);
 		$data = $db->sql_fetchrow($result);
+		if (!empty($data))
+		{
+			$data['vehicle'] = "{$data['made_year']} {$data['make']} {$data['model']}";
+		}
 		$db->sql_freeresult($result);
 
 		return $data;
@@ -287,7 +291,7 @@ class garage_track
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'v.id, v.made_year, v.user_id, mk.make, md.model, u.username, u.user_id, t.title, l.*, i.attach_id, l.id as lid, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle',
+			'SELECT'	=> 'v.id, v.made_year, v.user_id, mk.make, md.model, u.username, u.user_id, t.title, l.*, i.attach_id, l.id as lid, v.made_year, mk.make, md.model',
 			'FROM'		=> array(
 				GARAGE_LAPS_TABLE	=> 'l',
 				GARAGE_TRACKS_TABLE	=> 't',
@@ -317,6 +321,10 @@ class garage_track
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
+			if (!empty($row))
+			{
+				$row['vehicle'] = "{$row['made_year']} {$row['make']} {$row['model']}";
+			}
 			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
@@ -383,7 +391,7 @@ class garage_track
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'l.*, l.id as lid, i.*, t.title, u.username, u.user_id, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, v.id as vehicle_id, u.user_colour',
+			'SELECT'	=> 'l.*, l.id as lid, i.*, t.title, u.username, u.user_id, v.made_year, mk.make, md.model, v.id as vehicle_id, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_LAPS_TABLE	=> 'l',
 				GARAGE_TRACKS_TABLE	=> 't',
@@ -414,6 +422,10 @@ class garage_track
 		$result = $db->sql_query($sql);
 		while ($row = $db->sql_fetchrow($result))
 		{
+			if (!empty($row))
+			{
+				$row['vehicle'] = "{$row['made_year']} {$row['make']} {$row['model']}";
+			}
 			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
@@ -436,7 +448,7 @@ class garage_track
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'l.*, l.id as lid, t.title, t.id as tid, v.*, u.username, u.user_id, CONCAT_WS(\' \', v.made_year, mk.make, md.model) AS vehicle, v.id as vid, u.user_colour',
+			'SELECT'	=> 'l.*, l.id as lid, t.title, t.id as tid, v.*, u.username, u.user_id, v.made_year, mk.make, md.model, v.id as vid, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_LAPS_TABLE	=> 'l',
 				GARAGE_TRACKS_TABLE	=> 't',
@@ -458,6 +470,10 @@ class garage_track
 		$result = $db->sql_query_limit($sql, $limit, 0);
 		while ($row = $db->sql_fetchrow($result))
 		{
+			if (!empty($row))
+			{
+				$row['vehicle'] = "{$row['made_year']} {$row['make']} {$row['model']}";
+			}
 			$data[] = $row;
 		}
 		$db->sql_freeresult($result);
