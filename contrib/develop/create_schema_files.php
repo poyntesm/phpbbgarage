@@ -254,7 +254,6 @@ foreach ($supported_dbms as $dbms)
 
 		case 'firebird':
 			$line = "#\n# \$I" . "d: $\n#\n\n";
-			$line .= custom_data('firebird') . "\n";
 		break;
 
 		case 'sqlite':
@@ -269,13 +268,11 @@ foreach ($supported_dbms as $dbms)
 
 		case 'oracle':
 			$line = "/*\n\n \$I" . "d: $\n\n*/\n\n";
-			$line .= custom_data('oracle') . "\n";
 		break;
 
 		case 'postgres':
 			$line = "/*\n\n \$I" . "d: $\n\n*/\n\n";
 			$line .= "BEGIN;\n\n";
-			$line .= custom_data('postgres') . "\n";
 		break;
 	}
 
@@ -825,10 +822,10 @@ function get_schema_struct()
 		),
 		'PRIMARY_KEY'	=> 'id',
 		'KEYS'			=> array(
-			'date_created'		=> array('INDEX', 'filetime'),
-			'date_updated'		=> array('INDEX', 'post_msg_id'),
-			'user_id'		=> array('INDEX', 'topic_id'),
-			'views'			=> array('INDEX', 'poster_id'),
+			'date_created'		=> array('INDEX', 'date_created'),
+			'date_updated'		=> array('INDEX', 'date_updated'),
+			'user_id'		=> array('INDEX', 'user_id'),
+			'views'			=> array('INDEX', 'views'),
 		),
 	);
 
@@ -837,10 +834,10 @@ function get_schema_struct()
 			'id'			=> array('UINT', NULL, 'auto_increment'),
 			'title'			=> array('XSTEXT_UNI', ''),
 			'address'		=> array('VCHAR', ''),
-			'telephone'		=> array('VHCAR:100', ''),
-			'fax'			=> array('VHCAR:100', ''),
-			'website'		=> array('VHCAR', ''),
-			'email'			=> array('VHCAR:100', ''),
+			'telephone'		=> array('VCHAR:100', ''),
+			'fax'			=> array('VCHAR:100', ''),
+			'website'		=> array('VCHAR', ''),
+			'email'			=> array('VCHAR:100', ''),
 			'opening_hours'		=> array('VCHAR', ''),
 			'insurance'		=> array('BOOL', 0),
 			'garage'		=> array('BOOL', 0),
@@ -852,11 +849,11 @@ function get_schema_struct()
 		),
 		'PRIMARY_KEY'	=> 'id',
 		'KEYS'			=> array(
-			'insurance'		=> array('INDEX', 'group_id'),
-			'garage'		=> array('INDEX', 'group_id'),
-			'retail'		=> array('INDEX', 'group_id'),
-			'product'		=> array('INDEX', 'group_id'),
-			'dynocentre'		=> array('INDEX', 'group_id'),
+			'insurance'		=> array('INDEX', 'insurance'),
+			'garage'		=> array('INDEX', 'garage'),
+			'retail'		=> array('INDEX', 'retail'),
+			'product'		=> array('INDEX', 'product'),
+			'dynocentre'		=> array('INDEX', 'dynocentre'),
 		),
 	);
 
@@ -868,7 +865,7 @@ function get_schema_struct()
 		),
 		'PRIMARY_KEY'	=> 'id',
 		'KEYS'			=> array(
-			'title'		=> array('INDEX', 'auth_option'),
+			'title'		=> array('INDEX', 'title'),
 			'id'		=> array('INDEX', array('id', 'title')),
 		),
 	);
@@ -925,7 +922,7 @@ function get_schema_struct()
 		),
 	);
 
-	$schema_data['phpbb_dynoruns_gallery'] = array(
+	$schema_data['phpbb_garage_dynoruns_gallery'] = array(
 		'COLUMNS'		=> array(
 			'id'			=> array('UINT', NULL, 'auto_increment'),
 			'vehicle_id'		=> array('UINT', 0),
@@ -970,8 +967,8 @@ function get_schema_struct()
 		'PRIMARY_KEY'	=> 'id',
 		'KEYS'			=> array(
 			'vehicle_id'		=> array('INDEX', 'vehicle_id'),
-			'author_id'		=> array('INDEX', 'vehicle_id'),
-			'post_date'		=> array('INDEX', 'vehicle_id'),
+			'author_id'		=> array('INDEX', 'author_id'),
+			'post_date'		=> array('INDEX', 'post_date'),
 		),
 	);
 
@@ -1039,11 +1036,11 @@ function get_schema_struct()
 			'category_id'		=> array('UINT', 0),
 			'manufacturer_id'	=> array('UINT', 0),
 			'product_id'		=> array('UINT', 0),
-			'price'			=> array('', ),
-			'install_price'		=> array('', ),
-			'product_rating'	=> array('', ),
-			'purchase_rating'	=> array('', ),
-			'install_rating'	=> array('', ),
+			'price'			=> array('UINT', 0),
+			'install_price'		=> array('UINT', 0),
+			'product_rating'	=> array('TINT:2', 0),
+			'purchase_rating'	=> array('TINT:2', 0),
+			'install_rating'	=> array('TINT:2', 0),
 			'shop_id'		=> array('UINT', 0),
 			'installer_id'		=> array('UINT', 0),
 			'comments'		=> array('MTEXT_UNI', ''),
@@ -1053,12 +1050,12 @@ function get_schema_struct()
 		),
 		'PRIMARY_KEY'	=> 'id',
 		'KEYS'			=> array(
-			'user_id'		=> array('INDEX', 'make_id'),
+			'user_id'		=> array('INDEX', 'user_id'),
 			'vehicle_id_2'		=> array('INDEX', array('vehicle_id', 'category_id')),
-			'category_id'		=> array('INDEX', 'make_id'),
-			'vehicle_id'		=> array('INDEX', 'make_id'),
-			'date_created'		=> array('INDEX', 'make_id'),
-			'date_updated'		=> array('INDEX', 'make_id'),
+			'category_id'		=> array('INDEX', 'category_id'),
+			'vehicle_id'		=> array('INDEX', 'vehicle_id'),
+			'date_created'		=> array('INDEX', 'date_created'),
+			'date_updated'		=> array('INDEX', 'date_updated'),
 		),
 	);
 
@@ -1121,7 +1118,7 @@ function get_schema_struct()
 		'COLUMNS'		=> array(
 			'id'			=> array('UINT', NULL, 'auto_increment'),
 			'vehicle_id'		=> array('UINT', 0),
-			'rating'		=> array('UINT', 0),
+			'rating'		=> array('TINT:2', 0),
 			'user_id'		=> array('UINT', 0),
 			'rate_date'		=> array('TIMESTAMP', 0),
 		),
@@ -1165,7 +1162,7 @@ function get_schema_struct()
 			'garage_id'		=> array('UINT', 0),
 			'type_id'		=> array('UINT', 0),
 			'price'			=> array('UINT', 0),
-			'rating'		=> array('UINT', 0),
+			'rating'		=> array('TINT:2', 0),
 			'mileage'		=> array('UINT', 0),
 			'date_created'		=> array('TIMESTAMP', 0),
 			'date_updated'		=> array('TIMESTAMP', 0),

@@ -21,12 +21,12 @@
 		<mod-version>
 			<major>2</major>
 			<minor>0</minor>
-			<revision>B1</revision>
+			<revision>B3</revision>
 		</mod-version>
 
 		<installation>
 			<level>advanced</level>
-			<time>2725</time>
+			<time>1800</time>
 			<target-version>
 				<target-primary>3.0.RC3</target-primary>
 				<target-major allow="exact">3</target-major>
@@ -74,7 +74,11 @@
 
 	<action-group>
 		<copy>
-			<file from="./root/*.*" to="./" />
+			<file from="./root/adm/*.*" to="./adm/" />
+			<file from="./root/garage/*.*" to="./garage/" />
+			<file from="./root/includes/*.*" to="./inculdes/" />
+			<file from="./root/language/en/*.*" to="./langauge/en/" />
+			<file from="./root/*garage*.*" to="./" />
 		</copy>
 
 		<diy-instructions lang="en-gb"><![CDATA[<a href="http://en.wikipedia.org/wiki/Chmod">Chmod</a> ./garage/ to 755
@@ -381,6 +385,21 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------]]></action>
 			</edit>
 		</open>
+
+		<open src="includes/session.php">
+			<edit>
+				<find><![CDATA[<?php]]></find>
+				<action type="after-add">//-- mod : Garage ----------------------------------------------------------------------------------------------------------</action>
+			</edit>
+			<edit>
+				<find><![CDATA[		$this->add_lang($lang_set);
+		unset($lang_set);]]></find>
+				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+		$this->add_lang('mods/garage_common');
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------]]></action>
+			</edit>
+		</open>
 	    
 		<open src="includes/acp/acp_styles.php">
 			<edit>
@@ -407,120 +426,6 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 			</edit>
 		</open>
 
-
-		<open src="language/en/common.php">
-			<edit>
-				<find><![CDATA[<?php
-]]></find>
-				<action type="after-add">//-- mod : Garage ----------------------------------------------------------------------------------------------------------</action>
-			</edit>
-			<edit>
-				<find>$lang = array_merge($lang, array(</find>
-				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-	'GARAGE'				=> 'Garage',
-	'QUARTERMILE'				=> '&frac14; Mile',
-	'DYNORUN'				=> 'Dynorun',
-	'PENDING_GARAGE_ITEMS'			=> 'Pending Garage Items',
-	'VIEWING_GARAGE'			=> 'Viewing Garage',
-	'USERS_GARAGE'				=> 'View user\'s Garage',
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-]]></action>
-			</edit>
-		</open>
-		
-		<open src="language/en/mcp.php">
-			<edit>
-				<find><![CDATA[<?php]]></find>
-				<action type="after-add">//-- mod : Garage ----------------------------------------------------------------------------------------------------------</action>
-			</edit>
-			<edit>
-				<find>$lang = array_merge($lang, array(</find>
-				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-	'MCP_GARAGE'					=> 'Garage',
-	'MCP_GARAGE_UNAPPROVED_VEHICLES'		=> 'Vehicles awaiting approval',
-	'MCP_GARAGE_UNAPPROVED_GUESTBOOK_COMMENTS'	=> 'Comments awaiting approval',
-	'MCP_GARAGE_UNAPPROVED_MAKES'			=> 'Makes awaiting approval',
-	'MCP_GARAGE_UNAPPROVED_MODELS'			=> 'Models awaiting approval',
-	'MCP_GARAGE_UNAPPROVED_BUSINESS'		=> 'Business\'s awaiting approval',
-	'MCP_GARAGE_UNAPPROVED_QUARTERMILES'		=> '&frac14; miles awaiting approval',
-	'MCP_GARAGE_UNAPPROVED_DYNORUNS'		=> 'Dynoruns awaiting approval',
-	'MCP_GARAGE_UNAPPROVED_LAPS'			=> 'Laps awaiting approval',
-	'MCP_GARAGE_UNAPPROVED_TRACKS'			=> 'Tracks awaiting approval', 
-	'MCP_GARAGE_UNAPPROVED_PRODUCTS'		=> 'Products awaiting approval', 
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-]]></action>
-			</edit>
-		</open>
-		
-		<open src="language/en/ucp.php">
-			<edit>
-				<find><![CDATA[<?php]]></find>
-				<action type="after-add">//-- mod : Garage ----------------------------------------------------------------------------------------------------------</action>
-			</edit>
-			<edit>
-				<find>// Common language entries
-$lang = array_merge($lang, array(</find>
-				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-	'UCP_GARAGE'				=> 'Garage',
-	'UCP_GARAGE_OPTIONS'			=> 'Edit global settings',
-	'UCP_GARAGE_NOTIFY'			=> 'Edit notification settings',
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-]]></action>
-			</edit>
-		</open>
-		
-		<open src="language/en/acp/common.php">
-			<edit>
-				<find><![CDATA[<?php]]></find>
-				<action type="after-add">//-- mod : Garage ----------------------------------------------------------------------------------------------------------</action>
-			</edit>
-			<edit>
-				<find>$lang = array_merge($lang, array(</find>
-				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-	'ACP_GARAGE'				=> 'Garage',
-	'ACP_GARAGE_BUSINESS'			=> 'Business\'s',
-	'ACP_GARAGE_BUSINESS_MANAGEMENT'	=> 'Garage business management',
-	'ACP_GARAGE_CATEGORIES'			=> 'Categories',
-	'ACP_GARAGE_CATEGORY_MANAGEMENT'	=> 'Garage category management',
-	'ACP_GARAGE_MODELS'	 		=> 'Makes/models',
-	'ACP_GARAGE_MODEL_MANAGEMENT'	 	=> 'Garage make/model managment',
-	'ACP_GARAGE_PRODUCTS'	 		=> 'Products',
-	'ACP_GARAGE_PRODUCT_MANAGEMENT'		=> 'Garage modification managment',
-	'ACP_GARAGE_QUOTAS'			=> 'Quotas',
-	'ACP_GARAGE_QUOTA_MANAGEMENT'		=> 'Garage quotas',
-	'ACP_GARAGE_TOOLS'			=> 'Tools',
-	'ACP_GARAGE_TOOL_MANAGEMENT'		=> 'Garage Tools',
-	'ACP_GARAGE_TRACK'			=> 'Tracks',
-	'ACP_GARAGE_TRACK_MANAGEMENT'		=> 'Garage track managment',
-	'ACP_GARAGE_SETTINGS'			=> 'Garage settings',
-	'ACP_GARAGE_MANAGEMENT'			=> 'Garage management',
-	'ACP_GARAGE_GENERAL_SETTINGS'		=> 'General settings',
-	'ACP_GARAGE_MENU_SETTINGS'		=> 'Menu settings',
-	'ACP_GARAGE_INDEX_SETTINGS'		=> 'Index page settings',
-	'ACP_GARAGE_IMAGES_SETTINGS'		=> 'Image settings',
-	'ACP_GARAGE_QUARTERMILE_SETTINGS'	=> '&frac14; mile settings',
-	'ACP_GARAGE_DYNORUN_SETTINGS'		=> 'Dynorun settings',
-	'ACP_GARAGE_TRACK_SETTINGS'		=> 'Track/lap settings',
-	'ACP_GARAGE_INSURANCE_SETTINGS'		=> 'Insurance settings',
-	'ACP_GARAGE_BUSINESS_SETTINGS'		=> 'Business settings',
-	'ACP_GARAGE_RATING_SETTINGS'		=> 'Rating settings',
-	'ACP_GARAGE_GUESTBOOK_SETTINGS'		=> 'Guestbook settings',
-	'ACP_GARAGE_PRODUCT_SETTINGS'		=> 'Product settings',
-	'ACP_GARAGE_SERVICE_SETTINGS'		=> 'Service history settings',
-	'ACP_GARAGE_BLOG_SETTINGS'		=> 'Blog settings',
-	'ACP_GARAGE_FIELDS_MANAGEMENT'		=> 'Garage Custom fields management',
-	'ACP_GARAGE_FIELDS'			=> 'Custom Fields',
-	'APPROVE'				=> 'Approve',
-	'DISAPPROVE'				=> 'Disapprove',
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-]]></action>
-			</edit>
-		</open>
-		
 		<open src="language/en/acp/styles.php">
 			<edit>
 				<find><![CDATA[<?php]]></find>
