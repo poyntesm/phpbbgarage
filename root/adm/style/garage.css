@@ -1,0 +1,10 @@
+/* New logo for phpBB Garage
+---------------------------------------- */
+#page-header {
+	background: url("../images/phpbbgarage_logo.gif") top left no-repeat;
+}
+
+.rtl #page-header {
+	background: url("../images/phpbbgarage_logo.gif") top right no-repeat;
+}
+
