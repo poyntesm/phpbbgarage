@@ -67,7 +67,7 @@ require($phpbb_root_path . 'includes/mods/constants_garage.' . $phpEx);
 */
 $user->session_begin();
 $auth->acl($user->data);
-$user->setup(array('mods/garage_install'));
+$user->setup(array('install', 'mods/garage_install'));
 
 //Need to handle phpBB Garage 2.0.B2 so turn
 $db->sql_return_on_error(true);

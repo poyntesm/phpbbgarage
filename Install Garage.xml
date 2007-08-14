@@ -81,9 +81,7 @@
 			<file from="./root/*garage*.*" to="./" />
 		</copy>
 
-		<diy-instructions lang="en-gb"><![CDATA[<a href="http://en.wikipedia.org/wiki/Chmod">Chmod</a> ./garage/ to 755
-Chmod ./garage/upload to 777
-Open your web browser and run install_garage.php
+		<diy-instructions lang="en-gb"><![CDATA[Open your web browser and open the address http://www.yourdomain.com/pathtophpbb/garage/install/
 Delete install_garage.php if it ran succesfully]]>
 		</diy-instructions>
 	    
@@ -407,6 +405,13 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 				<action type="after-add">//-- mod : Garage ----------------------------------------------------------------------------------------------------------</action>
 			</edit>
 			<edit>
+				<find>		$user->add_lang('acp/styles');</find>
+				<action type="after-add">//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+		$user->add_lang('mods/garage_style');
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------</action>
+			</edit>
+			<edit>
 				<find>, 'button_topic_new', 'button_topic_reply',</find>
 				<action type="after-add">//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
@@ -423,48 +428,6 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 				'garage_img_attached', 'garage_edit', 'garage_delete', 'garage_toggle',
 			),
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------]]></action>
-			</edit>
-		</open>
-
-		<open src="language/en/acp/styles.php">
-			<edit>
-				<find><![CDATA[<?php]]></find>
-				<action type="after-add">//-- mod : Garage ----------------------------------------------------------------------------------------------------------</action>
-			</edit>
-			<edit>
-				<find><![CDATA[	'IMG_CAT_USER'			=> 'Additional images',]]></find>
-				<action type="after-add"><![CDATA[
-//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-	'IMG_CAT_GARAGE'		=> 'phpBB Garage images',
-	'IMG_GARAGE_IMG_ATTACHED'	=> 'Image attached',
-	'IMG_GARAGE_ICON_GARAGE'	=> 'Garage icon',
-	'IMG_GARAGE_MAIN_MENU'		=> 'Index menu',
-	'IMG_GARAGE_BROWSE'		=> 'Browse menu',
-	'IMG_GARAGE_SEARCH'		=> 'Search menu',
-	'IMG_GARAGE_QUARTERMILE_TABLE'	=> '&frac14; mile table',
-	'IMG_GARAGE_DYNORUN_TABLE'	=> 'Dynorun table',
-	'IMG_GARAGE_LAP_TABLE'		=> 'Lap table',
-	'IMG_GARAGE_GARAGE_REVIEW'	=> 'Garage review',
-	'IMG_GARAGE_SHOP_REVIEW'	=> 'Shop review',
-	'IMG_GARAGE_INSURANCE_REVIEW'	=> 'Insurance review',
-	'IMG_GARAGE_CREATE_VEHICLE'	=> 'Create vehicle',
-	'IMG_GARAGE_EDIT_VEHICLE'	=> 'Edit vehicle',
-	'IMG_GARAGE_DELETE_VEHICLE'	=> 'Delete vehicle',
-	'IMG_GARAGE_VIEW_VEHICLE'	=> 'View vehicle',
-	'IMG_GARAGE_ADD_MODIFICATION'	=> 'Add modification',
-	'IMG_GARAGE_ADD_INSURANCE'	=> 'Add insurance',
-	'IMG_GARAGE_ADD_DYNORUN'	=> 'Add dynorun',
-	'IMG_GARAGE_ADD_LAP'		=> 'Add lap',
-	'IMG_GARAGE_ADD_SERVICE'	=> 'Add service',
-	'IMG_GARAGE_ADD_QUARTERMILE'	=> 'Add &frac14; mile',
-	'IMG_GARAGE_EDIT'		=> 'Edit',
-	'IMG_GARAGE_DELETE'		=> 'Delete',
-	'IMG_GARAGE_TOGGLE'		=> 'Toggle',
-	'IMG_GARAGE_MAIN_VEHICLE'	=> 'Main vehicle',
-	'IMG_GARAGE_NO_THUMB'		=> 'No thumb',
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-]]></action>
 			</edit>
 		</open>
 

@@ -20,10 +20,10 @@ if (!defined('IN_INSTALL'))
 if (!empty($setmodules))
 {
 	// If phpBB Garage is already installed we do not include this module
-	/*if (defined('PHPBBGARAGE_INSTALLED'))
+	if (defined('PHPBBGARAGE_INSTALLED') AND $mode != "install")
 	{
 		return;
-	}*/
+	}
 
 	$module[] = array(
 		'module_type'		=> 'install',
@@ -31,7 +31,7 @@ if (!empty($setmodules))
 		'module_filename'	=> substr(basename(__FILE__), 0, -strlen($phpEx)-1),
 		'module_order'		=> 10,
 		'module_subs'		=> '',
-		'module_stages'		=> array('INTRO', 'REQUIREMENTS', 'OPTIONAL', 'CREATE_TABLE', 'FINAL'),
+		'module_stages'		=> array('INTRO', 'REQUIREMENTS', 'OPTIONAL', 'CREATE_TABLE', 'CREATE_PERMISSIONS', 'CREATE_MODULES,' 'FILE_CHECK', 'UPDATE_FILES', 'FINAL'),
 		'module_reqs'		=> ''
 	);
 }
@@ -78,12 +78,29 @@ class install_install extends module
 				$this->load_schema($mode, $sub);
 			break;
 
-			case 'final':
+			case 'create_permissions':
 				$this->add_permissions($mode, $sub);
 				$this->update_user_permissions($mode, $sub);
 				$this->update_role_permissions($mode, $sub);
+
+				$submit = $lang['NEXT_STEP'];
+
+				$url = $this->p_master->module_url . "?mode=$mode&amp;sub=final";
+
+				$template->assign_vars(array(
+					'BODY'		=> $lang['STAGE_CREATE_TABLE_EXPLAIN'],
+					'L_SUBMIT'	=> $submit,
+					'S_HIDDEN'	=> build_hidden_fields($data),
+					'U_ACTION'	=> $url,
+				));
+
+			break;
+
+			case 'create_modules':
 				$this->add_modules($mode, $sub);
-				
+			break;
+
+			case 'final':
 				// Remove the lock file
 				@unlink($phpbb_root_path . 'cache/install_lock');
 
@@ -667,6 +684,17 @@ ALTER TABLE phpbb_users ADD `user_garage_mod_pm_optout` TINYINT( 1 ) UNSIGNED NO
 		));
 
 		$auth_admin->acl_add_option($phpbbgarage_permissions);
+
+		$submit = $lang['NEXT_STEP'];
+
+		$url = $this->p_master->module_url . "?mode=$mode&amp;sub=final";
+
+		$template->assign_vars(array(
+			'BODY'		=> $lang['STAGE_CREATE_TABLE_EXPLAIN'],
+			'L_SUBMIT'	=> $submit,
+			'S_HIDDEN'	=> build_hidden_fields($data),
+			'U_ACTION'	=> $url,
+		));
 	}
 
 	/**
