@@ -14,7 +14,7 @@ $install_info = array(
 		'common.php',
 		'memberlist.php',
 		'viewonline.php',
-		'vietopic.php',
+		'viewtopic.php',
 		'adm/index.php',
 		'includes/functions.php',
 		'includes/functions_user.php',
