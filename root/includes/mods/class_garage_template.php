@@ -24,6 +24,20 @@ class garage_template
 	var $classname = "garage_template";
 
 	/**
+	* Updates the imageset keys for ACP pages
+	*/
+	function update_imageset_keys($imageset_keys)
+	{
+		$lang_images = array('garage_icon_garage', 'garage_main_menu', 'garage_browse', 'garage_search', 'garage_quartermile_table', 'garage_dynorun_table', 'garage_lap_table', 'garage_garage_review', 'garage_shop_review', 'garage_insurance_review', 'garage_create_vehicle', 'garage_edit_vehicle', 'garage_delete_vehicle', 'garage_view_vehicle', 'garage_add_modification', 'garage_add_insurance', 'garage_add_dynorun', 'garage_add_quartermile', 'garage_add_lap', 'garage_add_service', 'garage_main_vehicle', 'garage_no_thumb');
+		$non_lang_images = array('garage_img_attached', 'garage_edit', 'garage_delete', 'garage_toggle');
+
+		array_push($imageset_keys['buttons'], $lang_images);
+		$imageset_keys['garage'] = $non_lang_images;
+
+		return $imageset_keys;
+	}
+
+	/**
 	* Assign version number & copywright notice. Remove and no support
 	*/
 	function version_notice()

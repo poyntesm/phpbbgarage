@@ -28,10 +28,10 @@
 			<level>advanced</level>
 			<time>1800</time>
 			<target-version>
-				<target-primary>3.0.RC3</target-primary>
+				<target-primary>3.0.RC4</target-primary>
 				<target-major allow="exact">3</target-major>
 				<target-minor allow="exact">0</target-minor>
-            			<target-revision allow="after-equal" stage="release-candidate">3</target-revision>
+            			<target-revision allow="after-equal" stage="release-candidate">4</target-revision>
 			</target-version>
 		</installation>
 
@@ -81,8 +81,7 @@
 			<file from="./root/*garage*.*" to="./" />
 		</copy>
 
-		<diy-instructions lang="en-gb"><![CDATA[Open your web browser and open the address http://www.yourdomain.com/pathtophpbb/garage/install/
-Delete install_garage.php if it ran succesfully]]>
+		<diy-instructions lang="en-gb"><![CDATA[Open your web browser and open the address http://www.yourdomain.com/pathtophpbb/garage/install/]]>
 		</diy-instructions>
 	    
 		<open src="common.php">
@@ -137,14 +136,17 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 			<edit>
 				<find>		// Custom Profile Fields
 		$profile_fields = array();</find>
-				<action type="before-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+				<action type="before-add"><![CDATA[
+		//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 		if ($garage_config['integrate_profile'])
 		{
 			include_once($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
 			$garage_vehicle->profile_integration($member['user_id']);
 		}
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------]]></action>
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+]]></action>
 			</edit>
 
 			<edit>
@@ -158,8 +160,9 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 					LEFT JOIN ' . GARAGE_VEHICLES_TABLE . ' v
 						ON (
 							v.user_id = u.user_id AND v.main_vehicle = 1
-						)
-						WHERE ' . $db->sql_in_set('u.user_id', $user_list);
+						) .
+					WHERE ' . $db->sql_in_set('u.user_id', $user_list) . "
+						$sql_where_data";
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------]]></action>
 			</edit>
 
@@ -255,10 +258,13 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 				<action type="after-add">//-- mod : Garage ----------------------------------------------------------------------------------------------------------</action>
 			</edit>
 			<edit>
-				<find><![CDATA[	'WARN_IMG'			=> $user->img('icon_user_warn', 'WARN_USER'),]]></find>
-				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+				<find><![CDATA[$topic_data['topic_title'] = censor_text($topic_data['topic_title']);]]></find>
+				<action type="after-add"><![CDATA[
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
+$template->assign_vars(array(
 	'GARAGE_IMG'			=> $user->img('garage_icon_garage', 'USERS_GARAGE'),
+));
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------]]></action>
 			</edit>
 			<edit>
@@ -270,7 +276,7 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 				<find><![CDATA[	'SELECT'	=> 'u.*, z.friend, z.foe, p.*',]]></find>
 				<inline-edit>
 					<inline-find>p.*</inline-find>
-					<inline-action type="after-add">, g.id as garage_id, CONCAT_WS(\' \', g.made_year, makes.make, models.model) AS vehicle</inline-action>
+					<inline-action type="after-add">, g.id as garage_id, g.made_year, makes.make, models.model</inline-action>
 				</inline-edit>
 			</edit>
 			<edit>
@@ -315,7 +321,7 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 				<find>	$postrow = array(</find>
 				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
-		'VEHICLE'			=> $user_cache[$poster_id]['vehicle'],
+		'VEHICLE'			=> $user_cache[$poster_id]['made_year'] . ' ' . $user_cache[$poster_id]['make'] . ' ' . $user_cache[$poster_id]['model'],
 		'U_VEHICLE'			=> (isset($user_cache[$poster_id]['garage_id'])) ? append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", 'mode=view_vehicle&amp;VID=' . $user_cache[$poster_id]['garage_id']) : '',
 		'U_GARAGE'			=> (isset($user_cache[$poster_id]['garage_id'])) ? append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=dispay_results&amp;username=' . $user_cache[$poster_id]['username']) : '',
 		'S_DISPLAY_GARAGE_VIEWTOPIC'	=> ($garage_config['integrate_viewtopic']) ? true : false,
@@ -346,22 +352,25 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 				<action type="after-add">//-- mod : Garage ----------------------------------------------------------------------------------------------------------</action>
 			</edit>
 			<edit>
-				<find>	global $db, $config, $template, $SID, $_SID, $user, $auth, $phpEx, $phpbb_root_path;</find>
+				<find>function page_header($page_title = '', $display_online_list = true)
+{</find>
 				<action type="after-add">//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 	global $garage_config;
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------</action>
 			</edit>
 			<edit>
-				<find><![CDATA[		'U_FAQ'					=> append_sid("{$phpbb_root_path}faq.$phpEx"),]]></find>
+				<find><![CDATA[		$tz = ($user->data['user_id'] != ANONYMOUS) ? strval(doubleval($user->data['user_timezone'])) : strval(doubleval($config['board_timezone']));]]></find>
 				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
+	$template->assign_vars(array(
 		'U_GARAGE' 			=> append_sid("{$phpbb_root_path}garage.$phpEx"),
 		'U_QUARTERMILE' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=quartermile_table'),
 		'U_DYNORUN' 			=> append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=dynorun_table'),
 		'S_DISPLAY_GARAGE'		=> ($garage_config['enable_garage_header']) ? 1 : 0,
 		'S_DISPLAY_QUARTERMILE'		=> ($garage_config['enable_quartermile_header']) ? 1 : 0,
 		'S_DISPLAY_DYNORUN'		=> ($garage_config['enable_dynorun_header']) ? 1 : 0,
+	));
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------]]></action>
 			</edit>
 		</open>
@@ -369,7 +378,7 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 		<open src="includes/functions_user.php">
 			<edit>
 				<find><![CDATA[<?php]]></find>
-				<action type="after-add">//-- mod : Garage ----------------------------------------------------------------------------------------------------------</action>
+				<action type="after-add"><![CDATA[//-- mod : Garage ----------------------------------------------------------------------------------------------------------]]></action>
 			</edit>
 			<edit>
 				<find><![CDATA[		set_config('num_users', $config['num_users'] - 1, true);
@@ -387,7 +396,7 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 		<open src="includes/session.php">
 			<edit>
 				<find><![CDATA[<?php]]></find>
-				<action type="after-add">//-- mod : Garage ----------------------------------------------------------------------------------------------------------</action>
+				<action type="after-add"><![CDATA[//-- mod : Garage ----------------------------------------------------------------------------------------------------------]]></action>
 			</edit>
 			<edit>
 				<find><![CDATA[		$this->add_lang($lang_set);
@@ -402,32 +411,25 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 		<open src="includes/acp/acp_styles.php">
 			<edit>
 				<find><![CDATA[<?php]]></find>
-				<action type="after-add">//-- mod : Garage ----------------------------------------------------------------------------------------------------------</action>
+				<action type="after-add"><![CDATA[//-- mod : Garage ----------------------------------------------------------------------------------------------------------]]></action>
 			</edit>
 			<edit>
-				<find>		$user->add_lang('acp/styles');</find>
-				<action type="after-add">//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-		$user->add_lang('mods/garage_style');
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------</action>
-			</edit>
-			<edit>
-				<find>, 'button_topic_new', 'button_topic_reply',</find>
-				<action type="after-add">//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-				'garage_icon_garage', 'garage_main_menu', 'garage_browse', 'garage_search', 'garage_quartermile_table', 'garage_dynorun_table', 'garage_lap_table', 'garage_garage_review', 'garage_shop_review', 'garage_insurance_review', 'garage_create_vehicle', 'garage_edit_vehicle', 'garage_delete_vehicle', 'garage_view_vehicle', 'garage_add_modification', 'garage_add_insurance', 'garage_add_dynorun', 'garage_add_quartermile', 'garage_add_lap', 'garage_add_service', 'garage_main_vehicle', 'garage_no_thumb',
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------</action>
-			</edit>
-			<edit>
-				<find><![CDATA[			'polls'		=> array(
-				'poll_left', 'poll_center', 'poll_right',
-			),]]></find>
+				<find><![CDATA[		$user->add_lang('acp/styles');]]></find>
 				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
-			'garage'	=> array(
-				'garage_img_attached', 'garage_edit', 'garage_delete', 'garage_toggle',
-			),
+		$user->add_lang('mods/garage_style');
+		global $garage_template;
+		include($phpbb_root_path . 'includes/mods/class_garage_template.' . $phpEx);		
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------]]></action>
+			</edit>
+			<edit>
+				<find>		// Execute overall actions
+		switch ($action)</find>
+				<action type="before-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+		$this->imageset_keys = $garage_template->update_imageset_keys($this->imageset_keys);
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------]]></action>
+
 			</edit>
 		</open>
 

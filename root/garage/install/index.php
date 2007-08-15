@@ -60,7 +60,11 @@ include($phpbb_root_path . 'common.' . $phpEx);
 include($phpbb_root_path . 'includes/bbcode.' . $phpEx);
 include($phpbb_root_path . 'includes/functions_admin.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/functions_garage_install.' . $phpEx);
-require($phpbb_root_path . 'includes/mods/constants_garage.' . $phpEx);
+
+if (!defined('BUSINESS_PRODUCT'))
+{
+	require($phpbb_root_path . 'includes/mods/constants_garage.' . $phpEx);
+}
 
 /**
 * Setup user session, authorisation & language 
@@ -153,6 +157,7 @@ if (!file_exists($phpbb_root_path . 'language/' . $language))
 include($phpbb_root_path . 'language/' . $language . '/common.' . $phpEx);
 include($phpbb_root_path . 'language/' . $language . '/acp/common.' . $phpEx);
 include($phpbb_root_path . 'language/' . $language . '/acp/board.' . $phpEx);
+include($phpbb_root_path . 'language/' . $language . '/install.' . $phpEx);
 include($phpbb_root_path . 'language/' . $language . '/mods/garage_install.' . $phpEx);
 include($phpbb_root_path . 'language/' . $language . '/posting.' . $phpEx);
 

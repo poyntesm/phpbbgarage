@@ -22,7 +22,10 @@ include_once($phpbb_root_path . 'includes/mods/constants_garage.'. $phpEx);
 
 /**
 * Build $garage_config
+* We turn off error'ing in case table is not there to allow all phpBB pages
+* display as normal since this is called from common.php
 */
+$db->sql_return_on_error(true);
 $sql = $db->sql_build_query('SELECT', 
 	array(
 	'SELECT'	=> 'c.config_name, c.config_value',
@@ -37,6 +40,7 @@ while( $row = $db->sql_fetchrow($result) )
 	$garage_config[$row['config_name']] = $row['config_value'];
 }
 $db->sql_freeresult($result);
+$db->sql_return_on_error(false);
 
 /**
 * phpBB Garage Class

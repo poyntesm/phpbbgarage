@@ -422,14 +422,21 @@ class acp_garage_setting
 	*/
 	function dateformat_select($value, $key)
 	{
-		global $user;
+		global $user, $config;
+
+		// Let the format_date function operate with the acp values
+		$old_tz = $user->timezone;
+		$old_dst = $user->dst;
+
+		$user->timezone = $config['board_timezone'];
+		$user->dst = $config['board_dst'];
 
 		$dateformat_options = '';
 
 		foreach ($user->lang['dateformats'] as $format => $null)
 		{
 			$dateformat_options .= '<option value="' . $format . '"' . (($format == $value) ? ' selected="selected"' : '') . '>';
-			$dateformat_options .= $user->format_date(time(), $format, true) . ((strpos($format, '|') !== false) ? ' [' . $user->lang['RELATIVE_DAYS'] . ']' : '');
+			$dateformat_options .= $user->format_date(time(), $format, false) . ((strpos($format, '|') !== false) ? $user->lang['VARIANT_DATE_SEPARATOR'] . $user->format_date(time(), $format, true) : '');
 			$dateformat_options .= '</option>';
 		}
 
@@ -440,8 +447,13 @@ class acp_garage_setting
 		}
 		$dateformat_options .= '>' . $user->lang['CUSTOM_DATEFORMAT'] . '</option>';
 
+		// Reset users date options
+		$user->timezone = $old_tz;
+		$user->dst = $old_dst;
+
 		return "<select name=\"dateoptions\" id=\"dateoptions\" onchange=\"if (this.value == 'custom') { document.getElementById('$key').value = '$value'; } else { document.getElementById('$key').value = this.value; }\">$dateformat_options</select>
 		<input type=\"text\" name=\"config[$key]\" id=\"$key\" value=\"$value\" maxlength=\"30\" />";
+
 	}
 }
 
