@@ -356,11 +356,11 @@ class garage_model
 	{
 		global $template, $lang, $garage;
 
-		$params = array('make_id', 'model_id');
-		$int_data = $garage->process_int_vars($params);
-		$params = array('username');
-		$str_data = $garage->process_str_vars($params);
-		$data = array_merge($int_data, $str_data);
+		$int_params = array('make_id', 'model_id');
+		$int_data = $garage->process_int_vars($int_params);
+		$str_params = array('username');
+		$str_data = $garage->process_str_vars($str_params);
+		$data = $garage->merge_int_str_data($int_data, $str_data);
 
 		//Check If This Is A Search Including User
 		if (!empty($data['username']))

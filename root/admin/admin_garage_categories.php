@@ -84,7 +84,7 @@ switch ( $mode )
 		$int_data = $garage->process_int_vars($int_params);
 		$str_params = array('title');
 		$str_data = $garage->process_str_vars($str_params);
-		$data = array_merge($int_data, $str_data);
+		$data = $garage->merge_int_str_data($int_data, $str_data);
 
 		// Now we update this row
 		$garage->update_single_field(GARAGE_CATEGORIES_TABLE, 'title', $data['title'], 'id', $data['id']);

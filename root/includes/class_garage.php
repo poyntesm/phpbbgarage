@@ -102,6 +102,28 @@ class garage
 	}
 
 	/*========================================================================*/
+	// Merge Int & String Data To One Array If Both Are Populated
+	// Usage: merge_int_str_data(array(), array());
+	/*========================================================================*/
+	function merge_int_str_data($int_data, $str_data)
+	{
+		if ((!empty($int_data)) && (!empty($str_data)))
+		{
+			$return_data = array_merge($int_data, $str_data);
+		}
+		else if (!empty($int_data))
+		{
+			$return_data = $int_data;
+		}
+		else
+		{
+			$return_data = $str_data;
+		}
+
+		return $return_data;
+	}
+
+	/*========================================================================*/
 	// Check All Required Variables Have Data
 	// Usage: check_required_vars(array());
 	/*========================================================================*/

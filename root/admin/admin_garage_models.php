@@ -105,7 +105,7 @@ switch($mode)
 		$int_data = $garage->process_int_vars($int_params);
 		$str_params = array('make');
 		$str_data = $garage->process_str_vars($str_params);
-		$data = array_merge($int_data, $str_data);
+		$data = $garage->merge_int_str_data($int_data, $str_data);
 
 		//Checks All Required Data Is Present
 		$params = array('id', 'make');
@@ -266,7 +266,7 @@ switch($mode)
 		$int_data = $garage->process_int_vars($int_params);
 		$str_params = array('model');
 		$str_data = $garage->process_str_vars($str_params);
-		$data = array_merge($int_data, $str_data);
+		$data = $garage->merge_int_str_data($int_data, $str_data);
 
 		//Checks All Required Data Is Present
 		$params = array('make_id', 'model');
@@ -287,7 +287,7 @@ switch($mode)
 		$int_data = $garage->process_int_vars($int_params);
 		$str_params = array('model');
 		$str_data = $garage->process_str_vars($str_params);
-		$data = array_merge($int_data, $str_data);
+		$data = $garage->merge_int_str_data($int_data, $str_data);
 
 		//Checks All Required Data Is Present
 		$params = array('id', 'model');

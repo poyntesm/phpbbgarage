@@ -114,7 +114,7 @@ switch( $mode )
 		$int_data = $garage->process_int_vars($int_params);
 		$str_params = array('MAKE', 'MODEL');
 		$str_data = $garage->process_str_vars($str_params);
-		$data = array_merge($int_data, $str_data);
+		$data = $garage->merge_int_str_data($int_data, $str_data);
 		$data['MAKE'] = (empty($data['MAKE'])) ? '' : $data['MAKE'];
 
 		//Build All Required Javascript And Arrays
@@ -199,7 +199,7 @@ switch( $mode )
 		$int_data = $garage->process_int_vars($int_params);
 		$str_params = array('colour', 'mileage', 'mileage_units', 'price', 'currency', 'comments', 'guestbook_pm_notify', 'engine_type');
 		$str_data = $garage->process_str_vars($str_params);
-		$data = array_merge($int_data, $str_data);
+		$data = $garage->merge_int_str_data($int_data, $str_data);
 		$data['guestbook_pm_notify'] = ($data['guestbook_pm_notify'] == 'on') ? 1 : 0;
 		$data['time'] = time();
 
@@ -324,7 +324,7 @@ switch( $mode )
 		$int_data = $garage->process_int_vars($int_params);
 		$str_params = array('colour', 'mileage', 'mileage_units', 'price', 'currency', 'comments', 'guestbook_pm_notify', 'engine_type');
 		$str_data = $garage->process_str_vars($str_params);
-		$data = array_merge($int_data, $str_data);
+		$data = $garage->merge_int_str_data($int_data, $str_data);
 		$data['guestbook_pm_notify'] = ($data['guestbook_pm_notify'] == 'on') ? 1 : 0;
 
 		//Checks All Required Data Is Present
@@ -435,7 +435,7 @@ switch( $mode )
 		$int_data = $garage->process_int_vars($int_params);
 		$str_params = array('title', 'price', 'install_price', 'comments', 'install_comments');
 		$str_data = $garage->process_str_vars($str_params);
-		$data = array_merge($int_data, $str_data);
+		$data = $garage->merge_int_str_data($int_data, $str_data);
 		$data['time'] = time();
 		$vehicle = $garage_vehicle->select_vehicle_data($cid);
 		$data['member_id'] = $vehicle['member_id'];
@@ -553,7 +553,7 @@ switch( $mode )
 		$int_data = $garage->process_int_vars($int_params);
 		$str_params = array('title', 'price', 'install_price', 'comments', 'install_comments', 'editupload');
 		$str_data = $garage->process_str_vars($str_params);
-		$data = array_merge($int_data, $str_data);
+		$data = $garage->merge_int_str_data($int_data, $str_data);
 		$data['time'] = time();
 
 		//Checks All Required Data Is Present
@@ -687,7 +687,7 @@ switch( $mode )
 		$int_data = $garage->process_int_vars($int_params);
 		$str_params = array('rt', 'sixty', 'three', 'eight', 'eightmph', 'thou', 'quart', 'quartmph', 'install_comments');
 		$str_data = $garage->process_str_vars($str_params);
-		$data = array_merge($int_data, $str_data);
+		$data = $garage->merge_int_str_data($int_data, $str_data);
 		$data['pending'] = ($garage_config['enable_quartermile_approval'] == '1') ? 1 : 0 ;
 		$data['time'] = time();
 
@@ -828,7 +828,7 @@ switch( $mode )
 		$int_data = $garage->process_int_vars($int_params);
 		$str_params = array('rt', 'sixty', 'three', 'eight', 'eightmph', 'thou', 'quart', 'quartmph', 'install_comments', 'editupload', 'pending_redirect');
 		$str_data = $garage->process_str_vars($str_params);
-		$data = array_merge($int_data, $str_data);
+		$data = $garage->merge_int_str_data($int_data, $str_data);
 		$data['pending'] = ($garage_config['enable_quartermile_approval'] == '1') ? 1 : 0 ;
 		$data['time'] = time();
 
@@ -972,7 +972,7 @@ switch( $mode )
 		$int_data = $garage->process_int_vars($int_params);
 		$str_params = array('dynocenter', 'bhp', 'bhp_unit', 'torque', 'torque_unit', 'boost', 'boost_unit', 'peakpoint');
 		$str_data = $garage->process_str_vars($params);
-		$data = array_merge($int_data, $str_data);
+		$data = $garage->merge_int_str_data($int_data, $str_data);
 		$data['pending'] = ($garage_config['enable_rollingroad_approval'] == '1') ? 1 : 0 ;
 		$data['time'] = time();
 
@@ -1095,7 +1095,7 @@ switch( $mode )
 		$int_data = $garage->process_int_vars($int_params);
 		$str_params = array('dynocenter', 'bhp', 'bhp_unit', 'torque', 'torque_unit', 'boost', 'boost_unit', 'peakpoint', 'editupload', 'pending_redirect');
 		$str_data = $garage->process_str_vars($str_params);
-		$data = array_merge($int_data, $str_data);
+		$data = $garage->merge_int_str_data($int_data, $str_data);
 		$data['pending'] = ($garage_config['enable_rollingroad_approval'] == '1') ? 1 : 0 ;
 		$data['time'] = time();
 
@@ -1235,7 +1235,7 @@ switch( $mode )
 		$int_data = $garage->process_int_vars($int_params);
 		$str_params = array('premium', 'cover_type', 'comments');
 		$str_data = $garage->process_str_vars($str_params);
-		$data = array_merge($int_data, $str_data);
+		$data = $garage->merge_int_str_data($int_data, $str_data);
 		$data['time'] = time();
 
 		//Checks All Required Data Is Present
@@ -1309,7 +1309,7 @@ switch( $mode )
 		$int_data = $garage->process_int_vars($int_params);
 		$str_params = array('premium', 'cover_type', 'comments');
 		$str_data = $garage->process_str_vars($str_params);
-		$data = array_merge($int_data, $str_data);
+		$data = $garage->merge_int_str_data($int_data, $str_data);
 
 		//Checks All Required Data Is Present
 		$params = array('business_id', 'premium', 'cover_type');
@@ -2662,7 +2662,7 @@ switch( $mode )
 		$int_data = $garage->process_int_vars($int_params);
 		$str_params = array('title', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
 		$str_data = $garage->process_str_vars($str_params);
-		$data = array_merge($int_data, $str_data);
+		$data = $garage->merge_int_str_data($int_data, $str_data);
 		$data['pending'] = ($garage_config['enable_business_approval'] == '1') ? 1 : 0 ;
 		$data['insurance'] = ($data['insurance'] == 'on') ? 1 : 0 ;
 		$data['garage'] = ($data['garage'] == 'on') ? 1 : 0 ;
@@ -2743,7 +2743,7 @@ switch( $mode )
 		$int_data = $garage->process_int_vars($int_params);
 		$str_params = array('make');
 		$str_data = $garage->process_str_vars($str_params);
-		$data = array_merge($int_data, $str_data);
+		$data = $garage->merge_int_str_data($int_data, $str_data);
 
 		//Checks All Required Data Is Present
 		$params = array('make', 'year');
@@ -2839,7 +2839,7 @@ switch( $mode )
 		$int_data = $garage->process_int_vars($int_params);
 		$str_params = array('make', 'model');
 		$str_data = $garage->process_str_vars($str_params);
-		$data = array_merge($int_data, $str_data);
+		$data = $garage->merge_int_str_data($int_data, $str_data);
 
 		//Checks All Required Data Is Present
 		$params = array('make', 'make_id', 'model');
@@ -3516,7 +3516,7 @@ switch( $mode )
 		$int_data = $garage->process_int_vars($int_params);
 		$str_params = array('comments');
 		$str_data = $garage->process_str_vars($str_params);
-		$data = array_merge($int_data, $str_data);
+		$data = $garage->merge_int_str_data($int_data, $str_data);
 
 		//Checks All Required Data Is Present
 		$params = array('comments', 'COMMENT_ID');

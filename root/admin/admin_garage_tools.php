@@ -85,7 +85,7 @@ switch($mode)
 		$int_data = $garage->process_int_vars($int_params);
 		$str_params = array('file');
 		$str_data = $garage->process_str_vars($str_params);
-		$data = array_merge($int_data, $str_data);
+		$data = $garage->merge_int_str_data($int_data, $str_data);
 		$data['start'] = (empty($data['start'])) ? '0' : $data['start'] ;
 		$data['cycle'] = (empty($data['cycle'])) ? '20' : $data['cycle'] ;
 		$data['done'] = (empty($data['done'])) ? '0' : $data['done'] ;
