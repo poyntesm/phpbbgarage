@@ -42,15 +42,15 @@ require($phpbb_root_path . 'includes/class_garage_image.' . $phpEx);
 require($phpbb_root_path . 'includes/class_garage_template.' . $phpEx);
 require($phpbb_root_path . 'includes/class_garage_vehicle.' . $phpEx);
 
-if( isset( $HTTP_POST_VARS['mode'] ) || isset( $HTTP_GET_VARS['mode'] ) )
+$params = array('mode' => 'mode');
+while( list($var, $param) = @each($params) )
 {
-	$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
+	$$var = '';
+	if ( !empty($HTTP_POST_VARS[$param]) || !empty($HTTP_GET_VARS[$param]) )
+	{
+		$$var = ( !empty($HTTP_POST_VARS[$param]) ) ? str_replace("\'", "''", trim(htmlspecialchars($HTTP_POST_VARS[$param]))) : str_replace("\'", "''", trim(htmlspecialchars($HTTP_GET_VARS[$param])));
+	}
 }
-else
-{
-	$mode = '';
-}
-
 
 switch($mode)
 {

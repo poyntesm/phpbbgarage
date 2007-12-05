@@ -56,14 +56,15 @@ if(!$result = $db->sql_query($sql))
 }
 else
 {
+	$submit = (isset($HTTP_POST_VARS['submit'])) ? true : false ;
 	while( $row = $db->sql_fetchrow($result) )
 	{
 		$config_name = $row['config_name'];
 		$config_value = $row['config_value'];
-		$default_config[$config_name] = isset($HTTP_POST_VARS['submit']) ? str_replace("'", "\'", $config_value) : $config_value;
+		$default_config[$config_name] = $submit ? str_replace("'", "\'", $config_value) : $config_value;
 		$new[$config_name] = ( isset($HTTP_POST_VARS[$config_name]) ) ? $HTTP_POST_VARS[$config_name] : $default_config[$config_name];
 
-		if( isset($HTTP_POST_VARS['submit']) )
+		if ($submit)
 		{
 
 			$sql = "UPDATE " . GARAGE_CONFIG_TABLE . " SET
@@ -77,8 +78,10 @@ else
 	}
 
 //START MAKE RANDOM WORK
-	$featured_vehicle_random = str_replace("\'", "''", trim($HTTP_POST_VARS['featured_vehicle_random']));
-	if ($featured_vehicle_random == 'on')
+	$str_params = array('featured_vehicle_random', 'menu_selection', 'featured_vehicle_from_block');
+	$str_data = $garage->process_str_vars($str_params);
+
+	if ($str_data['featured_vehicle_random'] == 'on')
 	{
 		$config_value = 'on';
 		$config_name = 'featured_vehicle_random';
@@ -89,7 +92,7 @@ else
 		$config_name = 'featured_vehicle_random';
 	}
 
-	if( isset($HTTP_POST_VARS['submit']) )
+	if ($submit)
 	{
 		$sql = "UPDATE " . GARAGE_CONFIG_TABLE . " SET
 			config_value = '$config_value'
@@ -101,10 +104,9 @@ else
 	}
 //END OF MAKE RANDOM WORK
 
-	if (isset($HTTP_POST_VARS['menu_selection'])) 
+	if (!empty($str_data['menu_selection'])) 
 	{
-		$menu = @implode(',', $HTTP_POST_VARS['menu_selection']);
-		$selection = str_replace("\'", "''", $menu);
+		$selection = @implode(',', $str_data['menu_selection']);
 		$sql = "UPDATE ". GARAGE_CONFIG_TABLE ."
 			SET config_value = '$selection'
 			WHERE config_name = 'menu_selection'";
@@ -114,10 +116,10 @@ else
 		}
 	}
 
-	if ( (isset($HTTP_POST_VARS['featured_vehicle_from_block'])) AND (!empty($HTTP_POST_VARS['featured_vehicle_from_block'])) ) 
+	if (!empty($str_data['featured_vehicle_from_block'])) 
 	{
 		$sql = "UPDATE ". GARAGE_CONFIG_TABLE ."
-			SET config_value = '".$HTTP_POST_VARS['featured_vehicle_from_block']."'
+			SET config_value = '{$str_data['featured_vehicle_from_block']}'
 			WHERE config_name = 'featured_vehicle_from_block'";
 		if ( !$result = $db->sql_query($sql) )
 		{
@@ -125,10 +127,9 @@ else
 		}
 	}
 
-
-	if( isset($HTTP_POST_VARS['submit']) )
+	if ($submit)
 	{
-		$message = $lang['Garage_Config_Updated'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Config'], "<a href=\"" . append_sid("admin_garage_cfg.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
+		$message = $lang['Garage_Config_Updated'] . "<br /><br />" . sprintf($lang['Click_Return_Garage_Config'], "<a href=\"" . append_sid("admin_garage_config.$phpEx") . "\">", "</a>") . "<br /><br />" . sprintf($lang['Click_return_admin_index'], "<a href=\"" . append_sid("index.$phpEx?pane=right") . "\">", "</a>");
 
 		message_die(GENERAL_MESSAGE, $message);
 	}
@@ -168,7 +169,7 @@ $template->assign_vars(array(
 $template->assign_vars(array(
 
 	// GENERAL VARS
-	'S_GARAGE_CONFIG_ACTION' => append_sid('admin_garage_cfg.'.$phpEx),
+	'S_GARAGE_CONFIG_ACTION' => append_sid('admin_garage_config.'.$phpEx),
 
 	// GENERAL GARAGE CONFIG VARS
 	'MAIN_CHECKED' => (preg_match("/MAIN/",$garage_config['menu_selection'])) ? 'selected="selected"' : '',

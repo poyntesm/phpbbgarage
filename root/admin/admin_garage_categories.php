@@ -40,13 +40,14 @@ require($phpbb_root_path . 'includes/class_garage.' . $phpEx);
 require($phpbb_root_path . 'includes/class_garage_admin.' . $phpEx);
 require($phpbb_root_path . 'includes/class_garage_modification.' . $phpEx);
 
-if( isset( $HTTP_POST_VARS['mode'] ) || isset( $HTTP_GET_VARS['mode'] ) )
+$params = array('mode' => 'mode');
+while( list($var, $param) = @each($params) )
 {
-	$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
-}
-else
-{
-	$mode = '';
+	$$var = '';
+	if ( !empty($HTTP_POST_VARS[$param]) || !empty($HTTP_GET_VARS[$param]) )
+	{
+		$$var = ( !empty($HTTP_POST_VARS[$param]) ) ? str_replace("\'", "''", trim(htmlspecialchars($HTTP_POST_VARS[$param]))) : str_replace("\'", "''", trim(htmlspecialchars($HTTP_GET_VARS[$param])));
+	}
 }
 
 //Lets Setup Messages We Might Need...Just Easier On The Eye Doing This Seperatly
@@ -64,8 +65,8 @@ switch ( $mode )
 		$count = count($garage->select_all_category_data());
 
 		//Get posting variables
-		$params = array('title');
-		$data = $garage->process_post_vars($params);
+		$str_params = array('title');
+		$data = $garage->process_str_vars($str_params);
 		$data['field_order'] = $count + 1;
 
 		//Insert New Category Into DB
@@ -79,8 +80,11 @@ switch ( $mode )
 	case 'update_category':
 
 		// Get posting variables
-		$params = array('id', 'title');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('id');
+		$int_data = $garage->process_int_vars($int_params);
+		$str_params = array('title');
+		$str_data = $garage->process_str_vars($str_params);
+		$data = array_merge($int_data, $str_data);
 
 		// Now we update this row
 		$garage->update_single_field(GARAGE_CATEGORIES_TABLE, 'title', $data['title'], 'id', $data['id']);
@@ -93,8 +97,8 @@ switch ( $mode )
 	case 'confirm_delete':
 
 		//Store ID Of Category We Are Deleting For Use In Action Variable
-		$params = array('id');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('id');
+		$data = $garage->process_int_vars($int_params);
 		$data = $garage->select_category_data($data['id']);
 		$all_data = $garage->select_all_category_data();
 
@@ -139,8 +143,8 @@ switch ( $mode )
 	case 'delete_category':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('id', 'target', 'permenant');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('id', 'target', 'permenant');
+		$data = $garage->process_int_vars($int_params);
 
 		//If Set Delete Permentantly
 		if ($data['permenant'] == '1')
@@ -170,8 +174,8 @@ switch ( $mode )
 	case 'move_up':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('order');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('order');
+		$data = $garage->process_int_vars($int_params);
 		
 		$field_order = $data['order'];
 		$order_total = $field_order * 2 + (($mode == 'move_up') ? -1 : 1);
@@ -192,8 +196,8 @@ switch ( $mode )
 
 	case 'move_down':
 
-		$params = array('order');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('order');
+		$data = $garage->process_int_vars($int_params);
 
 		$field_order = $data['order'];
 		$order_total = $field_order * 2 + (($mode == 'move_up') ? -1 : 1);

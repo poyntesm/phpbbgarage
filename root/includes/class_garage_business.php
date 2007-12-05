@@ -270,9 +270,12 @@ class garage_business
 	/*========================================================================*/
 	function build_business_table($pending)
 	{
-		global $db, $template, $images, $phpEx, $start, $sort, $sort_order, $lang, $theme, $HTTP_GET_VARS;
+		global $db, $template, $images, $phpEx, $start, $sort, $sort_order, $lang, $theme, $garage;
 
 		$pending = ($pending == 'YES') ? 1 : 0;
+
+		$int_params = array('start');
+		$data = $garage->process_int_vars($int_params);
 
 		$sql = "SELECT bus.* 
 			FROM " . GARAGE_BUSINESS_TABLE ." AS bus
@@ -316,7 +319,7 @@ class garage_business
 			}
 			
 			$template->assign_block_vars('business_pending.row', array(
-				'ROW_NUMBER' => $i + (intval($HTTP_GET_VARS['start'] + 1 )),
+				'ROW_NUMBER' => $i + ($data['start'] + 1 )),
 				'ROW_CLASS' => ( !($i % 2) ) ? $theme['td_class1'] : $theme['td_class2'],
 				'BUSID' => $row['id'],
 				'NAME' => $row['title'],

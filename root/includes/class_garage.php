@@ -56,29 +56,6 @@ class garage
 	var $classname = "garage";
 
 	/*========================================================================*/
-	// Makes Safe Any Posted Variables
-	// Usage: process_post_vars(array());
-	/*========================================================================*/
-	function process_post_vars($params = array())
-	{
-		global $HTTP_POST_VARS, $HTTP_GET_VARS;
-
-		while( list($var, $param) = @each($params) )
-		{
-			if (!empty($HTTP_POST_VARS[$param]))
-			{
-				$data[$param] = str_replace("\'", "''", trim(htmlspecialchars($HTTP_POST_VARS[$param])));
-			}
-			else if (!empty($HTTP_GET_VARS[$param]))
-			{
-				$data[$param] = str_replace("\'", "''", trim(htmlspecialchars($HTTP_GET_VARS[$param])));
-			}
-		}
-
-		return $data;
-	}
-
-	/*========================================================================*/
 	// Makes Safe Any Posted Int Variables
 	// Usage: process_int_vars(array());
 	/*========================================================================*/
@@ -101,7 +78,6 @@ class garage
 		return $data;
 	}
 
-	/*========================================================================*/
 	/*========================================================================*/
 	// Makes Safe Any Posted String Variables
 	// Usage: process_str_vars(array());
@@ -447,10 +423,14 @@ class garage
 	function remove_duplicate($array, $field)
 	{
 		foreach ($array as $sub)
-		$cmp[] = $sub[$field];
+		{
+			$cmp[] = $sub[$field];
+		}
 		$unique = array_unique($cmp);
 		foreach ($unique as $k => $rien)
-		$new[] = $array[$k];
+		{
+			$new[] = $array[$k];
+		}
 		return $new;
 	}
 
@@ -472,12 +452,7 @@ class garage
 	{
 		global $garage_config;
 
-		if ($garage_config['items_pending'] == 1)
-		{
-			return true;
-		}
-
-		return false;
+		return $garage_config['items_pending'];
 	}
 
 	/*========================================================================*/
@@ -547,7 +522,7 @@ class garage
 		}
 
 		//Finished Writting Required Message So Close Our File Handle
- 		@fopen($log_handle);
+ 		@fclose($log_handle);
 	}
 }
 

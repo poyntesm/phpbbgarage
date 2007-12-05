@@ -110,8 +110,11 @@ switch( $mode )
 		}
 
 		//Set Default Make 
-		$params = array('MAKE', 'MODEL', 'YEAR');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('YEAR');
+		$int_data = $garage->process_int_vars($int_params);
+		$str_params = array('MAKE', 'MODEL');
+		$str_data = $garage->process_str_vars($str_params);
+		$data = array_merge($int_data, $str_data);
 		$data['MAKE'] = (empty($data['MAKE'])) ? '' : $data['MAKE'];
 
 		//Build All Required Javascript And Arrays
@@ -192,8 +195,11 @@ switch( $mode )
 		}
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('year', 'make_id', 'model_id', 'colour', 'mileage', 'mileage_units', 'price', 'currency', 'comments', 'guestbook_pm_notify', 'adding_model', 'engine_type');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('year', 'make_id', 'model_id');
+		$int_data = $garage->process_int_vars($int_params);
+		$str_params = array('colour', 'mileage', 'mileage_units', 'price', 'currency', 'comments', 'guestbook_pm_notify', 'engine_type');
+		$str_data = $garage->process_str_vars($str_params);
+		$data = array_merge($int_data, $str_data);
 		$data['guestbook_pm_notify'] = ($data['guestbook_pm_notify'] == 'on') ? 1 : 0;
 		$data['time'] = time();
 
@@ -314,8 +320,11 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('year', 'make_id', 'model_id', 'colour', 'mileage', 'mileage_units', 'price', 'currency', 'comments', 'guestbook_pm_notify', 'engine_type');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('year', 'make_id', 'model_id');
+		$int_data = $garage->process_int_vars($int_params);
+		$str_params = array('colour', 'mileage', 'mileage_units', 'price', 'currency', 'comments', 'guestbook_pm_notify', 'engine_type');
+		$str_data = $garage->process_str_vars($str_params);
+		$data = array_merge($int_data, $str_data);
 		$data['guestbook_pm_notify'] = ($data['guestbook_pm_notify'] == 'on') ? 1 : 0;
 
 		//Checks All Required Data Is Present
@@ -422,8 +431,11 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('category_id', 'title', 'price', 'business_id', 'install_business_id', 'install_price', 'install_rating', 'product_rating', 'comments', 'install_comments', 'purchase_rating');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('category_id', 'business_id', 'install_business_id', 'install_rating', 'product_rating', 'purchase_rating');
+		$int_data = $garage->process_int_vars($int_params);
+		$str_params = array('title', 'price', 'install_price', 'comments', 'install_comments');
+		$str_data = $garage->process_str_vars($str_params);
+		$data = array_merge($int_data, $str_data);
 		$data['time'] = time();
 		$vehicle = $garage_vehicle->select_vehicle_data($cid);
 		$data['member_id'] = $vehicle['member_id'];
@@ -537,8 +549,11 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('category_id', 'title', 'price', 'business_id', 'install_business_id', 'install_price', 'install_rating', 'product_rating', 'comments', 'install_comments', 'editupload', 'image_id', 'purchase_rating');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('category_id', 'business_id', 'install_business_id', 'install_rating', 'product_rating', 'purchase_rating', 'image_id');
+		$int_data = $garage->process_int_vars($int_params);
+		$str_params = array('title', 'price', 'install_price', 'comments', 'install_comments', 'editupload');
+		$str_data = $garage->process_str_vars($str_params);
+		$data = array_merge($int_data, $str_data);
 		$data['time'] = time();
 
 		//Checks All Required Data Is Present
@@ -668,8 +683,11 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('rt', 'sixty', 'three', 'eight', 'eightmph', 'thou', 'quart', 'quartmph', 'rr_id', 'install_comments');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('rr_id');
+		$int_data = $garage->process_int_vars($int_params);
+		$str_params = array('rt', 'sixty', 'three', 'eight', 'eightmph', 'thou', 'quart', 'quartmph', 'install_comments');
+		$str_data = $garage->process_str_vars($str_params);
+		$data = array_merge($int_data, $str_data);
 		$data['pending'] = ($garage_config['enable_quartermile_approval'] == '1') ? 1 : 0 ;
 		$data['time'] = time();
 
@@ -739,8 +757,8 @@ switch( $mode )
 		$count = $garage_dynorun->count_runs($cid);	
 
 		//See If We Got Sent Here By Pending Page...If So We Need To Tell Update To Redirect Correctly
-		$params = array('PENDING');
-		$redirect = $garage->process_post_vars($params);
+		$str_params = array('PENDING');
+		$redirect = $garage->process_str_vars($str_params);
 
 		//Pull Required Quartermile Data From DB
 		$data = $garage_quartermile->select_quartermile_data($qmid);
@@ -806,8 +824,11 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('rt', 'sixty', 'three', 'eight', 'eightmph', 'thou', 'quart', 'quartmph', 'rr_id', 'install_comments', 'editupload', 'image_id', 'pending_redirect');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('rr_id', 'image_id');
+		$int_data = $garage->process_int_vars($int_params);
+		$str_params = array('rt', 'sixty', 'three', 'eight', 'eightmph', 'thou', 'quart', 'quartmph', 'install_comments', 'editupload', 'pending_redirect');
+		$str_data = $garage->process_str_vars($str_params);
+		$data = array_merge($int_data, $str_data);
 		$data['pending'] = ($garage_config['enable_quartermile_approval'] == '1') ? 1 : 0 ;
 		$data['time'] = time();
 
@@ -947,8 +968,11 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('dynocenter', 'bhp', 'bhp_unit', 'torque', 'torque_unit', 'boost', 'boost_unit', 'nitrous', 'peakpoint');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('nitrous');
+		$int_data = $garage->process_int_vars($int_params);
+		$str_params = array('dynocenter', 'bhp', 'bhp_unit', 'torque', 'torque_unit', 'boost', 'boost_unit', 'peakpoint');
+		$str_data = $garage->process_str_vars($params);
+		$data = array_merge($int_data, $str_data);
 		$data['pending'] = ($garage_config['enable_rollingroad_approval'] == '1') ? 1 : 0 ;
 		$data['time'] = time();
 
@@ -1018,8 +1042,8 @@ switch( $mode )
 		$data = $garage_dynorun->select_dynorun_data($rrid);
 
 		//See If We Got Sent Here By Pending Page...If So We Need To Tell Update To Redirect Correctly
-		$params = array('PENDING');
-		$redirect = $garage->process_post_vars($params);
+		$str_params = array('PENDING');
+		$redirect = $garage->process_str_vars($str_params);
 
 		//Build All Required HTML
 		$garage_template->edit_image($data['image_id'], $data['attach_file']);
@@ -1067,8 +1091,11 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('dynocenter', 'bhp', 'bhp_unit', 'torque', 'torque_unit', 'boost', 'boost_unit', 'nitrous', 'peakpoint', 'editupload', 'image_id', 'pending_redirect');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('nitrous', 'image_id');
+		$int_data = $garage->process_int_vars($int_params);
+		$str_params = array('dynocenter', 'bhp', 'bhp_unit', 'torque', 'torque_unit', 'boost', 'boost_unit', 'peakpoint', 'editupload', 'pending_redirect');
+		$str_data = $garage->process_str_vars($str_params);
+		$data = array_merge($int_data, $str_data);
 		$data['pending'] = ($garage_config['enable_rollingroad_approval'] == '1') ? 1 : 0 ;
 		$data['time'] = time();
 
@@ -1204,8 +1231,11 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('business_id', 'premium', 'cover_type', 'comments');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('business_id');
+		$int_data = $garage->process_int_vars($int_params);
+		$str_params = array('premium', 'cover_type', 'comments');
+		$str_data = $garage->process_str_vars($str_params);
+		$data = array_merge($int_data, $str_data);
 		$data['time'] = time();
 
 		//Checks All Required Data Is Present
@@ -1238,7 +1268,7 @@ switch( $mode )
 		);
 
 		//Pull Required Insurance Premium Data From DB
-		$data = $garage_insurance->select_insurance_data($ins_id);
+		$data = $garage_insurance->select_premium_data($ins_id);
 
 		//Build Required HTML Components
 		$garage_template->insurance_dropdown($data['business_id'], $data['title']);
@@ -1275,15 +1305,18 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('business_id', 'premium', 'cover_type', 'comments');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('business_id');
+		$int_data = $garage->process_int_vars($int_params);
+		$str_params = array('premium', 'cover_type', 'comments');
+		$str_data = $garage->process_str_vars($str_params);
+		$data = array_merge($int_data, $str_data);
 
 		//Checks All Required Data Is Present
 		$params = array('business_id', 'premium', 'cover_type');
 		$garage->check_required_vars($params);
 
 		//Update The Insurance Premium With Data Acquired
-		$garage_insurnace->update_premium($data);
+		$garage_insurance->update_premium($data);
 
 		//Update Timestamp For Vehicle
 		$garage_vehicle->update_vehicle_time($cid);
@@ -1326,7 +1359,9 @@ switch( $mode )
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 
 		//Check If This Is A Search....If So We Have A Bit More Work To Do.....
-		if ((!empty($HTTP_GET_VARS['search'])) OR (!empty($HTTP_POST_VARS['search'])))
+		$str_params = array('search');
+		$data = $garage->process_str_vars($str_params);
+		if (!empty($data['search']))
 		{
 			$search_data = $garage_model->build_search_for_user_make_model();
 			$search_data['pagination'] = ';search=yes&amp';
@@ -1752,8 +1787,8 @@ switch( $mode )
 		$garage_vehicle->check_ownership($cid);
 
 		//Get Posted Data If We Got Here From Moderating
-		$params = array('user_id');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('user_id');
+		$data = $garage->process_int_vars($int_params);
 
 		//Now We Update All Vehicles They Own To Not Main Vehicle
 		if (!empty($data['user_id']))
@@ -2039,8 +2074,8 @@ switch( $mode )
 		);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('business_id', 'start');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('business_id', 'start');
+		$data = $garage->process_int_vars($int_params);
 		$data['start'] = (empty($data['start'])) ? 0 : $data['start'];
 
 		if (!empty($data['business_id']))
@@ -2175,8 +2210,8 @@ switch( $mode )
 		);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('business_id', 'start');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('business_id', 'start');
+		$data = $garage->process_int_vars($int_params);
 		$data['start'] = (empty($data['start'])) ? 0 : $data['start'];
 
 		//Build SQL Parameters Based On If We Are Displaying One Business Or Not
@@ -2326,8 +2361,8 @@ switch( $mode )
 
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('business_id', 'start');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('business_id', 'start');
+		$data = $garage->process_int_vars($int_params);
 		$data['start'] = (empty($data['start'])) ? 0 : $data['start'];
 
 		if (!empty($data['business_id']))
@@ -2484,8 +2519,8 @@ switch( $mode )
 		);
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('BUSINESS', 'mode_redirect');
-		$data = $garage->process_post_vars($params);
+		$str_params = array('BUSINESS', 'mode_redirect');
+		$data = $garage->process_str_vars($str_params);
 		$data['insurance'] = ($data['BUSINESS'] == 'insurance') ? 'checked="checked"' : '' ;
 		$data['garage'] = ($data['BUSINESS'] == 'garage') ? 'checked="checked"' : '' ;
 		$data['retail_shop'] = ($data['BUSINESS'] == 'shop') ? 'checked="checked"' : '' ;
@@ -2529,8 +2564,8 @@ switch( $mode )
 		$garage->check_permissions('ADD',"garage.$phpEx?mode=error&EID=14");
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('mode_redirect', 'title', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
-		$data = $garage->process_post_vars($params);
+		$str_params = array('mode_redirect', 'title', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
+		$data = $garage->process_str_vars($str_params);
 		$data['pending'] = ($garage_config['enable_business_approval'] == '1') ? 1 : 0 ;
 		$data['insurance'] = ($data['insurance'] == 'on') ? 1 : 0 ;
 		$data['garage'] = ($data['garage'] == 'on') ? 1 : 0 ;
@@ -2623,8 +2658,11 @@ switch( $mode )
 		$garage->check_permissions('ADD', "garage.$phpEx?mode=error&EID=14");
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('id', 'title', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('id');
+		$int_data = $garage->process_int_vars($int_params);
+		$str_params = array('title', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
+		$str_data = $garage->process_str_vars($str_params);
+		$data = array_merge($int_data, $str_data);
 		$data['pending'] = ($garage_config['enable_business_approval'] == '1') ? 1 : 0 ;
 		$data['insurance'] = ($data['insurance'] == 'on') ? 1 : 0 ;
 		$data['garage'] = ($data['garage'] == 'on') ? 1 : 0 ;
@@ -2665,8 +2703,8 @@ switch( $mode )
 		$garage->check_permissions('ADD',"garage.$phpEx?mode=error&EID=14");
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('year');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('year');
+		$data = $garage->process_int_vars($int_params);
 
 		include($phpbb_root_path . 'includes/page_header.' . $phpEx);
 		$template->set_filenames(array(
@@ -2701,8 +2739,11 @@ switch( $mode )
 		$garage->check_permissions('ADD',"garage.$phpEx?mode=error&EID=14");
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('make', 'year');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('year');
+		$int_data = $garage->process_int_vars($int_params);
+		$str_params = array('make');
+		$str_data = $garage->process_str_vars($str_params);
+		$data = array_merge($int_data, $str_data);
 
 		//Checks All Required Data Is Present
 		$params = array('make', 'year');
@@ -2746,8 +2787,8 @@ switch( $mode )
 		$garage->check_permissions('ADD',"garage.$phpEx?mode=error&EID=14");
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('make_id', 'year');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('make_id', 'year');
+		$data = $garage->process_int_vars($int_params);
 		$year = $data['year'];
 
 		//Check If User Owns Vehicle
@@ -2794,8 +2835,11 @@ switch( $mode )
 		$garage->check_permissions('ADD',"garage.$phpEx?mode=error&EID=14");
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('make', 'make_id', 'model', 'year');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('make_id', 'year');
+		$int_data = $garage->process_int_vars($int_params);
+		$str_params = array('make', 'model');
+		$str_data = $garage->process_str_vars($str_params);
+		$data = array_merge($int_data, $str_data);
 
 		//Checks All Required Data Is Present
 		$params = array('make', 'make_id', 'model');
@@ -2996,8 +3040,8 @@ switch( $mode )
 		}
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('action');
-		$data = $garage->process_post_vars($params);
+		$str_params = array('action');
+		$data = $garage->process_str_vars($str_params);
 
 		//Check If We Are Doing A Business Reassign
 		if ( $data['action'] == 'REASSIGN' )
@@ -3118,8 +3162,8 @@ switch( $mode )
 		}
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('business_id', 'target_id');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('business_id', 'target_id');
+		$data = $garage->process_int_vars($int_params);
 
 		//Checks All Required Data Is Present
 		$params = array('business_id', 'target_id');
@@ -3232,8 +3276,6 @@ switch( $mode )
 				$poster_car_mark = ( $comment_data[$i]['make'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $comment_data[$i]['make'] : '';
 				$poster_car_model = ( $comment_data[$i]['model'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang[''] . ' ' . $comment_data[$i]['model'] : '';
 				$poster_joined = ( $comment_data[$i]['user_id'] != ANONYMOUS ) ? $lang['Joined'] . ': ' . create_date($board_config['default_dateformat'], $comment_data[$i]['user_regdate'], $board_config['board_timezone']) : '';
-				}
-
 
 				$poster_avatar = '';
 				if ( $comment_data[$i]['user_avatar_type'] && $comment_data[$i]['user_id'] != ANONYMOUS && $comment_data[$i]['user_allowavatar'] )
@@ -3387,8 +3429,8 @@ switch( $mode )
 		$garage->check_permissions('INTERACT', "garage.$phpEx?mode=error&EID=17");
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('comments');
-		$data = $garage->process_post_vars($params);
+		$str_params = array('comments');
+		$data = $garage->process_str_vars($str_params);
 		$data['author_id'] = $userdata['user_id'];
 		$data['post_date'] = time();
 
@@ -3470,8 +3512,11 @@ switch( $mode )
 		}
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('comments', 'COMMENT_ID');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('COMMENT_ID');
+		$int_data = $garage->process_int_vars($int_params);
+		$str_params = array('comments');
+		$str_data = $garage->process_str_vars($str_params);
+		$data = array_merge($int_data, $str_data);
 
 		//Checks All Required Data Is Present
 		$params = array('comments', 'COMMENT_ID');
@@ -3493,8 +3538,8 @@ switch( $mode )
 		}
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('comment_id');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('comment_id');
+		$data = $garage->process_int_vars($int_params);
 
 		//Delete The Comment From The Guestbook
 		$garage->delete_rows(GARAGE_GUESTBOOKS_TABLE, 'id', $data['comment_id']);
@@ -3530,8 +3575,8 @@ switch( $mode )
 		$garage->check_permissions('INTERACT', "garage.$phpEx?mode=error&EID=17");
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('vehicle_rating');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('vehicle_rating');
+		$data = $garage->process_int_vars($int_params);
 		$data['rate_date'] = time();
 		$data['user_id'] = $userdata['user_id'];
 
@@ -3582,8 +3627,8 @@ switch( $mode )
 		}
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('RTID');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('RTID');
+		$data = $garage->process_int_vars($int_params);
 
 		//Checks All Required Data Is Present
 		$params = array('RTID');

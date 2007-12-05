@@ -16,6 +16,10 @@
 					<td class="row2"><input name="title" type="text" class="post" size="35" value="{TITLE}" /> <span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td>
 				</tr>
 				<tr>
+					<td class="row1" width="30%"><span class="gen"><b>{L_PRODUCT_RATING}</b></span></td>
+				  	<td class="row2">{PRODUCT_RATING_LIST}</td>
+				</tr>
+				<tr>
 					<td class="row1" width="30%"><span class="gen"><b>{L_PURCHASED_FROM}</b></span></td>
 				  	<td class="row2">{SHOP_LIST}&nbsp;<span class="gensmall">{L_NOT_LISTED_YET}<a href="{U_SUBMIT_SHOP}">{L_HERE}</a></span></td>
 				</tr>

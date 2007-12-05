@@ -47,13 +47,14 @@ require($phpbb_root_path . 'includes/class_garage_image.' . $phpEx);
 require($phpbb_root_path . 'includes/class_garage_template.' . $phpEx);
 require($phpbb_root_path . 'includes/class_garage_vehicle.' . $phpEx);
 
-if( isset( $HTTP_POST_VARS['mode'] ) || isset( $HTTP_GET_VARS['mode'] ) )
+$params = array('mode' => 'mode');
+while( list($var, $param) = @each($params) )
 {
-	$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
-}
-else
-{
-	$mode = '';
+	$$var = '';
+	if ( !empty($HTTP_POST_VARS[$param]) || !empty($HTTP_GET_VARS[$param]) )
+	{
+		$$var = ( !empty($HTTP_POST_VARS[$param]) ) ? str_replace("\'", "''", trim(htmlspecialchars($HTTP_POST_VARS[$param]))) : str_replace("\'", "''", trim(htmlspecialchars($HTTP_GET_VARS[$param])));
+	}
 }
 
 // Set VERBOSE to 1  for debugging info..
@@ -80,8 +81,11 @@ switch($mode)
 
 	case 'rebuild_thumbs':
 		
-		$params = array('start', 'cycle', 'file', 'done');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('start', 'cycle', 'done');
+		$int_data = $garage->process_int_vars($int_params);
+		$str_params = array('file');
+		$str_data = $garage->process_str_vars($str_params);
+		$data = array_merge($int_data, $str_data);
 		$data['start'] = (empty($data['start'])) ? '0' : $data['start'] ;
 		$data['cycle'] = (empty($data['cycle'])) ? '20' : $data['cycle'] ;
 		$data['done'] = (empty($data['done'])) ? '0' : $data['done'] ;

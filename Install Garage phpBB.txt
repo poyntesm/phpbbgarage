@@ -117,7 +117,7 @@
 ##			root/templates/subSilver/images/lang_english/garage_shop_review.gif
 ##			root/templates/subSilver/images/lang_english/garage_view_vehicle.gif
 ##			root/templates/subSilver/images/lang_english/icon_garage.gif
-## License: http://opensource.org/licenses/gpl-license.php GNU General Public License v2 or any later version
+## License: http://opensource.org/licenses/gpl-license.php GNU General Public License v2 
 ######################################################################################
 ## For security purposes, please check: http://www.phpbb.com/mods/
 ## for the latest version of this MOD. Although MODs are checked
@@ -131,9 +131,32 @@
 ##	- http://forums.phpbbgarage.com is the home of phpBBGarage so drop by
 ##	- This Mod Was Inspired By IPB Based Garage By Matthew C. Veno
 ##
+##	To help keep the phpBB Garage secure and to provide new features, upgrades are 
+##	provided from the last offical released version.
+##
+##	Each upgrade must be completed in the sequence.
+##
+##	If you are running 1.0.0 you need to complete the following 1.0.0 -> 1.0.2 -> 1.0.3 -> 1.0.4 -> 1.0.5 ->1.2.0
+##	If you are running 1.0.2 you need to complete the following 1.0.2 -> 1.0.3 -> 1.0.4 -> 1.0.5 -> 1.2.0
+##	If you are running 1.0.3 you need to complete the following 1.0.3 -> 1.0.4 -> 1.0.5 -> 1.2.0
+##	If you are running 1.0.4 you need to complete the following 1.0.4 -> 1.0.5 -> 1.2.0
+##	If you are running 1.0.5 you need to complete the following 1.0.5 -> 1.2.0
+##
+##	To complete a version upgrade you need to process the actions from upgrade_garage-x.y.z.txt file & run the
+##	upgrade_garage-x.y.z.php file for that upgrade. Each upgrade file will have a version number showing 
+##	which version it is the upgrade from.
+##
+##	So for example to upgrade 1.0.0 -> 1.0.2 the files will be named as follows.
+##	upgrade_garage-1.0.0.txt
+##	upgrade_garage-1.0.0.php
+##
+##	All these files can be found at http://forums.phpbbgarage.com/viewforum.php?f=3
+##
+##	Enjoy phpBB Garage!! Support can be obtained from http://www.phpbbgarage.com or http://forums.phpbbgarage.com
+##
 ######################################################################################
 ## MOD History: 
-##   xx-xx-2006 - Version 1.2.0
+##   31-0x-2007 - Version 1.2.0
 ##	- Add 'DENY' permission
 ##	- Add vehicle quotas by group
 ## 	- Add upload image quotas by group
@@ -562,9 +585,7 @@ language/lang_english/lang_main.php
 # 
 #-----[ FIND ]----- 
 # 
-//
-// That's all, Folks!
-// -------------------------------------------------
+?>
 #
 #-----[ BEFORE, ADD ]------------------------------------------
 #

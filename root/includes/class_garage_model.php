@@ -61,8 +61,8 @@ class garage_model
 		global $db;
 
 		$sql = "UPDATE ". GARAGE_MAKES_TABLE ." 
-			SET make='".$data['make']."'
-			WHERE id = ".$data['id'];
+			SET make='{$data['make']}'
+			WHERE id = '{$data['id']}'";
 
 		if(!$result = $db->sql_query($sql))
 		{
@@ -356,8 +356,11 @@ class garage_model
 	{
 		global $template, $lang, $garage;
 
-		$params = array('make_id', 'model_id', 'username');
-		$data = $garage->process_post_vars($params);
+		$params = array('make_id', 'model_id');
+		$int_data = $garage->process_int_vars($params);
+		$params = array('username');
+		$str_data = $garage->process_str_vars($params);
+		$data = array_merge($int_data, $str_data);
 
 		//Check If This Is A Search Including User
 		if (!empty($data['username']))

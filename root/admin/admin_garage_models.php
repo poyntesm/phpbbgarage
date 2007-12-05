@@ -50,14 +50,14 @@ require($phpbb_root_path . 'includes/class_garage_vehicle.' . $phpEx);
 require($phpbb_root_path . 'includes/class_garage_guestbook.' . $phpEx);
 require($phpbb_root_path . 'includes/class_garage_model.' . $phpEx);
 
-if( isset( $HTTP_POST_VARS['mode'] ) || isset( $HTTP_GET_VARS['mode'] ) )
+$params = array('mode' => 'mode');
+while( list($var, $param) = @each($params) )
 {
-	$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
-	//message_die(GENERAL_ERROR, 'Mode Is .... ', '', __LINE__, __FILE__, $mode);
-}
-else
-{
-	$mode = '';
+	$$var = '';
+	if ( !empty($HTTP_POST_VARS[$param]) || !empty($HTTP_GET_VARS[$param]) )
+	{
+		$$var = ( !empty($HTTP_POST_VARS[$param]) ) ? str_replace("\'", "''", trim(htmlspecialchars($HTTP_POST_VARS[$param]))) : str_replace("\'", "''", trim(htmlspecialchars($HTTP_GET_VARS[$param])));
+	}
 }
 
 //Lets Setup Messages We Might Need...Just Easier On The Eye Doing This Seperatly
@@ -76,8 +76,8 @@ switch($mode)
 	case 'insert_make':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('make');
-		$data = $garage->process_post_vars($params);
+		$str_params = array('make');
+		$data = $garage->process_str_vars($str_params);
 
 		//Checks All Required Data Is Present
 		$params = array('make');
@@ -101,8 +101,11 @@ switch($mode)
 	case 'update_make':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('id', 'make');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('id');
+		$int_data = $garage->process_int_vars($int_params);
+		$str_params = array('make');
+		$str_data = $garage->process_str_vars($str_params);
+		$data = array_merge($int_data, $str_data);
 
 		//Checks All Required Data Is Present
 		$params = array('id', 'make');
@@ -126,8 +129,8 @@ switch($mode)
 	case 'make_set_pending':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('id');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('id');
+		$data = $garage->process_int_vars($int_params);
 
 		//Checks All Required Data Is Present
 		$params = array('id');
@@ -145,8 +148,8 @@ switch($mode)
 	case 'make_set_approved':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('id');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('id');
+		$data = $garage->process_int_vars($int_params);
 
 		//Checks All Required Data Is Present
 		$params = array('id');
@@ -184,8 +187,8 @@ switch($mode)
 	case 'confirm_delete_make':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('id');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('id');
+		$data = $garage->process_int_vars($int_params);
 		$data = $garage_model->select_make_data($data['id']);
 
 		//Get All Make Data To Build Dropdown Of Where To Move Linked Items To
@@ -229,8 +232,8 @@ switch($mode)
 	case 'delete_make':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('id', 'target', 'permenant');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('id', 'target', 'permenant');
+		$data = $garage->process_int_vars($int_params);
 
 		//If Set Delete Permentantly..And Finish
 		if ($data['permenant'] == '1')
@@ -259,8 +262,11 @@ switch($mode)
 	case 'insert_model':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('make_id', 'model');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('make_id');
+		$int_data = $garage->process_int_vars($int_params);
+		$str_params = array('model');
+		$str_data = $garage->process_str_vars($str_params);
+		$data = array_merge($int_data, $str_data);
 
 		//Checks All Required Data Is Present
 		$params = array('make_id', 'model');
@@ -277,8 +283,11 @@ switch($mode)
 	case 'update_model':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('id', 'model');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('id');
+		$int_data = $garage->process_int_vars($int_params);
+		$str_params = array('model');
+		$str_data = $garage->process_str_vars($str_params);
+		$data = array_merge($int_data, $str_data);
 
 		//Checks All Required Data Is Present
 		$params = array('id', 'model');
@@ -295,8 +304,8 @@ switch($mode)
 	case 'model_set_pending':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('id');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('id');
+		$data = $garage->process_int_vars($int_params);
 
 		//Checks All Required Data Is Present
 		$params = array('id');
@@ -314,8 +323,8 @@ switch($mode)
 	case 'model_set_approved':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('id');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('id');
+		$data = $garage->process_int_vars($int_params);
 
 		//Checks All Required Data Is Present
 		$params = array('id');
@@ -352,8 +361,8 @@ switch($mode)
 	case 'confirm_delete_model':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('id');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('id');
+		$data = $garage->process_int_vars($int_params);
 		$data = $garage_model->select_model_data($data['id']);
 
 		//Get All Models For Make Data To Build Dropdown Of Where To Move Linked Items To
@@ -397,8 +406,8 @@ switch($mode)
 	case 'delete_model':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('id', 'target', 'permenant');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('id', 'target', 'permenant');
+		$data = $garage->process_int_vars($int_params);
 
 		//If Set Delete Permentantly..And Finish
 		if ($data['permenant'] == '1')

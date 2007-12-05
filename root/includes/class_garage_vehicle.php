@@ -977,7 +977,7 @@ class garage_vehicle
 	/*========================================================================*/
 	function display_vehicle($owned)
 	{
-		global $userdata, $template, $images, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $HTTP_POST_FILES, $HTTP_POST_VARS, $HTTP_GET_VARS, $rating_text, $rating_types, $cid, $mode, $garage, $garage_template, $garage_modification, $garage_insurance, $garage_quartermile, $garage_dynorun, $garage_image;
+		global $userdata, $template, $images, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $board_config, $rating_text, $rating_types, $cid, $mode, $garage, $garage_template, $garage_modification, $garage_insurance, $garage_quartermile, $garage_dynorun, $garage_image;
 
 		//Since We Called This Fuction Display Top Block With All Vehicle Info
 		$template->assign_block_vars('switch_top_block', array());
@@ -1074,7 +1074,7 @@ class garage_vehicle
 				$temp_url = append_sid("garage.$phpEx?mode=add_rollingroad&amp;CID=$cid");
 				$add_rollingroad_link = ' <a href="' . $temp_url . '"><img src="' . $images['garage_add_rollingroad'] . '" alt="'.$lang['Add_New_Rollingroad_Run'].'" title="'.$lang['Add_New_Rollingroad_Run'].'" border="0" /></a>';
 			}
-			
+
 			if ($garage->check_permissions('UPLOAD',''))
 			{
 				$template->assign_block_vars('switch_top_block.owned_yes.manage_vehicle_gallery', array());
@@ -1599,6 +1599,7 @@ class garage_vehicle
             		'ADD_INSURANCE_LINK' => $add_insurance_link,
             		'ADD_QUARTERMILE_LINK' => $add_quartermile_link,
             		'ADD_ROLLINGROAD_LINK' => $add_rollingroad_link,
+            		'ADD_LAPTIME_LINK' => $add_laptime_link,
             		'ADD_TANK_LINK' => $add_tank_link,
             		'MANAGE_VEHICLE_GALLERY_LINK' => $manage_vehicle_gallery_link,
             		'DELETE_VEHICLE_LINK' => $delete_vehicle_link,
@@ -1851,7 +1852,7 @@ class garage_vehicle
 				'L_DESCRIPTION' => $lang['Description'],
 				'L_SEARCH_USER_GARAGE' => $lang['Search_User_Garage'],
 				'YEAR' => $vehicle_data['year'],
-				'MAKE' => $vehicle_data['made_make'],
+				'MAKE' => $vehicle_data['make'],
 				'MODEL' => $vehicle_data['model'],
 		       		'COLOUR' => $vehicle_data['color'],
 			       	'HILITE_IMAGE' => $hilite_image,

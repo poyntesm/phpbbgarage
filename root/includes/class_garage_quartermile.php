@@ -253,10 +253,14 @@ class garage_quartermile
 	/*========================================================================*/
 	function build_quartermile_table($pending)
 	{
-		global $db, $template, $images, $sort, $phpEx, $order, $garage_config, $lang, $theme, $mode, $HTTP_POST_VARS, $HTTP_GET_VARS, $garage_model;
+		global $db, $template, $images, $sort, $phpEx, $order, $garage_config, $lang, $theme, $mode, $garage_model, $garage;
+
+
+		$int_params = array('start', 'make_id', 'model_id');
+		$int_data = $garage->process_int_vars($int_params);
 
 		$pending = ($pending == 'YES') ? 1 : 0;
-		$start = (isset($HTTP_GET_VARS['start'])) ? intval($HTTP_GET_VARS['start']) : 0;
+		$start = (empty($int_data['start'])) ? 0 : $int_data['start'];
 		$sort = (empty($sort)) ? 'quart' : $sort;
 
 		// Sorting Via QuarterMile
@@ -271,34 +275,26 @@ class garage_quartermile
 		}
 		$select_sort_mode .= '</select>';
 
-		if ( isset($HTTP_GET_VARS['make_id']) || isset($HTTP_POST_VARS['make_id']) )
+		$make_id = $int_data['make_id'];
+		if (!empty($make_id))
 		{
-			$make_id = ( isset($HTTP_POST_VARS['make_id']) ) ? htmlspecialchars($HTTP_POST_VARS['make_id']) : htmlspecialchars($HTTP_GET_VARS['make_id']);
-
-			if (!empty($make_id))
-			{
-				//Pull Required Data From DB
-				$data = $garage_model->select_make_data($make_id);
-				$addtional_where .= "AND g.make_id = '$make_id'";
-				$template->assign_vars(array(
-					'MAKE'	=> $data['make'])
-				);
-			}
+			//Pull Required Data From DB
+			$data = $garage_model->select_make_data($make_id);
+			$addtional_where .= "AND g.make_id = '$make_id'";
+			$template->assign_vars(array(
+				'MAKE'	=> $data['make'])
+			);
 		}
 
-		if ( isset($HTTP_GET_VARS['model_id']) || isset($HTTP_POST_VARS['model_id']) )
+		$model_id = $int_data['model_id'];
+		if (!empty($model_id))
 		{
-			$model_id = ( isset($HTTP_POST_VARS['model_id']) ) ? htmlspecialchars($HTTP_POST_VARS['model_id']) : htmlspecialchars($HTTP_GET_VARS['model_id']);
-
-			if (!empty($model_id))
-			{
-				//Pull Required Data From DB
-				$data = $garage_model->select_model_data($model_id);
-				$addtional_where .= "AND g.model_id = '$model_id'";
-				$template->assign_vars(array(
-					'MODEL'	=> $data['model'])
-				);
-			}
+			//Pull Required Data From DB
+			$data = $garage_model->select_model_data($model_id);
+			$addtional_where .= "AND g.model_id = '$model_id'";
+			$template->assign_vars(array(
+				'MODEL'	=> $data['model'])
+			);
 		}
 
 		//First Query To Return Top Time For All Or For Selected Filter...

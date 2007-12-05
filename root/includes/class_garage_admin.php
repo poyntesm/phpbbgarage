@@ -77,12 +77,12 @@ class garage_admin
 	// Inserts Category Into DB
 	// Usage: insert_category();
 	/*========================================================================*/
-	function gzip_PrintFourChars($Val)
+	function gzip_PrintFourChars($val)
 	{
 		for ($i = 0; $i < 4; $i ++)
 		{
-			$return .= chr($Val % 256);
-			$Val = floor($Val / 256);
+			$return .= chr($val % 256);
+			$val = floor($val / 256);
 		}
 		return $return;
 	} 

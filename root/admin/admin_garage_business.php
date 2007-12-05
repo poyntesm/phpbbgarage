@@ -39,13 +39,14 @@ require($phpbb_root_path . 'language/lang_' . $board_config['default_lang'] . '/
 require($phpbb_root_path . 'includes/class_garage.' . $phpEx);
 require($phpbb_root_path . 'includes/class_garage_business.' . $phpEx);
 
-if( isset( $HTTP_POST_VARS['mode'] ) || isset( $HTTP_GET_VARS['mode'] ) )
+$params = array('mode' => 'mode');
+while( list($var, $param) = @each($params) )
 {
-	$mode = ( isset($HTTP_POST_VARS['mode']) ) ? $HTTP_POST_VARS['mode'] : $HTTP_GET_VARS['mode'];
-}
-else
-{
-	$mode = '';
+	$$var = '';
+	if ( !empty($HTTP_POST_VARS[$param]) || !empty($HTTP_GET_VARS[$param]) )
+	{
+		$$var = ( !empty($HTTP_POST_VARS[$param]) ) ? str_replace("\'", "''", trim(htmlspecialchars($HTTP_POST_VARS[$param]))) : str_replace("\'", "''", trim(htmlspecialchars($HTTP_GET_VARS[$param])));
+	}
 }
 
 //Lets Setup Messages We Might Need...Just Easier On The Eye Doing This Seperatly
@@ -59,8 +60,8 @@ switch($mode)
 	case 'insert_business':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('title', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
-		$data = $garage->process_post_vars($params);
+		$str_params = array('title', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
+		$data = $garage->process_str_vars($str_params);
 		$data['pending'] = ($garage_config['enable_business_approval'] == '1') ? 1 : 0 ;
 		$data['insurance'] = ($data['insurance'] == 'on') ? 1 : 0 ;
 		$data['garage'] = ($data['garage'] == 'on') ? 1 : 0 ;
@@ -87,8 +88,11 @@ switch($mode)
 	case 'update_business':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('id', 'title', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('id');
+		$int_data = $garage->process_int_vars($int_params);
+		$str_params = array('title', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
+		$str_data = $garage->process_str_vars($str_params);
+		$data = array_merge($int_data, $str_data);
 		$data['pending'] = ($garage_config['enable_business_approval'] == '1') ? 1 : 0 ;
 		$data['insurance'] = ($data['insurance'] == 'true') ? 1 : 0 ;
 		$data['garage'] = ($data['garage'] == 'true') ? 1 : 0 ;
@@ -112,8 +116,8 @@ switch($mode)
 	case 'confirm_delete':
 
 		//Store Data Of Business We Are Deleting For Use In Action Variable
-		$params = array('id');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('id');
+		$data = $garage->process_int_vars($int_params);
 		$data = $garage_business->select_business_data($data['id']);
 
 		//Get All Business Data To Build Dropdown Of Where To Move Linked Items To
@@ -157,8 +161,8 @@ switch($mode)
 	case 'delete_business':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('id', 'target', 'permenant');
-		$data = $garage->process_post_vars($params);
+		$int_params = array('id', 'target', 'permenant');
+		$data = $garage->process_int_vars($int_params);
 
 		//If Set Delete Permentantly..And Finish
 		if ($data['permenant'] == '1')
@@ -185,8 +189,8 @@ switch($mode)
 	case 'set_pending':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('id');
-		$data = $garage->process_int_vars($params);
+		$int_params = array('id');
+		$data = $garage->process_int_vars($int_params);
 
 		//Set Business To Pending
 		$garage->update_single_field(GARAGE_BUSINESS_TABLE,'pending',1,'id',$data['id']);
@@ -199,8 +203,8 @@ switch($mode)
 	case 'set_approved':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('id');
-		$data = $garage->process_int_vars($params);
+		$int_params = array('id');
+		$data = $garage->process_int_vars($int_params);
 
 		//Set Business To Approved
 		$garage->update_single_field(GARAGE_BUSINESS_TABLE,'pending',0,'id',$data['id']);

@@ -267,10 +267,14 @@ class garage_dynorun
 	/*========================================================================*/
 	function build_dynorun_table($pending)
 	{
-		global $db, $template, $images, $start, $sort, $order,$phpEx, $garage_config, $lang, $theme, $mode, $HTTP_POST_VARS, $HTTP_GET_VARS, $garage_model, $phpEx;
+		global $db, $template, $images, $start, $sort, $order,$phpEx, $garage_config, $lang, $theme, $mode, $garage, $garage_model, $phpEx;
 
 		$pending = ($pending == 'YES') ? 1 : 0;
-		$start = (isset($HTTP_GET_VARS['start'])) ? intval($HTTP_GET_VARS['start']) : 0;
+
+		$int_params = array('start', 'make_id', 'model_id');
+		$int_data = $garage->process_int_vars($int_params);
+
+		$start = (empty($int_data['start'])) ? 0 : $int_data['start'];
 		$sort = (empty($sort)) ? 'bhp' : $sort;
 
 		$sort_types_text = array($lang['Dynocenter'], $lang['Bhp'], $lang['Bhp_Unit'], $lang['Torque'], $lang['Torque_Unit'], $lang['Boost'],  $lang['Boost_Unit'], $lang['Nitrous'], $lang['Peakpoint']);
@@ -284,34 +288,26 @@ class garage_dynorun
 		}
 		$select_sort_mode .= '</select>';
 
-		if ( isset($HTTP_GET_VARS['make_id']) || isset($HTTP_POST_VARS['make_id']) )
+		$make_id = $int_data['make_id'];
+		if (!empty($make_id))
 		{
-			$make_id = ( isset($HTTP_POST_VARS['make_id']) ) ? htmlspecialchars($HTTP_POST_VARS['make_id']) : htmlspecialchars($HTTP_GET_VARS['make_id']);
-
-			if (!empty($make_id))
-			{
-				//Pull Required Data From DB
-				$data = $garage_model->select_make_data($make_id);
-				$addtional_where .= "AND g.make_id = '$make_id'";
-				$template->assign_vars(array(
-					'MAKE'	=> $data['make'])
-				);
-			}
+			//Pull Required Data From DB
+			$data = $garage_model->select_make_data($make_id);
+			$addtional_where .= "AND g.make_id = '$make_id'";
+			$template->assign_vars(array(
+				'MAKE'	=> $data['make'])
+			);
 		}
 
-		if ( isset($HTTP_GET_VARS['model_id']) || isset($HTTP_POST_VARS['model_id']) )
+		$model_id = $int_data['model_id'];
+		if (!empty($model_id))
 		{
-			$model_id = ( isset($HTTP_POST_VARS['model_id']) ) ? htmlspecialchars($HTTP_POST_VARS['model_id']) : htmlspecialchars($HTTP_GET_VARS['model_id']);
-
-			if (!empty($model_id))
-			{
-				//Pull Required Data From DB
-				$data = $garage_model->select_model_data($model_id);
-				$addtional_where .= "AND g.model_id = '$model_id'";
-				$template->assign_vars(array(
-					'MODEL'	=> $data['model'])
-				);
-			}
+			//Pull Required Data From DB
+			$data = $garage_model->select_model_data($model_id);
+			$addtional_where .= "AND g.model_id = '$model_id'";
+			$template->assign_vars(array(
+				'MODEL'	=> $data['model'])
+			);
 		}
 
 		//First Query To Return Top Time For All Or For Selected Filter...
