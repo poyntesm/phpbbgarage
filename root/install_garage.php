@@ -45,11 +45,11 @@ if( $userdata['user_level'] != ADMIN )
 }
 
 
-$page_title = 'Installing Vehicle Garage Version 1.0.0';
+$page_title = 'Installing Vehicle Garage Version 1.0.6';
 include($phpbb_root_path . 'includes/page_header.'.$phpEx);
 
 echo '<table width="100%" cellspacing="1" cellpadding="2" border="0" class="forumline">';
-echo '<tr><th>Installing Vehicle Garage Version 1.0.0</th></tr><tr><td class="row1" ><span class="genmed"><ul type="circle">';
+echo '<tr><th>Installing Vehicle Garage Version 1.0.6</th></tr><tr><td class="row1" ><span class="genmed"><ul type="circle">';
 
 $sql = array();
 
@@ -312,7 +312,7 @@ $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('enable_insuran
 $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('profile_thumbs', '1')";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('enable_user_submit_make', '1')";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('enable_user_submit_model', '1')";
-$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('version', '1.0.3')";
+$sql[] = "INSERT INTO " . $table_prefix . "garage_config VALUES ('version', '1.0.6')";
 
 $sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (1, 'Engine', NULL)";
 $sql[] = "INSERT INTO " . $table_prefix . "garage_categories VALUES (2, 'Transmission', NULL)";

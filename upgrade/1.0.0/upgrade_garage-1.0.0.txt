@@ -17,7 +17,7 @@
 ## Included Files: (2)
 ##			upgrade/upgrade_garage-1.0.0.php
 ##			upgrade/upgrade_garage-1.0.0.txt
-## License: http://opensource.org/licenses/gpl-license.php GNU General Public License v2 or any later version
+## License: http://opensource.org/licenses/gpl-license.php GNU General Public License v2
 ######################################################################################
 ## For security purposes, please check: http://www.phpbb.com/mods/
 ## for the latest version of this MOD. Although MODs are checked

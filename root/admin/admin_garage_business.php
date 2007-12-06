@@ -57,8 +57,8 @@ switch($mode)
 	case 'insert_business':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('name', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hous', 'insurance', 'garage', 'retail_shop', 'web_shop');
-		$data = $garage_lib->process_post_vars($params);
+		$str_params = array('name', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hous', 'insurance', 'garage', 'retail_shop', 'web_shop');
+		$data = $garage_lib->process_str_vars($str_params);
 		$data['pending'] = ($garage_config['enable_business_approval'] == '1') ? 1 : 0 ;
 		$data['insurance'] = ($data['insurance'] == 'on') ? 1 : 0 ;
 		$data['garage'] = ($data['garage'] == 'on') ? 1 : 0 ;
@@ -86,8 +86,11 @@ switch($mode)
 	case 'update_business':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('BUS_ID', 'name', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
-		$data = $garage_lib->process_post_vars($params);
+		$int_params = array('BUS_ID');
+		$int_data = $garage_lib->process_int_vars($int_params);
+		$str_params = array('name', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
+		$str_data = $garage_lib->process_str_vars($str_params);
+		$data = $this->merge_int_str_data($int_data, $str_data);
 		$data['pending'] = ($garage_config['enable_business_approval'] == '1') ? 1 : 0 ;
 		$data['insurance'] = ($data['insurance'] == 'on') ? 1 : 0 ;
 		$data['garage'] = ($data['garage'] == 'on') ? 1 : 0 ;
@@ -115,8 +118,8 @@ switch($mode)
 	case 'delete_business':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('id');
-		$data = $garage_lib->process_post_vars($params);
+		$int_params = array('id');
+		$data = $garage_lib->process_int_vars($int_params);
 
 		$sql = "DELETE FROM ". GARAGE_BUSINESS_TABLE ."
 			WHERE id = ".$data['id'];
@@ -150,8 +153,8 @@ switch($mode)
 	case 'edit_business':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('id');
-		$data = $garage_lib->process_post_vars($params);
+		$int_params = array('id');
+		$data = $garage_lib->process_int_vars($int_params);
 
 		$sql = "SELECT * 
 			FROM ".GARAGE_BUSINESS_TABLE."

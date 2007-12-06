@@ -7,107 +7,17 @@
 ## MOD Version:		1.0.6
 ## 
 ## Installation Level:	Easy
-## Installation Time:	15 Minutes
-## Files To Edit: (2)
+## Installation Time:	25 Minutes
+## Files To Edit: (4)
 ##			garage.php
 ##			admin/admin_garage_business.php
 ##			admin/admin_garage_models.php
 ##			/includes/functions_garage.php
 ##
-## Included Files: (92)
-##			Install Garage.txt
-##			Upgrade.txt
-##			contrib/Install Garage PCP.txt
-##			contrib/profilcp/
-##			contrib/templates/
-## 			root/garage.php
-## 			root/install_garage.php
-##			root/admin/admin_garage_business.php
-##			root/admin/admin_garage_categories.php
-##			root/admin/admin_garage_config.php
-##			root/admin/admin_garage_models.php
-##			root/admin/admin_garage_permissions.php
-##			root/admin/admin_garage_tools.php
-##			root/includes/functions_garage.php
-##			root/language/lang_english/lang_garage.php
-##			root/language/lang_english/lang_garage_error.php
-##			root/templates/subSilver/garage.tpl
-##			root/templates/subSilver/garage_browse.tpl
-##			root/templates/subSilver/garage_browse_insurance.tpl
-##			root/templates/subSilver/garage_edit_comment.tpl
-##			root/templates/subSilver/garage_error.tpl
-##			root/templates/subSilver/garage_footer.tpl
-##			root/templates/subSilver/garage_header.tpl
-##			root/templates/subSilver/garage_insurance.tpl
-##			root/templates/subSilver/garage_manage_vehicle_gallery.tpl
-##			root/templates/subSilver/garage_menu.tpl
-##			root/templates/subSilver/garage_modification.tpl
-##			root/templates/subSilver/garage_pending.tpl
-##			root/templates/subSilver/garage_quartermile.tpl
-##			root/templates/subSilver/garage_quartermile_table.tpl
-##			root/templates/subSilver/garage_reassign_business.tpl
-##			root/templates/subSilver/garage_rollingroad.tpl
-##			root/templates/subSilver/garage_rollingroad_table.tpl
-##			root/templates/subSilver/garage_search.tpl
-##			root/templates/subSilver/garage_user_submit.tpl
-##			root/templates/subSilver/garage_user_submit_make.tpl
-##			root/templates/subSilver/garage_user_submit_model.tpl
-##			root/templates/subSilver/garage_vehicle.tpl
-##			root/templates/subSilver/garage_vehicle_select_javascript.tpl
-##			root/templates/subSilver/garage_view_garage_business.tpl
-##			root/templates/subSilver/garage_view_guestbook.tpl
-##			root/templates/subSilver/garage_view_insurance_business.tpl
-##			root/templates/subSilver/garage_view_modification.tpl
-##			root/templates/subSilver/garage_view_shop_business.tpl
-##			root/templates/subSilver/garage_view_vehicle.tpl
-##			root/templates/subSilver/admin/garage_business.tpl
-##			root/templates/subSilver/admin/garage_business_edit.tpl
-##			root/templates/subSilver/admin/garage_category.tpl
-##			root/templates/subSilver/admin/garage_category_delete_body.tpl
-##			root/templates/subSilver/admin/garage_category_edit_body.tpl
-##			root/templates/subSilver/admin/garage_config.tpl
-##			root/templates/subSilver/admin/garage_message.tpl
-##			root/templates/subSilver/admin/garage_model.tpl
-##			root/templates/subSilver/admin/garage_model_delete.tpl
-##			root/templates/subSilver/admin/garage_model_edit.tpl
-##			root/templates/subSilver/admin/garage_orphans.tpl
-##			root/templates/subSilver/admin/garage_permissions.tpl
-##			root/templates/subSilver/admin/garage_tools.tpl
-##			root/templates/subSilver/images/garage_camera.gif
-##			root/templates/subSilver/images/garage_slip.gif
-##			root/templates/subSilver/images/lang_english/garage_add_insurance.gif
-##			root/templates/subSilver/images/lang_english/garage_add_modification.gif
-##			root/templates/subSilver/images/lang_english/garage_add_quartermile.gif
-##			root/templates/subSilver/images/lang_english/garage_add_rollingroad.gif
-##			root/templates/subSilver/images/lang_english/garage_browse.gif
-##			root/templates/subSilver/images/lang_english/garage_create_vehicle.gif
-##			root/templates/subSilver/images/lang_english/garage_delete.gif
-##			root/templates/subSilver/images/lang_english/garage_delete_vehicle.gif
-##			root/templates/subSilver/images/lang_english/garage_edit.gif
-##			root/templates/subSilver/images/lang_english/garage_edit_vehicle.gif
-##			root/templates/subSilver/images/lang_english/garage_garage_review.gif
-##			root/templates/subSilver/images/lang_english/garage_insurance_review.gif
-##			root/templates/subSilver/images/lang_english/garage_main_menu.gif
-##			root/templates/subSilver/images/lang_english/garage_main_vehicle.gif
-##			root/templates/subSilver/images/lang_english/garage_manage_gallery.gif
-##			root/templates/subSilver/images/lang_english/garage_no_thumb.gif
-##			root/templates/subSilver/images/lang_english/garage_quartermile_table.gif
-##			root/templates/subSilver/images/lang_english/garage_rollingroad_table.gif
-##			root/templates/subSilver/images/lang_english/garage_search.gif
-##			root/templates/subSilver/images/lang_english/garage_shop_review.gif
-##			root/templates/subSilver/images/lang_english/garage_view_vehicle.gif
-##			root/templates/subSilver/images/lang_english/icon_garage.gif
-##			upgrade/upgrade_garage-1.0.0.php
-##			upgrade/upgrade_garage-1.0.0.txt
-##			upgrade/upgrade_garage-1.0.2.php
-##			upgrade/upgrade_garage-1.0.2.txt
-##			upgrade/upgrade_garage-1.0.3.php
-##			upgrade/upgrade_garage-1.0.3.txt
-##			upgrade/upgrade_garage-1.0.4.php
-##			upgrade/upgrade_garage-1.0.4.txt
+## Included Files: (2)
 ##			upgrade/upgrade_garage-1.0.5.php
 ##			upgrade/upgrade_garage-1.0.5.txt
-## License: http://opensource.org/licenses/gpl-license.php GNU General Public License v2 or any later version
+## License: http://opensource.org/licenses/gpl-license.php GNU General Public License v2
 ######################################################################################
 ## For security purposes, please check: http://www.phpbb.com/mods/
 ## for the latest version of this MOD. Although MODs are checked
@@ -245,31 +155,342 @@
 ###################################################################################### 
 ## Before Adding This MOD To Your Forum, You Should Back Up All Files Related To This MOD 
 ###################################################################################### 
-
 #
 #-----[ COPY ]------------------------------------------
 #
-copy upgrade/upgrade_garage-1.0.4.php TO upgrade_garage-1.0.4.php
-
+copy upgrade/upgrade_garage-1.0.5.php TO upgrade_garage-1.0.5.php
 #
 #-----[ DIY INSTRUCTIONS ]------------------------------------------
 #
-Open in your web browser and run upgrade_garage-1.0.4.php
-Delete upgrade_garage-1.0.4.php if it ran succesfull
-
+Open in your web browser and run upgrade_garage-1.0.5.php
+Delete upgrade_garage-1.0.5.php if it ran succesfull
 # 
 #-----[ OPEN ]----- 
 # 
 garage.php
-
 #
 #-----[ FIND ]------------------------------------------
 #
-
+		$params = array('MAKE', 'MODEL');
+		$data = $garage_lib->process_post_vars($params);
 #
 #-----[ REPLACE WITH ]------------------------------------------
 #
-
+		$str_params = array('MAKE', 'MODEL');
+		$data = $garage_lib->process_str_vars($str_params);
+#
+#-----[ FIND ]------------------------------------------
+#
+		$params = array('year', 'make_id', 'model_id', 'colour', 'mileage', 'mileage_units', 'price', 'currency', 'comments', 'guestbook_pm_notify', 'adding_model');
+		$data = $garage_lib->process_post_vars($params);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$int_params = array('year', 'make_id', 'model_id');
+		$int_data = $garage_lib->process_int_vars($int_params);
+		$str_params = array('colour', 'mileage', 'mileage_units', 'price', 'currency', 'comments', 'guestbook_pm_notify', 'adding_model');
+		$str_data = $garage_lib->process_str_vars($str_params);
+		$data = $this->merge_int_str_data($int_data, $str_data);
+#
+#-----[ FIND ]------------------------------------------
+#
+		$params = array('year', 'make_id', 'model_id', 'colour', 'mileage', 'mileage_units', 'price', 'currency', 'comments', 'guestbook_pm_notify');
+		$data = $garage_lib->process_post_vars($params);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$int_params = array('year', 'make_id', 'model_id');
+		$int_data = $garage_lib->process_int_vars($int_params);
+		$str_params = array('colour', 'mileage', 'mileage_units', 'price', 'currency', 'comments', 'guestbook_pm_notify');
+		$str_data = $garage_lib->process_str_vars($str_params);
+		$data = $this->merge_int_str_data($int_data, $str_data);
+#
+#-----[ FIND ]------------------------------------------
+#
+		$params = array('category_id', 'title', 'price', 'business_id', 'install_business_id', 'install_price', 'install_rating', 'product_rating', 'comments', 'install_comments');
+		$data = $garage_lib->process_post_vars($params);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$int_params = array('category_id', 'business_id', 'install_business_id', 'install_rating', 'product_rating');
+		$int_data = $garage_lib->process_int_vars($int_params);
+		$str_params = array('title', 'price', 'install_price', 'comments', 'install_comments');
+		$str_data = $garage_lib->process_str_vars($str_params);
+		$data = $this->merge_int_str_data($int_data, $str_data);
+#
+#-----[ FIND ]------------------------------------------
+#
+		$params = array('category_id', 'title', 'price', 'business_id', 'install_business_id', 'install_price', 'install_rating', 'product_rating', 'comments', 'install_comments', 'edit_upload', 'image_id');
+		$data = $garage_lib->process_post_vars($params);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$int_params = array('category_id', 'business_id', 'install_business_id', 'install_rating', 'product_rating', 'image_id');
+		$int_data = $garage_lib->process_int_vars($int_params);
+		$str_params = array('title', 'price', 'install_price', 'comments', 'install_comments', 'edit_upload');
+		$str_data = $garage_lib->process_str_vars($str_params);
+		$data = $this->merge_int_str_data($int_data, $str_data);
+#
+#-----[ FIND ]------------------------------------------
+#
+		$params = array('rt', 'sixty', 'three', 'eight', 'eightmph', 'thou', 'quart', 'quartmph', 'rr_id', 'install_comments');
+		$data = $garage_lib->process_post_vars($params);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$int_params = array('rr_id');
+		$int_data = $garage_lib->process_int_vars($int_params);
+		$str_params = array('rt', 'sixty', 'three', 'eight', 'eightmph', 'thou', 'quart', 'quartmph', 'install_comments');
+		$str_data = $garage_lib->process_str_vars($str_params);
+		$data = $this->merge_int_str_data($int_data, $str_data);
+#
+#-----[ FIND ]------------------------------------------
+#
+		$params = array('PENDING');
+		$redirect = $garage_lib->process_post_vars($params);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$str_params = array('PENDING');
+		$redirect = $garage_lib->process_str_vars($str_params);
+#
+#-----[ FIND ]------------------------------------------
+#
+		$params = array('rt', 'sixty', 'three', 'eight', 'eightmph', 'thou', 'quart', 'quartmph', 'rr_id', 'install_comments', 'editupload', 'image_id', 'pending_redirect');
+		$data = $garage_lib->process_post_vars($params);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$int_params = array('rr_id', 'image_id');
+		$int_data = $garage_lib->process_int_vars($int_params);
+		$str_params = array('rt', 'sixty', 'three', 'eight', 'eightmph', 'thou', 'quart', 'quartmph', 'install_comments', 'editupload', 'pending_redirect');
+		$str_data = $garage_lib->process_str_vars($str_params);
+		$data = $this->merge_int_str_data($int_data, $str_data);
+#
+#-----[ FIND ]------------------------------------------
+#
+		$params = array('dynocenter', 'bhp', 'bhp_unit', 'torque', 'torque_unit', 'boost', 'boost_unit', 'nitrous', 'peakpoint');
+		$data = $garage_lib->process_post_vars($params);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$int_params = array('nitrous');
+		$int_data = $garage_lib->process_int_vars($int_params);
+		$str_params = array('dynocenter', 'bhp', 'bhp_unit', 'torque', 'torque_unit', 'boost', 'boost_unit', 'peakpoint');
+		$str_data = $garage_lib->process_str_vars($str_params);
+		$data = $this->merge_int_str_data($int_data, $str_data);
+#
+#-----[ FIND ]------------------------------------------
+#
+		$params = array('PENDING');
+		$redirect = $garage_lib->process_post_vars($params);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$str_params = array('PENDING');
+		$redirect = $garage_lib->process_str_vars($str_params);
+#
+#-----[ FIND ]------------------------------------------
+#
+		$params = array('dynocenter', 'bhp', 'bhp_unit', 'torque', 'torque_unit', 'boost', 'boost_unit', 'nitrous', 'peakpoint', 'editupload', 'image_id', 'pending_redirect');
+		$data = $garage_lib->process_post_vars($params);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$int_params = array('nitrous', 'image_id');
+		$int_data = $garage_lib->process_int_vars($int_params);
+		$str_params = array('dynocenter', 'bhp', 'bhp_unit', 'torque', 'torque_unit', 'boost', 'boost_unit', 'peakpoint', 'editupload', 'pending_redirect');
+		$str_data = $garage_lib->process_str_vars($str_params);
+		$data = $this->merge_int_str_data($int_data, $str_data);
+#
+#-----[ FIND ]------------------------------------------
+#
+		$params = array('business_id', 'premium', 'cover_type', 'comments');
+		$data = $garage_lib->process_post_vars($params);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$int_params = array('business_id');
+		$int_data = $garage_lib->process_int_vars($int_params);
+		$str_params = array('premium', 'cover_type', 'comments');
+		$str_data = $garage_lib->process_str_vars($str_params);
+		$data = $this->merge_int_str_data($int_data, $str_data);
+#
+#-----[ FIND ]------------------------------------------
+#
+		$params = array('business_id', 'premium', 'cover_type', 'comments');
+		$data = $garage_lib->process_post_vars($params);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$int_params = array('business_id');
+		$int_data = $garage_lib->process_int_vars($int_params);
+		$str_params = array('premium', 'cover_type', 'comments');
+		$str_data = $garage_lib->process_str_vars($str_params);
+		$data = $this->merge_int_str_data($int_data, $str_data);
+#
+#-----[ FIND ]------------------------------------------
+#
+		$params = array('user_id');
+		$data = $garage_lib->process_post_vars($params);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$int_params = array('user_id');
+		$data = $garage_lib->process_int_vars($int_params);
+#
+#-----[ FIND ]------------------------------------------
+#
+		$single_business = str_replace("\'", "''", trim($HTTP_GET_VARS['business_id']));
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$single_business = (isset($HTTP_GET_VARS['business_id'])) ?  intval($HTTP_GET_VARS['business_id']): '';
+#
+#-----[ FIND ]------------------------------------------
+#
+		$single_business = str_replace("\'", "''", trim($HTTP_GET_VARS['business_id']));
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$single_business = (isset($HTTP_GET_VARS['business_id'])) ?  intval($HTTP_GET_VARS['business_id']): '';
+#
+#-----[ FIND ]------------------------------------------
+#
+		$single_business = str_replace("\'", "''", trim($HTTP_GET_VARS['business_id']));
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$single_business = (isset($HTTP_GET_VARS['business_id'])) ?  intval($HTTP_GET_VARS['business_id']): '';
+#
+#-----[ FIND ]------------------------------------------
+#
+		$params = array('BUSINESS', 'TYPE');
+		$data = $garage_lib->process_post_vars($params);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$str_params = array('BUSINESS', 'TYPE');
+		$data = $garage_lib->process_str_vars($str_params);
+#
+#-----[ FIND ]------------------------------------------
+#
+		$params = array('TYPE', 'name', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
+		$data = $garage_lib->process_post_vars($params);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$str_params = array('TYPE', 'name', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
+		$data = $garage_lib->process_str_vars($str_params);
+#
+#-----[ FIND ]------------------------------------------
+#
+		$params = array('BUS_ID', 'name', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
+		$data = $garage_lib->process_post_vars($params);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$int_params = array('BUS_ID');
+		$int_data = $garage_lib->process_int_vars($int_params);
+		$str_params = array('name', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
+		$str_data = $garage_lib->process_str_vars($str_params);
+		$data = $this->merge_int_str_data($int_data, $str_data);
+#
+#-----[ FIND ]------------------------------------------
+#
+		$params = array('make');
+		$data = $garage_lib->process_post_vars($params);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$str_params = array('make');
+		$data = $garage_lib->process_str_vars($str_params);
+#
+#-----[ FIND ]------------------------------------------
+#
+		$params = array('MAKE_ID');
+		$data = $garage_lib->process_post_vars($params);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$int_params = array('MAKE_ID');
+		$data = $garage_lib->process_int_vars($int_params);
+#
+#-----[ FIND ]------------------------------------------
+#
+		$params = array('make', 'make_id', 'model');
+		$data = $garage_lib->process_post_vars($params);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$int_params = array('make_id');
+		$int_data = $garage_lib->process_int_vars($int_params);
+		$str_params = array('make', 'model');
+		$str_data = $garage_lib->process_str_vars($str_params);
+		$data = $this->merge_int_str_data($int_data, $str_data);
+#
+#-----[ FIND ]------------------------------------------
+#
+		$params = array('action');
+		$data = $garage_lib->process_post_vars($params);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$str_params = array('action');
+		$data = $garage_lib->process_str_vars($str_params);
+#
+#-----[ FIND ]------------------------------------------
+#
+		$params = array('BUS_ID', 'id');
+		$data = $garage_lib->process_post_vars($params);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$int_params = array('BUS_ID', 'id');
+		$data = $garage_lib->process_int_vars($int_params);
+#
+#-----[ FIND ]------------------------------------------
+#
+		$params = array('comments');
+		$data = $garage_lib->process_post_vars($params);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$str_params = array('comments');
+		$data = $garage_lib->process_str_vars($str_params);
+#
+#-----[ FIND ]------------------------------------------
+#
+		$params = array('comments', 'COMMENT_ID');
+		$data = $garage_lib->process_post_vars($params);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$int_params = array('COMMENT_ID');
+		$int_data = $garage_lib->process_int_vars($int_params);
+		$str_params = array('comments');
+		$str_data = $garage_lib->process_str_vars($str_params);
+		$data = $this->merge_int_str_data($int_data, $str_data);
+#
+#-----[ FIND ]------------------------------------------
+#
+		$params = array('comment_id');
+		$data = $garage_lib->process_post_vars($params);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$int_params = array('comment_id');
+		$data = $garage_lib->process_int_vars($int_params);
+#
+#-----[ FIND ]------------------------------------------
+#
+		$params = array('vehicle_rating');
+		$data = $garage_lib->process_post_vars($params);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		$int_params = array('vehicle_rating');
+		$data = $garage_lib->process_int_vars($int_params);
 # 
 #-----[ OPEN ]----- 
 # 

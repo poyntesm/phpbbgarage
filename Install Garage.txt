@@ -1,5 +1,5 @@
 #############################################################################################################
-## MOD Title:		phpBB Garage 1.0.5
+## MOD Title:		phpBB Garage 1.0.6
 ## MOD Author: poyntesm < esmond.poynton[at]gmail[dot]com > (Esmond Poynton) http://forums.phpbbgarage.com/
 ## MOD Description:
 ##			This mod allows users of your forum to add details about their vehicles.
@@ -33,7 +33,7 @@
 ##			This mod also provides an insurance,garage,shop review page. Users Can Add Business's Themselves.
 ##			Although for the business to appear in a review page the moderator must approve it.
 ##
-## MOD Version:		1.0.5 
+## MOD Version:		1.0.6 
 ## 
 ## Installation Level:	Easy
 ## Installation Time:	10 Minutes
@@ -135,15 +135,17 @@
 ##			root/templates/subSilver/images/lang_english/garage_shop_review.gif
 ##			root/templates/subSilver/images/lang_english/garage_view_vehicle.gif
 ##			root/templates/subSilver/images/lang_english/icon_garage.gif
-##			upgrade/upgrade_garage-1.0.0.php
-##			upgrade/upgrade_garage-1.0.0.txt
-##			upgrade/upgrade_garage-1.0.2.php
-##			upgrade/upgrade_garage-1.0.2.txt
-##			upgrade/upgrade_garage-1.0.3.php
-##			upgrade/upgrade_garage-1.0.3.txt
-##			upgrade/upgrade_garage-1.0.4.php
-##			upgrade/upgrade_garage-1.0.4.txt
-## License: http://opensource.org/licenses/gpl-license.php GNU General Public License v2 or any later version
+##			upgrade/1.0.0/upgrade_garage-1.0.0.php
+##			upgrade/1.0.0/upgrade_garage-1.0.0.txt
+##			upgrade/1.0.2/upgrade_garage-1.0.2.php
+##			upgrade/1.0.2/upgrade_garage-1.0.2.txt
+##			upgrade/1.0.3/upgrade_garage-1.0.3.php
+##			upgrade/1.0.3/upgrade_garage-1.0.3.txt
+##			upgrade/1.0.4/upgrade_garage-1.0.4.php
+##			upgrade/1.0.4/upgrade_garage-1.0.4.txt
+##			upgrade/1.0.5/upgrade_garage-1.0.5.php
+##			upgrade/1.0.5/upgrade_garage-1.0.5.txt
+## License: http://opensource.org/licenses/gpl-license.php GNU General Public License v2
 ######################################################################################
 ## For security purposes, please check: http://www.phpbb.com/mods/
 ## for the latest version of this MOD. Although MODs are checked
@@ -158,6 +160,9 @@
 ##
 ######################################################################################
 ## MOD History: 
+##   06-12-2007 - Version 1.0.6
+##	- Fix security issue
+#
 ##   20-10-2006 - Version 1.0.5
 ##	- Fix security issue
 ##

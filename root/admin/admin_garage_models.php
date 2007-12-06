@@ -55,8 +55,8 @@ switch($mode)
 	case 'add_make':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('make');
-		$data = $garage_lib->process_post_vars($params);
+		$str_params = array('make');
+		$data = $garage_lib->process_str_vars($str_params);
 
 		//Checks All Required Data Is Present
 		$params = array('make');
@@ -124,8 +124,11 @@ switch($mode)
 	case 'add_model':
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('make_id', 'model');
-		$data = $garage_lib->process_post_vars($params);
+		$int_params = array('make_id');
+		$int_data = $garage_lib->process_int_vars($int_params);
+		$str_params = array('model');
+		$str_data = $garage_lib->process_str_vars($str_params);
+		$data = $this->merge_int_str_data($int_data, $str_data);
 
 		//Checks All Required Data Is Present
 		$params = array('make_id', 'model');

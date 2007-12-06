@@ -56,10 +56,33 @@ class garage_lib
 	var $classname = "garage_lib";
 
 	/*========================================================================*/
-	// Makes Safe Any Posted Variables
-	// Usage: process_post_vars(array());
+	// Makes Safe Any Posted Int Variables
+	// Usage: process_int_vars(array());
 	/*========================================================================*/
-	function process_post_vars($params = array())
+	function process_int_vars($params = array())
+	{
+		global $HTTP_POST_VARS, $HTTP_GET_VARS;
+
+		while( list($var, $param) = @each($params) )
+		{
+			if (!empty($HTTP_POST_VARS[$param]))
+			{
+				$data[$param] = intval($HTTP_POST_VARS[$param]);
+			}
+			else if (!empty($HTTP_GET_VARS[$param]))
+			{
+				$data[$param] = intval($HTTP_GET_VARS[$param]);
+			}
+		}
+
+		return $data;
+	}
+
+	/*========================================================================*/
+	// Makes Safe Any Posted String Variables
+	// Usage: process_str_vars(array());
+	/*========================================================================*/
+	function process_str_vars($params = array())
 	{
 		global $HTTP_POST_VARS, $HTTP_GET_VARS;
 
@@ -76,6 +99,28 @@ class garage_lib
 		}
 
 		return $data;
+	}
+
+	/*========================================================================*/
+	// Merge Int & String Data To One Array If Both Are Populated
+	// Usage: merge_int_str_data(array(), array());
+	/*========================================================================*/
+	function merge_int_str_data($int_data, $str_data)
+	{
+		if ((!empty($int_data)) && (!empty($str_data)))
+		{
+			$return_data = array_merge($int_data, $str_data);
+		}
+		else if (!empty($int_data))
+		{
+			$return_data = $int_data;
+		}
+		else
+		{
+			$return_data = $str_data;
+		}
+
+		return $return_data;
 	}
 
 	/*========================================================================*/
@@ -4497,8 +4542,11 @@ class garage_lib
 	{
 		global $template, $lang;
 
-		$params = array('make_id', 'model_id', 'user');
-		$data = $this->process_post_vars($params);
+		$int_params = array('make_id', 'model_id');
+		$int_data = $this->process_int_vars($int_params);
+		$str_params = array('user');
+		$str_data = $this->process_str_vars($str_params);
+		$data = $this->merge_int_str_data($int_data, $str_data);
 
 		//Check If This Is A Search Including User
 		if (!empty($data['user']))
