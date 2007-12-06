@@ -128,7 +128,7 @@ switch($mode)
 		$int_data = $garage_lib->process_int_vars($int_params);
 		$str_params = array('model');
 		$str_data = $garage_lib->process_str_vars($str_params);
-		$data = $this->merge_int_str_data($int_data, $str_data);
+		$data = $garage_lib->merge_int_str_data($int_data, $str_data);
 
 		//Checks All Required Data Is Present
 		$params = array('make_id', 'model');

@@ -190,7 +190,7 @@ garage.php
 		$int_data = $garage_lib->process_int_vars($int_params);
 		$str_params = array('colour', 'mileage', 'mileage_units', 'price', 'currency', 'comments', 'guestbook_pm_notify', 'adding_model');
 		$str_data = $garage_lib->process_str_vars($str_params);
-		$data = $this->merge_int_str_data($int_data, $str_data);
+		$data = $garage_lib->merge_int_str_data($int_data, $str_data);
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -203,7 +203,7 @@ garage.php
 		$int_data = $garage_lib->process_int_vars($int_params);
 		$str_params = array('colour', 'mileage', 'mileage_units', 'price', 'currency', 'comments', 'guestbook_pm_notify');
 		$str_data = $garage_lib->process_str_vars($str_params);
-		$data = $this->merge_int_str_data($int_data, $str_data);
+		$data = $garage_lib->merge_int_str_data($int_data, $str_data);
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -216,7 +216,7 @@ garage.php
 		$int_data = $garage_lib->process_int_vars($int_params);
 		$str_params = array('title', 'price', 'install_price', 'comments', 'install_comments');
 		$str_data = $garage_lib->process_str_vars($str_params);
-		$data = $this->merge_int_str_data($int_data, $str_data);
+		$data = $garage_lib->merge_int_str_data($int_data, $str_data);
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -229,7 +229,7 @@ garage.php
 		$int_data = $garage_lib->process_int_vars($int_params);
 		$str_params = array('title', 'price', 'install_price', 'comments', 'install_comments', 'edit_upload');
 		$str_data = $garage_lib->process_str_vars($str_params);
-		$data = $this->merge_int_str_data($int_data, $str_data);
+		$data = $garage_lib->merge_int_str_data($int_data, $str_data);
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -242,7 +242,7 @@ garage.php
 		$int_data = $garage_lib->process_int_vars($int_params);
 		$str_params = array('rt', 'sixty', 'three', 'eight', 'eightmph', 'thou', 'quart', 'quartmph', 'install_comments');
 		$str_data = $garage_lib->process_str_vars($str_params);
-		$data = $this->merge_int_str_data($int_data, $str_data);
+		$data = $garage_lib->merge_int_str_data($int_data, $str_data);
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -265,7 +265,7 @@ garage.php
 		$int_data = $garage_lib->process_int_vars($int_params);
 		$str_params = array('rt', 'sixty', 'three', 'eight', 'eightmph', 'thou', 'quart', 'quartmph', 'install_comments', 'editupload', 'pending_redirect');
 		$str_data = $garage_lib->process_str_vars($str_params);
-		$data = $this->merge_int_str_data($int_data, $str_data);
+		$data = $garage_lib->merge_int_str_data($int_data, $str_data);
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -278,7 +278,7 @@ garage.php
 		$int_data = $garage_lib->process_int_vars($int_params);
 		$str_params = array('dynocenter', 'bhp', 'bhp_unit', 'torque', 'torque_unit', 'boost', 'boost_unit', 'peakpoint');
 		$str_data = $garage_lib->process_str_vars($str_params);
-		$data = $this->merge_int_str_data($int_data, $str_data);
+		$data = $garage_lib->merge_int_str_data($int_data, $str_data);
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -301,7 +301,7 @@ garage.php
 		$int_data = $garage_lib->process_int_vars($int_params);
 		$str_params = array('dynocenter', 'bhp', 'bhp_unit', 'torque', 'torque_unit', 'boost', 'boost_unit', 'peakpoint', 'editupload', 'pending_redirect');
 		$str_data = $garage_lib->process_str_vars($str_params);
-		$data = $this->merge_int_str_data($int_data, $str_data);
+		$data = $garage_lib->merge_int_str_data($int_data, $str_data);
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -314,7 +314,7 @@ garage.php
 		$int_data = $garage_lib->process_int_vars($int_params);
 		$str_params = array('premium', 'cover_type', 'comments');
 		$str_data = $garage_lib->process_str_vars($str_params);
-		$data = $this->merge_int_str_data($int_data, $str_data);
+		$data = $garage_lib->merge_int_str_data($int_data, $str_data);
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -327,7 +327,7 @@ garage.php
 		$int_data = $garage_lib->process_int_vars($int_params);
 		$str_params = array('premium', 'cover_type', 'comments');
 		$str_data = $garage_lib->process_str_vars($str_params);
-		$data = $this->merge_int_str_data($int_data, $str_data);
+		$data = $garage_lib->merge_int_str_data($int_data, $str_data);
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -394,7 +394,7 @@ garage.php
 		$int_data = $garage_lib->process_int_vars($int_params);
 		$str_params = array('name', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
 		$str_data = $garage_lib->process_str_vars($str_params);
-		$data = $this->merge_int_str_data($int_data, $str_data);
+		$data = $garage_lib->merge_int_str_data($int_data, $str_data);
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -427,7 +427,7 @@ garage.php
 		$int_data = $garage_lib->process_int_vars($int_params);
 		$str_params = array('make', 'model');
 		$str_data = $garage_lib->process_str_vars($str_params);
-		$data = $this->merge_int_str_data($int_data, $str_data);
+		$data = $garage_lib->merge_int_str_data($int_data, $str_data);
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -470,7 +470,7 @@ garage.php
 		$int_data = $garage_lib->process_int_vars($int_params);
 		$str_params = array('comments');
 		$str_data = $garage_lib->process_str_vars($str_params);
-		$data = $this->merge_int_str_data($int_data, $str_data);
+		$data = $garage_lib->merge_int_str_data($int_data, $str_data);
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -517,7 +517,7 @@ admin/admin_garage_business.php
 		$int_data = $garage_lib->process_int_vars($int_params);
 		$str_params = array('name', 'address', 'telephone', 'fax', 'website', 'email', 'opening_hours', 'insurance', 'garage', 'retail_shop', 'web_shop');
 		$str_data = $garage_lib->process_str_vars($str_params);
-		$data = $this->merge_int_str_data($int_data, $str_data);
+		$data = $garage_lib->merge_int_str_data($int_data, $str_data);
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -564,7 +564,7 @@ admin/admin_garage_models.php
 		$int_data = $garage_lib->process_int_vars($int_params);
 		$str_params = array('model');
 		$str_data = $garage_lib->process_str_vars($str_params);
-		$data = $this->merge_int_str_data($int_data, $str_data);
+		$data = $garage_lib->merge_int_str_data($int_data, $str_data);
 # 
 #-----[ OPEN ]----- 
 # 
