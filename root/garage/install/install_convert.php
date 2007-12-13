@@ -4,6 +4,7 @@
 * @package install
 * @version $Id$
 * @copyright (c) 2006 phpBB Group 
+* @copyright (c) 2007 Esmond Poynton
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
 *
 */
@@ -38,10 +39,10 @@ if (!empty($setmodules))
 }
 
 /**
-* Class holding all convertor-specific details.
+* Class holding all garage convertor-specific details.
 * @package install
 */
-class convert
+class garage_convert
 {
 	var $options = array();
 
@@ -60,8 +61,6 @@ class convert
 	var $convertor = array();
 	var $src_truncate_statement = 'DELETE FROM ';
 	var $truncate_statement = 'DELETE FROM ';
-
-	var $fulltext_search;
 
 	// Batch size, can be adjusted by the conversion file
 	// For big boards a value of 6000 seems to be optimal
@@ -103,14 +102,14 @@ class install_convert extends module
 		$this->tpl_name = 'garage_install_convert';
 		$this->mode = $mode;
 
-		$convert = new convert($this->p_master);
+		$convert = new garage_convert($this->p_master);
 
 		switch ($sub)
 		{
 			case 'intro':
 
-				/*if (!$config['phbbgarage_installed'])
-				//{
+				if (!defined('PHPBBGARAGE_INSTALLED'))
+				{
 					$template->assign_vars(array(
 						'S_NOT_INSTALLED'	=> true,
 						'TITLE'			=> $lang['BOARD_NOT_INSTALLED'],
@@ -118,41 +117,35 @@ class install_convert extends module
 					));
 
 					return;
-				}*/
+				}
 
 				// Detect if there is already a conversion in progress at this point and offer to resume
 				// It's quite possible that the user will get disconnected during a large conversion so they need to be able to resume it
-				$new_conversion = request_var('new_conv', 0);
+				$new_conversion = request_var('new_garage_conv', 0);
 
 				if ($new_conversion)
 				{
-					$config['convert_progress'] = '';
-					$config['convert_db_server'] = '';
-					$config['convert_db_user'] = '';
+					$config['convert_garage_progress'] = '';
+					$config['convert_garage_db_server'] = '';
+					$config['convert_garage_db_user'] = '';
+
 					$db->sql_query('DELETE FROM ' . CONFIG_TABLE . "
-						WHERE config_name = 'convert_progress'
-							OR config_name = 'convert_db_server'
-							OR config_name = 'convert_db_user'"
+						WHERE config_name = 'convert_garage_progress'
+							OR config_name = 'convert_garage_db_server'
+							OR config_name = 'convert_garage_db_user'"
 					);
 				}
 
 				// Let's see if there is a conversion in the works...
 				$options = array();
-				if (!empty($config['convert_progress']) && !empty($config['convert_db_server']) && !empty($config['convert_db_user']) && !empty($config['convert_options']))
+				if (!empty($config['convert_garage_progress']) && !empty($config['convert_garage_db_server']) && !empty($config['convert_garage_db_user']) && !empty($config['convert_garage_options']))
 				{
-					$options = unserialize($config['convert_progress']);
-					$options = array_merge($options, unserialize($config['convert_db_server']), unserialize($config['convert_db_user']), unserialize($config['convert_options']));
+					$options = unserialize($config['convert_garage_progress']);
+					$options = array_merge($options, unserialize($config['convert_garage_db_server']), unserialize($config['convert_garage_db_user']), unserialize($config['convert_garage_options']));
 				}
 
 				// This information should have already been checked once, but do it again for safety
-				if (!empty($options) && !empty($options['tag']) &&
-					isset($options['dbms']) &&
-					isset($options['dbhost']) &&
-					isset($options['dbport']) &&
-					isset($options['dbuser']) &&
-					isset($options['dbpasswd']) &&
-					isset($options['dbname']) &&
-					isset($options['table_prefix']))
+				if (!empty($options) && !empty($options['tag']) && isset($options['dbms']) && isset($options['dbhost']) && isset($options['dbport']) && isset($options['dbuser']) && isset($options['dbpasswd']) && isset($options['dbname']) && isset($options['table_prefix']))
 				{
 					$this->page_title = $lang['CONTINUE_CONVERT'];
 
@@ -160,10 +153,10 @@ class install_convert extends module
 						'TITLE'			=> $lang['CONTINUE_CONVERT'],
 						'BODY'			=> $lang['CONTINUE_CONVERT_BODY'],
 						'L_NEW'			=> $lang['CONVERT_NEW_CONVERSION'],
-						'L_CONTINUE'	=> $lang['CONTINUE_OLD_CONVERSION'],
-						'S_CONTINUE'	=> true,
+						'L_CONTINUE'		=> $lang['CONTINUE_OLD_CONVERSION'],
+						'S_CONTINUE'		=> true,
 
-						'U_NEW_ACTION'		=> $this->p_master->module_url . "?mode={$this->mode}&amp;sub=intro&amp;new_conv=1",
+						'U_NEW_ACTION'		=> $this->p_master->module_url . "?mode={$this->mode}&amp;sub=intro&amp;new_garage_conv=1",
 						'U_CONTINUE_ACTION'	=> $this->p_master->module_url . "?mode={$this->mode}&amp;sub=in_progress&amp;tag={$options['tag']}{$options['step']}",
 					));
 
@@ -206,18 +199,18 @@ class install_convert extends module
 		$this->page_title = $lang['SUB_INTRO'];
 
 		$template->assign_vars(array(
-			'TITLE'		=> $lang['CONVERT_INTRO'],
-			'BODY'		=> $lang['CONVERT_INTRO_BODY'],
+			'TITLE'				=> $lang['CONVERT_INTRO'],
+			'BODY'				=> $lang['CONVERT_INTRO_BODY'],
 
-			'L_AUTHOR'					=> $lang['AUTHOR'],
+			'L_AUTHOR'			=> $lang['AUTHOR'],
 			'L_AVAILABLE_CONVERTORS'	=> $lang['AVAILABLE_CONVERTORS'],
-			'L_CONVERT'					=> $lang['CONVERT'],
-			'L_NO_CONVERTORS'			=> $lang['NO_CONVERTORS'],
-			'L_OPTIONS'					=> $lang['OPTIONS'],
-			'L_SOFTWARE'				=> $lang['SOFTWARE'],
-			'L_VERSION'					=> $lang['VERSION'],
+			'L_CONVERT'			=> $lang['CONVERT'],
+			'L_NO_CONVERTORS'		=> $lang['NO_CONVERTORS'],
+			'L_OPTIONS'			=> $lang['OPTIONS'],
+			'L_SOFTWARE'			=> $lang['SOFTWARE'],
+			'L_VERSION'			=> $lang['VERSION'],
 
-			'S_LIST'	=> true,
+			'S_LIST'			=> true,
 		));
 
 		$convertors = $sort = array();
@@ -278,14 +271,7 @@ class install_convert extends module
 	{
 		global $lang, $template, $db, $phpbb_root_path, $phpEx, $config, $cache;
 
-		require($phpbb_root_path . 'config.' . $phpEx);
-		require($phpbb_root_path . 'includes/constants.' . $phpEx);
-		require($phpbb_root_path . 'includes/db/' . $dbms . '.' . $phpEx);
 		require($phpbb_root_path . 'includes/functions_convert.' . $phpEx);
-
-		$db = new $sql_db();
-		$db->sql_connect($dbhost, $dbuser, $dbpasswd, $dbname, $dbport, false, true);
-		unset($dbpasswd);
 
 		$this->page_title = $lang['STAGE_SETTINGS'];
 
@@ -326,20 +312,15 @@ class install_convert extends module
 
 		$submit = (isset($_POST['submit'])) ? true : false;
 
-		$src_dbms			= request_var('src_dbms', $convertor_data['dbms']);
-		$src_dbhost			= request_var('src_dbhost', $convertor_data['dbhost']);
-		$src_dbport			= request_var('src_dbport', $convertor_data['dbport']);
-		$src_dbuser			= request_var('src_dbuser', $convertor_data['dbuser']);
+		$src_dbms		= request_var('src_dbms', $convertor_data['dbms']);
+		$src_dbhost		= request_var('src_dbhost', $convertor_data['dbhost']);
+		$src_dbport		= request_var('src_dbport', $convertor_data['dbport']);
+		$src_dbuser		= request_var('src_dbuser', $convertor_data['dbuser']);
 		$src_dbpasswd		= request_var('src_dbpasswd', $convertor_data['dbpasswd']);
-		$src_dbname			= request_var('src_dbname', $convertor_data['dbname']);
+		$src_dbname		= request_var('src_dbname', $convertor_data['dbname']);
 		$src_table_prefix	= request_var('src_table_prefix', $convertor_data['table_prefix']);
-		$forum_path			= request_var('forum_path', $convertor_data['forum_path']);
-		$refresh			= request_var('refresh', 1);
-
-		// Default URL of the old board
-		// @todo Are we going to use this for attempting to convert URL references in posts, or should we remove it?
-		//		-> We should convert old urls to the new relative urls format
-		// $src_url = request_var('src_url', 'Not in use at the moment');
+		$forum_path		= request_var('forum_path', $convertor_data['forum_path']);
+		$refresh		= request_var('refresh', 1);
 
 		// strip trailing slash from old forum path
 		$forum_path = (strlen($forum_path) && $forum_path[strlen($forum_path) - 1] == '/') ? substr($forum_path, 0, -1) : $forum_path;
@@ -443,7 +424,7 @@ class install_convert extends module
 				// Save convertor Status
 				set_config('convert_progress', serialize(array(
 					'step'			=> '',
-					'table_prefix'	=> $src_table_prefix,
+					'table_prefix'		=> $src_table_prefix,
 					'tag'			=> $convertor_tag,
 				)), true);
 				set_config('convert_db_server', serialize(array(
@@ -506,7 +487,7 @@ class install_convert extends module
 				'TITLE'			=> $lang[$vars['lang']],
 				'S_EXPLAIN'		=> $vars['explain'],
 				'S_LEGEND'		=> false,
-				'TITLE_EXPLAIN'	=> ($vars['explain']) ? $lang[$vars['lang'] . '_EXPLAIN'] : '',
+				'TITLE_EXPLAIN'		=> ($vars['explain']) ? $lang[$vars['lang'] . '_EXPLAIN'] : '',
 				'CONTENT'		=> $this->p_master->input_field($config_key, $vars['type'], $$config_key, $options),
 				)
 			);
@@ -525,17 +506,10 @@ class install_convert extends module
 	*/
 	function convert_data($sub)
 	{
-		global $template, $user, $phpbb_root_path, $phpEx, $db, $lang, $config, $cache;
+		global $template, $user, $phpbb_root_path, $phpEx, $db, $dbms, $lang, $config, $cache;
 		global $convert, $convert_row, $message_parser, $skip_rows;
 
-		require($phpbb_root_path . 'config.' . $phpEx);
-		require($phpbb_root_path . 'includes/constants.' . $phpEx);
-		require($phpbb_root_path . 'includes/db/' . $dbms . '.' . $phpEx);
 		require($phpbb_root_path . 'includes/functions_convert.' . $phpEx);
-
-		$db = new $sql_db();
-		$db->sql_connect($dbhost, $dbuser, $dbpasswd, $dbname, $dbport, false, true);
-		unset($dbpasswd);
 
 		$sql = 'SELECT *
 			FROM ' . CONFIG_TABLE;
@@ -547,12 +521,6 @@ class install_convert extends module
 			$config[$row['config_name']] = $row['config_value'];
 		}
 		$db->sql_freeresult($result);
-
-		// Override a couple of config variables for the duration
-		$config['max_quote_depth'] = 0;
-
-		// @todo Need to confirm that max post length in source is <= max post length in destination or there may be interesting formatting issues
-		$config['max_post_chars'] = -1; 
 
 		// Set up a user as well. We _should_ have enough of a database here at this point to do this
 		// and it helps for any core code we call
@@ -573,27 +541,20 @@ class install_convert extends module
 		}
 
 		// This information should have already been checked once, but do it again for safety
-		if (empty($convert->options) || empty($convert->options['tag']) ||
-			!isset($convert->options['dbms']) ||
-			!isset($convert->options['dbhost']) ||
-			!isset($convert->options['dbport']) ||
-			!isset($convert->options['dbuser']) ||
-			!isset($convert->options['dbpasswd']) ||
-			!isset($convert->options['dbname']) ||
-			!isset($convert->options['table_prefix']))
+		if (empty($convert->options) || empty($convert->options['tag']) || !isset($convert->options['dbms']) || !isset($convert->options['dbhost']) || !isset($convert->options['dbport']) || !isset($convert->options['dbuser']) || !isset($convert->options['dbpasswd']) || !isset($convert->options['dbname']) || !isset($convert->options['table_prefix']))
 		{
 			$this->p_master->error($user->lang['NO_CONVERT_SPECIFIED'], __LINE__, __FILE__);
 		}
 
 		// Make some short variables accessible, for easier referencing
-		$convert->convertor_tag = basename($convert->options['tag']);
-		$convert->src_dbms = $convert->options['dbms'];
-		$convert->src_dbhost = $convert->options['dbhost'];
-		$convert->src_dbport = $convert->options['dbport'];
-		$convert->src_dbuser = $convert->options['dbuser'];
-		$convert->src_dbpasswd = $convert->options['dbpasswd'];
-		$convert->src_dbname = $convert->options['dbname'];
-		$convert->src_table_prefix = $convert->options['table_prefix'];
+		$convert->convertor_tag 	= basename($convert->options['tag']);
+		$convert->src_dbms 		= $convert->options['dbms'];
+		$convert->src_dbhost 		= $convert->options['dbhost'];
+		$convert->src_dbport 		= $convert->options['dbport'];
+		$convert->src_dbuser 		= $convert->options['dbuser'];
+		$convert->src_dbpasswd 		= $convert->options['dbpasswd'];
+		$convert->src_dbname 		= $convert->options['dbname'];
+		$convert->src_table_prefix 	= $convert->options['table_prefix'];
 
 		// initiate database connection to old db if old and new db differ
 		global $src_db, $same_db;
@@ -677,18 +638,18 @@ class install_convert extends module
 		include('./convertors/convert_' . $convert->convertor_tag . '.' . $phpEx);
 
 		// Map some variables...
-		$convert->convertor_data = $convertor_data;
-		$convert->tables = $tables;
-		$convert->config_schema = $config_schema;
+		$convert->convertor_data 	= $convertor_data;
+		$convert->tables 		= $tables;
+		$convert->config_schema 	= $config_schema;
 
 		// Now include the real data
 		$get_info = false;
 		include('./convertors/convert_' . $convert->convertor_tag . '.' . $phpEx);
 
-		$convert->convertor_data = $convertor_data;
-		$convert->tables = $tables;
-		$convert->config_schema = $config_schema;
-		$convert->convertor = $convertor;
+		$convert->convertor_data 	= $convertor_data;
+		$convert->tables 		= $tables;
+		$convert->config_schema 	= $config_schema;
+		$convert->convertor 		= $convertor;
 
 		// The test_file is a file that should be present in the location of the old board.
 		if (!file_exists($convert->options['forum_path'] . '/' . $test_file))
@@ -696,36 +657,12 @@ class install_convert extends module
 			$this->p_master->error(sprintf($user->lang['COULD_NOT_FIND_PATH'], $convert->options['forum_path']), __LINE__, __FILE__);
 		}
 
-		$search_type = basename(trim($config['search_type']));
-
-		// For conversions we are a bit less strict and set to a search backend we know exist...
-		if (!file_exists($phpbb_root_path . 'includes/search/' . $search_type . '.' . $phpEx))
-		{
-			$search_type = 'fulltext_native';
-			set_config('search_type', $search_type);
-		}
-
-		if (!file_exists($phpbb_root_path . 'includes/search/' . $search_type . '.' . $phpEx))
-		{
-			trigger_error('NO_SUCH_SEARCH_MODULE');
-		}
-
-		require($phpbb_root_path . 'includes/search/' . $search_type . '.' . $phpEx);
-
-		$error = false;
-		$convert->fulltext_search = new $search_type($error);
-
-		if ($error)
-		{
-			trigger_error($error);
-		}
-
 		include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 		$message_parser = new parse_message();
 
-		$jump = request_var('jump', 0);
-		$final_jump = request_var('final_jump', 0);
-		$sync_batch = request_var('sync_batch', -1);
+		$jump 		= request_var('jump', 0);
+		$final_jump 	= request_var('final_jump', 0);
+		$sync_batch 	= request_var('sync_batch', -1);
 		$last_statement = request_var('last', 0);
 
 		// We are running sync...
@@ -747,23 +684,19 @@ class install_convert extends module
 			return;
 		}
 
-		$current_table = request_var('current_table', 0);
-		$old_current_table = min(-1, $current_table - 1);
-		$skip_rows = request_var('skip_rows', 0);
+		$current_table 		= request_var('current_table', 0);
+		$old_current_table 	= min(-1, $current_table - 1);
+		$skip_rows 		= request_var('skip_rows', 0);
 
 		if (!$current_table && !$skip_rows)
 		{
 			if (empty($_REQUEST['confirm']))
 			{
-				// If avatars / ranks / smilies folders are specified make sure they are writable
+				// If upload folders are specified make sure they are writable
 				$bad_folders = array();
 
 				$local_paths = array(
-					'avatar_path'			=> path($config['avatar_path']),
-					'avatar_gallery_path'	=> path($config['avatar_gallery_path']),
-					'icons_path'			=> path($config['icons_path']),
-					'ranks_path'			=> path($config['ranks_path']),
-					'smilies_path'			=> path($config['smilies_path'])
+					'upload_path'			=> path($config['upload_path']),
 				);
 
 				foreach ($local_paths as $folder => $local_path)
@@ -925,12 +858,6 @@ class install_convert extends module
 			if (!empty($convert->config_schema))
 			{
 				restore_config($convert->config_schema);
-
-				// Override a couple of config variables for the duration
-				$config['max_quote_depth'] = 0;
-
-				// @todo Need to confirm that max post length in source is <= max post length in destination or there may be interesting formatting issues
-				$config['max_post_chars'] = -1;
 			}
 
 			$template->assign_block_vars('checks', array(
@@ -1475,7 +1402,7 @@ class install_convert extends module
 		// Save convertor Status
 		set_config('convert_progress', serialize(array(
 			'step'			=> $step,
-			'table_prefix'	=> $convert->src_table_prefix,
+			'table_prefix'		=> $convert->src_table_prefix,
 			'tag'			=> $convert->convertor_tag,
 		)), true);
 
@@ -1502,14 +1429,12 @@ class install_convert extends module
 		global $db, $phpbb_root_path, $convert, $config, $user, $template;
 
 		$db->sql_query('DELETE FROM ' . CONFIG_TABLE . " 
-			WHERE config_name = 'convert_progress'
-				OR config_name = 'convert_options'
-				OR config_name = 'convert_db_server'
-				OR config_name = 'convert_db_user'");
-		$db->sql_query('DELETE FROM ' . SESSIONS_TABLE);
+				WHERE config_name = 'convert_garage_progress'
+					OR config_name = 'convert_garage_options'
+					OR config_name = 'convert_garage_db_server'
+					OR config_name = 'convert_garage_db_user'");
 
 		@unlink($phpbb_root_path . 'cache/data_global.php');
-		cache_moderators();
 
 		// And finally, add a note to the log
 		add_log('admin', 'LOG_INSTALL_CONVERTED', $convert->convertor_data['forum_name'], $config['version']);
@@ -1554,7 +1479,7 @@ class install_convert extends module
 				$template->assign_vars(array(
 					'S_ERROR_BOX'	=> true,
 					'ERROR_TITLE'	=> $user->lang['UPDATE_TOPICS_POSTED'],
-					'ERROR_MSG'		=> $user->lang['UPDATE_TOPICS_POSTED_ERR'],
+					'ERROR_MSG'	=> $user->lang['UPDATE_TOPICS_POSTED_ERR'],
 				));
 			}
 			$db->sql_return_on_error(false);
@@ -1654,21 +1579,6 @@ class install_convert extends module
 			$src_db->sql_return_on_error(false);
 
 			fix_empty_primary_groups();
-
-			if (!isset($config['board_startdate']))
-			{
-				$sql = 'SELECT MIN(user_regdate) AS board_startdate
-					FROM ' . USERS_TABLE;
-				$result = $db->sql_query($sql);
-				$row = $db->sql_fetchrow($result);
-				$db->sql_freeresult($result);
-
-				if (($row['board_startdate'] < $config['board_startdate'] && $row['board_startdate'] > 0) || !isset($config['board_startdate']))
-				{
-					set_config('board_startdate', $row['board_startdate']);
-					$db->sql_query('UPDATE ' . USERS_TABLE . ' SET user_regdate = ' . $row['board_startdate'] . ' WHERE user_id = ' . ANONYMOUS);
-				}
-			}
 
 			update_dynamic_config();
 
@@ -2038,17 +1948,16 @@ class install_convert extends module
 	* The information below will be used to build the input fields presented to the user
 	*/
 	var $convert_options = array(
-		'legend1'			=> 'SPECIFY_OPTIONS',
-		'src_dbms'			=> array('lang' => 'DBMS',			'type' => 'select', 'options' => 'dbms_select(\'{VALUE}\', true)', 'explain' => false),
+		'legend1'		=> 'SPECIFY_OPTIONS',
+		'src_dbms'		=> array('lang' => 'DBMS',		'type' => 'select', 'options' => 'dbms_select(\'{VALUE}\', true)', 'explain' => false),
 		'src_dbhost'		=> array('lang' => 'DB_HOST',		'type' => 'text:25:100', 'explain' => true),
 		'src_dbport'		=> array('lang' => 'DB_PORT',		'type' => 'text:25:100', 'explain' => true),
 		'src_dbname'		=> array('lang' => 'DB_NAME',		'type' => 'text:25:100', 'explain' => false),
 		'src_dbuser'		=> array('lang' => 'DB_USERNAME',	'type' => 'text:25:100', 'explain' => false),
 		'src_dbpasswd'		=> array('lang' => 'DB_PASSWORD',	'type' => 'password:25:100', 'explain' => false),
 		'src_table_prefix'	=> array('lang' => 'TABLE_PREFIX',	'type' => 'text:25:100', 'explain' => false),
-		//'src_url'			=> array('lang' => 'FORUM_ADDRESS',	'type' => 'text:50:100', 'explain' => true),
 		'forum_path'		=> array('lang' => 'FORUM_PATH',	'type' => 'text:25:100', 'explain' => true),
-		'refresh'			=> array('lang' => 'REFRESH_PAGE',	'type' => 'radio:yes_no', 'explain' => true),
+		'refresh'		=> array('lang' => 'REFRESH_PAGE',	'type' => 'radio:yes_no', 'explain' => true),
 	);
 }
 

@@ -13,6 +13,7 @@ $update_info = array(
 	),
 	'files'		=> array(
 		'garage.php',
+		'garage_dynorun.php',
 		'adm/images/phpbbgarage_logo.gif'
 	),
 	'binary'	=> array(

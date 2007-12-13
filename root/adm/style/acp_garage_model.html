@@ -2,7 +2,9 @@
 
 <!-- IF S_EDIT_MAKE -->
 
-	<a href="{U_BACK}" style="float: right">&laquo; {L_BACK}</a>
+	<!-- IF U_BACK -->
+	<a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a>
+	<!-- ENDIF -->
 
 	<h1>{L_MAKE_UPDATE}</h1>
 
@@ -35,7 +37,9 @@
 
 <!-- ELSEIF S_EDIT_MODEL -->
 
-	<a href="{U_BACK}" style="float: right">&laquo; {L_BACK}</a>
+	<!-- IF U_BACK -->
+	<a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a>
+	<!-- ENDIF -->
 
 	<h1>{L_MODEL_UPDATE}</h1>
 
@@ -68,7 +72,9 @@
 
 <!-- ELSEIF S_DELETE_MAKE -->
 
-	<a href="{U_BACK}" style="float: right">&laquo; {L_BACK}</a>
+	<!-- IF U_BACK -->
+	<a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a>
+	<!-- ENDIF -->
 
 	<h1>{L_MAKE_DELETE}</h1>
 
@@ -106,7 +112,9 @@
 
 <!-- ELSEIF S_DELETE_MODEL -->
 
-	<a href="{U_BACK}" style="float: right">&laquo; {L_BACK}</a>
+	<!-- IF U_BACK -->
+	<a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a>
+	<!-- ENDIF -->
 
 	<h1>{L_MODEL_DELETE}</h1>
 

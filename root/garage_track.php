@@ -292,7 +292,7 @@ switch( $mode )
 		*/
 		$params = array('length' => '', 'mileage_unit' => '');
 		$data 	= $garage->process_vars($params);
-		$params = array('title');
+		$params = array('title' => '');
 		$data 	+= $garage->process_mb_vars($params);
 		$params = array('title');
 		$garage->check_required_vars($params);

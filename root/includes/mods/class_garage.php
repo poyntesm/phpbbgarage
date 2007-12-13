@@ -721,18 +721,17 @@ class garage
 			'GROUP_BY'	=> $sql_array['GROUP_BY'],
 			'ORDER_BY'	=> $sql_array['ORDER_BY'],
 		));
-	
+
 		$result = $db->sql_query_limit($sql, $garage_config['cars_per_page'], $start);
 		while ($row = $db->sql_fetchrow($result) )
 		{
-			$data[] = $row;
 			if (!empty($row))
 			{
 				$row['vehicle'] = "{$row['made_year']} {$row['make']} {$row['model']}";
 			}
-			if (!empty($row['modification_title']))
+			if ($search_options['display_as'] == 'modifications')
 			{
-				$row['modification_title'] = "{$row['business_title']} {$row['modification_title']}";
+				$row['modification_title'] = "{$row['business_title']} {$row['product_title']}";
 			}
 			$data[] = $row;
 		}

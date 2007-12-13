@@ -48,24 +48,24 @@ define('SERVICE_MINOR', 2);
 
 
 //Define Engien Type Constants For Vehicle Engine Type
-define('2_CYLINDER_FI', 1);
-define('2_CYLINDER_NA', 2);
-define('3_CYLINDER_FI', 3);
-define('3_CYLINDER_NA', 4);
-define('4_CYLINDER_FI', 5);
-define('4_CYLINDER_NA', 6);
-define('5_CYLINDER_FI', 7);
-define('5_CYLINDER_NA', 8);
-define('6_CYLINDER_FI', 9);
-define('6_CYLINDER_NA', 10);
-define('8_CYLINDER_FI', 11);
-define('8_CYLINDER_NA', 12);
-define('10_CYLINDER_FI', 13);
-define('10_CYLINDER_NA', 14);
-define('12_CYLINDER_FI', 15);
-define('12_CYLINDER_NA', 16);
-define('16_CYLINDER_FI', 17);
-define('16_CYLINDER_NA', 18);
+define('FI_2_CYLINDER', 1);
+define('NA_2_CYLINDER', 2);
+define('FI_3_CYLINDER', 3);
+define('NA_3_CYLINDER', 4);
+define('FI_4_CYLINDER', 5);
+define('NA_4_CYLINDER', 6);
+define('FI_5_CYLINDERI', 7);
+define('NA_5_CYLINDERA', 8);
+define('FI_6_CYLINDER', 9);
+define('NA_6_CYLINDER', 10);
+define('FI_8_CYLINDER', 11);
+define('NA_8_CYLINDER', 12);
+define('FI_10_CYLINDER', 13);
+define('NA_10_CYLINDER', 14);
+define('FI_12_CYLINDER', 15);
+define('NA_12_CYLINDER', 16);
+define('FI_16_CYLINDER', 17);
+define('NA_16_CYLINDER', 18);
 
 //Define Garage Tables Constants
 define('GARAGE_VEHICLES_TABLE', $table_prefix . 'garage_vehicles');

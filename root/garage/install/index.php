@@ -44,7 +44,7 @@ if (!empty($mem_limit))
 	}
 	else if (is_numeric($unit))
 	{
-		$mem_limit = floor($mem_limit/1048576);
+		$mem_limit = floor((int) ($mem_limit . $unit) / 1048576);
 	}
 	$mem_limit = max(128, $mem_limit) . 'M';
 }
@@ -59,9 +59,10 @@ else
 include($phpbb_root_path . 'common.' . $phpEx);
 include($phpbb_root_path . 'includes/bbcode.' . $phpEx);
 include($phpbb_root_path . 'includes/functions_admin.' . $phpEx);
+require($phpbb_root_path . 'includes/functions_install.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/functions_garage_install.' . $phpEx);
 
-if (!defined('BUSINESS_PRODUCT'))
+if ((!defined('BUSINESS_PRODUCT')) && (file_exists($phpbb_root_path . 'includes/mods/constants_garage.' . $phpEx)))
 {
 	require($phpbb_root_path . 'includes/mods/constants_garage.' . $phpEx);
 }
@@ -71,7 +72,7 @@ if (!defined('BUSINESS_PRODUCT'))
 */
 $user->session_begin();
 $auth->acl($user->data);
-$user->setup(array('install', 'mods/garage_install'));
+$user->setup(array('common', 'acp/common', 'acp/board', 'install', 'mods/garage_install', 'posting'));
 
 //Need to handle phpBB Garage 2.0.B2 so turn
 $db->sql_return_on_error(true);
@@ -165,7 +166,7 @@ $mode = request_var('mode', 'overview');
 $sub = request_var('sub', '');
 
 // Set PHP error handler to ours
-set_error_handler('msg_handler');
+set_error_handler(defined('PHPBB_MSG_HANDLER') ? PHPBB_MSG_HANDLER : 'msg_handler');
 
 $auth = new auth();
 $cache = new cache();
@@ -339,6 +340,8 @@ class module
 			'PAGE_TITLE'		=> $this->get_page_title(),
 			'T_IMAGE_PATH'		=> $phpbb_root_path . 'adm/images/',
 			'S_CONTENT_DIRECTION' 	=> $lang['DIRECTION'],
+			'S_CONTENT_FLOW_BEGIN'	=> ($lang['DIRECTION'] == 'ltr') ? 'left' : 'right',
+			'S_CONTENT_FLOW_END'	=> ($lang['DIRECTION'] == 'ltr') ? 'right' : 'left',
 			'S_CONTENT_ENCODING' 	=> 'UTF-8',
 			'S_USER_LANG'		=> $lang['USER_LANG'],
 			)

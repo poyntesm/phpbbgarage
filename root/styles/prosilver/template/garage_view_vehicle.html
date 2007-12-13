@@ -154,7 +154,7 @@ function jumpto_garage()
 					<!-- IF S_DISPLAY_RATE -->
 					<input name="submit" type="submit" value="{L_RATE}" class="liteoption" />
 					<!-- ENDIF -->
-					<i> {L_RATING_NOTICE}</i></form></dd>
+					<i> {L_RATING_NOTICE}</i>{S_FORM_TOKEN}</form></dd>
                     		</dl>
 				<!-- ENDIF -->
 			</fieldset>
@@ -567,6 +567,7 @@ function jumpto_garage()
 										<dd>{L_ADD_FIRST_BLOG}</dd>
 									</dl>
 									<!-- END entry -->
+								{S_FORM_TOKEN}
 								</form>
 
 								<!-- IF PAGINATION or TOTAL_BUSINESS -->

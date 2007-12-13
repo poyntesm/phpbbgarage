@@ -141,9 +141,12 @@ switch( $mode )
 	case 'lap_table':
 	case 'search_results':
 
+		$required_permission = 'u_garage_search';
+
 		//Handle Some Mode Specific Things Like Navlinks & Display Defaults
 		if ($mode == 'browse')
 		{
+			$required_permission = 'u_garage_browse';
 			//Build Navlinks
 			$template->assign_block_vars('navlinks', array(
 				'FORUM_NAME'	=> $user->lang['BROWSE'],
@@ -156,6 +159,7 @@ switch( $mode )
 		}
 		else if ($mode == 'quartermile_table')
 		{
+			$required_permission = 'u_garage_browse';
 			//Build Navlinks
 			$template->assign_block_vars('navlinks', array(
 				'FORUM_NAME'	=> $user->lang['QUARTERMILE_TABLE'],
@@ -168,6 +172,7 @@ switch( $mode )
 		}
 		elseif ($mode == 'dynorun_table')
 		{
+			$required_permission = 'u_garage_browse';
 			//Build Navlinks
 			$template->assign_block_vars('navlinks', array(
 				'FORUM_NAME'	=> $user->lang['DYNORUN_TABLE'],
@@ -180,6 +185,7 @@ switch( $mode )
 		}
 		elseif ($mode == 'lap_table')
 		{
+			$required_permission = 'u_garage_browse';
 			//Build Navlinks
 			$template->assign_block_vars('navlinks', array(
 				'FORUM_NAME'	=> $user->lang['LAP_TABLE'],
@@ -206,7 +212,7 @@ switch( $mode )
 		$default_display = (empty($default_display)) ? 'vehicles' : $default_display;
 
 		//Let Check The User Is Allowed Perform This Action
-		if (!$auth->acl_get('u_garage_search'))
+		if (!$auth->acl_get($required_permission))
 		{
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=15"));
 		}
@@ -301,7 +307,7 @@ switch( $mode )
 					'PRICE' 		=> $results_data[$i]['price'],
 					'MOD_PRICE' 		=> $results_data[$i]['total_spent'],
 					'PREMIUM' 		=> $results_data[$i]['premium'],
-					'COVER_TYPE' 		=> $results_data[$i]['cover_type'],
+					'COVER_TYPE' 		=> $garage_insurance->get_cover_type($results_data[$i]['cover_type_id']),
 					'USERNAME_COLOUR'	=> get_username_string('colour', $results_data[$i]['user_id'], $results_data[$i]['username'], $results_data[$i]['user_colour']),
 				));
 			}
@@ -688,13 +694,13 @@ switch( $mode )
         	 	$template->assign_block_vars($detail, array());
 
 			//Now Loop Through All Insurance Cover Types...
-			$cover_types = array($user->lang['THIRD_PARTY'], $user->lang['THIRD_PARTY_FIRE_THEFT'], $user->lang['COMPREHENSIVE'], $user->lang['COMPREHENSIVE_CLASSIC'], $user->lang['COMPREHENSIVE_REDUCED']);
-			for($j = 0, $count2 = sizeof($cover_types);$j < $count2; $j++)
+			$cover_types_id = array(TP, TPFT, COMP, CLAS, COMP_RED);
+			for($j = 0, $count2 = sizeof($cover_types_id);$j < $count2; $j++)
 			{
 				//Pull MIN/MAX/AVG Of Specific Cover Type By Business ID
-				$premium_data = $garage_insurance->get_premiums_stats_by_business_and_covertype($business[$i]['id'], $cover_types[$j]);
+				$premium_data = $garage_insurance->get_premiums_stats_by_business_and_covertype($business[$i]['id'], $cover_types_id[$j]);
         	    		$template->assign_block_vars('business_row.cover_row', array(
-               				'COVER_TYPE'	=> $cover_types[$j],
+               				'COVER_TYPE'	=> $garage_insurance->get_cover_type($cover_types_id[$j]),
                				'MINIMUM' 	=> $premium_data['min'],
                				'AVERAGE' 	=> $premium_data['avg'],
                				'MAXIMUM' 	=> $premium_data['max'])
@@ -715,8 +721,8 @@ switch( $mode )
 						'USERNAME_COLOUR'	=> get_username_string('colour', $insurance_data[$i]['user_id'], $insurance_data[$i]['username'], $insurance_data[$i]['user_colour']),
 						'VEHICLE' 		=> $insurance_data[$k]['vehicle'],
 						'PREMIUM' 		=> $insurance_data[$k]['premium'],
-						'COVER_TYPE' 		=> $insurance_data[$k]['cover_type'])
-					);
+						'COVER_TYPE' 		=> $garage_insurance->get_cover_type($insurance_data[$k]['cover_type_id']),
+					));
 				}
 			}
       		}
@@ -1056,7 +1062,7 @@ switch( $mode )
 		}
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('redirect' => '', 'telephone' => '', 'fax' => '', 'website' => '', 'email' => '', 'product' => '', 'insurance' => '', 'garage' => '', 'retail' => '', 'dynocentre' => '');
+		$params = array('redirect' => '', 'telephone' => '', 'fax' => '', 'website' => '', 'email' => '', 'product' => '0', 'insurance' => '0', 'garage' => '0', 'retail' => '0', 'dynocentre' => '0');
 		$data 	= $garage->process_vars($params);
 		$params = array('title' => '', 'address' => '', 'opening_hours' => '');
 		$data 	+= $garage->process_mb_vars($params);

@@ -101,7 +101,7 @@
 					<!-- BEGIN modification -->
 					<!-- IF modification.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt><!-- IF modification.U_IMAGE --><a href="{modification.U_IMAGE}" class="garage-camera-icon"></a></div></div><!-- ENDIF --></dt>
+							<dt class="image_attached"><!-- IF modification.U_IMAGE --><a href="{modification.U_IMAGE}" class="garage-camera-icon"></a><!-- ENDIF --></dt>
 			  				<dd><a href="{modification.U_VIEW_VEHICLE}">{modification.VEHICLE}</a></dd>
 							<dd><a href="{modification.U_VIEW_MODIFICATION}">{modification.MODIFICATION}</a></dd>
 							<dd>{modification.CATEGORY}</dd>
@@ -390,6 +390,7 @@
 					<input type="hidden" value="{USERNAME}" name="username'" />
 				</fieldset>
 
+				{S_FORM_TOKEN}
 			</form>
 
 			<span class="corners-bottom"><span></span></span>

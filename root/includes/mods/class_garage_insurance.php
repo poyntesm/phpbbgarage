@@ -36,7 +36,7 @@ class garage_insurance
 		$sql = 'INSERT INTO ' . GARAGE_PREMIUMS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 			'vehicle_id'	=> $vid,
 			'premium'	=> $data['premium'],
-			'cover_type'	=> $data['cover_type'],
+			'cover_type_id'	=> $data['cover_type_id'],
 			'comments'	=> $data['comments'],
 			'business_id'	=> $data['business_id'])
 		);
@@ -58,7 +58,7 @@ class garage_insurance
 
 		$update_sql = array(
 			'premium'	=> $data['premium'],
-			'cover_type'	=> $data['cover_type'],
+			'cover_type_id'	=> $data['cover_type_id'],
 			'comments'	=> $data['comments'],
 			'business_id'	=> $data['business_id']
 		);
@@ -180,10 +180,10 @@ class garage_insurance
 	* Return maximum, minimum & average premiums for specific insurer & cover type
 	*
 	* @param int $business_id business id to get premiums for
-	* @param string $cover_type cover type to get premiums for
+	* @param int $cover_type_id cover type id to get premiums for
 	*
 	*/
-	function get_premiums_stats_by_business_and_covertype($business_id, $cover_type)
+	function get_premiums_stats_by_business_and_covertype($business_id, $cover_type_id)
 	{
 		global $db;
 
@@ -199,7 +199,7 @@ class garage_insurance
 			'WHERE'		=>  "i.business_id = b.id 
 						AND b.id = $business_id 
 						AND b.insurance = 1 
-						AND i.cover_type = '".htmlspecialchars($cover_type)."' 
+						AND i.cover_type_id = $cover_type_id 
 						AND i.premium > 0"
 		));
 
@@ -241,6 +241,38 @@ class garage_insurance
       		$db->sql_freeresult($result);
 
 		return $data;
+	}
+
+	/**
+	* Return language string for cover type id
+	*
+	* @param int $id cover history type id to return language for
+	*
+	*/
+	function get_cover_type($id)
+	{
+		global $user;
+
+		if ($id == COMP)
+		{
+			return $user->lang['COMPREHENSIVE'];
+		}
+		else if ($id == CLAS)
+		{
+			return $user->lang['COMPREHENSIVE_CLASSIC'];
+		}
+		else if ($id == COMP_RED)
+		{
+			return $user->lang['COMPREHENSIVE_REDUCED'];
+		}
+		else if ($id == TP)
+		{
+			return $user->lang['THIRD_PARTY'];
+		}
+		else if ($id == TPFT)
+		{
+			return $user->lang['THIRD_PARTY_FIRE_THEFT'];
+		}
 	}
 }
 

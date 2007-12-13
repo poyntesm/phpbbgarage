@@ -246,7 +246,7 @@ class install_install extends module
 				$template->assign_vars(array(
 					'S_FILE_CHECK'		=> true,
 					'S_ALL_UP_TO_DATE'	=> $all_up_to_date,
-					//'S_VERSION_UP_TO_DATE'	=> $up_to_date,
+					#'S_VERSION_UP_TO_DATE'	=> $up_to_date,
 					'U_ACTION'		=> append_sid($this->p_master->module_url, "mode=$mode&amp;sub=file_check"),
 					'U_UPDATE_ACTION'	=> append_sid($this->p_master->module_url, "mode=$mode&amp;sub=update_files"),
 				));
@@ -256,6 +256,13 @@ class install_install extends module
 					// Remove the lock file
 					@unlink($phpbb_root_path . 'cache/install_lock');
 				}
+
+				// Make sure we stay at the final if we checked_again and all is now up to date
+				if ((!empty($_POST['check_again'])) && ($all_up_to_date))
+				{
+					$sub = $this->p_master->sub = 'final';
+				}
+
 
 				/*if ($all_up_to_date)
 				{
@@ -733,8 +740,13 @@ class install_install extends module
 				}
 
 			break;
+		}
 
+		switch ($sub)
+		{
 			case 'final':
+
+				$this->tpl_name = 'garage_install_install';
 				// Remove the lock file
 				@unlink($phpbb_root_path . 'cache/install_lock');
 
@@ -754,10 +766,9 @@ class install_install extends module
 				$db->sql_freeresult($result);
 
 				$template->assign_vars(array(
+					'S_FILE_CHECK'	=> false,
 					'TITLE'		=> $lang['INSTALL_CONGRATS'],
 					'BODY'		=> sprintf($lang['INSTALL_CONGRATS_EXPLAIN'], $garage_config['version'], append_sid($phpbb_root_path . 'install/index.' . $phpEx, 'mode=convert&amp;'), '../docs/README.html'),
-					'L_SUBMIT'	=> $lang['INSTALL_LOGIN'],
-					'U_ACTION'	=> append_sid($phpbb_root_path . 'adm/index.' . $phpEx),
 				));
 
 			break;
@@ -1115,7 +1126,6 @@ class install_install extends module
 
 		foreach ($sql_query as $sql)
 		{
-			//$sql = trim(str_replace('|', ';', $sql));
 			if (!$db->sql_query($sql))
 			{
 				$error = $db->sql_error();
@@ -1154,11 +1164,22 @@ class install_install extends module
 			unset($category_query);
 		}
 
-/*ALTER TABLE phpbb_users ADD `user_garage_index_columns` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '2'";
-ALTER TABLE phpbb_users ADD `user_garage_guestbook_email_notify` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '1'";
-ALTER TABLE phpbb_users ADD `user_garage_guestbook_pm_notify` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '1'";
-ALTER TABLE phpbb_users ADD `user_garage_mod_email_optout` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0'";
-ALTER TABLE phpbb_users ADD `user_garage_mod_pm_optout` TINYINT( 1 ) UNSIGNED NOT NULL DEFAULT '0'";*/
+		$schema_changes = array(
+			'add_columns'	=> array(
+				USERS_TABLE	=> array(
+					'user_garage_index_columns' 		=> array('BOOL', 2),
+					'user_garage_guestbook_email_notify' 	=> array('BOOL', 1),
+					'user_garage_guestbook_pm_notify' 	=> array('BOOL', 1),
+					'user_garage_mod_email_optout' 		=> array('BOOL', 0),
+					'user_garage_mod_pm_optout' 		=> array('BOOL', 0),
+				),
+			),
+		);
+
+		require($phpbb_root_path . 'includes/db/db_tools.' . $phpEx);
+		$mod_db = new phpbb_db_tools($db);
+
+		$mod_db->perform_schema_changes($schema_changes);
 
 		$submit = $lang['NEXT_STEP'];
 

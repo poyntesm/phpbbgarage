@@ -51,7 +51,6 @@ div#codepanel {
 	overflow: auto;
 	width: 100%;
 	height: 350px;
-	display: inline-block;
 }
 <!-- ELSE -->
 div#codepanel {	
@@ -219,14 +218,13 @@ table.hrdiff caption span {
 		<h1>{L_VIEWING_FILE_DIFF}</h1>
 <!-- ENDIF -->
 <!-- IF not S_DIFF_NEW_FILE -->
+		<br />
 		<p id="skip"><a href="#acp">{L_SKIP}</a></p>
 		<form method="post">
-		<fieldset class="quick">
 			<label for="diff_mode">{L_SELECT_DIFF_MODE}:</label>
 			<select name="diff_mode" id="diff_mode">{S_DIFF_MODE_OPTIONS}</select>
 
 			<input class="button1" type="submit" id="submit" name="submit" value="{L_CHANGE}" />
-		</fieldset>
 		</form>
 <!-- ENDIF -->
 	</div>
@@ -235,11 +233,11 @@ table.hrdiff caption span {
 		<div id="acp">
 		<div class="panel" id="codepanel">
 			<span class="corners-top"><span></span></span>
-				<div id="diff_content">
+				<div id="content">
 					<div id="main">
 
 <!-- IF S_DIFF_CONFLICT_FILE -->
-		<div style="float: {S_CONTENT_FLOW_END};"><strong>{L_NUM_CONFLICTS}: {NUM_CONFLICTS}</strong></div>
+		<div style="float: right;"><strong>{L_NUM_CONFLICTS}: {NUM_CONFLICTS}</strong></div>
 <!-- ENDIF -->
 						{DIFF_CONTENT}
 					</div>

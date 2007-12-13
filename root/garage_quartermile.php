@@ -32,16 +32,11 @@ $user->setup(array('mods/garage'));
 /**
 * Build All Garage Classes e.g $garage_images->
 */
-require($phpbb_root_path . 'includes/mods/class_garage_business.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_dynorun.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_image.' . $phpEx);
-require($phpbb_root_path . 'includes/mods/class_garage_insurance.' . $phpEx);
-require($phpbb_root_path . 'includes/mods/class_garage_modification.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_quartermile.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_template.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
-require($phpbb_root_path . 'includes/mods/class_garage_guestbook.' . $phpEx);
-require($phpbb_root_path . 'includes/mods/class_garage_model.' . $phpEx);
 
 /**
 * Setup variables 
@@ -158,7 +153,7 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params	= array('rt' => '', 'sixty' => '', 'three' => '', 'eighth' => '', 'eighthmph' => '', 'thou' => '', 'quart' => '', 'quartmph' => '', 'dynorun_id' => '');
+		$params	= array('rt' => '', 'sixty' => '', 'three' => '', 'eighth' => '', 'eighthmph' => '', 'thou' => '', 'quart' => '', 'quartmph' => '', 'dynorun_id' => null);
 		$data 	= $garage->process_vars($params);
 		$params = array('quart');
 		$garage->check_required_vars($params);

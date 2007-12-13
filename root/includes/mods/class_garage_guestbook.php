@@ -97,7 +97,7 @@ class garage_guestbook
 			'post'			=> $data['post'],
     			'bbcode_uid'		=> $data['bbcode_uid'],
 			'bbcode_bitfield'	=> $data['bbcode_bitfield'],
-			'bbcode_flags'		=> $data['bbcode_flags'],
+			'bbcode_options'	=> $data['bbcode_options'],
 		));
 
 		$db->sql_query($sql);
@@ -120,7 +120,7 @@ class garage_guestbook
 			'post'			=> $data['post'],
     			'bbcode_uid'		=> $data['bbcode_uid'],
 			'bbcode_bitfield'	=> $data['bbcode_bitfield'],
-			'bbcode_flags'		=> $data['bbcode_flags'],
+			'bbcode_options'	=> $data['bbcode_options'],
 		);
 
 		$sql = 'UPDATE ' . GARAGE_GUESBOOKS_TABLE . '
@@ -148,7 +148,7 @@ class garage_guestbook
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, gb.bbcode_uid, gb.bbcode_bitfield, gb.bbcode_flags, u.username, u.user_id, u.user_posts, u.user_from, u.user_website, u.user_email, u.user_icq, u.user_aim, u.user_yim, u.user_regdate, u.user_msnm, u.user_allow_viewemail, u.user_rank, u.user_sig, u.user_sig_bbcode_uid, u.user_avatar, u.user_avatar_type, u.user_allow_viewonline, v.made_year, v.id as vehicle_id, mk.make, md.model, u.user_avatar, u.user_colour, u.user_avatar_width, u.user_avatar_height',
+			'SELECT'	=> 'gb.id as comment_id, gb.post, gb.author_id, gb.post_date, gb.ip_address, gb.bbcode_uid, gb.bbcode_bitfield, gb.bbcode_options, u.username, u.user_id, u.user_posts, u.user_from, u.user_website, u.user_email, u.user_icq, u.user_aim, u.user_yim, u.user_regdate, u.user_msnm, u.user_allow_viewemail, u.user_rank, u.user_sig, u.user_sig_bbcode_uid, u.user_avatar, u.user_avatar_type, u.user_allow_viewonline, v.made_year, v.id as vehicle_id, mk.make, md.model, u.user_avatar, u.user_colour, u.user_avatar_width, u.user_avatar_height',
 			'FROM'		=> array(
 				GARAGE_GUESTBOOKS_TABLE	=> 'gb',
 				GARAGE_VEHICLES_TABLE	=> 'v',
@@ -494,7 +494,7 @@ class garage_guestbook
 			$posted = '<a href="' . append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=".$comment_data[$i]['user_id']) . '">' . $comment_data[$i]['username'] . '</a>';
 			$posted = $user->format_date($comment_data[$i]['post_date']);
 	
-			$post = generate_text_for_display($comment_data[$i]['post'], $comment_data[$i]['bbcode_uid'], $comment_data[$i]['bbcode_bitfield'], $comment_data[$i]['bbcode_flags']);
+			$post = generate_text_for_display($comment_data[$i]['post'], $comment_data[$i]['bbcode_uid'], $comment_data[$i]['bbcode_bitfield'], $comment_data[$i]['bbcode_options']);
 
 			$post = make_clickable($post);
 

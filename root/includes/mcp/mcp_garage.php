@@ -9,6 +9,14 @@
 */
 
 /**
+* @ignore
+*/
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
+
+/**
 * garage
 * Handling the garage moderation queue
 * Allows moderators to approve or disapprove items

@@ -33,11 +33,8 @@ $user->setup(array('mods/garage'));
 */
 require($phpbb_root_path . 'includes/mods/class_garage_business.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_insurance.' . $phpEx);
-require($phpbb_root_path . 'includes/mods/class_garage_modification.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_template.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
-require($phpbb_root_path . 'includes/mods/class_garage_guestbook.' . $phpEx);
-require($phpbb_root_path . 'includes/mods/class_garage_model.' . $phpEx);
 
 /**
 * Setup variables 
@@ -141,11 +138,11 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('business_id' => '', 'premium' => '', 'cover_type' => '');
+		$params = array('business_id' => '', 'premium' => '', 'cover_type_id' => '');
 		$data 	= $garage->process_vars($params);
 		$params = array('comments' => '');
 		$data 	+= $garage->process_mb_vars($params);
-		$params = array('business_id', 'premium', 'cover_type');
+		$params = array('business_id', 'premium', 'cover_type_id');
 		$garage->check_required_vars($params);
 
 		/**
@@ -206,7 +203,7 @@ switch( $mode )
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;VID=$vid&amp;INS_ID=$ins_id"))
 		);
 		$garage_template->insurance_dropdown($insurance_business, $data['business_id']);
-		$garage_template->cover_dropdown($data['cover_type']);
+		$garage_template->cover_dropdown($data['cover_type_id']);
 		$template->assign_vars(array(
 			'L_TITLE' 		=> $user->lang['EDIT_PREMIUM'],
 			'L_BUTTON' 		=> $user->lang['EDIT_PREMIUM'],
@@ -232,11 +229,11 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('business_id' => '', 'premium' => '', 'cover_type' => '');
+		$params = array('business_id' => '', 'premium' => '', 'cover_type_id' => '');
 		$data = $garage->process_vars($params);
 		$params = array('comments' => '');
 		$data += $garage->process_mb_vars($params);
-		$params = array('business_id', 'premium', 'cover_type');
+		$params = array('business_id', 'premium', 'cover_type_id');
 		$garage->check_required_vars($params);
 
 		/**

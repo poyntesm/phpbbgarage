@@ -120,7 +120,7 @@ function build_product_list()
 										<dd><select id="product_id" name="product_id"><option value="">{L_SELECT_PRODUCT}</option><option value="">------</option></select>&nbsp;&nbsp;{L_NOT_LISTED_YET}<a href="{U_SUBMIT_PRODUCT}">{L_HERE}</a>&nbsp;&nbsp;&nbsp;<b>{L_RATING}</b>&nbsp;<select id="product_rating" name="product_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN product_rating --><option value="{product_rating.VALUE}" <!-- IF product_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{product_rating.TEXT}</option><!-- END product_rating --></select></dd>
 									</dl>
 									<dl>
-										<dt><b>{L_PURCHASED_FROM}</b></dt>
+										<dt><b>{L_PURCHASED_FROM}</b><span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
 									  	<dd><select id="shop_id" name="shop_id"><option value="">{L_SELECT_SHOP}</option><option value="">------</option><!-- BEGIN shop --><option value="{shop.VALUE}" <!-- IF shop.S_SELECTED -->selected="selected"<!-- ENDIF -->>{shop.TEXT}</option><!-- END shop --></select>&nbsp;{L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS_SHOP}">{L_HERE}</a></dd>
 									</dl>
 									<dl>
@@ -128,7 +128,7 @@ function build_product_list()
 										<dd>{CURRENCY}:<input name="price" type="text" class="inputbox autowidth" size="10" value="{PRICE}" />&nbsp;<b>{L_PURCHASE_RATING}</b>&nbsp;<select id="purchase_rating" name="purchase_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN purchase_rating --><option value="{purchase_rating.VALUE}" <!-- IF purchase_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{purchase_rating.TEXT}</option><!-- END purchase_rating --></select></dd>
 									</dl>	
 									<dl>
-										<dt><b>{L_INSTALLED_BY}</b></dt>
+										<dt><b>{L_INSTALLED_BY}</b><span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
 									  	<dd><select id="installer_id" name="installer_id"><option value="">{L_SELECT_GARAGE}</option><option value="">------</option><!-- BEGIN garage --><option value="{garage.VALUE}" <!-- IF garage.S_SELECTED -->selected="selected"<!-- ENDIF -->>{garage.TEXT}</option><!-- END garage --></select>&nbsp;{L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS_GARAGE}">{L_HERE}</a></dd>
 									</dl>
 									<dl>
@@ -158,6 +158,7 @@ function build_product_list()
 									<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 
 									<input type="submit" name="submit2" value="{L_BUTTON}" class="button1" />
 								</fieldset>
+								{S_FORM_TOKEN}
 								</form>
 								<span class="corners-bottom"><span></span></span>
 							</div>

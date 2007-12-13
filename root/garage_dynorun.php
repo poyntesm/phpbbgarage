@@ -35,11 +35,9 @@ $user->setup(array('mods/garage'));
 require($phpbb_root_path . 'includes/mods/class_garage_business.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_dynorun.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_image.' . $phpEx);
-require($phpbb_root_path . 'includes/mods/class_garage_modification.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_quartermile.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_template.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
-require($phpbb_root_path . 'includes/mods/class_garage_model.' . $phpEx);
 
 /**
 * Setup variables 

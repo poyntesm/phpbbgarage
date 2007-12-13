@@ -1367,7 +1367,7 @@ class garage_vehicle
 				$template->assign_block_vars('insurance.premium', array(
 					'INSURER' 	=> $insurance_data[$i]['title'],
 					'PREMIUM' 	=> $insurance_data[$i]['premium'],
-					'COVER_TYPE' 	=> $insurance_data[$i]['cover_type'],
+					'COVER_TYPE' 	=> $garage_insurance->get_cover_type($insurance_data[$i]['cover_type_id']),
 					'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage_premium.$phpEx?mode=edit_premium&amp;INS_ID=".$insurance_data[$i]['id']."&amp;VID=$vid") : '',
 					'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_insurance'))) OR ($auth->acl_get('m_garage_delete'))) ) ? 'javascript:confirm_delete_insurance(' . $vid . ',' . $insurance_data[$i]['id'] . ')' : '',
 					'U_INSURER' 	=> append_sid("garage.$phpEx", "mode=insurance_review&amp;business_id=".$insurance_data[$i]['business_id']),

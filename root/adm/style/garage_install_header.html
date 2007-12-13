@@ -11,6 +11,30 @@
 
 <link href="./../../adm/style/admin.css" rel="stylesheet" type="text/css" media="screen" />
 <link href="./../../adm/style/garage.css" rel="stylesheet" type="text/css" media="screen" />
+<script type="text/javascript">
+// <![CDATA[
+
+/**
+* Set display of page element
+* s[-1,0,1] = hide,toggle display,show
+*/
+function dE(n, s, type)
+{
+	if (!type)
+	{
+		type = 'block';
+	}
+
+	var e = document.getElementById(n);
+	if (!s)
+	{
+		s = (e.style.display == '' || e.style.display == 'block') ? -1 : 1;
+	}
+	e.style.display = (s == 1) ? type : 'none';
+}
+
+// ]]>
+</script>
 
 </head>
 
@@ -54,4 +78,4 @@
 						</ul>
 					</div>
 	
-					<div id="main">
+					<div id="main" class="install-body">

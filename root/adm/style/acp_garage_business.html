@@ -2,7 +2,9 @@
 
 <!-- IF S_EDIT_BUSINESS -->
 
-	<a href="{U_BACK}" style="float: right">&laquo; {L_BACK}</a>
+	<!-- IF U_BACK -->
+	<a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a>
+	<!-- ENDIF -->
 
 	<h1>{L_BUSINESS_UPDATE}</h1>
 
@@ -59,11 +61,15 @@
 		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
 	</fieldset>
 
+	{S_FORM_TOKEN}
+
 	</form>
 
 <!-- ELSEIF S_DELETE_BUSINESS -->
 
-	<a href="{U_BACK}" style="float: right">&laquo; {L_BACK}</a>
+	<!-- IF U_BACK -->
+	<a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a>
+	<!-- ENDIF -->
 
 	<h1>{L_BUSINESS_DELETE}</h1>
 
@@ -126,7 +132,10 @@
 	<p class="quick">
 		<input class="button1" type="submit" name="update" value="{L_SUBMIT}" />
 	</p>
+
 	</fieldset>
+
+	{S_FORM_TOKEN}
 
 	</form>
 
@@ -214,6 +223,8 @@
 		<input type="text" name="title" value="" maxlength="255" />
 		<input class="button2" name="addbusiness" type="submit" value="{L_CREATE_BUSINESS}" />
 	</fieldset>
+
+	{S_FORM_TOKEN}
 	
 	</form>
 

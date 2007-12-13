@@ -43,7 +43,7 @@
 									</dl>
 									<dl>
 										<dt><b>{L_COVER_TYPE}</b>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
-									  	<dd><select id="cover_type" name="cover_type"><option value="">{L_SELECT_COVER}</option><option value="">------</option><!-- BEGIN cover --><option value="{cover.VALUE}" <!-- IF cover.S_SELECTED -->selected="selected"<!-- ENDIF -->>{cover.TEXT}</option><!-- END cover --></select></dd>
+									  	<dd><select id="cover_type_id" name="cover_type_id"><option value="">{L_SELECT_COVER}</option><option value="">------</option><!-- BEGIN cover --><option value="{cover.VALUE}" <!-- IF cover.S_SELECTED -->selected="selected"<!-- ENDIF -->>{cover.TEXT}</option><!-- END cover --></select></dd>
 									</dl>
 									<dl>
 										<dt><b>{L_COMMENTS}</b></dt>
@@ -59,6 +59,7 @@
 									<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 
 									<input type="submit" name="submit" value="{L_BUTTON}" class="button1" />
 								</fieldset>
+								{S_FORM_TOKEN}
 								</form>
 								<span class="corners-bottom"><span></span></span>
 							</div>

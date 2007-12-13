@@ -2,7 +2,9 @@
 
 <!-- IF S_EDIT_PRODUCT -->
 
-	<a href="{U_BACK}" style="float: right">&laquo; {L_BACK}</a>
+	<!-- IF U_BACK -->
+	<a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a>
+	<!-- ENDIF -->
 
 	<h1>{L_PRODUCT_UPDATE}</h1>
 
@@ -39,7 +41,9 @@
 
 <!-- ELSEIF S_DELETE_PRODUCT -->
 
-	<a href="{U_BACK}" style="float: right">&laquo; {L_BACK}</a>
+	<!-- IF U_BACK -->
+	<a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a>
+	<!-- ENDIF -->
 
 	<h1>{L_PRODUCT_DELETE}</h1>
 

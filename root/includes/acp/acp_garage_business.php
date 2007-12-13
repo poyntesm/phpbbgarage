@@ -9,6 +9,14 @@
 */
 
 /**
+* @ignore
+*/
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
+
+/**
 * @package acp
 */
 class acp_garage_business
@@ -58,7 +66,7 @@ class acp_garage_business
 				* Add a new business & log it
 				*/
 				case 'add':
-					$params = array('telephone' => '', 'fax' => '', 'website' => '', 'email' => '', 'insurance' => '', 'garage' => '', 'retail'  => '', 'product' => '', 'dynocentre'  => '', 'pending' => '0');
+					$params = array('telephone' => '', 'fax' => '', 'website' => '', 'email' => '', 'insurance' => '0', 'garage' => '0', 'retail'  => '0', 'product' => '0', 'dynocentre'  => '0', 'pending' => '0');
 					$data = $garage->process_vars($params);
 					$params = array('title' => '', 'address' => '', 'opening_hours' => '');
 					$data += $garage->process_mb_vars($params);
@@ -78,7 +86,7 @@ class acp_garage_business
 				* Update an existing business & log it
 				*/
 				case 'edit':
-					$params = array('telephone' => '', 'fax' => '', 'website' => '', 'email' => '', 'insurance' => '', 'garage' => '', 'retail'  => '', 'product' => '', 'dynocentre'  => '', 'pending' => '0');
+					$params = array('telephone' => '', 'fax' => '', 'website' => '', 'email' => '', 'insurance' => '0', 'garage' => '0', 'retail'  => '0', 'product' => '0', 'dynocentre'  => '0', 'pending' => '0');
 					$data = $garage->process_vars($params);
 					$params = array('title' => '', 'address' => '', 'opening_hours' => '');
 					$data += $garage->process_mb_vars($params);

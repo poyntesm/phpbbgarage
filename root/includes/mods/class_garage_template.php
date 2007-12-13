@@ -31,7 +31,10 @@ class garage_template
 		$lang_images = array('garage_icon_garage', 'garage_main_menu', 'garage_browse', 'garage_search', 'garage_quartermile_table', 'garage_dynorun_table', 'garage_lap_table', 'garage_garage_review', 'garage_shop_review', 'garage_insurance_review', 'garage_create_vehicle', 'garage_edit_vehicle', 'garage_delete_vehicle', 'garage_view_vehicle', 'garage_add_modification', 'garage_add_insurance', 'garage_add_dynorun', 'garage_add_quartermile', 'garage_add_lap', 'garage_add_service', 'garage_main_vehicle', 'garage_no_thumb');
 		$non_lang_images = array('garage_img_attached', 'garage_edit', 'garage_delete', 'garage_toggle');
 
-		array_push($imageset_keys['buttons'], $lang_images);
+		foreach ($lang_images as $image)
+		{
+			array_push($imageset_keys['buttons'], $image);
+		}
 		$imageset_keys['garage'] = $non_lang_images;
 
 		return $imageset_keys;
@@ -482,14 +485,15 @@ class garage_template
 	{
 		global $template, $user;
 
-		$engine_types = array($user->lang['8_CYLINDER_NA'], $user->lang['8_CYLINDER_FI'], $user->lang['6_CYLINDER_NA'], $user->lang['6_CYLINDER_FI'], $user->lang['4_CYLINDER_NA'], $user->lang['4_CYLINDER_FI']);
+		$id = array(NA_8_CYLINDER, FI_8_CYLINDER, NA_6_CYLINDER, FI_6_CYLINDER, NA_4_CYLINDER, FI_4_CYLINDER, );
+		$text = array($user->lang['8_CYLINDER_NA'], $user->lang['8_CYLINDER_FI'], $user->lang['6_CYLINDER_NA'], $user->lang['6_CYLINDER_FI'], $user->lang['4_CYLINDER_NA'], $user->lang['4_CYLINDER_FI']);
 
-		for ($i = 0, $count = sizeof($engine_types);$i < $count; $i++)
+		for ($i = 0, $count = sizeof($id);$i < $count; $i++)
 		{
 			$template->assign_block_vars('engine', array(
-				'VALUE'		=> $engine_types[$i],
-				'TEXT'		=> $engine_types[$i],
-				'S_SELECTED'	=> ($selected == $engine_types[$i]) ? true : false)
+				'VALUE'		=> $id[$i],
+				'TEXT'		=> $text[$i],
+				'S_SELECTED'	=> ($selected == $id[$i]) ? true : false)
 			);
 		}
 	}
@@ -707,14 +711,15 @@ class garage_template
 	{
 		global $template, $user;
 
-		$cover_types = array($user->lang['THIRD_PARTY'], $user->lang['THIRD_PARTY_FIRE_THEFT'], $user->lang['COMPREHENSIVE'], $user->lang['COMPREHENSIVE_CLASSIC'], $user->lang['COMPREHENSIVE_REDUCED']);
+		$id = array(TP, TPFT, COMP, CLAS, COMP_RED);
+		$text = array($user->lang['THIRD_PARTY'], $user->lang['THIRD_PARTY_FIRE_THEFT'], $user->lang['COMPREHENSIVE'], $user->lang['COMPREHENSIVE_CLASSIC'], $user->lang['COMPREHENSIVE_REDUCED']);
 
-		for ($i = 0, $count = sizeof($cover_types);$i < $count; $i++)
+		for ($i = 0, $count = sizeof($id);$i < $count; $i++)
 		{
 			$template->assign_block_vars('cover', array(
-				'VALUE'		=> $cover_types[$i],
-				'TEXT'		=> $cover_types[$i],
-				'S_SELECTED'	=> ($selected == $cover_types[$i]) ? true : false)
+				'VALUE'		=> $id[$i],
+				'TEXT'		=> $text[$i],
+				'S_SELECTED'	=> ($selected == $id[$i]) ? true : false)
 			);
 		}
 	}

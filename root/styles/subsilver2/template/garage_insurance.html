@@ -29,7 +29,7 @@
 				</tr>
 				<tr>
 					<td class="row1" width="35%"><span class="gen"><b>{L_COVER_TYPE}</b></span>&nbsp;<span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td>
-				  	<td class="row2"><select id="cover_type" name="cover_type"><option value="">{L_SELECT_COVER}</option><option value="">------</option><!-- BEGIN cover --><option value="{cover.VALUE}" <!-- IF cover.S_SELECTED -->selected="selected"<!-- ENDIF -->>{cover.TEXT}</option><!-- END cover --></select></td>
+				  	<td class="row2"><select id="cover_type_id" name="cover_type_id"><option value="">{L_SELECT_COVER}</option><option value="">------</option><!-- BEGIN cover --><option value="{cover.VALUE}" <!-- IF cover.S_SELECTED -->selected="selected"<!-- ENDIF -->>{cover.TEXT}</option><!-- END cover --></select></td>
 				</tr>
 				<tr>
 					<td class="row1" width="30%"><span class="gen"><b>{L_COMMENTS}</b></span></td>
@@ -40,6 +40,7 @@
 				</tr>
 			</tbody>		
 			</table>
+	{S_FORM_TOKEN}
 			</form>
 		</td>
 

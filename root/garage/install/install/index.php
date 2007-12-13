@@ -19,6 +19,7 @@ $install_info = array(
 		'includes/functions.php',
 		'includes/functions_user.php',
 		'includes/session.php',
+		'includes/acp/acp_language.php',
 		'includes/acp/acp_styles.php',
 	),
 	'binary'	=> array(
