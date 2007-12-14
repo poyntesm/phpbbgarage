@@ -330,6 +330,7 @@ CREATE TABLE phpbb_garage_guestbooks (
 	ip_address varchar2(40) DEFAULT '' ,
 	bbcode_bitfield varchar2(255) DEFAULT '' ,
 	bbcode_uid varchar2(5) DEFAULT '' ,
+	bbcode_options number(8) DEFAULT '7' NOT NULL,
 	pending number(1) DEFAULT '0' NOT NULL,
 	post clob DEFAULT '' ,
 	CONSTRAINT pk_phpbb_garage_guestbooks PRIMARY KEY (id)

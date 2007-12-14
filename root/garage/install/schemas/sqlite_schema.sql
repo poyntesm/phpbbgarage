@@ -144,6 +144,7 @@ CREATE TABLE phpbb_garage_guestbooks (
 	ip_address varchar(40) NOT NULL DEFAULT '',
 	bbcode_bitfield varchar(255) NOT NULL DEFAULT '',
 	bbcode_uid varchar(5) NOT NULL DEFAULT '',
+	bbcode_options INTEGER UNSIGNED NOT NULL DEFAULT '7',
 	pending INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	post mediumtext(16777215) NOT NULL DEFAULT ''
 );

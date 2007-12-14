@@ -280,6 +280,7 @@ CREATE TABLE [phpbb_garage_guestbooks] (
 	[ip_address] [varchar] (40) DEFAULT ('') NOT NULL ,
 	[bbcode_bitfield] [varchar] (255) DEFAULT ('') NOT NULL ,
 	[bbcode_uid] [varchar] (5) DEFAULT ('') NOT NULL ,
+	[bbcode_options] [int] DEFAULT (7) NOT NULL ,
 	[pending] [int] DEFAULT (0) NOT NULL ,
 	[post] [text] DEFAULT ('') NOT NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]

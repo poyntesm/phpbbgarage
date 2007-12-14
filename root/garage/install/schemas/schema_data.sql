@@ -140,7 +140,7 @@ INSERT INTO phpbb_styles_imageset_data (image_name, image_filename, image_lang, 
 #INSERT INTO phpbb_styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_garage_review', 'garage_garage_review.gif', 'en', 33, 130, 2);
 #INSERT INTO phpbb_styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_shop_review', 'garage_shop_review.gif', 'en', 33, 130, 2);
 #INSERT INTO phpbb_styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_insurance_review', 'garage_insurance_review.gif', 'en', 33, 130, 2);
-INSERT INTO phpbb_styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_create_vehicle', 'garage_new_vehicle.gif', 'en', 50, 120, 1);
+INSERT INTO phpbb_styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_create_vehicle', 'garage_new_vehicle.gif', 'en', 25, 120, 1);
 #INSERT INTO phpbb_styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_create_vehicle', 'garage_create_vehicle.gif', 'en', 33, 130, 2);
 INSERT INTO phpbb_styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_edit_vehicle', 'garage_edit_vehicle.gif', 'en', 25, 120, 1);
 #INSERT INTO phpbb_styles_imageset_data (image_name, image_filename, image_lang, image_height, image_width, imageset_id) VALUES ('garage_edit_vehicle', 'garage_edit_vehicle.gif', 'en', 33, 130, 2);

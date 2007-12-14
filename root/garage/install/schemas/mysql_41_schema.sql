@@ -150,6 +150,7 @@ CREATE TABLE phpbb_garage_guestbooks (
 	ip_address varchar(40) DEFAULT '' NOT NULL,
 	bbcode_bitfield varchar(255) DEFAULT '' NOT NULL,
 	bbcode_uid varchar(5) DEFAULT '' NOT NULL,
+	bbcode_options mediumint(8) UNSIGNED DEFAULT '7' NOT NULL,
 	pending tinyint(1) UNSIGNED DEFAULT '0' NOT NULL,
 	post mediumtext NOT NULL,
 	PRIMARY KEY (id),

@@ -192,6 +192,7 @@ CREATE TABLE phpbb_garage_guestbooks (
 	ip_address varchar(40) DEFAULT '' NOT NULL,
 	bbcode_bitfield varchar(255) DEFAULT '' NOT NULL,
 	bbcode_uid varchar(5) DEFAULT '' NOT NULL,
+	bbcode_options INT4 DEFAULT '7' NOT NULL CHECK (bbcode_options >= 0),
 	pending INT2 DEFAULT '0' NOT NULL CHECK (pending >= 0),
 	post TEXT DEFAULT '' NOT NULL,
 	PRIMARY KEY (id)
