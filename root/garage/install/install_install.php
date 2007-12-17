@@ -263,7 +263,6 @@ class install_install extends module
 					$sub = $this->p_master->sub = 'final';
 				}
 
-
 				/*if ($all_up_to_date)
 				{
 					// Add database update to log
@@ -771,6 +770,8 @@ class install_install extends module
 					'BODY'		=> sprintf($lang['INSTALL_CONGRATS_EXPLAIN'], $garage_config['version'], append_sid($phpbb_root_path . 'install/index.' . $phpEx, 'mode=convert&amp;'), '../docs/README.html'),
 				));
 
+				$cache->purge();
+
 			break;
 		}
 
@@ -1163,6 +1164,86 @@ class install_install extends module
 			}
 			unset($category_query);
 		}
+
+		//Handle the installed & supported style imagesets
+		$sql = 'SELECT *
+			FROM ' . STYLES_IMAGESET_TABLE;
+		$result = $db->sql_query($sql);
+		while( $row = $db->sql_fetchrow($result) )
+		{
+			//Check For Imageset Data To Load
+			if (file_exists($phpbb_root_path . "garage/install/install/styles/{$row['imageset_name']}/imageset/data." . $phpEx))
+			{
+				$imageset_info= array();
+				include($phpbb_root_path . "garage/install/install/styles/{$row['imageset_name']}/imageset/data." . $phpEx);
+				for ($i = 0, $count = sizeof($imageset_info);$i < $count; $i++)
+				{
+					$sql = 'INSERT INTO ' . STYLES_IMAGESET_DATA_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+						'image_name'	=> $imageset_info[$i]['image_name'],
+						'image_filename'=> $imageset_info[$i]['image_filename'],
+						'image_lang'	=> $imageset_info[$i]['image_lang'],
+						'image_height'	=> $imageset_info[$i]['image_height'],
+						'image_width'	=> $imageset_info[$i]['image_width'],
+						'imageset_id'	=> $row['imageset_id'],
+					));
+					$db->sql_query($sql);
+				}
+			}
+
+			//Check For All Installed Languages
+			$sql = 'SELECT *
+			FROM ' . LANG_TABLE;
+			$lresult = $db->sql_query($sql);
+			while( $lrow = $db->sql_fetchrow($lresult) )
+			{
+				//Check For Imageset Data To Load
+				if (file_exists($phpbb_root_path . "garage/install/install/styles/{$row['imageset_name']}/imageset/{$lrow['lang_dir']}/data." . $phpEx))
+				{
+					$imageset_info= array();
+					include($phpbb_root_path . "garage/install/install/styles/{$row['imageset_name']}/imageset/{$lrow['lang_dir']}/data." . $phpEx);
+					for ($i = 0, $count = sizeof($imageset_info);$i < $count; $i++)
+					{
+						$sql = 'INSERT INTO ' . STYLES_IMAGESET_DATA_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+							'image_name'	=> $imageset_info[$i]['image_name'],
+							'image_filename'=> $imageset_info[$i]['image_filename'],
+							'image_lang'	=> $imageset_info[$i]['image_lang'],
+							'image_height'	=> $imageset_info[$i]['image_height'],
+							'image_width'	=> $imageset_info[$i]['image_width'],
+							'imageset_id'	=> $row['imageset_id'],
+						));
+						$db->sql_query($sql);
+					}
+				}
+			}
+			$db->sql_freeresult($lresult);
+		}
+		$db->sql_freeresult($result);
+
+		//Handle the installed & supported style themes
+		$sql = 'SELECT *
+			FROM ' . STYLES_THEME_TABLE;
+		$result = $db->sql_query($sql);
+		while( $row = $db->sql_fetchrow($result) )
+		{
+			//Check For Imageset Data To Load
+			if (file_exists($phpbb_root_path . "garage/install/install/styles/{$row['theme_name']}/theme/data." . $phpEx))
+			{
+				$theme_info= array();
+				include($phpbb_root_path . "garage/install/install/styles/{$row['theme_name']}/theme/data." . $phpEx);
+				$theme_data =  $row['theme_data'] . $theme_info['theme_data'];
+
+				$update_sql = array(
+					'theme_data'	=> $theme_data,
+				);
+
+				$sql = 'UPDATE ' . STYLES_THEME_TABLE . '
+					SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
+					WHERE theme_id = {$row['theme_id']}";
+
+				$db->sql_query($sql);
+			}
+		}
+		$db->sql_freeresult($result);
 
 		$schema_changes = array(
 			'add_columns'	=> array(
@@ -1912,6 +1993,70 @@ class install_install extends module
 
 				$install_info = array();
 				include($phpbb_root_path . 'garage/install/install/index.php');
+
+				//Handle the installed & supported style themes
+				$sql = 'SELECT *
+					FROM ' . STYLES_THEME_TABLE;
+				$result = $db->sql_query($sql);
+				while( $row = $db->sql_fetchrow($result) )
+				{
+					//Check For Imageset Data To Load
+					if (file_exists($phpbb_root_path . "garage/install/install/styles/{$row['theme_path']}/theme/index." . $phpEx))
+					{
+						$theme_info= array();
+						include($phpbb_root_path . "garage/install/install/styles/{$row['theme_path']}/theme/index." . $phpEx);
+						$install_info['files'] = array_merge($install_info['files'], $theme_info['files']);
+					}
+				}
+				$db->sql_freeresult($result);
+
+				//Handle the installed & supported style template
+				$sql = 'SELECT *
+					FROM ' . STYLES_TEMPLATE_TABLE;
+				$result = $db->sql_query($sql);
+				while( $row = $db->sql_fetchrow($result) )
+				{
+					//Check For Imageset Data To Load
+					if (file_exists($phpbb_root_path . "garage/install/install/styles/{$row['template_path']}/template/index." . $phpEx))
+					{
+						$template_info= array();
+						include($phpbb_root_path . "garage/install/install/styles/{$row['template_path']}/template/index." . $phpEx);
+						$install_info['files'] = array_merge($install_info['files'], $template_info['files']);
+					}
+				}
+				$db->sql_freeresult($result);
+
+				//Handle the installed & supported style imagesets
+				$sql = 'SELECT *
+					FROM ' . STYLES_IMAGESET_TABLE;
+				$result = $db->sql_query($sql);
+				while( $row = $db->sql_fetchrow($result) )
+				{
+					//Check For Imageset Data To Load
+					if (file_exists($phpbb_root_path . "garage/install/install/styles/{$row['imageset_name']}/imageset/index." . $phpEx))
+					{
+						$imageset_info= array();
+						include($phpbb_root_path . "garage/install/install/styles/{$row['imageset_name']}/imageset/index." . $phpEx);
+						$install_info['files'] = array_merge($install_info['files'], $imageset_info['files']);
+					}
+
+					//Check For All Installed Languages
+					$sql = 'SELECT *
+					FROM ' . LANG_TABLE;
+					$lresult = $db->sql_query($sql);
+					while( $lrow = $db->sql_fetchrow($lresult) )
+					{
+						//Check For Imageset Data To Load
+						if (file_exists($phpbb_root_path . "garage/install/install/styles/{$row['imageset_name']}/imageset/{$lrow['lang_dir']}/index." . $phpEx))
+						{
+							$imageset_info= array();
+							include($phpbb_root_path . "garage/install/install/styles/{$row['imageset_name']}/imageset/{$lrow['lang_dir']}/index." . $phpEx);
+							$install_info['files'] = array_merge($install_info['files'], $imageset_info['files']);
+						}
+					}
+					$db->sql_freeresult($lresult);
+				}
+				$db->sql_freeresult($result);
 
 				$info = (empty($install_info) || !is_array($install_info)) ? false : $install_info;
 				$errstr = ($info === false) ? $user->lang['WRONG_INFO_FILE_FORMAT'] : '';

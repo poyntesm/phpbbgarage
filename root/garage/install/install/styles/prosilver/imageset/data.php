@@ -6,110 +6,42 @@ if (!defined('IN_PHPBB'))
 }
 
 // Set prosilver info with imageset data to update
-$prosilver_info = array(
-	'garage_img_attached'	=> array(
+$imageset_info = array(
+	array(
+		'image_name'	=> 'garage_img_attached',
 		'image_filename'=> 'garage_camera.gif',
 		'image_lang' 	=> '',
-		'image_heigth'	=> '20',
+		'image_height'	=> '20',
 		'image_width'	=> '20',
 	),
-	'garage_toggle'	=> array(
+	array(
+		'image_name'	=> 'garage_toggle',
 		'image_filename'=> 'garage_toggle.gif',
 		'image_lang' 	=> '',
-		'image_heigth'	=> '18',
+		'image_height'	=> '18',
 		'image_width'	=> '18',
 	),
-	'garage_edit'	=> array(
+	 array(
+		'image_name'	=> 'garage_edit',
 		'image_filename'=> 'garage_edit.gif',
 		'image_lang' 	=> '',
-		'image_heigth'	=> '20',
+		'image_height'	=> '20',
 		'image_width'	=> '20',
 	),
-	'garage_delete'	=> array(
+	array(
+		'image_name'	=> 'garage_delete',
 		'image_filename'=> 'garage_delete.gif',
 		'image_lang' 	=> '',
-		'image_heigth'	=> '20',
+		'image_height'	=> '20',
 		'image_width'	=> '20',
 	),
-	'garage_icon_garage'	=> array(
+	array(
+		'image_name'	=> 'garage_icon_garage',
 		'image_filename'=> 'icon_miniprofile_garage.gif',
 		'image_lang' 	=> '',
-		'image_heigth'	=> '20',
+		'image_height'	=> '20',
 		'image_width'	=> '20',
-	),
-	'garage_create_vehicle'	=> array(
-		'image_filename'=> 'garage_new_vehicle.gif',
-		'image_lang' 	=> 'en',
-		'image_heigth'	=> '25',
-		'image_width'	=> '120',
-	),
-	'garage_edit_vehicle'	=> array(
-		'image_filename'=> 'garage_edit_vehicle.gif',
-		'image_lang' 	=> 'en',
-		'image_heigth'	=> '25',
-		'image_width'	=> '120',
-	),
-	'garage_delete_vehicle'	=> array(
-		'image_filename'=> 'garage_delete_vehicle.gif',
-		'image_lang' 	=> 'en',
-		'image_heigth'	=> '25',
-		'image_width'	=> '135',
-	),
-	'garage_view_vehicle'	=> array(
-		'image_filename'=> 'garage_view_vehicle.gif',
-		'image_lang' 	=> 'en',
-		'image_heigth'	=> '25',
-		'image_width'	=> '120',
-	),
-	'garage_add_modification'=> array(
-		'image_filename'=> 'garage_new_modification.gif',
-		'image_lang' 	=> 'en',
-		'image_heigth'	=> '25',
-		'image_width'	=> '135',
-	),
-	'garage_add_insurance'	=> array(
-		'image_filename'=> 'garage_new_premium.gif',
-		'image_lang' 	=> 'en',
-		'image_heigth'	=> '25',
-		'image_width'	=> '120',
-	),
-	'garage_add_dynorun'	=> array(
-		'image_filename'=> 'garage_new_dynorun.gif',
-		'image_lang' 	=> 'en',
-		'image_heigth'	=> '25',
-		'image_width'	=> '120',
-	),
-	'garage_add_quartermile'=> array(
-		'image_filename'=> 'garage_new_quartermile.gif',
-		'image_lang' 	=> 'en',
-		'image_heigth'	=> '25',
-		'image_width'	=> '135',
-	),
-	'garage_add_lap'	=> array(
-		'image_filename'=> 'garage_new_lap.gif',
-		'image_lang' 	=> 'en',
-		'image_heigth'	=> '25',
-		'image_width'	=> '120',
-	),
-	'garage_add_service'	=> array(
-		'image_filename'=> 'garage_new_service.gif',
-		'image_lang' 	=> 'en',
-		'image_heigth'	=> '25',
-		'image_width'	=> '120',
-	),
-	'garage_main_vehicle'	=> array(
-		'image_filename'=> 'garage_main_vehicle.gif',
-		'image_lang' 	=> 'en',
-		'image_heigth'	=> '25',
-		'image_width'	=> '120',
-	),
-	'garage_no_thumb'	=> array(
-		'image_filename'=> 'garage_no_thumb.gif',
-		'image_lang' 	=> 'en',
-		'image_heigth'	=> '25',
-		'image_width'	=> '96',
 	),
 );
 
 ?>
-

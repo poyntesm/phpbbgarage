@@ -6,8 +6,8 @@ if (!defined('IN_PHPBB'))
 }
 
 // Set prosilver info with imageset data to update
-$prosilver_info = array(
-	'css'	=> '
+$theme_info = array(
+	'theme_data'	=> '
 	/* Toggle */
 #garage-toggle {
 	padding: 0px;
@@ -484,4 +484,3 @@ a.garage-camera-icon:hover, a.garage-delete-icon:hover, a.garage-edit-icon:hover
 );
 
 ?>
-

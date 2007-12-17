@@ -6,32 +6,37 @@ if (!defined('IN_PHPBB'))
 }
 
 // Set subsilver2 info with imageset data to update
-$subsilver2_info = array(
-	'garage_img_attached'	=> array(
+$imageset_info = array(
+	array(
+		'image_name'	=> 'garage_img_attached',
 		'image_filename'=> 'garage_camera.gif',
 		'image_lang' 	=> '',
 		'image_heigth'	=> '20',
 		'image_width'	=> '20',
 	),
-	'garage_toggle'	=> array(
+	array(
+		'image_name'	=> 'garage_toggle',
 		'image_filename'=> 'garage_toggle.gif',
 		'image_lang' 	=> '',
 		'image_heigth'	=> '18',
 		'image_width'	=> '18',
 	),
-	'garage_edit'	=> array(
+	array(
+		'image_name'	=> 'garage_edit',
 		'image_filename'=> 'garage_edit.gif',
 		'image_lang' 	=> '',
 		'image_heigth'	=> '20',
 		'image_width'	=> '20',
 	),
-	'garage_delete'	=> array(
+	array(
+		'image_name'	=> 'garage_delete',
 		'image_filename'=> 'garage_delete.gif',
 		'image_lang' 	=> '',
 		'image_heigth'	=> '20',
 		'image_width'	=> '20',
 	),
-	'garage_icon_garage'	=> array(
+	array(
+		'image_name'	=> 'garage_icon_garage',
 		'image_filename'=> 'icon_garage.gif',
 		'image_lang' 	=> '',
 		'image_heigth'	=> '20',

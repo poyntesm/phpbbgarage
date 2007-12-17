@@ -6,9 +6,9 @@ if (!defined('IN_PHPBB'))
 }
 
 // Set install info with file structure to update
-$install_info = array(
+$imageset_info = array(
 	'files'		=> array(
-		'styles/prosilver/imageset/imageset.cfg',
+		'styles/prosilver/imageset/en/imageset.cfg',
 	),
 );
 
