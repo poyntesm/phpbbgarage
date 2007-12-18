@@ -6,12 +6,12 @@ if (!defined('IN_PHPBB'))
 }
 
 // Set install info with file structure to update
-$install_info = array(
+$template_info = array(
 	'files'		=> array(
-		'styles/subsilver2/templates/memberlist_body.html',
-		'styles/subsilver2/templates/memberlist_view.html',
-		'styles/subsilver2/templates/viewtopic_body.html',
-		'styles/subsilver2/templates/overall_header.html',
+		'styles/subsilver2/template/memberlist_body.html',
+		'styles/subsilver2/template/memberlist_view.html',
+		'styles/subsilver2/template/viewtopic_body.html',
+		'styles/subsilver2/template/overall_header.html',
 	),
 );
 
