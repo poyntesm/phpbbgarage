@@ -89,7 +89,7 @@ while( $row = $db->sql_fetchrow($result) )
 	$garage_config[$row['config_name']] = $row['config_value'];
 }
 $db->sql_freeresult($result);
-if (isset($garage_config['version']))
+if (isset($garage_config['installed']))
 {
 	define('PHPBBGARAGE_INSTALLED', true);
 }

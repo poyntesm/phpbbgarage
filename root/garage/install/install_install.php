@@ -20,7 +20,7 @@ if (!defined('IN_INSTALL'))
 if (!empty($setmodules))
 {
 	// If phpBB Garage is already installed we do not include this module
-	if (defined('PHPBBGARAGE_INSTALLED') AND $mode != "install")
+	if (defined('PHPBBGARAGE_INSTALLED'))
 	{
 		return;
 	}
@@ -770,6 +770,11 @@ class install_install extends module
 					'BODY'		=> sprintf($lang['INSTALL_CONGRATS_EXPLAIN'], $garage_config['version'], append_sid($phpbb_root_path . 'install/index.' . $phpEx, 'mode=convert&amp;'), '../docs/README.html'),
 				));
 
+				$sql = 'INSERT INTO ' . GARAGE_CONFIG_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+					'config_name'	=> 'installed',
+				));
+				$db->sql_query($sql);
+
 				$cache->purge();
 
 			break;
@@ -1419,16 +1424,6 @@ class install_install extends module
 		));
 
 		$auth_admin->acl_add_option($phpbbgarage_permissions);
-
-		$submit = $lang['NEXT_STEP'];
-
-		$url = $this->p_master->module_url . "?mode=$mode&amp;sub=final";
-
-		$template->assign_vars(array(
-			'BODY'		=> $lang['STAGE_CREATE_TABLE_EXPLAIN'],
-			'L_SUBMIT'	=> $submit,
-			'U_ACTION'	=> $url,
-		));
 	}
 
 	/**

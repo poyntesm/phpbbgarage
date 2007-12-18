@@ -964,6 +964,12 @@ class install_remove extends module
 			$db->sql_query('DELETE FROM ' . ACL_OPTIONS_TABLE . " WHERE auth_option_id = " . $auth_option_id);
 		}
 
+		// next for the chop is imageset data we added
+		foreach ($this->garage_imageset as $image_name)
+		{
+			$db->sql_query('DELETE FROM ' . STYLES_IMAGESET_DATA_TABLE . " WHERE image_name = '" . $image_name. "'");
+		}
+
 		// clear permissions cache now we have handled them all
 		$cache->destroy('_acl_options');
 		$auth_admin->acl_clear_prefetch();
@@ -1940,6 +1946,38 @@ class install_remove extends module
 		'garage_custom_fields_data',
 		'garage_custom_fields_lang',
 		'garage_lang',
+	);
+
+	/**
+	* The information below will be used to drop all tables phpBB Garage created
+	*/
+	var $garage_imageset = array(
+		'garage_img_attached',
+		'garage_toggle',
+		'garage_edit',
+		'garage_delete',
+		'garage_icon_garage',
+		'garage_create_vehicle',
+		'garage_edit_vehicle',
+		'garage_delete_vehicle',
+		'garage_view_vehicle',
+		'garage_add_modification',
+		'garage_add_insurance',
+		'garage_add_dynorun',
+		'garage_add_quartermile',
+		'garage_add_lap',
+		'garage_add_service',
+		'garage_main_vehicle',
+		'garage_no_thumb',
+		'garage_main_menu',
+		'garage_browse',
+		'garage_search',
+		'garage_quartermile_table',
+		'garage_lap_table',
+		'garage_dynorun_table',
+		'garage_garage_review',
+		'garage_shop_review',
+		'garage_insurance_review',
 	);
 
 	/**
