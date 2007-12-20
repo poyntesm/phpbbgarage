@@ -394,44 +394,6 @@ function phpbb_set_default_encoding($text)
 }
 
 /**
-* Convert Birthday from Birthday MOD to phpBB Format
-*/
-function phpbb_get_birthday($birthday = '')
-{
-	if (defined('MOD_BIRTHDAY_TERRA'))
-	{
-		$birthday = (string) $birthday;
-
-		// stored as month, day, year
-		if (!$birthday)
-		{
-			return ' 0- 0-   0';
-		}
-
-		// We use the original mod code to retrieve the birthday (not ideal)
-		preg_match('/(..)(..)(....)/', sprintf('%08d', $birthday), $birthday_parts);
-
-		$month = $birthday_parts[1];
-		$day = $birthday_parts[2];
-		$year =  $birthday_parts[3];
-
-		return sprintf('%2d-%2d-%4d', $day, $month, $year);
-	}
-	else
-	{
-		$birthday = (int) $birthday;
-
-		if (!$birthday || $birthday == 999999 || $birthday < 0)
-		{
-			return ' 0- 0-   0';
-		}
-
-		// The birthday mod from niels is using this code to transform to day/month/year
-		return gmdate('d-m-Y', $birthday * 86400 + 1);
-	}
-}
-
-/**
 * Return correct user id value
 * Everyone's id will be one higher to allow the guest/anonymous user to have a positive id as well
 */
@@ -509,537 +471,51 @@ function phpbb_copy_table_fields()
 
 /**
 * Convert authentication
-* user, group and forum table has to be filled in order to work
+* Will only bring across private if group names match from source to destination
 */
-function phpbb_convert_authentication($mode)
+function phpbbgarage_convert_authentication_quota()
 {
 	global $db, $src_db, $same_db, $convert, $user, $config, $cache;
 
-	if ($mode == 'start')
-	{
-		$db->sql_query($convert->truncate_statement . ACL_USERS_TABLE);
-		$db->sql_query($convert->truncate_statement . ACL_GROUPS_TABLE);
-
-		// What we will do is handling all 2.0.x admins as founder to replicate what is common in 2.0.x.
-		// After conversion the main admin need to make sure he is removing permissions and the founder status if wanted.
-
-
-		// Grab user ids of users with user_level of ADMIN
-		$sql = "SELECT user_id
-			FROM {$convert->src_table_prefix}users
-			WHERE user_level = 1
-			ORDER BY user_regdate ASC";
-		$result = $src_db->sql_query($sql);
-
-		while ($row = $src_db->sql_fetchrow($result))
-		{
-			$user_id = (int) phpbb_user_id($row['user_id']);
-			// Set founder admin...
-			$sql = 'UPDATE ' . USERS_TABLE . '
-				SET user_type = ' . USER_FOUNDER . "
-				WHERE user_id = $user_id";
-			$db->sql_query($sql);
-		}
-		$src_db->sql_freeresult($result);
-
-		$sql = 'SELECT group_id
-			FROM ' . GROUPS_TABLE . "
-			WHERE group_name = '" . $db->sql_escape('BOTS') . "'";
-		$result = $db->sql_query($sql);
-		$bot_group_id = (int) $db->sql_fetchfield('group_id');
-		$db->sql_freeresult($result);
-	}
-
-	// Grab forum auth information
+	//Get Source Permissions
 	$sql = "SELECT *
-		FROM {$convert->src_table_prefix}forums";
+		FROM {$convert->src_table_prefix}garage_config
+		WHERE config_name = 'browse_perms'
+			OR config_name = 'interact_perms'
+			OR config_name = 'add_perms'
+			OR config_name = 'upload_perms'
+			OR config_name = 'private_browse_perms'
+			OR config_name = 'private_interact_perms'
+			OR config_name = 'private_add_perms'
+			OR config_name = 'private_upload_perms'
+			OR config_name = 'private_deny_perms'
+			OR config_name = 'private_add_quota'
+			OR config_name = 'private_upload_quota'
+			OR config_name = 'private_remote_quota'";
 	$result = $src_db->sql_query($sql);
 
 	$forum_access = array();
 	while ($row = $src_db->sql_fetchrow($result))
 	{
-		$forum_access[] = $row;
+		$src_permissions[$row['config_name']] = $row['config_value'];
 	}
 	$src_db->sql_freeresult($result);
 
-	if ($convert->mysql_convert && $same_db)
-	{
-		$src_db->sql_query("SET NAMES 'binary'");
-	}
-	// Grab user auth information from 2.0.x board
-	$sql = "SELECT ug.user_id, aa.*
-		FROM {$convert->src_table_prefix}auth_access aa, {$convert->src_table_prefix}user_group ug, {$convert->src_table_prefix}groups g, {$convert->src_table_prefix}forums f
-		WHERE g.group_id = aa.group_id
-			AND g.group_single_user = 1
-			AND ug.group_id = g.group_id
-			AND f.forum_id = aa.forum_id";
-	$result = $src_db->sql_query($sql);
+	//Do Mapping Work To 
+	/*	'add_groups'				=>
+		'add_groups_quotas'			=>
+		'upload_groups'				=>
+		'upload_groups_quotas'			=>
+		'remote_groups'				=>
+		'remote_groups_quotas'			=> */
 
-	$user_access = array();
-	while ($row = $src_db->sql_fetchrow($result))
-	{
-		$user_access[$row['forum_id']][] = $row;
-	}
-	$src_db->sql_freeresult($result);
 
-	// Grab group auth information
-	$sql = "SELECT g.group_id, aa.*
-		FROM {$convert->src_table_prefix}auth_access aa, {$convert->src_table_prefix}groups g
-		WHERE g.group_id = aa.group_id
-			AND g.group_single_user <> 1";
-	$result = $src_db->sql_query($sql);
+}
 
-	$group_access = array();
-	while ($row = $src_db->sql_fetchrow($result))
-	{
-		$group_access[$row['forum_id']][] = $row;
-	}
-	$src_db->sql_freeresult($result);
-
-	if ($convert->mysql_convert && $same_db)
-	{
-		$src_db->sql_query("SET NAMES 'utf8'");
-	}
-
-	// Add Forum Access List
-	$auth_map = array(
-		'auth_view'			=> array('f_', 'f_list'),
-		'auth_read'			=> array('f_read', 'f_search'),
-		'auth_post'			=> array('f_post', 'f_bbcode', 'f_smilies', 'f_img', 'f_sigs', 'f_postcount', 'f_report', 'f_subscribe', 'f_print', 'f_email'),
-		'auth_reply'		=> 'f_reply',
-		'auth_edit'			=> 'f_edit',
-		'auth_delete'		=> 'f_delete',
-		'auth_pollcreate'	=> 'f_poll',
-		'auth_vote'			=> 'f_vote',
-		'auth_announce'		=> 'f_announce',
-		'auth_sticky'		=> 'f_sticky',
-		'auth_attachments'	=> array('f_attach', 'f_download'),
-		'auth_download'		=> 'f_download',
-	);
-
-	// Define the ACL constants used in 2.0 to make the code slightly more readable
-	define('AUTH_ALL', 0);
-	define('AUTH_REG', 1);
-	define('AUTH_ACL', 2);
-	define('AUTH_MOD', 3);
-	define('AUTH_ADMIN', 5);
-
-	// A mapping of the simple permissions used by 2.0
-	$simple_auth_ary = array(
-		'public'			=> array(
-			'auth_view'			=> AUTH_ALL,
-			'auth_read'			=> AUTH_ALL,
-			'auth_post'			=> AUTH_ALL,
-			'auth_reply'		=> AUTH_ALL,
-			'auth_edit'			=> AUTH_REG,
-			'auth_delete'		=> AUTH_REG,
-			'auth_sticky'		=> AUTH_MOD,
-			'auth_announce'		=> AUTH_MOD,
-			'auth_vote'			=> AUTH_REG,
-			'auth_pollcreate'	=> AUTH_REG,
-		),
-		'registered'		=> array(
-			'auth_view'			=> AUTH_ALL,
-			'auth_read'			=> AUTH_ALL,
-			'auth_post'			=> AUTH_REG,
-			'auth_reply'		=> AUTH_REG,
-			'auth_edit'			=> AUTH_REG,
-			'auth_delete'		=> AUTH_REG,
-			'auth_sticky'		=> AUTH_MOD,
-			'auth_announce'		=> AUTH_MOD,
-			'auth_vote'			=> AUTH_REG,
-			'auth_pollcreate'	=> AUTH_REG,
-		),
-		'registered_hidden'	=> array(
-			'auth_view'			=> AUTH_REG,
-			'auth_read'			=> AUTH_REG,
-			'auth_post'			=> AUTH_REG,
-			'auth_reply'		=> AUTH_REG,
-			'auth_edit'			=> AUTH_REG,
-			'auth_delete'		=> AUTH_REG,
-			'auth_sticky'		=> AUTH_MOD,
-			'auth_announce'		=> AUTH_MOD,
-			'auth_vote'			=> AUTH_REG,
-			'auth_pollcreate'	=> AUTH_REG,
-		),
-		'private'			=> array(
-			'auth_view'			=> AUTH_ALL,
-			'auth_read'			=> AUTH_ACL,
-			'auth_post'			=> AUTH_ACL,
-			'auth_reply'		=> AUTH_ACL,
-			'auth_edit'			=> AUTH_ACL,
-			'auth_delete'		=> AUTH_ACL,
-			'auth_sticky'		=> AUTH_ACL,
-			'auth_announce'		=> AUTH_MOD,
-			'auth_vote'			=> AUTH_ACL,
-			'auth_pollcreate'	=> AUTH_ACL,
-		),
-		'private_hidden'	=> array(
-			'auth_view'			=> AUTH_ACL,
-			'auth_read'			=> AUTH_ACL,
-			'auth_post'			=> AUTH_ACL,
-			'auth_reply'		=> AUTH_ACL,
-			'auth_edit'			=> AUTH_ACL,
-			'auth_delete'		=> AUTH_ACL,
-			'auth_sticky'		=> AUTH_ACL,
-			'auth_announce'		=> AUTH_MOD,
-			'auth_vote'			=> AUTH_ACL,
-			'auth_pollcreate'	=> AUTH_ACL,
-		),
-		'moderator'			=> array(
-			'auth_view'			=> AUTH_ALL,
-			'auth_read'			=> AUTH_MOD,
-			'auth_post'			=> AUTH_MOD,
-			'auth_reply'		=> AUTH_MOD,
-			'auth_edit'			=> AUTH_MOD,
-			'auth_delete'		=> AUTH_MOD,
-			'auth_sticky'		=> AUTH_MOD,
-			'auth_announce'		=> AUTH_MOD,
-			'auth_vote'			=> AUTH_MOD,
-			'auth_pollcreate'	=> AUTH_MOD,
-		),
-		'moderator_hidden'	=> array(
-			'auth_view'			=> AUTH_MOD,
-			'auth_read'			=> AUTH_MOD,
-			'auth_post'			=> AUTH_MOD,
-			'auth_reply'		=> AUTH_MOD,
-			'auth_edit'			=> AUTH_MOD,
-			'auth_delete'		=> AUTH_MOD,
-			'auth_sticky'		=> AUTH_MOD,
-			'auth_announce'		=> AUTH_MOD,
-			'auth_vote'			=> AUTH_MOD,
-			'auth_pollcreate'	=> AUTH_MOD,
-		),
-	);
-
-	if ($mode == 'start')
-	{
-		user_group_auth('guests', 'SELECT user_id, {GUESTS} FROM ' . USERS_TABLE . ' WHERE user_id = ' . ANONYMOUS, false);
-		user_group_auth('registered', 'SELECT user_id, {REGISTERED} FROM ' . USERS_TABLE . ' WHERE user_id <> ' . ANONYMOUS . " AND group_id <> $bot_group_id", false);
-
-		// Selecting from old table
-		if (!empty($config['increment_user_id']))
-		{
-			$auth_sql = 'SELECT user_id, {ADMINISTRATORS} FROM ' . $convert->src_table_prefix . 'users WHERE user_level = 1 AND user_id <> 1';
-			user_group_auth('administrators', $auth_sql, true);
-
-			$auth_sql = 'SELECT ' . $config['increment_user_id'] . ' as user_id, {ADMINISTRATORS} FROM ' . $convert->src_table_prefix . 'users WHERE user_level = 1 AND user_id = 1';
-			user_group_auth('administrators', $auth_sql, true);
-		}
-		else
-		{
-			$auth_sql = 'SELECT user_id, {ADMINISTRATORS} FROM ' . $convert->src_table_prefix . 'users WHERE user_level = 1';
-			user_group_auth('administrators', $auth_sql, true);
-		}
-
-		if (!empty($config['increment_user_id']))
-		{
-			$auth_sql = 'SELECT user_id, {GLOBAL_MODERATORS} FROM ' . $convert->src_table_prefix . 'users WHERE user_level = 1 AND user_id <> 1';
-			user_group_auth('global_moderators', $auth_sql, true);
-
-			$auth_sql = 'SELECT ' . $config['increment_user_id'] . ' as user_id, {GLOBAL_MODERATORS} FROM ' . $convert->src_table_prefix . 'users WHERE user_level = 1 AND user_id = 1';
-			user_group_auth('global_moderators', $auth_sql, true);
-		}
-		else
-		{
-			$auth_sql = 'SELECT user_id, {GLOBAL_MODERATORS} FROM ' . $convert->src_table_prefix . 'users WHERE user_level = 1';
-			user_group_auth('global_moderators', $auth_sql, true);
-		}
-	}
-	else if ($mode == 'first')
-	{
-		// Go through all 2.0.x forums
-		foreach ($forum_access as $forum)
-		{
-			$new_forum_id = (int) $forum['forum_id'];
-
-			// Administrators have full access to all forums whatever happens
-			mass_auth('group_role', $new_forum_id, 'administrators', 'FORUM_FULL');
-
-			$matched_type = '';
-			foreach ($simple_auth_ary as $key => $auth_levels)
-			{
-				$matched = 1;
-				foreach ($auth_levels as $k => $level)
-				{
-					if ($forum[$k] != $auth_levels[$k])
-					{
-						$matched = 0;
-					}
-				}
-
-				if ($matched)
-				{
-					$matched_type = $key;
-					break;
-				}
-			}
-
-			switch ($matched_type)
-			{
-				case 'public':
-					mass_auth('group_role', $new_forum_id, 'guests', 'FORUM_LIMITED');
-					mass_auth('group_role', $new_forum_id, 'registered', 'FORUM_LIMITED_POLLS');
-					mass_auth('group_role', $new_forum_id, 'bots', 'FORUM_BOT');
-				break;
-
-				case 'registered':
-					mass_auth('group_role', $new_forum_id, 'guests', 'FORUM_READONLY');
-					mass_auth('group_role', $new_forum_id, 'bots', 'FORUM_BOT');
-
-				// no break;
-
-				case 'registered_hidden':
-					mass_auth('group_role', $new_forum_id, 'registered', 'FORUM_POLLS');
-				break;
-
-				case 'private':
-				case 'private_hidden':
-				case 'moderator':
-				case 'moderator_hidden':
-				default:
-					// The permissions don't match a simple set, so we're going to have to map them directly
-
-					// No post approval for all, in 2.0.x this feature does not exist
-					mass_auth('group', $new_forum_id, 'guests', 'f_noapprove', ACL_YES);
-					mass_auth('group', $new_forum_id, 'registered', 'f_noapprove', ACL_YES);
-
-					// Go through authentication map
-					foreach ($auth_map as $old_auth_key => $new_acl)
-					{
-						// If old authentication key does not exist we continue
-						// This is helpful for mods adding additional authentication fields, we need to add them to the auth_map array
-						if (!isset($forum[$old_auth_key]))
-						{
-							continue;
-						}
-
-						// Now set the new ACL correctly
-						switch ($forum[$old_auth_key])
-						{
-							// AUTH_ALL
-							case AUTH_ALL:
-								mass_auth('group', $new_forum_id, 'guests', $new_acl, ACL_YES);
-								mass_auth('group', $new_forum_id, 'bots', $new_acl, ACL_YES);
-								mass_auth('group', $new_forum_id, 'registered', $new_acl, ACL_YES);
-							break;
-
-							// AUTH_REG
-							case AUTH_REG:
-								mass_auth('group', $new_forum_id, 'registered', $new_acl, ACL_YES);
-							break;
-
-							// AUTH_ACL
-							case AUTH_ACL:
-								// Go through the old group access list for this forum
-								if (isset($group_access[$forum['forum_id']]))
-								{
-									foreach ($group_access[$forum['forum_id']] as $index => $access)
-									{
-										// We only check for ACL_YES equivalence entry
-										if (isset($access[$old_auth_key]) && $access[$old_auth_key] == 1)
-										{
-											mass_auth('group', $new_forum_id, (int) $access['group_id'], $new_acl, ACL_YES);
-										}
-									}
-								}
-
-								if (isset($user_access[$forum['forum_id']]))
-								{
-									foreach ($user_access[$forum['forum_id']] as $index => $access)
-									{
-										// We only check for ACL_YES equivalence entry
-										if (isset($access[$old_auth_key]) && $access[$old_auth_key] == 1)
-										{
-											mass_auth('user', $new_forum_id, (int) phpbb_user_id($access['user_id']), $new_acl, ACL_YES);
-										}
-									}
-								}
-							break;
-
-							// AUTH_MOD
-							case AUTH_MOD:
-								if (isset($group_access[$forum['forum_id']]))
-								{
-									foreach ($group_access[$forum['forum_id']] as $index => $access)
-									{
-										// We only check for ACL_YES equivalence entry
-										if (isset($access[$old_auth_key]) && $access[$old_auth_key] == 1)
-										{
-											mass_auth('group', $new_forum_id, (int) $access['group_id'], $new_acl, ACL_YES);
-										}
-									}
-								}
-
-								if (isset($user_access[$forum['forum_id']]))
-								{
-									foreach ($user_access[$forum['forum_id']] as $index => $access)
-									{
-										// We only check for ACL_YES equivalence entry
-										if (isset($access[$old_auth_key]) && $access[$old_auth_key] == 1)
-										{
-											mass_auth('user', $new_forum_id, (int) phpbb_user_id($access['user_id']), $new_acl, ACL_YES);
-										}
-									}
-								}
-							break;
-						}
-					}
-				break;
-			}
-		}
-	}
-	else if ($mode == 'second')
-	{
-		// Assign permission roles and other default permissions
-
-		// guests having u_download and u_search ability
-		$db->sql_query('INSERT INTO ' . ACL_GROUPS_TABLE . ' (group_id, forum_id, auth_option_id, auth_role_id, auth_setting) SELECT ' . get_group_id('guests') . ', 0, auth_option_id, 0, 1 FROM ' . ACL_OPTIONS_TABLE . " WHERE auth_option IN ('u_', 'u_download', 'u_search')");
-
-		// administrators/global mods having full user features
-		mass_auth('group_role', 0, 'administrators', 'USER_FULL');
-		mass_auth('group_role', 0, 'global_moderators', 'USER_FULL');
-
-		// By default all converted administrators are given full access
-		mass_auth('group_role', 0, 'administrators', 'ADMIN_FULL');
-
-		// All registered users are assigned the standard user role
-		mass_auth('group_role', 0, 'registered', 'USER_STANDARD');
-		mass_auth('group_role', 0, 'registered_coppa', 'USER_STANDARD');
-
-		// Instead of administrators being global moderators we give the MOD_FULL role to global mods (admins already assigned to this group)
-		mass_auth('group_role', 0, 'global_moderators', 'MOD_FULL');
-
-		// And now those who have had their avatar rights removed get assigned a more restrictive role
-		$sql = 'SELECT user_id FROM ' . $convert->src_table_prefix . 'users
-			WHERE user_allowavatar = 0
-				AND user_id > 0';
-		$result = $src_db->sql_query($sql);
-
-		while ($row = $src_db->sql_fetchrow($result))
-		{
-			mass_auth('user_role', 0, (int) phpbb_user_id($row['user_id']), 'USER_NOAVATAR');
-		}
-		$src_db->sql_freeresult($result);
-
-		// And the same for those who have had their PM rights removed
-		$sql = 'SELECT user_id FROM ' . $convert->src_table_prefix . 'users
-			WHERE user_allow_pm = 0
-				AND user_id > 0';
-		$result = $src_db->sql_query($sql);
-
-		while ($row = $src_db->sql_fetchrow($result))
-		{
-			mass_auth('user_role', 0, (int) phpbb_user_id($row['user_id']), 'USER_NOPM');
-		}
-		$src_db->sql_freeresult($result);
-	}
-	else if ($mode == 'third')
-	{
-		// And now the moderators
-		// We make sure that they have at least standard access to the forums they moderate in addition to the moderating permissions
-		foreach ($user_access as $forum_id => $access_map)
-		{
-			$forum_id = (int) $forum_id;
-
-			foreach ($access_map as $access)
-			{
-				if (isset($access['auth_mod']) && $access['auth_mod'] == 1)
-				{
-					mass_auth('user_role', $forum_id, (int) phpbb_user_id($access['user_id']), 'MOD_STANDARD');
-					mass_auth('user_role', $forum_id, (int) phpbb_user_id($access['user_id']), 'FORUM_STANDARD');
-				}
-			}
-		}
-
-		foreach ($group_access as $forum_id => $access_map)
-		{
-			$forum_id = (int) $forum_id;
-
-			foreach ($access_map as $access)
-			{
-				if (isset($access['auth_mod']) && $access['auth_mod'] == 1)
-				{
-					mass_auth('group_role', $forum_id, (int) $access['group_id'], 'MOD_STANDARD');
-					mass_auth('group_role', $forum_id, (int) $access['group_id'], 'FORUM_STANDARD');
-				}
-			}
-		}
-
-		// We grant everyone readonly access to the categories to ensure that the forums are visible
-		$sql = 'SELECT forum_id, forum_name, parent_id, left_id, right_id
-			FROM ' . FORUMS_TABLE . '
-			ORDER BY left_id ASC';
-		$result = $db->sql_query($sql);
-
-		$parent_forums = $forums = array();
-		while ($row = $db->sql_fetchrow($result))
-		{
-			if ($row['parent_id'] == 0)
-			{
-				mass_auth('group_role', $row['forum_id'], 'administrators', 'FORUM_FULL');
-				mass_auth('group_role', $row['forum_id'], 'global_moderators', 'FORUM_FULL');
-				$parent_forums[] = $row;
-			}
-			else
-			{
-				$forums[] = $row;
-			}
-		}
-		$db->sql_freeresult($result);
-
-		global $auth;
-
-		// Let us see which groups have access to these forums...
-		foreach ($parent_forums as $row)
-		{
-			// Get the children
-			$branch = $forum_ids = array();
-
-			foreach ($forums as $key => $_row)
-			{
-				if ($_row['left_id'] > $row['left_id'] && $_row['left_id'] < $row['right_id'])
-				{
-					$branch[] = $_row;
-					$forum_ids[] = $_row['forum_id'];
-					continue;
-				}
-			}
-
-			if (sizeof($forum_ids))
-			{
-				// Now make sure the user is able to read these forums
-				$hold_ary = $auth->acl_group_raw_data(false, 'f_list', $forum_ids);
-
-				if (empty($hold_ary))
-				{
-					continue;
-				}
-
-				foreach ($hold_ary as $g_id => $f_id_ary)
-				{
-					$set_group = false;
-
-					foreach ($f_id_ary as $f_id => $auth_ary)
-					{
-						foreach ($auth_ary as $auth_option => $setting)
-						{
-							if ($setting == ACL_YES)
-							{
-								$set_group = true;
-								break 2;
-							}
-						}
-					}
-
-					if ($set_group)
-					{
-						mass_auth('group', $row['forum_id'], $g_id, 'f_list', ACL_YES);
-					}
-				}
-			}
-		}
-	}
+function phpbbgarage_browse_menu($menu_selection)
+{
+	return 1;
+		//'menu_selection' => 'MAIN,BROWSE,SEARCH,INSURANCEREVIEW,GARAGEREVIEW,SHOPREVIEW,QUARTERMILE,ROLLINGROAD', 
 }
 
 /**
@@ -1777,5 +1253,216 @@ function phpbb_check_username_collisions()
 
 	$db->sql_query($drop_sql);
 }
+
+
+/*
+*
+* Retrieves configuration information from the source forum and caches it as an array
+* Both database and file driven configuration formats can be handled
+* (the type used is specified in $config_schema, see convert_phpbb20.php for more details)
+*/
+function get_garage_config()
+{
+	static $convert_config;
+	global $user;
+
+	if (isset($convert_config))
+	{
+		return $convert_config;
+	}
+
+	global $src_db, $same_db, $phpbb_root_path, $config;
+	global $convert;
+
+	if ($convert->config_schema['table_format'] != 'file')
+	{
+		if ($convert->mysql_convert && $same_db)
+		{
+			$src_db->sql_query("SET NAMES 'binary'");
+		}
+
+		$sql = 'SELECT * FROM ' . $convert->src_table_prefix . $convert->config_schema['table_name'];
+		$result = $src_db->sql_query($sql);
+		$row = $src_db->sql_fetchrow($result);
+
+		if (!$row)
+		{
+			$convert->p_master->error($user->lang['CONV_ERROR_GET_CONFIG'], __LINE__, __FILE__);
+		}
+	}
+
+	if (is_array($convert->config_schema['table_format']))
+	{
+		$convert_config = array();
+		list($key, $val) = each($convert->config_schema['table_format']);
+
+		do
+		{
+			$convert_config[$row[$key]] = $row[$val];
+		}
+		while ($row = $src_db->sql_fetchrow($result));
+		$src_db->sql_freeresult($result);
+
+		if ($convert->mysql_convert && $same_db)
+		{
+			$src_db->sql_query("SET NAMES 'utf8'");
+		}
+	}
+	else if ($convert->config_schema['table_format'] == 'file')
+	{
+		$filename = $convert->options['forum_path'] . '/' . $convert->config_schema['filename'];
+		if (!file_exists($filename))
+		{
+			$convert->p_master->error($user->lang['FILE_NOT_FOUND'] . ': ' . $filename, __LINE__, __FILE__);
+		}
+
+		$convert_config = extract_variables_from_file($filename);
+		if (!empty($convert->config_schema['array_name']))
+		{
+			$convert_config = $convert_config[$convert->config_schema['array_name']];
+		}
+	}
+	else
+	{
+		$convert_config = $row;
+		if ($convert->mysql_convert && $same_db)
+		{
+			$src_db->sql_query("SET NAMES 'utf8'");
+		}
+	}
+
+	if (!sizeof($convert_config))
+	{
+		$convert->p_master->error($user->lang['CONV_ERROR_CONFIG_EMPTY'], __LINE__, __FILE__);
+	}
+
+	return $convert_config;
+}
+
+/**
+* Transfers the relevant configuration information from the source forum
+* The mapping of fields is specified in $config_schema, see convert_phpbb20.php for more details
+*/
+function restore_garage_config($schema)
+{
+	global $db, $config, $phpbb_root_path, $phpEx;
+
+	require($phpbb_root_path . 'includes/mods/class_garage_admin.' . $phpEx);
+
+	$convert_config = get_config();
+	foreach ($schema['settings'] as $config_name => $src)
+	{
+		if (preg_match('/(.*)\((.*)\)/', $src, $m))
+		{
+			$var = (empty($m[2]) || empty($convert_config[$m[2]])) ? "''" : "'" . addslashes($convert_config[$m[2]]) . "'";
+			$exec = '$config_value = ' . $m[1] . '(' . $var . ');';
+			eval($exec);
+		}
+		else
+		{
+			$config_value = (isset($convert_config[$src])) ? $convert_config[$src] : '';
+		}
+
+		if ($config_value !== '')
+		{
+			// Most are...
+			if (is_string($config_value))
+			{
+				$config_value = utf8_htmlspecialchars($config_value);
+			}
+
+			$garage_admin->set_config($config_name, $config_value);
+		}
+	}
+}
+
+/**
+* Get old config value
+*/
+function get_garage_config_value($config_name)
+{
+	static $convert_config;
+
+	if (!isset($convert_config))
+	{
+		$convert_config = get_garage_config();
+	}
+	
+	if (!isset($convert_config[$config_name]))
+	{
+		return false;
+	}
+
+	return (empty($convert_config[$config_name])) ? '' : $convert_config[$config_name];
+}
+
+function phpbbgarage_index_menu($menu)
+{
+	return 1;
+}
+
+function phpbbgarage_search_menu($menu)
+{
+	return 1;
+}
+
+function phpbbgarage_insurance_review_menu($menu)
+{
+	return 1;
+}
+
+function phpbbgarage_garage_review_menu($menu)
+{
+	return 1;
+}
+
+function phpbbgarage_shop_review_menu($menu)
+{
+	return 1;
+}
+
+function phpbbgarage_quartermile_menu($menu)
+{
+	return 1;
+}
+
+function phpbbgarage_dynorun_menu($menu)
+{
+	return 1;
+}
+
+
+function phpbbgarage_featured_vehicle($menu)
+{
+	return 1;
+}
+
+function phpbbgarage_feature_from_block ($menu)
+{
+	return 0;
+}
+
+
+function import_garage_gallery()
+{
+	return;
+}
+
+function phpbbgarage_insert_categories()
+{
+	return;
+}
+
+function import_dynocentre($dynocentre)
+{
+	global $db, $src_db, $same_db, $convert, $user, $config;
+	return;
+}
+
+function import_cover_type($cover_type)
+{
+	return;
+}
+
 
 ?>
