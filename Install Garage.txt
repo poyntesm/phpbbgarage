@@ -186,14 +186,14 @@
 ##	- 0000120: [Vehicle] Update should be required for new rating if set in ACP (poyntesm)
 ##	- 0000117: [ACP] submission fix : Missing language in admin_garage_tools.php (poyntesm)
 ##	- 0000110: [General] submission fix : Use socket_set_timeout as it works on all versions of PHP 4 and PHP 5 (poyntesm)
-##	- 0000107: [Installation] submission fix : Identifier "year" is a reserved keyword in MySQL (poyntesm)
-##	- 0000108: [Installation] submission fix : Identifier "name" is a reserved keyword in MySQL (poyntesm)
-##	- 0000109: [General] submission fix : SQL queries passed to mysql_query should not end in semicolons. (poyntesm)
+##	- 0000107: [Installation] submission fix : Identifier "year" is a reserved keyword in some DB (poyntesm)
+##	- 0000108: [Installation] submission fix : Identifier "name" is a reserved keyword in some DB (poyntesm)
+##	- 0000109: [General] submission fix : queries passed to mysql_query should not end in semicolons. (poyntesm)
 ##	- 0000104: [General] submission fix : Use POST_USERS_URL constant where needed (poyntesm)
 ##	- 0000111: [General] submission fix : Move some javascript from functions into .tpl files (poyntesm)
 ##	- 0000119: [ACP] submission fix : Missing language in admin_garage_models.php (poyntesm)
-##	- 0000114: [ACP] submission fix : Remove possible SQL injection from admin_garage_config.php (poyntesm)
-##	- 0000113: [ACP] submission fix : Remove possible SQL injection from admin_garage_models.php (poyntesm)
+##	- 0000114: [ACP] submission fix : Remove possible query injection from admin_garage_config.php (poyntesm)
+##	- 0000113: [ACP] submission fix : Remove possible query injection from admin_garage_models.php (poyntesm)
 ##	- 0000115: [ACP] submission fix : Missing language for block types in featured block dropdown (poyntesm)
 ##	- 0000106: [General] submission fix : {USERNAME}'s {L_VEHICLE}</span> replaced with {USERNAME} : {L_VEHICLE} (poyntesm)
 ##	- 0000103: [General] submission fix : Make sure all <a href=...></a> are done using <a href=""></a> (poyntesm)
@@ -724,7 +724,7 @@ if ( $db->sql_numrows($result) > 0 )
 					$thumb_image = GARAGE_UPLOAD_PATH . $gallery_data['attach_thumb_location'];
 					$id = $gallery_data['attach_id'];
 					$title = $gallery_data['attach_file'];
-					$hilite_image .= '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
+					$hilite_image .= '<a href="garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .'" title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
                			} 
 			}
 	        }
@@ -751,7 +751,7 @@ if ( $db->sql_numrows($result) > 0 )
 					$thumb_image = GARAGE_UPLOAD_PATH . $mod_gallery['attach_thumb_location'];
 					$id = $mod_gallery['attach_id'];
 					$title = $mod_gallerya['attach_file'];
-					$hilite_image .= '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
+					$hilite_image .= '<a href="garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .'" title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
                			} 
 			}
 	        }
@@ -768,7 +768,7 @@ if ( $db->sql_numrows($result) > 0 )
 				$id = $vehicle_row['attach_id'];
 				$title = $vehicle_row['attach_file'];
 				$total_image_views = $vehicle_row['attach_hits'];
-				$hilite_image = '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
+				$hilite_image = '<a href="garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .'" title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
 			}
 			else
 			{
@@ -776,7 +776,7 @@ if ( $db->sql_numrows($result) > 0 )
 				$id = $vehicle_row['attach_id'];
 				$title = $vehicle_row['attach_file'];
 				$total_image_views = $vehicle_row['attach_hits'];
-				$hilite_image = '<a href=garage.'.$php.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
+				$hilite_image = '<a href="garage.'.$php.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .'" title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
 			}
 		}
 	}

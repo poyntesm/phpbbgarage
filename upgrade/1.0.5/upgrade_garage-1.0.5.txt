@@ -8,11 +8,13 @@
 ## 
 ## Installation Level:	Easy
 ## Installation Time:	25 Minutes
-## Files To Edit: (4)
+## Files To Edit: (6)
 ##			garage.php
 ##			admin/admin_garage_business.php
 ##			admin/admin_garage_models.php
-##			/includes/functions_garage.php
+##			includes/functions_garage.php
+##			includes/usercp_viewprofile.php
+##			language/lang_english/lang_garage.php
 ##
 ## Included Files: (2)
 ##			upgrade/upgrade_garage-1.0.5.php
@@ -32,8 +34,8 @@
 ##
 ######################################################################################
 ## MOD History: 
-##   06-12-2007 - Version 1.0.6
-##	- Fix security issue
+##   20-12-2007 - Version 1.0.6
+##	- Fix security issues
 ##
 ##   20-10-2006 - Version 1.0.5
 ##	- Fix security issue
@@ -302,6 +304,14 @@ garage.php
 		$str_params = array('dynocenter', 'bhp', 'bhp_unit', 'torque', 'torque_unit', 'boost', 'boost_unit', 'peakpoint', 'editupload', 'pending_redirect');
 		$str_data = $garage_lib->process_str_vars($str_params);
 		$data = $garage_lib->merge_int_str_data($int_data, $str_data);
+#
+#-----[ FIND ]------------------------------------------
+#
+			'U_SUBMIT_BUSINESS' => append_sid("garage.$phpEx?mode=user_submit_business&CID=$cid&TYPE=add_insurance&BUSINESS=insurance"),
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+			'U_SUBMIT_BUSINESS' => append_sid("garage.$phpEx?mode=user_submit_business&amp;CID=$cid&amp;TYPE=add_insurance&amp;BUSINESS=insurance"),
 #
 #-----[ FIND ]------------------------------------------
 #
@@ -667,6 +677,62 @@ includes/functions_garage.php
 #
 #-----[ FIND ]------------------------------------------
 #
+	 		message_die(GENERAL_ERROR, 'Vehicle ID Not Entered..', '', __LINE__, __FILE__);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+	 		message_die(GENERAL_ERROR, $lang['No_vehicle_id_specified'] '', __LINE__, __FILE__);
+#
+#-----[ FIND ]------------------------------------------
+#
+		phpinfo(8);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+		phpinfo(INFO_MODULES);
+#
+#-----[ FIND ]------------------------------------------
+#
+			$attach_file = trim(stripslashes($HTTP_POST_FILES['FILE_UPLOAD']['name']));
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+			$attach_file = trim(str_replace("\'", "''", trim(htmlspecialchars($HTTP_POST_FILES['FILE_UPLOAD']['name']))));
+#
+#-----[ FIND ]------------------------------------------
+#
+			$make_id = ( isset($HTTP_POST_VARS['make_id']) ) ? htmlspecialchars($HTTP_POST_VARS['make_id']) : htmlspecialchars($HTTP_GET_VARS['make_id']);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+			$make_id = ( isset($HTTP_POST_VARS['make_id']) ) ? intval($HTTP_POST_VARS['make_id']) : intval($HTTP_GET_VARS['make_id']);
+#
+#-----[ FIND ]------------------------------------------
+#
+			$model_id = ( isset($HTTP_POST_VARS['model_id']) ) ? htmlspecialchars($HTTP_POST_VARS['model_id']) : htmlspecialchars($HTTP_GET_VARS['model_id']);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+			$model_id = ( isset($HTTP_POST_VARS['model_id']) ) ? intval($HTTP_POST_VARS['model_id']) : intval($HTTP_GET_VARS['model_id']);
+#
+#-----[ FIND ]------------------------------------------
+#
+			$make_id = ( isset($HTTP_POST_VARS['make_id']) ) ? htmlspecialchars($HTTP_POST_VARS['make_id']) : htmlspecialchars($HTTP_GET_VARS['make_id']);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+			$make_id = ( isset($HTTP_POST_VARS['make_id']) ) ? intval($HTTP_POST_VARS['make_id']) : intval($HTTP_GET_VARS['make_id']);
+#
+#-----[ FIND ]------------------------------------------
+#
+			$model_id = ( isset($HTTP_POST_VARS['model_id']) ) ? htmlspecialchars($HTTP_POST_VARS['model_id']) : htmlspecialchars($HTTP_GET_VARS['model_id']);
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+			$model_id = ( isset($HTTP_POST_VARS['model_id']) ) ? intval($HTTP_POST_VARS['model_id']) : intval($HTTP_GET_VARS['model_id']);
+#
+#-----[ FIND ]------------------------------------------
+#
 		$params = array('make_id', 'model_id', 'user');
 		$data = $this->process_post_vars($params);
 #
@@ -677,6 +743,57 @@ includes/functions_garage.php
 		$str_params = array('user');
 		$str_data = $this->process_str_vars($str_params);
 		$data = $this->merge_int_str_data($int_data, $str_data);
+# 
+#-----[ OPEN ]----- 
+# 
+includes/usercp_viewprofile.php
+#
+#-----[ FIND ]------------------------------------------
+#
+					$hilite_image .= '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+					$hilite_image .= '<a href="garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .'" title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
+#
+#-----[ FIND ]------------------------------------------
+#
+					$hilite_image .= '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+					$hilite_image .= '<a href="garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_gallery&amp;image_id='. $id .'" title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $thumb_image .'" class="attach"  /></a> ';
+#
+#-----[ FIND ]------------------------------------------
+#
+				$hilite_image = '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+				$hilite_image = '<a href="garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .'" title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
+#
+#-----[ FIND ]------------------------------------------
+#
+				$hilite_image = '<a href=garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .' title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
+#
+#-----[ REPLACE WITH ]------------------------------------------
+#
+				$hilite_image = '<a href="garage.'.$phpEx.'?mode=view_gallery_item&amp;type=garage_mod&amp;image_id='. $id .'" title=' . $title .' target="_blank"><img hspace="5" vspace="5" src="' . $image .'" class="attach"  /></a>';
+
+# 
+#-----[ OPEN ]----- 
+# 
+language/lang_english/lang_garage.php
+#
+#-----[ FIND ]------------------------------------------
+#
+			'U_SUBMIT_BUSINESS' => append_sid("garage.$phpEx?mode=user_submit_business&CID=$cid&TYPE=add_insurance&BUSINESS=insurance"),
+$lang['Move_Uploaded_File_Disallowed'] = 'open_basedir is set and your PHP version does not allow move_uploaded_file<br /><br />Please contact your server admin';
+#
+#-----[ AFTER, ADD ]------------------------------------------
+#
+//Added for 1.0.6
+$lang['No_vehicle_id_specified'] = 'Sorry, but that vehicle does not exist.';
 #
 #-----[ SAVE/CLOSE ALL FILES ]------------------------------------------
 #
