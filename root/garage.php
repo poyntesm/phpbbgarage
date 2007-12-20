@@ -1087,7 +1087,7 @@ switch( $mode )
 			'L_COVER_TYPE' => $lang['Cover_Type'],
 			'L_COMMENTS' => $lang['Comments'],
 			'S_MODE_ACTION' => append_sid("garage.$phpEx?mode=insert_insurance"),
-			'U_SUBMIT_BUSINESS' => append_sid("garage.$phpEx?mode=user_submit_business&CID=$cid&TYPE=add_insurance&BUSINESS=insurance"),
+			'U_SUBMIT_BUSINESS' => append_sid("garage.$phpEx?mode=user_submit_business&amp;CID=$cid&amp;TYPE=add_insurance&amp;BUSINESS=insurance"),
 			'CID' => $cid,
 			'COVER_TYPE_LIST' => $garage_lib->build_selection_box('cover_type',$cover_types,$cover_types,''))
 		);

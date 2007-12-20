@@ -556,4 +556,7 @@ $lang['Kbytes'] = 'kbytes';
 $lang['Your_File_Type_Was'] = 'Your File Type Was';
 $lang['Move_Uploaded_File_Disallowed'] = 'open_basedir is set and your PHP version does not allow move_uploaded_file<br /><br />Please contact your server admin';
 
+//Added for 1.0.6
+$lang['No_vehicle_id_specified'] = 'Sorry, but that vehicle does not exist.';
+
 ?>

@@ -795,7 +795,7 @@ class garage_lib
 	
 		if (empty($cid))
 		{
-	 		message_die(GENERAL_ERROR, 'Vehicle ID Not Entered..', '', __LINE__, __FILE__);
+	 		message_die(GENERAL_ERROR, $lang['No_vehicle_id_specified'] '', __LINE__, __FILE__);
 		}
 	
 		$sql = "SELECT g.member_id FROM " . GARAGE_TABLE . " AS g WHERE g.id = $cid ";
@@ -1317,7 +1317,7 @@ class garage_lib
 		}
 		// ...otherwise use phpinfo().
 		ob_start();
-		phpinfo(8);
+		phpinfo(INFO_MODULES);
 		$info = ob_get_contents();
 		ob_end_clean();
 		$info = stristr($info, 'gd version');
@@ -1485,7 +1485,7 @@ class garage_lib
 			$attach_filetype = $imagesize[2];
 			$attach_filesize = $HTTP_POST_FILES['FILE_UPLOAD']['size'];
 			$attach_tmp = $HTTP_POST_FILES['FILE_UPLOAD']['tmp_name'];
-			$attach_file = trim(stripslashes($HTTP_POST_FILES['FILE_UPLOAD']['name']));
+			$attach_file = trim(str_replace("\'", "''", trim(htmlspecialchars($HTTP_POST_FILES['FILE_UPLOAD']['name']))));
 			$attach_date = time();
 	
 			if ($attach_filesize == 0) 
@@ -4051,7 +4051,7 @@ class garage_lib
 
 		if ( isset($HTTP_GET_VARS['make_id']) || isset($HTTP_POST_VARS['make_id']) )
 		{
-			$make_id = ( isset($HTTP_POST_VARS['make_id']) ) ? htmlspecialchars($HTTP_POST_VARS['make_id']) : htmlspecialchars($HTTP_GET_VARS['make_id']);
+			$make_id = ( isset($HTTP_POST_VARS['make_id']) ) ? intval($HTTP_POST_VARS['make_id']) : intval($HTTP_GET_VARS['make_id']);
 
 			if (!empty($make_id))
 			{
@@ -4063,7 +4063,7 @@ class garage_lib
 
 		if ( isset($HTTP_GET_VARS['model_id']) || isset($HTTP_POST_VARS['model_id']) )
 		{
-			$model_id = ( isset($HTTP_POST_VARS['model_id']) ) ? htmlspecialchars($HTTP_POST_VARS['model_id']) : htmlspecialchars($HTTP_GET_VARS['model_id']);
+			$model_id = ( isset($HTTP_POST_VARS['model_id']) ) ? intval($HTTP_POST_VARS['model_id']) : intval($HTTP_GET_VARS['model_id']);
 
 			if (!empty($model_id))
 			{
@@ -4256,7 +4256,7 @@ class garage_lib
 
 		if ( isset($HTTP_GET_VARS['make_id']) || isset($HTTP_POST_VARS['make_id']) )
 		{
-			$make_id = ( isset($HTTP_POST_VARS['make_id']) ) ? htmlspecialchars($HTTP_POST_VARS['make_id']) : htmlspecialchars($HTTP_GET_VARS['make_id']);
+			$make_id = ( isset($HTTP_POST_VARS['make_id']) ) ? intval($HTTP_POST_VARS['make_id']) : intval($HTTP_GET_VARS['make_id']);
 
 			if (!empty($make_id))
 			{
@@ -4268,7 +4268,7 @@ class garage_lib
 
 		if ( isset($HTTP_GET_VARS['model_id']) || isset($HTTP_POST_VARS['model_id']) )
 		{
-			$model_id = ( isset($HTTP_POST_VARS['model_id']) ) ? htmlspecialchars($HTTP_POST_VARS['model_id']) : htmlspecialchars($HTTP_GET_VARS['model_id']);
+			$model_id = ( isset($HTTP_POST_VARS['model_id']) ) ? intval($HTTP_POST_VARS['model_id']) : intval($HTTP_GET_VARS['model_id']);
 
 			if (!empty($model_id))
 			{
