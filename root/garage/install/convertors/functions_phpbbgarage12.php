@@ -1458,8 +1458,8 @@ function is_business_retail($business_id)
 	global $db, $src_db, $same_db, $convert, $user, $config;
 
 	$sql = "SELECT web_shop, retail_shop
-		FROM {$convert->src_table_prefix}config
-		WHERE config_name = 'prune_enable'";
+		FROM {$convert->src_table_prefix}garage_business
+		WHERE id = '{$business_id}'";
 	$result = $src_db->sql_query($sql);
 	$row = $src_db->sql_fetchrow($result);
 	$src_db->sql_freeresult($result);
@@ -1484,7 +1484,7 @@ function import_dynocentre($dynocentre)
 	$db->sql_freeresult($result);
 
 	//No Business We Need To Create It
-	if (empty($row)
+	if (empty($row))
 	{
 		$sql = 'INSERT INTO ' . GARAGE_BUSINESS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 			'title'		=> $dynocentre,
@@ -1494,12 +1494,13 @@ function import_dynocentre($dynocentre)
 			'website'	=> '',
 			'email'		=> '',
 			'opening_hours'	=> '',
+			'comments'	=> '',
 			'insurance'	=> 0,
 			'garage'	=> 0,
 			'retail'	=> 0,
 			'product'	=> 0,
 			'dynocentre'	=> 1,
-			'pending'	=> $pending,
+			'pending'	=> 0,
 		));
 
 		$db->sql_query($sql);
@@ -1508,7 +1509,7 @@ function import_dynocentre($dynocentre)
 	//Dynocentre Exists Already Just Return ID
 	else
 	{
-		return $row['id']
+		return $row['id'];
 	}
 }
 
