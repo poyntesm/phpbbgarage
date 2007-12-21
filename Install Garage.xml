@@ -28,10 +28,10 @@
 			<level>advanced</level>
 			<time>1800</time>
 			<target-version>
-				<target-primary>3.0.RC4</target-primary>
+				<target-primary>3.0.0</target-primary>
 				<target-major allow="exact">3</target-major>
 				<target-minor allow="exact">0</target-minor>
-            			<target-revision allow="after-equal" stage="release-candidate">4</target-revision>
+            			<target-revision allow="after-equal">0</target-revision>
 			</target-version>
 		</installation>
 
@@ -91,10 +91,13 @@
 			</edit>
 			<edit>
 				<find><![CDATA[$config = $cache->obtain_config();]]></find>
-				<action type="after-add">//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+				<action type="after-add">
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------</action>
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
+				</action>
 			</edit>
 		</open>
 
@@ -183,8 +186,6 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 		'U_GARAGE'		=> (!empty($data['vid'])) ? append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=dispay_results&amp;username=' . $data['username']) : '',
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------]]></action>
 			</edit>
-
-
 		</open>
 		
 		<open src="viewonline.php">
@@ -313,7 +314,7 @@ $template->assign_vars(array(
 				<find><![CDATA[				'age'			=> '',]]></find>
 				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
-				'vehicle'		=> $row['vehicle'],
+				'vehicle'		=> $row['made_year'] . ' ' . $row['make'] . ' ' . $row['model'],
 				'garage_id'		=> $row['garage_id'],
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------]]></action>
 			</edit>
@@ -321,7 +322,7 @@ $template->assign_vars(array(
 				<find>	$postrow = array(</find>
 				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
-		'VEHICLE'			=> $user_cache[$poster_id]['made_year'] . ' ' . $user_cache[$poster_id]['make'] . ' ' . $user_cache[$poster_id]['model'],
+		'VEHICLE'			=> $user_cache[$poster_id]['vehicle'],
 		'U_VEHICLE'			=> (isset($user_cache[$poster_id]['garage_id'])) ? append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", 'mode=view_vehicle&amp;VID=' . $user_cache[$poster_id]['garage_id']) : '',
 		'U_GARAGE'			=> (isset($user_cache[$poster_id]['garage_id'])) ? append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=dispay_results&amp;username=' . $user_cache[$poster_id]['username']) : '',
 		'S_DISPLAY_GARAGE_VIEWTOPIC'	=> ($garage_config['integrate_viewtopic']) ? true : false,

@@ -30,7 +30,7 @@ unset($dbpasswd);
 * used on the initial list of convertors and to populate the default settings
 */
 $convertor_data = array(
-	'forum_name'		=> 'vB Garage 1.0.x',
+	'forum_name'		=> 'IPB Garage 2.0.4',
 	'version'		=> '1.0.B1',
 	'phpbbgarage_version'	=> '2.0.0',
 	'author'		=> '<a href="http://www.phpbbgarage.com/">phpBB Garage</a>',
@@ -50,27 +50,6 @@ $convertor_data = array(
 * source forum. It is used to guess the prefix if the specified prefix is incorrect
 */
 $tables = array(
-	'auth_access',
-	'banlist',
-	'categories',
-	'disallow',
-	'forum_prune',
-	'forums',
-	'groups',
-	'posts', 
-	'posts_text', 
-	'privmsgs', 
-	'privmsgs_text',
-	'ranks',
-	'smilies',
-	'topics',
-	'topics_watch',
-	'user_group',
-	'users',
-	'vote_desc',
-	'vote_results',
-	'vote_voters',
-	'words' 
 );
 
 /**
@@ -92,50 +71,6 @@ $tables = array(
 * empty() is such a function we created the function is_empty() to be used instead.
 */
 $config_schema = array(
-	'table_name'	=>	'config',
-	'table_format'	=>	array('config_name' => 'config_value'),
-	'settings'		=>	array(
-		'allow_bbcode'			=> 'allow_bbcode',
-		'allow_smilies'			=> 'allow_smilies',
-		'allow_sig'				=> 'allow_sig',
-		'allow_namechange'		=> 'allow_namechange',
-		'allow_avatar_local'	=> 'allow_avatar_local',
-		'allow_avatar_remote'	=> 'allow_avatar_remote',
-		'allow_avatar_upload'	=> 'allow_avatar_upload',
-		'board_disable'			=> 'board_disable',
-		'sitename'				=> 'phpbb_set_encoding(sitename)',
-		'site_desc'				=> 'phpbb_set_encoding(site_desc)',
-		'session_length'		=> 'session_length',
-		'board_email_sig'		=> 'phpbb_set_encoding(board_email_sig)',
-		'posts_per_page'		=> 'posts_per_page',
-		'topics_per_page'		=> 'topics_per_page',
-		'enable_confirm'		=> 'enable_confirm',
-		'board_email_form'		=> 'board_email_form',
-		'override_user_style'	=> 'override_user_style',
-		'hot_threshold'			=> 'hot_threshold',
-		'max_poll_options'		=> 'max_poll_options',
-		'max_sig_chars'			=> 'max_sig_chars',
-		'pm_max_msgs'			=> 'max_inbox_privmsgs',
-		'smtp_delivery'			=> 'smtp_delivery',
-		'smtp_host'				=> 'smtp_host',
-		'smtp_username'			=> 'smtp_username',
-		'smtp_password'			=> 'smtp_password',
-		'require_activation'	=> 'require_activation',
-		'flood_interval'		=> 'flood_interval',
-		'avatar_filesize'		=> 'avatar_filesize',
-		'avatar_max_width'		=> 'avatar_max_width',
-		'avatar_max_height'		=> 'avatar_max_height',
-		'default_dateformat'	=> 'default_dateformat',
-		'board_timezone'		=> 'board_timezone',
-		'allow_privmsg'			=> 'not(privmsg_disable)',
-		'gzip_compress'			=> 'gzip_compress',
-		'coppa_enable'			=> 'is_empty(coppa_mail)',
-		'coppa_fax'				=> 'coppa_fax',
-		'coppa_mail'			=> 'coppa_mail',
-		'record_online_users'	=> 'record_online_users',
-		'record_online_date'	=> 'record_online_date',
-		'board_startdate'		=> 'board_startdate',
-	)
 );
 
 /**

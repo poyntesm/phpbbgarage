@@ -328,7 +328,7 @@ class install_convert extends module
 		$error = array();
 		if ($submit)
 		{
-			if (!file_exists('./../' . $forum_path . '/' . $test_file))
+			if (!file_exists('./../../' . $forum_path . '/' . $test_file))
 			{
 				$error[] = sprintf($lang['COULD_NOT_FIND_PATH'], $forum_path);
 			}
@@ -439,10 +439,10 @@ class install_convert extends module
 				)), true);
 
 				// Save options
-				set_config('convert_options', serialize(array('forum_path' => './../' . $forum_path, 'refresh' => $refresh)), true);
+				set_config('convert_options', serialize(array('forum_path' => './../../' . $forum_path, 'refresh' => $refresh)), true);
 
 				$template->assign_block_vars('checks', array(
-					'TITLE'		=> $lang['SPECIFY_OPTIONS'],
+					'TITLE'		=> $lang['VERIFY_OPTIONS'],
 					'RESULT'	=> $lang['CONVERT_SETTINGS_VERIFIED'],
 				));
 
@@ -457,7 +457,7 @@ class install_convert extends module
 			else
 			{
 				$template->assign_block_vars('checks', array(
-					'TITLE'		=> $lang['SPECIFY_OPTIONS'],
+					'TITLE'		=> $lang['VERIFY_OPTIONS'],
 					'RESULT'	=> '<b style="color:red">' . implode('<br />', $error) . '</b>',
 				));
 			}
@@ -857,7 +857,7 @@ class install_convert extends module
 			// Convert the config table and load the settings of the old board
 			if (!empty($convert->config_schema))
 			{
-				restore_config($convert->config_schema);
+				restore_garage_config($convert->config_schema);
 			}
 
 			$template->assign_block_vars('checks', array(
@@ -1467,7 +1467,7 @@ class install_convert extends module
 		{
 			$db->sql_return_on_error(true);
 
-			update_topics_posted();
+			//update_topics_posted();
 
 			$template->assign_block_vars('checks', array(
 				'TITLE'		=> $user->lang['UPDATE_TOPICS_POSTED'],
@@ -1578,9 +1578,9 @@ class install_convert extends module
 			$db->sql_return_on_error(false);
 			$src_db->sql_return_on_error(false);
 
-			fix_empty_primary_groups();
+			//fix_empty_primary_groups();
 
-			update_dynamic_config();
+			//update_dynamic_config();
 
 			$template->assign_block_vars('checks', array(
 				'TITLE'		=> $user->lang['CLEAN_VERIFY'],
@@ -1604,8 +1604,8 @@ class install_convert extends module
 
 			// TODO: sync() is likely going to bomb out on forums with a considerable amount of topics.
 			// TODO: the sync function is able to handle FROM-TO values, we should use them here (batch processing)
-			sync('forum', '', '', false, true);
-			$cache->destroy('sql', FORUMS_TABLE);
+			//sync('forum', '', '', false, true);
+			//$cache->destroy('sql', FORUMS_TABLE);
 
 			$template->assign_block_vars('checks', array(
 				'TITLE'		=> $user->lang['SYNC_FORUMS'],

@@ -168,6 +168,4 @@ function get_role_by_name($name)
 	return $data;
 }
 
-
-
 ?>

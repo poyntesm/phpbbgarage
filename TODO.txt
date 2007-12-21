@@ -3,4 +3,33 @@ TODO: Make memberlist display garage button - template side done
 TODO: Events system
 TODO: Add vehicle status
 TODO: Make viewonline know exactly what you are doing..not just view garage
-TODO: Force a theme & imageset refresh after install
+
+phpbb_quartermile set dynorun_id = null
+phpbb_modification set price = null
+phpbb_modification set install_price = null
+phpbb_modification set product_rating = null
+phpbb_modification set purchase_rating = null
+phpbb_modification set install_rating = null
+phpbb_modification set shop_id = null
+phpbb_modification set installer_id = null
+
+
+
+-----------------------------------------------------
+
+1) Replace
+	<a href="{U_BACK}" style="float: right">&laquo; {L_BACK}</a>
+   With 
+	<a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a>
+
+
+4) CSS change for buttson From
+	.reply-icon, .reply-icon a			{ background: transparent none 0 0 no-repeat; }
+   To
+	.reply-icon span	{ background: transparent none 0 0 no-repeat; }
+
+
+5) CSS add to .buttons div a {
+	position: relative;
+	overflow: hidden;
+

@@ -163,9 +163,26 @@ class garage_admin
 	* @param array $garage_config  single-dimensional array holding current garage configuratin
 	*
 	*/
-	function set_config($config_name, $config_value, $garage_config)
+	function set_config($config_name, $config_value, $garage_config = null)
 	{
 		global $db ;
+
+		if (empty($garage_config))
+		{
+			$sql = $db->sql_build_query('SELECT', 
+				array(
+				'SELECT'	=> 'c.config_name, c.config_value',
+				'FROM'		=> array(
+					GARAGE_CONFIG_TABLE	=> 'c',
+				),
+				'WHERE'		=> "c.config_name = '$config_name'",
+			));
+
+			$result = $db->sql_query($sql);
+			$row = $db->sql_fetchrow($result);
+			$garage_config[$row['config_name']] = $row['config_value'];
+			$db->sql_freeresult($result);
+		}
 
 		$sql = 'UPDATE ' . GARAGE_CONFIG_TABLE . "
 			SET config_value = '" . $db->sql_escape($config_value) . "'

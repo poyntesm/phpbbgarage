@@ -1453,10 +1453,63 @@ function phpbbgarage_insert_categories()
 	return;
 }
 
+function is_business_retail($business_id)
+{
+	global $db, $src_db, $same_db, $convert, $user, $config;
+
+	$sql = "SELECT web_shop, retail_shop
+		FROM {$convert->src_table_prefix}config
+		WHERE config_name = 'prune_enable'";
+	$result = $src_db->sql_query($sql);
+	$row = $src_db->sql_fetchrow($result);
+	$src_db->sql_freeresult($result);
+
+	if (($row['web_shop']) OR ($row['retail_shop']))
+	{
+		return 1;
+	}
+
+	return 0;
+}
+
 function import_dynocentre($dynocentre)
 {
 	global $db, $src_db, $same_db, $convert, $user, $config;
-	return;
+
+	$sql = 'SELECT title, id
+		FROM ' . GARAGE_BUSINESS_TABLE . '
+		WHERE dynocentre = 1';
+	$result = $db->sql_query($sql);
+	$row = $db->sql_fetchrow($result);
+	$db->sql_freeresult($result);
+
+	//No Business We Need To Create It
+	if (empty($row)
+	{
+		$sql = 'INSERT INTO ' . GARAGE_BUSINESS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+			'title'		=> $dynocentre,
+			'address'	=> '',
+			'telephone'	=> '',
+			'fax'		=> '',
+			'website'	=> '',
+			'email'		=> '',
+			'opening_hours'	=> '',
+			'insurance'	=> 0,
+			'garage'	=> 0,
+			'retail'	=> 0,
+			'product'	=> 0,
+			'dynocentre'	=> 1,
+			'pending'	=> $pending,
+		));
+
+		$db->sql_query($sql);
+		return $db->sql_nextid();
+	}
+	//Dynocentre Exists Already Just Return ID
+	else
+	{
+		return $row['id']
+	}
 }
 
 function import_cover_type($cover_type)

@@ -30,7 +30,7 @@ unset($dbpasswd);
 * used on the initial list of convertors and to populate the default settings
 */
 $convertor_data = array(
-	'forum_name'		=> 'SMF Garage 1.0.x',
+	'forum_name'		=> 'SMF Garage 0.3',
 	'version'		=> '1.0.B1',
 	'phpbbgarage_version'	=> '2.0.0',
 	'author'		=> '<a href="http://www.phpbbgarage.com/">phpBB Garage</a>',
