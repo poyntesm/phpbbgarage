@@ -767,7 +767,7 @@ class install_install extends module
 				$template->assign_vars(array(
 					'S_FILE_CHECK'	=> false,
 					'TITLE'		=> $lang['INSTALL_CONGRATS'],
-					'BODY'		=> sprintf($lang['INSTALL_CONGRATS_EXPLAIN'], $garage_config['version'], append_sid($phpbb_root_path . 'install/index.' . $phpEx, 'mode=convert&amp;'), '../docs/README.html'),
+					'BODY'		=> sprintf($lang['INSTALL_CONGRATS_EXPLAIN'], $garage_config['version'], append_sid($phpbb_root_path . 'garage/install/index.' . $phpEx, 'mode=convert&amp;'), '../docs/README.html'),
 				));
 
 				$sql = 'INSERT INTO ' . GARAGE_CONFIG_TABLE . ' ' . $db->sql_build_array('INSERT', array(
