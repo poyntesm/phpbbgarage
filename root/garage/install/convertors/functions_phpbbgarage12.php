@@ -10,7 +10,28 @@
 
 /**
 * Helper functions for phpBB Garage 1.2.x to phpBB 2.0.x conversion
+ */
+
+/**
+* Get old config value
 */
+function get_phpbb_config_value($config_name)
+{
+	static $convert_phpbb_config;
+
+	if (!isset($convert_phpbb_config))
+	{
+		$convert_phpbb_config = get_phpbb_config();
+	}
+
+	if (!isset($convert_phpbb_config[$config_name]))
+	{
+		return false;
+	}
+
+	return (empty($convert_phpbb_config[$config_name])) ? '' : $convert_phpbb_config[$config_name];
+}
+
 
 /**
 * Insert/Convert forums
@@ -329,7 +350,7 @@ function phpbb_set_encoding($text, $grab_user_lang = true)
 		$lang_enc_array = array();
 	}
 
-	$get_lang = trim(get_config_value('default_lang'));
+	$get_lang = trim(get_phpbb_config_value('default_lang'));
 
 	// Do we need the users language encoding?
 	if ($grab_user_lang && !empty($convert_row))
@@ -359,7 +380,7 @@ function phpbb_set_encoding($text, $grab_user_lang = true)
 				$src_db->sql_query("SET NAMES 'utf8'");
 			}
 
-			$get_lang = (!trim($get_lang)) ? trim(get_config_value('default_lang')) : trim($get_lang);
+			$get_lang = (!trim($get_lang)) ? trim(get_phpbb_config_value('default_lang')) : trim($get_lang);
 		}
 	}
 
@@ -369,7 +390,7 @@ function phpbb_set_encoding($text, $grab_user_lang = true)
 
 		if (!file_exists($filename))
 		{
-			$get_lang = trim(get_config_value('default_lang'));
+			$get_lang = trim(get_phpbb_config_value('default_lang'));
 		}
 
 		if (!isset($lang_enc_array[$get_lang]))
@@ -1259,29 +1280,29 @@ function phpbb_check_username_collisions()
 *
 * Retrieves configuration information from the source forum and caches it as an array
 * Both database and file driven configuration formats can be handled
-* (the type used is specified in $config_schema, see convert_phpbb20.php for more details)
+* (the type used is specified in $garage_config_schema, see convert_phpbb20.php for more details)
 */
 function get_garage_config()
 {
-	static $convert_config;
+	static $convert_garage_config;
 	global $user;
 
-	if (isset($convert_config))
+	if (isset($convert_garage_config))
 	{
-		return $convert_config;
+		return $convert_garage_config;
 	}
 
 	global $src_db, $same_db, $phpbb_root_path, $config;
 	global $convert;
 
-	if ($convert->config_schema['table_format'] != 'file')
+	if ($convert->garage_config_schema['table_format'] != 'file')
 	{
 		if ($convert->mysql_convert && $same_db)
 		{
 			$src_db->sql_query("SET NAMES 'binary'");
 		}
 
-		$sql = 'SELECT * FROM ' . $convert->src_table_prefix . $convert->config_schema['table_name'];
+		$sql = 'SELECT * FROM ' . $convert->src_table_prefix . $convert->garage_config_schema['table_name'];
 		$result = $src_db->sql_query($sql);
 		$row = $src_db->sql_fetchrow($result);
 
@@ -1291,14 +1312,14 @@ function get_garage_config()
 		}
 	}
 
-	if (is_array($convert->config_schema['table_format']))
+	if (is_array($convert->garage_config_schema['table_format']))
 	{
-		$convert_config = array();
-		list($key, $val) = each($convert->config_schema['table_format']);
+		$convert_garage_config = array();
+		list($key, $val) = each($convert->garage_config_schema['table_format']);
 
 		do
 		{
-			$convert_config[$row[$key]] = $row[$val];
+			$convert_garage_config[$row[$key]] = $row[$val];
 		}
 		while ($row = $src_db->sql_fetchrow($result));
 		$src_db->sql_freeresult($result);
@@ -1308,40 +1329,40 @@ function get_garage_config()
 			$src_db->sql_query("SET NAMES 'utf8'");
 		}
 	}
-	else if ($convert->config_schema['table_format'] == 'file')
+	else if ($convert->garage_config_schema['table_format'] == 'file')
 	{
-		$filename = $convert->options['forum_path'] . '/' . $convert->config_schema['filename'];
+		$filename = $convert->options['forum_path'] . '/' . $convert->garage_config_schema['filename'];
 		if (!file_exists($filename))
 		{
 			$convert->p_master->error($user->lang['FILE_NOT_FOUND'] . ': ' . $filename, __LINE__, __FILE__);
 		}
 
-		$convert_config = extract_variables_from_file($filename);
-		if (!empty($convert->config_schema['array_name']))
+		$convert_garage_config = extract_variables_from_file($filename);
+		if (!empty($convert->garage_config_schema['array_name']))
 		{
-			$convert_config = $convert_config[$convert->config_schema['array_name']];
+			$convert_garage_config = $convert_garage_config[$convert->garage_config_schema['array_name']];
 		}
 	}
 	else
 	{
-		$convert_config = $row;
+		$convert_garage_config = $row;
 		if ($convert->mysql_convert && $same_db)
 		{
 			$src_db->sql_query("SET NAMES 'utf8'");
 		}
 	}
 
-	if (!sizeof($convert_config))
+	if (!sizeof($convert_garage_config))
 	{
 		$convert->p_master->error($user->lang['CONV_ERROR_CONFIG_EMPTY'], __LINE__, __FILE__);
 	}
 
-	return $convert_config;
+	return $convert_garage_config;
 }
 
 /**
 * Transfers the relevant configuration information from the source forum
-* The mapping of fields is specified in $config_schema, see convert_phpbb20.php for more details
+* The mapping of fields is specified in $garage_config_schema, see convert_phpbb20.php for more details
 */
 function restore_garage_config($schema)
 {
@@ -1349,7 +1370,7 @@ function restore_garage_config($schema)
 
 	require($phpbb_root_path . 'includes/mods/class_garage_admin.' . $phpEx);
 
-	$convert_config = get_config();
+	$convert_garage_config = get_garage_config();
 	foreach ($schema['settings'] as $config_name => $src)
 	{
 		if (preg_match('/(.*)\((.*)\)/', $src, $m))
@@ -1381,19 +1402,19 @@ function restore_garage_config($schema)
 */
 function get_garage_config_value($config_name)
 {
-	static $convert_config;
+	static $convert_garage_config;
 
-	if (!isset($convert_config))
+	if (!isset($convert_garage_config))
 	{
-		$convert_config = get_garage_config();
+		$convert_garage_config = get_garage_config();
 	}
 	
-	if (!isset($convert_config[$config_name]))
+	if (!isset($convert_garage_config[$config_name]))
 	{
 		return false;
 	}
 
-	return (empty($convert_config[$config_name])) ? '' : $convert_config[$config_name];
+	return (empty($convert_garage_config[$config_name])) ? '' : $convert_garage_config[$config_name];
 }
 
 function phpbbgarage_index_menu($menu)
@@ -1518,5 +1539,171 @@ function import_cover_type($cover_type)
 	return;
 }
 
+/**
+* Retrieves configuration information from the source forum and caches it as an array
+* Both database and file driven configuration formats can be handled
+* (the type used is specified in $forum_config_schema, see convert_phpbb20.php for more details)
+*/
+function get_phpbb_config()
+{
+	static $convert_phpbb_config;
+	global $user;
+
+	if (isset($convert_phpbb_config))
+	{
+		return $convert_phpbb_config;
+	}
+
+	global $src_db, $same_db, $phpbb_root_path, $config;
+	global $convert;
+
+	if ($convert->forum_config_schema['table_format'] != 'file')
+	{
+		if ($convert->mysql_convert && $same_db)
+		{
+			$src_db->sql_query("SET NAMES 'binary'");
+		}
+
+		$sql = 'SELECT * FROM ' . $convert->src_table_prefix . $convert->forum_config_schema['table_name'];
+		$result = $src_db->sql_query($sql);
+		$row = $src_db->sql_fetchrow($result);
+
+		if (!$row)
+		{
+			$convert->p_master->error($user->lang['CONV_ERROR_GET_CONFIG'], __LINE__, __FILE__);
+		}
+	}
+
+	if (is_array($convert->forum_config_schema['table_format']))
+	{
+		$convert_phpbb_config = array();
+		list($key, $val) = each($convert->forum_config_schema['table_format']);
+
+		do
+		{
+			$convert_phpbb_config[$row[$key]] = $row[$val];
+		}
+		while ($row = $src_db->sql_fetchrow($result));
+		$src_db->sql_freeresult($result);
+
+		if ($convert->mysql_convert && $same_db)
+		{
+			$src_db->sql_query("SET NAMES 'utf8'");
+		}
+	}
+	else if ($convert->forum_config_schema['table_format'] == 'file')
+	{
+		$filename = $convert->options['forum_path'] . '/' . $convert->forum_config_schema['filename'];
+		if (!file_exists($filename))
+		{
+			$convert->p_master->error($user->lang['FILE_NOT_FOUND'] . ': ' . $filename, __LINE__, __FILE__);
+		}
+
+		$convert_phpbb_config = extract_variables_from_file($filename);
+		if (!empty($convert->forum_config_schema['array_name']))
+		{
+			$convert_phpbb_config = $convert_phpbb_config[$convert->forum_config_schema['array_name']];
+		}
+	}
+	else
+	{
+		$convert_phpbb_config = $row;
+		if ($convert->mysql_convert && $same_db)
+		{
+			$src_db->sql_query("SET NAMES 'utf8'");
+		}
+	}
+
+	if (!sizeof($convert_phpbb_config))
+	{
+		$convert->p_master->error($user->lang['CONV_ERROR_CONFIG_EMPTY'], __LINE__, __FILE__);
+	}
+
+	return $convert_phpbb_config;
+}
+
+function get_placeholder_manufacturer_id()
+{
+
+	global $db, $src_db, $same_db, $convert, $user, $config;
+
+	$sql = "SELECT title, id
+		FROM " . GARAGE_BUSINESS_TABLE . "
+		WHERE product = 1
+			AND title = 'Converted Modifications'";
+	$result = $db->sql_query($sql);
+	$row = $db->sql_fetchrow($result);
+	$db->sql_freeresult($result);
+
+	if (empty($row['id']))
+	{
+		$sql = 'INSERT INTO ' . GARAGE_BUSINESS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+			'title'		=> 'Converted Modifications',
+			'address'	=> '',
+			'telephone'	=> '',
+			'fax'		=> '',
+			'website'	=> '',
+			'email'		=> '',
+			'opening_hours'	=> '',
+			'comments'	=> '',
+			'insurance'	=> 0,
+			'garage'	=> 0,
+			'retail'	=> 0,
+			'product'	=> 1,
+			'dynocentre'	=> 0,
+			'pending'	=> 0,
+		));
+
+		$db->sql_query($sql);
+		return $db->sql_nextid();
+	}
+	else
+	{
+		return $row['id'];
+	}
+}
+
+
+function insert_modification_product($src_modification_id)
+{
+	global $db, $src_db, $same_db, $convert, $user, $config;
+
+	//Get source modification data
+	$sql = 'SELECT *
+		FROM ' . $convert->src_table_prefix . 'garage_mods
+		WHERE id = '.$src_modification_id;
+	$result = $src_db->sql_query($sql);
+	$row = $src_db->sql_fetchrow($result);
+	$src_db->sql_freeresult($result);
+
+	//Get Modification Business
+	$business_id = get_placeholder_manufacturer_id();
+
+	//Check for duplicate modification product
+	$sql = "SELECT title, id
+		FROM " . GARAGE_PRODUCTS_TABLE . "
+		WHERE title = '" . str_replace("'", "\'", $row['title'])."'";
+	$result = $db->sql_query($sql);
+	$prow = $db->sql_fetchrow($result);
+	$db->sql_freeresult($result);
+
+
+	if (empty($prow['id']))
+	{
+		$sql = 'INSERT INTO ' . GARAGE_PRODUCTS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
+			'title'		=> $row['title'],
+			'business_id'	=> $business_id,
+			'category_id'	=> $row['category_id'],
+			'pending'	=> 0,
+		));
+
+		$db->sql_query($sql);
+		return $db->sql_nextid();
+	}
+	else
+	{
+		return $prow['id'];
+	}
+}
 
 ?>

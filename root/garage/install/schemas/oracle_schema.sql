@@ -18,6 +18,9 @@ CREATE TABLE phpbb_garage_vehicles (
 	price number(8) DEFAULT '0' NOT NULL,
 	currency varchar2(32) DEFAULT 'EUR' NOT NULL,
 	comments clob DEFAULT '' ,
+	bbcode_bitfield varchar2(255) DEFAULT '' ,
+	bbcode_uid varchar2(5) DEFAULT '' ,
+	bbcode_options number(8) DEFAULT '7' NOT NULL,
 	views number(8) DEFAULT '0' NOT NULL,
 	date_created number(11) DEFAULT '0' NOT NULL,
 	date_updated number(11) DEFAULT '0' NOT NULL,
@@ -25,8 +28,6 @@ CREATE TABLE phpbb_garage_vehicles (
 	model_id number(8) DEFAULT '0' NOT NULL,
 	main_vehicle number(1) DEFAULT '0' NOT NULL,
 	weighted_rating number(4, 2) DEFAULT '0' NOT NULL,
-	bbcode_bitfield varchar2(255) DEFAULT '' ,
-	bbcode_uid varchar2(5) DEFAULT '' ,
 	pending number(1) DEFAULT '0' NOT NULL,
 	CONSTRAINT pk_phpbb_garage_vehicles PRIMARY KEY (id)
 )
@@ -75,7 +76,6 @@ CREATE TABLE phpbb_garage_business (
 	product number(1) DEFAULT '0' NOT NULL,
 	dynocentre number(1) DEFAULT '0' NOT NULL,
 	pending number(1) DEFAULT '0' NOT NULL,
-	comments clob DEFAULT '' ,
 	CONSTRAINT pk_phpbb_garage_business PRIMARY KEY (id)
 )
 /
@@ -508,6 +508,9 @@ CREATE TABLE phpbb_garage_modifications (
 	shop_id number(8) DEFAULT '0' NOT NULL,
 	installer_id number(8) DEFAULT '0' NOT NULL,
 	comments clob DEFAULT '' ,
+	bbcode_bitfield varchar2(255) DEFAULT '' ,
+	bbcode_uid varchar2(5) DEFAULT '' ,
+	bbcode_options number(8) DEFAULT '7' NOT NULL,
 	install_comments clob DEFAULT '' ,
 	date_created number(11) DEFAULT '0' NOT NULL,
 	date_updated number(11) DEFAULT '0' NOT NULL,
@@ -804,6 +807,7 @@ CREATE TABLE phpbb_garage_blog (
 	blog_date number(11) DEFAULT '0' NOT NULL,
 	bbcode_bitfield varchar2(255) DEFAULT '' ,
 	bbcode_uid varchar2(5) DEFAULT '' ,
+	bbcode_options number(8) DEFAULT '7' NOT NULL,
 	CONSTRAINT pk_phpbb_garage_blog PRIMARY KEY (id)
 )
 /

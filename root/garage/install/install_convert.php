@@ -57,7 +57,8 @@ class garage_convert
 
 	var $convertor_data = array();
 	var $tables = array();
-	var $config_schema = array();
+	var $garage_config_schema = array();
+	var $forum_config_schema = array();
 	var $convertor = array();
 	var $src_truncate_statement = 'DELETE FROM ';
 	var $truncate_statement = 'DELETE FROM ';
@@ -640,7 +641,8 @@ class install_convert extends module
 		// Map some variables...
 		$convert->convertor_data 	= $convertor_data;
 		$convert->tables 		= $tables;
-		$convert->config_schema 	= $config_schema;
+		$convert->garage_config_schema 	= $garage_config_schema;
+		$convert->forum_config_schema 	= $forum_config_schema;
 
 		// Now include the real data
 		$get_info = false;
@@ -648,7 +650,8 @@ class install_convert extends module
 
 		$convert->convertor_data 	= $convertor_data;
 		$convert->tables 		= $tables;
-		$convert->config_schema 	= $config_schema;
+		$convert->garage_config_schema 	= $garage_config_schema;
+		$convert->forum_config_schema 	= $forum_config_schema;
 		$convert->convertor 		= $convertor;
 
 		// The test_file is a file that should be present in the location of the old board.
@@ -668,7 +671,7 @@ class install_convert extends module
 		// We are running sync...
 		if ($sync_batch >= 0)
 		{
-			$this->sync_forums($sync_batch);
+			//$this->sync_forums($sync_batch);
 			return;
 		}
 
@@ -855,9 +858,9 @@ class install_convert extends module
 			));
 
 			// Convert the config table and load the settings of the old board
-			if (!empty($convert->config_schema))
+			if (!empty($convert->garage_config_schema))
 			{
-				restore_garage_config($convert->config_schema);
+				restore_garage_config($convert->garage_config_schema);
 			}
 
 			$template->assign_block_vars('checks', array(
@@ -1587,7 +1590,7 @@ class install_convert extends module
 				'RESULT'	=> $user->lang['DONE'],
 			));
 
-			$url = $this->save_convert_progress('&amp;jump=2');
+			$url = $this->save_convert_progress('&amp;final_jump=1');
 
 			$template->assign_vars(array(
 				'L_SUBMIT'		=> $user->lang['CONTINUE_CONVERT'],
@@ -1598,31 +1601,6 @@ class install_convert extends module
 			return;
 		}
 
-		if ($jump == 2)
-		{
-			$db->sql_query('UPDATE ' . USERS_TABLE . " SET user_permissions = ''");
-
-			// TODO: sync() is likely going to bomb out on forums with a considerable amount of topics.
-			// TODO: the sync function is able to handle FROM-TO values, we should use them here (batch processing)
-			//sync('forum', '', '', false, true);
-			//$cache->destroy('sql', FORUMS_TABLE);
-
-			$template->assign_block_vars('checks', array(
-				'TITLE'		=> $user->lang['SYNC_FORUMS'],
-				'RESULT'	=> $user->lang['DONE'],
-			));
-
-			// Continue with synchronizing the forums...
-			$url = $this->save_convert_progress('&amp;sync_batch=0');
-
-			$template->assign_vars(array(
-				'L_SUBMIT'		=> $user->lang['CONTINUE_CONVERT'],
-				'U_ACTION'		=> $url,
-			));
-
-			$this->meta_refresh($url);
-			return;
-		}
 	}
 
 	function build_insert_query(&$schema, &$sql_data, $current_table)

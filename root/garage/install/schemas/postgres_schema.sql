@@ -22,6 +22,9 @@ CREATE TABLE phpbb_garage_vehicles (
 	price INT4 DEFAULT '0' NOT NULL CHECK (price >= 0),
 	currency varchar(32) DEFAULT 'EUR' NOT NULL,
 	comments TEXT DEFAULT '' NOT NULL,
+	bbcode_bitfield varchar(255) DEFAULT '' NOT NULL,
+	bbcode_uid varchar(5) DEFAULT '' NOT NULL,
+	bbcode_options INT4 DEFAULT '7' NOT NULL CHECK (bbcode_options >= 0),
 	views INT4 DEFAULT '0' NOT NULL CHECK (views >= 0),
 	date_created INT4 DEFAULT '0' NOT NULL CHECK (date_created >= 0),
 	date_updated INT4 DEFAULT '0' NOT NULL CHECK (date_updated >= 0),
@@ -29,8 +32,6 @@ CREATE TABLE phpbb_garage_vehicles (
 	model_id INT4 DEFAULT '0' NOT NULL CHECK (model_id >= 0),
 	main_vehicle INT2 DEFAULT '0' NOT NULL CHECK (main_vehicle >= 0),
 	weighted_rating decimal(4,2) DEFAULT '0' NOT NULL,
-	bbcode_bitfield varchar(255) DEFAULT '' NOT NULL,
-	bbcode_uid varchar(5) DEFAULT '' NOT NULL,
 	pending INT2 DEFAULT '0' NOT NULL CHECK (pending >= 0),
 	PRIMARY KEY (id)
 );
@@ -60,7 +61,6 @@ CREATE TABLE phpbb_garage_business (
 	product INT2 DEFAULT '0' NOT NULL CHECK (product >= 0),
 	dynocentre INT2 DEFAULT '0' NOT NULL CHECK (dynocentre >= 0),
 	pending INT2 DEFAULT '0' NOT NULL CHECK (pending >= 0),
-	comments varchar(4000) DEFAULT '' NOT NULL,
 	PRIMARY KEY (id)
 );
 
@@ -290,6 +290,9 @@ CREATE TABLE phpbb_garage_modifications (
 	shop_id INT4 DEFAULT '0' NOT NULL CHECK (shop_id >= 0),
 	installer_id INT4 DEFAULT '0' NOT NULL CHECK (installer_id >= 0),
 	comments TEXT DEFAULT '' NOT NULL,
+	bbcode_bitfield varchar(255) DEFAULT '' NOT NULL,
+	bbcode_uid varchar(5) DEFAULT '' NOT NULL,
+	bbcode_options INT4 DEFAULT '7' NOT NULL CHECK (bbcode_options >= 0),
 	install_comments TEXT DEFAULT '' NOT NULL,
 	date_created INT4 DEFAULT '0' NOT NULL CHECK (date_created >= 0),
 	date_updated INT4 DEFAULT '0' NOT NULL CHECK (date_updated >= 0),
@@ -454,6 +457,7 @@ CREATE TABLE phpbb_garage_blog (
 	blog_date INT4 DEFAULT '0' NOT NULL CHECK (blog_date >= 0),
 	bbcode_bitfield varchar(255) DEFAULT '' NOT NULL,
 	bbcode_uid varchar(5) DEFAULT '' NOT NULL,
+	bbcode_options INT4 DEFAULT '7' NOT NULL CHECK (bbcode_options >= 0),
 	PRIMARY KEY (id)
 );
 

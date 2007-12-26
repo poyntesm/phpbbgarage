@@ -84,8 +84,19 @@ $tables = array(
 * Please note that the contents of the old config value are passed to the function, therefore
 * an in-built function requiring the variable passed by reference is not able to be used. Since
 * empty() is such a function we created the function is_empty() to be used instead.
-*/
-$config_schema = array(
+ */
+
+$forum_config_schema = array(
+	'table_name'	=>	'config',
+	'table_format'	=>	array(
+		'config_name' => 'config_value'
+	),
+	'settings'	=>	array(
+		'default_lang'	=> 'default_lang',
+	),
+);
+
+$garage_config_schema = array(
 	'table_name'	=>	'garage_config',
 	'table_format'	=>	array(
 		'config_name' => 'config_value'
@@ -267,7 +278,7 @@ $convertor = array(
 			array('mileage_unit',		'garage.mileage_units',			''),
 			array('price',			'garage.price',				''),
 			array('currency',		'garage.currency',			''),
-			array('comments',		'garage.comments',			''),
+			array('comments',		'garage.comments',			array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
 			array('views',			'garage.views',				''),
 			array('date_created',		'garage.date_created',			''),
 			array('date_updated',		'garage.date_updated',			''),
@@ -277,7 +288,7 @@ $convertor = array(
 			array('weighted_rating',	'garage.weighted_rating',		''),
 			array('bbcode_bitfield',	'',					'get_bbcode_bitfield'),
 			array('bbcode_uid',		'garage.date_updated',			'make_uid'),
-			//array('bbcode_options',		'',					''),
+			array('bbcode_options',		'',					''),
 			array('pending',		'0',					''),
 		),
 		array(
@@ -285,13 +296,13 @@ $convertor = array(
 			'query_first'	=> array('target', $convert->truncate_statement . GARAGE_BUSINESS_TABLE),
 
 			array('id',			'garage_business.id',			''),
-			array('title',			'garage_business.title',		''),
-			array('address',		'garage_business.address',		''),
+			array('title',			'garage_business.title',		array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
+			array('address',		'garage_business.address',		array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
 			array('telephone',		'garage_business.telephone',		''),
 			array('fax',			'garage_business.fax',			''),
 			array('website',		'garage_business.website',		''),
 			array('email',			'garage_business.email',		''),
-			array('opening_hours',		'garage_business.opening_hours',	''),
+			array('opening_hours',		'garage_business.opening_hours',	array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
 			array('insurance',		'garage_business.insurance',		''),
 			array('garage',			'garage_business.garage',		''),
 			array('retail',			'garage_business.id',			'is_business_retail'),
@@ -303,19 +314,20 @@ $convertor = array(
 			'query_first'	=> array('target', $convert->truncate_statement . GARAGE_CATEGORIES_TABLE),
 
 			array('id',			'garage_categories.id',			''),
-			array('title',			'garage_categories.title',		''),
+			array('title',			'garage_categories.title',		array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
 			array('field_order',		'garage_categories.field_order',	''),
 		),
 		array(
 			'target'	=> GARAGE_MODIFICATIONS_TABLE,
 			'query_first'	=> array('target', $convert->truncate_statement . GARAGE_MODIFICATIONS_TABLE),
+			'function_first'=> 'create_placeholder_manufacturer',
 
 			array('id',			'garage_mods.id',			''),
 			array('vehicle_id',		'garage_mods.garage_id',		''),
 			array('user_id',		'garage_mods.member_id',		''),
 			array('category_id',		'garage_mods.category_id',		''),
-			//array('manufacturer_id',	'garage_mods.field_order',		''),
-			//array('product_id',		'garage_mods.field_order',		''),
+			array('manufacturer_id',	'',					'get_placeholder_manufacturer_id'),
+			array('product_id',		'garage_mods.id',			'insert_modification_product'),
 			array('price',			'garage_mods.price',			''),
 			array('install_price',		'garage_mods.install_price',		''),
 			array('product_rating',		'garage_mods.product_rating',		''),
@@ -323,8 +335,8 @@ $convertor = array(
 			array('install_rating',		'garage_mods.install_rating',		''),
 			array('shop_id',		'garage_mods.business_id',		''),
 			array('installer_id',		'garage_mods.install_business_id',	''),
-			array('comments',		'garage_mods.comments',			''),
-			array('install_comments',	'garage_mods.install_comments',		''),
+			array('comments',		'garage_mods.comments',			array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
+			array('install_comments',	'garage_mods.install_comments',		array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
 			array('date_created',		'garage_mods.date_created',		''),
 			array('date_updated',		'garage_mods.date_updated',		''),
 		),
@@ -353,7 +365,7 @@ $convertor = array(
 			'query_first'	=> array('target', $convert->truncate_statement . GARAGE_MAKES_TABLE),
 
 			array('id',			'garage_makes.id',			''),
-			array('make',			'garage_makes.make',			''),
+			array('make',			'garage_makes.make',			array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
 			array('pending',		'garage_makes.pending',			''),
 		),
 		array(
@@ -362,7 +374,7 @@ $convertor = array(
 
 			array('id',			'garage_models.id',			''),
 			array('make_id',		'garage_models.make_id',		''),
-			array('model',			'garage_models.model',			''),
+			array('model',			'garage_models.model',			array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
 			array('pending',		'garage_models.pending',		''),
 		),
 		array(
@@ -374,7 +386,7 @@ $convertor = array(
 			array('business_id',		'garage_insurance.business_id',		''),
 			array('cover_type_id',		'garage_insurance.cover_type',		'import_cover_type'),
 			array('premium',		'garage_insurance.premium',		''),
-			array('comments',		'garage_insurance.comments',		''),
+			array('comments',		'garage_insurance.comments',		array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
 		),
 		array(
 			'target'	=> GARAGE_QUARTERMILES_TABLE,
@@ -484,12 +496,12 @@ $convertor = array(
 			array('vehicle_id',		'garage_guestbooks.garage_id',		''),
 			array('author_id',		'garage_guestbooks.author_id',		''),
 			array('post_date',		'garage_guestbooks.post_date',		''),
-			array('ip_address',		'garage_guestbooks.ip_address',		''),
+			array('ip_address',		'garage_guestbooks.ip_address',		'decode_ip'),
 			array('bbcode_bitfield',	'',					'get_bbcode_bitfield'),
 			array('bbcode_uid',		'garage_guestbooks.post_date',		'make_uid'),
 			array('bbcode_options',		'',					''),
 			array('pending',		'0',					''),
-			array('post',			'garage_guestbooks.post',		''),
+			array('post',			'garage_guestbooks.post',		'phpbb_prepare_message'),
 		),
 	),
 );

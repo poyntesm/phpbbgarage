@@ -21,6 +21,9 @@ CREATE TABLE [phpbb_garage_vehicles] (
 	[price] [int] DEFAULT (0) NOT NULL ,
 	[currency] [varchar] (32) DEFAULT ('EUR') NOT NULL ,
 	[comments] [text] DEFAULT ('') NOT NULL ,
+	[bbcode_bitfield] [varchar] (255) DEFAULT ('') NOT NULL ,
+	[bbcode_uid] [varchar] (5) DEFAULT ('') NOT NULL ,
+	[bbcode_options] [int] DEFAULT (7) NOT NULL ,
 	[views] [int] DEFAULT (0) NOT NULL ,
 	[date_created] [int] DEFAULT (0) NOT NULL ,
 	[date_updated] [int] DEFAULT (0) NOT NULL ,
@@ -28,8 +31,6 @@ CREATE TABLE [phpbb_garage_vehicles] (
 	[model_id] [int] DEFAULT (0) NOT NULL ,
 	[main_vehicle] [int] DEFAULT (0) NOT NULL ,
 	[weighted_rating] [float] DEFAULT (0) NOT NULL ,
-	[bbcode_bitfield] [varchar] (255) DEFAULT ('') NOT NULL ,
-	[bbcode_uid] [varchar] (5) DEFAULT ('') NOT NULL ,
 	[pending] [int] DEFAULT (0) NOT NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
@@ -71,8 +72,7 @@ CREATE TABLE [phpbb_garage_business] (
 	[retail] [int] DEFAULT (0) NOT NULL ,
 	[product] [int] DEFAULT (0) NOT NULL ,
 	[dynocentre] [int] DEFAULT (0) NOT NULL ,
-	[pending] [int] DEFAULT (0) NOT NULL ,
-	[comments] [varchar] (4000) DEFAULT ('') NOT NULL 
+	[pending] [int] DEFAULT (0) NOT NULL 
 ) ON [PRIMARY]
 GO
 
@@ -413,6 +413,9 @@ CREATE TABLE [phpbb_garage_modifications] (
 	[shop_id] [int] DEFAULT (0) NOT NULL ,
 	[installer_id] [int] DEFAULT (0) NOT NULL ,
 	[comments] [text] DEFAULT ('') NOT NULL ,
+	[bbcode_bitfield] [varchar] (255) DEFAULT ('') NOT NULL ,
+	[bbcode_uid] [varchar] (5) DEFAULT ('') NOT NULL ,
+	[bbcode_options] [int] DEFAULT (7) NOT NULL ,
 	[install_comments] [text] DEFAULT ('') NOT NULL ,
 	[date_created] [int] DEFAULT (0) NOT NULL ,
 	[date_updated] [int] DEFAULT (0) NOT NULL 
@@ -640,7 +643,8 @@ CREATE TABLE [phpbb_garage_blog] (
 	[blog_text] [text] DEFAULT ('') NOT NULL ,
 	[blog_date] [int] DEFAULT (0) NOT NULL ,
 	[bbcode_bitfield] [varchar] (255) DEFAULT ('') NOT NULL ,
-	[bbcode_uid] [varchar] (5) DEFAULT ('') NOT NULL 
+	[bbcode_uid] [varchar] (5) DEFAULT ('') NOT NULL ,
+	[bbcode_options] [int] DEFAULT (7) NOT NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 

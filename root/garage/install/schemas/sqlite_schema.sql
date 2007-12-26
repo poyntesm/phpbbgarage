@@ -16,6 +16,9 @@ CREATE TABLE phpbb_garage_vehicles (
 	price INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	currency varchar(32) NOT NULL DEFAULT 'EUR',
 	comments mediumtext(16777215) NOT NULL DEFAULT '',
+	bbcode_bitfield varchar(255) NOT NULL DEFAULT '',
+	bbcode_uid varchar(5) NOT NULL DEFAULT '',
+	bbcode_options INTEGER UNSIGNED NOT NULL DEFAULT '7',
 	views INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	date_created INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	date_updated INTEGER UNSIGNED NOT NULL DEFAULT '0',
@@ -23,8 +26,6 @@ CREATE TABLE phpbb_garage_vehicles (
 	model_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	main_vehicle INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	weighted_rating decimal(4,2) NOT NULL DEFAULT '0',
-	bbcode_bitfield varchar(255) NOT NULL DEFAULT '',
-	bbcode_uid varchar(5) NOT NULL DEFAULT '',
 	pending INTEGER UNSIGNED NOT NULL DEFAULT '0'
 );
 
@@ -48,8 +49,7 @@ CREATE TABLE phpbb_garage_business (
 	retail INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	product INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	dynocentre INTEGER UNSIGNED NOT NULL DEFAULT '0',
-	pending INTEGER UNSIGNED NOT NULL DEFAULT '0',
-	comments text(65535) NOT NULL DEFAULT ''
+	pending INTEGER UNSIGNED NOT NULL DEFAULT '0'
 );
 
 CREATE INDEX phpbb_garage_business_insurance ON phpbb_garage_business (insurance);
@@ -217,6 +217,9 @@ CREATE TABLE phpbb_garage_modifications (
 	shop_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	installer_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	comments mediumtext(16777215) NOT NULL DEFAULT '',
+	bbcode_bitfield varchar(255) NOT NULL DEFAULT '',
+	bbcode_uid varchar(5) NOT NULL DEFAULT '',
+	bbcode_options INTEGER UNSIGNED NOT NULL DEFAULT '7',
 	install_comments mediumtext(16777215) NOT NULL DEFAULT '',
 	date_created INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	date_updated INTEGER UNSIGNED NOT NULL DEFAULT '0'
@@ -340,7 +343,8 @@ CREATE TABLE phpbb_garage_blog (
 	blog_text mediumtext(16777215) NOT NULL DEFAULT '',
 	blog_date INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	bbcode_bitfield varchar(255) NOT NULL DEFAULT '',
-	bbcode_uid varchar(5) NOT NULL DEFAULT ''
+	bbcode_uid varchar(5) NOT NULL DEFAULT '',
+	bbcode_options INTEGER UNSIGNED NOT NULL DEFAULT '7'
 );
 
 CREATE INDEX phpbb_garage_blog_vehicle_id ON phpbb_garage_blog (vehicle_id);
