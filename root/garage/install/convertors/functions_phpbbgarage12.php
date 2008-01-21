@@ -1466,7 +1466,20 @@ function phpbbgarage_feature_from_block ($menu)
 
 function import_garage_gallery()
 {
-	return;
+	global $config, $convert, $phpbb_root_path, $user;
+
+	$relative_path = empty($convert->convertor['source_path_absolute']);
+
+	$convert->convertor['garage_image_path'] = './garage/upload/';
+	$config['garage_image_path'] = './garage/upload/';
+
+	$src_path = relative_base(path($convert->convertor['garage_image_path'], $relative_path), $relative_path);
+
+	if (is_dir($src_path))
+	{
+		// Do not die on failure... safe mode restrictions may be in effect.
+		copy_dir($convert->convertor['garage_image_path'], path($config['garage_image_path']), !$subdirs_as_galleries, false, false, $relative_path);
+	}
 }
 
 function phpbbgarage_insert_categories()

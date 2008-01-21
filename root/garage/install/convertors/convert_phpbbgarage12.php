@@ -307,7 +307,6 @@ $convertor = array(
 			array('garage',			'garage_business.garage',		''),
 			array('retail',			'garage_business.id',			'is_business_retail'),
 			array('pending',		'garage_business.pending',		''),
-			array('comments',		'garage_business.comments',		''),
 		),
 		array(
 			'target'	=> GARAGE_CATEGORIES_TABLE,

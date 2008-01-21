@@ -699,7 +699,7 @@ class install_convert extends module
 				$bad_folders = array();
 
 				$local_paths = array(
-					'upload_path'			=> path($config['upload_path']),
+					'garage_upload_path'			=> path($config['garage_upload_path']),
 				);
 
 				foreach ($local_paths as $folder => $local_path)
