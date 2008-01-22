@@ -1360,7 +1360,7 @@ switch ($mode)
 					LEFT JOIN ' . GARAGE_VEHICLES_TABLE . ' v
 						ON (
 							v.user_id = u.user_id AND v.main_vehicle = 1
-						) .
+						)
 					WHERE ' . $db->sql_in_set('u.user_id', $user_list) . "
 						$sql_where_data";
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
@@ -1588,7 +1588,7 @@ function show_profile($data)
 		'U_EMAIL'		=> $email,
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
-		'U_GARAGE'		=> (!empty($data['vid'])) ? append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=dispay_results&amp;username=' . $data['username']) : '',
+		'U_GARAGE' 		=> (!empty($data['vid'])) ? append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=search_results&amp;search_username=1&amp;username=' . $data['username']) : '',
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 		'U_WWW'			=> (!empty($data['user_website'])) ? $data['user_website'] : '',
 		'U_ICQ'			=> ($data['user_icq']) ? 'http://www.icq.com/people/webmsg.php?to=' . urlencode($data['user_icq']) : '',
