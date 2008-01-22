@@ -32,29 +32,29 @@
 				<div class="inner">
 					<span class="corners-top"><span></span></span>
 					<!-- BEGIN customers -->
-					<ul class="topiclist">
+					<ul class="garage_list">
 						<li class="header">
 							<dl>
-								<dt>{L_OWNER}</dt>
-								<dd>{L_VEHICLE}</dd>
-								<dd>{L_MODIFICATION}</dd>
-								<dd>{L_PURCHASE_RATING}</dd>
-								<dd>{L_PRODUCT_RATING}</dd>
-								<dd>{L_PRICE}</dd>
+								<dt class="gwidth-20">{L_OWNER}</dt>
+								<dd class="gwidth-20">{L_VEHICLE}</dd>
+								<dd class="gwidth-20">{L_MODIFICATION}</dd>
+								<dd class="gwidth-10">{L_PURCHASE_RATING}</dd>
+								<dd class="gwidth-10">{L_PRODUCT_RATING}</dd>
+								<dd class="gwidth-10">{L_PRICE}</dd>
 							</dl>
 						</li>
 					</ul>
-					<ul class="topiclist topics">
+					<ul class="garage_list">
 					<!-- END customers --> 				
 					<!-- BEGIN mod_row -->
 						<!-- IF mod_row.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 							<dl>
-								<dt><b><a href="{business_row.mod_row.U_VIEW_PROFILE}" <!-- IF business_row.mod_row.USERNAME_COLOUR --> style="color: {business_row.mod_row.USERNAME_COLOUR}"<!-- ENDIF -->>{business_row.mod_row.USERNAME}</a></b></dt>
-								<dd><a href="{business_row.mod_row.U_VIEW_VEHICLE}">{business_row.mod_row.VEHICLE}</a></dd>
-								<dd><a href="{business_row.mod_row.U_VIEW_MODIFICATION}">{business_row.mod_row.MODIFICATION}</a></dd>
-								<dd>{business_row.mod_row.PURCHASE_RATING}</dd>
-								<dd>{business_row.mod_row.PRODUCT_RATING}</dd>
-								<dd>{business_row.mod_row.PRICE}</dd>
+								<dt class="gwidth-20"><b><a href="{business_row.mod_row.U_VIEW_PROFILE}" <!-- IF business_row.mod_row.USERNAME_COLOUR --> style="color: {business_row.mod_row.USERNAME_COLOUR}"<!-- ENDIF -->>{business_row.mod_row.USERNAME}</a></b></dt>
+								<dd class="gwidth-20"><a href="{business_row.mod_row.U_VIEW_VEHICLE}">{business_row.mod_row.VEHICLE}</a></dd>
+								<dd class="gwidth-20"><a href="{business_row.mod_row.U_VIEW_MODIFICATION}">{business_row.mod_row.MODIFICATION}</a></dd>
+								<dd class="gwidth-10">{business_row.mod_row.PURCHASE_RATING}</dd>
+								<dd class="gwidth-10">{business_row.mod_row.PRODUCT_RATING}</dd>
+								<dd class="gwidth-10">{business_row.mod_row.PRICE}</dd>
 							</dl>
 						</li>
 					<!-- END mod_row -->
