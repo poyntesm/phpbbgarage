@@ -380,6 +380,7 @@ ul.garage_list dl {
 
 ul.garage_list li.row dl {
 	padding: 2px 0;
+        width:100%;
 }
 
 ul.garage_list dt {
@@ -387,13 +388,14 @@ ul.garage_list dt {
 	float: left;
 	font-size: 1.1em;
 	padding-left: 4px;
+        text-align:center;
 }
 
 ul.garage_list dd {
 	display: block;
 	float: left;
-	border-left: 1px solid #FFFFFF;
 	padding: 4px 0;
+        text-align:center;
 }
 
 ul.garage_list dfn {
@@ -468,5 +470,9 @@ a.garage-camera-icon:hover, a.garage-delete-icon:hover, a.garage-edit-icon:hover
 }
 .gwidth-50 {
 	width: 50%;
+}
+.gcamera_image {
+	width:20px;
+	height:20px;
 }
 

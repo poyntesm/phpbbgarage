@@ -8,7 +8,7 @@ if (!defined('IN_PHPBB'))
 // Set prosilver info with imageset data to update
 $theme_info = array(
 	'theme_data'	=> '
-	/* Toggle */
+/* Toggle */
 #garage-toggle {
 	padding: 0px;
 	width: 16%;
@@ -390,6 +390,7 @@ ul.garage_list dl {
 
 ul.garage_list li.row dl {
 	padding: 2px 0;
+        width:100%;
 }
 
 ul.garage_list dt {
@@ -397,13 +398,14 @@ ul.garage_list dt {
 	float: left;
 	font-size: 1.1em;
 	padding-left: 4px;
+        text-align:center;
 }
 
 ul.garage_list dd {
 	display: block;
 	float: left;
-	border-left: 1px solid #FFFFFF;
 	padding: 4px 0;
+        text-align:center;
 }
 
 ul.garage_list dfn {
@@ -464,21 +466,24 @@ a.garage-camera-icon:hover, a.garage-delete-icon:hover, a.garage-edit-icon:hover
 .gwidth-10 {
 	width: 10%;
 }
-
+.gwidth-15 {
+	width: 15%;
+}
 .gwidth-20 {
 	width: 20%;
 }
-
 .gwidth-30 {
 	width: 30%;
 }
-
 .gwidth-40 {
 	width: 40%;
 }
-
 .gwidth-50 {
 	width: 50%;
+}
+.gcamera_image {
+	width:20px;
+	height:20px;
 }
 '
 );

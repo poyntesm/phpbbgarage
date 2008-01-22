@@ -1510,9 +1510,15 @@ function import_dynocentre($dynocentre)
 {
 	global $db, $src_db, $same_db, $convert, $user, $config;
 
-	$sql = 'SELECT title, id
-		FROM ' . GARAGE_BUSINESS_TABLE . '
-		WHERE dynocentre = 1';
+	$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'b.title, b.id',
+			'FROM'		=> array(
+				GARAGE_BUSINESS_TABLE	=> 'b',
+			),
+			'WHERE'		=> "dynocentre = 1 AND title = '".$db->sql_escape($dynocentre)."'"
+	));
+
 	$result = $db->sql_query($sql);
 	$row = $db->sql_fetchrow($result);
 	$db->sql_freeresult($result);

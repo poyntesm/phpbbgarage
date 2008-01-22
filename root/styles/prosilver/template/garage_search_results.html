@@ -28,12 +28,12 @@
 					<ul class="garage_list">
 						<li class="header">
 							<dl>
-								<dt class="image_attached"></dt>
+								<dt class="gcamera_image"></dt>
 								<dd class="gwidth-10">{L_YEAR}</dd>
 								<dd class="gwidth-10">{L_MAKE}</dd>
-								<dd class="gwidth-10">{L_MODEL}</dd>
-								<dd class="gwidth-10">{L_COLOUR}</dd>
-								<dd class="gwidth-10">{L_OWNER}</dd>
+								<dd class="gwidth-15">{L_MODEL}</dd>
+								<dd class="gwidth-15">{L_COLOUR}</dd>
+								<dd class="gwidth-15">{L_OWNER}</dd>
 								<dd class="gwidth-5">{L_VIEWS}</dd>
 								<dd class="gwidth-5">{L_MODS}</dd>
 								<dd class="gwidth-10">{L_UPDATED}</dd>
@@ -44,12 +44,12 @@
 					<!-- BEGIN vehicle -->
 					<!-- IF vehicle.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt class="image_attached"><!-- IF vehicle.U_IMAGE --><a href="{vehicle.U_IMAGE}" class="garage-camera-icon"></a><!-- ENDIF --></dt>
+							<dt class="gcamera_image"><!-- IF vehicle.U_IMAGE --><a href="{vehicle.U_IMAGE}" class="garage-camera-icon"></a><!-- ENDIF --></dt>
 			  				<dd class="gwidth-10">{vehicle.YEAR}</dd>
 							<dd class="gwidth-10">{vehicle.MAKE}</dd>
-							<dd class="gwidth-10"><a href="{vehicle.U_VIEW_VEHICLE}">{vehicle.MODEL}</a></dd>
-							<dd class="gwidth-10">{vehicle.COLOUR}</dd>
-							<dd class="gwidth-10"><b><a href="{vehicle.U_VIEW_PROFILE}" <!-- IF vehicle.USERNAME_COLOUR --> style="color: {vehicle.USERNAME_COLOUR}"<!-- ENDIF -->>{vehicle.USERNAME}</a></b></dd>
+							<dd class="gwidth-15"><a href="{vehicle.U_VIEW_VEHICLE}">{vehicle.MODEL}</a></dd>
+							<dd class="gwidth-15">{vehicle.COLOUR}</dd>
+							<dd class="gwidth-15"><b><a href="{vehicle.U_VIEW_PROFILE}" <!-- IF vehicle.USERNAME_COLOUR --> style="color: {vehicle.USERNAME_COLOUR}"<!-- ENDIF -->>{vehicle.USERNAME}</a></b></dd>
 							<dd class="gwidth-5">{vehicle.VIEWS}</dd>
 							<dd class="gwidth-5">{vehicle.MODS}</dd>
 							<dd class="gwidth-20">{vehicle.UPDATED}</dd>
@@ -87,7 +87,7 @@
 				<ul class="garage_list">
 					<li class="header">
 						<dl>
-							<dt></dt>
+							<dt class="gcamera_image"></dt>
 							<dd class="gwidth-20">{L_VEHICLE}</dd>
 							<dd class="gwidth-20">{L_MODIFICATION}</dd>
 							<dd class="gwidth-20">{L_CATEGORY}</dd>
@@ -101,7 +101,7 @@
 					<!-- BEGIN modification -->
 					<!-- IF modification.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt class="image_attached"><!-- IF modification.U_IMAGE --><a href="{modification.U_IMAGE}" class="garage-camera-icon"></a><!-- ENDIF --></dt>
+							<dt class="gcamera_image"><!-- IF modification.U_IMAGE --><a href="{modification.U_IMAGE}" class="garage-camera-icon"></a><!-- ENDIF --></dt>
 			  				<dd class="gwidth-20"><a href="{modification.U_VIEW_VEHICLE}">{modification.VEHICLE}</a></dd>
 							<dd class="gwidth-20"><a href="{modification.U_VIEW_MODIFICATION}">{modification.MODIFICATION}</a></dd>
 							<dd class="gwidth-20">{modification.CATEGORY}</dd>
@@ -145,13 +145,13 @@
 				<ul class="garage_list">
 					<li class="header">
 						<dl>
-							<dt>{L_VEHICLE}</dt>
-							<dd>{L_PRICE}</dd>
-							<dd>{L_MOD_PRICE}</dd>
-							<dd>{L_OWNER}</dd>
-							<dd>{L_PREMIUM}</dd>
-							<dd>{L_COVER_TYPE}</dd>
-							<dd>{L_INSURER}</dd>
+							<dt class="gwidth-20">{L_VEHICLE}</dt>
+							<dd class="gwidth-10">{L_PRICE}</dd>
+							<dd class="gwidth-10">{L_MOD_PRICE}</dd>
+							<dd class="gwidth-20">{L_OWNER}</dd>
+							<dd class="gwidth-10">{L_PREMIUM}</dd>
+							<dd class="gwidth-10">{L_COVER_TYPE}</dd>
+							<dd class="gwidth-15">{L_INSURER}</dd>
 						</dl>
 					</li>
 				</ul>
@@ -159,13 +159,13 @@
 					<!-- BEGIN premium -->
 					<!-- IF premium.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt><a href="{premium.U_VIEW_VEHICLE}">{premium.VEHICLE}</a></dt>
-							<dd>{premium.PRICE}</dd>
-							<dd>{premium.MOD_PRICE}</dd>
-							<dd><b><a href="{premium.U_VIEW_PROFILE}" <!-- IF premium.USERNAME_COLOUR --> style="color: {premium.USERNAME_COLOUR}"<!-- ENDIF -->>{premium.USERNAME}</a></b></dd>
-							<dd>{premium.PREMIUM}</dd>
-							<dd>{premium.COVER_TYPE}</dd>
-							<dd><a href="{premium.U_VIEW_BUSINESS}">{premium.BUSINESS}</a></dd>
+							<dt class="gwidth-20"><a href="{premium.U_VIEW_VEHICLE}">{premium.VEHICLE}</a></dt>
+							<dd class="gwidth-10">{premium.PRICE}</dd>
+							<dd class="gwidth-10">{premium.MOD_PRICE}</dd>
+							<dd class="gwidth-20"><b><a href="{premium.U_VIEW_PROFILE}" <!-- IF premium.USERNAME_COLOUR --> style="color: {premium.USERNAME_COLOUR}"<!-- ENDIF -->>{premium.USERNAME}</a></b></dd>
+							<dd class="gwidth-10">{premium.PREMIUM}</dd>
+							<dd class="gwidth-10">{premium.COVER_TYPE}</dd>
+							<dd class="gwidth-25"><a href="{premium.U_VIEW_BUSINESS}">{premium.BUSINESS}</a></dd>
 						</dl>
 					</li>
 					<!-- BEGINELSE -->
@@ -201,7 +201,7 @@
 				<ul class="garage_list">
 					<li class="header">
 						<dl>
-							<dt></dt>
+							<dt class="gcamera_image"></dt>
 							<dd class="gwidth-10">{L_USERNAME}</dd>
 							<dd class="gwidth-20">{L_VEHICLE}</dd>
 							<dd class="gwidth-10">{L_RT}</dd>
@@ -217,7 +217,7 @@
 					<!-- BEGIN quartermile -->
 					<!-- IF quartermile.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt><!-- IF quartermile.U_IMAGE --><a href="{quartermile.U_IMAGE}" class="garage-camera-icon"></a><!-- ENDIF --></dt>
+							<dt class="gcamera_image"><!-- IF quartermile.U_IMAGE --><a href="{quartermile.U_IMAGE}" class="garage-camera-icon"></a><!-- ENDIF --></dt>
 							<dd class="gwidth-10"><b><a href="{quartermile.U_VIEWPROFILE}" <!-- IF quartermile.USERNAME_COLOUR --> style="color: {quartermile.USERNAME_COLOUR}"<!-- ENDIF -->>{quartermile.USERNAME}</a></b></dd>
 							<dd class="gwidth-20"><a href="{quartermile.U_VIEWVEHICLE}">{quartermile.VEHICLE}</a></dd>
 							<dd class="gwidth-10">{quartermile.RT}</dd>
@@ -261,7 +261,7 @@
 				<ul class="garage_list">
 					<li class="header">
 						<dl>
-							<dt></dt>
+							<dt class="gcamera_image"></dt>
 							<dd class="gwidth-10">{L_USERNAME}</dd>
 							<dd class="gwidth-20">{L_VEHICLE}</dd>
 							<dd class="gwidth-10">{L_DYNOCENTRE}</dd>
@@ -277,7 +277,7 @@
 					<!-- BEGIN dynorun -->
 					<!-- IF dynorun.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt><!-- IF dynorun.U_IMAGE --><a href="{dynorun.U_IMAGE}" class="garage-camera-icon"></a><!-- ENDIF --></dt>
+							<dt class="gcamera_image"><!-- IF dynorun.U_IMAGE --><a href="{dynorun.U_IMAGE}" class="garage-camera-icon"></a><!-- ENDIF --></dt>
 							<dd class="gwidth-10"><b><a href="{dynorun.U_VIEWPROFILE}" <!-- IF dynorun.USERNAME_COLOUR --> style="color: {dynorun.USERNAME_COLOUR}"<!-- ENDIF -->>{dynorun.USERNAME}</a></b></dd>
 							<dd class="gwidth-20"><a href="{dynorun.U_VIEWVEHICLE}" >{dynorun.VEHICLE}</a></dd>
 							<dd class="gwidth-10">{dynorun.DYNOCENTRE}</dd>
@@ -321,7 +321,7 @@
 				<ul class="garage_list">
 					<li class="header">
 						<dl>
-							<dt></dt>
+							<dt class="gcamera_image"></dt>
 							<dd class="gwidth-20">{L_USERNAME}</dd>
 							<dd class="gwidth-20">{L_VEHICLE}</dd>
 							<dd class="gwidth-20">{L_TRACK}</dd>
@@ -335,7 +335,7 @@
 					<!-- BEGIN lap -->
 					<!-- IF lap.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
 						<dl>
-							<dt><!-- IF lap.U_IMAGE --><a href="{lap.U_IMAGE}" class="garage-camera-icon"></a><!-- ENDIF --></dt>
+							<dt class="gcamera_image"><!-- IF lap.U_IMAGE --><a href="{lap.U_IMAGE}" class="garage-camera-icon"></a><!-- ENDIF --></dt>
 							<dd class="gwidth-20"><b><a href="{lap.U_VIEWPROFILE}" <!-- IF lap.USERNAME_COLOUR --> style="color: {lap.USERNAME_COLOUR}"<!-- ENDIF -->>{lap.USERNAME}</a></b></dd>
 							<dd class="gwidth-20"><a href="{lap.U_VIEWVEHICLE}">{lap.VEHICLE}</a></dd>
 							<dd class="gwidth-20"><a href="{lap.U_TRACK}">{lap.TRACK}</a></dd>
