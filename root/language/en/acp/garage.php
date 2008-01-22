@@ -420,6 +420,7 @@ $lang = array_merge($lang, array(
 	'PRODUCT_UPDATE_EXPLAIN'	=> 'The form below will allow you to customise this product',
 	'CATEGORY'			=> 'Category',
 	'SELECT_CATEGORY'		=> 'Select a category',
+	'SELECT_MANUFACTURER'		=> 'Select a manufacturer',
 	'PRODUCT_DELETE'		=> 'Delete product',
 	'PRODUCT_DELETED'		=> 'Product deleted',
 	'PRODUCT_DELETE_EXPLAIN'	=> 'The form below will allow you to delete a product. You are able to decide where you want to put all items linked to it.',

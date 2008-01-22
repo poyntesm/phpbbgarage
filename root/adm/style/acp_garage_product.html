@@ -22,6 +22,10 @@
 	<fieldset>
 		<legend>{L_PRODUCT_SETTINGS}</legend>
 	<dl>
+		<dt><label for="delete_action">{L_MANUFACTURER}:</label></dt>
+		<dd><select name="manufacturer_id"><option value="">{L_SELECT_MANUFACTURER}</option><option value="">------</option><!-- BEGIN manufacturer--><option value="{manufacturer.VALUE}" <!-- IF manufacturer.S_SELECTED -->selected="selected"<!-- ENDIF -->>{manufacturer.TEXT}</option><!-- END manufacturer --></select></dd>
+	</dl>
+	<dl>
 		<dt><label for="title">{L_PRODUCT}:</label></dt>
 		<dd><input class="medium" type="text" id="title" name="title" value="{PRODUCT}" maxlength="255" /></dd>
 	</dl>

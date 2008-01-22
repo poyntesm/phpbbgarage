@@ -176,7 +176,9 @@ class acp_garage_product
 				}
 
 				$categories = $garage->get_categories();
+				$manufacturers = $garage_business->get_business_by_type(BUSINESS_PRODUCT);
 				$garage_template->category_dropdown($categories, $product_data['category_id']);
+				$garage_template->manufacturer_dropdown($manufacturers, $product_data['business_id']);
 				$template->assign_vars(array(
 					'S_EDIT_PRODUCT'	=> true,
 					'S_ERROR'		=> (sizeof($errors)) ? true : false,
