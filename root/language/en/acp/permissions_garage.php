@@ -89,6 +89,7 @@ $lang = array_merge($lang, array(
 * Adds the new administrator permission for phpBB Garage
 */
 $lang = array_merge($lang, array(
+ 	'acl_a_garage_update'	=> array('lang' => 'Can check garage version', 'cat' => 'garage'),
  	'acl_a_garage_setting'	=> array('lang' => 'Can alter garage settings', 'cat' => 'garage'),
  	'acl_a_garage_business'	=> array('lang' => 'Can manage garage business\'s', 'cat' => 'garage'),
  	'acl_a_garage_category'	=> array('lang' => 'Can manage garage categories', 'cat' => 'garage'),

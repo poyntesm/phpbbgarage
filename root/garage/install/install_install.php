@@ -1328,6 +1328,7 @@ class install_install extends module
 		$module_data[] = array('module_basename' => 'garage_setting', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_settings_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_BLOG_SETTINGS', 'module_mode' => 'blog', 'module_auth' => 'acl_a_garage_setting');
 
 		//Define ACP Management Modules
+		$module_data[] = array('module_basename' => 'garage_update', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_management_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_VERSION_CHECK', 'module_mode' => 'version_check', 'module_auth' => 'acl_a_garage_update');
 		$module_data[] = array('module_basename' => 'garage_business', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_management_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_BUSINESS', 'module_mode' => 'business', 'module_auth' => 'acl_a_garage_business');
 		$module_data[] = array('module_basename' => 'garage_category', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_management_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_CATEGORIES', 'module_mode' => 'categories', 'module_auth' => 'acl_a_garage_category');
 		$module_data[] = array('module_basename' => 'garage_model', 'module_enabled' => '1', 'module_display' => '1', 'parent_id' => $acp_management_parent, 'module_class' => 'acp', 'module_langname' => 'ACP_GARAGE_MODELS', 'module_mode' => 'makes', 'module_auth' => 'acl_a_garage_model');
@@ -1412,6 +1413,7 @@ class install_install extends module
 				'm_garage_approve_lap',
 				'm_garage_approve_track',
 				'm_garage_approve_product',
+			 	'a_garage_update',
 			 	'a_garage_setting',
 			 	'a_garage_business',
 			 	'a_garage_category',
@@ -1444,14 +1446,14 @@ class install_install extends module
 		$role = get_role_by_name('ROLE_ADMIN_STANDARD');
 		if ($role)
 		{
-			acl_update_role($role['role_id'], array('a_garage_setting', 'a_garage_business', 'a_garage_category', 'a_garage_field', 'a_garage_model', 'a_garage_product', 'a_garage_quota', 'a_garage_tool', 'a_garage_track'));
+			acl_update_role($role['role_id'], array('a_garage_update', 'a_garage_setting', 'a_garage_business', 'a_garage_category', 'a_garage_field', 'a_garage_model', 'a_garage_product', 'a_garage_quota', 'a_garage_tool', 'a_garage_track'));
 		}
 
 		//Full Admin Role
 		$role = get_role_by_name('ROLE_ADMIN_FULL');
 		if ($role)
 		{
-			acl_update_role($role['role_id'], array('a_garage_setting', 'a_garage_business', 'a_garage_category', 'a_garage_field', 'a_garage_model', 'a_garage_product', 'a_garage_quota', 'a_garage_tool', 'a_garage_track'));
+			acl_update_role($role['role_id'], array('a_garage_update', 'a_garage_setting', 'a_garage_business', 'a_garage_category', 'a_garage_field', 'a_garage_model', 'a_garage_product', 'a_garage_quota', 'a_garage_tool', 'a_garage_track'));
 		}
 
 		//Queue Moderator Role

@@ -52,6 +52,8 @@ $lang = array_merge($lang, array(
 	'ACP_GARAGE_BLOG_SETTINGS'		=> 'Blog settings',
 	'ACP_GARAGE_FIELDS_MANAGEMENT'		=> 'Garage Custom fields management',
 	'ACP_GARAGE_FIELDS'			=> 'Custom Fields',
+	'ACP_GARAGE_UPDATE'			=> 'Check for Garage update',
+	'ACP_GARAGE_VERSION_CHECK'		=> 'Version check',
 	'APPROVE'				=> 'Approve',
 	'DISAPPROVE'				=> 'Disapprove',
 ));
