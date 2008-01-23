@@ -183,7 +183,7 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('category_id' => '' , 'manufacturer_id' => '', 'product_id' =>'', 'price' => '', 'shop_id' => '', 'installer_id' => '', 'install_price' => '', 'install_rating' => '', 'product_rating' => '', 'purchase_rating' => '');
+		$params = array('category_id' => '' , 'manufacturer_id' => '', 'product_id' =>'', 'price' => 0, 'shop_id' => '', 'installer_id' => '', 'install_price' => 0, 'install_rating' => 0, 'product_rating' => 0, 'purchase_rating' => 0);
 		$data	= $garage->process_vars($params);
 		$params = array('comments' => '', 'install_comments' => '');
 		$data	+= $garage->process_mb_vars($params);

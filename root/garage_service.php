@@ -140,7 +140,7 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params	= array('garage_id' => '', 'type_id' => '', 'price' => '', 'rating' => '', 'mileage' => '');
+		$params	= array('garage_id' => '', 'type_id' => '', 'price' => 0, 'rating' => 0, 'mileage' => '');
 		$data 	= $garage->process_vars($params);
 		$params = array('garage_id', 'type_id', 'mileage');
 		$garage->check_required_vars($params);

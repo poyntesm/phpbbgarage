@@ -190,7 +190,7 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params	= array('made_year' => '', 'make_id' => '', 'model_id' => '', 'mileage' => '', 'mileage_units' => '', 'price' => '', 'currency' => '', 'engine_type' => '');
+		$params	= array('made_year' => '', 'make_id' => '', 'model_id' => '', 'mileage' => 0, 'mileage_units' => '', 'price' => 0, 'currency' => '', 'engine_type' => 0);
 		$data	= $garage->process_vars($params);
 		$params	= array('colour' => '', 'comments' => '');
 		$data	+= $garage->process_mb_vars($params);
