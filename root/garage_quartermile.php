@@ -153,7 +153,7 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params	= array('rt' => '', 'sixty' => '', 'three' => '', 'eighth' => '', 'eighthmph' => '', 'thou' => '', 'quart' => '', 'quartmph' => '', 'dynorun_id' => null);
+		$params	= array('rt' => 0, 'sixty' => 0, 'three' => 0, 'eighth' => 0, 'eighthmph' => 0, 'thou' => 0, 'quart' => '', 'quartmph' => 0, 'dynorun_id' => 0);
 		$data 	= $garage->process_vars($params);
 		$params = array('quart');
 		$garage->check_required_vars($params);
@@ -246,13 +246,13 @@ switch( $mode )
 			'FORUM_NAME'	=> $user->lang['EDIT_QUARTERMILE'],
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;VID=$vid&amp;QMID=$qmid"))
 		);
-		if ((!empty($data['dynorun_id'])) AND ($count > 0))
+		if (($data['dynorun_id'] > 0) AND ($count > 0))
 		{
 			$bhp_statement = $data['bhp'] . ' BHP @ ' . $data['bhp_unit'];
 			$template->assign_block_vars('link_rr', array());
 			$garage_template->dynorun_dropdown($data['dynorun_id'], $bhp_statement, $vid);
 		}
-		else if ((empty($data['dynorun_id'])) AND ($count > 0))
+		else if (($data['dynorun_id'] = 0) AND ($count > 0))
 		{
 			$template->assign_block_vars('link_rr', array());
 			$garage_template->dynorun_dropdown(NULL, NULL, $vid);

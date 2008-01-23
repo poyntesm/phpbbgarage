@@ -32,7 +32,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'CONFIG_PHPBB_EMPTY'		=> 'The phpBB Garage config variable for "%s" is empty.',
-	'CONVERT_COMPLETE_EXPLAIN'	=> 'You have now successfully converted your garage to phpBB Garage 2.0. You can now login and <a href="../">access your board</a>. Please ensure that the settings were transferred correctly before enabling your board by deleting the install directory. Remember that help on using phpBB Garage is available online via the <a href="http://www.phpbbgarage.com/support/documentation/2.0/">Documentation</a> and the <a href="http://www.phpbbgarage.com/community/viewforum.php?f=46">support forums</a>.',
+	'CONVERT_COMPLETE_EXPLAIN'	=> 'You have now successfully converted your garage to phpBB Garage 2.0. You can now login and <a href="../../garage.php">access your garage</a>. Please ensure that the settings were transferred correctly before enabling your board by deleting the install directory. Remember that help on using phpBB Garage is available online via the <a href="http://www.phpbbgarage.com/support/documentation/2.0/">Documentation</a> and the <a href="http://www.phpbbgarage.com/community/viewforum.php?f=4">beta support forums</a>.',
 	'CONVERT_INTRO'			=> 'Welcome to the phpBB Garage Unified Convertor Framework',
 	'CONVERT_INTRO_BODY'		=> 'From here, you are able to import data from other (installed) garage board systems. The list below shows all the conversion modules currently available. If there is no convertor shown in this list for the board software you wish to convert from, please check our website where further conversion modules may be available for download.',
 
@@ -43,7 +43,7 @@ $lang = array_merge($lang, array(
 		<h2>Convert an existing garage board to phpBB Garage</h2>
 		<p>The phpBB Garage Unified Convertor Framework supports the conversion of phpBB Garage 1.x.x and other garage board systems to phpBB Garage 2. If you have an existing garage board that you wish to convert, please <a href="%2$s">proceed on to the convertor</a>.</p>
 		<h2>Go live with your phpBB Garage 2!</h2>
-		<p>Clicking the button below will take you to your Administration Control Panel (ACP). Take some time to examine the options available to you. Remember that help is available online via the <a href="http://www.phpbbgarage.com/support/documentation/3.0/">Documentation</a> and the <a href="http://www.phpbbgarage.com/community/viewforum.php?f=46">support forums</a>, see the <a href="%3$s">README</a> for further information.</p>',
+		<p>Clicking the button below will take you to your Administration Control Panel (ACP). Take some time to examine the options available to you. Remember that help is available online via the <a href="http://www.phpbbgarage.com/support/documentation/3.0/">Documentation</a> and the <a href="http://www.phpbbgarage.com/community/viewforum.php?f=4">beta support forums</a>, see the <a href="%3$s">README</a> for further information.</p>',
 	'UPDATE_CONGRATS_EXPLAIN'	=> '
 		<p>You have now successfully updated to phpBB Garage %1$s.',
 	'REMOVE_INTRO'			=> 'Welcome to removal',
