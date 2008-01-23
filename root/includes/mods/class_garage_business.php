@@ -654,10 +654,10 @@ class garage_business
 	*/
 	function delete_garage_business_content($business_id)
 	{
-		global $db, $config, $phpbb_root_path, $phpEx, $garage;
+		global $db, $config, $phpbb_root_path, $phpEx, $garage, $garage_modification;
 
 		include_once($phpbb_root_path . 'includes/mods/class_garage_modification.' . $phpEx);
-		$modifications = $garage_modification->get_modifications_by_garage_id($business_id);
+		$modifications = $garage_modification->get_modifications_by_installer_id($business_id);
 		for ($i = 0, $count = sizeof($modifications);$i < $count; $i++)
 		{
 			$garage_modification->delete_modification($modifications[$i]['id']);
@@ -674,7 +674,7 @@ class garage_business
 	*/
 	function delete_insurance_business_content($business_id)
 	{
-		global $db, $config, $phpbb_root_path, $phpEx, $garage;
+		global $db, $config, $phpbb_root_path, $phpEx, $garage, $garage_modification;
 
 		include_once($phpbb_root_path . 'includes/mods/class_garage_insurance.' . $phpEx);
 		$premiums = $garage_insurance->get_premiums_by_insurer_id($business_id);
@@ -694,7 +694,7 @@ class garage_business
 	*/
 	function delete_dynocentre_business_content($business_id)
 	{
-		global $db, $config, $phpbb_root_path, $phpEx, $garage;
+		global $db, $config, $phpbb_root_path, $phpEx, $garage, $garage_modification;
 
 		include_once($phpbb_root_path . 'includes/mods/class_garage_dynorun.' . $phpEx);
 		$dynoruns = $garage_dynorun->get_dynoruns_by_dynocentre_id($business_id);
@@ -714,7 +714,7 @@ class garage_business
 	*/
 	function delete_retail_business_content($business_id)
 	{
-		global $db, $config, $phpbb_root_path, $phpEx, $garage;
+		global $db, $config, $phpbb_root_path, $phpEx, $garage, $garage_modification;
 
 		include_once($phpbb_root_path . 'includes/mods/class_garage_modification.' . $phpEx);
 		$modifications = $garage_modification->get_modifications_by_retail_id($business_id);
@@ -734,7 +734,7 @@ class garage_business
 	*/
 	function delete_product_business_content($business_id)
 	{
-		global $db, $config, $phpbb_root_path, $phpEx, $garage;
+		global $db, $config, $phpbb_root_path, $phpEx, $garage, $garage_modification;
 
 		include_once($phpbb_root_path . 'includes/mods/class_garage_modification.' . $phpEx);
 		$modifications = $garage_modification->get_modifications_by_manufacturer_id($business_id);

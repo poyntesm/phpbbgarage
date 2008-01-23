@@ -671,6 +671,51 @@ class garage_modification
 	}
 
 	/**
+	* Return data for specific garage
+	*
+	* @param int $garage_id retail id to return data for
+	*
+	*/
+	function get_modifications_by_installer_id($garage_id)
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'm.*, i.*, p.title',
+			'FROM'		=> array(
+				GARAGE_MODIFICATIONS_TABLE	=> 'm',
+				GARAGE_PRODUCTS_TABLE		=> 'p',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_MODIFICATION_GALLERY_TABLE => 'mg'),
+					'ON'	=> 'm.id = mg.modification_id AND mg.hilite = 1',
+				)
+				,array(
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
+					'ON'	=> 'mg.image_id = i.attach_id'
+				)
+			),
+			'WHERE'		=> "m.installer_id = $garage_id
+						AND m.product_id = p.id",
+			'ORDER_BY'	=> "p.title ASC"
+		));
+
+      		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$data[] = $row;
+		}
+
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
+	/**
 	* Return data for specific manufacturer
 	*
 	* @param int $manufacturer_id manufacturer id to return data for
