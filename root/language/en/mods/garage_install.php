@@ -242,7 +242,8 @@ $lang = array_merge($lang, array(
 		<h1>Incomplete update detected</h1>
 
 		<p>phpBB Garage detected an incomplete automatic update. Please make sure you followed every step within the automatic update tool. Below you will find the link again, or go directly to your install directory.</p>
-	',
+		',
+	'VERSION_CHECK'				=> 'Version check',
 	'VERSION_CHECK_EXPLAIN'		=> 'Checks to see if the version of phpBB Garage you are currently running is up to date.',
 	'VERSION_NOT_UP_TO_DATE'	=> 'Your version of phpBB Garage is not up to date. Please continue the update process.',
 	'VERSION_NOT_UP_TO_DATE_ACP'=> 'Your version of phpBB Garage is not up to date.<br />Below you will find a link to the release announcement for the latest version as well as instructions on how to perform the update.',
@@ -254,6 +255,8 @@ $lang = array_merge($lang, array(
 	'INSERT_MAKES_EXPLAIN'		=> 'Inserts a default set of makes and models.',
 	'INSERT_CATEGORIES'		=> 'Insert categories',
 	'INSERT_CATEGORIES_EXPLAIN'	=> 'Inserts a default set of modification categories.',
+	'CURRENT_VERSION'				=> 'Current version',
+	'LATEST_VERSION'		=> 'Latest version',
 
 ));
 

@@ -26,10 +26,10 @@ class acp_garage_update
 
 	function main($id, $mode)
 	{
-		global $config, $db, $user, $auth, $template, $cache;
+		global $db, $user, $auth, $template, $cache, $garage_config;
 		global $phpbb_root_path, $phpbb_admin_path, $phpEx;
 
-		$user->add_lang('acp/garage');
+		$user->add_lang(array('acp/garage', 'mods/garage_install'));
 
 		$this->tpl_name = 'acp_update';
 		$this->page_title = 'ACP_GARAGE_VERSION_CHECK';
@@ -59,10 +59,10 @@ class acp_garage_update
 		$version_update_from = (string) $db->sql_fetchfield('config_value');
 		$db->sql_freeresult($result);
 
-		$current_version = (!empty($version_update_from)) ? $version_update_from : $config['version'];
+		$current_version = (!empty($version_update_from)) ? $version_update_from : $garage_config['version'];
 
 		$up_to_date_automatic = (version_compare(str_replace('rc', 'RC', strtolower($current_version)), str_replace('rc', 'RC', strtolower($latest_version)), '<')) ? false : true;
-		$up_to_date = (version_compare(str_replace('rc', 'RC', strtolower($config['version'])), str_replace('rc', 'RC', strtolower($latest_version)), '<')) ? false : true;
+		$up_to_date = (version_compare(str_replace('rc', 'RC', strtolower($garage_config['version'])), str_replace('rc', 'RC', strtolower($latest_version)), '<')) ? false : true;
 
 		$template->assign_vars(array(
 			'S_UP_TO_DATE'		=> $up_to_date,
@@ -71,7 +71,7 @@ class acp_garage_update
 			'U_ACTION'		=> $this->u_action,
 
 			'LATEST_VERSION'	=> $latest_version,
-			'CURRENT_VERSION'	=> $config['version'],
+			'CURRENT_VERSION'	=> $garage_config['version'],
 			'AUTO_VERSION'		=> $version_update_from,
 
 			'UPDATE_INSTRUCTIONS'	=> sprintf($user->lang['UPDATE_INSTRUCTIONS'], $announcement_url, $update_link),

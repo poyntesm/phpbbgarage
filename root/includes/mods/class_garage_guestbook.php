@@ -454,11 +454,12 @@ class garage_guestbook
 
 		for ($i = 0, $count = sizeof($comment_data);$i < $count; $i++)
 		{	
+			$comment_data[$i]['user_id'] = (empty($comment_data[$i]['user_id'])) ? ANONYMOUS : $comment_data[$i]['user_id'];
 			$username = $comment_data[$i]['username'];
 			$temp_url = append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=" . $comment_data[$i]['user_id']);
 			$poster = '<a href="' . $temp_url . '">' . $comment_data[$i]['username'] . '</a>';
 			$poster_posts = ( $comment_data[$i]['user_id'] != ANONYMOUS ) ? $comment_data[$i]['user_posts'] : '';
-			$poster_from = ( $comment_data[$i]['user_from'] && $comment_data['user_id'] != ANONYMOUS ) ? $user->lang['Location'] . ': ' . $comment_data[$i]['user_from'] : '';
+			$poster_from = ( $comment_data[$i]['user_from'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? $user->lang['LOCATION'] . ': ' . $comment_data[$i]['user_from'] : '';
 			$vehicle_id = $comment_data[$i]['vehicle_id'];
 			$poster_car_year = ( $comment_data[$i]['made_year'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ? ' ' . $comment_data[$i]['made_year'] : '';
 			$poster_car_mark = ( $comment_data[$i]['make'] && $comment_data[$i]['user_id'] != ANONYMOUS ) ?  ' ' . $comment_data[$i]['make'] : '';
@@ -488,8 +489,10 @@ class garage_guestbook
 				$email = '';
 			}
 
-			$www_img = ( $comment_data[$i]['user_website'] ) ? '<a href="' . $comment_data[$i]['user_website'] . '" target="_userwww"><img src="' . $images['icon_www'] . '" alt="' . $user->lang['Visit_website'] . '" title="' . $user->lang['Visit_website'] . '" border="0" /></a>' : '';
-			$www = ( $comment_data[$i]['user_website'] ) ? '<a href="' . $comment_data[$i]['user_website'] . '" target="_userwww">' . $user->lang['Visit_website'] . '</a>' : '';
+			//$www_img = ( $comment_data[$i]['user_website'] ) ? '<a href="' . $comment_data[$i]['user_website'] . '" target="_userwww"><img src="' . $images['icon_www'] . '" alt="' . $user->lang['Visit_website'] . '" title="' . $user->lang['Visit_website'] . '" border="0" /></a>' : '';
+			$www_img = '';
+			//$www = ( $comment_data[$i]['user_website'] ) ? '<a href="' . $comment_data[$i]['user_website'] . '" target="_userwww">' . $user->lang['Visit_website'] . '</a>' : '';
+			$www = '';
 
 			$posted = '<a href="' . append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=".$comment_data[$i]['user_id']) . '">' . $comment_data[$i]['username'] . '</a>';
 			$posted = $user->format_date($comment_data[$i]['post_date']);
