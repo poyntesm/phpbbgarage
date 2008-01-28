@@ -500,7 +500,7 @@ $convertor = array(
 			array('bbcode_uid',		'garage_guestbooks.post_date',		'make_uid'),
 			array('bbcode_options',		'',					''),
 			array('pending',		'0',					''),
-			array('post',			'garage_guestbooks.post',		'phpbb_prepare_message'),
+			array('post',			'garage_guestbooks.post',		'phpbb_guestbook_prepare_message'),
 		),
 	),
 );

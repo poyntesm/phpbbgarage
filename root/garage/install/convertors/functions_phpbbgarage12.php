@@ -34,269 +34,6 @@ function get_phpbb_config_value($config_name)
 
 
 /**
-* Insert/Convert forums
-*/
-function phpbb_insert_forums()
-{
-	global $db, $src_db, $same_db, $convert, $user, $config;
-
-	$db->sql_query($convert->truncate_statement . FORUMS_TABLE);
-
-	// Determine the highest id used within the old forums table (we add the categories after the forum ids)
-	$sql = 'SELECT MAX(forum_id) AS max_forum_id
-		FROM ' . $convert->src_table_prefix . 'forums';
-	$result = $src_db->sql_query($sql);
-	$max_forum_id = (int) $src_db->sql_fetchfield('max_forum_id');
-	$src_db->sql_freeresult($result);
-
-	$max_forum_id++;
-
-	// pruning disabled globally?
-	$sql = "SELECT config_value
-		FROM {$convert->src_table_prefix}config
-		WHERE config_name = 'prune_enable'";
-	$result = $src_db->sql_query($sql);
-	$prune_enabled = (int) $src_db->sql_fetchfield('config_value');
-	$src_db->sql_freeresult($result);
-	
-	
-	// Insert categories
-	$sql = 'SELECT cat_id, cat_title
-		FROM ' . $convert->src_table_prefix . 'categories
-		ORDER BY cat_order';
-
-	if ($convert->mysql_convert && $same_db)
-	{
-		$src_db->sql_query("SET NAMES 'binary'");
-	}
-
-	$result = $src_db->sql_query($sql);
-
-	if ($convert->mysql_convert && $same_db)
-	{
-		$src_db->sql_query("SET NAMES 'utf8'");
-	}
-
-	switch ($db->sql_layer)
-	{
-		case 'mssql':
-		case 'mssql_odbc':
-			$db->sql_query('SET IDENTITY_INSERT ' . FORUMS_TABLE . ' ON');
-		break;
-	}
-
-	$cats_added = array();
-	while ($row = $src_db->sql_fetchrow($result))
-	{
-		$sql_ary = array(
-			'forum_id'		=> (int) $max_forum_id,
-			'forum_name'	=> ($row['cat_title']) ? htmlspecialchars(phpbb_set_default_encoding($row['cat_title']), ENT_COMPAT, 'UTF-8') : $user->lang['CATEGORY'],
-			'parent_id'		=> 0,
-			'forum_parents'	=> '',
-			'forum_desc'	=> '',
-			'forum_type'	=> FORUM_CAT,
-			'forum_status'	=> ITEM_UNLOCKED,
-			'forum_rules'	=> '',
-		);
-
-		$sql = 'SELECT MAX(right_id) AS right_id
-			FROM ' . FORUMS_TABLE;
-		$_result = $db->sql_query($sql);
-		$cat_row = $db->sql_fetchrow($_result);
-		$db->sql_freeresult($_result);
-
-		$sql_ary['left_id'] = (int) ($cat_row['right_id'] + 1);
-		$sql_ary['right_id'] = (int) ($cat_row['right_id'] + 2);
-
-		$sql = 'INSERT INTO ' . FORUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
-		$db->sql_query($sql);
-
-		$cats_added[$row['cat_id']] = $max_forum_id;
-		$max_forum_id++;
-	}
-	$src_db->sql_freeresult($result);
-
-	// There may be installations having forums with non-existant category ids.
-	// We try to catch them and add them to an "unknown" category instead of leaving them out.
-	$sql = 'SELECT cat_id
-		FROM ' . $convert->src_table_prefix . 'forums
-		GROUP BY cat_id';
-	$result = $src_db->sql_query($sql);
-
-	$unknown_cat_id = false;
-	while ($row = $src_db->sql_fetchrow($result))
-	{
-		// Catch those categories not been added before
-		if (!isset($cats_added[$row['cat_id']]))
-		{
-			$unknown_cat_id = true;
-		}
-	}
-	$src_db->sql_freeresult($result);
-
-	// Is there at least one category not known?
-	if ($unknown_cat_id === true)
-	{
-		$unknown_cat_id = 'ghost';
-
-		$sql_ary = array(
-			'forum_id'		=> (int) $max_forum_id,
-			'forum_name'	=> (string) $user->lang['CATEGORY'],
-			'parent_id'		=> 0,
-			'forum_parents'	=> '',
-			'forum_desc'	=> '',
-			'forum_type'	=> FORUM_CAT,
-			'forum_status'	=> ITEM_UNLOCKED,
-			'forum_rules'	=> '',
-		);
-
-		$sql = 'SELECT MAX(right_id) AS right_id
-			FROM ' . FORUMS_TABLE;
-		$_result = $db->sql_query($sql);
-		$cat_row = $db->sql_fetchrow($_result);
-		$db->sql_freeresult($_result);
-
-		$sql_ary['left_id'] = (int) ($cat_row['right_id'] + 1);
-		$sql_ary['right_id'] = (int) ($cat_row['right_id'] + 2);
-
-		$sql = 'INSERT INTO ' . FORUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
-		$db->sql_query($sql);
-
-		$cats_added[$unknown_cat_id] = $max_forum_id;
-		$max_forum_id++;
-	}
-
-	// Now insert the forums
-	$sql = 'SELECT f.forum_id, f.forum_name, f.cat_id, f.forum_desc, f.forum_status, f.prune_enable, f.prune_next, fp.prune_days, fp.prune_freq FROM ' . $convert->src_table_prefix . 'forums f
-		LEFT JOIN ' . $convert->src_table_prefix . 'forum_prune fp ON f.forum_id = fp.forum_id
-		GROUP BY f.forum_id, f.forum_name, f.cat_id, f.forum_desc, f.forum_status, f.prune_enable, f.prune_next, f.forum_order, fp.prune_days, fp.prune_freq
-		ORDER BY f.cat_id, f.forum_order';
-
-	if ($convert->mysql_convert && $same_db)
-	{
-		$src_db->sql_query("SET NAMES 'binary'");
-	}
-
-	$result = $src_db->sql_query($sql);
-
-	if ($convert->mysql_convert && $same_db)
-	{
-		$src_db->sql_query("SET NAMES 'utf8'");
-	}
-
-	while ($row = $src_db->sql_fetchrow($result))
-	{
-		// Some might have forums here with an id not being "possible"...
-		// To be somewhat friendly we "change" the category id for those to a previously created ghost category
-		if (!isset($cats_added[$row['cat_id']]) && $unknown_cat_id !== false)
-		{
-			$row['cat_id'] = $unknown_cat_id;
-		}
-
-		if (!isset($cats_added[$row['cat_id']]))
-		{
-			continue;
-		}
-
-		// Define the new forums sql ary
-		$sql_ary = array(
-			'forum_id'			=> (int) $row['forum_id'],
-			'forum_name'		=> htmlspecialchars(phpbb_set_default_encoding($row['forum_name']), ENT_COMPAT, 'UTF-8'),
-			'parent_id'			=> (int) $cats_added[$row['cat_id']],
-			'forum_parents'		=> '',
-			'forum_desc'		=> htmlspecialchars(phpbb_set_default_encoding($row['forum_desc']), ENT_COMPAT, 'UTF-8'),
-			'forum_type'		=> FORUM_POST,
-			'forum_status'		=> is_item_locked($row['forum_status']),
-			'enable_prune'		=> ($prune_enabled) ? $row['prune_enable'] : 0,
-			'prune_next'		=> (int) null_to_zero($row['prune_next']),
-			'prune_days'		=> (int) null_to_zero($row['prune_days']),
-			'prune_viewed'		=> 0,
-			'prune_freq'		=> (int) null_to_zero($row['prune_freq']),
-
-			'forum_flags'		=> phpbb_forum_flags(),
-
-			// Default values
-			'forum_desc_bitfield'		=> '',
-			'forum_desc_options'		=> 7,
-			'forum_desc_uid'			=> '',
-			'forum_link'				=> '',
-			'forum_password'			=> '',
-			'forum_style'				=> 0,
-			'forum_image'				=> '',
-			'forum_rules'				=> '',
-			'forum_rules_link'			=> '',
-			'forum_rules_bitfield'		=> '',
-			'forum_rules_options'		=> 7,
-			'forum_rules_uid'			=> '',
-			'forum_topics_per_page'		=> 0,
-			'forum_posts'				=> 0,
-			'forum_topics'				=> 0,
-			'forum_topics_real'			=> 0,
-			'forum_last_post_id'		=> 0,
-			'forum_last_poster_id'		=> 0,
-			'forum_last_post_subject'	=> '',
-			'forum_last_post_time'		=> 0,
-			'forum_last_poster_name'	=> '',
-			'forum_last_poster_colour'	=> '',
-			'display_on_index'			=> 1,
-			'enable_indexing'			=> 1,
-			'enable_icons'				=> 0,
-		);
-
-		// Now add the forums with proper left/right ids
-		$sql = 'SELECT left_id, right_id
-			FROM ' . FORUMS_TABLE . '
-			WHERE forum_id = ' . $cats_added[$row['cat_id']];
-		$_result = $db->sql_query($sql);
-		$cat_row = $db->sql_fetchrow($_result);
-		$db->sql_freeresult($_result);
-
-		$sql = 'UPDATE ' . FORUMS_TABLE . '
-			SET left_id = left_id + 2, right_id = right_id + 2
-			WHERE left_id > ' . $cat_row['right_id'];
-		$db->sql_query($sql);
-
-		$sql = 'UPDATE ' . FORUMS_TABLE . '
-			SET right_id = right_id + 2
-			WHERE ' . $cat_row['left_id'] . ' BETWEEN left_id AND right_id';
-		$db->sql_query($sql);
-
-		$sql_ary['left_id'] = (int) $cat_row['right_id'];
-		$sql_ary['right_id'] = (int) ($cat_row['right_id'] + 1);
-
-		$sql = 'INSERT INTO ' . FORUMS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
-		$db->sql_query($sql);
-	}
-	$src_db->sql_freeresult($result);
-
-	switch ($db->sql_layer)
-	{
-		case 'postgres':
-			$db->sql_query("SELECT SETVAL('" . FORUMS_TABLE . "_seq',(select case when max(forum_id)>0 then max(forum_id)+1 else 1 end from " . FORUMS_TABLE . '));');
-		break;
-
-		case 'mssql':
-		case 'mssql_odbc':
-			$db->sql_query('SET IDENTITY_INSERT ' . FORUMS_TABLE . ' OFF');
-		break;
-
-		case 'oracle':
-			$result = $db->sql_query('SELECT MAX(forum_id) as max_id FROM ' . FORUMS_TABLE);
-			$row = $db->sql_fetchrow($result);
-			$db->sql_freeresult($result);
-
-			$largest_id = (int) $row['max_id'];
-
-			if ($largest_id)
-			{
-				$db->sql_query('DROP SEQUENCE ' . FORUMS_TABLE . '_seq');
-				$db->sql_query('CREATE SEQUENCE ' . FORUMS_TABLE . '_seq START WITH ' . ($largest_id + 1));
-			}
-		break;
-	}
-}
-
-/**
 * Function for recoding text with the default language
 *
 * @param string $text text to recode to utf8
@@ -539,104 +276,6 @@ function phpbbgarage_browse_menu($menu_selection)
 		//'menu_selection' => 'MAIN,BROWSE,SEARCH,INSURANCEREVIEW,GARAGEREVIEW,SHOPREVIEW,QUARTERMILE,ROLLINGROAD', 
 }
 
-/**
-* Set primary group.
-* Really simple and only based on user_level (remaining groups will be assigned later)
-*/
-function phpbb_set_primary_group($user_level)
-{
-	global $convert_row;
-
-	if ($user_level == 1)
-	{
-		return get_group_id('administrators');
-	}
-/*	else if ($user_level == 2)
-	{
-		return get_group_id('global_moderators');
-	}
-	else if ($user_level == 0 && $convert_row['user_active'])*/
-	else if ($convert_row['user_active'])
-	{
-		return get_group_id('registered');
-	}
-
-	return 0;
-}
-
-/**
-* Convert the group name, making sure to avoid conflicts with 3.0 special groups
-*/
-function phpbb_convert_group_name($group_name)
-{
-	$default_groups = array(
-		'GUESTS',
-		'REGISTERED',
-		'REGISTERED_COPPA',
-		'GLOBAL_MODERATORS',
-		'ADMINISTRATORS',
-		'BOTS',
-	);
-
-	if (in_array(strtoupper($group_name), $default_groups))
-	{
-		return 'phpBB2 - ' . $group_name;
-	}
-
-	return phpbb_set_default_encoding($group_name);
-}
-
-/**
-* Convert the group type constants
-*/
-function phpbb_convert_group_type($group_type)
-{
-	switch ($group_type)
-	{
-		case 0:
-			return GROUP_OPEN;
-		break;
-
-		case 1:
-			return GROUP_CLOSED;
-		break;
-
-		case 2:
-			return GROUP_HIDDEN;
-		break;
-	}
-
-	// Never return GROUP_SPECIAL here, because only phpBB3's default groups are allowed to have this type set.
-	return GROUP_HIDDEN;
-}
-
-/**
-* Convert the topic type constants
-*/
-function phpbb_convert_topic_type($topic_type)
-{
-	switch ($topic_type)
-	{
-		case 0:
-			return POST_NORMAL;
-		break;
-
-		case 1:
-			return POST_STICKY;
-		break;
-
-		case 2:
-			return POST_ANNOUNCE;
-		break;
-
-		case 3:
-			return POST_GLOBAL;
-		break;
-	}
-
-	return POST_NORMAL;
-}
-
 function phpbb_replace_size($matches)
 {
 	return '[size=' . min(200, ceil(100.0 * (((double) $matches[1])/12.0))) . ':' . $matches[2] . ']';
@@ -646,7 +285,7 @@ function phpbb_replace_size($matches)
 * Reparse the message stripping out the bbcode_uid values and adding new ones and setting the bitfield
 * @todo What do we want to do about HTML in messages - currently it gets converted to the entities, but there may be some objections to this
 */
-function phpbb_prepare_message($message)
+function phpbb_guestbook_prepare_message($message)
 {
 	global $phpbb_root_path, $phpEx, $db, $convert, $user, $config, $cache, $convert_row, $message_parser;
 
@@ -679,7 +318,7 @@ function phpbb_prepare_message($message)
 	}
 
 	// Already the new user id ;)
-	$user_id = $convert->row['poster_id'];
+	$user_id = $convert->row['author_id'];
 
 	$message = str_replace('<', '&lt;', $message);
 	$message = str_replace('>', '&gt;', $message);
@@ -689,7 +328,7 @@ function phpbb_prepare_message($message)
 	$message = phpbb_set_encoding($message);
 
 	$message_parser->warn_msg = array(); // Reset the errors from the previous message
-	$message_parser->bbcode_uid = make_uid($convert->row['post_time']);
+	$message_parser->bbcode_uid = make_uid($convert->row['post_date']);
 	$message_parser->message = $message;
 	unset($message);
 
@@ -723,23 +362,7 @@ function get_bbcode_bitfield()
 {
 	global $convert_row;
 
-	return $convert_row['mp_bbcode_bitfield'];
-}
-
-/**
-* Determine the last user to edit a post
-* In practice we only tracked edits by the original poster in 2.0.x so this will only be set if they had edited their own post
-*/
-function phpbb_post_edit_user()
-{
-	global $convert_row, $config;
-
-	if (isset($convert_row['post_edit_count']))
-	{
-		return phpbb_user_id($convert_row['poster_id']);
-	}
-
-	return 0;
+	return (empty($convert_row['mp_bbcode_bitfield'])) ? '' : $convert_row['mp_bbcode_bitfield'];
 }
 
 /**
@@ -787,133 +410,6 @@ function phpbb_get_files_dir()
 }
 
 /**
-* Copy thumbnails of uploaded images from the 2.0.x forum
-* This is only used if the Attachment MOD was installed
-*/
-function phpbb_copy_thumbnails()
-{
-	global $db, $convert, $user, $config, $cache, $phpbb_root_path;
-
-	$src_path = $convert->options['forum_path'] . '/' . phpbb_get_files_dir() . '/thumbs/';
-	
-	if ($handle = @opendir($src_path))
-	{
-		while ($entry = readdir($handle))
-		{
-			if ($entry[0] == '.')
-			{
-				continue;
-			}
-
-			if (is_dir($src_path . $entry))
-			{
-				continue;
-			}
-			else
-			{
-				copy_file($src_path . $entry, $config['upload_path'] . '/' . preg_replace('/^t_/', 'thumb_', $entry));
-				@unlink($phpbb_root_path . $config['upload_path'] . '/thumbs/' . $entry);
-			}
-		}
-		closedir($handle);
-	}
-}
-
-/**
-* Convert the attachment category constants
-* This is only used if the Attachment MOD was installed
-*/
-function phpbb_attachment_category($cat_id)
-{
-	switch ($cat_id)
-	{
-		case 1:
-			return ATTACHMENT_CATEGORY_IMAGE;
-		break;
-
-		case 2:
-			return ATTACHMENT_CATEGORY_WM;
-		break;
-
-		case 3:
-			return ATTACHMENT_CATEGORY_FLASH;
-		break;
-	}
-
-	return ATTACHMENT_CATEGORY_NONE;
-}
-
-/**
-* Obtain list of forums in which different attachment categories can be used
-*/
-function phpbb_attachment_forum_perms($forum_permissions)
-{
-	if (empty($forum_permissions))
-	{
-		return '';
-	}
-
-	// Decode forum permissions
-	$forum_ids = array();
-
-	$one_char_encoding = '#';
-	$two_char_encoding = '.';
-
-	$auth_len = 1;
-	for ($pos = 0; $pos < strlen($forum_permissions); $pos += $auth_len)
-	{
-		$forum_auth = substr($forum_permissions, $pos, 1);
-		if ($forum_auth == $one_char_encoding)
-		{
-			$auth_len = 1;
-			continue;
-		}
-		else if ($forum_auth == $two_char_encoding)
-		{
-			$auth_len = 2;
-			$pos--;
-			continue;
-		}
-		
-		$forum_auth = substr($forum_permissions, $pos, $auth_len);
-		$forum_id = base64_unpack($forum_auth);
-
-		$forum_ids[] = (int) $forum_id;
-	}
-	
-	if (sizeof($forum_ids))
-	{
-		return attachment_forum_perms($forum_ids);
-	}
-
-	return '';
-}
-
-/**
-* Convert the avatar type constants
-*/
-function phpbb_avatar_type($type)
-{
-	switch ($type)
-	{
-		case 1:
-			return AVATAR_UPLOAD;
-		break;
-
-		case 2:
-			return AVATAR_REMOTE;
-		break;
-
-		case 3:
-			return AVATAR_GALLERY;
-		break;
-	}
-
-	return 0;
-}
-
-
-/**
 * Just undos the replacing of '<' and '>'
 */
 function  phpbb_smilie_html_decode($code)
@@ -921,68 +417,6 @@ function  phpbb_smilie_html_decode($code)
 	$code = str_replace('&lt;', '<', $code);
 	return str_replace('&gt;', '>', $code);
 }
-
-/**
-* Transfer avatars, copying the image if it was uploaded
-*/
-function phpbb_import_avatar($user_avatar)
-{
-	global $convert_row;
-
-	if (!$convert_row['user_avatar_type'])
-	{
-		return '';
-	}
-	else if ($convert_row['user_avatar_type'] == 1)
-	{
-		// Uploaded avatar
-		return import_avatar($user_avatar, false, $convert_row['user_id']);
-	}
-	else if ($convert_row['user_avatar_type'] == 2)
-	{
-		// Remote avatar
-		return $user_avatar;
-	}
-	else if ($convert_row['user_avatar_type'] == 3)
-	{
-		// Gallery avatar
-		return $user_avatar;
-	}
-
-	return '';
-}
-
-
-/**
-* Find out about the avatar's dimensions
-*/
-function phpbb_get_avatar_height($user_avatar)
-{
-	global $convert_row;
-	
-	if (empty($convert_row['user_avatar_type']))
-	{
-		return 0;
-	}
-	return get_avatar_height($user_avatar, 'phpbb_avatar_type', $convert_row['user_avatar_type']);
-}
-
-
-/**
-* Find out about the avatar's dimensions
-*/
-function phpbb_get_avatar_width($user_avatar)
-{
-	global $convert_row;
-
-	if (empty($convert_row['user_avatar_type']))
-	{
-		return 0;
-	}
-	
-	return get_avatar_width($user_avatar, 'phpbb_avatar_type', $convert_row['user_avatar_type']);
-}
-
 
 /**
 * Calculate the correct to_address field for private messages
@@ -1392,7 +826,7 @@ function restore_garage_config($schema)
 				$config_value = utf8_htmlspecialchars($config_value);
 			}
 
-			$garage_admin->set_config($config_name, $config_value);
+			$garage_admin->set_config($config_name, $config_value, '');
 		}
 	}
 }
@@ -1478,7 +912,7 @@ function import_garage_gallery()
 	if (is_dir($src_path))
 	{
 		// Do not die on failure... safe mode restrictions may be in effect.
-		copy_dir($convert->convertor['garage_image_path'], path($config['garage_image_path']), !$subdirs_as_galleries, false, false, $relative_path);
+		copy_dir($convert->convertor['garage_image_path'], path($config['garage_image_path']), false, false, false, $relative_path);
 	}
 }
 

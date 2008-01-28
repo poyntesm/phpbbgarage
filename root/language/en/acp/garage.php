@@ -449,6 +449,14 @@ $lang = array_merge($lang, array(
 	//
 	'GARAGE_CUSTOM_FIELDS'		=> 'Garage custom fields',
 
+	'ACP_MANAGE_QUOTAS'		=> 'Manage quotas',
+	'ACP_MANAGE_BUSINESS'		=> 'Manage business\'s',
+	'ACP_MANAGE_CATEGORY'		=> 'Manage categories',
+	'ACP_MANAGE_PRODUCTS'		=> 'Manage products',
+	'ACP_MANAGE_TRACKS'		=> 'Manage tracks',
+	'ACP_MANAGE_CATEGORY'		=> 'Manage categories',
+	'ACP_MANAGE_MAKES_MODELS'	=> 'Manage makes and models',
+
 
 
 

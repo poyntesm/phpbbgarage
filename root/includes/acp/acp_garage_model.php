@@ -43,7 +43,7 @@ class acp_garage_model
 		*/
 		$user->add_lang('acp/garage');
 		$this->tpl_name = 'acp_garage_model';
-		$this->page_title = 'ACP_MANAGE_FORUMS';
+		$this->page_title = 'ACP_MANAGE_MAKES_MODELS';
 
 		/**
 		* Setup variables 

@@ -97,7 +97,7 @@ class install_convert extends module
 
 	function main($mode, $sub)
 	{
-		global $lang, $template, $phpbb_root_path, $phpEx, $cache, $config, $language, $table_prefix;
+		global $lang, $template, $phpbb_root_path, $phpEx, $cache, $config, $language, $table_prefix, $dbhost;
 		global $convert;
 
 		$this->tpl_name = 'garage_install_convert';
@@ -270,7 +270,9 @@ class install_convert extends module
 	*/
 	function get_convert_settings($sub)
 	{
-		global $lang, $template, $db, $phpbb_root_path, $phpEx, $config, $cache;
+		global $lang, $template, $db, $phpbb_root_path, $phpEx, $config, $cache, $dbhost;
+
+		require_once($phpbb_root_path . 'config.' . $phpEx);
 
 		require($phpbb_root_path . 'includes/functions_convert.' . $phpEx);
 
@@ -507,7 +509,7 @@ class install_convert extends module
 	*/
 	function convert_data($sub)
 	{
-		global $template, $user, $phpbb_root_path, $phpEx, $db, $dbms, $lang, $config, $cache;
+		global $template, $user, $phpbb_root_path, $phpEx, $db, $dbms, $lang, $config, $cache, $dbhost, $dbport, $dbname;
 		global $convert, $convert_row, $message_parser, $skip_rows;
 
 		require($phpbb_root_path . 'includes/functions_convert.' . $phpEx);
@@ -699,7 +701,7 @@ class install_convert extends module
 				$bad_folders = array();
 
 				$local_paths = array(
-					'garage_upload_path'			=> path($config['garage_upload_path']),
+					'garage_upload_path'			=> path('./garage/upload'),
 				);
 
 				foreach ($local_paths as $folder => $local_path)
