@@ -46,8 +46,7 @@ define('LAP_TRACKDAY', 3);
 define('SERVICE_MAJOR', 1);
 define('SERVICE_MINOR', 2);
 
-
-//Define Engien Type Constants For Vehicle Engine Type
+//Define Engine Type Constants For Vehicle Engine Type
 define('FI_2_CYLINDER', 1);
 define('NA_2_CYLINDER', 2);
 define('FI_3_CYLINDER', 3);

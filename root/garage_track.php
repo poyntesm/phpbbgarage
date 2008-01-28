@@ -30,6 +30,11 @@ $auth->acl($user->data);
 $user->setup(array('mods/garage'));
 
 /**
+* Check For Garage Install Files
+*/
+$garage->check_installation_files();
+
+/**
 * Build All Garage Classes e.g $garage_images->
 */
 require($phpbb_root_path . 'includes/mods/class_garage_image.' . $phpEx);

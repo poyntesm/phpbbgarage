@@ -107,6 +107,34 @@ class garage
 	}
 
 	/**
+	* Checks all required data is present. If any required data is missing 
+	* the user is redirected to an informational error page
+	*
+	* @param array $params multi-dimensional array holding the required variables.
+	*
+	*/
+	function check_installation_files()
+	{
+		global $phpbb_root_path, $auth, $config;
+
+		// Disable board if the install/ directory is still present
+		// For the brave development army we do not care about this, else we need to comment out this everytime we develop locally
+		if (!defined('DEBUG_EXTRA') && !defined('ADMIN_START') && !defined('IN_INSTALL') && !defined('IN_LOGIN') && file_exists($phpbb_root_path . 'garage/install'))
+		{
+			// Adjust the message slightly according to the permissions
+			if ($auth->acl_gets('a_', 'm_') || $auth->acl_getf_global('m_'))
+			{
+				$message = 'REMOVE_GARAGE_NSTALL';
+			}
+			else
+			{
+				$message = 'GARAGE_DISABLE';
+			}
+			trigger_error($message);
+		}
+	}
+
+	/**
 	* Count the total views the garage has recieved
 	*
 	* @return int
