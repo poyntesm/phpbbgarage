@@ -1116,19 +1116,13 @@ function get_placeholder_manufacturer_id()
 
 function attach_thumb_filesize($image_id)
 {
-	global $db, $src_db, $same_db, $convert, $user, $config;
 
-	//Get source modification data
-	$sql = 'SELECT *
-		FROM ' . $convert->src_table_prefix . 'garage_images
-		WHERE id = '.$image_id;
-	$result = $src_db->sql_query($sql);
-	$row = $src_db->sql_fetchrow($result);
-	$src_db->sql_freeresult($result);
+	global $config, $convert, $phpbb_root_path, $user;
 
-
-	return filesize($phpbb_root_path . GARAGE_UPLOAD_PATH . $row['attach_thumb_location']);
-
+	$relative_path = empty($convert->convertor['source_path_absolute']);
+	$convert->convertor['garage_image_path'] = './garage/upload/';
+	$src_path = relative_base(path($convert->convertor['garage_image_path'], $relative_path), $relative_path);
+	return @filesize($src_path . $row['attach_thumb_location']);
 }
 
 function insert_modification_product($src_modification_id)
@@ -1170,6 +1164,89 @@ function insert_modification_product($src_modification_id)
 	else
 	{
 		return $prow['id'];
+	}
+}
+
+function attach_thumb_width($attach_thumb_location)
+{
+	$relative_path = empty($convert->convertor['source_path_absolute']);
+	$convert->convertor['garage_image_path'] = './garage/upload/';
+	$src_path = relative_base(path($convert->convertor['garage_image_path'], $relative_path), $relative_path);
+	$attach_thumb_imagesize = @getimagesize($src_path . $attach_thumb_location);
+	return $attach_thumb_imagesize[0];
+}
+
+function attach_thumb_height($attach_thumb_location)
+{
+	$relative_path = empty($convert->convertor['source_path_absolute']);
+	$convert->convertor['garage_image_path'] = './garage/upload/';
+	$src_path = relative_base(path($convert->convertor['garage_image_path'], $relative_path), $relative_path);
+	$attach_thumb_imagesize = @getimagesize($src_path . $attach_thumb_location);
+	return $attach_thumb_imagesize[1];
+}
+
+function determine_image_vehicle_id($attach_id)
+{
+	global $db, $src_db, $same_db, $convert, $user, $config;
+
+	//Workout If Image Is Attached To Vehicle Gallery
+	$sql = "SELECT gallery.garage_id
+		FROM " . $convert->src_table_prefix . "garage_gallery gallery
+        		LEFT JOIN " . $convert->src_table_prefix . "garage_images images ON images.attach_id = gallery.image_id 
+		WHERE images.attach_id = " . $attach_id;
+	if ( !($result = $src_db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'Could Select Image Data', '', __LINE__, __FILE__, $sql);
+	}
+	$row = $src_db->sql_fetchrow($result);
+	if (!empty($row['garage_id']))
+	{
+		return $row['garage_id'];
+	}
+
+	//Workout If Image Is Attached To Vehicle Modification
+	$sql = "SELECT mods.garage_id
+		FROM " . $convert->src_table_prefix . "garage_mods mods
+        		LEFT JOIN " . $convert->src_table_prefix . "garage_images images ON images.attach_id = mods.image_id 
+        	WHERE images.attach_id = " . $attach_id;
+	if ( !($result = $src_db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'Could Select Image Data', '', __LINE__, __FILE__, $sql);
+	}
+	$row = $src_db->sql_fetchrow($result);
+	if (!empty($row['garage_id']))
+	{
+		return $row['garage_id'];
+	}
+
+	//Workout If Image Is Attached To Vehicle Quartermile
+	$sql = "SELECT qm.garage_id
+		FROM " . $convert->src_table_prefix . "garage_quartermile qm
+        		LEFT JOIN " . $convert->src_table_prefix . "garage_images images ON images.attach_id = qm.image_id 
+		WHERE images.attach_id = " . $attach_id;
+	if ( !($result = $src_db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'Could Select Image Data', '', __LINE__, __FILE__, $sql);
+	}
+	$row = $src_db->sql_fetchrow($result);
+	if (!empty($row['garage_id']))
+	{
+		return $row['garage_id'];
+	}
+
+	//Workout If Image Is Attached To Vehicle Dynorun
+	$sql = "SELECT rr.garage_id
+		FROM " . $convert->src_table_prefix . "garage_rollingroad rr
+        		LEFT JOIN " . $convert->src_table_prefix . "garage_images images ON images.attach_id = rr.image_id 
+        	WHERE images.attach_id = " . $attach_id;
+	if ( !($result = $src_db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'Could Select Image Data', '', __LINE__, __FILE__, $sql);
+	}
+	$row = $src_db->sql_fetchrow($result);
+	if (!empty($row['garage_id']))
+	{
+		return $row['garage_id'];
 	}
 }
 
