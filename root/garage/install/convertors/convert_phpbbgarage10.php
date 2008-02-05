@@ -4,6 +4,7 @@
 * @package install
 * @version $Id: convert_phpbb20.php,v 1.43 2007/07/28 15:06:16 acydburn Exp $
 * @copyright (c) 2006 phpBB Group 
+* @copyright (c) 2007 Esmond Poynton
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
 *
 */
@@ -67,14 +68,14 @@ $tables = array(
 );
 
 /**
-* $config_schema details how the board configuration information is stored in the source forum.
+* $config_schema details how the garage configuration information is stored in the source forum.
 *
 * 'table_format' can take the value 'file' to indicate a config file. In this case array_name
 * is set to indicate the name of the array the config values are stored in
 * 'table_format' can be an array if the values are stored in a table which is an assosciative array
-* (as per phpBB 2.0.x)
+* (as per phpBB Garage 1.x.x)
 * If left empty, values are assumed to be stored in a table where each config setting is
-* a column (as per phpBB 1.x)
+* a column
 *
 * In either of the latter cases 'table_name' indicates the name of the table in the database
 *
@@ -83,52 +84,90 @@ $tables = array(
 * Please note that the contents of the old config value are passed to the function, therefore
 * an in-built function requiring the variable passed by reference is not able to be used. Since
 * empty() is such a function we created the function is_empty() to be used instead.
-*/
-$config_schema = array(
+ */
+$forum_config_schema = array(
 	'table_name'	=>	'config',
-	'table_format'	=>	array('config_name' => 'config_value'),
-	'settings'		=>	array(
-		'allow_bbcode'			=> 'allow_bbcode',
-		'allow_smilies'			=> 'allow_smilies',
-		'allow_sig'				=> 'allow_sig',
-		'allow_namechange'		=> 'allow_namechange',
-		'allow_avatar_local'	=> 'allow_avatar_local',
-		'allow_avatar_remote'	=> 'allow_avatar_remote',
-		'allow_avatar_upload'	=> 'allow_avatar_upload',
-		'board_disable'			=> 'board_disable',
-		'sitename'				=> 'phpbb_set_encoding(sitename)',
-		'site_desc'				=> 'phpbb_set_encoding(site_desc)',
-		'session_length'		=> 'session_length',
-		'board_email_sig'		=> 'phpbb_set_encoding(board_email_sig)',
-		'posts_per_page'		=> 'posts_per_page',
-		'topics_per_page'		=> 'topics_per_page',
-		'enable_confirm'		=> 'enable_confirm',
-		'board_email_form'		=> 'board_email_form',
-		'override_user_style'	=> 'override_user_style',
-		'hot_threshold'			=> 'hot_threshold',
-		'max_poll_options'		=> 'max_poll_options',
-		'max_sig_chars'			=> 'max_sig_chars',
-		'pm_max_msgs'			=> 'max_inbox_privmsgs',
-		'smtp_delivery'			=> 'smtp_delivery',
-		'smtp_host'				=> 'smtp_host',
-		'smtp_username'			=> 'smtp_username',
-		'smtp_password'			=> 'smtp_password',
-		'require_activation'	=> 'require_activation',
-		'flood_interval'		=> 'flood_interval',
-		'avatar_filesize'		=> 'avatar_filesize',
-		'avatar_max_width'		=> 'avatar_max_width',
-		'avatar_max_height'		=> 'avatar_max_height',
-		'default_dateformat'	=> 'default_dateformat',
-		'board_timezone'		=> 'board_timezone',
-		'allow_privmsg'			=> 'not(privmsg_disable)',
-		'gzip_compress'			=> 'gzip_compress',
-		'coppa_enable'			=> 'is_empty(coppa_mail)',
-		'coppa_fax'				=> 'coppa_fax',
-		'coppa_mail'			=> 'coppa_mail',
-		'record_online_users'	=> 'record_online_users',
-		'record_online_date'	=> 'record_online_date',
-		'board_startdate'		=> 'board_startdate',
-	)
+	'table_format'	=>	array(
+		'config_name' => 'config_value'
+	),
+	'settings'	=>	array(
+		'default_lang'	=> 'default_lang',
+	),
+);
+
+$garage_config_schema = array(
+	'table_name'	=>	'garage_config',
+	'table_format'	=>	array(
+		'config_name' => 'config_value'
+	),
+	'settings'	=>	array(
+		'cars_per_page'				=> 'cars_per_page',
+		'year_start'				=> 'year_start',
+		'year_end'				=> 'year_end',
+		'enable_user_submit_make'		=> 'enable_user_submit_make', 
+		'enable_user_submit_model'		=> 'enable_user_submit_model', 
+		'profile_thumbs'			=> 'profile_thumbs', 
+		'enable_index_menu'			=> 'phpbbgarage_index_menu(menu_selection)',
+		'enable_browse_menu'			=> 'phpbbgarage_browse_menu(menu_selection)',
+		'enable_search_menu'			=> 'phpbbgarage_search_menu(menu_selection)',
+		'enable_insurance_review_menu'		=> 'phpbbgarage_insurance_review_menu(menu_selection)',
+		'enable_garage_review_menu'		=> 'phpbbgarage_garage_review_menu(menu_selection)',
+		'enable_shop_review_menu'		=> 'phpbbgarage_shop_review_menu(menu_selection)',
+		'enable_quartermile_menu'		=> 'phpbbgarage_quartermile_menu(menu_selection)',
+		'enable_dynorun_menu'			=> 'phpbbgarage_dynorun_menu(menu_selection)',
+		'enable_latest_vehicle_index'		=> 'lastupdatedvehiclesmain_on', 
+		'latest_vehicle_index_limit'		=> 'lastupdatedvehiclesmain_limit', 
+		'enable_featured_vehicle'		=> 'phpbbgarage_featured_vehicle()',
+		'featured_vehicle_id'			=> 'featured_vehicle_id',
+		'featured_vehicle_from_block'		=> 'phpbbgarage_feature_from_block(featured_vehicle_from_block)',
+		'featured_vehicle_description'		=> 'featured_vehicle_description',
+		'enable_newest_vehicle'			=> 'newestvehicles_on',
+		'newest_vehicle_limit'			=> 'newestvehicles_limit', 
+		'enable_updated_vehicle'		=> 'lastupdatedvehicles_on', 
+		'updated_vehicle_limit'			=> 'lastupdatedvehicles_limit', 
+		'enable_newest_modification'		=> 'newestmods_on',
+		'newest_modification_limit'		=> 'newestmods_limit', 
+		'enable_updated_modification'		=> 'lastupdatedmods_on', 
+		'updated_modification_limit'		=> 'lastupdatedmods_limit', 
+		'enable_most_modified'			=> 'mostmodded_on', 
+		'most_modified_limit'			=> 'mostmodded_limit', 
+		'enable_most_spent'			=> 'mostmoneyspent_on', 
+		'most_spent_limit'			=> 'mostmoneyspent_limit', 
+		'enable_most_viewed'			=> 'mostviewed_on', 
+		'most_viewed_limit'			=> 'mostviewed_limit', 
+		'enable_last_commented'			=> 'lastcommented_on', 
+		'last_commented_limit'			=> 'lastcommented_limit', 
+		'enable_top_dynorun'			=> 'topdynorun_on', 
+		'top_dynorun_limit'			=> 'topdynorun_limit', 
+		'enable_top_quartermile'		=> 'topquartermile_on', 
+		'top_quartermile_limit'			=> 'topquartermile_limit', 
+		'enable_top_rating'			=> 'toprated_on', 
+		'top_rating_limit'			=> 'toprated_limit', 
+		'enable_images'				=> 'garage_images', 
+		'enable_modification_images'		=> 'allow_mod_image', 
+		'enable_uploaded_images'		=> 'allow_image_upload', 
+		'enable_remote_images'			=> 'allow_image_url', 
+		'remote_timeout'			=> 'remote_timeout',
+		'enable_mod_gallery'			=> 'show_mod_gallery', 
+		'gallery_limit'				=> 'limit_mod_gallery', 
+		'max_image_kbytes'			=> 'max_image_kbytes',
+		'max_image_resolution'			=> 'max_image_resolution',
+		'thumbnail_resolution'			=> 'thumbnail_resolution',
+		'enable_quartermile'			=> 'enable_quartermile', 
+		'enable_quartermile_approval'		=> 'enable_quartermile_approval', 
+		'enable_quartermile_image_required'	=> 'quartermile_image_required', 
+		'enable_dynorun'			=> 'enable_rollingroad', 
+		'enable_dynorun_approval'		=> 'enable_rollingroad_approval', 
+		'enable_dynorun_image_required'		=> 'dynorun_image_required', 
+		'enable_insurance'			=> 'enable_insurance', 
+		'enable_business_approval'		=> 'enable_business_approval', 
+		'rating_permanent'			=> 'rating_permanent', 
+		'rating_always_updateable'		=> 'rating_always_updateable', 
+		'enable_guestbooks'			=> 'enable_guestbooks',
+		'default_vehicle_quota'			=> 'max_user_cars', 
+		'default_upload_quota'			=> 'max_car_images', 
+		'default_remote_quota'			=> 'max_car_images', 
+	),
 );
 
 /**
@@ -136,97 +175,18 @@ $config_schema = array(
 * forum which can be used to check that the path specified by the 
 * user was correct
 */
-$test_file = 'modcp.php';
+$test_file = 'garage.php';
 
 /**
 * If this is set then we are not generating the first page of information but getting the conversion information.
 */
 if (!$get_info)
 {
-	// Test to see if the birthday MOD is installed on the source forum
-	// Niels' birthday mod
-	if (get_config_value('birthday_required') !== false || get_config_value('bday_require') !== false)
-	{
-		define('MOD_BIRTHDAY', true);
-	}
-
-	// TerraFrost's validated birthday mod
-	if (get_config_value('bday_require') !== false)
-	{
-		define('MOD_BIRTHDAY_TERRA', true);
-	}
-
-	// Test to see if the attachment MOD is installed on the source forum
-	// If it is, we will convert this data as well
-	$src_db->sql_return_on_error(true);
-
-	$sql = "SELECT config_value
-		FROM {$convert->src_table_prefix}attachments_config
-		WHERE config_name = 'upload_dir'";
-	$result = $src_db->sql_query($sql);
-
-	if ($result && $row = $src_db->sql_fetchrow($result))
-	{
-		// Here the constant is defined
-		define('MOD_ATTACHMENT', true);
-
-		// Here i add more tables to be checked in the old forum
-		$tables += array(
-			'attachments',
-			'attachments_desc',
-			'extensions',
-			'extension_groups'
-		);
-
-		$src_db->sql_freeresult($result);
-	}
-	else if ($result)
-	{
-		$src_db->sql_freeresult($result);
-	}
-	
-
-	/**
-	* Tests for further MODs can be included here.
-	* Please use constants for this, prefixing them with MOD_
-	*/
-
-	$src_db->sql_return_on_error(false);
-
-	// Now let us set a temporary config variable for user id incrementing
-	$sql = "SELECT user_id
-		FROM {$convert->src_table_prefix}users
-		WHERE user_id = 1";
-	$result = $src_db->sql_query($sql);
-	$user_id = (int) $src_db->sql_fetchfield('user_id');
-	$src_db->sql_freeresult($result);
-
-	// If there is a user id 1, we need to increment user ids. :/
-	if ($user_id === 1)
-	{
-		// Try to get the maximum user id possible...
-		$sql = "SELECT MAX(user_id) AS max_user_id
-			FROM {$convert->src_table_prefix}users";
-		$result = $src_db->sql_query($sql);
-		$user_id = (int) $src_db->sql_fetchfield('max_user_id');
-		$src_db->sql_freeresult($result);
-
-		set_config('increment_user_id', ($user_id + 1), true);
-	}
-	else
-	{
-		set_config('increment_user_id', 0, true);
-	}
-
-	// Overwrite maximum avatar width/height
-	@define('DEFAULT_AVATAR_X_CUSTOM', get_config_value('avatar_max_width'));
-	@define('DEFAULT_AVATAR_Y_CUSTOM', get_config_value('avatar_max_height'));
-
 /**
 *	Description on how to use the convertor framework.
 *
 *	'schema' Syntax Description
-*		-> 'target'			=> Target Table. If not specified the next table will be handled
+*		-> 'target'		=> Target Table. If not specified the next table will be handled
 *		-> 'primary'		=> Primary Key. If this is specified then this table is processed in batches
 *		-> 'query_first'	=> array('target' or 'src', Query to execute before beginning the process
 *								(if more than one then specified as array))
@@ -283,630 +243,264 @@ if (!$get_info)
 *
 */
 
-	$convertor = array(
-		'test_file'				=> 'viewtopic.php',
+$convertor = array(
+	'test_file'		=> 'garage.php',
 
-		'avatar_path'			=> get_config_value('avatar_path') . '/',
-		'avatar_gallery_path'	=> get_config_value('avatar_gallery_path') . '/',
-		'smilies_path'			=> get_config_value('smilies_path') . '/',
-		'upload_path'			=> (defined('MOD_ATTACHMENT')) ? phpbb_get_files_dir() . '/' : '',
-		'thumbnails'			=> (defined('MOD_ATTACHMENT')) ? array('thumbs/', 't_') : '',
-		'ranks_path'			=> false, // phpBB 2.0.x had no config value for a ranks path
+	'avatar_path'		=> get_garage_config_value('upload_path') . '/',
 
-		// We empty some tables to have clean data available
-		'query_first'			=> array(
-			array('target', $convert->truncate_statement . SEARCH_RESULTS_TABLE),
-			array('target', $convert->truncate_statement . SEARCH_WORDLIST_TABLE),
-			array('target', $convert->truncate_statement . SEARCH_WORDMATCH_TABLE),
-			array('target', $convert->truncate_statement . LOG_TABLE),
-		),
+	'query_first'		=> array(
+	),
 		
-//	with this you are able to import all attachment files on the fly. For large boards this is not an option, therefore commented out by default.
-//	Instead every file gets copied while processing the corresponding attachment entry.
-//		if (defined("MOD_ATTACHMENT")) { import_attachment_files(); phpbb_copy_thumbnails(); }
-
-		// phpBB2 allowed some similar usernames to coexist which would have the same
-		// username_clean in phpBB3 which is not possible, so we'll give the admin a list
-		// of user ids and usernames and let him deicde what he wants to do with them
-		'execute_first'	=> '
-			phpbb_check_username_collisions();
-			import_avatar_gallery();
-			if (defined("MOD_ATTACHMENT")) phpbb_import_attach_config();
-			phpbb_insert_forums();
-		',
-
-		'execute_last'	=> array('
-			add_bots();
-		', '
-			update_folder_pm_count();
-		', '
-			update_unread_count();
-		', '
-			phpbb_convert_authentication(\'start\');
-		', '
-			phpbb_convert_authentication(\'first\');
-		', '
-			phpbb_convert_authentication(\'second\');
-		', '
-			phpbb_convert_authentication(\'third\');
-		'),
-
-		'schema' => array(
-
-			array(
-				'target'		=> (defined('MOD_ATTACHMENT')) ? ATTACHMENTS_TABLE : '',
-				'primary'		=> 'attachments.attach_id',
-				'query_first'	=> (defined('MOD_ATTACHMENT')) ? array('target', $convert->truncate_statement . ATTACHMENTS_TABLE) : '',
-				'autoincrement'	=> 'attach_id',
-
-				array('attach_id',				'attachments.attach_id',				''),
-				array('post_msg_id',			'attachments.post_id',					''),
-				array('topic_id',				'posts.topic_id',						''),
-				array('in_message',				0,										''),
-				array('is_orphan',				0,										''),
-				array('poster_id',				'attachments.user_id_1 AS poster_id',	'phpbb_user_id'),
-				array('physical_filename',		'attachments_desc.physical_filename',	'import_attachment'),
-				array('real_filename',			'attachments_desc.real_filename',		'phpbb_set_encoding'),
-				array('download_count',			'attachments_desc.download_count',		''),
-				array('attach_comment',			'attachments_desc.comment',				array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
-				array('extension',				'attachments_desc.extension',			''),
-				array('mimetype',				'attachments_desc.mimetype',			''),
-				array('filesize',				'attachments_desc.filesize',			''),
-				array('filetime',				'attachments_desc.filetime',			''),
-				array('thumbnail',				'attachments_desc.thumbnail',			''),
-
-				'where'			=> 'attachments_desc.attach_id = attachments.attach_id AND attachments.privmsgs_id = 0 AND posts.post_id = attachments.post_id',
-				'group_by'		=> 'attachments.attach_id'
-			),
-
-			array(
-				'target'		=> (defined('MOD_ATTACHMENT')) ? ATTACHMENTS_TABLE : '',
-				'primary'		=> 'attachments.attach_id',
-				'autoincrement'	=> 'attach_id',
-
-				array('attach_id',				'attachments.attach_id',				''),
-				array('post_msg_id',			'attachments.privmsgs_id',				''),
-				array('topic_id',				0,										''),
-				array('in_message',				1,										''),
-				array('is_orphan',				0,										''),
-				array('poster_id',				'attachments.user_id_1 AS poster_id',	'phpbb_user_id'),
-				array('physical_filename',		'attachments_desc.physical_filename',	'import_attachment'),
-				array('real_filename',			'attachments_desc.real_filename',		''),
-				array('download_count',			'attachments_desc.download_count',		''),
-				array('attach_comment',			'attachments_desc.comment',				array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
-				array('extension',				'attachments_desc.extension',			''),
-				array('mimetype',				'attachments_desc.mimetype',			''),
-				array('filesize',				'attachments_desc.filesize',			''),
-				array('filetime',				'attachments_desc.filetime',			''),
-				array('thumbnail',				'attachments_desc.thumbnail',			''),
-
-				'where'			=> 'attachments_desc.attach_id = attachments.attach_id AND attachments.post_id = 0',
-				'group_by'		=> 'attachments.attach_id'
-			),
-
-			array(
-				'target'		=> (defined('MOD_ATTACHMENT')) ? EXTENSIONS_TABLE : '',
-				'query_first'	=> (defined('MOD_ATTACHMENT')) ? array('target', $convert->truncate_statement . EXTENSIONS_TABLE) : '',
-				'autoincrement'	=> 'extension_id',
-
-				array('extension_id',			'extensions.ext_id',				''),
-				array('group_id',				'extensions.group_id',				''),
-				array('extension',				'extensions.extension',				''),
-			),
-
-			array(
-				'target'		=> (defined('MOD_ATTACHMENT')) ? EXTENSION_GROUPS_TABLE : '',
-				'query_first'	=> (defined('MOD_ATTACHMENT')) ? array('target', $convert->truncate_statement . EXTENSION_GROUPS_TABLE) : '',
-				'autoincrement'	=> 'group_id',
-
-				array('group_id',				'extension_groups.group_id',			''),
-				array('group_name',				'extension_groups.group_name',			array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
-				array('cat_id',					'extension_groups.cat_id',				'phpbb_attachment_category'),
-				array('allow_group',			'extension_groups.allow_group',			''),
-				array('download_mode',			1,										''),
-				array('upload_icon',			'',										''),
-				array('max_filesize',			'extension_groups.max_filesize',		''),
-				array('allowed_forums',			'extension_groups.forum_permissions',	'phpbb_attachment_forum_perms'),
-				array('allow_in_pm',			1,										''),
-			),
-
-			array(
-				'target'		=> BANLIST_TABLE,
-				'query_first'	=> array('target', $convert->truncate_statement . BANLIST_TABLE),
-
-				array('ban_ip',					'banlist.ban_ip',					'decode_ban_ip'),
-				array('ban_userid',				'banlist.ban_userid',				'phpbb_user_id'),
-				array('ban_email',				'banlist.ban_email',				''),
-				array('ban_reason',				'',									''),
-				array('ban_give_reason',		'',									''),
-
-				'where'			=> "banlist.ban_ip NOT LIKE '%.%'",
-			),
-
-			array(
-				'target'		=> BANLIST_TABLE,
-
-				array('ban_ip',					'banlist.ban_ip',	''),
-				array('ban_userid',				0,					''),
-				array('ban_email',				'',					''),
-				array('ban_reason',				'',					''),
-				array('ban_give_reason',		'',					''),
-
-				'where'			=> "banlist.ban_ip LIKE '%.%'",
-			),
-
-			array(
-				'target'		=> DISALLOW_TABLE,
-				'query_first'	=> array('target', $convert->truncate_statement . DISALLOW_TABLE),
-
-				array('disallow_username',		'disallow.disallow_username',				'phpbb_disallowed_username'),
-			),
-
-			array(
-				'target'		=> RANKS_TABLE,
-				'query_first'	=> array('target', $convert->truncate_statement . RANKS_TABLE),
-				'autoincrement'	=> 'rank_id',
-
-				array('rank_id',					'ranks.rank_id',				''),
-				array('rank_title',					'ranks.rank_title',				array('function1' => 'phpbb_set_default_encoding', 'function2' => 'utf8_htmlspecialchars')),
-				array('rank_min',					'ranks.rank_min',				array('typecast' => 'int', 'execute' => '{RESULT} = ({VALUE}[0] < 0) ? 0 : {VALUE}[0];')),
-				array('rank_special',				'ranks.rank_special',			''),
-				array('rank_image',					'ranks.rank_image',				'import_rank'),
-			),
-
-			array(
-				'target'		=> TOPICS_TABLE,
-				'query_first'	=> array('target', $convert->truncate_statement . TOPICS_TABLE),
-				'primary'		=> 'topics.topic_id',
-				'autoincrement'	=> 'topic_id',
-
-				array('topic_id',				'topics.topic_id',					''),
-				array('forum_id',				'topics.forum_id',					''),
-				array('icon_id',				0,									''),
-				array('topic_poster',			'topics.topic_poster AS poster_id',	'phpbb_user_id'),
-				array('topic_attachment',		((defined('MOD_ATTACHMENT')) ? 'topics.topic_attachment' : 0), ''),
-				array('topic_title',			'topics.topic_title',				'phpbb_set_encoding'),
-				array('topic_time',				'topics.topic_time',				''),
-				array('topic_views',			'topics.topic_views',				''),
-				array('topic_replies',			'topics.topic_replies',				''),
-				array('topic_replies_real',		'topics.topic_replies',				''),
-				array('topic_last_post_id',		'topics.topic_last_post_id',		''),
-				array('topic_status',			'topics.topic_status',				'is_topic_locked'),
-				array('topic_moved_id',			0,									''),
-				array('topic_type',				'topics.topic_type',				'phpbb_convert_topic_type'),
-				array('topic_first_post_id',	'topics.topic_first_post_id',		''),
-
-				array('poll_title',				'vote_desc.vote_text',				array('function1' => 'null_to_str', 'function2' => 'phpbb_set_encoding', 'function3' => 'utf8_htmlspecialchars')),
-				array('poll_start',				'vote_desc.vote_start',				'null_to_zero'),
-				array('poll_length',			'vote_desc.vote_length',			'null_to_zero'),
-				array('poll_max_options',		1,									''),
-				array('poll_vote_change',		0,									''),
-
-				'left_join'		=> 'topics LEFT JOIN vote_desc ON topics.topic_id = vote_desc.topic_id AND topics.topic_vote = 1',
-				'where'			=> 'topics.topic_moved_id = 0',
-			),
-
-			array(
-				'target'		=> TOPICS_TABLE,
-				'primary'		=> 'topics.topic_id',
-				'autoincrement'	=> 'topic_id',
-
-				array('topic_id',				'topics.topic_id',					''),
-				array('forum_id',				'topics.forum_id',					''),
-				array('icon_id',				0,									''),
-				array('topic_poster',			'topics.topic_poster AS poster_id',	'phpbb_user_id'),
-				array('topic_attachment',		((defined('MOD_ATTACHMENT')) ? 'topics.topic_attachment' : 0), ''),
-				array('topic_title',			'topics.topic_title',				'phpbb_set_encoding'),
-				array('topic_time',				'topics.topic_time',				''),
-				array('topic_views',			'topics.topic_views',				''),
-				array('topic_replies',			'topics.topic_replies',				''),
-				array('topic_replies_real',		'topics.topic_replies',				''),
-				array('topic_last_post_id',		'topics.topic_last_post_id',		''),
-				array('topic_status',			ITEM_MOVED,							''),
-				array('topic_moved_id',			'topics.topic_moved_id',			''),
-				array('topic_type',				'topics.topic_type',				'phpbb_convert_topic_type'),
-				array('topic_first_post_id',	'topics.topic_first_post_id',		''),
-
-				array('poll_title',				'vote_desc.vote_text',				array('function1' => 'null_to_str', 'function2' => 'phpbb_set_encoding', 'function3' => 'utf8_htmlspecialchars')),
-				array('poll_start',				'vote_desc.vote_start',				'null_to_zero'),
-				array('poll_length',			'vote_desc.vote_length',			'null_to_zero'),
-				array('poll_max_options',		1,									''),
-				array('poll_vote_change',		0,									''),
-
-				'left_join'		=> 'topics LEFT JOIN vote_desc ON topics.topic_id = vote_desc.topic_id AND topics.topic_vote = 1',
-				'where'			=> 'topics.topic_moved_id <> 0',
-			),
-
-			array(
-				'target'		=> TOPICS_WATCH_TABLE,
-				'primary'		=> 'topics_watch.topic_id',
-				'query_first'	=> array('target', $convert->truncate_statement . TOPICS_WATCH_TABLE),
-
-				array('topic_id',				'topics_watch.topic_id',			''),
-				array('user_id',				'topics_watch.user_id',				'phpbb_user_id'),
-				array('notify_status',			'topics_watch.notify_status',		''),
-			),
-
-			array(
-				'target'		=> SMILIES_TABLE,
-				'query_first'	=> array('target', $convert->truncate_statement . SMILIES_TABLE),
-				'autoincrement'	=> 'smiley_id',
-
-				array('smiley_id',				'smilies.smilies_id',				''),
-				array('code',					'smilies.code',						array('function1' => 'phpbb_smilie_html_decode', 'function2' => 'phpbb_set_encoding', 'function3' => 'utf8_htmlspecialchars')),
-				array('emotion',				'smilies.emoticon',					'phpbb_set_encoding'),
-				array('smiley_url',				'smilies.smile_url',				'import_smiley'),
-				array('smiley_width',			'smilies.smile_url',				'get_smiley_width'),
-				array('smiley_height',			'smilies.smile_url',				'get_smiley_height'),
-				array('smiley_order',			'smilies.smilies_id',				''),
-				array('display_on_posting',		'smilies.smilies_id',				'get_smiley_display'),
-
-				'order_by'		=> 'smilies.smilies_id ASC',
-			),
-
-			array(
-				'target'		=> POLL_OPTIONS_TABLE,
-				'primary'		=> 'vote_results.vote_option_id',
-				'query_first'	=> array('target', $convert->truncate_statement . POLL_OPTIONS_TABLE),
-
-				array('poll_option_id',			'vote_results.vote_option_id',		''),
-				array('topic_id',				'vote_desc.topic_id',				''),
-				array('',						'topics.topic_poster AS poster_id',	'phpbb_user_id'),
-				array('poll_option_text',		'vote_results.vote_option_text',	array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
-				array('poll_option_total',		'vote_results.vote_result',			''),
-
-				'where'			=> 'vote_results.vote_id = vote_desc.vote_id',
-				'left_join'		=> 'vote_desc LEFT JOIN topics ON topics.topic_id = vote_desc.topic_id',
-			),
-
-			array(
-				'target'		=> POLL_VOTES_TABLE,
-				'primary'		=> 'vote_desc.topic_id',
-				'query_first'	=> array('target', $convert->truncate_statement . POLL_VOTES_TABLE),
-
-				array('poll_option_id',			1,									''),
-				array('topic_id',				'vote_desc.topic_id',				''),
-				array('vote_user_id',			'vote_voters.vote_user_id',			'phpbb_user_id'),
-				array('vote_user_ip',			'vote_voters.vote_user_ip',			'decode_ip'),
-
-				'where'			=> 'vote_voters.vote_id = vote_desc.vote_id',
-			),
-
-			array(
-				'target'		=> WORDS_TABLE,
-				'primary'		=> 'words.word_id',
-				'query_first'	=> array('target', $convert->truncate_statement . WORDS_TABLE),
-				'autoincrement'	=> 'word_id',
-
-				array('word_id',				'words.word_id',					''),
-				array('word',					'words.word',						'phpbb_set_encoding'),
-				array('replacement',			'words.replacement',				'phpbb_set_encoding'),
-			),
-
-			array(
-				'target'		=> POSTS_TABLE,
-				'primary'		=> 'posts.post_id',
-				'autoincrement'	=> 'post_id',
-				'query_first'	=> array('target', $convert->truncate_statement . POSTS_TABLE),
-				'execute_first'	=> '
-					$config["max_post_chars"] = -1;
-					$config["max_quote_depth"] = 0;
-				',
-
-				array('post_id',				'posts.post_id',					''),
-				array('topic_id',				'posts.topic_id',					''),
-				array('forum_id',				'posts.forum_id',					''),
-				array('poster_id',				'posts.poster_id',					'phpbb_user_id'),
-				array('icon_id',				0,									''),
-				array('poster_ip',				'posts.poster_ip',					'decode_ip'),
-				array('post_time',				'posts.post_time',					''),
-				array('enable_bbcode',			'posts.enable_bbcode',				''),
-				array('',						'posts.enable_html',				''),
-				array('enable_smilies',			'posts.enable_smilies',				''),
-				array('enable_sig',				'posts.enable_sig',					''),
-				array('enable_magic_url',		1,									''),
-				array('post_username',			'posts.post_username',				'phpbb_set_encoding'),
-				array('post_subject',			'posts_text.post_subject',			'phpbb_set_encoding'),
-				array('post_attachment',		((defined('MOD_ATTACHMENT')) ? 'posts.post_attachment' : 0), ''),
-				array('post_edit_time',			'posts.post_edit_time',				array('typecast' => 'int')),
-				array('post_edit_count',		'posts.post_edit_count',			''),
-				array('post_edit_reason',		'',									''),
-				array('post_edit_user',			'',									'phpbb_post_edit_user'),
-
-				array('bbcode_uid',				'posts.post_time',					'make_uid'),
-				array('post_text',				'posts_text.post_text',				'phpbb_prepare_message'),
-				array('',						'posts_text.bbcode_uid AS old_bbcode_uid',			''),
-				array('bbcode_bitfield',		'',									'get_bbcode_bitfield'),
-				array('post_checksum',			'',									''),
-
-				// Commented out inline search indexing, this takes up a LOT of time. :D
-				// @todo We either need to enable this or call the rebuild search functionality post convert
-/*				array('',						'',									'search_indexing'),
-				array('',						'posts_text.post_text AS message',	''),
-				array('',						'posts_text.post_subject AS title',	''),*/
-
-				'where'			=>	'posts.post_id = posts_text.post_id'
-			),
-
-			array(
-				'target'		=> PRIVMSGS_TABLE,
-				'primary'		=> 'privmsgs.privmsgs_id',
-				'autoincrement'	=> 'msg_id',
-				'query_first'	=> array(
-					array('target', $convert->truncate_statement . PRIVMSGS_TABLE),
-					array('target', $convert->truncate_statement . PRIVMSGS_RULES_TABLE),
-				),
-
-				'execute_first'	=> '
-					$config["max_post_chars"] = -1;
-					$config["max_quote_depth"] = 0;
-				',
-
-				array('msg_id',					'privmsgs.privmsgs_id',				''),
-				array('root_level',				0,									''),
-				array('author_id',				'privmsgs.privmsgs_from_userid AS poster_id',	'phpbb_user_id'),
-				array('icon_id',				0,									''),
-				array('author_ip',				'privmsgs.privmsgs_ip',				'decode_ip'),
-				array('message_time',			'privmsgs.privmsgs_date',			''),
-				array('enable_bbcode',			'privmsgs.privmsgs_enable_bbcode AS enable_bbcode',	''),
-				array('',						'privmsgs.privmsgs_enable_html AS enable_html',	''),
-				array('enable_smilies',			'privmsgs.privmsgs_enable_smilies AS enable_smilies',	''),
-				array('enable_magic_url',		1,									''),
-				array('enable_sig',				'privmsgs.privmsgs_attach_sig',		''),
-				array('message_subject',		'privmsgs.privmsgs_subject',		'phpbb_set_encoding'), // Already specialchared in 2.0.x
-				array('message_attachment',		((defined('MOD_ATTACHMENT')) ? 'privmsgs.privmsgs_attachment' : 0), ''),
-				array('message_edit_reason',	'',									''),
-				array('message_edit_user',		0,									''),
-				array('message_edit_time',		0,									''),
-				array('message_edit_count',		0,									''),
-
-				array('bbcode_uid',				'privmsgs.privmsgs_date AS post_time',	'make_uid'),
-				array('message_text',			'privmsgs_text.privmsgs_text',			'phpbb_prepare_message'),
-				array('',						'privmsgs_text.privmsgs_bbcode_uid AS old_bbcode_uid',			''),
-				array('bbcode_bitfield',		'',										'get_bbcode_bitfield'),
-				array('to_address',				'privmsgs.privmsgs_to_userid',			'phpbb_privmsgs_to_userid'),
-				array('bcc_address',			'',										''),
-
-				'where'			=>	'privmsgs.privmsgs_id = privmsgs_text.privmsgs_text_id'
-			),
-
-			array(
-				'target'		=> PRIVMSGS_FOLDER_TABLE,
-				'primary'		=> 'users.user_id',
-				'query_first'	=> array('target', $convert->truncate_statement . PRIVMSGS_FOLDER_TABLE),
-
-				array('user_id',				'users.user_id',						'phpbb_user_id'),
-				array('folder_name',			$user->lang['CONV_SAVED_MESSAGES'],		''),
-				array('pm_count',				0,										''),
-			
-				'where'			=> 'users.user_id <> -1',
-			),
-
-			// Inbox
-			array(
-				'target'		=> PRIVMSGS_TO_TABLE,
-				'primary'		=> 'privmsgs.privmsgs_id',
-				'query_first'	=> array('target', $convert->truncate_statement . PRIVMSGS_TO_TABLE),
-
-				array('msg_id',					'privmsgs.privmsgs_id',					''),
-				array('user_id',				'privmsgs.privmsgs_to_userid',			'phpbb_user_id'),
-				array('author_id',				'privmsgs.privmsgs_from_userid',		'phpbb_user_id'),
-				array('pm_deleted',				0,										''),
-				array('pm_new',					'privmsgs.privmsgs_type',				'phpbb_new_pm'),
-				array('pm_unread',				'privmsgs.privmsgs_type',				'phpbb_unread_pm'),
-				array('pm_replied',				0,										''),
-				array('pm_marked',				0,										''),
-				array('pm_forwarded',			0,										''),
-				array('folder_id',				PRIVMSGS_INBOX,							''),
-
-				'where'			=> 'privmsgs.privmsgs_id = privmsgs_text.privmsgs_text_id 
-										AND (privmsgs.privmsgs_type = 0 OR privmsgs.privmsgs_type = 1 OR privmsgs.privmsgs_type = 5)',
-			),
-			
-			// Outbox
-			array(
-				'target'		=> PRIVMSGS_TO_TABLE,
-				'primary'		=> 'privmsgs.privmsgs_id',
-
-				array('msg_id',					'privmsgs.privmsgs_id',					''),
-				array('user_id',				'privmsgs.privmsgs_from_userid',		'phpbb_user_id'),
-				array('author_id',				'privmsgs.privmsgs_from_userid',		'phpbb_user_id'),
-				array('pm_deleted',				0,										''),
-				array('pm_new',					0,										''),
-				array('pm_unread',				0,										''),
-				array('pm_replied',				0,										''),
-				array('pm_marked',				0,										''),
-				array('pm_forwarded',			0,										''),
-				array('folder_id',				PRIVMSGS_OUTBOX,						''),
-
-				'where'			=> 'privmsgs.privmsgs_id = privmsgs_text.privmsgs_text_id
-										AND (privmsgs.privmsgs_type = 1 OR privmsgs.privmsgs_type = 5)',
-			),
-
-			// Sentbox
-			array(
-				'target'		=> PRIVMSGS_TO_TABLE,
-				'primary'		=> 'privmsgs.privmsgs_id',
-
-				array('msg_id',					'privmsgs.privmsgs_id',					''),
-				array('user_id',				'privmsgs.privmsgs_from_userid',		'phpbb_user_id'),
-				array('author_id',				'privmsgs.privmsgs_from_userid',		'phpbb_user_id'),
-				array('pm_deleted',				0,										''),
-				array('pm_new',					'privmsgs.privmsgs_type',				'phpbb_new_pm'),
-				array('pm_unread',				'privmsgs.privmsgs_type',				'phpbb_unread_pm'),
-				array('pm_replied',				0,										''),
-				array('pm_marked',				0,										''),
-				array('pm_forwarded',			0,										''),
-				array('folder_id',				PRIVMSGS_SENTBOX,						''),
-
-				'where'			=> 'privmsgs.privmsgs_id = privmsgs_text.privmsgs_text_id 
-										AND privmsgs.privmsgs_type = 2',
-			),
-
-			// Savebox (SAVED IN)
-			array(
-				'target'		=> PRIVMSGS_TO_TABLE,
-				'primary'		=> 'privmsgs.privmsgs_id',
-
-				array('msg_id',					'privmsgs.privmsgs_id',					''),
-				array('user_id',				'privmsgs.privmsgs_to_userid',			'phpbb_user_id'),
-				array('author_id',				'privmsgs.privmsgs_from_userid',		'phpbb_user_id'),
-				array('pm_deleted',				0,										''),
-				array('pm_new',					'privmsgs.privmsgs_type',				'phpbb_new_pm'),
-				array('pm_unread',				'privmsgs.privmsgs_type',				'phpbb_unread_pm'),
-				array('pm_replied',				0,										''),
-				array('pm_marked',				0,										''),
-				array('pm_forwarded',			0,										''),
-				array('folder_id',				'privmsgs.privmsgs_to_userid',			'phpbb_get_savebox_id'),
-
-				'where'			=> 'privmsgs.privmsgs_id = privmsgs_text.privmsgs_text_id 
-										AND privmsgs.privmsgs_type = 3',
-			),
-
-			// Savebox (SAVED OUT)
-			array(
-				'target'		=> PRIVMSGS_TO_TABLE,
-				'primary'		=> 'privmsgs.privmsgs_id',
-
-				array('msg_id',					'privmsgs.privmsgs_id',					''),
-				array('user_id',				'privmsgs.privmsgs_from_userid',		'phpbb_user_id'),
-				array('author_id',				'privmsgs.privmsgs_from_userid',		'phpbb_user_id'),
-				array('pm_deleted',				0,										''),
-				array('pm_new',					'privmsgs.privmsgs_type',				'phpbb_new_pm'),
-				array('pm_unread',				'privmsgs.privmsgs_type',				'phpbb_unread_pm'),
-				array('pm_replied',				0,										''),
-				array('pm_marked',				0,										''),
-				array('pm_forwarded',			0,										''),
-				array('folder_id',				'privmsgs.privmsgs_from_userid',		'phpbb_get_savebox_id'),
-
-				'where'			=> 'privmsgs.privmsgs_id = privmsgs_text.privmsgs_text_id 
-										AND privmsgs.privmsgs_type = 4',
-			),
-
-			array(
-				'target'		=> GROUPS_TABLE,
-				'autoincrement'	=> 'group_id',
-				'query_first'	=> array('target', $convert->truncate_statement . GROUPS_TABLE),
-
-				array('group_id',				'groups.group_id',					''),
-				array('group_type',				'groups.group_type',				'phpbb_convert_group_type'),
-				array('group_display',			0,									''),
-				array('group_legend',			0,									''),
-				array('group_name',				'groups.group_name',				'phpbb_convert_group_name'), // phpbb_set_encoding called in phpbb_convert_group_name
-				array('group_desc',				'groups.group_description',			'phpbb_set_encoding'),
-
-				'where'			=> 'groups.group_single_user = 0',
-			),
-
-			array(
-				'target'		=> USER_GROUP_TABLE,
-				'query_first'	=> array('target', $convert->truncate_statement . USER_GROUP_TABLE),
-				'execute_first'	=> '
-					add_default_groups();
-				',
-
-				array('group_id',		'groups.group_id',					''),
-				array('user_id',		'groups.group_moderator',			'phpbb_user_id'),
-				array('group_leader',	1,									''),
-				array('user_pending',	0,									''),
-
-				'where'			=> 'groups.group_single_user = 0 AND groups.group_moderator <> 0',
-			),
-
-			array(
-				'target'		=> USER_GROUP_TABLE,
-
-				array('group_id',		'user_group.group_id',				''),
-				array('user_id',		'user_group.user_id',				'phpbb_user_id'),
-				array('group_leader',	0,									''),
-				array('user_pending',	'user_group.user_pending',			''),
-
-				'where'			=> 'user_group.group_id = groups.group_id AND groups.group_single_user = 0 AND groups.group_moderator <> user_group.user_id',
-			),
-
-			array(
-				'target'		=> USERS_TABLE,
-				'primary'		=> 'users.user_id',
-				'autoincrement'	=> 'user_id',
-				'query_first'	=> array(
-					array('target', 'DELETE FROM ' . USERS_TABLE . ' WHERE user_id <> ' . ANONYMOUS),
-					array('target', $convert->truncate_statement . BOTS_TABLE)
-				),
-
-				'execute_last'	=> '
-					remove_invalid_users();
-				',
-
-				array('user_id',				'users.user_id',					'phpbb_user_id'),
-				array('',						'users.user_id AS poster_id',		'phpbb_user_id'),
-				array('user_type',				'users.user_active',				'set_user_type'),
-				array('group_id',				'users.user_level',					'phpbb_set_primary_group'),
-				array('user_regdate',			'users.user_regdate',				''),
-				array('username',				'users.username',					'phpbb_set_default_encoding'), // recode to utf8 with default lang
-				array('username_clean',			'users.username',					array('function1' => 'phpbb_set_default_encoding', 'function2' => 'utf8_clean_string')),
-				array('user_password',			'users.user_password',				''),
-				array('user_pass_convert',		1,									''),
-				array('user_posts',				'users.user_posts',					''),
-				array('user_email',				'users.user_email',					'strtolower'),
-				array('user_email_hash',		'users.user_email',					'gen_email_hash'),
-				array('user_birthday',			((defined('MOD_BIRTHDAY')) ? 'users.user_birthday' : ''),	'phpbb_get_birthday'),
-				array('user_lastvisit',			'users.user_lastvisit',				''),
-				array('user_lastmark',			'users.user_lastvisit',				''),
-				array('user_lang',				$config['default_lang'],			''),
-				array('',						'users.user_lang',					''),
-				array('user_timezone',			'users.user_timezone',				''),
-				array('user_dateformat',		'users.user_dateformat',			array('function1' => 'phpbb_set_encoding', 'function2' => 'fill_dateformat')),
-				array('user_inactive_reason',	'',									'phpbb_inactive_reason'),
-				array('user_inactive_time',		'',									'phpbb_inactive_time'),
-
-				array('user_interests',			'users.user_interests',				array('function1' => 'phpbb_set_encoding')),
-				array('user_occ',				'users.user_occ',					array('function1' => 'phpbb_set_encoding')),
-				array('user_website',			'users.user_website',				'validate_website'),
-				array('user_jabber',			'',									''),
-				array('user_msnm',				'users.user_msnm',					array('function1' => 'phpbb_set_encoding')),
-				array('user_yim',				'users.user_yim',					array('function1' => 'phpbb_set_encoding')),
-				array('user_aim',				'users.user_aim',					array('function1' => 'phpbb_set_encoding')),
-				array('user_icq',				'users.user_icq',					array('function1' => 'phpbb_set_encoding')),
-				array('user_from',				'users.user_from',					array('function1' => 'phpbb_set_encoding')),
-				array('user_rank',				'users.user_rank',					''),
-				array('user_permissions',		'',									''),
-
-				array('user_avatar',			'users.user_avatar',				'phpbb_import_avatar'),
-				array('user_avatar_type',		'users.user_avatar_type',			'phpbb_avatar_type'),
-				array('user_avatar_width',		'users.user_avatar',				'phpbb_get_avatar_width'),
-				array('user_avatar_height',		'users.user_avatar',				'phpbb_get_avatar_height'),
-
-				array('user_new_privmsg',		'users.user_new_privmsg',			''),
-				array('user_unread_privmsg',	0,									''), //'users.user_unread_privmsg'
-				array('user_last_privmsg',		'users.user_last_privmsg',			''),
-				array('user_emailtime',			'users.user_emailtime',				'null_to_zero'),
-				array('user_notify',			'users.user_notify',				''),
-				array('user_notify_pm',			'users.user_notify_pm',				''),
-				array('user_notify_type',		NOTIFY_EMAIL,						''),
-				array('user_allow_pm',			'users.user_allow_pm',				''),
-				array('user_allow_viewonline',	'users.user_allow_viewonline',		''),
-				array('user_allow_viewemail',	'users.user_viewemail',				''),
-				array('user_actkey',			'users.user_actkey',				''),
-				array('user_newpasswd',			'',									''), // Users need to re-request their password...
-				array('user_style',				$config['default_style'],			''),
-
-				array('user_options',			'',									'set_user_options'),
-				array('',						'users.user_popup_pm AS popuppm',	''),
-				array('',						'users.user_allowhtml AS html',		''),
-				array('',						'users.user_allowbbcode AS bbcode',	''),
-				array('',						'users.user_allowsmile AS smile',	''),
-				array('',						'users.user_attachsig AS attachsig',''),
-
-				array('user_sig_bbcode_uid',		'users.user_regdate',							'make_uid'),
-				array('user_sig',					'users.user_sig',								'phpbb_prepare_message'),
-				array('',							'users.user_sig_bbcode_uid AS old_bbcode_uid',	''),
-				array('user_sig_bbcode_bitfield',	'',												'get_bbcode_bitfield'),
-				array('',							'users.user_regdate AS post_time',				''),
-
-				'where'			=> 'users.user_id <> -1',
-			),
+	'execute_first'		=> '
+		import_garage_gallery();
+		phpbbgarage_insert_categories();
+	',
+
+	'execute_last'	=> array(
+		'phpbbgarage_convert_authentication_quota();',
+	),
+
+	'schema' => array(
+
+		array(
+			'target'	=> GARAGE_VEHICLES_TABLE,
+			'query_first'	=> array('target', $convert->truncate_statement . GARAGE_VEHICLES_TABLE),
+
+			array('id',			'garage.id',				''),
+			array('user_id',		'garage.member_id',			''),
+			array('made_year',		'garage.made_year',			''),
+			array('engine_type',		'0',					''),
+			array('colour',			'garage.color',				''),
+			array('mileage',		'garage.mileage',			''),
+			array('mileage_unit',		'garage.mileage_units',			''),
+			array('price',			'garage.price',				''),
+			array('currency',		'garage.currency',			''),
+			array('comments',		'garage.comments',			array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
+			array('views',			'garage.views',				''),
+			array('date_created',		'garage.date_created',			''),
+			array('date_updated',		'garage.date_updated',			''),
+			array('make_id',		'garage.make_id',			''),
+			array('model_id',		'garage.model_id',			''),
+			array('main_vehicle',		'garage.main_vehicle',			''),
+			array('weighted_rating',	'',					''),
+			array('bbcode_bitfield',	'',					'get_bbcode_bitfield'),
+			array('bbcode_uid',		'garage.date_updated',			'make_uid'),
+			array('bbcode_options',		'',					''),
+			array('pending',		'0',					''),
 		),
-	);
+		array(
+			'target'	=> GARAGE_BUSINESS_TABLE,
+			'query_first'	=> array('target', $convert->truncate_statement . GARAGE_BUSINESS_TABLE),
+
+			array('id',			'garage_business.id',			''),
+			array('title',			'garage_business.title',		array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
+			array('address',		'garage_business.address',		array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
+			array('telephone',		'garage_business.telephone',		''),
+			array('fax',			'garage_business.fax',			''),
+			array('website',		'garage_business.website',		''),
+			array('email',			'garage_business.email',		''),
+			array('opening_hours',		'garage_business.opening_hours',	array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
+			array('insurance',		'garage_business.insurance',		''),
+			array('garage',			'garage_business.garage',		''),
+			array('retail',			'garage_business.id',			'is_business_retail'),
+			array('pending',		'garage_business.pending',		''),
+		),
+		array(
+			'target'	=> GARAGE_CATEGORIES_TABLE,
+			'query_first'	=> array('target', $convert->truncate_statement . GARAGE_CATEGORIES_TABLE),
+
+			array('id',			'garage_categories.id',			''),
+			array('title',			'garage_categories.title',		array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
+			array('field_order',		'0',					''),
+		),
+		array(
+			'target'	=> GARAGE_MODIFICATIONS_TABLE,
+			'query_first'	=> array('target', $convert->truncate_statement . GARAGE_MODIFICATIONS_TABLE),
+			'function_first'=> 'create_placeholder_manufacturer',
+
+			array('id',			'garage_mods.id',			''),
+			array('vehicle_id',		'garage_mods.garage_id',		''),
+			array('user_id',		'garage_mods.member_id',		''),
+			array('category_id',		'garage_mods.category_id',		''),
+			array('manufacturer_id',	'',					'get_placeholder_manufacturer_id'),
+			array('product_id',		'garage_mods.id',			'insert_modification_product'),
+			array('price',			'garage_mods.price',			''),
+			array('install_price',		'garage_mods.install_price',		''),
+			array('product_rating',		'garage_mods.product_rating',		''),
+			array('purchase_rating',	'0',		''),
+			array('install_rating',		'garage_mods.install_rating',		''),
+			array('shop_id',		'garage_mods.business_id',		''),
+			array('installer_id',		'garage_mods.install_business_id',	''),
+			array('comments',		'garage_mods.comments',			array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
+			array('install_comments',	'garage_mods.install_comments',		array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
+			array('date_created',		'garage_mods.date_created',		''),
+			array('date_updated',		'garage_mods.date_updated',		''),
+		),
+		array(
+			'target'	=> GARAGE_DYNORUNS_TABLE,
+			'query_first'	=> array('target', $convert->truncate_statement . GARAGE_DYNORUNS_TABLE),
+
+			array('id',			'garage_rollingroad.id',		''),
+			array('vehicle_id',		'garage_rollingroad.garage_id',		''),
+			array('dynocentre_id',		'garage_rollingroad.dynocenter',	'import_dynocentre'),
+			array('bhp',			'garage_rollingroad.bhp',		''),
+			array('bhp_unit',		'garage_rollingroad.bhp_unit',		''),
+			array('torque',			'garage_rollingroad.torque',		''),
+			array('torque_unit',		'garage_rollingroad.torque_unit',	''),
+			array('boost',			'garage_rollingroad.boost',		''),
+			array('boost_unit',		'garage_rollingroad.boost_unit',	''),
+			array('nitrous',		'garage_rollingroad.nitrous',		''),
+			array('peakpoint',		'garage_rollingroad.peakpoint',		''),
+			array('date_created',		'garage_rollingroad.date_created',	''),
+			array('date_updated',		'garage_rollingroad.date_updated',	''),
+			array('pending',		'garage_rollingroad.pending',		''),
+
+		),
+		array(
+			'target'	=> GARAGE_MAKES_TABLE,
+			'query_first'	=> array('target', $convert->truncate_statement . GARAGE_MAKES_TABLE),
+
+			array('id',			'garage_makes.id',			''),
+			array('make',			'garage_makes.make',			array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
+			array('pending',		'garage_makes.pending',			''),
+		),
+		array(
+			'target'	=> GARAGE_MODELS_TABLE,
+			'query_first'	=> array('target', $convert->truncate_statement . GARAGE_MODELS_TABLE),
+
+			array('id',			'garage_models.id',			''),
+			array('make_id',		'garage_models.make_id',		''),
+			array('model',			'garage_models.model',			array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
+			array('pending',		'garage_models.pending',		''),
+		),
+		array(
+			'target'	=> GARAGE_PREMIUMS_TABLE,
+			'query_first'	=> array('target', $convert->truncate_statement . GARAGE_PREMIUMS_TABLE),
+
+			array('id',			'garage_insurance.id',			''),
+			array('vehicle_id',		'garage_insurance.garage_id',		''),
+			array('business_id',		'garage_insurance.business_id',		''),
+			array('cover_type_id',		'garage_insurance.cover_type',		'import_cover_type'),
+			array('premium',		'garage_insurance.premium',		''),
+			array('comments',		'garage_insurance.comments',		array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
+		),
+		array(
+			'target'	=> GARAGE_QUARTERMILES_TABLE,
+			'query_first'	=> array('target', $convert->truncate_statement . GARAGE_QUARTERMILES_TABLE),
+
+			array('id',			'garage_quartermile.id',		''),
+			array('vehicle_id',		'garage_quartermile.garage_id',		''),
+			array('rt',			'garage_quartermile.rt',		''),
+			array('sixty',			'garage_quartermile.sixty',		''),
+			array('three',			'garage_quartermile.three',		''),
+			array('eighth',			'garage_quartermile.eight',		''),
+			array('eighthmph',		'garage_quartermile.eightmph',		''),
+			array('thou',			'garage_quartermile.thou',		''),
+			array('quart',			'garage_quartermile.quart',		''),
+			array('quartmph',		'garage_quartermile.quartmph',		''),
+			array('pending',		'garage_quartermile.pending',		''),
+			array('dynorun_id',		'garage_quartermile.rr_id',		''),
+			array('date_created',		'garage_quartermile.date_created',	''),
+			array('date_updated',		'garage_quartermile.date_updated',	''),
+		),
+		array(
+			'target'	=> GARAGE_RATINGS_TABLE,
+			'query_first'	=> array('target', $convert->truncate_statement . GARAGE_RATINGS_TABLE),
+
+			array('id',			'garage_rating.id',			''),
+			array('vehicle_id',		'garage_rating.garage_id',		''),
+			array('rating',			'garage_rating.rating',			''),
+			array('user_id',		'garage_rating.user_id',		''),
+			array('rate_date',		'garage_rating.rate_date',		''),
+		),
+		array(
+			'target'	=> GARAGE_IMAGES_TABLE,
+			'query_first'	=> array('target', $convert->truncate_statement . GARAGE_IMAGES_TABLE),
+
+			array('attach_id',		'garage_images.attach_id',		''),
+			array('vehicle_id',		'garage_images.garage_id',		''),
+			array('attach_location',	'garage_images.attach_location',	''),
+			array('attach_hits',		'garage_images.attach_hits',		''),
+			array('attach_ext',		'garage_images.attach_ext',		''),
+			array('attach_file',		'garage_images.attach_file',		''),
+			array('attach_thumb_location',	'garage_images.attach_thumb_location',	''),
+			array('attach_thumb_width',	'garage_images.attach_thumb_width',	''),
+			array('attach_thumb_height',	'garage_images.attach_thumb_height',	''),
+			array('attach_is_image',	'garage_images.attach_is_image',	''),
+			array('attach_date',		'garage_images.attach_date',		''),
+			array('attach_filesize',	'garage_images.attach_filesize',	''),
+			array('attach_thumb_filesize',	'garage_images.attach_id',		'attach_thumb_filesize'),
+		),
+		array(
+			'target'	=> GARAGE_VEHICLE_GALLERY_TABLE,
+			'query_first'	=> array('target', $convert->truncate_statement . GARAGE_VEHICLE_GALLERY_TABLE),
+
+			array('vehicle_id',		'garage_gallery.garage_id',		''),
+			array('image_id',		'garage_gallery.image_id',		''),
+			array('hilite',			'1',					''),
+
+			'where'		=>	'garage_gallery.garage_id = garage.id AND garage_gallery.image_id = garage.image_id'
+		),
+		array(
+			'target'	=> GARAGE_VEHICLE_GALLERY_TABLE,
+
+			array('vehicle_id',		'garage_gallery.garage_id',		''),
+			array('image_id',		'garage_gallery.image_id',		''),
+			array('hilite',			'0',					''),
+
+			'where'		=>	'garage_gallery.garage_id = garage.id AND garage_gallery.image_id != garage.image_id',
+			'group_by'	=>	'garage_gallery.image_id'
+		),
+		array(
+			'target'	=> GARAGE_MODIFICATION_GALLERY_TABLE,
+			'query_first'	=> array('target', $convert->truncate_statement . GARAGE_MODIFICATION_GALLERY_TABLE),
+
+			array('vehicle_id',		'garage_mods.garage_id',		''),
+			array('modification_id',	'garage_mods.id',			''),
+			array('image_id',		'garage_mods.image_id',			''),
+			array('hilite',			'1',					''),
+
+			'where'		=>	'garage_mods.image_id IS NOT NULL'
+		),
+		array(
+			'target'	=> GARAGE_QUARTERMILE_GALLERY_TABLE,
+			'query_first'	=> array('target', $convert->truncate_statement . GARAGE_QUARTERMILE_GALLERY_TABLE),
+
+			array('vehicle_id',		'garage_quartermile.garage_id',		''),
+			array('quartermile_id',		'garage_quartermile.id',		''),
+			array('image_id',		'garage_quartermile.image_id',		''),
+			array('hilite',			'1',					''),
+
+			'where'		=>	'garage_quartermile.image_id IS NOT NULL'
+		),
+		array(
+			'target'	=> GARAGE_DYNORUN_GALLERY_TABLE,
+			'query_first'	=> array('target', $convert->truncate_statement . GARAGE_DYNORUN_GALLERY_TABLE),
+
+			array('vehicle_id',		'garage_rollingroad.garage_id',		''),
+			array('dynorun_id',		'garage_rollingroad.id',		''),
+			array('image_id',		'garage_rollingroad.image_id',		''),
+			array('hilite',			'1',					''),
+
+			'where'		=>	'garage_rollingroad.image_id IS NOT NULL'
+		),
+		array(
+			'target'	=> GARAGE_GUESTBOOKS_TABLE,
+			'query_first'	=> array('target', $convert->truncate_statement . GARAGE_GUESTBOOKS_TABLE),
+
+			array('id',			'garage_guestbooks.id',			''),
+			array('vehicle_id',		'garage_guestbooks.garage_id',		''),
+			array('author_id',		'garage_guestbooks.author_id',		''),
+			array('post_date',		'garage_guestbooks.post_date',		''),
+			array('ip_address',		'garage_guestbooks.ip_address',		'decode_ip'),
+			array('bbcode_bitfield',	'',					'get_bbcode_bitfield'),
+			array('bbcode_uid',		'garage_guestbooks.post_date',		'make_uid'),
+			array('bbcode_options',		'',					''),
+			array('pending',		'0',					''),
+			array('post',			'garage_guestbooks.post',		'phpbb_guestbook_prepare_message'),
+		),
+	),
+);
 }
 
 ?>

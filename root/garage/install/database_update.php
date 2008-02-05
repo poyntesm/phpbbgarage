@@ -139,8 +139,17 @@ $database_update_info = array(
 			),
 		),
 	),
-	// Changes from 3.0.B2 to the next version
+	// Changes from 2.0.B2 to the next version
 	'2.0.B2'			=> array(
+		// Change the following columns
+		'change_columns'		=> array(
+			BANLIST_TABLE	=> array(
+				'ban_reason'		=> array('VCHAR_UNI', ''),
+			),
+		),
+	),
+	// Changes from 2.0.B3 to the next version
+	'2.0.B3'			=> array(
 		// Change the following columns
 		'change_columns'		=> array(
 			BANLIST_TABLE	=> array(
