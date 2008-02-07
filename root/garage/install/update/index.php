@@ -9,9 +9,10 @@ if (!defined('IN_PHPBB'))
 $update_info = array(
 	'version'	=> array(
 		'from' => '2.0.B3',
-	       	'to' => '2.0.B4'
+	       	'to' => '2.0.B4-DEV'
 	),
 	'files'		=> array(
+		'viewtopic.php'
 	),
 	'binary'	=> array(
 	),
