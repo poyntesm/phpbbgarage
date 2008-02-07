@@ -1188,14 +1188,14 @@ class garage_vehicle
 		//We Are Moderating...So Show Options Required
 		if ( $owned == 'MODERATE' )
 		{
-			$reset_rating_link = '<a href="javascript:confirm_reset_rating(' . $vid . ')"><img src="' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" /></a>';
+			$reset_rating_link = '<a href="javascript:confirm_reset_rating(' . $vid . ')"><img src="' . $images['garage_delete'] . '" alt="'.$user->lang['DELETE'].'" title="'.$user->lang['DELETE'].'" border="0" /></a>';
 			$template->assign_block_vars('moderate', array());
 			$template->assign_vars(array(
-				'L_RATING_MODERATION' 	=> $lang['Rating Moderation'],
-				'L_RATER' 		=> $lang['Rater'],
-				'L_RATING' 		=> $lang['Rating'],
-				'L_DATE'	 	=> $lang['Date'],
-				'L_RESET_VEHICLE_RATING'=> $lang['Reset_Vehicle_Rating'],
+				'L_RATING_MODERATION' 	=> $user->lang['RATING MODERATION'],
+				'L_RATER' 		=> $user->lang['RATER'],
+				'L_RATING' 		=> $user->lang['RATING'],
+				'L_DATE'	 	=> $user->lang['DATE'],
+				'L_RESET_VEHICLE_RATING'=> $user->lang['RESET_VEHICLE_RATING'],
 				'RESET_RATING_LINK' 	=> $reset_rating_link)
 			);
 
@@ -1205,7 +1205,7 @@ class garage_vehicle
 			{
 				$delete_rating_link 		= '<a href="javascript:confirm_delete_rating(' . $vid . ',' . $rating_data[$i]['id'] . ')"><img src="' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" /></a>';
 				$rating_data[$i]['user_id']	=  ($rating_data[$i]['user_id'] < 0 ) ? ANONYMOUS : $rating_data[$i]['user_id'];
-				$rating_data[$i]['username'] 	=  ($rating_data[$i]['user_id'] < 0 ) ? $lang['Guest'] : $rating_data[$i]['username'];
+				$rating_data[$i]['username'] 	=  ($rating_data[$i]['user_id'] < 0 ) ? $user->lang['GUEST'] : $rating_data[$i]['username'];
 
 				$template->assign_block_vars('moderate.rating_row', array(
 					'U_PROFILE'	=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$rating_data[$i]['user_id']) ,
@@ -1615,17 +1615,17 @@ class garage_vehicle
 			'U_DELETE_VEHICLE2' 		=> append_sid("garage_vehicle.$phpEx?mode=delete_vehicle"),
 			'U_GUESTBOOK' 			=> append_sid("garage_guestbook.$phpEx?mode=view_guestbook&amp;VID=$vid"),
             		'U_PROFILE' 			=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$vehicle['user_id']),
-            		'U_VIEW_VEHICLE' 		=> ($owned == 'YES' ) ? append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;VID=$vid") : '',
-            		'U_EDIT_VEHICLE' 		=> ($owned == 'YES' ) ? append_sid("garage_vehicle.$phpEx?mode=edit_vehicle&amp;VID=$vid") : '',
-            		'U_DELETE_VEHICLE' 		=> (($owned == 'YES' AND $auth->acl_get('u_garage_delete_vehicle')) OR ($auth->acl_get('m_garage_delete'))) ? 'javascript:confirm_delete_vehicle(' . $vid . ')' : '',
-            		'U_ADD_MODIFICATION' 		=> ($owned == 'YES' ) ? append_sid("garage_modification.$phpEx?mode=add_modification&amp;VID=$vid") : '',
-            		'U_ADD_INSURANCE' 		=> ($owned == 'YES' AND $garage_config['enable_insurance'] ) ? append_sid("garage_premium.$phpEx?mode=add_premium&amp;VID=$vid") : '',
-            		'U_ADD_QUARTERMILE' 		=> ($owned == 'YES' AND $garage_config['enable_quartermile'] ) ? append_sid("garage_quartermile.$phpEx?mode=add_quartermile&amp;VID=$vid") : '',
-            		'U_ADD_DYNORUN' 		=> ($owned == 'YES' AND $garage_config['enable_dynorun'] ) ? append_sid("garage_dynorun.$phpEx?mode=add_dynorun&amp;VID=$vid") : '',
-            		'U_ADD_LAP' 			=> ($owned == 'YES' AND $garage_config['enable_tracktime'] ) ? append_sid("garage_track.$phpEx?mode=add_lap&amp;VID=$vid") : '',
-            		'U_ADD_SERVICE' 		=> ($owned == 'YES' AND $garage_config['enable_service'] ) ? append_sid("garage_service.$phpEx?mode=add_service&amp;VID=$vid") : '',
-            		'U_MANAGE_VEHICLE_GALLERY'	=> ($owned == 'YES' ) ? append_sid("garage_vehicle.$phpEx?mode=manage_vehicle_gallery&amp;VID=$vid") : '',
-			'U_SET_MAIN_VEHICLE' 		=> (($owned == 'YES' OR $owned == 'MODERATE') AND ($vehicle['main_vehicle'] == 0) ) ?  append_sid("garage_vehicle.$phpEx?mode=set_main_vehicle&amp;VID=$vid"): '' ,
+            		'U_VIEW_VEHICLE' 		=> ($owned == 'YES' || $auth->acl_get('m_garage_edit') ) ? append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;VID=$vid") : '',
+            		'U_EDIT_VEHICLE' 		=> ($owned == 'YES' || $auth->acl_get('m_garage_edit') ) ? append_sid("garage_vehicle.$phpEx?mode=edit_vehicle&amp;VID=$vid") : '',
+            		'U_DELETE_VEHICLE' 		=> (($owned == 'YES' AND $auth->acl_get('u_garage_delete_vehicle') || $auth->acl_get('m_garage_delete')) OR ($auth->acl_get('m_garage_delete'))) ? 'javascript:confirm_delete_vehicle(' . $vid . ')' : '',
+            		'U_ADD_MODIFICATION' 		=> ($owned == 'YES' || $auth->acl_get('m_garage_edit') ) ? append_sid("garage_modification.$phpEx?mode=add_modification&amp;VID=$vid") : '',
+            		'U_ADD_INSURANCE' 		=> (($owned == 'YES' || $auth->acl_get('m_garage_edit')) AND $garage_config['enable_insurance'] ) ? append_sid("garage_premium.$phpEx?mode=add_premium&amp;VID=$vid") : '',
+            		'U_ADD_QUARTERMILE' 		=> (($owned == 'YES' || $auth->acl_get('m_garage_edit')) AND $garage_config['enable_quartermile'] ) ? append_sid("garage_quartermile.$phpEx?mode=add_quartermile&amp;VID=$vid") : '',
+            		'U_ADD_DYNORUN' 		=> (($owned == 'YES' || $auth->acl_get('m_garage_edit')) AND $garage_config['enable_dynorun'] ) ? append_sid("garage_dynorun.$phpEx?mode=add_dynorun&amp;VID=$vid") : '',
+            		'U_ADD_LAP' 			=> (($owned == 'YES' || $auth->acl_get('m_garage_edit')) AND $garage_config['enable_tracktime'] ) ? append_sid("garage_track.$phpEx?mode=add_lap&amp;VID=$vid") : '',
+            		'U_ADD_SERVICE' 		=> (($owned == 'YES' || $auth->acl_get('m_garage_edit')) AND $garage_config['enable_service'] ) ? append_sid("garage_service.$phpEx?mode=add_service&amp;VID=$vid") : '',
+            		'U_MANAGE_VEHICLE_GALLERY'	=> ($owned == 'YES' || $auth->acl_get('m_garage_edit')) ? append_sid("garage_vehicle.$phpEx?mode=manage_vehicle_gallery&amp;VID=$vid") : '',
+			'U_SET_MAIN_VEHICLE' 		=> (($owned == 'YES' || $auth->acl_get('m_garage_edit')) AND ($vehicle['main_vehicle'] == 0) ) ?  append_sid("garage_vehicle.$phpEx?mode=set_main_vehicle&amp;VID=$vid"): '' ,
 			'U_MODERATE_VEHICLE' 		=> ($owned == 'NO' AND $auth->acl_get('m_garage_delete')) ?  append_sid("garage_vehicle.$phpEx?mode=moderate_vehicle&amp;VID=$vid"): '' ,
 			'U_HILITE_IMAGE' 		=> (($vehicle['attach_id']) AND ($vehicle['attach_is_image']) AND (!empty($vehicle['attach_thumb_location'])) AND (!empty($vehicle['attach_location'])) ) ?  append_sid("garage.$phpEx?mode=view_image&amp;image_id=". $vehicle['attach_id']): '' ,
 
