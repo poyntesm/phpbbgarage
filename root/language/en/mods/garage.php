@@ -762,6 +762,7 @@ $lang = array_merge($lang, array(
 	'TRACK_PICTURES'		=> 'Track Pictures',
 
 	//SERVICE HISTORY KEYS
+	'SERVICES'			=> 'Services',
 	'ADD_SERVICE'			=> 'Add Service',
 	'ADD_NEW_SERVICE'		=> 'Add New Service',
 	'EDIT_SERVICE'			=> 'Edit Service',
