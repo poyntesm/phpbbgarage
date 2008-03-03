@@ -32,7 +32,7 @@
 			<td>{vehicle_row.COLOUR}</td>
 			<td>{vehicle_row.PRICE}&nbsp;{vehicle_row.CURRENCY}</td>
 			<td>{vehicle_row.MILEAGE}&nbsp;{vehicle_row.MILEAGE_UNIT}</td>
-			<td align="center"><a href="{vehicle_row.U_EDIT}">{vehicle_row.EDIT}</a></td>
+			<td align="center"><a href="{vehicle_row.U_EDIT}" class="garage-edit-icon">{vehicle_row.EDIT}</a></td>
 			<td align="center"><input type="checkbox" class="radio" name="vehicle_id_list[]" value="{vehicle_row.ID}" /></td>
 		</tr>
 		<!-- BEGINELSE -->
@@ -139,7 +139,7 @@
 			<td>{business_row.WEBSITE}<br />{business_row.EMAIL}</td>
 			<td>{business_row.OPENING_HOURS}</td>
 			<td>{business_row.TYPE}</td>
-			<td align="center"><a href="{business_row.U_EDIT}">{business_row.EDIT}</a></td>
+			<td align="center"><a href="{business_row.U_EDIT}" class="garage-edit-icon">{business_row.EDIT}</a></td>
 			<td align="center"><input type="checkbox" class="radio" name="business_id_list[]" value="{business_row.ID}" /></td>
 		</tr>
 		<!-- BEGINELSE -->
@@ -188,7 +188,7 @@
 			<td>{quartermile_row.EIGHTH}&nbsp;@&nbsp;{quartermile_row.EIGHTHMPH}</td>
 			<td>{quartermile_row.THOU}</td>
 			<td>{quartermile_row.QUART}&nbsp;@&nbsp;{quartermile_row.QUARTMPH}</td>
-			<td align="center"><a href="{quartermile_row.U_EDIT}">{quartermile_row.EDIT}</a></td>
+			<td align="center"><a href="{quartermile_row.U_EDIT}" class="garage-edit-icon">{quartermile_row.EDIT}</a></td>
 			<td align="center"><input type="checkbox" class="radio" name="quartermile_id_list[]" value="{quartermile_row.ID}" /></td>
 		</tr>
 		<!-- BEGINELSE -->
@@ -237,7 +237,7 @@
 			<td>{dynorun_row.BOOST}&nbsp;{dynorun_row.BOOST_UNIT}</td>
 			<td>{dynorun_row.NITROUS}</td>
 			<td>{dynorun_row.PEAKPOINT}</td>
-			<td align="center"><a href="{dynorun_row.U_EDIT}">{dynorun_row.EDIT}</a></td>
+			<td align="center"><a href="{dynorun_row.U_EDIT}" class="garage-edit-icon">{dynorun_row.EDIT}</a></td>
 			<td align="center"><input type="checkbox" class="radio" name="dynorun_id_list[]" value="{dynorun_row.ID}" /></td>
 		</tr>
 		<!-- BEGINELSE -->
@@ -276,7 +276,7 @@
 			<td>{comment_row.POST}</td>
 			<td>{comment_row.AUTHOR}</td>
 			<td>{comment_row.POST_TIME}</td>
-			<td align="center"><a href="{comment_row.U_EDIT}">{comment_row.EDIT}</a></td>
+			<td align="center"><a href="{comment_row.U_EDIT}" class="garage-edit-icon">{comment_row.EDIT}</a></td>
 			<td align="center"><input type="checkbox" class="radio" name="comment_id_list[]" value="{comment_row.ID}" /></td>
 		</tr>
 		<!-- BEGINELSE -->
@@ -321,7 +321,7 @@
 			<td>{lap_row.CONDITION}</td>
 			<td>{lap_row.TYPE}</td>
 			<td>{lap_row.MINUTE}.{lap_row.SECOND}.{lap_row.MILLISECOND}</td>
-			<td align="center"><a href="{lap_row.U_EDIT}">{lap_row.EDIT}</a></td>
+			<td align="center"><a href="{lap_row.U_EDIT}" class="garage-edit-icon">{lap_row.EDIT}</a></td>
 			<td align="center"><input type="checkbox" class="radio" name="lap_id_list[]" value="{lap_row.ID}" /></td>
 		</tr>
 		<!-- BEGINELSE -->
@@ -354,7 +354,7 @@
 		<!-- BEGIN track_row -->
 		<!-- IF track_row.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
 			<td>{track_row.TITLE}</td>
-			<td align="center"><a href="{track_row.U_EDIT}">{track_row.EDIT}</a></td>
+			<td align="center"><a href="{track_row.U_EDIT}" class="garage-edit-icon">{track_row.EDIT}</a></td>
 			<td align="center"><input type="checkbox" class="radio" name="track_id_list[]" value="{track_row.ID}" /></td>
 		</tr>
 		<!-- BEGINELSE -->
