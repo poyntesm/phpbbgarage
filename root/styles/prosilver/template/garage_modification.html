@@ -108,19 +108,19 @@ function build_product_list()
 								<h3>{L_TITLE}</h3>
 								<fieldset>
 									<dl>
-										<dt><b>{L_CATEGORY}</b><span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
+										<dt><b>{L_CATEGORY}</b>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
 										<dd><select id="category_id" name="category_id" onchange="category_change(this)" ><option value="">{L_SELECT_CATEGORY}</option><option value="">------</option><!-- BEGIN category--><option value="{category.VALUE}" <!-- IF category.S_SELECTED -->selected="selected"<!-- ENDIF -->>{category.TEXT}</option><!-- END category --></select>&nbsp;</dd>
 									</dl>
 									<dl>
-										<dt><b>{L_MANUFACTURER}</b><span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
+										<dt><b>{L_MANUFACTURER}</b>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
 										<dd><select id="manufacturer_id" name="manufacturer_id" onchange="get_product_list(this)" ><option value="">{L_SELECT_MANUFACTURER}</option><option value="">------</option><!-- BEGIN manufacturer--><option value="{manufacturer.VALUE}" <!-- IF manufacturer.S_SELECTED -->selected="selected"<!-- ENDIF -->>{manufacturer.TEXT}</option><!-- END manufacturer --></select>&nbsp;{L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS_PRODUCT}">{L_HERE}</a></dd>
 									</dl>
 									<dl>
-										<dt><b>{L_PRODUCT}</b><span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
+										<dt><b>{L_PRODUCT}</b>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
 										<dd><select id="product_id" name="product_id"><option value="">{L_SELECT_PRODUCT}</option><option value="">------</option></select>&nbsp;&nbsp;{L_NOT_LISTED_YET}<a href="{U_SUBMIT_PRODUCT}">{L_HERE}</a>&nbsp;&nbsp;&nbsp;<b>{L_RATING}</b>&nbsp;<select id="product_rating" name="product_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN product_rating --><option value="{product_rating.VALUE}" <!-- IF product_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{product_rating.TEXT}</option><!-- END product_rating --></select></dd>
 									</dl>
 									<dl>
-										<dt><b>{L_PURCHASED_FROM}</b><span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
+										<dt><b>{L_PURCHASED_FROM}</b>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
 									  	<dd><select id="shop_id" name="shop_id"><option value="">{L_SELECT_SHOP}</option><option value="">------</option><!-- BEGIN shop --><option value="{shop.VALUE}" <!-- IF shop.S_SELECTED -->selected="selected"<!-- ENDIF -->>{shop.TEXT}</option><!-- END shop --></select>&nbsp;{L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS_SHOP}">{L_HERE}</a></dd>
 									</dl>
 									<dl>
@@ -128,7 +128,7 @@ function build_product_list()
 										<dd>{CURRENCY}:<input name="price" type="text" class="inputbox autowidth" size="10" value="{PRICE}" />&nbsp;<b>{L_PURCHASE_RATING}</b>&nbsp;<select id="purchase_rating" name="purchase_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN purchase_rating --><option value="{purchase_rating.VALUE}" <!-- IF purchase_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{purchase_rating.TEXT}</option><!-- END purchase_rating --></select></dd>
 									</dl>	
 									<dl>
-										<dt><b>{L_INSTALLED_BY}</b><span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
+										<dt><b>{L_INSTALLED_BY}</b>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
 									  	<dd><select id="installer_id" name="installer_id"><option value="">{L_SELECT_GARAGE}</option><option value="">------</option><!-- BEGIN garage --><option value="{garage.VALUE}" <!-- IF garage.S_SELECTED -->selected="selected"<!-- ENDIF -->>{garage.TEXT}</option><!-- END garage --></select>&nbsp;{L_NOT_LISTED_YET}<a href="{U_SUBMIT_BUSINESS_GARAGE}">{L_HERE}</a></dd>
 									</dl>
 									<dl>
