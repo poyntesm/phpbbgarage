@@ -10,47 +10,6 @@
 
 	<h3>{L_MCP_GARAGE_UNAPPROVED_VEHICLES}</h3>
 
-		<ul class="topiclist topics">
-			<li class="header">
-				<dl>
-					<dt></dt>
-					<dd><span>{L_USERNAME}</span></dd>
-					<dd><span>{L_VEHICLE}</span></dd>
-					<dd><span>{L_COLOUR}</span></dd>
-					<dd><span>{L_PRICE}</span></dd>
-					<dd><span>{L_MILEAGE}</span></dd>
-					<dd><span>{L_EDIT}</span></dd>
-					<dd><span>{L_MARK}</span></dd>
-				</dl>
-			</li>
-		</ul>
-
-		<ul class="topiclist topics">
-
-			<!-- BEGIN vehicle_row -->
-			<li class="row<!-- IF vehicle_row.S_ROW_COUNT is even --> bg1<!-- ELSE --> bg2<!-- ENDIF -->">
-				<dl class="icon" style="background-image: url({vehicle_row.TOPIC_FOLDER_IMG_SRC});">
-					<dt><!-- IF vehicle_row.U_IMAGE --><a href="{vehicle_row.U_IMAGE}" target="_blank">{vehicle_row.IMAGE}</a><!-- ENDIF --></dt>
-					<dd><b><a href="{vehicle_row.U_PROFILE}" <!-- IF vehicle_row.USERNAME_COLOUR --> style="color: {vehicle_row.USERNAME_COLOUR}"<!-- ENDIF -->>{vehicle_row.USERNAME}</a></b></dd>
-					<dd>{vehicle_row.MAKE}&nbsp;{vehicle_row.MODEL}&nbsp;{vehicle_row.ENGINE_TYPE}</dd>
-					<dd>{vehicle_row.COLOUR}</dd>
-					<dd>{vehicle_row.PRICE}&nbsp;{vehicle_row.CURRENCY}</dd>
-					<dd>{vehicle_row.MILEAGE}&nbsp;{vehicle_row.MILEAGE_UNIT}</dd>
-					<dd align="center"><a href="{vehicle_row.U_EDIT}">{vehicle_row.EDIT}</a></dd>
-					<dd align="center"><input type="checkbox" class="radio" name="vehicle_id_list[]" value="{vehicle_row.ID}" /></dd>
-				</dl>
-			</li>
-			<!-- END vehicle_row -->
-		</ul>
-
-	<span class="corners-bottom"><span></span></span></div>
-	</div>
-
-	<div class="panel">
-	<div class="inner"><span class="corners-top"><span></span></span>
-
-	<h3>{L_MCP_GARAGE_UNAPPROVED_VEHICLES}</h3>
-
 	<table cellspacing="1" class="table1">
 	<thead>
 		<tr> 
