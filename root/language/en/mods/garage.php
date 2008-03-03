@@ -730,8 +730,8 @@ $lang = array_merge($lang, array(
 	'SELECT_ONE_ONLY'		=> 'Disapproving this item require decisions about linked items, as such you can not disapprove more than one item at a time.',
 
 	//UCP LANGUAGE KEYS
-	'EMAIL_OPTOUT'			=> 'Optout of pending notification emails',
-	'PM_OPTOUT'			=> 'Optout of pending notification private messages',
+	'EMAIL_OPTOUT'			=> 'Opt-out of pending notification emails',
+	'PM_OPTOUT'			=> 'Opt-out of pending notification private messages',
 	'GUESTBOOK_EMAIL_NOTIFY'	=> 'Email notification of comments to your vehicles',
 	'GUESTBOOK_PM_NOTIFY'		=> 'Private message notification of comments to your vehicles',
 	'INDEX_COLUMNS'			=> 'Number of columns on index page',
