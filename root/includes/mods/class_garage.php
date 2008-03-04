@@ -124,7 +124,7 @@ class garage
 			// Adjust the message slightly according to the permissions
 			if ($auth->acl_gets('a_', 'm_') || $auth->acl_getf_global('m_'))
 			{
-				$message = 'REMOVE_GARAGE_NSTALL';
+				$message = 'REMOVE_GARAGE_INSTALL';
 			}
 			else
 			{

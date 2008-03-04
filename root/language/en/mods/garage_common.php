@@ -25,7 +25,7 @@ $lang = array_merge($lang, array(
 	'PENDING_GARAGE_ITEMS'		=> 'Pending Garage Items',
 	'VIEWING_GARAGE'		=> 'Viewing Garage',
 	'USERS_GARAGE'			=> 'View user\'s Garage',
-	'REMOVE_GARAGE_NSTALL' 		=> 'Please delete, move or rename the garage install directory before you use your garage. If this directory is still presentthe garage will be unavailable',
+	'REMOVE_GARAGE_INSTALL'		=> 'Please delete, move or rename the garage install directory before you use your garage. If this directory is still presentthe garage will be unavailable',
 	'GARAGE_DISABLE'		=> 'Sorry but this garage is currently unavailable while the admin is performing work on it.',
 ));
 
