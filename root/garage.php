@@ -1105,6 +1105,10 @@ switch( $mode )
 		{
 			redirect(append_sid("{$phpbb_root_path}garage_premium.$phpEx", "mode=" . $data['redirect'] . "&amp;VID=$vid"));
 		}
+		elseif ($data['redirect'] == 'add_service' || $data['redirect'] == 'edit_service')
+		{
+			redirect(append_sid("{$phpbb_root_path}garage_service.$phpEx", "mode=" . $data['redirect'] . "&amp;VID=$vid"));
+		}
 
 		break;
 
