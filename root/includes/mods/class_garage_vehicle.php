@@ -1081,7 +1081,12 @@ class garage_vehicle
 	*/
 	function delete_user_vehicles($user_id)
 	{
-		break;
+
+		$vehicles = $this->get_vehicles_by_user($user_id);
+		for ($i = 0; $i < count($vehicles); $i++)
+		{
+			$this->delete_vehicle($vehicles[$i]['id']);
+		}
 	}
 	
 	/**
@@ -1092,20 +1097,66 @@ class garage_vehicle
 	*/
 	function delete_vehicle($id)
 	{
-		global $garage, $garage_modification, $garage_quartermile, $garage_dynorun, $garage_insurance, $garage_guestbook, $garage_vehicle, $garage_image, $garage_service, $garage_track, $garage_blog, $vid;
+		global $garage, $garage_modification, $garage_quartermile, $garage_dynorun, $garage_insurance, $garage_guestbook, $garage_vehicle, $garage_image, $garage_service, $garage_track, $garage_blog, $vid, $phpEx, $phpbb_root_path;
 
 		$vid = $id;
 
+		//If any required class is not setup then set it up.
+		if (!class_exists('garage_modification'))
+		{
+			include_once($phpbb_root_path . 'includes/mods/class_garage_modification.' . $phpEx);
+		}
 		$modifications	= $garage_modification->get_modifications_by_vehicle($vid);
+
+		if (!class_exists('garage_quartermile'))
+		{
+			include_once($phpbb_root_path . 'includes/mods/class_garage_quartermile.' . $phpEx);
+		}
 		$quartermiles	= $garage_quartermile->get_quartermiles_by_vehicle($id);
+
+		if (!class_exists('garage_dynorun'))
+		{
+			include_once($phpbb_root_path . 'includes/mods/class_garage_dynorun.' . $phpEx);
+		}
 		$dynoruns 	= $garage_dynorun->get_dynoruns_by_vehicle($vid);
+
+		if (!class_exists('garage_insurance'))
+		{
+			include_once($phpbb_root_path . 'includes/mods/class_garage_insurance.' . $phpEx);
+		}
 		$premiums 	= $garage_insurance->get_premiums_by_vehicle($vid);
+
+		if (!class_exists('garage_service'))
+		{
+			include_once($phpbb_root_path . 'includes/mods/class_garage_service.' . $phpEx);
+		}
 		$services 	= $garage_service->get_services_by_vehicle($vid);
+
+		if (!class_exists('garage_track'))
+		{
+			include_once($phpbb_root_path . 'includes/mods/class_garage_track.' . $phpEx);
+		}
 		$laps 		= $garage_track->get_laps_by_vehicle($vid);
+
+		if (!class_exists('garage_blog'))
+		{
+			include_once($phpbb_root_path . 'includes/mods/class_garage_blog.' . $phpEx);
+		}
 		$blogs 		= $garage_blog->get_blogs_by_vehicle($vid);
+
+		if (!class_exists('garage_guestbook'))
+		{
+			include_once($phpbb_root_path . 'includes/mods/class_garage_guestbook.' . $phpEx);
+		}
 		$comments 	= $garage_guestbook->get_comments_by_vehicle($vid);
-		$ratings	= $garage_vehicle->get_vehicle_rating($vid);
+
+		if (!class_exists('garage_image'))
+		{
+			include_once($phpbb_root_path . 'includes/mods/class_garage_image.' . $phpEx);
+		}
 		$images		= $garage_image->get_vehicle_gallery($vid);
+
+		$ratings	= $this->get_vehicle_rating($vid);
 	
 		for ($i = 0, $count = sizeof($modifications);$i < $count; $i++)
 		{
