@@ -156,7 +156,7 @@ class acp_garage_category
 
 				$category_data = $garage->get_category($category_id);
 				$all_data = $garage->get_categories();
-				$select_to = $garage_template->build_move_to($all_data, $category_id, 'id');
+				$select_to = $garage_template->build_move_to($all_data, $category_id, 'title');
 
 				$template->assign_vars(array(
 					'S_DELETE_CATEGORY'		=> true,
