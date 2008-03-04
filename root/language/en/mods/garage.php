@@ -543,7 +543,6 @@ $lang = array_merge($lang, array(
 	'NO_ORPHANED_FILES_SELECTED' 	=> 'No orphaned files were selected, therefore none were removed ;)',
 	'REBUILD_THUMBNAILS_COMPLETE' 	=> 'Rebuild All Thumbnails completed',
 	'PERMISSIONS_UPDATED' 		=> 'Garage Permissions Updated.',
-	'SHOP' 				=> 'Shop',
 	'PROCESSING_ATTACH_ID' 		=> 'Processing attach_id: ',
 	'REMOTE_IMAGE' 			=> 'Remote Image: ',
 	'FILE_NAME' 			=> 'file_name: ',
