@@ -82,6 +82,7 @@ class acp_garage_category
 				* Delete an existing catgory
 				*/
 				case 'delete':
+	
 					$action_modifications	= request_var('action_modifications', '');
 					$modifications_to_id	= request_var('modifications_to_id', 0);
 
@@ -135,7 +136,7 @@ class acp_garage_category
 
 				$template->assign_vars(array(
 					'S_EDIT_CATEGORY'		=> true,
-					'U_ACTION'			=> $this->u_action . "&amp;action=edit&amp;id=$category_id",
+					'U_EDIT_ACTION'			=> $this->u_action . "&amp;action=edit&amp;id=$category_id",
 					'U_BACK'			=> $this->u_action,
 					'CATEGORY_NAME'			=> $category_data['title'],
 					'S_ERROR'			=> (sizeof($errors)) ? true : false,
@@ -161,7 +162,7 @@ class acp_garage_category
 				$template->assign_vars(array(
 					'S_DELETE_CATEGORY'		=> true,
 					'S_MOVE_CATEGORY'		=> ($garage_admin->count_categories() > 1) ? true : false,
-					'U_ACTION'			=> $this->u_action . "&amp;action=delete&amp;id=$category_id",
+					'U_DELETE_ACTION'		=> $this->u_action . "&amp;action=delete&amp;id=$category_id",
 					'U_BACK'			=> $this->u_action,
 					'CATEGORY_NAME'			=> $category_data['title'],
 					'S_MOVE_CATEGORY_OPTIONS'	=> $select_to,
