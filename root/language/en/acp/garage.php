@@ -457,15 +457,34 @@ $lang = array_merge($lang, array(
 	'ACP_MANAGE_CATEGORY'		=> 'Manage categories',
 	'ACP_MANAGE_MAKES_MODELS'	=> 'Manage makes and models',
 
-
-
-
-
-
-
-
-
-
+	//Added For B4
+	'DEFAULT_MAKE' 			=> 'Default Make Id',
+	'DEFAULT_MAKE_EXPLAIN' 		=> 'The make with this ID is shown by default in the \'add vehicle\' list.',
+	'DEFAULT_MODEL' 		=> 'Default Model Id',
+	'DEFAULT_MODEL_EXPLAIN' 	=> 'The model with this ID is shown by default in the \'add vehicle\' list.',
+	'VEHICLES_PER_PAGE_EXPLAIN' 	=> 'The number of vehicles that is shown on a page.',
+	'ENABLE_TOP_LAP' 		=> 'Enable Top Lap',
+	'ENABLE_TOP_LAP_EXPLAIN' 	=> 'Shows the \'Fastest laptime\' block on the index page.',
+	'TOP_LAP_LIMIT' 		=> 'Top Lap Limit',
+	'TOP_LAP_LIMIT_EXPLAIN' 	=> 'The number of vehicles that is shown in the \'Fastest laptime\' block.',
+	'ACP_GARAGE_SERVICE_CONFIG' 	=> 'Service Configuration',
+	'ACP_GARAGE_BLOG_CONFIG' 	=> 'Blog Configuration',
+	'ENABLE_SERVICE' 		=> 'Enable Service',
+	'ENABLE_SERVICE_EXPLAIN' 	=> 'Enable Service',
+	'ENABLE_BLOG' 			=> 'Enable Blog',
+	'ENABLE_BLOG_EXPLAIN' 		=> 'Allow users to add a blog to their vehicles.',
+	'ENABLE_BLOG_BBCODE' 		=> 'Enable Blog BBCode ',
+	'ENABLE_BLOG_BBCODE_EXPLAIN' 	=> 'Enable BBcode usage in blogs.',
+	'ACP_MANAGE_QUOTAS' 		=> 'Manage quotas',
+	'ACP_MANAGE_PRODUCTS' 		=> 'Manage products',
+	'ACP_MANAGE_MAKES_MODELS' 	=> 'Manage makes & models',
+	'ACP_MANAGE_BUSINESS' 		=> 'Bussines configuration',
+	'ACP_MANAGE_CATEGORY' 		=> 'Category management',
+	'EDIT_PRODUCT' 			=> 'Modify Product',
+	'SELECT_MANUFACTURER' 		=> 'Select manufacturer',
+	'ACP_MANAGE_TRACKS' 		=> 'Track management',
+	'EDIT_TRACK' 			=> 'Modify track',
+	'ADD_INSURANCE' 		=> 'Add insurance'
 
 
 ));
