@@ -854,7 +854,7 @@ class garage_vehicle
 				'VEHICLE' 		=> $vehicle_data['vehicle'],
 				'USERNAME' 		=> $vehicle_data['username'],
 				'IMAGE_TITLE'		=> $vehicle_data['attach_file'],
-				'U_VIEW_IMAGE'		=> append_sid($absolute_url."garage.$phpEx?mode=view_image&amp;image_id=".$vehicle_data['attach_id']),
+				'U_VIEW_IMAGE'		=> (!empty($vehicle_data['attach_id'])) ? append_sid($absolute_url."garage.$phpEx?mode=view_image&amp;image_id=".$vehicle_data['attach_id']) : '',
 				'U_VIEW_VEHICLE' 	=> append_sid($absolute_url."garage_vehicle.$phpEx?mode=view_vehicle&amp;VID=".$vehicle_data['id']),
 				'U_VIEW_PROFILE' 	=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$vehicle_data['user_id']),
 				'USERNAME_COLOUR'	=> get_username_string('colour', $vehicle_data['user_id'], $vehicle_data['username'], $vehicle_data['user_colour']),
