@@ -62,7 +62,7 @@ $lang = array_merge($lang, array(
 
 	'INSTALL_INTRO_BODY'		=> 'With this option, it is possible to install phpBB Garage onto your server.</p>
 
-	<p><strong>Note:</strong> This installer will help you through all the database related steps & also the editting of core phpBB files. Please my sure you have read the template & language MODX files to complete the installation.</p>
+	<p><strong>Note:</strong> This installer will help you through all the database related steps &amp; also the editting of core phpBB files. Please my sure you have read the template &amp; language MODX files to complete the installation.</p>
 
 	<p>phpBB Garage supports the following databases:</p>
 	<ul>
@@ -101,7 +101,7 @@ $lang = array_merge($lang, array(
 	'SPECIFY_OPTIONS'		=> 'Specify conversion options',
 	'STAGE_ADMINISTRATOR'		=> 'Administrator details',
 	'STAGE_OPTIONAL'		=> 'Optional settings',
-	'STAGE_OPTIONAL_EXPLAIN'	=> 'The options on this page allow you to have some default data created during the install. The options here are not required for install, however if you do not use the defaults you will need to setup items such as makes, models & categories after the installation.',
+	'STAGE_OPTIONAL_EXPLAIN'	=> 'The options on this page allow you to have some default data created during the install. The options here are not required for install, however if you do not use the defaults you will need to setup items such as makes, models &amp; categories after the installation.',
 	'STAGE_CONFIG_FILE'		=> 'Configuration file',
 	'STAGE_CREATE_TABLE'		=> 'Create database tables',
 	'STAGE_CREATE_TABLE_EXPLAIN'	=> 'The database tables used by phpBB Garage have been created and populated with required data and if selected some optional data. Proceed to the next screen to install new permissions required by phpBB Garage.',
