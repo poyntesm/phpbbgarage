@@ -90,11 +90,33 @@ class garage
 		{
 			if (!empty($HTTP_POST_VARS[$param]))
 			{
-				$data[$param] = str_replace("\'", "''", trim(htmlspecialchars($HTTP_POST_VARS[$param])));
+				if ( is_array( $HTTP_POST_VARS[$param]) )
+				{
+					$data[$param] = $HTTP_POST_VARS[$param];
+
+					foreach($data[$param] as $index => $value)
+					{
+						$data[$param][$index] = str_replace("\'", "''", trim(htmlspecialchars($value)));
+					}
+
+				}
+				else
+					$data[$param] = str_replace("\'", "''", trim(htmlspecialchars($HTTP_POST_VARS[$param])));
 			}
 			else if (!empty($HTTP_GET_VARS[$param]))
 			{
-				$data[$param] = str_replace("\'", "''", trim(htmlspecialchars($HTTP_GET_VARS[$param])));
+				if ( is_array( $HTTP_GET_VARS[$param]) )
+				{					
+					$data[$param] = $HTTP_GET_VARS[$param];
+
+					foreach($data[$param] as $index => $value)
+					{
+						$data[$param][$index] = str_replace("\'", "''", trim(htmlspecialchars($value)));
+					}
+
+				}
+				else
+					$data[$param] = str_replace("\'", "''", trim(htmlspecialchars($HTTP_GET_VARS[$param])));
 			}
 		}
 

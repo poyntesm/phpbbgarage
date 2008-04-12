@@ -971,7 +971,7 @@ switch( $mode )
 		$int_params = array('nitrous');
 		$int_data = $garage->process_int_vars($int_params);
 		$str_params = array('dynocenter', 'bhp', 'bhp_unit', 'torque', 'torque_unit', 'boost', 'boost_unit', 'peakpoint');
-		$str_data = $garage->process_str_vars($params);
+		$str_data = $garage->process_str_vars($str_params);
 		$data = $garage->merge_int_str_data($int_data, $str_data);
 		$data['pending'] = ($garage_config['enable_rollingroad_approval'] == '1') ? 1 : 0 ;
 		$data['time'] = time();
