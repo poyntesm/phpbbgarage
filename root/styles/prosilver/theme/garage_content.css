@@ -64,7 +64,6 @@
 	padding: 0 5px;
 	margin: 0px 10px 10px 0px;
 	width: auto;
-	white-space: nowrap;
 }
 
 .vehicles-mini span.corners-top, .vehicles-mini span.corners-bottom {
@@ -219,11 +218,15 @@ ul.manage-vehicle-icons li.newservice-icon	{
 	background-position: 100% 50%;
 	padding: 1px 17px 0 0;
 }
-
-.icon-garage		{ background-image: url("{T_THEME_PATH}/images/icon_garage.gif"); }
-.icon-quartermile	{ background-image: url("{T_THEME_PATH}/images/icon_quartermile.gif"); }
-.icon-dynorun		{ background-image: url("{T_THEME_PATH}/images/icon_dynorun.gif"); }
-
+.icon-garage { 
+background-image : url("{T_THEME_PATH}/images/icon_garage.gif");
+} 
+.icon-quartermile { 
+background-image : url("{T_THEME_PATH}/images/icon_quartermile.gif");
+} 
+.icon-dynorun { 
+background-image : url("{T_THEME_PATH}/images/icon_dynorun.gif");
+} 
 dt.index_block_header, dd.index_block_header {
 	width: 33%;
 	text-align: center;
@@ -320,11 +323,11 @@ dt.index_block, dd.index_block {
 }
 
 #gtabs a:hover span {
-	color: #BC2A4D;
+color : #bc2a4d;
 }
 
 #gtabs .activetab a {
-	border-bottom-color: #CADCEB;
+border-bottom-color : #cadceb;
 }
 
 #gtabs .activetab a span {
@@ -354,11 +357,11 @@ dt.index_block, dd.index_block {
 * html ul.garage_list li { position: relative; }
 
 ul.garage_list li {
-	color: #4C5D77;
+color : #4c5d77;
 }
 
 ul.garage_list dd {
-	border-left-color: #FFFFFF;
+border-left-color : #ffffff;
 }
 
 ul.garage_list {

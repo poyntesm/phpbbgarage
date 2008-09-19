@@ -108,24 +108,10 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 				<action type="after-add">//-- mod : Garage ----------------------------------------------------------------------------------------------------------</action>
 			</edit>
 			<edit>
-				<find><![CDATA['k' => $user->lang['JABBER']]]></find>
-				<inline-edit>
-					<inline-find><![CDATA['k' => $user->lang['JABBER']]]></inline-find>
-					<inline-action type="after-add"><![CDATA[, 'o' => $user->lang['GARAGE']]]></inline-action>
-				</inline-edit>
-			</edit>
-			<edit>
-				<find><![CDATA['k' => 'u.user_jabber']]></find>
-				<inline-edit>
-					<inline-find><![CDATA['k' => 'u.user_jabber']]></inline-find>
-					<inline-action type="after-add"><![CDATA[, 'o' => 'u.garage_id']]></inline-action>
-				</inline-edit>
-			</edit>
-			<edit>
 				<find><![CDATA[			'SELECT'	=> 'u.user_id, u.group_id as default_group, u.username, u.username_clean, u.user_colour, u.user_rank, u.user_posts, u.user_allow_pm, g.group_id, g.group_name, g.group_colour, g.group_type, ug.user_id as ug_user_id',]]></find>
 				<inline-edit>
-					<inline-find>ug.user_id as ug_user_id</inline-find>
-					<inline-action type="after-add">, v.id as vid</inline-action>
+					<inline-find><![CDATA[u.user_id]]></inline-find>
+					<inline-action type="after-add"><![CDATA[, v.id as vid]]></inline-action>
 				</inline-edit>
 			</edit>
 			<edit>
@@ -151,6 +137,20 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
 ]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA['k' => $user->lang['JABBER']]]></find>
+				<inline-edit>
+					<inline-find><![CDATA['k' => $user->lang['JABBER']]]></inline-find>
+					<inline-action type="after-add"><![CDATA[, 'o' => $user->lang['GARAGE']]]></inline-action>
+				</inline-edit>
+			</edit>
+			<edit>
+				<find><![CDATA['k' => 'u.user_jabber']]></find>
+				<inline-edit>
+					<inline-find><![CDATA['k' => 'u.user_jabber']]></inline-find>
+					<inline-action type="after-add"><![CDATA[, 'o' => 'u.garage_id']]></inline-action>
+				</inline-edit>
 			</edit>
 
 			<edit>

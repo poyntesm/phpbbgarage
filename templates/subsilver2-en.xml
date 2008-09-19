@@ -124,7 +124,7 @@ img_garage_no_thumb		= garage_no_thumb.gif
 			</edit>
 		</open>
 
-		<open src="styles/subsilver2/templates/memberlist_body.html">
+		<open src="styles/subsilver2/template/memberlist_body.html">
 			<edit>
 				<find><![CDATA[	<th nowrap="nowrap" width="11%"><a href="{U_SORT_WEBSITE}">{L_WEBSITE}</a></th>
 ]]></find>
@@ -157,7 +157,7 @@ img_garage_no_thumb		= garage_no_thumb.gif
 			</edit>
 		</open>
 
-		<open src="styles/subsilver2/templates/memberlist_view.html">
+		<open src="styles/subsilver2/template/memberlist_view.html">
 			<edit>
 				<find><![CDATA[				<td><!-- IF U_WWW --><b><a class="genmed" href="{U_WWW}">{U_WWW}</a></b><!-- ENDIF --></td>
 			</tr>]]></find>
@@ -180,7 +180,7 @@ img_garage_no_thumb		= garage_no_thumb.gif
 			</edit>
 		</open>
 		
-		<open src="styles/subsilver2/templates/viewtopic_body.html">
+		<open src="styles/subsilver2/template/viewtopic_body.html">
 			<edit>
 				<find><![CDATA[					<td>{postrow.POSTER_AVATAR}</td>
 				</tr>
@@ -205,7 +205,7 @@ img_garage_no_thumb		= garage_no_thumb.gif
 			</edit>
 		</open>
 
-		<open src="styles/subsilver2/templates/overall_header.html">
+		<open src="styles/subsilver2/template/overall_header.html">
 			<edit>
 				<find><![CDATA[			<td class="genmed" align="{S_CONTENT_FLOW_END}">
 ]]></find>

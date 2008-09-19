@@ -73,10 +73,10 @@
 
   	<action-group>
 		<copy>
-			<file from="./../root/styles/prosilver/imageset/*garage*.*" to="./styles/prosilver/imageset/" />
-			<file from="./../root/styles/prosilver/imageset/en/*.*" to="./styles/prosilver/imageset/en/" />
-			<file from="./../root/styles/prosilver/template/*.*" to="./styles/prosilver/template/" />
-			<file from="./../root/styles/prosilver/theme/*.*" to="./styles/prosilver/theme/" />
+			<file from="./root/styles/prosilver/imageset/*garage*.*" to="./styles/prosilver/imageset/" />
+			<file from="./root/styles/prosilver/imageset/en/*.*" to="./styles/prosilver/imageset/en/" />
+			<file from="./root/styles/prosilver/template/*.*" to="./styles/prosilver/template/" />
+			<file from="./root/styles/prosilver/theme/*.*" to="./styles/prosilver/theme/" />
 		</copy>
 
 		<open src="styles/prosilver/imageset/imageset.cfg">
@@ -116,7 +116,7 @@ img_garage_no_thumb		= garage_no_thumb.gif*25*120
 			</edit>
 		</open>
 
-		<open src="styles/prosilver/templates/memberlist_view.html">
+		<open src="styles/prosilver/template/memberlist_view.html">
 			<edit>
 				<find><![CDATA[		<!-- IF U_JABBER and S_JABBER_ENABLED --><dt>{L_JABBER}:</dt> <dd><a href="{U_JABBER}" onclick="popup('{U_JABBER}', 550, 320); return false;">{L_SEND_JABBER_MESSAGE}</a></dd><!-- ELSEIF USER_JABBER --><dt>{L_JABBER}:</dt> <dd>{USER_JABBER}</dd><!-- ENDIF -->
 ]]></find>
@@ -131,7 +131,7 @@ img_garage_no_thumb		= garage_no_thumb.gif*25*120
 			</edit>
 		</open>
 
-		<open src="styles/prosilver/templates/viewtopic_body.html">
+		<open src="styles/prosilver/template/viewtopic_body.html">
 			<edit>
 				<find><![CDATA[		<!-- IF postrow.POSTER_FROM --><dd><strong>{L_LOCATION}:</strong> {postrow.POSTER_FROM}</dd><!-- ENDIF -->
 ]]></find>
@@ -147,7 +147,7 @@ img_garage_no_thumb		= garage_no_thumb.gif*25*120
 			</edit>
 		</open>
 		
-		<open src="styles/prosilver/templates/overall_header.html">
+		<open src="styles/prosilver/template/overall_header.html">
 			<edit>
 				<find><![CDATA[			<ul class="linklist rightside">]]></find>
 					<action type="after-add"><![CDATA[					<!-- IF S_DISPLAY_GARAGE --><li><a href="{U_GARAGE}" title="{L_GARAGE}" class="icon-garage">{L_GARAGE}</a></li><!-- ENDIF -->
