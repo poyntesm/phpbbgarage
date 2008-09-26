@@ -355,10 +355,10 @@ class garage_image
 	*/
 	function image_attached()
 	{
-		global $HTTP_POST_FILES, $HTTP_POST_VARS;
+		global $_FILES, $_POST;
 
 		//Look For Image To Handle From Either Upload Or Remotely Linked
-		if ( ((isset($HTTP_POST_FILES['FILE_UPLOAD'])) AND ($HTTP_POST_FILES['FILE_UPLOAD']['name'])) OR ((!preg_match("/^http:\/\/$/i", $HTTP_POST_VARS['url_image'])) AND (!empty($HTTP_POST_VARS['url_image']))) )
+		if ( ((isset($_FILES['FILE_UPLOAD'])) AND ($_FILES['FILE_UPLOAD']['name'])) OR ((!preg_match("/^http:\/\/$/i", $_POST['url_image'])) AND (!empty($_POST['url_image']))) )
 		{
 			return true;
 		}
@@ -375,10 +375,10 @@ class garage_image
 	*/
 	function image_is_remote()
 	{
-		global $HTTP_POST_VARS;
+		global $_POST;
 
 		//Lets Make Sure It's Not Just A Default http:// 
-		$url_image = str_replace("\'", "''", trim($HTTP_POST_VARS['url_image']));
+		$url_image = str_replace("\'", "''", trim($_POST['url_image']));
 		if ( preg_match( "/^http:\/\/$/i", $url_image ) )
 		{
 			$url_image = "";
@@ -402,10 +402,10 @@ class garage_image
 	*/
 	function image_is_local()
 	{
-		global $HTTP_POST_FILES;
+		global $_FILES;
 
 		//Is Image Local
-		if ( (isset($HTTP_POST_FILES['FILE_UPLOAD'])) AND (!empty($HTTP_POST_FILES['FILE_UPLOAD']['name'])) )
+		if ( (isset($_FILES['FILE_UPLOAD'])) AND (!empty($_FILES['FILE_UPLOAD']['name'])) )
 		{
 			return true;
 		}
@@ -423,7 +423,7 @@ class garage_image
 	*/
 	function process_image_attached($type, $id)
 	{
-		global $user, $images, $phpEx, $phpbb_root_path, $garage_config, $HTTP_POST_FILES, $HTTP_POST_VARS, $garage, $vid, $auth;
+		global $user, $images, $phpEx, $phpbb_root_path, $garage_config, $_FILES, $_POST, $garage, $vid, $auth;
 
 		if ( (!$auth->acl_get('u_garage_upload_image')) OR (!$auth->acl_get('u_garage_remote_image')) )
 		{
@@ -463,7 +463,7 @@ class garage_image
 		//Process The Remote Image
 		else if ( $this->image_is_remote() )
 		{
-			$data['location'] = str_replace("\'", "''", trim($HTTP_POST_VARS['url_image']));
+			$data['location'] = str_replace("\'", "''", trim($_POST['url_image']));
 
 			//Stop dynamic images and display correct error message
 			if ( preg_match( "/[?&;]/", $data['location'] ) )
@@ -537,11 +537,11 @@ class garage_image
 		//Uploaded Image Not Remote Image
 		else if ( $this->image_is_local() )
 		{
-			$data['filesize']	= $HTTP_POST_FILES['FILE_UPLOAD']['size'];
-			$data['tmp_name'] 	= $HTTP_POST_FILES['FILE_UPLOAD']['tmp_name'];
-			$data['file']		= trim(str_replace("\'", "''", trim(htmlspecialchars($HTTP_POST_FILES['FILE_UPLOAD']['name']))));
+			$data['filesize']	= $_FILES['FILE_UPLOAD']['size'];
+			$data['tmp_name'] 	= $_FILES['FILE_UPLOAD']['tmp_name'];
+			$data['file']		= trim(str_replace("\'", "''", trim(htmlspecialchars($_FILES['FILE_UPLOAD']['name']))));
 			$data['date'] 		= time();
-			$imagesize 		= getimagesize($HTTP_POST_FILES['FILE_UPLOAD']['tmp_name']);
+			$imagesize 		= getimagesize($_FILES['FILE_UPLOAD']['tmp_name']);
 			$data['filetype'] 	= $imagesize[2];
 	
 			if ($data['filesize'] == 0) 
