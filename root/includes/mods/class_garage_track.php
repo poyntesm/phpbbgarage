@@ -143,7 +143,7 @@ class garage_track
 	
 		for ($i = 0, $count = sizeof($images);$i < $count; $i++)
 		{
-			$garage_image->delete_lap_image($images[$i]['id']);
+			$garage_image->delete_lap_image($images[$i]['image_id']);
 		}
 
 		$garage->delete_rows(GARAGE_LAPS_TABLE, 'id', $lid);

@@ -100,7 +100,7 @@ class garage_quartermile
 	
 		for ($i = 0, $count = sizeof($images);$i < $count; $i++)
 		{
-			$garage_image->delete_quartermile_image($images[$i]['id']);
+			$garage_image->delete_quartermile_image($images[$i]['image_id']);
 		}
 
 		$garage->delete_rows(GARAGE_QUARTERMILES_TABLE, 'id', $qmid);

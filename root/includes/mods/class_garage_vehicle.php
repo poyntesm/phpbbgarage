@@ -1205,7 +1205,7 @@ class garage_vehicle
 	
 		for ($i = 0, $count = sizeof($images);$i < $count; $i++)
 		{
-			$garage_image->delete_image($images[$i]['id']);
+			$garage_image->delete_image($images[$i]['image_id']);
 		}
 	
 		$garage->delete_rows(GARAGE_VEHICLES_TABLE, 'id', $vid);

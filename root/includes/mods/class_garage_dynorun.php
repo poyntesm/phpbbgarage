@@ -103,7 +103,7 @@ class garage_dynorun
 	
 		for ($i = 0, $count = sizeof($images);$i < $count; $i++)
 		{
-			$garage_image->delete_dynorun_image($images[$i]['id']);
+			$garage_image->delete_dynorun_image($images[$i]['image_id']);
 		}
 	
 		$garage->update_single_field(GARAGE_QUARTERMILES_TABLE, 'dynorun_id', 'NULL', 'dynorun_id', $did);	

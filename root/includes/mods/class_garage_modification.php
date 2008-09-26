@@ -109,7 +109,7 @@ class garage_modification
 	
 		for ($i = 0, $count = sizeof($images);$i < $count; $i++)
 		{
-			$garage_image->delete_modification_image($images[$i]['id']);
+			$garage_image->delete_modification_image($images[$i]['image_id']);
 		}
 	
 		$garage->delete_rows(GARAGE_MODIFICATIONS_TABLE, 'id', $mid);
