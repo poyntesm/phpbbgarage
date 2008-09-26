@@ -561,7 +561,7 @@ class garage_guestbook
 		$template->assign_vars(array(
 			'PAGINATION' 			=> $pagination,
 			'PAGE_NUMBER' 			=> on_page($count, $garage_config['cars_per_page'], $start),
-			'TOTAL_COMMENTS'		=> ($count == 1) ? $user->lang['VIEW_COMMENT'] : sprintf($user->lang['VIEW_COMMENTS'], $count),
+			'TOTAL_COMMENTS'		=> ($count == 1) ? $user->lang['VIEW_COMMENT_PAGE'] : sprintf($user->lang['VIEW_COMMENTS_PAGE'], $count),
 			'S_DISPLAY_LEAVE_COMMENT'	=> $auth->acl_get('u_garage_comment'),
 			'S_MODE_GUESTBOOK_ACTION' 	=> append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=insert_comment&amp;VID=$vid"))
 		);

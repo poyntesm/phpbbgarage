@@ -250,7 +250,7 @@ switch( $mode )
 				'S_DISPLAY_VEHICLE_RESULTS' 	=> true,
 				'PAGINATION' 			=> $pagination,
 				'PAGE_NUMBER' 			=> on_page($total_vehicles, $garage_config['cars_per_page'], $start),
-				'TOTAL_VEHICLES'		=> ($total_vehicles == 1) ? $user->lang['VIEW_VEHICLE'] : sprintf($user->lang['VIEW_VEHICLES'], $total_vehicles),
+				'TOTAL_VEHICLES'		=> ($total_vehicles == 1) ? $user->lang['VIEW_VEHICLE_PAGE'] : sprintf($user->lang['VIEW_VEHICLES_PAGE'], $total_vehicles),
 			));
 			$garage_template->vehicle_assignment($results_data, 'vehicle');
 		}
@@ -264,7 +264,7 @@ switch( $mode )
 				'S_DISPLAY_MODIFICATION_RESULTS'=> true,
 				'PAGINATION' 			=> $pagination,
 				'PAGE_NUMBER' 			=> on_page($total_modifications, $garage_config['cars_per_page'], $start),
-				'TOTAL_MODIFICATIONS'		=> ($total_modifications == 1) ? $user->lang['VIEW_MODIFICATION'] : sprintf($user->lang['VIEW_MODIFICATIONS'], $total_modifications),
+				'TOTAL_MODIFICATIONS'		=> ($total_modifications == 1) ? $user->lang['VIEW_MODIFICATION_PAGE'] : sprintf($user->lang['VIEW_MODIFICATIONS_PAGE'], $total_modifications),
 			));
 			for ($i = 0, $count = sizeof($results_data); $i < $count; $i++)
 			{
@@ -295,7 +295,7 @@ switch( $mode )
 				'S_DISPLAY_PREMIUM_RESULTS' 	=> true,
 				'PAGINATION' 			=> $pagination,
 				'PAGE_NUMBER' 			=> on_page($total_premiums, $garage_config['cars_per_page'], $start),
-				'TOTAL_PREMIUMS'		=> ($total_premiums == 1) ? $user->lang['VIEW_PREMIUM'] : sprintf($user->lang['VIEW_PREMIUMS'], $total_premiums),
+				'TOTAL_PREMIUMS'		=> ($total_premiums == 1) ? $user->lang['VIEW_PREMIUM_PAGE'] : sprintf($user->lang['VIEW_PREMIUMS_PAGE'], $total_premiums),
 			));
 			//How about Something like
 			//$garage_template->assign_premium_block($results_data);
@@ -327,7 +327,7 @@ switch( $mode )
 				'S_DISPLAY_QUARTERMILE_RESULTS'	=> true,
 				'PAGINATION' 			=> $pagination,
 				'PAGE_NUMBER' 			=> on_page($total_quartermiles, $garage_config['cars_per_page'], $start),
-				'TOTAL_QUARTERMILES'		=> ($total_quartermiles == 1) ? $user->lang['VIEW_QUARTERMILE'] : sprintf($user->lang['VIEW_QUARTERMILES'], $total_quartermiles),
+				'TOTAL_QUARTERMILES'		=> ($total_quartermiles == 1) ? $user->lang['VIEW_QUARTERMILE_PAGE'] : sprintf($user->lang['VIEW_QUARTERMILES_PAGE'], $total_quartermiles),
 			));
 			for ($i = 0, $count = sizeof($results_data); $i < $count; $i++)
 			{
@@ -362,7 +362,7 @@ switch( $mode )
 				'S_DISPLAY_DYNORUN_RESULTS' 	=> true,
 				'PAGINATION' 			=> $pagination,
 				'PAGE_NUMBER' 			=> on_page($total_dynoruns, $garage_config['cars_per_page'], $start),
-				'TOTAL_DYNORUNS'		=> ($total_dynoruns == 1) ? $user->lang['VIEW_DYNORUN'] : sprintf($user->lang['VIEW_DYNORUNS'], $total_dynoruns),
+				'TOTAL_DYNORUNS'		=> ($total_dynoruns == 1) ? $user->lang['VIEW_DYNORUN_PAGE'] : sprintf($user->lang['VIEW_DYNORUNS_PAGE'], $total_dynoruns),
 			));
 			for ($i = 0, $count = sizeof($results_data); $i < $count; $i++)
 			{
@@ -398,7 +398,7 @@ switch( $mode )
 				'S_DISPLAY_LAP_RESULTS' 	=> true,
 				'PAGINATION' 			=> $pagination,
 				'PAGE_NUMBER' 			=> on_page($total_laps, $garage_config['cars_per_page'], $start),
-				'TOTAL_LAPS'			=> ($total_laps == 1) ? $user->lang['VIEW_LAP'] : sprintf($user->lang['VIEW_LAPS'], $total_laps),
+				'TOTAL_LAPS'			=> ($total_laps == 1) ? $user->lang['VIEW_LAP_PAGE'] : sprintf($user->lang['VIEW_LAPS_PAGE'], $total_laps),
 			));
 			for ($i = 0, $count = sizeof($results_data); $i < $count; $i++)
 			{
@@ -741,7 +741,7 @@ switch( $mode )
 		$template->assign_vars(array(
 			'PAGINATION' 			=> $pagination,
 			'PAGE_NUMBER' 			=> on_page($count, $garage_config['cars_per_page'], $start),
-			'TOTAL_BUSINESS'		=> ($count == 1) ? $user->lang['VIEW_BUSINESS'] : sprintf($user->lang['VIEW_BUSINESS\'S'], $count),
+			'TOTAL_BUSINESS'		=> ($count == 1) ? $user->lang['VIEW_BUSINESS_PAGE'] : sprintf($user->lang['VIEW_BUSINESS\'S_PAGE'], $count),
 			'S_INSURANCE_REVIEW_TAB_ACTIVE'	=> true,
 		));
 		}
@@ -872,7 +872,7 @@ switch( $mode )
 		$template->assign_vars(array(
 			'PAGINATION' 			=> $pagination,
 			'PAGE_NUMBER' 			=> on_page($count, $garage_config['cars_per_page'], $start),
-			'TOTAL_BUSINESS'		=> ($count == 1) ? $user->lang['VIEW_BUSINESS'] : sprintf($user->lang['VIEW_BUSINESS\'S'], $count),
+			'TOTAL_BUSINESS'		=> ($count == 1) ? $user->lang['VIEW_BUSINESS_PAGE'] : sprintf($user->lang['VIEW_BUSINESS\'S_PAGE'], $count),
 			'S_GARAGE_REVIEW_TAB_ACTIVE'	=> true,
 		));
 		}
@@ -991,7 +991,7 @@ switch( $mode )
 		$template->assign_vars(array(
 			'PAGINATION' 			=> $pagination,
 			'PAGE_NUMBER' 			=> on_page($count, $garage_config['cars_per_page'], $start),
-			'TOTAL_BUSINESS'		=> ($count == 1) ? $user->lang['VIEW_BUSINESS'] : sprintf($user->lang['VIEW_BUSINESS\'S'], $count),
+			'TOTAL_BUSINESS'		=> ($count == 1) ? $user->lang['VIEW_BUSINESS_PAGE'] : sprintf($user->lang['VIEW_BUSINESS\'S_PAGE'], $count),
 			'S_SHOP_REVIEW_TAB_ACTIVE'	=> true,
 		));
 		}
