@@ -992,7 +992,7 @@ class garage_image
 
 		$this->delete_image($image_id);
 
-		$garage->delete_rows(GARAGE_VEHICLE_GALLERY_TABLE, 'image_id', $image_id);
+		$garage->delete_rows(GARAGE_MODIFICATION_GALLERY_TABLE, 'image_id', $image_id);
 
 		return;
 	}
