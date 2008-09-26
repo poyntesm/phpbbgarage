@@ -570,7 +570,10 @@ function user_delete($mode, $user_id, $post_username = false)
 
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
-	include($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
+	if (!class_exists('garage_vehicle'))
+	{
+		include($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
+	}
 	$garage_vehicle->delete_user_vehicles($user_id);
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
