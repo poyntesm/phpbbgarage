@@ -784,7 +784,7 @@ function remote_file_exist($url)
                    if(!isset($matches[1]))
                        return false;
                    $nextloc = $matches[1];
-                   return remote_file_exists($nextloc);
+                   return remote_file_exist($nextloc);
                }
             }
 
