@@ -156,12 +156,6 @@
 				<td class="gen" align="{S_CONTENT_FLOW_END}" nowrap="nowrap">{L_WEBSITE}: </td>
 				<td><!-- IF U_WWW --><b><a class="genmed" href="{U_WWW}">{U_WWW}</a></b><!-- ENDIF --></td>
 			</tr>
-			<!-- IF S_DISPLAY_GARAGE_PROFILE -->
-			<tr>
-				<td class="gen" align="right" nowrap="nowrap">{L_GARAGE}: </td>
-				<td><a class="genmed" href="{U_GARAGE_USER_SEARCH}" >{L_VIEW_USERS_GARAGE}</a></td>
-			</tr>
-			<!-- ENDIF -->
 			<!-- IF S_PROFILE_FIELD1 -->
 				<!-- Use a construct like this to include admin defined profile fields. Replace FIELD1 with the name of your field. -->
 				<tr>
@@ -186,9 +180,6 @@
 			<td class="row1" colspan="2"><div class="postbody" style="padding: 10px;">{SIGNATURE}</div></td>
 		</tr>
 	<!-- ENDIF -->
-
-	<!-- INCLUDE garage_profile_integration.html -->
-
 	</table>
 
 	</form>

@@ -1,8 +1,9 @@
 <?php
+//-- mod : Garage ----------------------------------------------------------------------------------------------------------
 /**
 *
 * @package phpBB3
-* @version $Id: viewtopic.php,v 1.513 2007/11/06 00:05:53 kellanved Exp $
+* @version $Id: viewtopic.php 8601 2008-06-04 15:48:19Z naderman $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -445,13 +446,22 @@ if ($start < 0 || $start > $total_posts)
 $viewtopic_url = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;start=$start&amp;$u_sort_param" . (($highlight_match) ? "&amp;hilit=$highlight" : ''));
 
 // Are we watching this topic?
-$s_watching_topic = $s_watching_topic_img = array();
-$s_watching_topic['link'] = $s_watching_topic['title'] = '';
-$s_watching_topic['is_watching'] = false;
+$s_watching_topic = array(
+	'link'			=> '',
+	'title'			=> '',
+	'is_watching'	=> false,
+);
 
-if ($config['email_enable'] && $config['allow_topic_notify'] && $user->data['is_registered'])
+if (($config['email_enable'] || $config['jab_enable']) && $config['allow_topic_notify'] && $user->data['is_registered'])
 {
-	watch_topic_forum('topic', $s_watching_topic, $s_watching_topic_img, $user->data['user_id'], $forum_id, $topic_id, $topic_data['notify_status'], $start);
+	watch_topic_forum('topic', $s_watching_topic, $user->data['user_id'], $forum_id, $topic_id, $topic_data['notify_status'], $start);
+
+	// Reset forum notification if forum notify is set
+	if ($config['allow_forum_notify'] && $auth->acl_get('f_subscribe', $forum_id))
+	{
+		$s_watching_forum = $s_watching_topic;
+		watch_topic_forum('forum', $s_watching_forum, $user->data['user_id'], $forum_id, 0);
+	}
 }
 
 // Bookmarks
@@ -585,7 +595,7 @@ $template->assign_vars(array(
 	'S_SELECT_SORT_DAYS' 	=> $s_limit_days,
 	'S_SINGLE_MODERATOR'	=> (!empty($forum_moderators[$forum_id]) && sizeof($forum_moderators[$forum_id]) > 1) ? false : true,
 	'S_TOPIC_ACTION' 		=> append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;start=$start"),
-	'S_TOPIC_MOD' 			=> ($topic_mod != '') ? '<select name="action">' . $topic_mod . '</select>' : '',
+	'S_TOPIC_MOD' 			=> ($topic_mod != '') ? '<select name="action" id="quick-mod-select">' . $topic_mod . '</select>' : '',
 	'S_MOD_ACTION' 			=> append_sid("{$phpbb_root_path}mcp.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;quickmod=1&amp;redirect=" . urlencode(str_replace('&amp;', '&', $viewtopic_url)), true, $user->session_id),
 
 	'S_VIEWTOPIC'			=> true,
@@ -670,7 +680,7 @@ if (!empty($topic_data['poll_start']))
 
 	if ($update && $s_can_vote)
 	{
-		
+
 		if (!sizeof($voted_id) || sizeof($voted_id) > $topic_data['poll_max_options'] || in_array(VOTE_CONVERTED, $cur_voted_id))
 		{
 			$redirect_url = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "f=$forum_id&amp;t=$topic_id&amp;start=$start");
@@ -688,7 +698,7 @@ if (!empty($topic_data['poll_start']))
 			{
 				$message = 'VOTE_CONVERTED';
 			}
- 
+
 			$message = $user->lang[$message] . '<br /><br />' . sprintf($user->lang['RETURN_TOPIC'], '<a href="' . $redirect_url . '">', '</a>');
 			trigger_error($message);
 		}
@@ -1023,7 +1033,6 @@ while ($row = $db->sql_fetchrow($result))
 				'rank_image'		=> '',
 				'rank_image_src'	=> '',
 				'sig'				=> '',
-				'posts'				=> '',
 				'profile'			=> '',
 				'pm'				=> '',
 				'email'				=> '',
@@ -1041,6 +1050,7 @@ while ($row = $db->sql_fetchrow($result))
 				'vehicle'			=> '',
 				'garage_id'			=> '',
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
 				'username'			=> $row['username'],
 				'user_colour'		=> $row['user_colour'],
 
@@ -1095,7 +1105,7 @@ while ($row = $db->sql_fetchrow($result))
 				'msn'			=> ($row['user_msnm'] && $auth->acl_get('u_sendim')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=contact&amp;action=msnm&amp;u=$poster_id") : '',
 				'yim'			=> ($row['user_yim']) ? 'http://edit.yahoo.com/config/send_webmesg?.target=' . urlencode($row['user_yim']) . '&amp;.src=pg' : '',
 				'jabber'		=> ($row['user_jabber'] && $auth->acl_get('u_sendim')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=contact&amp;action=jabber&amp;u=$poster_id") : '',
-				'search'		=> ($auth->acl_get('u_search')) ? append_sid("{$phpbb_root_path}search.$phpEx", 'search_author=' . urlencode($row['username']) .'&amp;showresults=posts') : '',
+				'search'		=> ($auth->acl_get('u_search')) ? append_sid("{$phpbb_root_path}search.$phpEx", 'search_author=' . urlencode($row['username']) .'&amp;sr=posts') : '',
 			);
 
 			get_user_rank($row['user_rank'], $row['user_posts'], $user_cache[$poster_id]['rank_title'], $user_cache[$poster_id]['rank_image'], $user_cache[$poster_id]['rank_image_src']);

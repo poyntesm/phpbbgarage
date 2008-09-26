@@ -1,8 +1,9 @@
 <?php
+//-- mod : Garage ----------------------------------------------------------------------------------------------------------
 /**
 *
 * @package acp
-* @version $Id: acp_styles.php,v 1.117 2007/10/21 11:26:24 acydburn Exp $
+* @version $Id: acp_styles.php 8530 2008-04-28 17:13:50Z Kellanved $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -51,9 +52,9 @@ class acp_styles
 //-- add
 		$user->add_lang('mods/garage_style');
 		global $garage_template;
-		include($phpbb_root_path . 'includes/mods/class_garage_template.' . $phpEx);
+		include($phpbb_root_path . 'includes/mods/class_garage_template.' . $phpEx);		
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-
+		
 		$this->tpl_name = 'acp_styles';
 		$this->page_title = 'ACP_CAT_STYLES';
 
@@ -443,12 +444,6 @@ parse_css_file = {PARSE_CSS_FILE}
 								}
 							}
 
-//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-							global $garage;
-		//					$sql_ary = $garage->add_garage_images($sql_ary, $imageset_row['imageset_path']);
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-
 							$sql = 'SELECT lang_dir
 								FROM ' . LANG_TABLE;
 							$result = $db->sql_query($sql);
@@ -495,13 +490,6 @@ parse_css_file = {PARSE_CSS_FILE}
 										}
 									}
 								}
-
-//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-								global $garage;
-		//						$sql_ary = $garage->add_garage_lang_images($sql_ary, $imageset_row['imageset_path'], $row['lang_dir']);
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-							
 							}
 							$db->sql_freeresult($result);
 
@@ -719,6 +707,15 @@ parse_css_file = {PARSE_CSS_FILE}
 		if (!$template_info)
 		{
 			trigger_error($user->lang['NO_TEMPLATE'] . adm_back_link($this->u_action), E_USER_WARNING);
+		}
+		
+		if ($save_changes && !check_form_key('acp_styles'))
+		{
+			trigger_error($user->lang['FORM_INVALID'] . adm_back_link($this->u_action), E_USER_WARNING);
+		}
+		else if (!$save_changes)
+		{
+			add_form_key('acp_styles');
 		}
 
 		// save changes to the template if the user submitted any
@@ -1028,7 +1025,7 @@ parse_css_file = {PARSE_CSS_FILE}
 
 				'CACHED'		=> $user->format_date(filemtime("{$phpbb_root_path}cache/$filename")),
 				'FILENAME'		=> $file,
-				'FILESIZE'		=> sprintf('%.1f KB', filesize("{$phpbb_root_path}cache/$filename") / 1024),
+				'FILESIZE'		=> sprintf('%.1f ' . $user->lang['KIB'], filesize("{$phpbb_root_path}cache/$filename") / 1024),
 				'MODIFIED'		=> $user->format_date((!$template_row['template_storedb']) ? filemtime("{$phpbb_root_path}styles/{$template_row['template_path']}/template/$tpl_file.html") : $filemtime[$file . '.html']))
 			);
 		}
@@ -1933,12 +1930,6 @@ parse_css_file = {PARSE_CSS_FILE}
 
 				unset($imageset_cfg);
 			}
-
-//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-			global $garage;
-		//	$garage->ammend_imageset_export($file, $data);
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
 			switch ($format)
 			{

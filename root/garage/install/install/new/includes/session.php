@@ -1,8 +1,9 @@
 <?php
+//-- mod : Garage ----------------------------------------------------------------------------------------------------------
 /**
 *
 * @package phpBB3
-* @version $Id: session.php,v 1.317 2007/11/04 12:07:46 acydburn Exp $
+* @version $Id: session.php 8670 2008-06-23 14:07:24Z acydburn $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -68,7 +69,7 @@ class session
 
 		foreach ($args as $key => $argument)
 		{
-			if (strpos($argument, 'sid=') === 0 || strpos($argument, '_f_=') === 0)
+			if (strpos($argument, 'sid=') === 0)
 			{
 				continue;
 			}
@@ -129,7 +130,8 @@ class session
 			'script_path'		=> str_replace(' ', '%20', htmlspecialchars($script_path)),
 			'root_script_path'	=> str_replace(' ', '%20', htmlspecialchars($root_script_path)),
 
-			'page'				=> $page
+			'page'				=> $page,
+			'forum'				=> (isset($_REQUEST['f']) && $_REQUEST['f'] > 0) ? (int) $_REQUEST['f'] : 0,
 		);
 
 		return $page_array;
@@ -157,8 +159,16 @@ class session
 		$this->cookie_data			= array('u' => 0, 'k' => '');
 		$this->update_session_page	= $update_session_page;
 		$this->browser				= (!empty($_SERVER['HTTP_USER_AGENT'])) ? htmlspecialchars((string) $_SERVER['HTTP_USER_AGENT']) : '';
+		$this->referer				= (!empty($_SERVER['HTTP_REFERER'])) ? htmlspecialchars((string) $_SERVER['HTTP_REFERER']) : '';
 		$this->forwarded_for		= (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) ? (string) $_SERVER['HTTP_X_FORWARDED_FOR'] : '';
-		$this->host					= (!empty($_SERVER['HTTP_HOST'])) ? (string) $_SERVER['HTTP_HOST'] : 'localhost';
+		$this->host					= (!empty($_SERVER['HTTP_HOST'])) ? (string) strtolower($_SERVER['HTTP_HOST']) : ((!empty($_SERVER['SERVER_NAME'])) ? $_SERVER['SERVER_NAME'] : getenv('SERVER_NAME'));
+
+		// Since HTTP_HOST may carry a port definition, we need to remove it here...
+		if (strpos($this->host, ':') !== false)
+		{
+			$this->host = substr($this->host, 0, strpos($this->host, ':'));
+		}
+
 		$this->page					= $this->extract_current_page($phpbb_root_path);
 
 		// if the forwarded for header shall be checked we have to validate its contents
@@ -179,9 +189,10 @@ class session
 				}
 			}
 		}
-
-		// Add forum to the page for tracking online users - also adding a "x" to the end to properly identify the number
-		$this->page['page'] .= (isset($_REQUEST['f'])) ? ((strpos($this->page['page'], '?') !== false) ? '&' : '?') . '_f_=' . (int) $_REQUEST['f'] . 'x' : '';
+		else
+		{
+			$this->forwarded_for = '';
+		}
 
 		if (isset($_COOKIE[$config['cookie_name'] . '_sid']) || isset($_COOKIE[$config['cookie_name'] . '_u']))
 		{
@@ -215,9 +226,9 @@ class session
 		// Load limit check (if applicable)
 		if ($config['limit_load'] || $config['limit_search_load'])
 		{
-			if ($load = @file_get_contents('/proc/loadavg'))
+			if ((function_exists('sys_getloadavg') && $load = sys_getloadavg()) || ($load = explode(' ', @file_get_contents('/proc/loadavg'))))
 			{
-				$this->load = array_slice(explode(' ', $load), 0, 1);
+				$this->load = array_slice($load, 0, 1);
 				$this->load = floatval($this->load[0]);
 			}
 			else
@@ -256,13 +267,24 @@ class session
 					$u_ip = implode('.', array_slice(explode('.', $this->ip), 0, $config['ip_check']));
 				}
 
-				$s_browser = ($config['browser_check']) ? strtolower(substr($this->data['session_browser'], 0, 149)) : '';
-				$u_browser = ($config['browser_check']) ? strtolower(substr($this->browser, 0, 149)) : '';
+				$s_browser = ($config['browser_check']) ? trim(strtolower(substr($this->data['session_browser'], 0, 149))) : '';
+				$u_browser = ($config['browser_check']) ? trim(strtolower(substr($this->browser, 0, 149))) : '';
 
 				$s_forwarded_for = ($config['forwarded_for_check']) ? substr($this->data['session_forwarded_for'], 0, 254) : '';
 				$u_forwarded_for = ($config['forwarded_for_check']) ? substr($this->forwarded_for, 0, 254) : '';
 
-				if ($u_ip === $s_ip && $s_browser === $u_browser && $s_forwarded_for === $u_forwarded_for)
+				// referer checks
+				// The @ before $config['referer_validation'] suppresses notices present while running the updater
+				$check_referer_path = (@$config['referer_validation'] == REFERER_VALIDATE_PATH);
+				$referer_valid = true;
+
+				// we assume HEAD and TRACE to be foul play and thus only whitelist GET
+				if (@$config['referer_validation'] && isset($_SERVER['REQUEST_METHOD']) && strtolower($_SERVER['REQUEST_METHOD']) !== 'get')
+				{
+					$referer_valid = $this->validate_referer($check_referer_path);
+				}
+
+				if ($u_ip === $s_ip && $s_browser === $u_browser && $s_forwarded_for === $u_forwarded_for && $referer_valid)
 				{
 					$session_expired = false;
 
@@ -306,11 +328,27 @@ class session
 							if ($this->update_session_page)
 							{
 								$sql_ary['session_page'] = substr($this->page['page'], 0, 199);
+								$sql_ary['session_forum_id'] = $this->page['forum'];
 							}
+
+							$db->sql_return_on_error(true);
 
 							$sql = 'UPDATE ' . SESSIONS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
 								WHERE session_id = '" . $db->sql_escape($this->session_id) . "'";
-							$db->sql_query($sql);
+							$result = $db->sql_query($sql);
+
+							$db->sql_return_on_error(false);
+
+							// If the database is not yet updated, there will be an error due to the session_forum_id
+							// @todo REMOVE for 3.0.2
+							if ($result === false)
+							{
+								unset($sql_ary['session_forum_id']);
+
+								$sql = 'UPDATE ' . SESSIONS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
+									WHERE session_id = '" . $db->sql_escape($this->session_id) . "'";
+								$db->sql_query($sql);
+							}
 						}
 
 						$this->data['is_registered'] = ($this->data['user_id'] != ANONYMOUS && ($this->data['user_type'] == USER_NORMAL || $this->data['user_type'] == USER_FOUNDER)) ? true : false;
@@ -325,7 +363,14 @@ class session
 					// Added logging temporarly to help debug bugs...
 					if (defined('DEBUG_EXTRA') && $this->data['user_id'] != ANONYMOUS)
 					{
-						add_log('critical', 'LOG_IP_BROWSER_FORWARDED_CHECK', $u_ip, $s_ip, $u_browser, $s_browser, htmlspecialchars($u_forwarded_for), htmlspecialchars($s_forwarded_for));
+						if ($referer_valid)
+						{
+							add_log('critical', 'LOG_IP_BROWSER_FORWARDED_CHECK', $u_ip, $s_ip, $u_browser, $s_browser, htmlspecialchars($u_forwarded_for), htmlspecialchars($s_forwarded_for));
+						}
+						else
+						{
+							add_log('critical', 'LOG_REFERER_INVALID', $this->referer);
+						}
 					}
 				}
 			}
@@ -526,8 +571,8 @@ class session
 				$u_ip = implode('.', array_slice(explode('.', $this->ip), 0, $config['ip_check']));
 			}
 
-			$s_browser = ($config['browser_check']) ? strtolower(substr($this->data['session_browser'], 0, 149)) : '';
-			$u_browser = ($config['browser_check']) ? strtolower(substr($this->browser, 0, 149)) : '';
+			$s_browser = ($config['browser_check']) ? trim(strtolower(substr($this->data['session_browser'], 0, 149))) : '';
+			$u_browser = ($config['browser_check']) ? trim(strtolower(substr($this->browser, 0, 149))) : '';
 
 			$s_forwarded_for = ($config['forwarded_for_check']) ? substr($this->data['session_forwarded_for'], 0, 254) : '';
 			$u_forwarded_for = ($config['forwarded_for_check']) ? substr($this->forwarded_for, 0, 254) : '';
@@ -546,6 +591,7 @@ class session
 					if ($this->update_session_page)
 					{
 						$sql_ary['session_page'] = substr($this->page['page'], 0, 199);
+						$sql_ary['session_forum_id'] = $this->page['forum'];
 					}
 
 					$sql = 'UPDATE ' . SESSIONS_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . "
@@ -579,7 +625,7 @@ class session
 			'session_start'			=> (int) $this->time_now,
 			'session_last_visit'	=> (int) $this->data['session_last_visit'],
 			'session_time'			=> (int) $this->time_now,
-			'session_browser'		=> (string) substr($this->browser, 0, 149),
+			'session_browser'		=> (string) trim(substr($this->browser, 0, 149)),
 			'session_forwarded_for'	=> (string) $this->forwarded_for,
 			'session_ip'			=> (string) $this->ip,
 			'session_autologin'		=> ($session_autologin) ? 1 : 0,
@@ -590,6 +636,7 @@ class session
 		if ($this->update_session_page)
 		{
 			$sql_ary['session_page'] = (string) substr($this->page['page'], 0, 199);
+			$sql_ary['session_forum_id'] = $this->page['forum'];
 		}
 
 		$db->sql_return_on_error(true);
@@ -604,6 +651,8 @@ class session
 			// Limit new sessions in 1 minute period (if required)
 			if (empty($this->data['session_time']) && $config['active_sessions'])
 			{
+//				$db->sql_return_on_error(false);
+
 				$sql = 'SELECT COUNT(session_id) AS sessions
 					FROM ' . SESSIONS_TABLE . '
 					WHERE session_time >= ' . ($this->time_now - 60);
@@ -619,10 +668,15 @@ class session
 			}
 		}
 
+		// Since we re-create the session id here, the inserted row must be unique. Therefore, we display potential errors.
+		// Commented out because it will not allow forums to update correctly
+//		$db->sql_return_on_error(false);
+
 		$this->session_id = $this->data['session_id'] = md5(unique_id());
 
 		$sql_ary['session_id'] = (string) $this->session_id;
 		$sql_ary['session_page'] = (string) substr($this->page['page'], 0, 199);
+		$sql_ary['session_forum_id'] = $this->page['forum'];
 
 		$sql = 'INSERT INTO ' . SESSIONS_TABLE . ' ' . $db->sql_build_array('INSERT', $sql_ary);
 		$db->sql_query($sql);
@@ -649,11 +703,11 @@ class session
 			$this->set_cookie('sid', $this->session_id, $cookie_expire);
 
 			unset($cookie_expire);
-			
+
 			$sql = 'SELECT COUNT(session_id) AS sessions
 					FROM ' . SESSIONS_TABLE . '
 					WHERE session_user_id = ' . (int) $this->data['user_id'] . '
-					AND session_time >= ' . ($this->time_now - $config['form_token_lifetime']);
+					AND session_time >= ' . (int) ($this->time_now - (max($config['session_length'], $config['form_token_lifetime'])));
 			$result = $db->sql_query($sql);
 			$row = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
@@ -777,7 +831,7 @@ class session
 		global $db, $config;
 
 		$batch_size = 10;
-		
+
 		if (!$this->time_now)
 		{
 			$this->time_now = time();
@@ -825,7 +879,7 @@ class session
 			// Less than 10 users, update gc timer ... else we want gc
 			// called again to delete other sessions
 			set_config('session_last_gc', $this->time_now, true);
-			
+
 			if ($config['max_autologin_time'])
 			{
 				$sql = 'DELETE FROM ' . SESSIONS_KEYS_TABLE . '
@@ -834,14 +888,14 @@ class session
 			}
 			$this->confirm_gc();
 		}
-		
+
 		return;
 	}
-	
+
 	function confirm_gc($type = 0)
 	{
 		global $db, $config;
-		
+
 		$sql = 'SELECT DISTINCT c.session_id
 				FROM ' . CONFIRM_TABLE . ' c
 				LEFT JOIN ' . SESSIONS_TABLE . ' s ON (c.session_id = s.session_id)
@@ -867,12 +921,16 @@ class session
 		}
 		$db->sql_freeresult($result);
 	}
-	
-	
+
+
 	/**
 	* Sets a cookie
 	*
-	* Sets a cookie of the given name with the specified data for the given length of time.
+	* Sets a cookie of the given name with the specified data for the given length of time. If no time is specified, a session cookie will be set.
+	*
+	* @param string $name		Name of the cookie, will be automatically prefixed with the phpBB cookie name. track becomes [cookie_name]_track then.
+	* @param string $cookiedata	The data to hold within the cookie
+	* @param int $cookietime	The expiration time as UNIX timestamp. If 0 is provided, a session cookie is set.
 	*/
 	function set_cookie($name, $cookiedata, $cookietime)
 	{
@@ -882,7 +940,7 @@ class session
 		$expire = gmdate('D, d-M-Y H:i:s \\G\\M\\T', $cookietime);
 		$domain = (!$config['cookie_domain'] || $config['cookie_domain'] == 'localhost' || $config['cookie_domain'] == '127.0.0.1') ? '' : '; domain=' . $config['cookie_domain'];
 
-		header('Set-Cookie: ' . $name_data . '; expires=' . $expire . '; path=' . $config['cookie_path'] . $domain . ((!$config['cookie_secure']) ? '' : '; secure') . '; HttpOnly', false);
+		header('Set-Cookie: ' . $name_data . (($cookietime) ? '; expires=' . $expire : '') . '; path=' . $config['cookie_path'] . $domain . ((!$config['cookie_secure']) ? '' : '; secure') . '; HttpOnly', false);
 	}
 
 	/**
@@ -1067,10 +1125,18 @@ class session
 			// To circumvent session_begin returning a valid value and the check_ban() not called on second page view, we kill the session again
 			$this->session_kill(false);
 
+			// A very special case... we are within the cron script which is not supposed to print out the ban message... show blank page
+			if (defined('IN_CRON'))
+			{
+				garbage_collection();
+				exit_handler();
+				exit;
+			}
+
 			trigger_error($message);
 		}
 
-		return ($banned) ? true : false;
+		return ($banned && $ban_row['ban_give_reason']) ? $ban_row['ban_give_reason'] : $banned;
 	}
 
 	/**
@@ -1248,6 +1314,55 @@ class session
 			$this->set_login_key($user_id);
 		}
 	}
+
+
+	/**
+	* Check if the request originated from the same page.
+	* @param bool $check_script_path If true, the path will be checked as well
+	*/
+	function validate_referer($check_script_path = false)
+	{
+		// no referer - nothing to validate, user's fault for turning it off (we only check on POST; so meta can't be the reason)
+		if (empty($this->referer) || empty($this->host) )
+		{
+			return true;
+		}
+
+		$host = htmlspecialchars($this->host);
+		$ref = substr($this->referer, strpos($this->referer, '://') + 3);
+
+		if (!(stripos($ref , $host) === 0))
+		{
+			return false;
+		}
+		else if ($check_script_path && rtrim($this->page['root_script_path'], '/') !== '')
+		{
+			$ref = substr($ref, strlen($host));
+			$server_port = (!empty($_SERVER['SERVER_PORT'])) ? (int) $_SERVER['SERVER_PORT'] : (int) getenv('SERVER_PORT');
+
+			if ($server_port !== 80 && $server_port !== 443 && stripos($ref, ":$server_port") === 0)
+			{
+				$ref = substr($ref, strlen(":$server_port"));
+			}
+
+			if (!(stripos(rtrim($ref, '/'), rtrim($this->page['root_script_path'], '/')) === 0))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+
+	function unset_admin()
+	{
+		global $db;
+		$sql = 'UPDATE ' . SESSIONS_TABLE . '
+			SET session_admin = 0
+			WHERE session_id = \'' . $db->sql_escape($this->session_id) . '\'';
+		$db->sql_query($sql);
+	}
 }
 
 
@@ -1356,6 +1471,7 @@ class user extends session
 //-- add
 		$this->add_lang('mods/garage_common');
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+		
 
 		if (!empty($_GET['style']) && $auth->acl_get('a_styles'))
 		{
@@ -1482,6 +1598,7 @@ class user extends session
 		$sql = 'SELECT image_name, image_filename, image_lang, image_height, image_width
 			FROM ' . STYLES_IMAGESET_DATA_TABLE . '
 			WHERE imageset_id = ' . $this->theme['imageset_id'] . "
+			AND image_filename <> ''
 			AND image_lang IN ('" . $db->sql_escape($this->img_lang) . "', '')";
 		$result = $db->sql_query($sql, 3600);
 
@@ -1493,6 +1610,7 @@ class user extends session
 				$localised_images = true;
 			}
 
+			$row['image_filename'] = rawurlencode($row['image_filename']);
 			$this->img_array[$row['image_name']] = $row;
 		}
 		$db->sql_freeresult($result);
@@ -1548,12 +1666,6 @@ class user extends session
 					}
 				}
 			}
-
-//-- mod start : Garage ----------------------------------------------------------------------------------------------------
-//-- add
-			global $garage;
-			$sql_ary = $garage->add_garage_images($sql_ary, $this->theme['imageset_path'], $this->img_lang);
-//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 
 			if (sizeof($sql_ary))
 			{

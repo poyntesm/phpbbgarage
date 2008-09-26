@@ -1,8 +1,9 @@
 <?php
+//-- mod : Garage ----------------------------------------------------------------------------------------------------------
 /**
 *
 * @package phpBB3
-* @version $Id: memberlist.php,v 1.254 2007/10/05 14:30:06 acydburn Exp $
+* @version $Id: memberlist.php 8645 2008-06-10 14:37:38Z acydburn $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -141,10 +142,9 @@ switch ($mode)
 		unset($admin_memberships);
 
 		$sql = 'SELECT forum_id, forum_name
-			FROM ' . FORUMS_TABLE . '
-			WHERE forum_type = ' . FORUM_POST;
+			FROM ' . FORUMS_TABLE;
 		$result = $db->sql_query($sql);
-		
+
 		$forums = array();
 		while ($row = $db->sql_fetchrow($result))
 		{
@@ -565,6 +565,8 @@ switch ($mode)
 			'S_CUSTOM_FIELDS'	=> (isset($profile_fields['row']) && sizeof($profile_fields['row'])) ? true : false,
 
 			'U_USER_ADMIN'			=> ($auth->acl_get('a_user')) ? append_sid("{$phpbb_root_path}adm/index.$phpEx", 'i=users&amp;mode=overview&amp;u=' . $user_id, true, $user->session_id) : '',
+			'U_USER_BAN'			=> ($auth->acl_get('m_ban')) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=ban&amp;mode=user&amp;u=' . $user_id, true, $user->session_id) : '',
+
 			'U_SWITCH_PERMISSIONS'	=> ($auth->acl_get('a_switchperm') && $user->data['user_id'] != $user_id) ? append_sid("{$phpbb_root_path}ucp.$phpEx", "mode=switch_perm&amp;u={$user_id}") : '',
 
 			'S_ZEBRA'			=> ($user->data['user_id'] != $user_id && $user->data['is_registered'] && $zebra_enabled) ? true : false,
@@ -894,21 +896,23 @@ switch ($mode)
 		$template_html = 'memberlist_body.html';
 
 		// Sorting
-		$sort_key_text = array('a' => $user->lang['SORT_USERNAME'], 'b' => $user->lang['SORT_LOCATION'], 'c' => $user->lang['SORT_JOINED'], 'd' => $user->lang['SORT_POST_COUNT'], 'e' => $user->lang['SORT_EMAIL'], 'f' => $user->lang['WEBSITE'], 'g' => $user->lang['ICQ'], 'h' => $user->lang['AIM'], 'i' => $user->lang['MSNM'], 'j' => $user->lang['YIM'], 'k' => $user->lang['JABBER'], 'o' => $user->lang['GARAGE']);
+		$sort_key_text = array('a' => $user->lang['SORT_USERNAME'], 'b' => $user->lang['SORT_LOCATION'], 'c' => $user->lang['SORT_JOINED'], 'd' => $user->lang['SORT_POST_COUNT'], 'f' => $user->lang['WEBSITE'], 'g' => $user->lang['ICQ'], 'h' => $user->lang['AIM'], 'i' => $user->lang['MSNM'], 'j' => $user->lang['YIM'], 'k' => $user->lang['JABBER'], 'o' => $user->lang['GARAGE']);
+		$sort_key_sql = array('a' => 'u.username_clean', 'b' => 'u.user_from', 'c' => 'u.user_regdate', 'd' => 'u.user_posts', 'f' => 'u.user_website', 'g' => 'u.user_icq', 'h' => 'u.user_aim', 'i' => 'u.user_msnm', 'j' => 'u.user_yim', 'k' => 'u.user_jabber', 'o' => 'u.garage_id');
+
+		if ($auth->acl_get('a_user'))
+		{
+			$sort_key_text['e'] = $user->lang['SORT_EMAIL'];
+			$sort_key_sql['e'] = 'u.user_email';
+		}
 
 		if ($auth->acl_get('u_viewonline'))
 		{
 			$sort_key_text['l'] = $user->lang['SORT_LAST_ACTIVE'];
-		}
-		$sort_key_text['m'] = $user->lang['SORT_RANK'];
-
-		$sort_key_sql = array('a' => 'u.username_clean', 'b' => 'u.user_from', 'c' => 'u.user_regdate', 'd' => 'u.user_posts', 'e' => 'u.user_email', 'f' => 'u.user_website', 'g' => 'u.user_icq', 'h' => 'u.user_aim', 'i' => 'u.user_msnm', 'j' => 'u.user_yim', 'k' => 'u.user_jabber', 'o' => 'u.garage_id');
-
-		if ($auth->acl_get('u_viewonline'))
-		{
 			$sort_key_sql['l'] = 'u.user_lastvisit';
 		}
-		$sort_key_sql['m'] = 'u.user_rank DESC, u.user_posts';
+
+		$sort_key_text['m'] = $user->lang['SORT_RANK'];
+		$sort_key_sql['m'] = 'u.user_rank';
 
 		$sort_dir_text = array('a' => $user->lang['ASCENDING'], 'd' => $user->lang['DESCENDING']);
 
@@ -983,7 +987,7 @@ switch ($mode)
 			}
 
 			$sql_where .= ($username) ? ' AND u.username_clean ' . $db->sql_like_expression(str_replace('*', $db->any_char, utf8_clean_string($username))) : '';
-			$sql_where .= ($email) ? ' AND u.user_email ' . $db->sql_like_expression(str_replace('*', $db->any_char, $email)) . ' ' : '';
+			$sql_where .= ($auth->acl_get('a_user') && $email) ? ' AND u.user_email ' . $db->sql_like_expression(str_replace('*', $db->any_char, $email)) . ' ' : '';
 			$sql_where .= ($icq) ? ' AND u.user_icq ' . $db->sql_like_expression(str_replace('*', $db->any_char, $icq)) . ' ' : '';
 			$sql_where .= ($aim) ? ' AND u.user_aim ' . $db->sql_like_expression(str_replace('*', $db->any_char, $aim)) . ' ' : '';
 			$sql_where .= ($yahoo) ? ' AND u.user_yim ' . $db->sql_like_expression(str_replace('*', $db->any_char, $yahoo)) . ' ' : '';
@@ -1168,6 +1172,12 @@ switch ($mode)
 
 		$order_by .= $sort_key_sql[$sort_key] . ' ' . (($sort_dir == 'a') ? 'ASC' : 'DESC');
 
+		// Unfortunately we must do this here for sorting by rank, else the sort order is applied wrongly
+		if ($sort_key == 'm')
+		{
+			$order_by .= ', u.user_posts DESC';
+		}
+
 		// Count the users ...
 		if ($sql_where)
 		{
@@ -1201,7 +1211,7 @@ switch ($mode)
 			'sd'			=> array('sd', 'a'),
 			'form'			=> array('form', ''),
 			'field'			=> array('field', ''),
-			'select_single'	=> array('select_single', 0),
+			'select_single'	=> array('select_single', $select_single),
 			'username'		=> array('username', '', true),
 			'email'			=> array('email', ''),
 			'icq'			=> array('icq', ''),
@@ -1251,6 +1261,7 @@ switch ($mode)
 		{
 			$group_selected = request_var('search_group_id', 0);
 			$s_group_select = '<option value="0"' . ((!$group_selected) ? ' selected="selected"' : '') . '>&nbsp;</option>';
+			$group_ids = array();
 
 			if ($auth->acl_gets('a_group', 'a_groupadd', 'a_groupdel'))
 			{
@@ -1275,9 +1286,15 @@ switch ($mode)
 
 			while ($row = $db->sql_fetchrow($result))
 			{
+				$group_ids[] = $row['group_id'];
 				$s_group_select .= '<option value="' . $row['group_id'] . '"' . (($group_selected == $row['group_id']) ? ' selected="selected"' : '') . '>' . (($row['group_type'] == GROUP_SPECIAL) ? $user->lang['G_' . $row['group_name']] : $row['group_name']) . '</option>';
 			}
 			$db->sql_freeresult($result);
+
+			if ($group_selected !== 0 && !in_array($group_selected, $group_ids))
+			{
+				trigger_error('NO_GROUP');
+			}
 
 			$template->assign_vars(array(
 				'USERNAME'	=> $username,
@@ -1293,6 +1310,7 @@ switch ($mode)
 				'IP'		=> $ipdomain,
 
 				'S_IP_SEARCH_ALLOWED'	=> ($auth->acl_getf_global('m_info')) ? true : false,
+				'S_EMAIL_SEARCH_ALLOWED'=> ($auth->acl_get('a_user')) ? true : false,
 				'S_IN_SEARCH_POPUP'		=> ($form && $field) ? true : false,
 				'S_SEARCH_USER'			=> true,
 				'S_FORM_NAME'			=> $form,
@@ -1353,17 +1371,18 @@ switch ($mode)
 			}
 			else
 			{
-	//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- modify
 				$sql = 'SELECT u.*, v.id as vid
 					FROM ' . USERS_TABLE . ' u
 					LEFT JOIN ' . GARAGE_VEHICLES_TABLE . ' v
 						ON (
 							v.user_id = u.user_id AND v.main_vehicle = 1
-						) 
+						)
 					WHERE ' . $db->sql_in_set('u.user_id', $user_list) . "
 						$sql_where_data";
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+
 			}
 			$result = $db->sql_query($sql);
 
@@ -1391,7 +1410,8 @@ switch ($mode)
 			if ($sort_key == 'l')
 			{
 				$lesser_than = ($sort_dir == 'a') ? -1 : 1;
-				uasort($id_cache, create_function('$first, $second', "return (\$first['last_visit'] == \$second['last_visit']) ? 0 : ((\$first['last_visit'] < \$second['last_visit']) ? $lesser_than : ($lesser_than * -1));"));
+//				uasort($id_cache, create_function('$first, $second', "return (\$first['last_visit'] == \$second['last_visit']) ? 0 : ((\$first['last_visit'] < \$second['last_visit']) ? $lesser_than : ($lesser_than * -1));"));
+				usort($user_list, create_function('$first, $second', "global \$id_cache; return (\$id_cache[\$first]['last_visit'] == \$id_cache[\$second]['last_visit']) ? 0 : ((\$id_cache[\$first]['last_visit'] < \$id_cache[\$second]['last_visit']) ? $lesser_than : ($lesser_than * -1));"));
 			}
 
 			for ($i = 0, $end = sizeof($user_list); $i < $end; ++$i)
@@ -1473,7 +1493,7 @@ switch ($mode)
 			'S_DISPLAY_GARAGE_MEMBERLIST'	=> ($garage_config['integrate_memberlist']) ? true : false,
 			'GARAGE_IMG'			=> $user->img('garage_icon_garage', $user->lang['USERS_GARAGE']),
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-
+			
 			'S_SHOW_GROUP'		=> ($mode == 'group') ? true : false,
 			'S_VIEWONLINE'		=> $auth->acl_get('u_viewonline'),
 			'S_MODE_SELECT'		=> $s_sort_key,
@@ -1506,9 +1526,9 @@ function show_profile($data)
 	$rank_title = $rank_img = $rank_img_src = '';
 	get_user_rank($data['user_rank'], $data['user_posts'], $rank_title, $rank_img, $rank_img_src);
 
-	if (!empty($data['user_allow_viewemail']) || $auth->acl_get('a_email'))
+	if (!empty($data['user_allow_viewemail']) || $auth->acl_get('a_user'))
 	{
-		$email = ($config['board_email_form'] && $config['email_enable']) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=email&amp;u=' . $user_id) : (($config['board_hide_emails'] && !$auth->acl_get('a_email')) ? '' : 'mailto:' . $data['user_email']);
+		$email = ($config['board_email_form'] && $config['email_enable']) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=email&amp;u=' . $user_id) : (($config['board_hide_emails'] && !$auth->acl_get('a_user')) ? '' : 'mailto:' . $data['user_email']);
 	}
 	else
 	{
@@ -1574,6 +1594,7 @@ function show_profile($data)
 
 		'A_USERNAME'		=> addslashes(get_username_string('username', $user_id, $username, $data['user_colour'])),
 
+		'AVATAR_IMG'		=> get_user_avatar($data['user_avatar'], $data['user_avatar_type'], $data['user_avatar_width'], $data['user_avatar_height']),
 		'ONLINE_IMG'		=> (!$config['load_onlinetrack']) ? '' : (($online) ? $user->img('icon_user_online', 'ONLINE') : $user->img('icon_user_offline', 'OFFLINE')),
 		'S_ONLINE'			=> ($config['load_onlinetrack'] && $online) ? true : false,
 		'RANK_IMG'			=> $rank_img,
@@ -1588,7 +1609,7 @@ function show_profile($data)
 		'U_EMAIL'		=> $email,
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
-		'U_GARAGE' 		=> (!empty($data['vid'])) ? append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=search_results&amp;search_username=1&amp;username=' . $data['username']) : '',
+		'U_GARAGE' 		=> (!empty($data['vid'])) ? append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=search_results&amp;search_username=1&amp;username=' . $data['username']) : '',		
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 		'U_WWW'			=> (!empty($data['user_website'])) ? $data['user_website'] : '',
 		'U_ICQ'			=> ($data['user_icq']) ? 'http://www.icq.com/people/webmsg.php?to=' . urlencode($data['user_icq']) : '',

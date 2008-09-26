@@ -19,53 +19,52 @@
 			</author>
 		</author-group>
 
-		<mod-version>
-			<major>2</major>
-			<minor>0</minor>
-			<revision>B3</revision>
-		</mod-version>
+		<mod-version>2.0.B4-DEV</mod-version>
 
 		<installation>
 			<level>advanced</level>
 			<time>1800</time>
-			<target-version>
-				<target-primary>3.0.0</target-primary>
-				<target-major allow="exact">3</target-major>
-				<target-minor allow="exact">0</target-minor>
-            			<target-revision allow="after-equal">0</target-revision>
-			</target-version>
+			<target-version>3.0.2</target-version>
 		</installation>
+
+		<link-group>
+			<link type="template" href="./xml/prosilver-fr.xml" lang="fr">Prosilver French</link>
+			<link type="template" href="./xml/prosilver-de.xml" lang="de">Prosilver German (Casual Honorifics)</link>
+			<link type="template" href="./xml/prosilver-it.xml" lang="it">Prosilver Italian</link>
+			<link type="template" href="./xml/subsilver2-en.xml" lang="en">subsilver2 English</link>
+			<link type="template" href="./xml/subsilver2-fr.xml" lang="fr">subsilver2 French</link>
+			<link type="template" href="./xml/subsilver2-de.xml" lang="de">subsilver2 German (Casual Honorifics)</link>
+			<link type="template" href="./xml/subsilver2-it.xml" lang="it">subsilver2 Italian</link>
+			<link type="language" href="./xml/lang-fr.xml" lang="fr">French</link>
+			<link type="language" href="./xml/lang-de.xml" lang="de">German (Casual Honorifics)</link>
+			<link type="language" href="./xml/lang-it.xml" lang="it">Italian</link>
+		</link-group>
 
 		<history>
 			<entry>
+        			<date>2008-08-25</date>
+			        <rev-version>2.0.B4</rev-version>
+				<changelog lang="en-gb">
+					<change>Fourth BETA release.</change>
+				</changelog>
+			</entry>
+			<entry>
         			<date>2008-01-29</date>
-			        <rev-version>
-					<major>2</major>
-					<minor>0</minor>
-					<revision>B3</revision>
-				</rev-version>
+			        <rev-version>2.0.B3</rev-version>
 				<changelog lang="en-gb">
 					<change>Third BETA release.</change>
 				</changelog>
 			</entry>
 			<entry>
         			<date>2007-06-08</date>
-			        <rev-version>
-					<major>2</major>
-					<minor>0</minor>
-					<revision>B2</revision>
-				</rev-version>
+			        <rev-version>2.0.B2</rev-version>
 				<changelog lang="en-gb">
 					<change>Second BETA release.</change>
 				</changelog>
 			</entry>
 			<entry>
         			<date>2007-05-22</date>
-			        <rev-version>
-					<major>2</major>
-					<minor>0</minor>
-					<revision>B1</revision>
-				</rev-version>
+			        <rev-version>2.0.B1</rev-version>
 				<changelog lang="en-gb">
 					<change>First phpBB3 version of phpBB Garage for phpBB3.</change>
 				</changelog>
@@ -77,10 +76,17 @@
 		<copy>
 			<file from="./root/adm/*.*" to="./adm/" />
 			<file from="./root/garage/*.*" to="./garage/" />
-			<file from="./root/includes/*.*" to="./inculdes/" />
+			<file from="./root/includes/*.*" to="./includes/" />
 			<file from="./root/language/en/*.*" to="./langauge/en/" />
-			<file from="./root/*garage*.*" to="./" />
+			<file from="./root/styles/prosilver/imageset/*.*" to="./styles/prosilver/imageset/" />
+			<file from="./root/styles/prosilver/imageset/en/*.*" to="./styles/prosilver/imageset/en/" />
+			<file from="./root/styles/prosilver/template/*.*" to="./styles/prosilver/template/" />
+			<file from="./root/styles/prosilver/theme/*.*" to="./styles/prosilver/theme/" />
+			<file from="./root/*.*" to="./" />
 		</copy>
+
+		<sql dbms="">
+		</sql>
 
 		<diy-instructions lang="en-gb"><![CDATA[Open your web browser and open the address http://www.yourdomain.com/pathtophpbb/garage/install/]]>
 		</diy-instructions>
@@ -432,6 +438,93 @@ $template->assign_vars(array(
 		$this->imageset_keys = $garage_template->update_imageset_keys($this->imageset_keys);
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------]]></action>
 
+			</edit>
+		</open>
+
+
+		<open src="styles/prosilver/imageset/imageset.cfg">
+			<edit>
+				<find>img_icon_user_warn = icon_user_warn.gif*20*20</find>
+				<action type="after-add">//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+img_garage_img_attached		= garage_camera.gif*20*20
+img_garage_edit			= garage_edit.gif*20*20
+img_garage_delete		= garage_delete.gif*20*20
+img_garage_icon_garage		= icon_miniprofile_garage.gif*20*20
+img_garage_toggle		= garage_toggle.gif*18*18
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+				</action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/imageset/en/imageset.cfg">
+			<edit>
+				<find>img_button_topic_reply = button_topic_reply.gif*25*96</find>
+				<action type="after-add">//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+img_garage_create_vehicle	= garage_new_vehicle.gif*25*120
+img_garage_edit_vehicle		= garage_edit_vehicle.gif*25*120
+img_garage_delete_vehicle	= garage_delete_vehicle.gif*25*135
+img_garage_view_vehicle		= garage_view_vehicle.gif*25*120
+img_garage_add_modification	= garage_new_modification.gif*25*135
+img_garage_add_insurance	= garage_new_premium.gif*25*120
+img_garage_add_dynorun		= garage_new_dynorun.gif*25*120
+img_garage_add_quartermile	= garage_new_quartermile.gif*25*135
+img_garage_add_lap		= garage_new_lap.gif*25*120
+img_garage_add_service		= garage_new_service.gif*25*120
+img_garage_main_vehicle		= garage_main_vehicle.gif*25*120
+img_garage_no_thumb		= garage_no_thumb.gif*25*120
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------
+				</action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/template/memberlist_view.html">
+			<edit>
+				<find><![CDATA[		<!-- IF U_JABBER and S_JABBER_ENABLED --><dt>{L_JABBER}:</dt> <dd><a href="{U_JABBER}" onclick="popup(this.href, 550, 320); return false;">{L_SEND_JABBER_MESSAGE}</a></dd><!-- ELSEIF USER_JABBER --><dt>{L_JABBER}:</dt> <dd>{USER_JABBER}</dd><!-- ENDIF -->
+]]></find>
+				<action type="after-add"><![CDATA[		<!-- IF S_DISPLAY_GARAGE_PROFILE --><dt>{L_GARAGE}:</dt> <dd><a href="{U_GARAGE_USER_SEARCH}" >{L_VIEW_USERS_GARAGE}</a></dd><!-- ENDIF -->
+]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[</form>]]></find>
+				<action type="before-add"><![CDATA[
+<!-- INCLUDE garage_profile_integration.html -->
+]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/template/viewtopic_body.html">
+			<edit>
+				<find><![CDATA[		<!-- IF postrow.POSTER_FROM --><dd><strong>{L_LOCATION}:</strong> {postrow.POSTER_FROM}</dd><!-- ENDIF -->
+]]></find>
+				<action type="after-add"><![CDATA[		<!-- IF postrow.U_VEHICLE and postrow.S_DISPLAY_GARAGE_VIEWTOPIC --><dd><br /><a href={postrow.U_VEHICLE}>{postrow.VEHICLE}</a></dd><!-- ENDIF -->
+]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[					<!-- IF postrow.U_JABBER --><li class="jabber-icon"><a href="{postrow.U_JABBER}" onclick="popup(this.href, 550, 320); return false;" title="{L_JABBER}"><span>{L_JABBER}</span></a></li><!-- ENDIF -->
+]]></find>
+				<action type="after-add"><![CDATA[					<!-- IF postrow.U_GARAGE and postrow.S_DISPLAY_GARAGE_VIEWTOPIC --><li class="garage-icon"><a href="{postrow.U_GARAGE}" title="{L_GARAGE}"><span>{L_GARAGE}</span></a></li><!-- ENDIF -->
+
+]]></action>
+			</edit>
+		</open>
+		
+		<open src="styles/prosilver/template/overall_header.html">
+			<edit>
+				<find><![CDATA[			<ul class="linklist rightside">]]></find>
+					<action type="after-add"><![CDATA[					<!-- IF S_DISPLAY_GARAGE --><li><a href="{U_GARAGE}" title="{L_GARAGE}" class="icon-garage">{L_GARAGE}</a></li><!-- ENDIF -->
+						<!-- IF S_DISPLAY_QUARTERMILE --><li><a href="{U_QUARTERMILE}" title="{L_QUARTERMILE}" class="icon-quartermile">{L_QUARTERMILE}</a></li><!-- ENDIF -->
+						<!-- IF S_DISPLAY_DYNORUN --><li><a href="{U_DYNORUN}" title="{L_DYNORUN}" class="icon-dynorun">{L_DYNORUN}</a></li><!-- ENDIF -->
+]]></action>
+			</edit>
+		</open>
+
+		<open src="styles/prosilver/theme/stylesheet.css">
+			<edit>
+		        	<find>@import url("colours.css");</find>
+			        <action type="after-add">@import url("garage_content.css");
+				</action>
 			</edit>
 		</open>
 

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<?xml-stylesheet type="text/xsl" href="./../modx.prosilver.en.xsl"?>
+<?xml-stylesheet type="text/xsl" href="./modx.prosilver.en.xsl"?>
 <!--For security purposes, please check: http
 ://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
 <mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.1.xsd">
 	<header>
 		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
-    		<title lang="en-gb">phpBB Garage - subsilver2</title>
-    		<description lang="en-gb">This enables you to use phpBB Garage with subsilver2.</description>
+    		<title lang="en-gb">phpBB Garage subSilver2 EN Installation</title>
+    		<description lang="en-gb">Provides subSilver2 EN language support for phpBB Garage</description>
 
 		<author-group>
 			<author>
@@ -17,55 +17,24 @@
 			</author>
 		</author-group>
 
-		<mod-version>
-			<major>2</major>
-			<minor>0</minor>
-			<revision>B3</revision>
-		</mod-version>
+		<mod-version>1.0.0</mod-version>
 
 		<installation>
 			<level>easy</level>
 			<time>300</time>
-			<target-version>
-				<target-primary>3.0.RC3</target-primary>
-				<target-major allow="exact">3</target-major>
-				<target-minor allow="exact">0</target-minor>
-            			<target-revision allow="after-equal" stage="release-candidate">3</target-revision>
-			</target-version>
+			<target-version>2.0.B4</target-version>
 		</installation>
+
+		<link-group>
+			<link type="parent" href="./../Install Garage.xml" lang="fr">phpBB Garage</link>
+		</link-group>
 
 		<history>
 			<entry>
-        			<date>2008-01-29</date>
-			        <rev-version>
-					<major>2</major>
-					<minor>0</minor>
-					<revision>B3</revision>
-				</rev-version>
+        			<date>2007-xx-xx</date>
+			        <rev-version>1.0.0</rev-version>
 				<changelog lang="en-gb">
-					<change>Third BETA release.</change>
-				</changelog>
-			</entry>
-			<entry>
-        			<date>2007-06-08</date>
-			        <rev-version>
-					<major>2</major>
-					<minor>0</minor>
-					<revision>B2</revision>
-				</rev-version>
-				<changelog lang="en-gb">
-					<change>Second BETA release.</change>
-				</changelog>
-			</entry>
-			<entry>
-        			<date>2006-02-27</date>
-			        <rev-version>
-					<major>2</major>
-					<minor>0</minor>
-					<revision>B1</revision>
-				</rev-version>
-				<changelog lang="en-gb">
-					<change>First phpBB3 version of phpBB Garage for phpBB3.</change>
+					<change>First release of subSilver2 en support.</change>
 				</changelog>
 			</entry>
 		</history>

@@ -8,7 +8,7 @@
 <meta http-equiv="imagetoolbar" content="no" />
 <meta name="resource-type" content="document" />
 <meta name="distribution" content="global" />
-<meta name="copyright" content="2002-2006 phpBB Group" />
+<meta name="copyright" content="2000, 2002, 2005, 2007 phpBB Group" />
 <meta name="keywords" content="" />
 <meta name="description" content="" />
 {META}
@@ -151,14 +151,11 @@ function marklist(id, name, state)
 				<!-- IF not S_IS_BOT -->
 					<!-- IF S_USER_LOGGED_IN -->
 						<!-- IF S_DISPLAY_PM --> &nbsp;<a href="{U_PRIVATEMSGS}"><img src="{T_THEME_PATH}/images/icon_mini_message.gif" width="12" height="13" alt="*" /> {PRIVATE_MESSAGE_INFO}<!-- IF PRIVATE_MESSAGE_INFO_UNREAD -->, {PRIVATE_MESSAGE_INFO_UNREAD}<!-- ENDIF --></a><!-- ENDIF -->
-					<!-- ELSE --> &nbsp;<a href="{U_REGISTER}"><img src="{T_THEME_PATH}/images/icon_mini_register.gif" width="12" height="13" alt="*" /> {L_REGISTER}</a>
+					<!-- ELSEIF S_REGISTER_ENABLED --> &nbsp;<a href="{U_REGISTER}"><img src="{T_THEME_PATH}/images/icon_mini_register.gif" width="12" height="13" alt="*" /> {L_REGISTER}</a>
 					<!-- ENDIF -->
 				<!-- ENDIF -->
 			</td>
 			<td class="genmed" align="{S_CONTENT_FLOW_END}">
-				<!-- IF S_DISPLAY_GARAGE --><a href="{U_GARAGE}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_garage.gif" width="12" height="13" border="0" alt="{L_GARAGE}" hspace="3" /> {L_GARAGE}</a>&nbsp; &nbsp;<!-- ENDIF -->
-				<!-- IF S_DISPLAY_QUARTERMILE --><a href="{U_QUARTERMILE}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_quartermile.gif" width="12" height="13" border="0" alt="{L_QUARTERMILE}" hspace="3" /> {L_QUARTERMILE}</a>&nbsp; &nbsp;<!-- ENDIF -->
-				<!-- IF S_DISPLAY_DYNORUN --><a href="{U_DYNORUN}" class="mainmenu"><img src="{T_THEME_PATH}/images/icon_mini_dynorun.gif" width="12" height="13" border="0" alt="{L_DYNORUN}" hspace="3" /> {L_DYNORUN}</a>&nbsp; &nbsp;<!-- ENDIF -->
 				<a href="{U_FAQ}"><img src="{T_THEME_PATH}/images/icon_mini_faq.gif" width="12" height="13" alt="*" /> {L_FAQ}</a>
 				<!-- IF S_DISPLAY_SEARCH -->&nbsp; &nbsp;<a href="{U_SEARCH}"><img src="{T_THEME_PATH}/images/icon_mini_search.gif" width="12" height="13" alt="*" /> {L_SEARCH}</a><!-- ENDIF -->
 				<!-- IF not S_IS_BOT -->
