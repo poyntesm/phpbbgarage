@@ -667,9 +667,9 @@ class garage_track
 	function delete_track($track_id, $action_laps = 'delete', $laps_to_id = 0)
 	{
 
-		global $db, $user, $cache, $garage, $garage_track;
+		global $db, $user, $cache, $garage;
 
-		$track_data = $garage_track->get_track($track_id);
+		$track_data = $this->get_track($track_id);
 
 		$errors = array();
 
@@ -687,7 +687,7 @@ class garage_track
 			}
 			else
 			{
-				$row = $garage_track->get_track($laps_to_id);
+				$row = $this->get_track($laps_to_id);
 
 				if (!$row)
 				{
