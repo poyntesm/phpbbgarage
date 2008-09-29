@@ -435,6 +435,51 @@ class garage_dynorun
 		return $data;
 	}
 
+		/**
+	* Return array of dynoruns filtered by dynocentre id
+	*
+	* @param int $bid dynocentre id to filter on
+	*
+	*/
+	function get_dynoruns_by_dynocentre_id($dc_id)
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'd.*, d.id as did, i.*, b.title',
+			'FROM'		=> array(
+				GARAGE_DYNORUNS_TABLE	=> 'd',
+				GARAGE_BUSINESS_TABLE	=> 'b',
+			),
+			'LEFT_JOIN'	=> array(
+				array(
+					'FROM'	=> array(GARAGE_DYNORUN_GALLERY_TABLE => 'dg'),
+					'ON'	=> 'd.id = dg.dynorun_id'
+				)
+				,array(
+					'FROM'	=> array(GARAGE_IMAGES_TABLE => 'i'),
+					'ON'	=> 'i.attach_id = dg.image_id'
+				)
+			),
+			'WHERE'		=>	"d.dynocentre_id = $dc_id
+							AND d.dynocentre_id = b.id",
+			'GROUP_BY'	=>	'd.id',
+			'ORDER_BY'	=>	'd.id'
+		));
+
+		$result = $db->sql_query($sql);
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$data[] = $row;
+		}
+		$db->sql_freeresult($result);
+
+		return $data;
+	}
+
 	/**
 	* Assign template variables to display top dynoruns
 	*/
