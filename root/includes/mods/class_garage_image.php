@@ -80,7 +80,7 @@ class garage_image
 		//If No Specific Group Value Exists Use Default Value
 		if (empty($garage_config['remote_groups']))
 		{
-			return;
+			return $garage_config['default_remote_quota'];
 		}
 		//It Appears Some Groups Have Private Permissions & Quotas We Will Need To Check Them
 		else
@@ -525,6 +525,9 @@ class garage_image
 				$data['thumb_width'] 	= '145';
 				$data['thumb_height'] 	= '35';
 			}
+
+			//Filesize is 0 as we have not used local storage for the many image.. only thumbnai
+			$data['filesize'] = 0;
 
 			//Remove Our Temporary File As We No Longer Need It..
 			@unlink($phpbb_root_path . GARAGE_UPLOAD_PATH . $data['tmp_name']);
