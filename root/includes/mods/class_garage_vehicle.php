@@ -1222,7 +1222,7 @@ class garage_vehicle
 	*/
 	function delete_rating($rating_id, $vid = null)
 	{
-		global $garage
+		global $garage;
 
 		//Remove rating
 		$garage->delete_rows(GARAGE_RATINGS_TABLE, 'id', $rating_id);
