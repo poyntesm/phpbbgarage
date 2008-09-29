@@ -568,7 +568,7 @@ class garage_image
 					$data['is_image'] = '1';
 					break;
 				default:
-					message_die(GENERAL_ERROR, $lang['Not_Allowed_File_Type_Vehicle_Created_No_Image'] . "<br />Your File Type Was " .$data['filetype']);
+					trigger_error($lang['Not_Allowed_File_Type_Vehicle_Created_No_Image'] . "<br />Your File Type Was " .$data['filetype'] . adm_back_link(append_sid("index.$phpEx", "i=garage_tool")));
 			}
 	
 			//Generate Required Filename & Thumbname
@@ -583,7 +583,7 @@ class garage_image
 			{
 				if ( @phpversion() < '4.0.3' )
 				{
-					message_die(GENERAL_ERROR, 'open_basedir is set and your PHP version does not allow move_uploaded_file<br /><br />Please contact your server admin', '', __LINE__, __FILE__);
+					trigger_error('open_basedir is set and your PHP version does not allow move_uploaded_file<br /><br />Please contact your server admin');
 				}
 				$move_file = 'move_uploaded_file';
 			}
