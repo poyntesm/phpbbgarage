@@ -1214,6 +1214,30 @@ class garage_vehicle
 	}
 
 	/**
+	* Delete a specific rating, and if needed update weighted rating of vehicle
+	*
+	* @param $rating_id int rating id
+	* @param $vid int vehicle id
+	*
+	*/
+	function delete_rating($rating_id, $vid = null)
+	{
+		global $garage
+
+		//Remove rating
+		$garage->delete_rows(GARAGE_RATINGS_TABLE, 'id', $rating_id);
+
+		//Only if user supplies vid do we update weighted rating
+		if (!empty($vid))
+		{
+			$weighted_rating = $this->calculate_weighted_rating($vid);
+			$this->update_weighted_rating($vid, $weighted_rating);
+		}
+
+		return;
+	}
+
+	/**
 	* Assign template variables to display vehicle page
 	*
 	* @param YES|NO|MODERATE ownership mode
