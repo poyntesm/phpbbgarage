@@ -36,7 +36,7 @@ $lang = array_merge($lang, array(
 	'CONVERT_INTRO'			=> 'Welcome to the phpBB Garage Unified Convertor Framework',
 	'CONVERT_INTRO_BODY'		=> 'From here, you are able to import data from other (installed) garage board systems. The list below shows all the conversion modules currently available. If there is no convertor shown in this list for the board software you wish to convert from, please check our website where further conversion modules may be available for download.',
 
-	'FILES_REQUIRED_EXPLAIN'	=> '<strong>Required</strong> - In order to function correctly phpBB Garage needs to be able to access or write to certain files or directories. If you see “Not Found” you need to create the relevant file or directory. If you see “Unwritable” you need to change the permissions on the file or directory to allow phpBB Garage to write to it.',
+	'FILES_REQUIRED_EXPLAIN'	=> '<strong>Required</strong> - In order to function correctly phpBB Garage needs to be able to access or write to certain files or directories. If you see âNot Foundâ you need to create the relevant file or directory. If you see âUnwritableâ you need to change the permissions on the file or directory to allow phpBB Garage to write to it.',
 
 	'INSTALL_CONGRATS_EXPLAIN'	=> '
 		<p>You have now successfully installed phpBB Garage %1$s. From here, you have two options as to what to do with your newly installed phpBB Garage:</p>
