@@ -368,9 +368,9 @@ $lang = array_merge($lang, array(
 	'PRODUCT_MANUFACTURER'		=> 'Product Manufacturer',
 	'MANUFACTURER'			=> 'Manufacturer',
 	'DYNOCENTRE'			=> 'Dynocentre',
-	'DELETE_ALL_PREMIUMS'		=> 'Delete all premiums',
+	'DELETE_ALL_PREMIUMS'		=> 'Delete all premiums from insurer',
 	'MOVE_PREMIUMS_TO'		=> 'Move premiums to',
-	'DELETE_ALL_DYNORUNS'		=> 'Delete all dynoruns',
+	'DELETE_ALL_DYNORUNS'		=> 'Delete all dynoruns from dynocentre',
 	'MOVE_DYNORUNS_TO'		=> 'Move dynoruns to',
 	'DELETE_BOUGHT_MODIFICATIONS'	=> 'Delete modifications bought from business',
 	'DELETE_INSTALLED_MODIFICATIONS'=> 'Delete modifications installed by business',
@@ -438,7 +438,7 @@ $lang = array_merge($lang, array(
 	'SELECT_MILEAGE_UNIT'		=> 'Select mileage type',
 	'TRACK_DELETE'			=> 'Delete track',
 	'TRACK_DELETE_EXPLAIN'		=> 'The form below will allow you to delete a track. You are able to decide where you want to put all items linked to it.',
-	'DELETE_ALL_LAPS'		=> 'Delete all laps',
+	'DELETE_ALL_LAPS'		=> 'Delete all laps from track',
 	'MOVE_LAPS_TO'			=> 'Move laps to',
 	'TRACK_CREATED'			=> 'Track created',
 	'TRACK_UPDATED'			=> 'Track updated',
@@ -488,6 +488,8 @@ $lang = array_merge($lang, array(
 	'GARAGE_ORPHANS_TITLE' 		=> 'Garage Orphan Locator',
 	'GARAGE_ORPHANS_EXPLAIN' 	=> 'Below are all the orphaned files that were found.  An orphaned file is defined as a file that exists on your local drive that is no longer present in the database.<br />Please check all the applicable orphans you wish to delete.<br /><br /><b>This operation is not undo-able!  Once you choose to remove an orphan it is gone for good.</b>',
 	'REMOVE_SELECTED_ORPHANS' 	=> 'Remove Selected Orphans',
+	'MOVE_PRODUCT_TO'		=> 'Move products to',
+	'DELETE_MADE_PRODUCTS'		=> 'Delete products made by business. (Note: Deletes linked modifications)',
 
 ));
 

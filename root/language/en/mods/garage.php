@@ -797,7 +797,7 @@ $lang = array_merge($lang, array(
 	'VIEW_BLOG_PAGE'		=> '1 blog',
 	'VIEW_BLOGS_PAGE'		=> '%d blogs',
 	'VIEW_COMMENT_PAGE'		=> '1 comment',
-	'VIEW_COMMENTS_PAGE	'	=> '%d comments',
+	'VIEW_COMMENTS_PAGE'		=> '%d comments',
 
 
 	'MONTH_TOPRATED_VEHICLE'	=> 'Month Top Rated',

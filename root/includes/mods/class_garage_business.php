@@ -485,7 +485,6 @@ class garage_business
 	*/
 	function delete_business($business_id, $action_garage = 'delete', $garage_to_id = 0, $action_insurance = 'delete', $insurance_to_id = 0, $action_dynocentre = 'delete', $dynocentre_to_id = 0, $action_retail = 'delete', $retail_to_id = 0, $action_product = 'delete', $product_to_id = 0)
 	{
-
 		global $db, $user, $cache, $garage, $garage_business;
 
 		$business_data = $garage_business->get_business($business_id);
@@ -622,7 +621,7 @@ class garage_business
 			else
 			{
 				$row = $garage_business->get_business($product_to_id);
-
+				
 				if (!$row)
 				{
 					$errors[] = $user->lang['NO_BUSINESS'];
@@ -677,7 +676,7 @@ class garage_business
 		global $db, $config, $phpbb_root_path, $phpEx, $garage, $garage_modification;
 
 		include_once($phpbb_root_path . 'includes/mods/class_garage_insurance.' . $phpEx);
-		$premiums = $garage_insurance->get_premiums_by_insurer_id($business_id);
+		$premiums = $garage_insurance->get_premiums_by_business($business_id);
 		for ($i = 0, $count = sizeof($premiums);$i < $count; $i++)
 		{
 			$garage_insurance->delete_premium($premiums[$i]['id']);
@@ -821,7 +820,7 @@ class garage_business
 	{
 		global $garage;
 
-		$garage->update_single_field(GARAGE_MODIFICATIONS_TABLE, 'manufacturer_id', $to_id, 'manufacturer_id', $from_id);
+		$garage->update_single_field(GARAGE_PRODUCTS_TABLE, 'business_id', $to_id, 'business_id', $from_id);
 
 		return;
 	}

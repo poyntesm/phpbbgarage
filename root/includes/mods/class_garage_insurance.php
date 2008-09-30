@@ -134,7 +134,7 @@ class garage_insurance
 	* @param int $business_id business id to get premiums for
 	*
 	*/
-	function get_all_premiums_by_business($business_id)
+	function get_premiums_by_business($business_id)
 	{
 		global $db;
 

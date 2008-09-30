@@ -231,7 +231,7 @@ switch( $mode )
 		* Get vehicle, dynorun count, quartermile & gallery data from DB
 		*/
 		$vehicle_data 	= $garage_vehicle->get_vehicle($vid);
-		$count = $garage_dynorun->count_runs($vid);	
+		$dynoruns = $garage_dynorun->get_dynoruns_by_vehicle($vid);
 		$data = $garage_quartermile->get_quartermile($qmid);
 		$gallery_data = $garage_image->get_quartermile_gallery($qmid);
 
@@ -251,15 +251,19 @@ switch( $mode )
 			'FORUM_NAME'	=> $user->lang['EDIT_QUARTERMILE'],
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;VID=$vid&amp;QMID=$qmid"))
 		);
-		if (($data['dynorun_id'] > 0) AND ($count > 0))
+		if (($data['dynorun_id'] > 0) AND (sizeof($dynoruns) > 0))
 		{
 			$bhp_statement = $data['bhp'] . ' BHP @ ' . $data['bhp_unit'];
-			$template->assign_block_vars('link_rr', array());
+			$template->assign_vars(array(
+				'S_DISPLAY_DYNORUNS' => true)
+			);
 			$garage_template->dynorun_dropdown($data['dynorun_id'], $bhp_statement, $vid);
 		}
-		else if (($data['dynorun_id'] = 0) AND ($count > 0))
+		else if (($data['dynorun_id'] == 0) AND (sizeof($dynoruns) > 0))
 		{
-			$template->assign_block_vars('link_rr', array());
+			$template->assign_vars(array(
+				'S_DISPLAY_DYNORUNS' => true)
+			);
 			$garage_template->dynorun_dropdown(NULL, NULL, $vid);
 		}
 		$garage_template->attach_image('quartermile');

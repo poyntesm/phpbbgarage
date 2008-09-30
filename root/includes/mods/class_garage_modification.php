@@ -37,7 +37,6 @@ class garage_modification
 			'vehicle_id'		=> $vid,
 			'user_id'		=> $garage_vehicle->get_vehicle_owner_id($vid),
 			'category_id'		=> $data['category_id'],
-			'manufacturer_id'	=> $data['manufacturer_id'],
 			'product_id'		=> $data['product_id'],
 			'shop_id'		=> $data['shop_id'],
 			'installer_id'		=> $data['installer_id'],
@@ -71,7 +70,6 @@ class garage_modification
 			'vehicle_id'		=> $vid,
 			'user_id'		=> $garage_vehicle->get_vehicle_owner_id($vid),
 			'category_id'		=> $data['category_id'],
-			'manufacturer_id'	=> $data['manufacturer_id'],
 			'product_id'		=> $data['product_id'],
 			'shop_id'		=> $data['shop_id'],
 			'installer_id'		=> $data['installer_id'],
@@ -483,7 +481,7 @@ class garage_modification
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'm.*, v.made_year, v.id, v.currency, i.*, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.title as manufacturer, b2.title as business_title, b3.title as install_business_title, v.made_year, mk.make, md.model, p.title, u.user_avatar_width, u.user_avatar_height, u.user_colour',
+			'SELECT'	=> 'm.*, v.made_year, v.id, v.currency, i.*, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.id as manufacturer_id, b1.title as manufacturer, b2.title as business_title, b3.title as install_business_title, v.made_year, mk.make, md.model, p.title, u.user_avatar_width, u.user_avatar_height, u.user_colour',
 			'FROM'		=> array(
 				GARAGE_VEHICLES_TABLE		=> 'v',
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
@@ -516,7 +514,7 @@ class garage_modification
 						AND v.id = m.vehicle_id
 						AND m.product_id = p.id
 						AND m.category_id = c.id
-						AND m.manufacturer_id = b1.id
+						AND p.business_id = b1.id
 						AND (v.make_id = mk.id AND mk.pending = 0)
 						AND (v.model_id = md.id AND md.pending = 0)
 						AND v.user_id = u.user_id"
@@ -733,6 +731,7 @@ class garage_modification
 			'FROM'		=> array(
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 				GARAGE_PRODUCTS_TABLE		=> 'p',
+				GARAGE_BUSINESS_TABLE		=> 'b',
 			),
 			'LEFT_JOIN'	=> array(
 				array(
@@ -744,7 +743,8 @@ class garage_modification
 					'ON'	=> 'mg.image_id = i.attach_id'
 				)
 			),
-			'WHERE'		=> "m.manufacturer_id = $manufacturer_id
+			'WHERE'		=> "p.business_id = $manufacturer_id
+						AND p.business_id = b.id
 						AND m.product_id = p.id",
 			'ORDER_BY'	=> "p.title ASC"
 		));

@@ -716,7 +716,7 @@ switch( $mode )
 			if  (!empty($bid))
 			{
 				//Pull All Insurance Premiums Data For Specific Insurance Company
-				$insurance_data = $garage_insurance->get_all_premiums_by_business($business[$i]['id']);
+				$insurance_data = $garage_insurance->get_premiums_by_business($business[$i]['id']);
 				for($k = 0, $count3 = sizeof($insurance_data);$k < $count3; $k++)
 				{
 					$template->assign_block_vars('business_row.insurance_detail.premiums', array(

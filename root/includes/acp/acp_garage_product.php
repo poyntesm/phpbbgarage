@@ -171,6 +171,7 @@ class acp_garage_product
 						$product_data = array(
 							'title'		=> request_var('product', '', true),
 							'category_id'	=> '',
+							'business_id'	=> '',
 						);
 					}
 				}

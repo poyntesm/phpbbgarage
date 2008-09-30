@@ -431,7 +431,7 @@ class garage
 			$garage_template->order_dropdown($order);
 
 			$sql_array = array(
-				'SELECT'	=> "m.*, m.id as modification_id, v.id as vehicle_id, v.made_year, v.currency, i.*, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.title as business_title, v.made_year, mk.make, md.model, b1.title as business_title, p.title as product_title, u.user_colour",
+				'SELECT'	=> "m.*, m.id as modification_id, v.made_year, v.currency, i.attach_id, i.attach_location, i.attach_hits, i.attach_ext, i.attach_file, i.attach_thumb_location, i.attach_thumb_width, i.attach_thumb_height, i.attach_is_image, i.attach_date, i.attach_filesize, i.attach_thumb_filesize, u.username, u.user_avatar_type, u.user_avatar, c.title as category_title, mk.make, md.model, b1.id as manufacturer_id, b1.title as business_title, v.made_year, mk.make, md.model, b1.title as business_title, p.title as product_title, u.user_colour",
 				'SELECT_COUNT'	=> "COUNT(m.id) AS total",
 				'FROM'		=> array(
 					GARAGE_MODIFICATIONS_TABLE	=> 'm',
@@ -459,10 +459,14 @@ class garage
 					)
 					,array(
 						'FROM'	=> array(GARAGE_BUSINESS_TABLE => 'b1'),
-						'ON'	=> 'm.manufacturer_id = b1.id'
+						'ON'	=> 'p.business_id = b1.id'
 					)
 				),
-				'WHERE'		=> "m.id IS NOT NULL AND m.vehicle_id = v.id AND (v.make_id = mk.id and mk.pending = 0) AND (v.model_id = md.id and md.pending = 0) AND v.user_id = u.user_id",
+				'WHERE'		=> "m.id IS NOT NULL 
+							AND m.vehicle_id = v.id 
+							AND (v.make_id = mk.id and mk.pending = 0) 
+							AND (v.model_id = md.id and md.pending = 0) 
+							AND v.user_id = u.user_id",
 				'GROUP_BY'	=> "m.id",
 				'ORDER_BY'	=> "$sort $order"
 			);
@@ -724,7 +728,7 @@ class garage
 		}
 		if ($search_options['search_manufacturer'] AND (!empty($search_options['manufacturer_id'])))
 		{
-			$sql_array['WHERE'] .= " AND m.manufacturer_id = " . $search_options['manufacturer_id'];
+			$sql_array['WHERE'] .= " AND p.business_id = " . $search_options['manufacturer_id'];
 			$pagination_url .= "&amp;search_manufacturer=1&amp;manufacturer_id=" . $search_options['manufacturer_id'];
 		}
 		if ($search_options['search_product'] AND (!empty($search_options['product_id'])))
