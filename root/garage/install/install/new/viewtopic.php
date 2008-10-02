@@ -1424,7 +1424,7 @@ for ($i = 0, $end = sizeof($post_list); $i < $end; ++$i)
 //-- add
 		'VEHICLE'			=> $user_cache[$poster_id]['vehicle'],
 		'U_VEHICLE'			=> (isset($user_cache[$poster_id]['garage_id'])) ? append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", 'mode=view_vehicle&amp;VID=' . $user_cache[$poster_id]['garage_id']) : '',
-		'U_GARAGE'			=> (isset($user_cache[$poster_id]['garage_id'])) ? append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=dispay_results&amp;username=' . $user_cache[$poster_id]['username']). '&amp;search_username=1' : '',
+		'U_GARAGE'			=> (isset($user_cache[$poster_id]['garage_id'])) ? append_sid("{$phpbb_root_path}garage.$phpEx", 'mode=display_results&amp;username=' . $user_cache[$poster_id]['username']). '&amp;search_username=1' : '',
 		'S_DISPLAY_GARAGE_VIEWTOPIC'	=> ($garage_config['integrate_viewtopic']) ? true : false,
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 		'POST_AUTHOR_FULL'		=> get_username_string('full', $poster_id, $row['username'], $row['user_colour'], $row['post_username']),
