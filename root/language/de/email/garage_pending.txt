@@ -1,0 +1,10 @@
+Subject: phpBB Garage Eintrag in der Warteliste
+
+Hallo,
+
+ein Eintrag, der in der phpBB Garage erstellt wurde, bedarf der Genehmingung. Bitte prüfe den Eintrag und genehmige ihn oder lehne ihn ab.
+
+Benutze diesen Link zur Genehmingung/Ablehnung des Eintrags:
+{U_MCP}
+
+{EMAIL_SIG}

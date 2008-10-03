@@ -1,0 +1,7 @@
+Subject: phpBB Garage - Fahrzeug-Kommentar erhalten
+
+Hallo,
+
+eines deiner Fahrzeuge hat einen Kommentar erhalten. Bitte benutze den folgenden Link, um ihn anzusehen: {U_VIEW_COMMENT}
+
+{EMAIL_SIG}
