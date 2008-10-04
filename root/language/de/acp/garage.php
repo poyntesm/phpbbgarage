@@ -1,10 +1,10 @@
 <?php
 /** 
 *
-* acp_garage [English]
+* acp_garage [German]
 *
 * @package language
-* @version $Id: garage.php 505 2008-01-28 10:40:33Z poyntesm $
+* @version $Id$
 * @copyright (c) 2005 phpBB Garage
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
 *

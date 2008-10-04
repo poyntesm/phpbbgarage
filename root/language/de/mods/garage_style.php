@@ -1,10 +1,10 @@
 <?php
 /** 
 *
-* garage [English]
+* garage [German]
 *
 * @package language
-* @version $Id: garage.php 451 2007-07-25 14:12:04Z poyntesm $
+* @version $Id$
 * @copyright (c) 2005 phpBB Garage
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
 *

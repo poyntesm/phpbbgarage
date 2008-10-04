@@ -1,7 +1,7 @@
 <?php
 /** 
 *
-* garage [English]
+* garage [German]
 *
 * @package language
 * @version $Id$

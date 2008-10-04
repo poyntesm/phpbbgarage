@@ -1,10 +1,10 @@
 <?php
 /**
 *
-* install [English]
+* install [German]
 *
 * @package language
-* @version $Id: install.php,v 1.119 2007/07/24 15:17:47 acydburn Exp $
+* @version $Id$
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *

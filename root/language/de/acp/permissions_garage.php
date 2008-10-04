@@ -1,10 +1,10 @@
 <?php
 /** 
 *
-* acp_garage_permissions (phpBB Garage Permission Set) [English]
+* acp_garage_permissions (phpBB Garage Permission Set) [German]
 *
 * @package language
-* @version $Id: permissions_garage.php 504 2008-01-23 15:09:35Z poyntesm $
+* @version $Id$
 * @copyright (c) 2005 phpBB Garage
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
 *
