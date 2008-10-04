@@ -13,7 +13,7 @@
 	- prosilver
 	- subSilver2</author-notes>
 
-			<author-notes lang="de">Bisher werden folgende Templates untertsützt:
+			<author-notes lang="de">Bisher werden folgende Templates unterstützt:
 	- prosilver
 	- subSilver2</author-notes>
 
@@ -26,7 +26,7 @@
 			</author>
 		</author-group>
 
-		<mod-version>1.0.1</mod-version>
+		<mod-version>1.0.0</mod-version>
 
 		<installation>
 			<level>easy</level>
@@ -40,17 +40,7 @@
 
 		<history>
 			<entry>
-        			<date>2008-10-03</date>
-				<rev-version>1.0.1</rev-version>
-				<changelog lang="de">
-					<change>Sprachdateien für v2.0.B4 vorbereitet</change>
-				</changelog>
-				<changelog lang="en-gb">
-					<change>ready for v2.0.B4</change>
-				</changelog>
-				</entry>
-			<entry>
-			<date>2008-09-18</date>
+				<date>2008-10-04</date>
 				<rev-version>1.0.0</rev-version>
 				<changelog lang="de">
 					<change>Erste Version eines deutschen Sprachpakets veröffentlicht.</change>
