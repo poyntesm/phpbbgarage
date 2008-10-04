@@ -5,12 +5,17 @@
 <mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.1.xsd">
 	<header>
 		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
-    		<title lang="de">phpBB Garage DE Language Pack Installation</title>
+			<title lang="de">phpBB Garage - Deutsches Sprachpaket</title>
     		<description lang="en-gb">Provide support for 'de' language to phpBB Garage.</description>
-		<author-notes lang="en-gb"><![CDATA[- Please process also ./xml/xxx-de.xml where xxx is your required template.
-Current available templates are :
+    		<description lang="de">Diese Installationsdateien bieten eine deutsche Sprachausgabe für phpBB Garage.</description>
+
+			<author-notes lang="en-gb">Current available templates are :
 	- prosilver
-	- subSilver2]]></author-notes>
+	- subSilver2</author-notes>
+
+			<author-notes lang="de">Bisher werden folgende Templates untertsützt:
+	- prosilver
+	- subSilver2</author-notes>
 
 		<author-group>
 			<author>
@@ -38,14 +43,20 @@ Current available templates are :
         			<date>2008-10-03</date>
 				<rev-version>1.0.1</rev-version>
 				<changelog lang="de">
-					<change>zu ca. 90% übersetzt, für B4 vorbereitet</change>
+					<change>Sprachdateien für v2.0.B4 vorbereitet</change>
 				</changelog>
-			</entry>
+				<changelog lang="en-gb">
+					<change>ready for v2.0.B4</change>
+				</changelog>
+				</entry>
 			<entry>
 			<date>2008-09-18</date>
 				<rev-version>1.0.0</rev-version>
 				<changelog lang="de">
-					<change>Erstes 'de' Sprachpaket.</change>
+					<change>Erste Version eines deutschen Sprachpakets veröffentlicht.</change>
+				</changelog>
+				<changelog lang="en-gb">
+					<change>First 'de' language pack.</change>
 				</changelog>
 			</entry>
 		</history>

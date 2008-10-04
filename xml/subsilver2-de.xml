@@ -5,20 +5,20 @@
 <mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.1.xsd">
 	<header>
 		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
-    		<title lang="en-gb">phpBB Garage subSilver2 DE Installation</title>
-		<description lang="en-gb">Provides subSilver2 DE language support for phpBB Garage</description>
-		<author-notes lang="en-gb"><![CDATA[- Please process also ./xml/lang-de.xml]]></author-notes>		
+    		<title lang="de">phpBB Garage subSilver2 DE</title>
+			<description lang="en-gb">Provides subSilver2 DE language support for phpBB Garage</description>
+			<description lang="de">Deutscher subSilver2-Sprachausgabe für phpBB Garage</description>
 
 		<author-group>
 			<author>
-				<realname>Esmond Poynton</realname>
-				<email>esmond.poynton[at]gmail[dot]com</email>
-				<username>poyntesm</username>
-				<homepage>http://forums.phpbbgarage.com/</homepage>
+				<realname>Sven Drese</realname>
+				<email>sven.drese[at]gmail[dot]com</email>
+				<username>cbr-fighter</username>
+				<homepage>http://www.cbr-fighter.de/</homepage>
 			</author>
 		</author-group>
 
-		<mod-version>1.0.0</mod-version>
+		<mod-version>1.0.1</mod-version>
 
 		<installation>
 			<level>easy</level>
@@ -27,28 +27,41 @@
 		</installation>
 
 		<link-group>
-			<link type="parent" href="./../Install Garage.xml" lang="fr">phpBB Garage</link>
+			<link type="parent" href="./../Install Garage.xml" lang="de">phpBB Garage</link>
 		</link-group>
 
 		<history>
 			<entry>
-        			<date>2007-xx-xx</date>
-			        <rev-version>1.0.0</rev-version>
+        			<date>2008-10-03</date>
+				<rev-version>1.0.1</rev-version>
+				<changelog lang="de">
+					<change>Sprachdateien für v2.0.B4 vorbereitet</change>
+				</changelog>
 				<changelog lang="en-gb">
-					<change>First release of subSilver2 de support.</change>
+					<change>ready for v2.0.B4</change>
+				</changelog>
+				</entry>
+			<entry>
+			<date>2008-09-18</date>
+				<rev-version>1.0.0</rev-version>
+				<changelog lang="de">
+					<change>Erste Version eines deutschen Sprachpakets veröffentlicht.</change>
+				</changelog>
+				<changelog lang="en-gb">
+					<change>First 'de' language pack.</change>
 				</changelog>
 			</entry>
 		</history>
 	</header>
 
-	<action-group>
+  	<action-group>
 		<copy>
-			<file from="./root/styles/subsilver2/imageset/de/*.*" to="./styles/subsilver2/imageset/de/" />
+			<file from="./../root/styles/subsilver2/imageset/de/*.*" to="./styles/subsilver2/imageset/de/" />
 		</copy>
 
 		<open src="styles/subsilver2/imageset/de/imageset.cfg">
 			<edit>
-				<find>img_button_topic_reply = button_topic_reply.gif</find>
+				<find>img_button_topic_reply = button_topic_reply.gif*27*115</find>
 				<action type="after-add">//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 img_garage_icon_garage		= icon_garage.gif*
@@ -74,11 +87,11 @@ img_garage_add_service		= garage_add_service.gif
 img_garage_main_vehicle		= garage_main_vehicle.gif
 img_garage_no_thumb		= garage_no_thumb.gif
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
-</action>
+				</action>
 			</edit>
 		</open>
 
-		<diy-instructions lang="en-gb"><![CDATA[Refresh theme & imageset & template cache in ACP]]>
-		</diy-instructions>
+		<diy-instructions lang="en-gb"><![CDATA[Refresh theme & imagest & template cache in ACP]]></diy-instructions>
+		<diy-instructions lang="de"><![CDATA[Aktualisiere Template-, Theme- & Grafiksammlungs-Daten im ACP]]></diy-instructions>
 	</action-group>
 </mod>
