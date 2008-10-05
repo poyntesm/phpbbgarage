@@ -756,6 +756,7 @@ $lang = array_merge($lang, array(
 	'TRACK_PICTURES'		=> 'Streckenbilder',
 
 	//SERVICE HISTORY KEYS
+	'SERVICES'			=> 'Inspektionen',
 	'ADD_SERVICE'			=> 'Inspektion hinzufügen',
 	'ADD_NEW_SERVICE'		=> 'Neue Inspektion hinzufügen',
 	'EDIT_SERVICE'			=> 'Inspektion bearbeiten',

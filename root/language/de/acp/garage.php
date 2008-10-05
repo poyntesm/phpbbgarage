@@ -175,10 +175,10 @@ $lang = array_merge($lang, array(
 	'USER_SUBMIT_MODEL_EXPLAIN' 			=> 'Ermöglicht Benutzern, neue Fabrikate vorzuschlagen.',
 	'USER_SUBMIT_BUSINESS' 				=> 'Unternehmenvorschlag durch Benutzer',
 	'USER_SUBMIT_BUSINESS_EXPLAIN' 			=> 'Ermöglicht Benutzern, neue Unternehmen vorzuschlagen.',
-	'ENABLE_LATESTMAIN_VEHICLE' 			=> 'Enable Latest Vehicles',
-	'ENABLE_LATESTMAIN_VEHICLE_EXPLAIN' 		=> 'Enable \'Latest Updated\' block on all pages',
-	'LATESTMAIN_VEHCILE_LIMIT' 			=> 'Latest Vehicles Limit ',
-	'LATESTMAIN_VEHCILE_LIMIT_EXPLAIN' 		=> 'Number of vehicle to be displayed in \'Latest Updated\' block on all pages',
+	'ENABLE_LATESTMAIN_VEHICLE' 			=> 'neueste Fahrzeuge aktivieren',
+	'ENABLE_LATESTMAIN_VEHICLE_EXPLAIN' 		=> 'Aktiviert auf allen Seiten den Block \'Zuletzt aktualisiert\'.',
+	'LATESTMAIN_VEHCILE_LIMIT' 			=> 'Limit für \'Zuletzt aktualisierte Fahrzeuge\'',
+	'LATESTMAIN_VEHCILE_LIMIT_EXPLAIN' 		=> 'Anzahl der Fahrzeuge, die auf allen Seiten im Block \'Zuletzt aktualisiert\' angezeigt werden.',
 	'GARAGE_DATE_FORMAT' 				=> 'Datumsformat',
 	'GARAGE_DATE_FORMAT_EXPLAIN' 			=> 'Datumsformat, um Einträge in der Garage anzuzeigen.',
 	'PROFILE_INTEGRATION' 				=> 'Profil-Integration',
@@ -309,8 +309,8 @@ $lang = array_merge($lang, array(
 
 	//QUOTA KEYS
 	'QUOTA_TITLE'			=> 'Kontingentverwaltung',
-	'QUOTA_EXPLAIN'			=> 'This page controls quotas for how many vehicles and images an user can have.<br /><br />Default quotas are the values given to any user that has the permissions effective by quotas, unless they are within a group granted a quota below.',
-	'GROUP_QUOTA_EXPLAIN'		=> 'Groups only get displayed here if they have been granted permissions that allow them to create items which can be controlled via quotas.If a group you want to adjust quotas for is not here you need to manage permissions first and grant them the required permissions.',
+	'QUOTA_EXPLAIN'			=> 'Auf dieser Seite werden die Kontingente überwacht, wie viele Fahrzeuge und Bilder ein Benutzer anlegen bzw. einstellen darf.<br /><br />Das Standardkontingent gibt Werte für alle Benutzer vor, es sei denn, das Kontingent wird für Mitglieder einer bestimmten Gruppe nachfolgend gesondert geregelt.',
+	'GROUP_QUOTA_EXPLAIN'		=> 'Gruppen werden hier nur dann angezeigt, wenn ihnen die Berechtigung erteilt wurde, Einträge zu erstellen, welche mittels Kontingenten überwacht werden. Falls eine Gruppe, für die du die Kontingente überawchen möchtest, hier nicht erscheint, musst du zuerst dieser Gruppe die erforderlichen Berechtigungen zuweisen.',
 	'REMOTE'			=> 'extern',
 	'UPLOADED'			=> 'hochgeladen',
 	'DEFAULT_QUOTA'			=> 'Standardkontingent',
@@ -408,7 +408,7 @@ $lang = array_merge($lang, array(
 	//PRODUCT KEYS
 	'MANUFACTURER_TITLE'		=> 'Garage Produktverwaltung',
 	'MANUFACTURER_EXPLAIN'		=> 'Hier kannst Du deine Produkte verwalten: erstellen, ändern, löschen. Hersteller sind Unternehmen und werden über die Unternehmensverwaltung verwaltet.',
-	'MANUFACTURER_INDEX'		=> 'Herstellernummer',
+	'MANUFACTURER_INDEX'		=> 'Produktverzeichnis',
 	'CREATE_PRODUCT'		=> 'Produkt erstellen',
 	'PRODUCTS_TITLE'		=> 'Garage Produktverwaltung',
 	'PRODUCT_EXPLAIN'		=> 'Hier kannst Du deine Produkte verwalten: erstellen, ändern, löschen.',
@@ -488,6 +488,8 @@ $lang = array_merge($lang, array(
 	'GARAGE_ORPHANS_TITLE' 		=> 'Verwaiste Dateien in der Garage suchen',
 	'GARAGE_ORPHANS_EXPLAIN' 	=> 'Unten findest Du alle verwaisten Dateien. Verwaiste Dateien sind Dateien, die sich noch auf Deinem Webspace befinden, die aber nicht mehr in der Datenbank sind und daher auch nicht mehr benötigt werden.<br />Bitte markiere diejenigen, die Du löschen möchtest.<br /><br /><b>Dieser Vorgang kann nicht rückgängig gemacht werden!</b>',
 	'REMOVE_SELECTED_ORPHANS' 	=> 'Lösche markierte Dateien',
+	'MOVE_PRODUCT_TO'		=> 'Verschiebe Produkte nach',
+	'DELETE_MADE_PRODUCTS'		=> 'Lösche Produkte eines Unternehmens. (Hinweis: Zugeordnete Modifikationen werden gelöscht)',
 
 ));
 
