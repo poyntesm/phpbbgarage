@@ -32,113 +32,113 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'CONFIG_PHPBB_EMPTY'		=> 'Die phpBB Garage Konfigurationsvariable für "%s" ist leer.',
-	'CONVERT_COMPLETE_EXPLAIN'	=> 'Du hst deine Garage erfolgreich zu phpbb Garage 2.0 konvertiert. Du kannst dich jetzt einloggen und <a href="../../garage.php">auf deine Garage zugreifen</a>. Please ensure that the settings were transferred correctly before enabling your board by deleting the install directory. Remember that help on using phpBB Garage is available online via the <a href="http://www.phpbbgarage.com/support/documentation/2.0/">Documentation</a> and the <a href="http://www.phpbbgarage.com/community/viewforum.php?f=4">beta support forums</a>.',
-	'CONVERT_INTRO'			=> 'Welcome to the phpBB Garage Unified Convertor Framework',
-	'CONVERT_INTRO_BODY'		=> 'From here, you are able to import data from other (installed) garage board systems. The list below shows all the conversion modules currently available. If there is no convertor shown in this list for the board software you wish to convert from, please check our website where further conversion modules may be available for download.',
+	'CONVERT_COMPLETE_EXPLAIN'	=> 'Du hast deine Garage erfolgreich zu phpbb Garage 2.0 konvertiert. Du kannst dich jetzt einloggen und <a href="../../garage.php">auf deine Garage zugreifen</a>. Bitte vergewissere dich, dass die Einstellungen korrekt übernommen wurden, bevor du dein Board durch das Löschen des Installationsverzeichnisses aktivierst. Denke daran, dass Hilfe zum Gebrauch der phpBB Garage online verfügbar ist via <a href="http://docs.phpbbgarage.com/index.php">Dokumentation</a> und dem <a href="http://forums.phpbbgarage.com/viewforum.php?f=2">Support Forum</a>.',
+	'CONVERT_INTRO'			=> 'Willkommen beim phpBB Garage Konvertierungs-System',
+	'CONVERT_INTRO_BODY'		=> 'Hier kannst du Garage-Daten aus anderen (installierten) Datenbanksystemen importieren. Die nachfolgende Übersicht gibt Auskunft über alle derzeit verfügbaren Konvertierungsmodule. Wenn dort kein Konverter für die Forensoftware angezeigt wird, von der du konvertieren möchtest, prüfe bitte auf unserer Webseite, ob weitere Konvertierungsmodule zum Download bereitstehen.',
 
-	'FILES_REQUIRED_EXPLAIN'	=> '<strong>Required</strong> - In order to function correctly phpBB Garage needs to be able to access or write to certain files or directories. If you see “Not Found” you need to create the relevant file or directory. If you see “Unwritable” you need to change the permissions on the file or directory to allow phpBB Garage to write to it.',
+	'FILES_REQUIRED_EXPLAIN'	=> '<strong>Voraussetzung</strong> - phpBB Garage muss auf diverse Dateien und Verzeichnisse zugreifen oder diese beschreiben können, um reibungslos zu funktionieren. Wenn „Nicht gefunden“ angezeigt wird, musst du die entsprechende Datei oder das Verzeichnis erstellen. Wenn „Nicht beschreibbar“ angezeigt wird, musst du die Befugnisse für die Datei oder das Verzeichnis so ändern, dass phpBB Garage darauf schreiben kann.',
 
 	'INSTALL_CONGRATS_EXPLAIN'	=> '
-		<p>You have now successfully installed phpBB Garage %1$s. From here, you have two options as to what to do with your newly installed phpBB Garage:</p>
-		<h2>Convert an existing garage board to phpBB Garage</h2>
-		<p>The phpBB Garage Unified Convertor Framework supports the conversion of phpBB Garage 1.x.x and other garage board systems to phpBB Garage 2. If you have an existing garage board that you wish to convert, please <a href="%2$s">proceed on to the convertor</a>.</p>
-		<h2>Go live with your phpBB Garage 2!</h2>
-		<p>Clicking the button below will take you to your Administration Control Panel (ACP). Take some time to examine the options available to you. Remember that help is available online via the <a href="http://www.phpbbgarage.com/support/documentation/3.0/">Documentation</a> and the <a href="http://www.phpbbgarage.com/community/viewforum.php?f=4">beta support forums</a>, see the <a href="%3$s">README</a> for further information.</p>',
+		<p>Du hast phpBB Garage %1$s nun erfolgreich installiert. Du hast nun zwei Optionen, was du mit deiner frisch installierten phpBB Garage machen kannst:</p>
+		<h2>Ein bestehendes Garage-Board auf phpBB Garage konvertieren</h2>
+		<p>Das phpBB Garage Konvertierungs-System unterstützt die Konvertierung von phpBB Garage 1.x.x und anderen Garage-Forensystemen zu phpBB Garage 2. Wenn du ein bestehendes Garage-Board konvertieren willst, fahre bitte <a href="%2$s">mit dem Konverter fort</a>.</p>
+		<h2>Starte mit phpBB Garage 2 durch!</h2>
+		<p>Wenn du unten auf die Schaltfläche klickst, wirst du zum Administrations-Bereich weitergeleitet. Nimm dir etwas Zeit, um die verfügbaren Optionen kennen zu lernen. Hilfe zum Gebrauch von phpBB Garage erhältst du online über die <a href="http://docs.phpbbgarage.com/">Dokumentation</a> und das <a href="http://forums.phpbbgarage.com/viewforum.php?f=2">Beta Support-Forum</a>. Für weitere Informationen lies die <a href="%3$s">README</a>-Datei.</p>',
 	'UPDATE_CONGRATS_EXPLAIN'	=> '
-		<p>You have now successfully updated to phpBB Garage %1$s.',
-	'REMOVE_INTRO'			=> 'Welcome to removal',
-	'REMOVE_INTRO_BODY'		=> 'With this option, it is possible to remove phpBB Garage from your server.</p>
+		<p>Du hast phpBB Garage %1$s nun erfolgreich aktualisiert.',
+	'REMOVE_INTRO'			=> 'Willkommen bei der Deinstallation',
+	'REMOVE_INTRO_BODY'		=> 'Mit dieser Option kannst du phpBB Garage von deinem Server entfernen.</p>
 
-	<p><strong>Note:</strong> This remover will totally remove all of the phpBB Garage software. Once the data is removed there is no restore option. Only a DB restore and files from before this action can return phpBB Garage to its original state. By clicking next step this process will start. DO NOT PROCEED UNLESS SURE.</p>
+	<p><strong>Note:</strong>Die Deinstallation wird die komplette phpBB Garage-Software entfernen. Einmal gelöscht lassen sich die Daten nicht wiederherstellen. Nur eine Wiederherstellung der Datenbank sowie der Dateien zu einem vorigen Zeitpunkt ermöglichen die Rückkehr zum Ausgangsstatus der phpBB Garage. Wenn du mit dem nächsten Schritt fortfährst, wird der Vorgang gestartet. FAHRE NICHT FORT, ES SEI DENN DU WEISST WAS DU TUST.</p>
 
-	<p>phpBB Garage removes</p>
+	<p>phpBB Garage entfernt</p>
 	<ul>
-		<li>All created tables</li>
-		<li>All data</li>
-		<li>All phpBB Garage files</li>
-		<li>All phpBB Garage modules</li>
-		<li>All phpBB Garage permissions</li>
+		<li>Alle erstellen Datenbankeinträge</li>
+		<li>Alle Daten</li>
+		<li>Alle phpBB Garage Dateien</li>
+		<li>Alle phpBB Garage Module</li>
+		<li>Alle phpBB Garage Berechtigungen</li>
 		</ul>',
 
-	'INSTALL_INTRO_BODY'		=> 'With this option, it is possible to install phpBB Garage onto your server.</p>
+	'INSTALL_INTRO_BODY'		=> 'Dieser Assistent ermöglicht dir die Installation von phpBB Garage auf deinem Server.</p>
 
-	<p><strong>Note:</strong> This installer will help you through all the database related steps &amp; also the editting of core phpBB files. Please my sure you have read the template &amp; language MODX files to complete the installation.</p>
+	<p><strong>Note:</strong>Dieser Assistent wird dich bei allen Schritten zur Datenbank und Bearbeitung der phpBB-Dateien begleiten. Bitte vergewissere dich, dass du die Anweisungen der Template- &amp; Sprach-MODX-Dateien zur Installation vollständig abgearbeitet hast.</p>
 
-	<p>phpBB Garage supports the following databases:</p>
+	<p>phpBB Garage unterstützt die folgenden Datenbanken:</p>
 	<ul>
-		<li>MySQL 3.23 or above (MySQLi supported)</li>
+		<li>MySQL 3.23 oder höher (MySQLi-unterstützt)</li>
 		<li>PostgreSQL 7.3+</li>
 		<li>SQLite 2.8.2+</li>
 		<li>Firebird 2.0+</li>
-		<li>MS SQL Server 2000 or above (directly or via ODBC)</li>
+		<li>MS SQL Server 2000 oder höher (direkt oder via ODBC)</li>
 		<li>Oracle</li>
 	</ul>',
-	'REMOVE_COMPLETE'		=> 'phpBB Garage removed!!',
-	'REMOVE_COMPLETE_EXPLAIN'	=> 'Some text about removal post checks here',
-	'PHP_REQUIRED_MODULE'		=> 'Required modules',
-	'PHP_REQUIRED_MODULE_EXPLAIN'	=> '<strong>Required</strong> - These modules or applications are required.',
+	'REMOVE_COMPLETE'		=> 'phpBB Garage gelöscht!!',
+	'REMOVE_COMPLETE_EXPLAIN'	=> 'Die phpBB Garage und alle zugehörigen Komponenten wurden vollständig entfernt.',
+	'PHP_REQUIRED_MODULE'		=> 'Erforderliche Module',
+	'PHP_REQUIRED_MODULE_EXPLAIN'	=> '<strong>Voraussetzung</strong> - Diese Module oder Anwendungen sind erfoderlich.',
 
-	'OVERVIEW_BODY'			=> 'Welcome to our public beta of the next-generation of phpBB Garage after 1.x.x, phpBB Garage 2.0! This release is intended to help us identify bugs and problematic areas.</p><p>Please read <a href="../docs/INSTALL.html">our installation guide</a> for more information about installing phpBB Garage</p><p><strong style="text-transform: uppercase;">Note:</strong> This release is <strong style="text-transform: uppercase;">still not final</strong>. You may want to wait for the full final release before running it live.</p><p>This installation system will guide you through the process of installing phpBB Garage, converting from a different software package or updating to the latest version of phpBB Garage. For more information on each option, select it from the menu above.',
+	'OVERVIEW_BODY'			=> 'Willkommen zu unserer veröffentlichten Beta-Version der nächsten Generation nach phpBB Garage 1.x.x, phpBB Garage 2.0! Dieses Release ist dazu gedacht, dass du uns helfen kannst, Bugs und Problemfelder zu entdecken.</p><p>Bitte lies <a href="../docs/INSTALL.html">unser Installations-Handbuch</a> für weitere Informationen zur Installation von phpBB Garage</p><p><strong style="text-transform: uppercase;">Beachte:</strong> Dieses Release ist <strong style="text-transform: uppercase;">noch keine Final-Version</strong>. Du kannst warten bis zum Final-Release, bevor du es auf einem Live-System betreibst.</p><p>Dieser Installations-Assistent führt dich durch den Installationsprozess der phpBB Garage, das Konvertieren von einer anderen Software oder die Aktualisierung auf die neueste Version von phpBB Garage. Für weitere Informationen zu den einzelnen Optionen wähle diese im obigen Menü.',
 
-	'PRE_CONVERT_COMPLETE'		=> 'All pre-conversion steps have successfully been completed. You may now begin the actual conversion process. Please note that you may have to manually adjust several things. After conversion, especially check the permissions assigned, rebuild your search index if necessary and also make sure files got copied correctly, for example avatars and smilies.',
-	'PROCESS_LAST'			=> 'Processing last statements',
+	'PRE_CONVERT_COMPLETE'		=> 'Alle vorbreitenden Schritte wurden erfolgreich abgeschlossen. Du kannst nun die Konvertierung starten. Bitte beachte, dass du einige Einstellungen manuell vornehmen musst. Nach der Konvertierung solltest du insbesondere die zugewiesenen Berechtigungen prüfen, falls erforderlich deinen Suchindex neu aufbauen und sicherstellen, dass die Dateien korrekt kopiert wurden, z.B. Avatar und Smilies.',
+	'PROCESS_LAST'			=> 'Verarbeite abschließende Anweisungen',
 
-	'REFRESH_PAGE'			=> 'Refresh page to continue conversion',
-	'REFRESH_PAGE_EXPLAIN'		=> 'If set to yes, the convertor will refresh the page to continue the conversion after having finished a step. If this is your first conversion for testing purposes and to determine any errors in advance, we suggest to set this to No.',
-//	'REQUIRED'					=> 'Required',
-	'REQUIREMENTS_TITLE'		=> 'Installation compatibility',
-	'REQUIREMENTS_EXPLAIN'		=> 'Before proceeding with the full installation phpBB Garage will carry out some tests on your server configuration and files to ensure that you are able to install and run phpBB Garage. Please ensure you read through the results thoroughly and do not proceed until all the required tests are passed. If you wish to use any of the features depending on the optional tests, you should ensure that these tests are passed also.',
-	'RETRY_WRITE'			=> 'Retry writing config',
-	'RETRY_WRITE_EXPLAIN'		=> 'If you wish you can change the permissions on config.php to allow phpBB to write to it. Should you wish to do that you can click Retry below to try again. Remember to return the permissions on config.php after phpBB has finished installation.',
+	'REFRESH_PAGE'			=> 'Seite aktualisieren, um Konvertierung fortzusetzen',
+	'REFRESH_PAGE_EXPLAIN'		=> 'Wenn auf Ja gesetzt, wird der Konverter die Seite aktualisieren, wenn er einen Schritt abgeschlossen hat. Wenn dies deine erste Konvertierung zu Testzwecken und um Fehler im Vorfeld festzustellen ist, empfehlen wir, dies auf Nein zu stellen.',
+//	'REQUIRED'					=> 'Voraussetzung',
+	'REQUIREMENTS_TITLE'		=> 'Installations-Kompatibilität',
+	'REQUIREMENTS_EXPLAIN'		=> 'Bevor die Installation fortgesetzt werden kann, wird phpBB Garage einige Tests zu deiner Server-Konfiguration und deinen Dateien durchführen, um sicherzustellen, dass du phpBB Garage installieren und benutzen kannst. Bitte lies die Ergebnisse aufmerksam durch und fahre nicht weiter fort, bevor alle erforderlichen Tests bestanden sind. Falls du irgendeine der Funktionen, die unter den optionalen Modulen aufgeführt sind, nutzen möchtest, solltest du sicherstellen, dass die entsprechenden Tests auch bestanden werden.',
+	'RETRY_WRITE'			=> 'Erneut versuchen, die Konfigurationsdatei zu schreiben',
+	'RETRY_WRITE_EXPLAIN'		=> 'Wenn du möchtest, kannst du die Berechtigungen der config.php ändern, so dass sie phpBB schreiben kann. Mit „Erneut versuchen, die Konfigurationsdatei zu schreiben“ kannst du einen weiteren Versuch starten. Denke daran, die Berechtigungen der config.php nach der Installation wieder zurückzustellen.',
 
-	'SCRIPT_PATH'			=> 'Script path',
-	'SCRIPT_PATH_EXPLAIN'		=> 'The path where phpBB is located relative to the domain name, e.g. <samp>/phpBB3</samp>.',
-	'SELECT_LANG'			=> 'Select language',
-	'SERVER_CONFIG'			=> 'Server configuration',
-	'SEARCH_INDEX_UNCONVERTED'	=> 'Search index was not converted',
-	'SEARCH_INDEX_UNCONVERTED_EXPLAIN'	=> 'Your old search index was not converted. Searching will always yield an empty result. To create a new search index go to the Administration Control Panel, select Maintenance and then choose Search index from the submenu.',
-	'SOFTWARE'			=> 'Garage software',
-	'SPECIFY_OPTIONS'		=> 'Specify conversion options',
-	'STAGE_ADMINISTRATOR'		=> 'Administrator details',
-	'STAGE_OPTIONAL'		=> 'Optional settings',
-	'STAGE_OPTIONAL_EXPLAIN'	=> 'The options on this page allow you to have some default data created during the install. The options here are not required for install, however if you do not use the defaults you will need to setup items such as makes, models &amp; categories after the installation.',
-	'STAGE_CONFIG_FILE'		=> 'Configuration file',
-	'STAGE_CREATE_TABLE'		=> 'Create database tables',
-	'STAGE_CREATE_TABLE_EXPLAIN'	=> 'The database tables used by phpBB Garage have been created and populated with required data and if selected some optional data. Proceed to the next screen to install new permissions required by phpBB Garage.',
-	'STAGE_CREATE_PERMISSIONS'	=> 'Create permissions',
-	'STAGE_CREATE_PERMISSIONS_EXPLAIN'	=> 'New permissions required by phpBB Garage have been created and assigned to default roles if they exist. You should after the install confirm you are happy with the permissions.',
-	'STAGE_INSTALL_MODULES'		=> 'Install modules',
-	'STAGE_INSTALL_MODULES_EXPLAIN'	=> 'The phpBB Garage modules have been installed.',
-	'STAGE_DATABASE'		=> 'Database settings',
-	'STAGE_FINAL'			=> 'Final stage',
-	'STAGE_INTRO'			=> 'Introduction',
-	'STAGE_IN_PROGRESS'		=> 'Conversion in progress',
-	'STAGE_REQUIREMENTS'		=> 'Requirements',
-	'STAGE_DATA'			=> 'Data',
-	'STAGE_DATA_EXPLAIN'		=> 'All phpBB Garage data is now removed. Proceeding will removing all files.',
-	'STAGE_FILES'			=> 'Files',
-	'STAGE_FILES_EXPLAIN'		=> 'All phpBB Garage files are now removed.',
-	'STAGE_SETTINGS'		=> 'Settings',
-	'STARTING_CONVERT'		=> 'Starting conversion process',
-	'STEP_PERCENT_COMPLETED'	=> 'Step <strong>%d</strong> of <strong>%d</strong>',
-	'SUB_INTRO'			=> 'Introduction',
-	'SUB_LICENSE'			=> 'License',
+	'SCRIPT_PATH'			=> 'Scriptpfad',
+	'SCRIPT_PATH_EXPLAIN'		=> 'er Pfad, in dem sich phpBB befindet, relativ zum Domainnamen. Z.&nbsp;B. <samp>/phpBB3</samp>.',
+	'SELECT_LANG'			=> 'Sprache wählen',
+	'SERVER_CONFIG'			=> 'Server-Konfiguration',
+	'SEARCH_INDEX_UNCONVERTED'	=> 'Der Suchindex wurde nicht konvertiert',
+	'SEARCH_INDEX_UNCONVERTED_EXPLAIN'	=> 'Dein alter Suchindex wurde nicht konvertiert. Eine Suche wird immer zu einem leeren Ergebnis führen. Um einen neuen Suchindex zu erstellen, gehe in den Administrations-Bereich, wähle dort das Register Wartung aus und rufe dann den Punkt Such-Indizes auf.',
+	'SOFTWARE'			=> 'Garage-Software',
+	'SPECIFY_OPTIONS'		=> 'Konvertierungs-Optionen festlegen',
+	'STAGE_ADMINISTRATOR'		=> 'Administrator-Details',
+	'STAGE_OPTIONAL'		=> 'Optionale Einstellungen',
+	'STAGE_OPTIONAL_EXPLAIN'	=> 'Die Optionen auf dieser Seite ermöglichen dir, einige Standarddaten während der Installation zu erstellen. Diese Optionen sind keine Voraussetzung für die Installation. Falls du die Standards nicht verwenden möchtest, solltest du nach der Installation Komponenten wie Hersteller, Fabrikate &amp; Kategorien einrichten.',
+	'STAGE_CONFIG_FILE'		=> 'Konfigurationsdatei',
+	'STAGE_CREATE_TABLE'		=> 'Datenbank-Tabellen erstellen',
+	'STAGE_CREATE_TABLE_EXPLAIN'	=> 'Die von phpBB Garage genutzten Datenbank-Tabellen wurden nun erstellt und mit einigen Ausgangswerten gefüllt. Geh weiter zum nächsten Schritt, um die Installation von phpBB Garage abzuschließen.',
+	'STAGE_CREATE_PERMISSIONS'	=> 'Berechtigungen einrichten',
+	'STAGE_CREATE_PERMISSIONS_EXPLAIN'	=> 'Neue Berechtigungen, die für phpBB Garage erforderlich sind, wurden erstellt und an Standardrollen vergeben, sofern diese existieren. Du solltest nach der Installation bestätigen, dass du mit den Berechtigungen zufrieden bist.',
+	'STAGE_INSTALL_MODULES'		=> 'Module installieren',
+	'STAGE_INSTALL_MODULES_EXPLAIN'	=> 'Die phpBB Garage Module wurden installiert.',
+	'STAGE_DATABASE'		=> 'Datenbank-Einstellungen',
+	'STAGE_FINAL'			=> 'Abschließender Schritt',
+	'STAGE_INTRO'			=> 'Einführung',
+	'STAGE_IN_PROGRESS'		=> 'Konvertierung wird durchgeführt',
+	'STAGE_REQUIREMENTS'		=> 'Voraussetzungen',
+	'STAGE_DATA'			=> 'Daten',
+	'STAGE_DATA_EXPLAIN'		=> 'Alle phpBB Garage Daten sind nun gelöscht. Als nächstes werden alle Dateien gelöscht.',
+	'STAGE_FILES'			=> 'Dateien',
+	'STAGE_FILES_EXPLAIN'		=> 'Alle phpBB Garage Dateien sind nun gelöscht.',
+	'STAGE_SETTINGS'		=> 'Einstellungen',
+	'STARTING_CONVERT'		=> 'Starte Konvertierungsprozess',
+	'STEP_PERCENT_COMPLETED'	=> 'Schritt <strong>%d</strong> von <strong>%d</strong>',
+	'SUB_INTRO'			=> 'Einführung',
+	'SUB_LICENSE'			=> 'Lizenz',
 	'SUB_SUPPORT'			=> 'Support',
-	'SUCCESSFUL_CONNECT'		=> 'Successful connection',
+	'SUCCESSFUL_CONNECT'		=> 'Verbindung erfolgreich',
 // TODO: Write some text on obtaining support
-	'SUPPORT_BODY'			=> 'During the beta phase minimal support will be given at <a href="http://forums.phpbbgarage.com/">the phpBB Garage support forums</a>. We will provide answers to general setup questions, configuration problems, conversion problems and support for determining common problems mostly related to bugs.',
+	'SUPPORT_BODY'			=> 'Während der Beta-Phase wird in den <a href="http://forums.phpbbgarage.com/">phpBB Garage Support Foren</a> nur eingeschränkter Support gewährt. Wir werden dort Antwort geben auf allgemeine Fragen zu Setup, Konfigurations- und Konvertierungsproblemen und leisten Support für häufig auftretende Probleme, die durch Bugs hervorgerufen wurden.',
 
-	'WELCOME_INSTALL'		=> 'Welcome to phpBB Garage Installation',
-	'WRITABLE'			=> 'Writable',
+	'WELCOME_INSTALL'		=> 'Willkommen zur phpBB Garage Installation',
+	'WRITABLE'			=> 'Beschreibbar',
 ));
 
 // Updater
 $lang = array_merge($lang, array(
-	'ALL_FILES_UP_TO_DATE'		=> 'All files are up to date with the latest phpBB Garage version. You should now check if everything is working fine.',
+	'ALL_FILES_UP_TO_DATE'		=> 'Alle Dateien sind auf dem Stand der neuesten phpBB Garage-Version. Du solltest nun prüfen, ob alles einwandfrei funktioniert.',
 
-	'CHECK_FILES_UP_TO_DATE'	=> 'According to your database your version is up to date. You may want to proceed with the file check to make sure all files are really up to date with the latest phpBB Garage version.',
-	'COLLECTED_INFORMATION_EXPLAIN'	=> 'The list below shows information about the files needing an update. Please read the information in front of every status block to see what they mean and what you may need to do to perform a successful update.',
-	'COMPLETE_LOGIN_TO_BOARD'	=> 'You should now <a href="../ucp.php?mode=login">login to your board</a> and check if everything is working fine. Do not forget to delete, rename or move your install directory!',
+	'CHECK_FILES_UP_TO_DATE'	=> 'Laut deiner Datenbank ist deine Version auf dem neuesten Stand. Du solltest mit der Dateiüberprüfung fortfahren, um sicher zu gehen, dass alle Dateien wirklich auf dem Stand der aktuellen phpBB Garage-Version sind.',
+	'COLLECTED_INFORMATION_EXPLAIN'	=> 'Die folgende Liste zeigt dir die Dateien, die eine Aktualisierung benötigen. Bitte lies die Informationen vor jedem Abschnitt durch, um zu verstehen was passiert und was du möglicherweise tun musst, um ein erfolgreiches Update durchzuführen.',
+	'COMPLETE_LOGIN_TO_BOARD'	=> 'Du solltest dich jetzt <a href="../ucp.php?mode=login">in deinem Forum anmelden</a> und prüfen, ob alles funktioniert. Vergiss nicht, das Installations-Verzeichnis „install“ zu löschen!',
 
 	'FILE_USED'			=> 'Information used from',			// Single file
 	'FILES_CONFLICT'		=> 'Conflict files',
@@ -239,22 +239,22 @@ $lang = array_merge($lang, array(
 	',
 	'UPDATE_INSTRUCTIONS_INCOMPLETE'	=> '
 
-		<h1>Incomplete update detected</h1>
+		<h1>Unvollständige Aktualisierung erkannt</h1>
 
-		<p>phpBB Garage detected an incomplete automatic update. Please make sure you followed every step within the automatic update tool. Below you will find the link again, or go directly to your install directory.</p>
+		<p>phpBB Garage hat eine unvollständige automatische Aktualisierung erkannt. Bitte stelle sicher, dass du jeden Schritt innerhalb des automatischen Aktualisierungs-Assistenten befolgt hast. Nachfolgend findest du den Link erneut or go directly to your install directory.</p>
 		',
 	'VERSION_CHECK'				=> 'Versionsprüfung',
 	'VERSION_CHECK_EXPLAIN'		=> 'Prüft, ob die phpBB Garage-Version, die du einsetzt, auf dem neuesten Stand ist.',
-	'VERSION_NOT_UP_TO_DATE'	=> 'Your version of phpBB Garage is not up to date. Please continue the update process.',
-	'VERSION_NOT_UP_TO_DATE_ACP'=> 'Your version of phpBB Garage is not up to date.<br />Below you will find a link to the release announcement for the latest version as well as instructions on how to perform the update.',
-	'VERSION_UP_TO_DATE'		=> 'Deine Installation ist auf dem neuesten Stand, für deine phpBB Garage-Version sind keine Updates verfügbar. You may want to continue anyway to perform a file validity check.',
+	'VERSION_NOT_UP_TO_DATE'	=> 'Deine Version von phpBB Garage ist nicht auf dem neuesten Stand. Bitte fahre mit der Aktualisierung fort.',
+	'VERSION_NOT_UP_TO_DATE_ACP'=> 'Deine Version von phpBB Garage ist nicht auf dem neuesten Stand.<br />Im Folgenden findest du einen Link zu der Release-Ankündigung der neuesten Version sowie Informationen, wie du deine Version aktualisieren kannst.',
+	'VERSION_UP_TO_DATE'		=> 'Deine Installation ist auf dem neuesten Stand, für deine phpBB Garage-Version sind keine Updates verfügbar. Du kannst trotzdem fortfahren und die Dateien auf Gültigkeit überprüfen.',
 	'VERSION_UP_TO_DATE_ACP'	=> 'Deine Installation ist auf dem neuesten Stand, für deine phpBB Garage-Version sind keine Updates verfügbar. Es ist nicht nötig, die Installation zu aktualisieren.',
 
-	'INSERT_OPTIONS'		=> 'Optional data',
-	'INSERT_MAKES'			=> 'Insert makes',
-	'INSERT_MAKES_EXPLAIN'		=> 'Inserts a default set of makes and models.',
-	'INSERT_CATEGORIES'		=> 'Insert categories',
-	'INSERT_CATEGORIES_EXPLAIN'	=> 'Inserts a default set of modification categories.',
+	'INSERT_OPTIONS'		=> 'Optionale Daten',
+	'INSERT_MAKES'			=> 'Hersteller einfügen',
+	'INSERT_MAKES_EXPLAIN'		=> 'fügt einen Standardsatz von Herstellern ein',
+	'INSERT_CATEGORIES'		=> 'Kategorien einfügen',
+	'INSERT_CATEGORIES_EXPLAIN'	=> 'fügt einen Standardsatz von Modifikationskategorien ein',
 	'CURRENT_VERSION'				=> 'Derzeit installierte Version',
 	'LATEST_VERSION'		=> 'Neueste Version',
 
