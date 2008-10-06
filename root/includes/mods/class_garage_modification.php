@@ -926,7 +926,7 @@ class garage_modification
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'm.*, i.*, p.*',
+			'SELECT'	=> 'm.*, i.*, p.title',
 			'FROM'		=> array(
 				GARAGE_MODIFICATIONS_TABLE	=> 'm',
 				GARAGE_PRODUCTS_TABLE		=> 'p',

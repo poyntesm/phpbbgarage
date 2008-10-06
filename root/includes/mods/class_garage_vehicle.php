@@ -1157,7 +1157,7 @@ class garage_vehicle
 
 		$images		= $garage_image->get_vehicle_gallery($vid);
 		$ratings	= $this->get_vehicle_rating($vid);
-	
+
 		for ($i = 0, $count = sizeof($modifications);$i < $count; $i++)
 		{
 			$garage_modification->delete_modification($modifications[$i]['id']);
