@@ -214,7 +214,7 @@ switch( $mode )
 			if ($garage_image->below_image_quotas())
 			{
 				$image_id = $garage_image->process_image_attached('modification', $mid);
-				$hilite = $garage_modification->hilite_exists($vid, $mid);
+				$hilite = $garage_modification->hilite_exists($mid);
 				$garage_image->insert_modification_gallery_image($image_id, $hilite);
 			}
 			else if ($garage_image->above_image_quotas())

@@ -182,7 +182,7 @@ switch( $mode )
 			if ( $garage_image->below_image_quotas() )
 			{
 				$image_id = $garage_image->process_image_attached('quartermile', $qmid);
-				$hilite = $garage_quartermile->hilite_exists($vid, $qmid);
+				$hilite = $garage_quartermile->hilite_exists($qmid);
 				$garage_image->insert_quartermile_gallery_image($image_id, $hilite);
 			}
 			else if ( $garage_image->above_image_quotas() )

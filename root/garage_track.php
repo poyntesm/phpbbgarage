@@ -244,7 +244,7 @@ switch( $mode )
 			if ($garage_image->below_image_quotas())
 			{
 				$image_id = $garage_image->process_image_attached('lap', $lid);
-				$hilite = $garage_track->hilite_exists($vid, $lid);
+				$hilite = $garage_track->hilite_exists($lid);
 				$garage_image->insert_lap_gallery_image($image_id, $hilite);
 			}
 			else if ($garage_image->above_image_quotas())

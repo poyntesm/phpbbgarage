@@ -196,7 +196,7 @@ switch( $mode )
 			if ($garage_image->below_image_quotas())
 			{
 				$image_id = $garage_image->process_image_attached('dynorun', $did);
-				$hilite = $garage_dynorun->hilite_exists($vid, $did);
+				$hilite = $garage_dynorun->hilite_exists($did);
 				$garage_image->insert_dynorun_gallery_image($image_id, $hilite);
 			}
 			else if ($garage_image->above_image_quotas())
