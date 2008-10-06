@@ -1154,8 +1154,8 @@ class garage_vehicle
 		{
 			include_once($phpbb_root_path . 'includes/mods/class_garage_image.' . $phpEx);
 		}
-		$images		= $garage_image->get_vehicle_gallery($vid);
 
+		$images		= $garage_image->get_vehicle_gallery($vid);
 		$ratings	= $this->get_vehicle_rating($vid);
 	
 		for ($i = 0, $count = sizeof($modifications);$i < $count; $i++)
@@ -1206,9 +1206,10 @@ class garage_vehicle
 		for ($i = 0, $count = sizeof($images);$i < $count; $i++)
 		{
 			$garage_image->delete_image($images[$i]['image_id']);
+			$garage->delete_rows(GARAGE_VEHICLE_GALLERY_TABLE, 'image_id', $images[$i]['image_id']);
 		}
 	
-		$garage->delete_rows(GARAGE_VEHICLES_TABLE, 'id', $vid);
+		$igarage->delete_rows(GARAGE_VEHICLES_TABLE, 'id', $vid);
 	
 		return;
 	}
