@@ -1594,6 +1594,61 @@ class garage_image
 		return;
 	}
 
+
+	/**
+	* Download a remote image to local using fsockopen
+	*
+	* @param string $remote_url url to download
+	*
+	*/
+	function fsockopen_url($url) 
+	{
+		$url_parsed = parse_url($url);
+		$host = $url_parsed["host"];
+		$port = $url_parsed["port"];
+		if ($port==0)
+		{
+			$port = 80;
+		}
+
+		$path = $url_parsed["path"];
+		if (empty($path))
+		{
+			$path="/";
+		}
+	
+		if ($url_parsed["query"] != "")
+		{
+			$path .= "?".$url_parsed["query"];
+		}
+
+	  	$out = "GET $path HTTP/1.0\r\nHost: $host\r\n\r\n";
+	  	$fp = fsockopen($host, $port, $errno, $errstr, 5);
+	  	if (!$fp) 
+		{    
+			return false;
+	  	} 
+		else 
+		{
+			fwrite($fp, $out);
+			$body = false;
+			while (!feof($fp)) 
+			{
+		  		$s = fgets($fp, 1024);
+		  		if ( $body )
+				{
+					$in .= $s;
+				}
+		  		if ( $s == "\r\n" )
+				{
+					$body = true;
+				}
+			} 
+		}
+	  	fclose($fp);
+	  	return $in;
+	}
+
 	/**
 	* Rebuild thumbnails. Useful when deminisions changed in ACP
 	*
