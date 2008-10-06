@@ -1209,7 +1209,7 @@ class garage_vehicle
 			$garage->delete_rows(GARAGE_VEHICLE_GALLERY_TABLE, 'image_id', $images[$i]['image_id']);
 		}
 	
-		$igarage->delete_rows(GARAGE_VEHICLES_TABLE, 'id', $vid);
+		$garage->delete_rows(GARAGE_VEHICLES_TABLE, 'id', $vid);
 	
 		return;
 	}
