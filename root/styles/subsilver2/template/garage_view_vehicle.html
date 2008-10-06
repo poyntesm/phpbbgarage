@@ -71,6 +71,13 @@ function confirm_delete_service (car_id, svid)
 		window.location.href = "{U_DELETE_SERVICE}&SVID=" + svid + "&VID=" + car_id;
 	}
 }
+function confirm_delete_blog (car_id, bid)
+{
+	if ( confirm("{L_CONFIRM_DELETE_BLOG}") )
+	{
+		window.location.href = "{U_DELETE_BLOG}&BID=" + bid + "&VID=" + car_id;
+	}
+}
 
 function jumpto_garage()
 {

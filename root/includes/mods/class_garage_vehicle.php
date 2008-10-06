@@ -1466,14 +1466,14 @@ class garage_vehicle
         		for ( $i = 0; $i < count($quartermile_data); $i++ )
 	         	{
 				$template->assign_block_vars('quartermile.run', array(
-					'RT' 		=> $quartermile_data[$i]['rt'],
-					'SIXTY' 	=> $quartermile_data[$i]['sixty'],
-					'THREE' 	=> $quartermile_data[$i]['three'],
-					'EIGHTH' 	=> $quartermile_data[$i]['eighth'],
-					'EIGHTHMPH' 	=> $quartermile_data[$i]['eighthmph'],
-					'THOU' 		=> $quartermile_data[$i]['thou'],
-					'QUART' 	=> $quartermile_data[$i]['quart'],
-					'QUARTMPH' 	=> $quartermile_data[$i]['quartmph'],
+					'RT' 		=> ($quartermile_data[$i]['rt'] != "0.000") ? $quartermile_data[$i]['rt'] : '-',
+					'SIXTY' 	=> ($quartermile_data[$i]['sixty'] != "0.000") ? $quartermile_data[$i]['sixty'] : '-',
+					'THREE' 	=> ($quartermile_data[$i]['three'] != "0.000") ? $quartermile_data[$i]['three'] : '-',
+					'EIGHTH' 	=> ($quartermile_data[$i]['eighth'] != "0.000") ? $quartermile_data[$i]['eighth'] : '-',
+					'EIGHTHMPH' 	=> ($quartermile_data[$i]['eighthmph'] != "0.000") ? $quartermile_data[$i]['eighthmph'] : '-',
+					'THOU' 		=> ($quartermile_data[$i]['thou'] != "0.000") ? $quartermile_data[$i]['thou'] : '-',
+					'QUART' 	=> ($quartermile_data[$i]['quart'] != "0.000") ? $quartermile_data[$i]['quart'] : '-',
+					'QUARTMPH' 	=> ($quartermile_data[$i]['quartmph'] != "0.000") ? $quartermile_data[$i]['quartmph'] : '-',
 					'U_IMAGE'	=> ($quartermile_data[$i]['attach_id']) ? append_sid("garage.$phpEx", "mode=view_image&amp;image_id=". $quartermile_data[$i]['attach_id']) : '',
 					'IMAGE'		=> $user->img('garage_img_attached', 'IMAGE_ATTACHED'),
 					'U_QUART'	=> append_sid("garage_quartermile.$phpEx?mode=view_quartermile&amp;QMID=".$quartermile_data[$i]['id']."&amp;VID=$vid"),
