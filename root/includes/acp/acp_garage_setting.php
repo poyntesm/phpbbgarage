@@ -282,6 +282,8 @@ class acp_garage_setting
 						'legend1'				=> 'ACP_GARAGE_BLOG_CONFIG',
 						'enable_blogs'				=> array('lang' => 'ENABLE_BLOG', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_blogs_bbcode'			=> array('lang' => 'ENABLE_BLOG_BBCODE', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_blogs_smilies'			=> array('lang' => 'ENABLE_BLOG_SMILIES', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_blogs_url'			=> array('lang' => 'ENABLE_BLOG_URL', 'type' => 'radio:yes_no', 'explain' => true),
 					)
 				);
 				break;

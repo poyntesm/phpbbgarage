@@ -22,7 +22,7 @@ CREATE TABLE [phpbb_garage_vehicles] (
 	[currency] [varchar] (32) DEFAULT ('EUR') NOT NULL ,
 	[comments] [text] DEFAULT ('') NOT NULL ,
 	[bbcode_bitfield] [varchar] (255) DEFAULT ('') NOT NULL ,
-	[bbcode_uid] [varchar] (5) DEFAULT ('') NOT NULL ,
+	[bbcode_uid] [varchar] (8) DEFAULT ('') NOT NULL ,
 	[bbcode_options] [int] DEFAULT (7) NOT NULL ,
 	[views] [int] DEFAULT (0) NOT NULL ,
 	[date_created] [int] DEFAULT (0) NOT NULL ,
@@ -279,7 +279,7 @@ CREATE TABLE [phpbb_garage_guestbooks] (
 	[post_date] [int] DEFAULT (0) NOT NULL ,
 	[ip_address] [varchar] (40) DEFAULT ('') NOT NULL ,
 	[bbcode_bitfield] [varchar] (255) DEFAULT ('') NOT NULL ,
-	[bbcode_uid] [varchar] (5) DEFAULT ('') NOT NULL ,
+	[bbcode_uid] [varchar] (8) DEFAULT ('') NOT NULL ,
 	[bbcode_options] [int] DEFAULT (7) NOT NULL ,
 	[pending] [int] DEFAULT (0) NOT NULL ,
 	[post] [text] DEFAULT ('') NOT NULL 
@@ -414,7 +414,7 @@ CREATE TABLE [phpbb_garage_modifications] (
 	[installer_id] [int] DEFAULT (0) NOT NULL ,
 	[comments] [text] DEFAULT ('') NOT NULL ,
 	[bbcode_bitfield] [varchar] (255) DEFAULT ('') NOT NULL ,
-	[bbcode_uid] [varchar] (5) DEFAULT ('') NOT NULL ,
+	[bbcode_uid] [varchar] (8) DEFAULT ('') NOT NULL ,
 	[bbcode_options] [int] DEFAULT (7) NOT NULL ,
 	[install_comments] [text] DEFAULT ('') NOT NULL ,
 	[date_created] [int] DEFAULT (0) NOT NULL ,
@@ -643,7 +643,7 @@ CREATE TABLE [phpbb_garage_blog] (
 	[blog_text] [text] DEFAULT ('') NOT NULL ,
 	[blog_date] [int] DEFAULT (0) NOT NULL ,
 	[bbcode_bitfield] [varchar] (255) DEFAULT ('') NOT NULL ,
-	[bbcode_uid] [varchar] (5) DEFAULT ('') NOT NULL ,
+	[bbcode_uid] [varchar] (8) DEFAULT ('') NOT NULL ,
 	[bbcode_options] [int] DEFAULT (7) NOT NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO

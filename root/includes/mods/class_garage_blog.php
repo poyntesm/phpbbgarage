@@ -41,7 +41,7 @@ class garage_blog
 			'blog_date'		=> time(),
 			'bbcode_bitfield'	=> $data['bbcode_bitfield'],
 			'bbcode_uid'		=> $data['bbcode_uid'],
-			'bbcode_flags'		=> $data['bbcode_flags'],
+			'bbcode_options'	=> $data['bbcode_options'],
 		));
 
 		$db->sql_query($sql);
@@ -65,7 +65,7 @@ class garage_blog
 			'blog_text'		=> $data['blog_text'],
 			'bbcode_bitfield'	=> $data['bbcode_bitfield'],
 			'bbcode_uid'		=> $data['bbcode_uid'],
-			'bbcode_flags'		=> $data['bbcode_flags'],
+			'bbcode_options'	=> $data['bbcode_options'],
 		);
 
 		$sql = 'UPDATE ' . GARAGE_BLOGS_TABLE . '
@@ -92,6 +92,36 @@ class garage_blog
 		$garage->delete_rows(GARAGE_BLOGS_TABLE, 'id', $id);
 	
 		return ;
+	}
+
+	/**
+	* Return blog entry
+	*
+	* @param int $bid blog id to get
+	*
+	* @return array
+	*/
+	function get_blog($bid)
+	{
+		global $db;
+
+		$data = array();
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'b.*',
+			'FROM'		=> array(
+				GARAGE_BLOGS_TABLE	=> 'b',
+			),
+			'WHERE'		=>	"b.id = $bid ",
+			'ORDER_BY'	=>	'b.id DESC'
+		));
+
+		$result = $db->sql_query($sql);
+		$data = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $data;
 	}
 
 	/**
@@ -135,9 +165,9 @@ class garage_blog
 	* @param int $vehicle_id vehicle id to display blog for
 	*
 	*/
-	function display_blog($vehicle_id)
+	function display_blog($vehicle_id, $owned)
 	{
-		global $template, $garage_vehicle, $garage, $user, $phpEx, $auth, $phpbb_root_path, $config, $owned;
+		global $template, $garage_vehicle, $garage, $user, $phpEx, $auth, $phpbb_root_path, $config;
 
 		$template->assign_block_vars('blog', array());
 
@@ -145,14 +175,10 @@ class garage_blog
 
 		for ( $i=0; $i < count($data); $i++ )
 		{
-			$blog_text = generate_text_for_display($data[$i]['blog_text'], $data[$i]['bbcode_uid'], $data[$i]['bbcode_bitfield'], $data[$i]['bbcode_flags']);
-			$blog_text = make_clickable($blog_text);
-			if ( $config['allow_smilies'] )
-			{
-				$blog_text = smiley_text($blog_text);
-			}
-
+			$blog_text = generate_text_for_display($data[$i]['blog_text'], $data[$i]['bbcode_uid'], $data[$i]['bbcode_bitfield'], $data[$i]['bbcode_options']);
 			$template->assign_block_vars('blog.entry', array(
+				'U_EDIT'	=> (($owned == 'YES') OR ($owned == 'MODERATE')) ? append_sid("garage_blog.$phpEx?mode=edit_blog&amp;BID=". $data[$i]['id'] . "&amp;VID=$vehicle_id") : '',
+				'U_DELETE' 	=> ( (($owned == 'YES') OR ($owned == 'MODERATE')) AND ( (($auth->acl_get('u_garage_delete_blog'))) OR ($auth->acl_get('m_garage_delete'))) ) ? 'javascript:confirm_delete_blog(' . $vehicle_id . ',' . $data[$i]['id'] . ')' : '',
 				'BLOG_TITLE' 	=> $data[$i]['blog_title'],
 				'BLOG_DATE' 	=> $user->format_date($data[$i]['blog_date']),
 				'BLOG_TEXT' 	=> $blog_text,

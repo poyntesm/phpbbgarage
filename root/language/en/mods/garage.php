@@ -802,6 +802,10 @@ $lang = array_merge($lang, array(
 
 	'MONTH_TOPRATED_VEHICLE'	=> 'Month Top Rated',
 	'VIEW_USERS_GARAGE'		=> 'View users garage',
+
+	//ADDED FOR B4
+	'DELETE_BLOG'			=> 'Delete blog',
+	'CONFIRM_DELETE_BLOG' 	=> 'Are you sure you want to delete this blog entry?  This operation is not undo-able!',
 ));
 
 ?>

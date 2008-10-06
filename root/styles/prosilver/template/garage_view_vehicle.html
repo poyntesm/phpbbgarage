@@ -70,6 +70,14 @@ function confirm_delete_service (car_id, svid)
 	}
 }
 
+function confirm_delete_blog (car_id, bid)
+{
+	if ( confirm("{L_CONFIRM_DELETE_BLOG}") )
+	{
+		window.location.href = "{U_DELETE_BLOG}&BID=" + bid + "&VID=" + car_id;
+	}
+}
+
 function jumpto_garage()
 {
 	var page = prompt('{LA_JUMP_PAGE}:', '{ON_PAGE}');
@@ -160,24 +168,26 @@ function jumpto_garage()
 			</fieldset>
 
 			<!-- IF U_VIEW_VEHICLE -->
+			<!-- IF MODERATE or U_MODERATE_VEHICLE -->
+			<h3>{L_MODERATE_VEHICLE}</h3>
+			<!-- ELSE -->
 			<h3>{L_MANAGE_VEHICLE}</h3>
-			<ul class="manage-vehicle-icons">
-				<!-- IF U_VIEW_VEHICLE --><li class="viewvehicle-icon"><a href="{U_VIEW_VEHICLE}" title="{L_VIEW_VEHICLE}"></a></li><!-- ENDIF -->
-				<!-- IF U_EDIT_VEHICLE --><li class="editvehicle-icon"><a href="{U_EDIT_VEHICLE}" title="{L_EDIT_VEHICLE}"></a></li><!-- ENDIF -->
-				<!-- IF U_DELETE_VEHICLE --><li class="deletevehicle-icon"><a href="{U_DELETE_VEHICLE}" title="{L_DELETE_VEHICLE}"></a></li><!-- ENDIF -->
-				<!-- IF U_ADD_MODIFICATION --><li class="newmodification-icon"><a href="{U_ADD_MODIFICATION}" title="{L_ADD_MODIFICATION}"></a></li><!-- ENDIF -->
-				<!-- IF U_ADD_INSURANCE --><li class="newpremium-icon"><a href="{U_ADD_INSURANCE}" title="{L_ADD_PREMIUM}"></a></li><!-- ENDIF -->
-				<!-- IF U_ADD_QUARTERMILE --><li class="newquartermile-icon"><a href="{U_ADD_QUARTERMILE}" title="{L_ADD_QUARTERMILE}"></a></li><!-- ENDIF -->
-				<!-- IF U_ADD_DYNORUN --><li class="newdynorun-icon"><a href="{U_ADD_DYNORUN}" title="{L_ADD_DYNORUN}"></a></li><!-- ENDIF -->
-				<!-- IF U_ADD_LAP --><li class="newlap-icon"><a href="{U_ADD_LAP}" title="{L_ADD_LAP}"></a></li><!-- ENDIF -->
-				<!-- IF U_ADD_SERVICE --><li class="newservice-icon"><a href="{U_ADD_SERVICE}" title="{L_ADD_SERVICE}"></a></li><!-- ENDIF -->
-				<!-- IF U_SET_MAIN_VEHICLE --><li class="mainvehicle-icon"><a href="{U_SET_MAIN_VEHICLE}" title="{L_SET_MAIN_VEHICLE}"></a></li><!-- ENDIF -->
-			</ul>
 			<!-- ENDIF -->
-
-			<!-- IF U_MODERATE_VEHICLE -->
 			<ul class="manage-vehicle-icons">
-				<li class="editvehicle-icon"><a href="{U_MODERATE_VEHICLE}" title="{L_MODERATE_VEHICLE}"></a></li>
+				<!-- IF ! U_MODERATE_VEHICLE -->
+					<!-- IF U_VIEW_VEHICLE --><li class="viewvehicle-icon"><a href="{U_VIEW_VEHICLE}" title="{L_VIEW_VEHICLE}"></a></li><!-- ENDIF -->
+					<!-- IF U_EDIT_VEHICLE --><li class="editvehicle-icon"><a href="{U_EDIT_VEHICLE}" title="{L_EDIT_VEHICLE}"></a></li><!-- ENDIF -->
+					<!-- IF U_DELETE_VEHICLE --><li class="deletevehicle-icon"><a href="{U_DELETE_VEHICLE}" title="{L_DELETE_VEHICLE}"></a></li><!-- ENDIF -->
+					<!-- IF U_ADD_MODIFICATION --><li class="newmodification-icon"><a href="{U_ADD_MODIFICATION}" title="{L_ADD_MODIFICATION}"></a></li><!-- ENDIF -->
+					<!-- IF U_ADD_INSURANCE --><li class="newpremium-icon"><a href="{U_ADD_INSURANCE}" title="{L_ADD_PREMIUM}"></a></li><!-- ENDIF -->
+					<!-- IF U_ADD_QUARTERMILE --><li class="newquartermile-icon"><a href="{U_ADD_QUARTERMILE}" title="{L_ADD_QUARTERMILE}"></a></li><!-- ENDIF -->
+					<!-- IF U_ADD_DYNORUN --><li class="newdynorun-icon"><a href="{U_ADD_DYNORUN}" title="{L_ADD_DYNORUN}"></a></li><!-- ENDIF -->
+					<!-- IF U_ADD_LAP --><li class="newlap-icon"><a href="{U_ADD_LAP}" title="{L_ADD_LAP}"></a></li><!-- ENDIF -->
+					<!-- IF U_ADD_SERVICE --><li class="newservice-icon"><a href="{U_ADD_SERVICE}" title="{L_ADD_SERVICE}"></a></li><!-- ENDIF -->
+					<!-- IF U_SET_MAIN_VEHICLE --><li class="mainvehicle-icon"><a href="{U_SET_MAIN_VEHICLE}" title="{L_SET_MAIN_VEHICLE}"></a></li><!-- ENDIF -->
+				<!-- ELSE -->
+					<li class="editvehicle-icon"><a href="{U_MODERATE_VEHICLE}" title="{L_MODERATE_VEHICLE}"></a></li>
+				<!-- ENDIF -->
 			</ul>
 			<!-- ENDIF -->
 
@@ -197,6 +207,7 @@ function jumpto_garage()
 					<!-- IF S_DISPLAY_LAP_TAB --><li class="garage_preset_yes" id="tab004"><a href="#laps" onclick="swap_options('0','0','4');"><span class="tabbg">{L_LAPS}</span></a></li><!-- ENDIF -->
 					<!-- IF S_DISPLAY_PREMIUM_TAB --><li class="garage_preset_yes" id="tab005"><a href="#premiums" onclick="swap_options('0','0','5');"><span class="tabbg">{L_PREMIUMS}</span></a></li><!-- ENDIF -->	
 					<!-- IF S_DISPLAY_SERVICE_TAB --><li class="garage_preset_yes" id="tab006"><a href="#services" onclick="swap_options('0','0','6');"><span class="tabbg">{L_SERVICES}</span></a></li><!-- ENDIF -->
+					<!-- IF S_DISPLAY_RATING_TAB --><li class="garage_preset_yes" id="tab009"><a href="#ratings" onclick="swap_options('0','0','9');"><span class="tabbg">{L_RATINGS}</span></a></li><!-- ENDIF -->
 					<!-- IF S_DISPLAY_BLOG_TAB --><li class="garage_preset_yes" id="tab007"><a href="#blog" onclick="swap_options('0','0','7');"><span class="tabbg">{L_BLOG}</span></a></li><!-- ENDIF -->
 					<!-- IF S_DISPLAY_GUESTBOOK_TAB --><li class="garage_preset_yes" id="tab008"><a href="#guestbook" onclick="swap_options('0','0','8');"><span class="tabbg">{L_GUESTBOOK}</span></a></li>	<!-- ENDIF -->
 				</ul>
@@ -560,7 +571,13 @@ function jumpto_garage()
 
 									<!-- BEGIN entry -->
 									<dl>
-										<dd><h3>{blog.entry.BLOG_TITLE}</h3>{blog.entry.BLOG_DATE}<br /><br />{blog.entry.BLOG_TEXT}</dd>
+										<dd><h3>{blog.entry.BLOG_TITLE}</h3>
+										<ul class="profile-icons">
+											<!-- IF blog.entry.U_EDIT --><li class="edit-icon"><a href="{blog.entry.U_EDIT}" title="{L_EDIT_BLOG}"><span>{L_EIT_BLOG}</span></a></li><!-- ENDIF -->
+											<!-- IF blog.entry.U_DELETE --><li class="delete-icon"><a href="{blog.entry.U_DELETE}" title="{L_DELETE_BLOG}"><span>{L_DELETE_BLOG}</span></a></li><!-- ENDIF -->
+										</ul>
+										</br>
+										{blog.entry.BLOG_DATE}<br /><br />{blog.entry.BLOG_TEXT}</dd>
 									</dl>
 									<!-- BEGINELSE -->
 									<dl>
@@ -592,6 +609,51 @@ function jumpto_garage()
 								<span class="corners-bottom"><span></span></span>
 							</div>
 						</div>
+
+						<div id="options009" style="display: none;">
+							<div class="panel">
+								<div class="inner">
+									<span class="corners-top"><span></span></span>
+									<!-- BEGIN rating_history -->
+									<h3>{L_VEHICLE_RATINGS}</h3>
+									<div class="forabg">
+										<div class="inner">
+											<span class="corners-top"><span></span></span>
+											<ul class="garage_list">
+												<li class="header">
+													<dl>
+														<dt class="gwidth-20">{L_GARAGE}</dt>
+														<dd class="gwidth-20">{L_TYPE}</dd>
+														<dd class="gwidth-10">{L_COST}</dd>
+														<dd class="gwidth-10">{L_RATING}</dd>
+														<dd class="gwidth-10">{L_MILEAGE}</dd>
+														<!-- IF S_DISPLAY_VEHICLE_OWNER--><dd></dd><dd></dd><!-- ENDIF -->
+													</dl>
+												</li>
+											</ul>
+											<ul class="garage_list">
+												<!-- BEGIN rated -->
+												<!-- IF rated.ROW_NUMBER is even --><li class="row bg1"><!-- ELSE --><li class="row bg2"><!-- ENDIF -->
+													<dl>
+														<dt class="gwidth-20"><a href="{service_history.service.U_GARAGE}">{service_history.service.TITLE}</a></dt>
+	  													<dd class="gwidth-20">{service_history.service.TYPE}</dd>
+														<dd class="gwidth-10">{service_history.service.PRICE}</dd>
+														<dd class="gwidth-10">{service_history.service.RATING}</dd>
+														<dd class="gwidth-10">{service_history.service.MILEAGE}</dd>
+														<!-- IF S_DISPLAY_VEHICLE_OWNER --><dd><!-- IF service_history.service.U_EDIT --><a href="{service_history.service.U_EDIT}" class="garage-edit-icon"></a><!-- ENDIF --></dd><dd><!-- IF service_history.service.U_DELETE--><a href="{service_history.service.U_DELETE}" class="garage-delete-icon"></a><!-- ENDIF --></dd><!-- ENDIF -->
+													</dl>
+												</li>
+												<!-- END service -->
+											</ul>
+										</div>
+										<span class="corners-bottom"><span></span></span>
+									</div>
+									<!-- END service_history -->
+									<span class="corners-bottom"><span></span></span>
+								</div>
+							</div>
+						</div>
+
 					</div>
 					<span class="corners-bottom"><span></span></span>
 				</div>

@@ -17,7 +17,7 @@ CREATE TABLE phpbb_garage_vehicles (
 	currency varchar(32) NOT NULL DEFAULT 'EUR',
 	comments mediumtext(16777215) NOT NULL DEFAULT '',
 	bbcode_bitfield varchar(255) NOT NULL DEFAULT '',
-	bbcode_uid varchar(5) NOT NULL DEFAULT '',
+	bbcode_uid varchar(8) NOT NULL DEFAULT '',
 	bbcode_options INTEGER UNSIGNED NOT NULL DEFAULT '7',
 	views INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	date_created INTEGER UNSIGNED NOT NULL DEFAULT '0',
@@ -143,7 +143,7 @@ CREATE TABLE phpbb_garage_guestbooks (
 	post_date INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	ip_address varchar(40) NOT NULL DEFAULT '',
 	bbcode_bitfield varchar(255) NOT NULL DEFAULT '',
-	bbcode_uid varchar(5) NOT NULL DEFAULT '',
+	bbcode_uid varchar(8) NOT NULL DEFAULT '',
 	bbcode_options INTEGER UNSIGNED NOT NULL DEFAULT '7',
 	pending INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	post mediumtext(16777215) NOT NULL DEFAULT ''
@@ -218,7 +218,7 @@ CREATE TABLE phpbb_garage_modifications (
 	installer_id INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	comments mediumtext(16777215) NOT NULL DEFAULT '',
 	bbcode_bitfield varchar(255) NOT NULL DEFAULT '',
-	bbcode_uid varchar(5) NOT NULL DEFAULT '',
+	bbcode_uid varchar(8) NOT NULL DEFAULT '',
 	bbcode_options INTEGER UNSIGNED NOT NULL DEFAULT '7',
 	install_comments mediumtext(16777215) NOT NULL DEFAULT '',
 	date_created INTEGER UNSIGNED NOT NULL DEFAULT '0',
@@ -343,7 +343,7 @@ CREATE TABLE phpbb_garage_blog (
 	blog_text mediumtext(16777215) NOT NULL DEFAULT '',
 	blog_date INTEGER UNSIGNED NOT NULL DEFAULT '0',
 	bbcode_bitfield varchar(255) NOT NULL DEFAULT '',
-	bbcode_uid varchar(5) NOT NULL DEFAULT '',
+	bbcode_uid varchar(8) NOT NULL DEFAULT '',
 	bbcode_options INTEGER UNSIGNED NOT NULL DEFAULT '7'
 );
 

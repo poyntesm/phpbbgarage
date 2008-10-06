@@ -152,8 +152,18 @@ $database_update_info = array(
 	'2.0.B3'			=> array(
 		// Change the following columns
 		'change_columns'		=> array(
-			BANLIST_TABLE	=> array(
-				'ban_reason'		=> array('VCHAR_UNI', ''),
+			GARAGE_BLOG_TABLE	=> array(
+				'bbcode_uid'		=> array('VARCHAR:8', ''),
+				'bbcode_options'	=> array('UINT', '7'),
+			),
+			GARAGE_VEHICLE_TABLE	=> array(
+				'bbcode_uid'		=> array('VARCHAR:8', ''),
+			),
+			GARAGE_GUESTBOOK_TABLE	=> array(
+				'bbcode_uid'		=> array('VARCHAR:8', ''),
+			),
+			GARAGE_MODIFICATION_TABLE	=> array(
+				'bbcode_uid'		=> array('VARCHAR:8', ''),
 			),
 		),
 	),
@@ -294,6 +304,14 @@ if (version_compare($current_version, '2.0.B2', '<='))
 {
 	// if any update remove comment below
 	//$no_updates = false;
+}
+
+if (version_compare($current_version, '2.0.B3', '<='))
+{
+	// if any update remove comment below
+	$no_updates = false;
+	_sql('INSERT INTO ' . GARAGE_CONFIG_TABLE . " (config_name, config_value) VALUES ('enable_blogs_smilies', '1')", $errored, $error_ary);
+	_sql('INSERT INTO ' . GARAGE_CONFIG_TABLE . " (config_name, config_value) VALUES ('enable_blogs_url', '1')", $errored, $error_ary);
 }
 
 _write_result($no_updates, $errored, $error_ary);

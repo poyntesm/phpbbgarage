@@ -121,5 +121,7 @@ INSERT INTO phpbb_garage_config (config_name, config_value) VALUES ('upload_grou
 INSERT INTO phpbb_garage_config (config_name, config_value) VALUES ('upload_groups_quotas', '');
 INSERT INTO phpbb_garage_config (config_name, config_value) VALUES ('remote_groups', '');
 INSERT INTO phpbb_garage_config (config_name, config_value) VALUES ('remote_groups_quotas', '');
+INSERT INTO phpbb_garage_config (config_name, config_value) VALUES ('enable_blogs_smilies', '1');
+INSERT INTO phpbb_garage_config (config_name, config_value) VALUES ('enable_blogs_url', '1');
 
 # POSTGRES COMMIT #

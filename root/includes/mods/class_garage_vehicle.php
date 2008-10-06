@@ -1264,29 +1264,30 @@ class garage_vehicle
 		if ( $owned == 'MODERATE' )
 		{
 			$reset_rating_link = '<a href="javascript:confirm_reset_rating(' . $vid . ')"><img src="' . $images['garage_delete'] . '" alt="'.$user->lang['DELETE'].'" title="'.$user->lang['DELETE'].'" border="0" /></a>';
-			$template->assign_block_vars('moderate', array());
+			$template->assign_block_vars('rating_history', array());
 			$template->assign_vars(array(
 				'L_RATING_MODERATION' 	=> $user->lang['RATING MODERATION'],
 				'L_RATER' 		=> $user->lang['RATER'],
 				'L_RATING' 		=> $user->lang['RATING'],
 				'L_DATE'	 	=> $user->lang['DATE'],
 				'L_RESET_VEHICLE_RATING'=> $user->lang['RESET_VEHICLE_RATING'],
-				'RESET_RATING_LINK' 	=> $reset_rating_link)
-			);
+				'RESET_RATING_LINK' 	=> $reset_rating_link,
+				'MODERATE' 		=> true,
+			));
 
 			//Let Get Vehicle Rating Details
 			$rating_data = $this->get_vehicle_rating($vid);
 			for ($i = 0; $i < count($rating_data); $i++)
 			{
-				$delete_rating_link 		= '<a href="javascript:confirm_delete_rating(' . $vid . ',' . $rating_data[$i]['id'] . ')"><img src="' . $images['garage_delete'] . '" alt="'.$lang['Delete'].'" title="'.$lang['Delete'].'" border="0" /></a>';
+				$delete_rating_link 		= '<a href="javascript:confirm_delete_rating(' . $vid . ',' . $rating_data[$i]['id'] . ')"><img src="' . $images['garage_delete'] . '" alt="'.$user->lang['DELETE'].'" title="'.$user->lang['DELETE'].'" border="0" /></a>';
 				$rating_data[$i]['user_id']	=  ($rating_data[$i]['user_id'] < 0 ) ? ANONYMOUS : $rating_data[$i]['user_id'];
 				$rating_data[$i]['username'] 	=  ($rating_data[$i]['user_id'] < 0 ) ? $user->lang['GUEST'] : $rating_data[$i]['username'];
 
-				$template->assign_block_vars('moderate.rating_row', array(
-					'U_PROFILE'	=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;".POST_USERS_URL."=".$rating_data[$i]['user_id']) ,
+				$template->assign_block_vars('rating_history.rated', array(
+					'U_PROFILE'	=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$rating_data[$i]['user_id']),
 					'USERNAME' 	=> $rating_data[$i]['username'] ,
 					'RATING' 	=> $rating_data[$i]['rating'],
-					'DATE' 		=> create_date('D M d, Y G:i', $rating_data[$i]['rate_date'], $board_config['board_timezone']),
+					'DATE' 		=> $user->format_date($rating_data[$i]['rate_date']),
 					'DELETE_RATING_LINK' => $delete_rating_link)
 				);
 			}	
@@ -1356,7 +1357,7 @@ class garage_vehicle
 		if ($garage_config['enable_blogs'])
 		{
 			//Display Vehicle Guestbook
-			$garage_blog->display_blog($vid);
+			$garage_blog->display_blog($vid, $owned);
 			$template->assign_vars(array(
 				'S_DISPLAY_BLOG_TAB' => true,
 			));
@@ -1688,6 +1689,7 @@ class garage_vehicle
 			'U_DELETE_LAP' 			=> append_sid("garage_track.$phpEx?mode=delete_lap"),
 			'U_DELETE_SERVICE' 		=> append_sid("garage_service.$phpEx?mode=delete_service"),
 			'U_DELETE_VEHICLE2' 		=> append_sid("garage_vehicle.$phpEx?mode=delete_vehicle"),
+			'U_DELETE_BLOG' 		=> append_sid("garage_blog.$phpEx?mode=delete_blog"),
 			'U_GUESTBOOK' 			=> append_sid("garage_guestbook.$phpEx?mode=view_guestbook&amp;VID=$vid"),
             		'U_PROFILE' 			=> append_sid("memberlist.$phpEx?mode=viewprofile&amp;u=".$vehicle['user_id']),
             		'U_VIEW_VEHICLE' 		=> ($owned == 'YES' || $auth->acl_get('m_garage_edit') ) ? append_sid("garage_vehicle.$phpEx?mode=view_vehicle&amp;VID=$vid") : '',

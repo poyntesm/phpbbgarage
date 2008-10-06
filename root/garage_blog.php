@@ -91,15 +91,14 @@ switch( $mode )
 		* Handle text in the phpBB standard UTF8 way, allowing bbcode, urls & smilies
 		*/
 		$text = utf8_normalize_nfc(request_var('blog_text', '', true));
-		$uid = $bitfield = $flags = '';
-		$allow_bbcode = $allow_urls = $allow_smilies = true;
-		generate_text_for_storage($text, $uid, $bitfield, $flags, $allow_bbcode, $allow_urls, $allow_smilies);
+		$uid = $bitfield = $options = '';
+		generate_text_for_storage($text, $uid, $bitfield, $options, $garage_config['enable_blogs_bbcode'], $garage_config['enable_blogs_url'], $garage_config['enable_blogs_smilies']);
 		$data = array(
-			'blog_title'		=> request_var('blog_title', ''),
+			'blog_title'		=> request_var('blog_title', '', true),
 			'blog_text'		=> $text,
 			'bbcode_uid'        	=> $uid,
 		    	'bbcode_bitfield'   	=> $bitfield,
-		    	'bbcode_flags'      	=> $flags,
+		    	'bbcode_options'      	=> $options,
 		);
 
 		/**
@@ -149,6 +148,9 @@ switch( $mode )
 			'header' => 'garage_header.html',
 			'body'   => 'garage_blog.html')
 		);
+
+		decode_message($data['blog_text'], $data['bbcode_uid']);
+
 		$template->assign_vars(array(
 			'L_TITLE'		=> $user->lang['EDIT_BLOG'],
 			'L_BUTTON'		=> $user->lang['EDIT_BLOG'],
@@ -179,12 +181,18 @@ switch( $mode )
 		$garage_vehicle->check_ownership($vid);
 
 		/**
-		* Get all required/optional data and check required data is present
+		* Handle text in the phpBB standard UTF8 way, allowing bbcode, urls & smilies
 		*/
-		$params = array('blog_title' => '', 'blog_text' => '');
-		$data = $garage->process_vars($params);
-		$params = array('blog_title', 'blog_text');
-		$garage->check_required_vars($params);
+		$text = utf8_normalize_nfc(request_var('blog_text', '', true));
+		$uid = $bitfield = $options = '';
+		generate_text_for_storage($text, $uid, $bitfield, $options, $garage_config['enable_blogs_bbcode'], $garage_config['enable_blogs_url'], $garage_config['enable_blogs_smilies']);
+		$data = array(
+			'blog_title'		=> request_var('blog_title', '', true),
+			'blog_text'		=> $text,
+			'bbcode_uid'        	=> $uid,
+		    	'bbcode_bitfield'   	=> $bitfield,
+		    	'bbcode_options'      	=> $options,
+		);
 
 		/**
 		* Perform required DB work to update blog entry
