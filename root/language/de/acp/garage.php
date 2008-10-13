@@ -490,6 +490,10 @@ $lang = array_merge($lang, array(
 	'REMOVE_SELECTED_ORPHANS' 	=> 'Lösche markierte Dateien',
 	'MOVE_PRODUCT_TO'		=> 'Verschiebe Produkte nach',
 	'DELETE_MADE_PRODUCTS'		=> 'Lösche Produkte eines Unternehmens. (Hinweis: Zugeordnete Modifikationen werden gelöscht)',
+	'ENABLE_BLOG_SMILIES' 		=> 'Blog Smilies aktivieren',
+	'ENABLE_BLOG_SMILIES_EXPLAIN' 	=> 'aktiviert die Benutzung von Smilies in Blogs.',
+	'ENABLE_BLOG_URL' 		=> 'URL-Parsing aktivieren',
+	'ENABLE_BLOG_URL_EXPLAIN' 	=> 'aktiviert URL-Parsing in Blogs.',
 
 ));
 

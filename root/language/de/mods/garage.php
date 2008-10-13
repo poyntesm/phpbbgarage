@@ -801,6 +801,10 @@ $lang = array_merge($lang, array(
 
 	'MONTH_TOPRATED_VEHICLE'	=> 'Fahrzeug des Monats',
 	'VIEW_USERS_GARAGE'		=> 'Garage des Benutzers ansehen',
+
+	//ADDED FOR B4
+	'DELETE_BLOG'			=> 'Blog-Eintrag löschen',
+	'CONFIRM_DELETE_BLOG' 	=> 'Bist du sicher, dass du diesen Blog-Eintrag löschen möchtest? Du kannst diesen Vorgang nicht rückgängig machen!',
 ));
 
 ?>

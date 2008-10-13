@@ -140,108 +140,108 @@ $lang = array_merge($lang, array(
 	'COLLECTED_INFORMATION_EXPLAIN'	=> 'Die folgende Liste zeigt dir die Dateien, die eine Aktualisierung benötigen. Bitte lies die Informationen vor jedem Abschnitt durch, um zu verstehen was passiert und was du möglicherweise tun musst, um ein erfolgreiches Update durchzuführen.',
 	'COMPLETE_LOGIN_TO_BOARD'	=> 'Du solltest dich jetzt <a href="../ucp.php?mode=login">in deinem Forum anmelden</a> und prüfen, ob alles funktioniert. Vergiss nicht, das Installations-Verzeichnis „install“ zu löschen!',
 
-	'FILE_USED'			=> 'Information used from',			// Single file
-	'FILES_CONFLICT'		=> 'Conflict files',
-	'FILES_CONFLICT_EXPLAIN'	=> 'The following files are modified and do not represent the original files from the old version. phpBB determined that these files create conflicts if they are tried to be merged. Please investigate the conflicts and try to manually resolve them or continue the update choosing the preferred merging method. If you resolve the conflicts manually check the files again after you modified them. You are also able to choose between the preferred merge method for every file. The first one will result in a file where the conflicting lines from your old file will be lost, the other one will result in loosing the changes from the newer file.',
-	'FILES_MODIFIED'		=> 'Modified files',
-	'FILES_MODIFIED_EXPLAIN'	=> 'The following files are modified and do not represent the original files from the old version. The updated file will be a merge between your modifications and the new file.',
-	'FILES_NEW'			=> 'New files',
-	'FILES_NEW_EXPLAIN'		=> 'The following files currently do not exist within your installation.',
-	'FILES_NEW_CONFLICT'		=> 'New conflicting files',
-	'FILES_NEW_CONFLICT_EXPLAIN'	=> 'The following files are new within the latest version but it has been determined that there is already a file with the same name within the same position. This file will be overwritten by the new file.',
-	'FILES_NOT_MODIFIED'		=> 'Not modified files',
-	'FILES_NOT_MODIFIED_EXPLAIN'	=> 'The following files were not modified and represent the original phpBB files from the version you want to update from.',
-	'FILES_UP_TO_DATE'		=> 'Already updated files',
-	'FILES_UP_TO_DATE_EXPLAIN'	=> 'The following files are already up to date and do not need to be updated.',
-	'FTP_SETTINGS'			=> 'FTP settings',
-	'FTP_UPDATE_METHOD'		=> 'FTP upload',
-	'INCOMPATIBLE_UPDATE_FILES'	=> 'The update files found are incompatible with your installed version. Your installed version is %1$s and the update file is for updating phpBB Garage %2$s to %3$s.',
-	'INCOMPATIBLE_REMOVE_FILES'	=> 'The remove files found are incompatible with your installed version. Your installed version is %1$s and the remove file is for phpBB Garage %2$s.',
-	'INCOMPLETE_UPDATE_FILES'	=> 'The update files are incomplete.',
-	'INLINE_UPDATE_SUCCESSFUL'	=> 'The database update was successful. Now you need to continue the update process.',
+	'FILE_USED'			=> 'Information benutzt von',			// Single file
+	'FILES_CONFLICT'				=> 'Problematische Dateien',
+	'FILES_CONFLICT_EXPLAIN'		=> 'Die folgenden Dateien wurden geändert und entsprechen nicht den Originaldateien der alten Version. phpBB hat festgestellt, dass die Dateien nicht zusammengeführt werden können, da beide Versionen verändert wurden. Bitte sieh dir diese Konflikte an und versuche, sie von Hand zu lösen oder fahre mit der Aktualisierung fort, indem du deine bevorzugte Methode des Zusammenführens auswählst. Wenn du die Konflikte von Hand löst, prüfe die Dateien nach der Bearbeitung erneut. Du kannst außerdem die Zusammenführungsmethode für jede Datei getrennt angeben. Die erste Methode erzeugt eine Datei, in der die problematischen Zeilen deiner alten Datei verworfen werden, die andere Methode verwirft die Änderungen in der neuen Datei.',
+	'FILES_MODIFIED'				=> 'Geänderte Dateien',
+	'FILES_MODIFIED_EXPLAIN'		=> 'Die folgenden Dateien wurden geändert und entsprechen nicht den Originaldateien der alten Version. In der aktualisierten Version werden deine Änderungen und die Neuerungen der phpBB-Datei zusammengeführt.',
+	'FILES_NEW'						=> 'Neue Dateien',
+	'FILES_NEW_EXPLAIN'				=> 'Gegenwärtig fehlen die folgenden Dateien in deiner Installation. Sie werden dieser hinzugefügt.',
+	'FILES_NEW_CONFLICT'			=> 'Neue Dateien, die bereits existieren',
+	'FILES_NEW_CONFLICT_EXPLAIN'	=> 'Die folgenden Dateien sind neu innerhalb der aktuellen Version, aber es wurde festgestellt, dass bereits eine Datei mit dem gleichen Namen im gleichen Verzeichnis existiert. Diese wird durch die neue Datei überschrieben.',
+	'FILES_NOT_MODIFIED'			=> 'Nicht geänderte Dateien',
+	'FILES_NOT_MODIFIED_EXPLAIN'	=> 'Die folgenden Dateien sind nicht geändert und entsprechen den originalen phpBB-Dateien der Version, von der aus du updaten willst.',
+	'FILES_UP_TO_DATE'				=> 'Bereits aktualisierte Dateien',
+	'FILES_UP_TO_DATE_EXPLAIN'		=> 'Die folgenden Dateien sind bereits auf dem neuesten Stand und müssen nicht aktualisiert werden.',
+	'FTP_SETTINGS'					=> 'FTP-Einstellungen',
+	'FTP_UPDATE_METHOD'				=> 'FTP-Upload',
+	'INCOMPATIBLE_UPDATE_FILES'		=> 'Die gefundenen Update-Dateien sind inkompatibel zu deiner installierten Version. Deine phpBB Garage-Version ist %1$s. Das Update-Paket aktualisiert Version %2$s auf %3$s.',
+	'INCOMPATIBLE_REMOVE_FILES'	=> 'Die gefundenen Deinstallations-Dateien sind inkompatibel zu deiner installierten Version. Deine phpBB Garage-Version ist is %1$s und die Deinstallations-Datei ist für phpBB Garage %2$s.',
+	'INCOMPLETE_UPDATE_FILES'		=> 'Das Update-Paket ist unvollständig.',
+	'INLINE_UPDATE_SUCCESSFUL'		=> 'Die Aktualisierung der Datenbank war erfolgreich. Du musst nun den Update-Prozess fortsetzen.',
 
-	'KEEP_OLD_NAME'			=> 'Keep username',
+	'KEEP_OLD_NAME'			=> 'Benutzernamen beibehalten',
 
-	'NO_UPDATE_FILES_EXPLAIN'	=> 'The following files are new or modified but the directory they normally reside in could not be found on your installation. If this list contains files to other directories than language/ or styles/ than you may have modified your directory structure and the update may be incomplete.',
-	'NO_UPDATE_FILES_OUTDATED'	=> 'No valid update directory was found, please make sure you uploaded the relevant files.<br /><br />Your installation does <strong>not</strong> seem to be up to date. Updates are available for your version of phpBB Garage %1$s, please visit <a href="http://www.phpbbgarage.com/downloads/" rel="external">http://www.phpbbgarage.com/downloads/</a> to obtain the correct package to update from Version %2$s to Version %3$s.',
-	'NO_UPDATE_FILES_UP_TO_DATE'	=> 'Your version is up to date. There is no need to run the update tool. If you want to make an integrity check on your files make sure you uploaded the correct update files.',
-	'NO_UPDATE_INFO'		=> 'Update file information could not be found.',
-	'NO_UPDATES_REQUIRED'		=> 'No updates required',
-	'NO_VISIBLE_CHANGES'		=> 'No visible changes',
-	'NOTICE'			=> 'Notice',
-	'NUM_CONFLICTS'			=> 'Number of conflicts',
+	'NO_UPDATE_FILES_EXPLAIN'	=> 'Die folgenden Dateien sind neu oder wurden verändert. Das Verzeichnis, in dem sie sich normalerweise befinden, konnte jedoch in deiner Installation nicht gefunden werden. Wenn diese Liste Dateien in anderen Verzeichnissen als language/ oder styles/ enthält, so hast du möglicherweise deine Verzeichnissturktur geändert und das Update könnte unvollständig sein.',
+	'NO_UPDATE_FILES_OUTDATED'		=> 'Es wurde kein gültiges Aktualisierungsverzeichnis gefunden. Bitte stelle sicher, dass du die entsprechenden Dateien hochgeladen hast.<br /><br />Deine Installation scheint <strong>nicht</strong> auf dem neuesten Stand zu sein. Für deine phpBB Garage-Version %1$s sind Updates verfügbar. Bitte besuche <a href="http://downloads.phpbbgarage.com/" rel="external">http://downloads.phpbbgarage.com/</a>, um das richtige Packet für das Update von Version %2$s auf Version %3$s herunterzuladen.',
+	'NO_UPDATE_FILES_UP_TO_DATE'	=> 'Deine Version ist auf dem neuesten Stand. Es ist nicht nötig, das Update-Tool auszuführen. Wenn du eine Integritätsprüfung der Dateien ausführen möchtest, stelle sicher, dass du das richtige Update-Paket hochgeladen hast.',
+	'NO_UPDATE_INFO'				=> 'Information zu den Update-Paketen konnte nicht gefunden werden.',
+	'NO_UPDATES_REQUIRED'			=> 'Kein Update notwendig',
+	'NO_VISIBLE_CHANGES'			=> 'Keine sichtbaren Änderungen',
+	'NOTICE'						=> 'Hinweis',
+	'NUM_CONFLICTS'					=> 'Anzahl der Konflikte',
 
-	'OLD_UPDATE_FILES'		=> 'Update files are out of date. The update files found are for updating from phpBB %1$s to phpBB %2$s but the latest version of phpBB is %3$s.',
+	'OLD_UPDATE_FILES'		=> 'Die Update-Dateien sind nicht auf dem neuesten Stand. Die gefundenen Update-Dateien sind für ein Update von phpBB %1$s auf phpBB %2$s, aber die neueste Version von phpBB ist %3$s.',
 
-	'PACKAGE_UPDATES_TO'		=> 'Current package updates to version',
-	'PERFORM_DATABASE_UPDATE'	=> 'Perform database update',
-	'PERFORM_DATABASE_UPDATE_EXPLAIN'	=> 'Below you will find a button to the database update script. The database update can take a while, so please do not stop the execution if it seems to hang. After the database update has been performed just follow the instructions to continue the update process.',
-	'PREVIOUS_VERSION'		=> 'Previous version',
-	'PROGRESS'			=> 'Progress',
+	'PACKAGE_UPDATES_TO'				=> 'Dieses Paket aktualisiert auf Version',
+	'PERFORM_DATABASE_UPDATE'			=> 'Datenbankaktualisierung durchführen',
+	'PERFORM_DATABASE_UPDATE_EXPLAIN'	=> 'Weiter unten findest du eine Schaltfläche zum Skript für die Datenbank-Aktualisierung. Die Aktualisierung der Datenbank kann eine Weile dauern, also unterbreche bitte die Ausführung nicht, falls sie zu hängen scheint. Nachdem die Datenbank-Aktualisierung durchgeführt wurde, folge bitte den Hinweisen, um den Update-Prozess fortzusetzen.',
+	'PREVIOUS_VERSION'					=> 'Vorherige Version',
+	'PROGRESS'							=> 'Fortschritt',
 
-	'RESULT'			=> 'Result',
-	'RUN_DATABASE_SCRIPT'		=> 'Update my database now',
+	'RESULT'					=> 'Ergebnis',
+	'RUN_DATABASE_SCRIPT'		=> 'Datenbank jetzt aktualisieren',
 
-	'SELECT_DIFF_MODE'		=> 'Select diff mode',
-	'SELECT_DOWNLOAD_FORMAT'	=> 'Select download archive format',
-	'SELECT_FTP_SETTINGS'		=> 'Select FTP settings',
-	'SHOW_DIFF_CONFLICT'		=> 'Show differences/conflicts',
-	'SHOW_DIFF_FINAL'		=> 'Show resulting file',
-	'SHOW_DIFF_MODIFIED'		=> 'Show merged differences',
-	'SHOW_DIFF_NEW'			=> 'Show file contents',
-	'SHOW_DIFF_NEW_CONFLICT'	=> 'Show differences',
-	'SHOW_DIFF_NOT_MODIFIED'	=> 'Show differences',
-	'SOME_QUERIES_FAILED'		=> 'Some queries failed, the statements and errors are listing below.',
-	'SQL'				=> 'SQL',
-	'SQL_FAILURE_EXPLAIN'		=> 'This is probably nothing to worry about, update will continue. Should this fail to complete you may need to seek help at our support forums. See <a href="../docs/README.html">README</a> for details on how to obtain advice.',
-	'STAGE_FILE_CHECK'		=> 'Check files',
-	'STAGE_UPDATE_DB'		=> 'Update database',
-	'STAGE_UPDATE_FILES'		=> 'Update files',
-	'STAGE_VERSION_CHECK'		=> 'Version check',
-	'STATUS_CONFLICT'		=> 'Modified file producing conflicts',
-	'STATUS_MODIFIED'		=> 'Modified file',
-	'STATUS_NEW'			=> 'New file',
-	'STATUS_NEW_CONFLICT'		=> 'Conflicting new file',
-	'STATUS_NOT_MODIFIED'		=> 'Not modified file',
-	'STATUS_UP_TO_DATE'		=> 'Already updated file',
+	'SELECT_DIFF_MODE'			=> 'Unterschiedmodus auswählen',
+	'SELECT_DOWNLOAD_FORMAT'	=> 'Format des Download-Archivs wählen',
+	'SELECT_FTP_SETTINGS'		=> 'FTP-Einstellungen auswählen',
+	'SHOW_DIFF_CONFLICT'		=> 'Unterschiede/Konflikte zeigen',
+	'SHOW_DIFF_FINAL'			=> 'Die sich ergebende Datei zeigen',
+	'SHOW_DIFF_MODIFIED'		=> 'Zusammengefügte Unterschiede anzeigen',
+	'SHOW_DIFF_NEW'				=> 'Dateiinhalte zeigen',
+	'SHOW_DIFF_NEW_CONFLICT'	=> 'Unterschiede zeigen',
+	'SHOW_DIFF_NOT_MODIFIED'	=> 'Unterschiede zeigen',
+	'SOME_QUERIES_FAILED'		=> 'Einige Abfragen sind gescheitert. Die Abfragen und die zugehörigen Fehler sind weiter unten aufgeführt.',
+	'SQL'						=> 'SQL',
+	'SQL_FAILURE_EXPLAIN'		=> 'Dies ist in der Regel nicht kritisch, die Aktualisierung wird fortgeführt. Sollte deren Fertigstellung scheitern, musst du möglicherweise Hilfe in unserem Supportforum in Anspruch nehmen. Details, wie und wo du Hilfe bekommst, kannst du der <a href="../docs/README.html">README-Datei</a> entnehmen.',
+	'STAGE_FILE_CHECK'			=> 'Dateien überprüfen',
+	'STAGE_UPDATE_DB'			=> 'Datenbank aktualisieren',
+	'STAGE_UPDATE_FILES'		=> 'Dateien aktualisieren',
+	'STAGE_VERSION_CHECK'		=> 'Versionsprüfung	',
+	'STATUS_CONFLICT'			=> 'Geänderte Datei, die Konflikte verursacht',
+	'STATUS_MODIFIED'			=> 'Veränderte Datei',
+	'STATUS_NEW'				=> 'Neue Datei',
+	'STATUS_NEW_CONFLICT'		=> 'Problematische neue Datei',
+	'STATUS_NOT_MODIFIED'		=> 'Unveränderte Datei',
+	'STATUS_UP_TO_DATE'			=> 'Bereits aktualisierte Datei',
 
-	'UPDATE_COMPLETED'		=> 'Update completed',
-	'UPDATE_DATABASE'		=> 'Update database',
-	'UPDATE_DATABASE_EXPLAIN'	=> 'Within the next step the database will be updated.',
-	'UPDATE_DATABASE_SCHEMA'	=> 'Updating database schema',
-	'UPDATE_FILES'			=> 'Update files',
-	'UPDATE_FILES_NOTICE'		=> 'Please make sure you have updated your board files too, this file is only updating your database.',
-	'UPDATE_INSTALLATION'		=> 'Update phpBB Garage installation',
-	'UPDATE_INSTALLATION_EXPLAIN'	=> 'With this option, it is possible to update your phpBB Garage installation to the latest version.<br />During the process all of your files will be checked for their integrity. You are able to review all differences and files before the update.<br /><br />The file update itself can be done in two different ways.</p><h2>Manual Update</h2><p>With this update you only download your personal set of changed files to make sure you do not lose your file modifications you may have done. After you downloaded this package you need to manually upload the files to their correct position under your phpBB Garage root directory. Once done, you are able to do the file check stage again to see if you moved the files to their correct location.</p><h2>Automatic Update with FTP</h2><p>This method is similar to the first one but without the need to download the changed files and uploading them on your own. This will be done for you. In order to use this method you need to know your FTP login details since you will be asked for them. Once finished you will be redirected to the file check again to make sure everything got updated correctly.<br /><br />',
+	'UPDATE_COMPLETED'				=> 'Update abgeschlossen',
+	'UPDATE_DATABASE'				=> 'Datenbank jetzt aktualisieren',
+	'UPDATE_DATABASE_EXPLAIN'		=> 'Im nächsten Schritt wird die Datenbank aktualisiert.',
+	'UPDATE_DATABASE_SCHEMA'		=> 'Datenbankstruktur wird aktualisiert',
+	'UPDATE_FILES'					=> 'Dateien werden aktualisiert',
+	'UPDATE_FILES_NOTICE'			=> 'Bitte stelle sicher, dass du auch die Dateien des Boards aktualisiert hast. Diese Datei aktualisiert nur die Datenbank.',
+	'UPDATE_INSTALLATION'			=> 'Update der phpBB Garage-Installation',
+	'UPDATE_INSTALLATION_EXPLAIN'	=> 'Mit dieser Option kannst du deine phpBB Garage-Version auf den neuesten Stand bringen.<br />Während dieses Prozesses wird die Integrität aller deiner Dateien überprüft. Du hast die Möglichkeit, alle Dateiunterschiede vor dem Update zu überprüfen.<br /><br />Die Dateiaktualisierung an sich kann auf zwei Wegen erfolgen:</p><h2>Manuelle Aktualisierung</h2><p>Bei dieser Methode lädst du nur die von dir geänderten Dateien herunter, damit du sichergehen kannst, dass die erfolgten Dateiänderungen nicht verloren gehen. Nach dem Herunterladen dieses Archivs musst du die Dateien in die entsprechenden Verzeichnisse deiner phpBB Garage-Installation hochladen. Nachdem du das getan hast, kannst du die Dateiüberprüfung erneut ausführen, um zu sehen, ob du alle Dateien korrekt hochgeladen hast.</p><h2>Automatische Aktualisierung über FTP</h2><p>Diese Methode ist der ersten sehr ähnlich, mit dem Unterschied, dass du die veränderten Dateien nicht herunter- und anschließend von Hand wieder hochladen musst. Dies wird automatisch erledigt. Um diese Methode nutzen zu können, musst du deine FTP-Anmeldedaten kennen und eingeben. Nach der Fertigstellung wird auch hier eine Integritätsprüfung der Dateien ausgeführt.',
 	'UPDATE_INSTRUCTIONS'			=> '
 
-		<h1>Release announcement</h1>
+		<h1>Bekanntmachungen zur Veröffentlichung</h1>
 
-		<p>Please read <a href="%1$s" title="%1$s"><strong>the release announcement for the latest version</strong></a> before you continue your update process, it may contain useful information. It also contains full download links as well as the change log.</p>
+		<p>Bitte lies <a href="%1$s" title="%1$s"><strong>die Bekanntmachung zur Veröffentlichung der neuesten Version</strong></a> bevor du den Update-Prozess beginnst, sie enthält wichtige Informationen. Außerdem enthält sie die Download-Links sowie ein Änderungsprotokoll (Changelog) der Versionen.</p>
 
 		<br />
 
-		<h1>How to update your installation with the Automatic Update Package</h1>
+		<h1>Wie du ein Update deiner Installation mit dem „Automatisches-Update-Paket“ durchführst</h1>
 
-		<p>The recommended way of updating your installation listed here is only valid for the automatic update package. You are also able to update your installation using the methods listed within the INSTALL.html document. The steps for updating phpBB Garage  automatically are:</p>
+		<p>Diese empfohlene Anleitung zum Update deiner Installation gilt nur für das „Automatisches-Update-Paket“ („automatic update package“). Du kannst deine Installation auch mit den in der INSTALL.html beschriebenen Methoden aktualisieren. Zum automatischen Update von phpBB Garage musst du folgende Schritte ausführen:</p>
 
 		<ul style="margin-left: 20px; font-size: 1.1em;">
-			<li>Go to the <a href="http://www.phpbbgarage.com/downloads/" title="http://www.phpbbgarage.com/downloads/">phpBBGarage.com downloads page</a> and download the "Automatic Update Package" archive.<br /><br /></li>
-			<li>Unpack the archive.<br /><br /></li>
-			<li>Upload the complete uncompressed install folder to your phpBB Garage root directory (where your config.php file is).<br /><br /></li>
+			<li>Gehe zur <a href="http://downloads.phpbbgarage.com/" title="http://downloads.phpbbgarage.com/">phpBB Garage-Downloadseite</a> und lade das entsprechende „Automatisches-Update-Paket“ herunter (<a href="http://www.phpbb.de/go/3/downloads">deutschsprachige Downloadseite</a>).<br /><br /></li>
+			<li>Entpacke das Archiv.<br /><br /></li>
+			<li>Lade das entpackte Installationsverzeichnis komplett in dein phpBB Garage-Hauptverzeichnis (dort, wo die config.php ist).<br /><br /></li>
 		</ul>
 
-		<p>Once uploaded your board will be offline for normal users due to the install directory you uploaded now present.<br /><br />
-		<strong><a href="%2$s" title="%2$s">Now start the update process by pointing your browser to the install folder</a>.</strong><br />
+		<p>Nach dem Upload wird das Forum vorübergehend für normale Benutzer nicht zugänglich sein, da das von dir hochgeladene Installations-Verzeichnis vorhanden ist.<br /><br />
+		<strong><a href="%2$s" title="%2$s">Starte nun den Update-Prozess, indem du in deinem Webbrowser die Adresse zum Installationsverzeichnis angibst</a>.</strong><br />
 		<br />
-		You will then be guided through the update process. You will be notified once the update is complete.
+		Anschließend wirst du durch den Update-Prozess geführt. Du wirst benachrichtigt, sobald das Update abgeschlossen ist.
 		</p>
 	',
 	'UPDATE_INSTRUCTIONS_INCOMPLETE'	=> '
 
-		<h1>Unvollständige Aktualisierung erkannt</h1>
+		<h1>Unvollständiges Update gefunden</h1>
 
-		<p>phpBB Garage hat eine unvollständige automatische Aktualisierung erkannt. Bitte stelle sicher, dass du jeden Schritt innerhalb des automatischen Aktualisierungs-Assistenten befolgt hast. Nachfolgend findest du den Link erneut or go directly to your install directory.</p>
+		<p>phpBB Garage hat ein unvollständiges automatisches Update gefunden. Bitte stell sicher, dass du jeden Schritt des automatischen Updates durchgeführt hast. Du findest unten nochmals den Link oder rufe das „install“-Verzeichnis direkt auf.</p>
 		',
 	'VERSION_CHECK'				=> 'Versionsprüfung',
 	'VERSION_CHECK_EXPLAIN'		=> 'Prüft, ob die phpBB Garage-Version, die du einsetzt, auf dem neuesten Stand ist.',
