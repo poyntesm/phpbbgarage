@@ -4,7 +4,7 @@
 * garage [English]
 *
 * @package language
-*@version $Id: info_ucp_garage.php 587 2008-10-10 chrizathens $
+*@version $Id: info_ucp_garage.php 588 2008-10-10 chrizathens $
 * @copyright (c) 2005 phpBB Garage
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
 */

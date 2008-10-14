@@ -4,7 +4,7 @@
 * garage [Greek]
 *
 * @package language
-* @version $Id: garage_common.php 587 2008-10-10 chrizathens $
+* @version $Id: garage_common.php 588 2008-10-10 chrizathens $
 * @copyright (c) 2005 phpBB Garage
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
 */
@@ -25,7 +25,7 @@ $lang = array_merge($lang, array(
 	'VIEWING_GARAGE'		=> 'Βλέπει το Γκαράζ',
 	'USERS_GARAGE'			=> 'Προβολή του Γκαράζ του μέλους',
 	'REMOVE_GARAGE_INSTALL'	=> 'Παρακαλώ διαγράψτε, μετακινήστε ή μετονομάστε τον φάκελο εγκατάστασης του Γκαράζ πριν χρησιμοποιήσετε το Γκαράζ. Αν αυτός ο φάκελος υπάρχει, το Γκαράζ δεν θα είναι διαθέσιμο.',
-	'GARAGE_DISABLE'		=> 'Συγγνώμη αλλά το Γκαράζ δεν είναι διαθέσιμο καθώς η διαχείριση εκτελεί κάποιες εργασίες σε αυτό.',
+	'GARAGE_DISABLE'		=> 'Συγγνώμη, αλλά το Γκαράζ δεν είναι διαθέσιμο καθώς η διαχείριση εκτελεί κάποιες εργασίες σε αυτό.',
 ));
 
 ?>

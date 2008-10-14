@@ -4,7 +4,7 @@
 * garage [Greek]
 *
 * @package language
-*@version $Id: garage_style.php 587 2008-10-10 chrizathens $
+*@version $Id: garage_style.php 588 2008-10-10 chrizathens $
 * @copyright (c) 2005 phpBB Garage
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
 *
@@ -19,7 +19,7 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'IMG_CAT_GARAGE'				=> 'phpBB Garage images',
+	'IMG_CAT_GARAGE'				=> 'Εικονίδια phpBB Garage',
 	'IMG_GARAGE_IMG_ATTACHED'		=> 'Image attached',
 	'IMG_GARAGE_ICON_GARAGE'		=> 'Garage icon',
 	'IMG_GARAGE_MAIN_MENU'			=> 'Index menu',
@@ -34,18 +34,18 @@ $lang = array_merge($lang, array(
 	'IMG_GARAGE_CREATE_VEHICLE'		=> 'Create vehicle',
 	'IMG_GARAGE_EDIT_VEHICLE'		=> 'Edit vehicle',
 	'IMG_GARAGE_DELETE_VEHICLE'		=> 'Delete vehicle',
-	'IMG_GARAGE_VIEW_VEHICLE'		=> 'View vehicle',
-	'IMG_GARAGE_ADD_MODIFICATION'	=> 'Add modification',
-	'IMG_GARAGE_ADD_INSURANCE'		=> 'Add insurance',
-	'IMG_GARAGE_ADD_DYNORUN'		=> 'Add dynorun',
-	'IMG_GARAGE_ADD_LAP'			=> 'Add lap',
-	'IMG_GARAGE_ADD_SERVICE'		=> 'Add service',
-	'IMG_GARAGE_ADD_QUARTERMILE'	=> 'Add &frac14; mile',
-	'IMG_GARAGE_EDIT'				=> 'Edit',
-	'IMG_GARAGE_DELETE'				=> 'Delete',
-	'IMG_GARAGE_TOGGLE'				=> 'Toggle',
-	'IMG_GARAGE_MAIN_VEHICLE'		=> 'Main vehicle',
-	'IMG_GARAGE_NO_THUMB'			=> 'No thumb',
+	'IMG_GARAGE_VIEW_VEHICLE'		=> 'Προβολή οχήματος',
+	'IMG_GARAGE_ADD_MODIFICATION'	=> 'Προσθήκη μετατροπής',
+	'IMG_GARAGE_ADD_INSURANCE'		=> 'Προσθήκη ασφάλειας',
+	'IMG_GARAGE_ADD_DYNORUN'		=> 'Προσθήκη δυναμομέτρησης',
+	'IMG_GARAGE_ADD_LAP'			=> 'Προσθήκη γύρου πίστας',
+	'IMG_GARAGE_ADD_SERVICE'		=> 'Προσθήκη σέρβις',
+	'IMG_GARAGE_ADD_QUARTERMILE'	=> 'Προσθήκη χρόνου 0-400μ.',
+	'IMG_GARAGE_EDIT'				=> 'Επεξεργασία',
+	'IMG_GARAGE_DELETE'				=> 'Διαγραφή',
+	'IMG_GARAGE_TOGGLE'				=> 'Εναλλαγή',
+	'IMG_GARAGE_MAIN_VEHICLE'		=> 'Κύριο όχημα',
+	'IMG_GARAGE_NO_THUMB'			=> 'Δεν υπάρχει μικρογραφία',
 ));
 
 ?>

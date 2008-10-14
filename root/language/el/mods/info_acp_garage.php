@@ -4,7 +4,7 @@
 * garage [Greek]
 *
 * @package language
-@version $Id: info_acp_garage.php 587 2008-10-10 chrizathens $
+@version $Id: info_acp_garage.php 588 2008-10-10 chrizathens $
 * @copyright (c) 2005 phpBB Garage
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
 */
@@ -47,7 +47,7 @@ $lang = array_merge($lang, array(
 	'ACP_GARAGE_RATING_SETTINGS'		=> 'Ρυθμίσεις Αξιολόγησης',
 	'ACP_GARAGE_GUESTBOOK_SETTINGS'		=> 'Ρυθμίσεις Guestbook',
 	'ACP_GARAGE_PRODUCT_SETTINGS'		=> 'Ρυθμίσεις προϊόντων',
-	'ACP_GARAGE_SERVICE_SETTINGS'		=> 'Ρυθμίσεις ιστορικού Σέρβις',
+	'ACP_GARAGE_SERVICE_SETTINGS'		=> 'Ρυθμίσεις των Σέρβις',
 	'ACP_GARAGE_BLOG_SETTINGS'			=> 'Ρυθμίσεις Blog',
 	'ACP_GARAGE_FIELDS_MANAGEMENT'		=> 'Διαχείριση προσαρμοσμένων πεδίων',
 	'ACP_GARAGE_FIELDS'					=> 'Προσαρμοσμένα πεδία',

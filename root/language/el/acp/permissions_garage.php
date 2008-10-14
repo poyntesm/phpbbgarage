@@ -4,7 +4,7 @@
 * acp_garage_permissions (phpBB Garage Permission Set) [Greek]
 *
 * @package language
-* @version $Id: garage.php 587 2008-10-10 chrizathens $
+* @version $Id: garage.php 588 2008-10-10 chrizathens $
 * @copyright (c) 2005 phpBB Garage
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
 *

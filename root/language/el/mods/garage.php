@@ -4,7 +4,7 @@
 * garage [Greek]
 *
 * @package language
-* @version $Id: garage.php 587 2008-10-10 chrizathens $
+* @version $Id: garage.php 588 2008-10-10 chrizathens $
 * @copyright (c) 2005 phpBB Garage
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
 */
@@ -38,11 +38,11 @@ $lang = array_merge($lang, array(
 	'CATEGORY_DESC' 				=> 'Περιγραφή κατηγορίας',
 	'NEW_CATEGORY_CREATED' 			=> 'Η νέα κατηγορία δημιουργήθηκε με επιτυχία',
 	'CLICK_RETURN_GARAGE_CATEGORY' 	=> 'Πατήστε %sεδώ%s για να επιστρέψετε στην Διαχείριση κατηγοριών Γκαράζ',
-	'CATEGORY_UPDATED' 			=> 'Η κατηγορία ενημερώθηκε με επιτυχία',
-	'DELETE_CATEGORY' 			=> 'Διαγραφή κατηγορίας',
-	'MOVE_DELETE_CATEGORY' 		=> 'Μετακίνηση όλων των υπάρχοντων μετατροπών από αυτήν την κατηγορία σε ποιά κατηγορία;',
-	'REMOVE_CATEGORY' 			=> 'Κατηγορία για διαγραφή:',
-	'DELETE_CATEGORY_EXPLAIN' 	=> 'Η παρακάτω φόρμα σας επιτρέπει να διαγράψετε μια κατηγορία',
+	'CATEGORY_UPDATED' 				=> 'Η κατηγορία ενημερώθηκε με επιτυχία',
+	'DELETE_CATEGORY' 				=> 'Διαγραφή κατηγορίας',
+	'MOVE_DELETE_CATEGORY' 			=> 'Μετακίνηση όλων των υπάρχοντων μετατροπών από αυτήν την κατηγορία σε ποιά κατηγορία;',
+	'REMOVE_CATEGORY' 				=> 'Κατηγορία για διαγραφή:',
+	'DELETE_CATEGORY_EXPLAIN' 		=> 'Η παρακάτω φόρμα σας επιτρέπει να διαγράψετε μια κατηγορία',
 	'CATEGORY_DELETED' 		=> 'Η κατηγορία διαγράφηκε με επιτυχία',
 	'GARAGE_MODELS_TITLE' 	=> 'Διαχείριση στις Μάρκες  & Μοντέλα του Γκαράζ',
 	'GARAGE_MODELS_EXPLAIN' => 'Σε αυτή την οθόνη μπορείτε να διαχειριστείτε τα μοντέλα και τις μάρκες: προσθήκη, αλλαγή, διαγραφή.',
