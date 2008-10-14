@@ -4,7 +4,7 @@
 * garage [Greek]
 *
 * @package language
-*@version $Id: garage_style.php 588 2008-10-10 chrizathens $
+*@version $Id: garage_style.php 590 2008-10-10 chrizathens $
 * @copyright (c) 2005 phpBB Garage
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
 *
@@ -21,19 +21,19 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'IMG_CAT_GARAGE'				=> 'Εικονίδια phpBB Garage',
 	'IMG_GARAGE_IMG_ATTACHED'		=> 'Image attached',
-	'IMG_GARAGE_ICON_GARAGE'		=> 'Garage icon',
-	'IMG_GARAGE_MAIN_MENU'			=> 'Index menu',
-	'IMG_GARAGE_BROWSE'				=> 'Browse menu',
-	'IMG_GARAGE_SEARCH'				=> 'Search menu',
+	'IMG_GARAGE_ICON_GARAGE'		=> 'Εικονίδιο Γκαράζ',
+	'IMG_GARAGE_MAIN_MENU'			=> 'Αρχικό μενού',
+	'IMG_GARAGE_BROWSE'				=> 'Μενού περιήγησης',
+	'IMG_GARAGE_SEARCH'				=> 'Μενού αναζήτησης',
 	'IMG_GARAGE_QUARTERMILE_TABLE'	=> 'Πίνακας 0-400μ.',
 	'IMG_GARAGE_DYNORUN_TABLE'		=> 'Πίνακας Δυναμομετρήσεων',
-	'IMG_GARAGE_LAP_TABLE'			=> 'Πίνακας φύρων πίστας',
+	'IMG_GARAGE_LAP_TABLE'			=> 'Πίνακας γύρων πίστας',
 	'IMG_GARAGE_GARAGE_REVIEW'		=> 'Επισκόπηση Γκαράζ',
-	'IMG_GARAGE_SHOP_REVIEW'		=> 'Shop review',
-	'IMG_GARAGE_INSURANCE_REVIEW'	=> 'Insurance review',
-	'IMG_GARAGE_CREATE_VEHICLE'		=> 'Create vehicle',
-	'IMG_GARAGE_EDIT_VEHICLE'		=> 'Edit vehicle',
-	'IMG_GARAGE_DELETE_VEHICLE'		=> 'Delete vehicle',
+	'IMG_GARAGE_SHOP_REVIEW'		=> 'Επισκόπηση καταστημάτων',
+	'IMG_GARAGE_INSURANCE_REVIEW'	=> 'Επισκόπηση Ασφ. Εταιριών',
+	'IMG_GARAGE_CREATE_VEHICLE'		=> 'Δημιουργία οχήματος',
+	'IMG_GARAGE_EDIT_VEHICLE'		=> 'Επεξεργασία οχήματος',
+	'IMG_GARAGE_DELETE_VEHICLE'		=> 'Διαγραφή οχήματος',
 	'IMG_GARAGE_VIEW_VEHICLE'		=> 'Προβολή οχήματος',
 	'IMG_GARAGE_ADD_MODIFICATION'	=> 'Προσθήκη μετατροπής',
 	'IMG_GARAGE_ADD_INSURANCE'		=> 'Προσθήκη ασφάλειας',
