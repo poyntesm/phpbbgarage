@@ -1,0 +1,10 @@
+Subject: phpBB Garage item wacht op goedkeuring
+
+Hallo,
+
+Er is in de phpBB Garage een of meerdere items aangemaakt dat goedkeuring nodig heeft. 
+Geef je goedkeuring/afkeuring op het item(s) via de onderstaande link:
+
+{U_MCP}
+
+{EMAIL_SIG}

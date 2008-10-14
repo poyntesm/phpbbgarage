@@ -1,0 +1,9 @@
+Subject: phpBB Garage - Voertuig commentaar ontvangen
+
+Hallo,
+
+Er is een commentaar gegeven op een voertuig waarvan jij de eigenaar bent. Klik op onderstaande link om dit berecht te bekijken 
+
+{U_VIEW_COMMENT}
+
+{EMAIL_SIG}
