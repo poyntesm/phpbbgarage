@@ -31,7 +31,7 @@
 							<div class="inner">
 								<span class="corners-top"><span></span></span>
 
-								<form id="edit_lap" enctype="multipart/form-data" method="post" action="{S_MODE_ACTION}">
+								<form id="lap" enctype="multipart/form-data" method="post" action="{S_MODE_ACTION}">
 								<h3>{L_TITLE}</h3>
 								<fieldset>
 									<dl>
@@ -62,12 +62,17 @@
 								</fieldset>
 
 								<fieldset>
-									<input type="hidden" value="{VID}" name="VID" /><input type="hidden" value="{LID}" name="LID" />
+									<input type="hidden" value="{VID}" name="VID" />
+									<input type="hidden" value="{LID}" name="LID" />
+									<input type="hidden" value="" name="primary" />
+									<input type="hidden" value="" name="secondary" />
+									<input type="hidden" value="" name="tertiary" />
+									<input type="hidden" value="{REDIRECT}" name="redirect" />
 								</fieldset>
 				
 								<fieldset class="submit-buttons">
 									<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 
-									<input type="submit" name="submit" value="{L_BUTTON}" class="button1" />
+									<input type="submit" name="submit2" value="{L_BUTTON}" class="button1" />
 								</fieldset>
 								{S_FORM_TOKEN}
 								</form>
@@ -94,6 +99,20 @@
 		<span class="corners-bottom"><span></span></span>
 	</div>
 </div>
+
+<script type="text/javascript">
+<!--
+function add_track ( tertiary )
+{
+	var lap = document.getElementById("lap");
+	lap.action = '{S_MODE_USER_SUBMIT}';
+	lap.primary.value = 'lap' ;
+	lap.secondary.value = '' ;
+	lap.tertiary.value = tertiary ;
+	lap.submit() ;
+}
+-->
+</script>
 
 <script type="text/javascript">
 <!--

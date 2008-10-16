@@ -19,7 +19,6 @@ define('IN_PHPBB', true);
 $phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : './';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
-include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 include($phpbb_root_path . 'includes/bbcode.' . $phpEx);
 require($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 
@@ -136,7 +135,7 @@ switch( $mode )
 			$posted = '<a href="' . append_sid("{$phpbb_root_path}memberlist.$phpEx", "mode=viewprofile&amp;u=".$comment_data[$i]['user_id']) . '">' . $comment_data[$i]['username'] . '</a>';
 			$posted = $user->format_date($comment_data[$i]['post_date']);
 
-			$post = generate_text_for_display($comment_data[$i]['post'], $comment_data[$i]['bbcode_uid'], $comment_data[$i]['bbcode_bitfield'], $comment_data[$i]['bbcode_flags']);
+			$post = generate_text_for_display($comment_data[$i]['post'], $comment_data[$i]['bbcode_uid'], $comment_data[$i]['bbcode_bitfield'], $comment_data[$i]['bbcode_options']);
 
 			$edit_img = '';
 			$edit = '';
@@ -202,14 +201,13 @@ switch( $mode )
 		* Handle text in the phpBB standard UTF8 way, allowing bbcode, urls & smilies
 		*/
 		$text = utf8_normalize_nfc(request_var('comments', '', true));
-		$uid = $bitfield = $flags = ''; 
-		$allow_bbcode = $allow_urls = $allow_smilies = true;
-		generate_text_for_storage($text, $uid, $bitfield, $flags, $allow_bbcode, $allow_urls, $allow_smilies);
+		$uid = $bitfield = $options = '';
+		generate_text_for_storage($text, $uid, $bitfield, $options, $garage_config['enable_guestbooks_bbcode'], $garage_config['enable_guestbooks_url'], $garage_config['enable_guestbooks_smilies']);
 		$data = array(
 		    'post'              => $text,
 		    'bbcode_uid'        => $uid,
 		    'bbcode_bitfield'   => $bitfield,
-		    'bbcode_flags'      => $flags,
+		    'bbcode_options'    => $options,
 		);
 
 		/**
@@ -273,7 +271,7 @@ switch( $mode )
 		/**
 		* All work complete for mode, so redirect to correct page
 		*/
-		redirect(append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=view_guestbook&amp;VID=$vid"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=$vid#guestbook"));
 	break;
 
 	case 'edit_comment':

@@ -119,8 +119,8 @@ class ucp_garage
 
 				$template->assign_vars(array(
 					'L_TITLE'			=> $user->lang['UCP_GARAGE_NOTIFY'],
-					'S_DISPLAY_EMAIL_OPTOUT'	=> ($garage_config['enable_email_pending_notify'] && $garage_config['enable_email_pending_notify_optout'] && $auth->acl_get('m_garage')) ? 1 : 0,
-					'S_DISPLAY_PM_OPTOUT'		=> ($garage_config['enable_pm_pending_notify'] && $garage_config['enable_pm_pending_notify_optout'] && $auth->acl_get('m_garage')) ? 1 : 0,
+					'S_DISPLAY_EMAIL_OPTOUT'	=> ($garage_config['enable_email_pending_notify'] && $garage_config['enable_email_pending_notify_optout'] && $auth->acl_get('m_garage_edit') ) ? 1 : 0,
+					'S_DISPLAY_PM_OPTOUT'		=> ($garage_config['enable_pm_pending_notify'] && $garage_config['enable_pm_pending_notify_optout'] && $auth->acl_get('m_garage_edit')) ? 1 : 0,
 					'S_GUESTBOOK_EMAIL_NOTIFY'	=> $data['guestbook_email_notify'],
 					'S_GUESTBOOK_PM_NOTIFY'		=> $data['guestbook_pm_notify'],
 					'S_EMAIL_OPTOUT'		=> $data['email_optout'],

@@ -46,8 +46,8 @@ class garage_dynorun
 			'peakpoint'	=> $data['peakpoint'],
 			'date_created'	=> time(),
 			'date_updated'	=> time(),
-			'pending'	=> ($garage_config['enable_dynorun_approval'] == '1') ? 1 : 0)
-		);
+			'pending'	=> ($garage_config['enable_dynorun_approval'] == '1') ? 1 : 0,
+		));
 
 		$db->sql_query($sql);
 
@@ -191,6 +191,36 @@ class garage_dynorun
 	}
 
 	/**
+	* Return vehicle id of dynoruns
+	*
+	* @param int $did dynorun id to get vehicle id for
+	*
+	*/
+	function get_vehicle_id_for_dynorun($did)
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'v.id',
+			'FROM'		=> array(
+				GARAGE_VEHICLES_TABLE	=> 'v',
+				GARAGE_DYNORUNS_TABLE	=> 'd',
+			),
+			'WHERE'		=>  "d.id = $did
+						AND v.id = d.vehicle_id"
+		));
+
+		$result = $db->sql_query($sql);
+		$data = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $data['id'];
+	}
+
+	/**
 	* Return data for a specific dynorun
 	*
 	* @param int $did dynorun id to return data for
@@ -254,7 +284,7 @@ class garage_dynorun
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'v.id, v.made_year, v.user_id, mk.make, md.model, u.username, u.user_id, b.title, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, round(d.peakpoint,0) as peakpoint, i.attach_id as image_id, d.id as did, v.made_year, mk.make, md.model',
+			'SELECT'	=> 'v.id, v.made_year, v.user_id, mk.make, md.model, u.username, u.user_id,u.user_colour, b.title, d.bhp, d.bhp_unit, d.torque, d.torque_unit, d.boost, d.boost_unit, d.nitrous, round(d.peakpoint,0) as peakpoint, i.attach_id as image_id, d.id as did, v.made_year, mk.make, md.model',
 			'FROM'		=> array(
 				GARAGE_DYNORUNS_TABLE	=> 'd',
 				GARAGE_VEHICLES_TABLE	=> 'v',
@@ -523,42 +553,6 @@ class garage_dynorun
 		$required_position++;
 		return ;
 	}	
-
-	/**
-	* Approve dynoruns
-	*
-	* @param array $id_list single-dimension array holding the dynorun ids to approve
-	*
-	*/
-	function approve_dynorun($id_list)
-	{
-		global $phpbb_root_path, $phpEx, $garage;
-
-		for($i = 0; $i < count($id_list); $i++)
-		{
-			$garage->update_single_field(GARAGE_DYNORUNS_TABLE, 'pending', 0, 'id', $id_list[$i]);
-		}
-
-		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_dynoruns"));
-	}
-
-	/**
-	* Disapprove dynoruns
-	*
-	* @param array $id_list sigle-dimension array holding the dynorun ids to disapprove
-	*
-	*/
-	function disapprove_dynorun($id_list)
-	{
-		global $phpbb_root_path, $phpEx;
-
-		for($i = 0; $i < count($id_list); $i++)
-		{
-			$this->delete_dynorun($id_list[$i]);
-		}
-
-		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_dynoruns"));
-	}
 }
 
 $garage_dynorun = new garage_dynorun();

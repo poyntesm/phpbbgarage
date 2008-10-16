@@ -96,6 +96,12 @@ switch( $mode )
 		$garages = $garage_business->get_business_by_type(BUSINESS_GARAGE);
 
 		/**
+		* Get all required/optional data and check required data is present
+		*/
+		$params	= array('VID' => '', 'garage_id' => '', 'type_id' => '', 'price' => '', 'rating' => '', 'mileage' => '');
+		$data 	= $garage->process_vars($params);
+
+		/**
 		* Handle template declarations & assignments
 		*/
 		page_header($user->lang['GARAGE']);
@@ -111,17 +117,20 @@ switch( $mode )
 			'FORUM_NAME'	=> $user->lang['ADD_SERVICE'],
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_service&amp;VID=$vid"))
 		);
-		$garage_template->garage_dropdown($garages);
-		$garage_template->rating_dropdown('rating');
-		$garage_template->service_type_dropdown();
+		$garage_template->garage_dropdown($garages, $data['garage_id']);
+		$garage_template->rating_dropdown('rating', $data['rating']);
+		$garage_template->service_type_dropdown($data['type_id']);
 		$template->assign_vars(array(
 			'L_TITLE'  			=> $user->lang['ADD_SERVICE'],
 			'L_BUTTON'  			=> $user->lang['ADD_SERVICE'],
-			'U_SUBMIT_BUSINESS_GARAGE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;VID=$vid&amp;redirect=add_service&amp;BUSINESS=". BUSINESS_GARAGE),
+			'U_SUBMIT_BUSINESS_GARAGE'	=> "javascript:add_garage('')",
 			'VID' 				=> $vid,
+			'PRICE'				=> $data['price'],
+			'MILEAGE'			=> $data['mileage'],
 			'CURRENCY'			=> $vehicle['currency'],
-			'S_MODE_ACTION' 		=> append_sid("{$phpbb_root_path}garage_service.$phpEx", "mode=insert_service"))
-         	);
+			'S_MODE_ACTION' 		=> append_sid("{$phpbb_root_path}garage_service.$phpEx", "mode=insert_service"),
+			'S_MODE_USER_SUBMIT' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_data"),
+         	));
 		$garage_template->sidemenu();
 	break;
 
@@ -185,6 +194,12 @@ switch( $mode )
 		$garage_vehicle->check_ownership($vid);
 
 		/**
+		* Get any changed data incase we are arriving from creating a garage
+		*/
+		$params	= array('garage_id' => '', 'type_id' => '', 'price' => 0, 'rating' => 0, 'mileage' => '');
+		$store 	= $garage->process_vars($params);
+
+		/**
 		* Get vehicle, service history & garage business data from DB
 		*/
 		$vehicle	= $garage_vehicle->get_vehicle($vid);
@@ -207,19 +222,20 @@ switch( $mode )
 			'FORUM_NAME'	=> $user->lang['EDIT_SERVICE'],
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;VID=$vid&amp;SVID=$svid"))
 		);
-		$garage_template->garage_dropdown($garages, $data['garage_id']);
-		$garage_template->rating_dropdown('rating', $data['rating']);
-		$garage_template->service_type_dropdown($data['type_id']);
+		$garage_template->garage_dropdown($garages, (!empty($store['garage_id'])) ? $store['garage_id'] : $data['garage_id']);
+		$garage_template->rating_dropdown('rating', (!empty($store['rating'])) ? $store['rating'] : $data['rating']);
+		$garage_template->service_type_dropdown((!empty($store['type_id'])) ? $store['type_id'] : $data['type_id']);
 		$template->assign_vars(array(
-			'L_TITLE'		=> $user->lang['EDIT_SERVICE'],
-			'L_BUTTON'		=> $user->lang['EDIT_SERVICE'],
-			'U_SUBMIT_BUSINESS_GARAGE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;VID=$vid&amp;redirect=edit_service&amp;BUSINESS=". BUSINESS_GARAGE),
-			'PRICE'			=> $data['price'],
-			'MILEAGE'		=> $data['mileage'],
-			'CURRENCY'		=> $vehicle['currency'],
-			'VID'			=> $vid,
-			'SVID'			=> $svid,
-			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_service.$phpEx", "mode=update_service"))
+			'L_TITLE'			=> $user->lang['EDIT_SERVICE'],
+			'L_BUTTON'			=> $user->lang['EDIT_SERVICE'],
+			'U_SUBMIT_BUSINESS_GARAGE'	=> "javascript:add_garage('edit')",
+			'PRICE'				=> (!empty($store['price'])) ? $store['price'] : $data['price'],
+			'MILEAGE'			=> (!empty($store['mileage'])) ? $store['mileage'] : $data['mileage'],
+			'CURRENCY'			=> $vehicle['currency'],
+			'VID'				=> $vid,
+			'SVID'				=> $svid,
+			'S_MODE_USER_SUBMIT' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_data"),
+			'S_MODE_ACTION' 		=> append_sid("{$phpbb_root_path}garage_service.$phpEx", "mode=update_service"))
 		);
 		$garage_template->sidemenu();
 	break;

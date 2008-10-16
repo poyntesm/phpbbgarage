@@ -6,7 +6,130 @@
 
 	<div class="inner"><span class="corners-top"><span></span></span>
 
-	<!-- IF S_UNAPPROVED_VEHICLE -->
+	<!-- IF S_EDIT_MAKE -->
+
+	<h3>{L_EDIT_MAKE}</h3>
+	<fieldset>
+		<dl>
+			<dt>{L_VEHICLE_MAKE}</dt>
+			<dd><input name="make" type="text" class="inputbox autowidth" size="35" value="{MAKE}" /></dd>
+		</dl>
+	</fieldset>
+
+	<fieldset class="display-actions">
+		<input type="hidden" name="id" value="{MAKE_ID}" />
+		<input class="button2" type="submit" name="submit" value="{L_SUBMIT}" />
+	</fieldset>
+
+	<!-- ELSEIF S_EDIT_MODEL -->
+
+	<h3>{L_EDIT_MODEL}</h3>
+
+	<fieldset>
+		<dl>
+			<dt>{L_VEHICLE_MAKE}</dt>
+			<dd>{MAKE}</span></dd>
+		</dl>
+		<dl>
+			<dt>{L_VEHICLE_MODEL}</dt>
+			<dd><input name="model" type="text" class="inputbox autowidth" size="35" value="{MODEL}" /></dd>
+		</dl>
+	</fieldset>
+
+	<fieldset class="display-actions">
+		<input type="hidden" name="id" value="{MODEL_ID}" />
+		<input class="button2" type="submit" name="submit" value="{L_SUBMIT}" />
+	</fieldset>
+
+	<!-- ELSEIF S_EDIT_BUSINESS -->
+
+	<h3>{L_EDIT_BUSINESS}</h3>
+
+	<fieldset>
+		<dl>
+			<dt><b>{L_BUSINESS_NAME}</b></dt>
+			<dd><input name="title" type="text" class="inputbox autowidth" size="35" value="{TITLE}" /> <span style="color:#FF0000">[{L_REQUIRED}]</span></dd>
+		</dl>
+		<dl>
+			<dt><b>{L_ADDRESS}</b></dt>
+			<dd><textarea name="address" cols="40" rows="4" wrap="soft" class="inputbox autowidth">{ADDRESS}</textarea></dd>
+		</dl>
+		<dl>
+			<dt><b>{L_TELEPHONE}</b></dt>
+			<dd><input name="telephone" type="text" class="inputbox autowidth" size="35" value="{TELEPHONE}" /></dd>
+		</dl>
+		<dl>
+			<dt><b>{L_FAX}</b></dt>
+			<dd><input name="fax" type="text" class="inputbox autowidth" size="35" value="{FAX}" /></dd>
+		</dl>
+		<dl>
+			<dt><b>{L_WEBSITE}</b></dt>
+			<dd><input name="website" type="text" class="inputbox autowidth" size="35" value="{WEBSITE}" /></dd>
+		</dl>
+		<dl>
+			<dt><b>{L_EMAIL}</b></dt>
+			<dd><input name="email" type="text" class="inputbox autowidth" size="35" value="{EMAIL}" /></dd>
+		</dl>
+		<dl>
+			<dt><b>{L_OPENING_HOURS}</b></dt>
+			<dd><textarea name="opening_hours" cols="40" rows="4" wrap="soft" class="inputbox autowidth">{OPENING_HOURS}</textarea></dd>
+		</dl>
+		<dl>
+			<dt><b>{L_TYPE}</b></dt>
+			<dd>{L_INSURANCE}&nbsp;:&nbsp;<input type="checkbox" name="insurance" value="1" <!-- IF S_BUSINESS_INSURANCE -->checked="checked"<!-- ENDIF --> /><br />{L_GARAGE}&nbsp;:&nbsp;<input type="checkbox" name="garage" value="1" <!-- IF S_BUSINESS_GARAGE-->checked="checked"<!-- ENDIF --> /><br />{L_RETAIL}&nbsp;:&nbsp;<input type="checkbox" name="retail" value="1" <!-- IF S_BUSINESS_RETAIL -->checked="checked"<!-- ENDIF --> /><br />{L_PRODUCT_MANUFACTURER}&nbsp;:&nbsp;<input type="checkbox" name="product" value="1" <!-- IF S_BUSINESS_PRODUCT -->checked="checked"<!-- ENDIF --> /><br />{L_DYNOCENTRE}&nbsp;:&nbsp;<input type="checkbox" name="dynocentre" value="1" <!-- IF S_BUSINESS_DYNOCENTRE -->checked="checked"<!-- ENDIF --> /></dd>
+		</dl>
+	</fieldset>
+
+	<fieldset class="display-actions">
+		<input type="hidden" name="id" value="{BUSINESS_ID}" />
+		<input class="button2" type="submit" name="submit" value="{L_SUBMIT}" />
+	</fieldset>
+
+	<!-- ELSEIF S_EDIT_TRACK -->
+
+	<h3>{L_EDIT_TRACK}</h3>
+
+	<fieldset>
+		<dl>
+			<dt><b>{L_TRACK}</b>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
+			<dd><input name="title" type="text" class="inputbox autowidth" size="35" value="{TITLE}" /></dd>
+		</dl>
+		<dl>
+			<dt><b>{L_LENGTH}</b></dt>
+			<dd><input name="length" type="text" class="inputbox autowidth" size="15" value="{LENGTH}" />&nbsp;<select id="mileage_unit" name="mileage_unit"><option value="">{L_SELECT_MILEAGE_UNIT}</option><option value="">------</option><!-- BEGIN mileage --><option value="{mileage.VALUE}" <!-- IF mileage.S_SELECTED -->selected="selected"<!-- ENDIF -->>{mileage.TEXT}</option><!-- END mileage --></select></dd>
+		</dl>
+	</fieldset>
+
+	<fieldset class="display-actions">
+		<input type="hidden" name="id" value="{TRACK_ID}" />
+		<input class="button2" type="submit" name="submit" value="{L_SUBMIT}" />
+	</fieldset>
+
+	<!-- ELSEIF S_EDIT_PRODUCT -->
+
+	<h3>{L_EDIT_PRODUCT}</h3>
+
+	<fieldset>
+		<dl>
+			<dt><b>{L_CATEGORY}</b>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
+			<dd><select id="category_id" name="category_id" ><option value="">{L_SELECT_CATEGORY}</option><option value="">------</option><!-- BEGIN category--><option value="{category.VALUE}" <!-- IF category.S_SELECTED -->selected="selected"<!-- ENDIF -->>{category.TEXT}</option><!-- END category --></select>&nbsp;</dd>
+		</dl>
+		<dl>
+			<dt><b>{L_MANUFACTURER}</b>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
+			<dd><select id="manufacturer_id" name="manufacturer_id" ><option value="">{L_SELECT_MANUFACTURER}</option><option value="">------</option><!-- BEGIN manufacturer--><option value="{manufacturer.VALUE}" <!-- IF manufacturer.S_SELECTED -->selected="selected"<!-- ENDIF -->>{manufacturer.TEXT}</option><!-- END manufacturer --></select></dd>
+		</dl>
+		<dl>
+			<dt><b>{L_MODIFICATION}&nbsp;{L_PRODUCT}</b></dt>
+			<dd><input name="title" type="text" class="inputbox autowidth" size="35" value="{TITLE}" /></dd>
+		</dl>
+	</fieldset>
+
+	<fieldset class="display-actions">
+		<input type="hidden" name="id" value="{PRODUCT_ID}" />
+		<input class="button2" type="submit" name="submit" value="{L_SUBMIT}" />
+	</fieldset>
+
+	<!-- ELSEIF S_UNAPPROVED_VEHICLE -->
 
 	<h3>{L_MCP_GARAGE_UNAPPROVED_VEHICLES}</h3>
 
@@ -19,7 +142,6 @@
 		  	<th class="name">{L_COLOUR}</th>
   			<th class="name">{L_PRICE}</th>
 		  	<th class="name">{L_MILEAGE}</th>
-			<th class="name" width="5%">{L_EDIT}</th>
 			<th class="name" width="5%">{L_MARK}</th>
 		</tr>
 	</thead>
@@ -32,8 +154,7 @@
 			<td>{vehicle_row.COLOUR}</td>
 			<td>{vehicle_row.PRICE}&nbsp;{vehicle_row.CURRENCY}</td>
 			<td>{vehicle_row.MILEAGE}&nbsp;{vehicle_row.MILEAGE_UNIT}</td>
-			<td align="center"><a href="{vehicle_row.U_EDIT}" class="garage-edit-icon">{vehicle_row.EDIT}</a></td>
-			<td align="center"><input type="checkbox" class="radio" name="vehicle_id_list[]" value="{vehicle_row.ID}" /></td>
+			<td align="center"><input type="checkbox" class="radio" name="id_list[]" value="{vehicle_row.ID}" /></td>
 		</tr>
 		<!-- BEGINELSE -->
 		<tr>
@@ -45,8 +166,9 @@
 
 	<fieldset class="display-actions">
 		<input class="button2" type="submit" name="action[approve_vehicle]" value="{L_APPROVE}" />
-		&nbsp;<input class="button1" type="submit" name="action[disapprove_vehicle]" value="{L_DISAPPROVE}" />
-		<div><a href="#" onclick="marklist('mcp', 'vehicle_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'vehicle_id_list', false); return false;">{L_UNMARK_ALL}</a></div>
+		<!-- IF S_GARAGE_EDIT -->&nbsp;<input class="button1" type="submit" name="action[edit_vehicle]" value="{L_EDIT}" /><!-- ENDIF -->
+		<!-- IF S_GARAGE_DELETE -->&nbsp;<input class="button1" type="submit" name="action[disapprove_vehicle]" value="{L_DISAPPROVE}" /><!-- ENDIF -->
+		<div><a href="#" onclick="marklist('mcp', 'id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'id_list', false); return false;">{L_UNMARK_ALL}</a></div>
 	</fieldset>
 
 	<!-- ELSEIF S_UNAPPROVED_MAKE -->
@@ -64,7 +186,7 @@
 		<!-- BEGIN makes_row -->
 		<!-- IF makes_row.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
 			<td>{makes_row.MAKE}</td>
-			<td align="center"><input type="checkbox" class="radio" name="make_id_list[]" value="{makes_row.ID}" /></td>
+			<td align="center"><input type="checkbox" class="radio" name="id_list[]" value="{makes_row.ID}" /></td>
 		</tr>
 		<!-- BEGINELSE -->
 		<tr>
@@ -76,8 +198,9 @@
 
 	<fieldset class="display-actions">
 		<input class="button2" type="submit" name="action[approve_make]" value="{L_APPROVE}" />
-		&nbsp;<input class="button1" type="submit" name="action[disapprove_make_confirm]" value="{L_DISAPPROVE}" />
-		<div><a href="#" onclick="marklist('mcp', 'make_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'make_id_list', false); return false;">{L_UNMARK_ALL}</a></div>
+		<!-- IF S_GARAGE_EDIT -->&nbsp;<input class="button1" type="submit" name="action[edit_make]" value="{L_EDIT}" /><!-- ENDIF -->
+		<!-- IF S_GARAGE_DELETE -->&nbsp;<input class="button1" type="submit" name="action[disapprove_make_confirm]" value="{L_DISAPPROVE}" /><!-- ENDIF -->
+		<div><a href="#" onclick="marklist('mcp', 'id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'id_list', false); return false;">{L_UNMARK_ALL}</a></div>
 	</fieldset>
 
 	<!-- ELSEIF S_UNAPPROVED_MODEL -->
@@ -97,7 +220,7 @@
 		<!-- IF models_row.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
 			<td>{models_row.MAKE}</td>
 			<td>{models_row.MODEL}</td>
-			<td align="center"><input type="checkbox" class="radio" name="model_id_list[]" value="{models_row.ID}" /></td>
+			<td align="center"><input type="checkbox" class="radio" name="id_list[]" value="{models_row.ID}" /></td>
 		</tr>
 		<!-- BEGINELSE -->
 		<tr>
@@ -109,8 +232,9 @@
 
 	<fieldset class="display-actions">
 		<input class="button2" type="submit" name="action[approve_model]" value="{L_APPROVE}" />
-		&nbsp;<input class="button1" type="submit" name="action[disapprove_model_confirm]" value="{L_DISAPPROVE}" />
-		<div><a href="#" onclick="marklist('mcp', 'model_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'model_id_list', false); return false;">{L_UNMARK_ALL}</a></div>
+		<!-- IF S_GARAGE_EDIT -->&nbsp;<input class="button1" type="submit" name="action[edit_model]" value="{L_EDIT}" /><!-- ENDIF -->
+		<!-- IF S_GARAGE_DELETE -->&nbsp;<input class="button1" type="submit" name="action[disapprove_model_confirm]" value="{L_DISAPPROVE}" /><!-- ENDIF -->
+		<div><a href="#" onclick="marklist('mcp', 'id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'id_list', false); return false;">{L_UNMARK_ALL}</a></div>
 	</fieldset>
 
 	<!-- ELSEIF S_UNAPPROVED_BUSINESS -->
@@ -126,7 +250,6 @@
 			<th class="name">{L_WEBSITE}/{L_EMAIL}</th>
 		  	<th class="name">{L_OPENING_HOURS}</th>
 			<th class="name">{L_TYPE}</th>
-		  	<th class="name" width="5%">{L_EDIT}</th>
 			<th class="name" width="5%">{L_MARK}</th>
 		</tr>
 	</thead>
@@ -139,8 +262,7 @@
 			<td>{business_row.WEBSITE}<br />{business_row.EMAIL}</td>
 			<td>{business_row.OPENING_HOURS}</td>
 			<td>{business_row.TYPE}</td>
-			<td align="center"><a href="{business_row.U_EDIT}" class="garage-edit-icon">{business_row.EDIT}</a></td>
-			<td align="center"><input type="checkbox" class="radio" name="business_id_list[]" value="{business_row.ID}" /></td>
+			<td align="center"><input type="checkbox" class="radio" name="id_list[]" value="{business_row.ID}" /></td>
 		</tr>
 		<!-- BEGINELSE -->
 		<tr>
@@ -152,8 +274,9 @@
 
 	<fieldset class="display-actions">
 		<input class="button2" type="submit" name="action[approve_business]" value="{L_APPROVE}" />
-		&nbsp;<input class="button1" type="submit" name="action[disapprove_business_confirm]" value="{L_DISAPPROVE}" />
-		<div><a href="#" onclick="marklist('mcp', 'business_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'business_id_list', false); return false;">{L_UNMARK_ALL}</a></div>
+		<!-- IF S_GARAGE_EDIT -->&nbsp;<input class="button1" type="submit" name="action[edit_business]" value="{L_EDIT}" /><!-- ENDIF -->
+		<!-- IF S_GARAGE_DELETE -->&nbsp;<input class="button1" type="submit" name="action[disapprove_business_confirm]" value="{L_DISAPPROVE}" /><!-- ENDIF -->
+		<div><a href="#" onclick="marklist('mcp', 'id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'id_list', false); return false;">{L_UNMARK_ALL}</a></div>
 	</fieldset>
 
 <!-- ELSEIF S_UNAPPROVED_QUARTERMILE -->
@@ -172,7 +295,6 @@
 		  	<th class="name">{L_EIGHTH}</th>
 		  	<th class="name">{L_THOU}</th>
 		  	<th class="name">{L_QUART}</th>
-			<th class="name" width="5%">{L_EDIT}</th>
 			<th class="name" width="5%">{L_MARK}</th>
 		</tr>
 	</thead>
@@ -188,8 +310,7 @@
 			<td>{quartermile_row.EIGHTH}&nbsp;@&nbsp;{quartermile_row.EIGHTHMPH}</td>
 			<td>{quartermile_row.THOU}</td>
 			<td>{quartermile_row.QUART}&nbsp;@&nbsp;{quartermile_row.QUARTMPH}</td>
-			<td align="center"><a href="{quartermile_row.U_EDIT}" class="garage-edit-icon">{quartermile_row.EDIT}</a></td>
-			<td align="center"><input type="checkbox" class="radio" name="quartermile_id_list[]" value="{quartermile_row.ID}" /></td>
+			<td align="center"><input type="checkbox" class="radio" name="id_list[]" value="{quartermile_row.ID}" /></td>
 		</tr>
 		<!-- BEGINELSE -->
 		<tr>
@@ -201,8 +322,9 @@
 
 	<fieldset class="display-actions">
 		<input class="button2" type="submit" name="action[approve_quartermile]" value="{L_APPROVE}" />
-		&nbsp;<input class="button1" type="submit" name="action[disapprove_quartermile]" value="{L_DISAPPROVE}" />
-		<div><a href="#" onclick="marklist('mcp', 'quartermile_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'quartermile_id_list', false); return false;">{L_UNMARK_ALL}</a></div>
+		<!-- IF S_GARAGE_EDIT -->&nbsp;<input class="button1" type="submit" name="action[edit_quartermile]" value="{L_EDIT}" /><!-- ENDIF -->
+		<!-- IF S_GARAGE_DELETE -->&nbsp;<input class="button1" type="submit" name="action[disapprove_quartermile]" value="{L_DISAPPROVE}" /><!-- ENDIF -->
+		<div><a href="#" onclick="marklist('mcp', 'id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'id_list', false); return false;">{L_UNMARK_ALL}</a></div>
 	</fieldset>
 
 	<!-- ELSEIF S_UNAPPROVED_DYNORUN -->
@@ -221,7 +343,6 @@
 		  	<th class="name">{L_BOOST}</th>
 		  	<th class="name">{L_NITROUS}</th>
 		  	<th class="name">{L_PEAKPOINT}</th>
-		  	<th class="name" width="5%">{L_EDIT}</th>
 			<th class="name" width="5%">{L_MARK}</th>
 		</tr>
 	</thead>
@@ -237,8 +358,7 @@
 			<td>{dynorun_row.BOOST}&nbsp;{dynorun_row.BOOST_UNIT}</td>
 			<td>{dynorun_row.NITROUS}</td>
 			<td>{dynorun_row.PEAKPOINT}</td>
-			<td align="center"><a href="{dynorun_row.U_EDIT}" class="garage-edit-icon">{dynorun_row.EDIT}</a></td>
-			<td align="center"><input type="checkbox" class="radio" name="dynorun_id_list[]" value="{dynorun_row.ID}" /></td>
+			<td align="center"><input type="checkbox" class="radio" name="id_list[]" value="{dynorun_row.ID}" /></td>
 		</tr>
 		<!-- BEGINELSE -->
 		<tr>
@@ -250,8 +370,9 @@
 
 	<fieldset class="display-actions">
 		<input class="button2" type="submit" name="action[approve_dynorun]" value="{L_APPROVE}" />
-		&nbsp;<input class="button1" type="submit" name="action[disapprove_dynorun]" value="{L_DISAPPROVE}" />
-		<div><a href="#" onclick="marklist('mcp', 'dynorun_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'dynorun_id_list', false); return false;">{L_UNMARK_ALL}</a></div>
+		<!-- IF S_GARAGE_EDIT -->&nbsp;<input class="button1" type="submit" name="action[edit_dynorun]" value="{L_EDIT}" /><!-- ENDIF -->
+		<!-- IF S_GARAGE_DELETE -->&nbsp;<input class="button1" type="submit" name="action[disapprove_dynorun]" value="{L_DISAPPROVE}" /><!-- ENDIF -->
+		<div><a href="#" onclick="marklist('mcp', 'id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'id_list', false); return false;">{L_UNMARK_ALL}</a></div>
 	</fieldset>
 
 	<!-- ELSEIF S_UNAPPROVED_COMMENT -->
@@ -265,19 +386,17 @@
 			<th class="name">{L_POST}</th>
 			<th class="name">{L_AUTHOR}</th>
 			<th class="name">{L_POST_TIME}</th>
-			<th class="name" width="5%">{L_EDIT}</th>
 			<th class="name" width="5%">{L_MARK}</th>
 		</tr>
 	</thead>
 	<tbody>
 		<!-- BEGIN comment_row -->
 		<!-- IF comment_row.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
-			<td>{comment_row.VEHICLE}</td>
+				<td><a href="{comment_row.U_VEHICLE}">{comment_row.VEHICLE}</a></td>
 			<td>{comment_row.POST}</td>
-			<td>{comment_row.AUTHOR}</td>
+			<td><a href="{comment_row.U_PROFILE" <!-- IF comment_row.USERNAME_COLOUR --> style="color: {comment_row.USERNAME_COLOUR}"<!-- ENDIF -->>{comment_row.AUTHOR}</a></td>
 			<td>{comment_row.POST_TIME}</td>
-			<td align="center"><a href="{comment_row.U_EDIT}" class="garage-edit-icon">{comment_row.EDIT}</a></td>
-			<td align="center"><input type="checkbox" class="radio" name="comment_id_list[]" value="{comment_row.ID}" /></td>
+			<td align="center"><input type="checkbox" class="radio" name="id_list[]" value="{comment_row.ID}}" /></td>
 		</tr>
 		<!-- BEGINELSE -->
 		<tr>
@@ -289,8 +408,9 @@
 
 	<fieldset class="display-actions">
 		<input class="button2" type="submit" name="action[approve_comment]" value="{L_APPROVE}" />
-		&nbsp;<input class="button1" type="submit" name="action[disapprove_comment]" value="{L_DISAPPROVE}" />
-		<div><a href="#" onclick="marklist('mcp', 'comment_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'comment_id_list', false); return false;">{L_UNMARK_ALL}</a></div>
+		<!-- IF S_GARAGE_EDIT -->&nbsp;<input class="button1" type="submit" name="action[edit_comment]" value="{L_EDIT}" /><!-- ENDIF -->
+		<!-- IF S_GARAGE_DELETE -->&nbsp;<input class="button1" type="submit" name="action[disapprove_comment]" value="{L_DISAPPROVE}" /><!-- ENDIF -->
+		<div><a href="#" onclick="marklist('mcp', 'id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'id_list', false); return false;">{L_UNMARK_ALL}</a></div>
 	</fieldset>
 
 	<!-- ELSEIF S_UNAPPROVED_LAP -->
@@ -307,7 +427,6 @@
 			<th class="name">{L_CONDITION}</td>
 			<th class="name">{L_TYPE}</td>
 			<th class="name">{L_TIME}&nbsp;<span class="gensmall">(M:S:MS)</span></td>
-			<th class="name" width="5%">{L_EDIT}</th>
 			<th class="name" width="5%">{L_MARK}</th>
 		</tr>
 	</thead>
@@ -321,8 +440,7 @@
 			<td>{lap_row.CONDITION}</td>
 			<td>{lap_row.TYPE}</td>
 			<td>{lap_row.MINUTE}.{lap_row.SECOND}.{lap_row.MILLISECOND}</td>
-			<td align="center"><a href="{lap_row.U_EDIT}" class="garage-edit-icon">{lap_row.EDIT}</a></td>
-			<td align="center"><input type="checkbox" class="radio" name="lap_id_list[]" value="{lap_row.ID}" /></td>
+			<td align="center"><input type="checkbox" class="radio" name="id_list[]" value="{lap_row.ID}" /></td>
 		</tr>
 		<!-- BEGINELSE -->
 		<tr>
@@ -334,8 +452,9 @@
 
 	<fieldset class="display-actions">
 		<input class="button2" type="submit" name="action[approve_lap]" value="{L_APPROVE}" />
-		&nbsp;<input class="button1" type="submit" name="action[disapprove_lap]" value="{L_DISAPPROVE}" />
-		<div><a href="#" onclick="marklist('mcp', 'lap_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'lap_id_list', false); return false;">{L_UNMARK_ALL}</a></div>
+		<!-- IF S_GARAGE_EDIT -->&nbsp;<input class="button1" type="submit" name="action[edit_lap]" value="{L_EDIT}" /><!-- ENDIF -->
+		<!-- IF S_GARAGE_DELETE -->&nbsp;<input class="button1" type="submit" name="action[disapprove_lap]" value="{L_DISAPPROVE}" /><!-- ENDIF -->
+		<div><a href="#" onclick="marklist('mcp', 'id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'id_list', false); return false;">{L_UNMARK_ALL}</a></div>
 	</fieldset>
 
 	<!-- ELSEIF S_UNAPPROVED_TRACK -->
@@ -346,7 +465,7 @@
 	<thead>
 		<tr> 
 			<th class="name">{L_TRACK}</th>
-			<th class="name" width="5%">{L_EDIT}</th>
+			<th class="name">{L_LENGTH}</th>
 			<th class="name" width="5%">{L_MARK}</th>
 		</tr>
 	</thead>
@@ -354,8 +473,8 @@
 		<!-- BEGIN track_row -->
 		<!-- IF track_row.S_ROW_COUNT is even --><tr class="bg1"><!-- ELSE --><tr class="bg2"><!-- ENDIF -->
 			<td>{track_row.TITLE}</td>
-			<td align="center"><a href="{track_row.U_EDIT}" class="garage-edit-icon">{track_row.EDIT}</a></td>
-			<td align="center"><input type="checkbox" class="radio" name="track_id_list[]" value="{track_row.ID}" /></td>
+			<td>{track_row.LENGTH} {track_row.MILEAGE_UNIT}</td>
+			<td align="center"><input type="checkbox" class="radio" name="id_list[]" value="{track_row.ID}" /></td>
 		</tr>
 		<!-- BEGINELSE -->
 		<tr>
@@ -367,8 +486,9 @@
 
 	<fieldset class="display-actions">
 		<input class="button2" type="submit" name="action[approve_track]" value="{L_APPROVE}" />
-		&nbsp;<input class="button1" type="submit" name="action[disapprove_track_confirm]" value="{L_DISAPPROVE}" />
-		<div><a href="#" onclick="marklist('mcp', 'track_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'track_id_list', false); return false;">{L_UNMARK_ALL}</a></div>
+		<!-- IF S_GARAGE_EDIT -->&nbsp;<input class="button1" type="submit" name="action[edit_track]" value="{L_EDIT}" /><!-- ENDIF -->
+		<!-- IF S_GARAGE_DELETE -->&nbsp;<input class="button1" type="submit" name="action[disapprove_track_confirm]" value="{L_DISAPPROVE}" /><!-- ENDIF -->
+		<div><a href="#" onclick="marklist('mcp', 'id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'id_list', false); return false;">{L_UNMARK_ALL}</a></div>
 	</fieldset>
 
 <!-- ELSEIF S_UNAPPROVED_PRODUCT -->
@@ -390,7 +510,7 @@
 			<td>{products_row.PRODUCT}</td>
 			<td>{products_row.MANUFACTURER}</td>
 			<td>{products_row.CATEGORY}</td>
-			<td align="center"><input type="checkbox" class="radio" name="product_id_list[]" value="{products_row.ID}" /></td>
+			<td align="center"><input type="checkbox" class="radio" name="id_list[]" value="{products_row.ID}" /></td>
 		</tr>
 		<!-- BEGINELSE -->
 		<tr>
@@ -402,8 +522,9 @@
 
 	<fieldset class="display-actions">
 		<input class="button2" type="submit" name="action[approve_product]" value="{L_APPROVE}" />
-		&nbsp;<input class="button1" type="submit" name="action[disapprove_product_confirm]" value="{L_DISAPPROVE}" />
-		<div><a href="#" onclick="marklist('mcp', 'product_id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'product_id_list', false); return false;">{L_UNMARK_ALL}</a></div>
+		<!-- IF S_GARAGE_EDIT -->&nbsp;<input class="button1" type="submit" name="action[edit_product]" value="{L_EDIT}" /><!-- ENDIF -->
+		<!-- IF S_GARAGE_DELETE -->&nbsp;<input class="button1" type="submit" name="action[disapprove_product_confirm]" value="{L_DISAPPROVE}" /><!-- ENDIF -->
+		<div><a href="#" onclick="marklist('mcp', 'id_list', true); return false;">{L_MARK_ALL}</a> :: <a href="#" onclick="marklist('mcp', 'id_list', false); return false;">{L_UNMARK_ALL}</a></div>
 	</fieldset>
 <!-- ENDIF -->
 
@@ -425,35 +546,35 @@
 		<dt><label for="delete_action">{L_ACTION}:</label></dt>
 		<!-- IF S_TYPE_GARAGE -->
 			<dd><input type="radio" class="radio" id="delete_action" name="action_garage" value="delete" checked="checked" /> {L_DELETE_INSTALLED_MODIFICATIONS}</dd>
-			<!-- IF S_MOVE_GARAGE -->
+			<!-- IF S_MOVE_GARAGE_OPTIONS -->
 				<dd><input type="radio" class="radio" name="action_garage" value="move" /> {L_MOVE_MODIFICATIONS_TO} <select name="garage_to_id">{S_MOVE_GARAGE_OPTIONS}</select></dd>
 			<!-- ENDIF -->
 			<br /><br />
 		<!-- ENDIF -->
 		<!-- IF S_TYPE_INSURER -->
 			<dd><input type="radio" class="radio" id="delete_action" name="action_insurance" value="delete" checked="checked" /> {L_DELETE_ALL_PREMIUMS}</dd>
-			<!-- IF S_MOVE_INSURER -->
+			<!-- IF S_MOVE_INSURER_OPTIONS -->
 				<dd><input type="radio" class="radio" name="action_insurance" value="move" /> {L_MOVE_PREMIUMS_TO} <select name="insurance_to_id">{S_MOVE_INSURER_OPTIONS}</select></dd>
 			<!-- ENDIF -->
 			<br /><br />
 		<!-- ENDIF -->
 		<!-- IF S_TYPE_DYNOCENTRE -->
 			<dd><input type="radio" class="radio" id="delete_action" name="action_dynocentre" value="delete" checked="checked" /> {L_DELETE_ALL_DYNORUNS}</dd>
-			<!-- IF S_MOVE_DYNOCENTRE -->
+			<!-- IF S_MOVE_DYNOCENTRE_OPTIONS -->
 				<dd><input type="radio" class="radio" name="action_dynocentre" value="move" /> {L_MOVE_DYNORUNS_TO} <select name="dynocentre_to_id">{S_MOVE_DYNOCENTRE_OPTIONS}</select></dd>
 			<!-- ENDIF -->
 			<br /><br />
 		<!-- ENDIF -->
 		<!-- IF S_TYPE_RETAIL -->
 			<dd><input type="radio" class="radio" id="delete_action" name="action_retail" value="delete" checked="checked" /> {L_DELETE_BOUGHT_MODIFICATIONS}</dd>
-			<!-- IF S_MOVE_RETAIL -->
+			<!-- IF S_MOVE_RETAIL_OPTIONS -->
 				<dd><input type="radio" class="radio" name="action_retail" value="move" /> {L_MOVE_MODIFICATIONS_TO} <select name="retail_to_id">{S_MOVE_RETAIL_OPTIONS}</select></dd>
 			<!-- ENDIF -->
 			<br /><br />
 		<!-- ENDIF -->
 		<!-- IF S_TYPE_PRODUCT -->	
 			<dd><input type="radio" class="radio" id="delete_action" name="action_product" value="delete" checked="checked" /> {L_DELETE_MADE_MODIFICATIONS}</dd>
-			<!-- IF S_MOVE_PRODUCT -->
+			<!-- IF S_MOVE_PRODUCT_OPTIONS -->
 				<dd><input type="radio" class="radio" name="action_product" value="move" /> {L_MOVE_MODIFICATIONS_TO} <select name="product_to_id">{S_MOVE_PRODUCT_OPTIONS}</select></dd>
 			<!-- ENDIF -->
 			<br /><br />
@@ -485,7 +606,7 @@
 	<dl>
 		<dt><label for="delete_action">{L_ACTION}:</label></dt>
 		<dd><input type="radio" class="radio" id="delete_action" name="action_make" value="delete" checked="checked" /> {L_DELETE_ALL_VEHICLES}</dd>
-		<!-- IF S_MOVE -->
+		<!-- IF S_MOVE_OPTIONS -->
 			<dd><input type="radio" class="radio" name="action_make" value="move" /> {L_MOVE_VEHICLES_TO} <select name="make_to_id">{S_MOVE_OPTIONS}</select></dd>
 		<!-- ENDIF -->
 	</dl>
@@ -515,7 +636,7 @@
 	<dl>
 		<dt><label for="delete_action">{L_ACTION}:</label></dt>
 		<dd><input type="radio" class="radio" id="delete_action" name="action_model" value="delete" checked="checked" /> {L_DELETE_ALL_VEHICLES}</dd>
-		<!-- IF S_MOVE -->
+		<!-- IF S_MOVE_OPTIONS -->
 			<dd><input type="radio" class="radio" name="action_model" value="move" /> {L_MOVE_VEHICLES_TO} <select name="model_to_id">{S_MOVE_OPTIONS}</select></dd>
 		<!-- ENDIF -->
 	</dl>
@@ -545,7 +666,7 @@
 	<dl>
 		<dt><label for="delete_action">{L_ACTION}:</label></dt>
 		<dd><input type="radio" class="radio" id="delete_action" name="action_modifications" value="delete" checked="checked" /> {L_DELETE_ALL_MODIFICATIONS}</dd>
-		<!-- IF S_MOVE -->
+		<!-- IF S_MOVE_OPTIONS -->
 			<dd><input type="radio" class="radio" name="action_modifications" value="move" /> {L_MOVE_MODIFICATIONS_TO} <select name="product_to_id">{S_MOVE_OPTIONS}</select></dd>
 		<!-- ENDIF -->
 	</dl>
@@ -575,7 +696,7 @@
 	<dl>
 		<dt><label for="delete_action">{L_ACTION}:</label></dt>
 		<dd><input type="radio" class="radio" id="delete_action" name="action_laps" value="delete" checked="checked" /> {L_DELETE_ALL_LAPS}</dd>
-		<!-- IF S_MOVE -->
+		<!-- IF S_MOVE_OPTIONS -->
 			<dd><input type="radio" class="radio" name="action_laps" value="move" /> {L_MOVE_LAPS_TO} <select name="garage_to_id">{S_MOVE_OPTIONS}</select></dd>
 		<!-- ENDIF -->
 	</dl>

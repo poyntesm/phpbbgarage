@@ -182,7 +182,7 @@ class garage_quartermile
 						AND (v.make_id = mk.id AND mk.pending = 0)
 						AND (v.model_id =md.id AND md.pending = 0)",
 			'GROUP_BY'	=> 'q.vehicle_id, q.quart',
-			'ORDER_BY'	=> "q.quart DESC"
+			'ORDER_BY'	=> "q.quart ASC"
 		));
 
 		$result = $db->sql_query_limit($sql, $limit, 0);
@@ -263,7 +263,7 @@ class garage_quartermile
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'v.id as vehicle_id, u.user_id, v.user_id, q.id as qmid, qg.image_id, u.username, v.made_year, mk.make, md.model, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.dynorun_id',
+			'SELECT'	=> 'v.id as vehicle_id, u.user_id, u.user_colour, v.user_id, q.id as qmid, qg.image_id, u.username, v.made_year, mk.make, md.model, q.rt, q.sixty, q.three, q.eighth, q.eighthmph, q.thou, q.quart, q.quartmph, q.dynorun_id',
 			'FROM'		=> array(
 				GARAGE_QUARTERMILES_TABLE	=> 'q',
 				GARAGE_VEHICLES_TABLE		=> 'v',
@@ -301,6 +301,36 @@ class garage_quartermile
 		$db->sql_freeresult($result);
 
 		return $data;
+	}
+
+	/**
+	* Return vehicle id of quartermile
+	*
+	* @param int $qmid quartermile id to get vehicle id for
+	*
+	*/
+	function get_vehicle_id_for_quartermile($qmid)
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'v.id',
+			'FROM'		=> array(
+				GARAGE_VEHICLES_TABLE		=> 'v',
+				GARAGE_QUARTERMILES_TABLE	=> 'qm',
+			),
+			'WHERE'		=>  "qm.id = $qmid
+						AND v.id = qm.vehicle_id"
+		));
+
+		$result = $db->sql_query($sql);
+		$data = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $data['id'];
 	}
 
 	/**
@@ -445,42 +475,6 @@ class garage_quartermile
 	
 		$required_position++;
 		return ;
-	}
-
-	/**
-	* Approve quartermiles
-	*
-	* @param array $id_list single-dimension array holding the quartermile ids to approve
-	*
-	*/
-	function approve_quartermile($id_list)
-	{
-		global $phpbb_root_path, $phpEx, $garage;
-
-		for($i = 0; $i < count($id_list); $i++)
-		{
-			$garage->update_single_field(GARAGE_QUARTERMILES_TABLE, 'pending', 0, 'id', $id_list[$i]);
-		}
-
-		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_quartermiles"));
-	}
-
-	/**
-	* Disapprove quartermiles
-	*
-	* @param array $id_list sigle-dimension array holding the quartermile ids to disapprove
-	*
-	*/
-	function disapprove_quartermile($id_list)
-	{
-		global $phpbb_root_path, $phpEx;
-
-		for($i = 0; $i < count($id_list); $i++)
-		{
-			$this->delete_quartermile($id_list[$i]);
-		}
-
-		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_quartermiles"));
 	}
 }
 

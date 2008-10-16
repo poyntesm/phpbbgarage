@@ -14,7 +14,7 @@
 
 		<td width="72%" valign="top">
 
-				<form enctype="multipart/form-data" method="post" name="rollingroad" action="{S_MODE_ACTION}">
+				<form enctype="multipart/form-data" method="post" name="dynorun" action="{S_MODE_ACTION}">
 				<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
 				<tbody>
 					<tr>
@@ -50,7 +50,15 @@
 					<!-- ENDIF -->
 
 					<tr>
-						<td class="cat" align="center" height="28" colspan="2"><input type="hidden" value="{VID}" name="VID" /><input type="hidden" value="{DID}" name="DID" /><input type="hidden" value="{PENDING_REDIRECT}" name="pending_redirect" /><input name="submit" type="submit" value="{L_BUTTON}" class="liteoption" /></td>
+						<td class="cat" align="center" height="28" colspan="2">
+							<input type="hidden" value="{VID}" name="VID" />
+							<input type="hidden" value="{DID}" name="DID" />
+							<input type="hidden" value="{REDIRECT}" name="redirect" />
+							<input type="hidden" value="" name="primary" />
+							<input type="hidden" value="" name="secondary" />
+							<input type="hidden" value="" name="tertiary" />
+							<input name="submit2" type="submit" value="{L_BUTTON}" class="liteoption" />
+						</td>
 					</tr>
 				</tbody>
 				</table>
@@ -62,6 +70,20 @@
 				<!-- INCLUDE garage_manage_gallery.html -->
 			<!-- ENDIF -->
 		</td>
+
+<script type="text/javascript">
+<!--
+function add_dynocentre ( tertiary )
+{
+	var dynorun = document.getElementById("dynorun");
+	dynorun.action = '{S_MODE_USER_SUBMIT}';
+	dynorun.primary.value = 'dynorun' ;
+	dynorun.secondary.value = '' ;
+	dynorun.tertiary.value = tertiary ;
+	dynorun.submit() ;
+}
+-->
+</script>
 
 <!-- INCLUDE garage_footer.html -->
 

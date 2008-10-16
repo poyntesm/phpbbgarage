@@ -114,8 +114,10 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('category_id' => '', 'manufacturer_id' => '', 'product_id' => '');
-		$data = $garage->process_vars($params);
+		$params = array('category_id' => '' , 'manufacturer_id' => '', 'product_id' =>'', 'price' => '', 'shop_id' => '', 'installer_id' => '', 'install_price' => '', 'install_rating' => '', 'product_rating' => '', 'purchase_rating' => '', 'url_image' => '');
+		$data	= $garage->process_vars($params);
+		$params = array('comments' => '', 'install_comments' => '');
+		$data	+= $garage->process_mb_vars($params);
 
 		/**
 		* Handle template declarations & assignments
@@ -136,27 +138,34 @@ switch( $mode )
 		$garage_template->attach_image('modification');
 		$garage_template->category_dropdown($categories, $data['category_id']);
 		$garage_template->manufacturer_dropdown($manufacturers, $data['manufacturer_id']);
-		$garage_template->retail_dropdown($shops);
-		$garage_template->garage_dropdown($garages);
-		$garage_template->rating_dropdown('product_rating');
-		$garage_template->rating_dropdown('purchase_rating');
-		$garage_template->rating_dropdown('install_rating');
+		$garage_template->retail_dropdown($shops, $data['shop_id']);
+		$garage_template->garage_dropdown($garages, $data['installer_id']);
+		$garage_template->rating_dropdown('product_rating', $data['product_rating']);
+		$garage_template->rating_dropdown('purchase_rating', $data['purchase_rating']);
+		$garage_template->rating_dropdown('install_rating', $data['install_rating']);
 		$template->assign_vars(array(
 			'L_BUTTON' 			=> $user->lang['ADD_MODIFICATION'],
 			'L_TITLE' 			=> $user->lang['ADD_MODIFICATION'],
-			'U_SUBMIT_PRODUCT'		=> "javascript:add_product('add_modification')",
-			'U_SUBMIT_BUSINESS_SHOP'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;VID=$vid&amp;redirect=add_modification&amp;BUSINESS=" . BUSINESS_RETAIL ),
-			'U_SUBMIT_BUSINESS_GARAGE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;VID=$vid&amp;redirect=add_modification&amp;BUSINESS=". BUSINESS_GARAGE),
-			'U_SUBMIT_BUSINESS_PRODUCT'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;VID=$vid&amp;redirect=add_modification&amp;BUSINESS=". BUSINESS_PRODUCT),
+			'U_SUBMIT_PRODUCT'		=> "javascript:add_product('')",
+			'U_SUBMIT_BUSINESS_SHOP'	=> "javascript:add_shop('')",
+			'U_SUBMIT_BUSINESS_GARAGE'	=> "javascript:add_garage('')",
+			'U_SUBMIT_BUSINESS_PRODUCT'	=> "javascript:add_manufacturer('')",
 			'VID' 				=> $vid,
+			'PRICE' 			=> $data['price'],
+			'INSTALL_PRICE' 		=> $data['install_price'],
+			'MANUFACTURER_ID' 		=> $data['manufacturer_id'],
+			'PRODUCT_ID' 			=> $data['product_id'],
 			'CATEGORY_ID' 			=> $data['category_id'],
 			'MANUFACTURER_ID' 		=> $data['manufacturer_id'],
 			'PRODUCT_ID' 			=> $data['product_id'],
+			'COMMENTS' 			=> $data['comments'],
+			'INSTALL_COMMENTS' 		=> $data['install_comments'],
+			'URL_IMAGE'			=> $data['url_image'],
 			'CURRENCY'			=> $vehicle['currency'],
 			'S_DISPLAY_SUBMIT_BUSINESS'	=> ($garage_config['enable_user_submit_business'] && $auth->acl_get('u_garage_add_business')) ? true : false,
-			'S_MODE_ACTION_PRODUCT' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_product"),
-			'S_MODE_ACTION'			=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=insert_modification&amp;VID=$vid"))
-		);
+			'S_MODE_USER_SUBMIT' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_data"),
+			'S_MODE_ACTION'			=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=insert_modification&amp;VID=$vid"),
+		));
 		$garage_template->sidemenu();
 	break;
 
@@ -247,6 +256,14 @@ switch( $mode )
 		$garage_vehicle->check_ownership($vid);
 
 		/**
+		* Get any changed data incase we are arriving from creating a manufacturer, product, shop or garage
+		*/
+		$params = array('category_id' => '' , 'manufacturer_id' => '', 'product_id' =>'', 'price' => 0, 'shop_id' => '', 'installer_id' => '', 'install_price' => 0, 'install_rating' => 0, 'product_rating' => 0, 'purchase_rating' => 0);
+		$store	= $garage->process_vars($params);
+		$params = array('comments' => '', 'install_comments' => '');
+		$store	+= $garage->process_mb_vars($params);
+
+		/**
 		* Get vehicle, modification, catgories, gallery, shops, garages & manufacturers data from DB
 		*/
 		$vehicle_data 	= $garage_vehicle->get_vehicle($vid);
@@ -273,40 +290,38 @@ switch( $mode )
 			'FORUM_NAME'	=> $user->lang['EDIT_MODIFICATION'],
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;VID=$vid&amp;MID=$mid"))
 		);
-		$garage_template->category_dropdown($categories, $data['category_id']);
-		$garage_template->manufacturer_dropdown($manufacturers, $data['manufacturer_id']);
-		$garage_template->retail_dropdown($shops, $data['shop_id']);
-		$garage_template->garage_dropdown($garages, $data['installer_id']);
-		$garage_template->rating_dropdown('product_rating', $data['product_rating']);
-		$garage_template->rating_dropdown('purchase_rating', $data['purchase_rating']);
-		$garage_template->rating_dropdown('install_rating', $data['install_rating']);
+		$garage_template->category_dropdown($categories, (!empty($store['category_id'])) ? $store['category_id'] : $data['category_id']);
+		$garage_template->manufacturer_dropdown($manufacturers, (!empty($store['manufacturer_id'])) ? $store['manufacturer_id'] : $data['manufacturer_id']);
+		$garage_template->retail_dropdown($shops, (!empty($store['shop_id'])) ? $store['shop_id'] : $data['shop_id']);
+		$garage_template->garage_dropdown($garages, (!empty($store['installer_id'])) ? $store['installer_id'] : $data['installer_id']);
+		$garage_template->rating_dropdown('product_rating', (!empty($store['product_rating'])) ? $store['product_rating'] : $data['product_rating']);
+		$garage_template->rating_dropdown('purchase_rating', (!empty($store['purchase_rating'])) ? $store['purchase_rating'] : $data['purchase_rating']);
+		$garage_template->rating_dropdown('install_rating', (!empty($store['install_rating'])) ? $store['install_rating'] : $data['install_rating']);
 		$garage_template->attach_image('modification');
 		$template->assign_vars(array(
-       			'L_TITLE' 		=> $user->lang['MODIFY_MOD'],
-			'L_BUTTON' 		=> $user->lang['MODIFY_MOD'],
-			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=edit_modification&amp;VID=$vid&amp;MID=$mid"),
-			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=manage_modification_gallery&amp;VID=$vid&amp;MID=$mid"),
-			'U_SUBMIT_PRODUCT'	=> "javascript:add_product('edit_modification')",
-			'U_SUBMIT_SHOP'		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;VID=$vid&amp;redirect=add_modification&amp;BUSINESS=" . BUSINESS_RETAIL),
-			'U_SUBMIT_GARAGE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;VID=$vid&amp;redirect=add_modification&amp;BUSINESS=" . BUSINESS_GARAGE),
-			'MID' 			=> $mid,
-			'VID' 			=> $vid,
-			'TITLE' 		=> $data['title'],
-			'MAKE' 			=> $data['make'],
-			'MODEL' 		=> $data['model'],
-			'PRICE' 		=> $data['price'],
-			'INSTALL_PRICE' 	=> $data['install_price'],
-			'MANUFACTURER_ID' 	=> $data['manufacturer_id'],
-			'PRODUCT_ID' 		=> $data['product_id'],
-			'CATEGORY_ID' 		=> $data['category_id'],
-			'MANUFACTURER_ID' 	=> $data['manufacturer_id'],
-			'PRODUCT_ID' 		=> $data['product_id'],
-			'COMMENTS' 		=> $data['comments'],
-			'INSTALL_COMMENTS' 	=> $data['install_comments'],
-			'CURRENCY'		=> $vehicle_data['currency'],
-			'S_DISPLAY_SUBMIT_BUS'	=> $garage_config['enable_user_submit_business'],
-			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=update_modification"),
-			'S_IMAGE_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=insert_modification_image"),
+       			'L_TITLE' 			=> $user->lang['MODIFY_MOD'],
+			'L_BUTTON' 			=> $user->lang['MODIFY_MOD'],
+			'U_EDIT_DATA' 			=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=edit_modification&amp;VID=$vid&amp;MID=$mid"),
+			'U_MANAGE_GALLERY' 		=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=manage_modification_gallery&amp;VID=$vid&amp;MID=$mid"),
+			'U_SUBMIT_PRODUCT'		=> "javascript:add_product('edit')",
+			'U_SUBMIT_BUSINESS_SHOP'	=> "javascript:add_shop('edit')",
+			'U_SUBMIT_BUSINESS_GARAGE'	=> "javascript:add_garage('edit')",
+			'U_SUBMIT_BUSINESS_PRODUCT'	=> "javascript:add_manufacturer('edit')",
+			'MID' 				=> $mid,
+			'VID' 				=> $vid,
+			'PRICE' 			=> (!empty($store['price'])) ? $store['price'] : $data['price'],
+			'INSTALL_PRICE'	 		=> (!empty($store['install_price'])) ? $store['install_price'] : $data['install_price'],
+			'PRODUCT_ID' 			=> (!empty($store['product_id'])) ? $store['product_id'] : $data['product_id'],
+			'CATEGORY_ID' 			=> (!empty($store['category_id'])) ? $store['category_id'] : $data['category_id'],
+			'MANUFACTURER_ID' 		=> (!empty($store['manufacturer_id'])) ? $store['manufacturer_id'] : $data['manufacturer_id'],
+			'PRODUCT_ID' 			=> (!empty($store['product_id'])) ? $store['product_id'] : $data['product_id'],
+			'COMMENTS' 			=> (!empty($store['comments'])) ? $store['comments'] : $data['comments'],
+			'INSTALL_COMMENTS' 		=> (!empty($store['install_comments'])) ? $store['install_comments'] : $data['install_comments'],
+			'CURRENCY'			=> $vehicle_data['currency'],
+			'S_DISPLAY_SUBMIT_BUS'		=> $garage_config['enable_user_submit_business'],
+			'S_MODE_USER_SUBMIT' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_data"),
+			'S_MODE_ACTION' 		=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=update_modification"),
+			'S_IMAGE_MODE_ACTION' 		=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=insert_modification_image"),
 		));
 		for ($i = 0, $count = sizeof($gallery_data);$i < $count; $i++)
 		{
@@ -570,6 +585,77 @@ switch( $mode )
 		* All work complete for mode, so redirect to correct page
 		*/
 		redirect(append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=edit_modification&amp;VID=$vid&amp;MID=$mid#images"));
+		break;
+
+	case 'insert_product':
+
+		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
+		if ($user->data['user_id'] == ANONYMOUS)
+		{
+			login_box("garage.$phpEx?mode=user_submit_product");
+		}
+
+		//Let Check The User Is Allowed Perform This Action
+		if (!$auth->acl_get('u_garage_add_product'))
+		{
+			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
+		}
+
+		//Get All Data Posted And Make It Safe To Use
+		$params = array('VID' => '', 'MID' => '', 'category_id' => '', 'manufacturer_id' => '', 'product_id' => '', 'price' => 0, 'shop_id' => '', 'installer_id' => '', 'install_price' => 0, 'install_rating' => 0, 'product_rating' => 0, 'editupload' => '', 'image_id' => '', 'purchase_rating' => 0, 'url_image' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '');
+		$data	= $garage->process_vars($params);
+		$params = array('title'=> '', 'comments' => '', 'install_comments' => '');
+		$data	+= $garage->process_mb_vars($params);
+
+		//Checks All Required Data Is Present
+		$params = array('title', 'category_id', 'manufacturer_id');
+		$garage->check_required_vars($params);
+
+		//If Needed Perform Notifications If Configured
+		if ($garage_config['enable_product_approval'])
+		{
+			$garage->pending_notification('unapproved_products');
+		}
+
+		//Create The Product
+		$data['product_id'] = $garage_modification->insert_product($data);
+
+		//Now rather than redirect.. we build a page with all data
+		page_header($user->lang['GARAGE']);
+
+		//Set Template Files In Use For This Mode
+		$template->set_filenames(array(
+			'header' 	=> 'garage_header.html',
+			'body'   	=> 'garage_user_submit_data.html')
+		);
+
+		$user_submit_action = append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=add_modification");
+		if ($data['tertiary'] == "edit")
+		{
+			$user_submit_action = append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=edit_modification&amp;VID={$data['VID']}&amp;MID={$data['MID']}");
+		}
+
+		$template->assign_vars(array(
+			'L_BUTTON_LABEL'		=> $user->lang['RETURN_TO_ITEM'],
+			'S_USER_SUBMIT_SUCCESS'		=> true,
+			'S_USER_SUBMIT_ACTION'		=> $user_submit_action,
+		));
+
+		foreach ($data as $key => $value)
+		{
+			if (empty($value))
+			{
+				continue;
+			}
+			$template->assign_block_vars('hidden_data', array(
+				'VALUE'	=> $value,
+				'NAME'	=> $key,
+			));
+		}
+
+		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
+		$garage_template->sidemenu();
+
 	break;
 }
 $garage_template->version_notice();

@@ -113,8 +113,11 @@ function build_model_list()
 
 									<fieldset>
 										<input type="hidden" value="{VID}" name="VID" />
+										<input type="hidden" value="" name="primary" />
+										<input type="hidden" value="" name="secondary" />
+										<input type="hidden" value="" name="tertiary" />
+										<input type="hidden" value="{REDIRECT}" name="redirect" />
 									</fieldset>
-
 
 									<fieldset class="submit-buttons">
 										<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 
@@ -153,17 +156,23 @@ function build_model_list()
 //Fill The Model Dropdown If We Are Editing + Select Correct One
 update_model_list('{MAKE_ID}', '{MODEL_ID}');
 
-function add_model ()
+function add_model ( tertiary )
 {
 	var vehicle = document.getElementById("vehicle");
-	vehicle.action = '{S_MODE_ACTION_MODEL}';
+	vehicle.action = '{S_MODE_USER_SUBMIT}';
+	vehicle.primary.value = 'vehicle' ;
+	vehicle.secondary.value = 'model' ;
+	vehicle.tertiary.value = tertiary ;
 	vehicle.submit() ;
 }
 
-function add_make ()
+function add_make ( tertiary )
 {
 	var vehicle = document.getElementById("vehicle");
-	vehicle.action = '{S_MODE_ACTION_MAKE}';
+	vehicle.action = '{S_MODE_USER_SUBMIT}';
+	vehicle.primary.value = 'vehicle' ;
+	vehicle.secondary.value = 'make' ;
+	vehicle.tertiary.value = tertiary ;
 	vehicle.submit();
 }
 -->

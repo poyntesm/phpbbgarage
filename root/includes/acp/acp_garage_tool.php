@@ -121,17 +121,17 @@ class acp_garage_tool
 				}
 
 				$template->assign_vars(array(
-					'S_ACTION' => $this->u_action . "&amp;action=orphan_remove",
+					'S_GARAGE_ORPHAN_REMOVE_ACTION' => $this->u_action . "&amp;action=orphan_delete",
 				));
 			break;
 
 			/**
 			* Remove orphan files from disk
 			*/
-			case 'orphan_remove':
+			case 'orphan_delete':
 				$output = $files = array();
 
-				$files = request_var('orphan_attach');
+				$files = request_var('orphan_attach', '');
 		
 			        if (!empty($files))
 		        	{

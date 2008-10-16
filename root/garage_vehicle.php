@@ -90,6 +90,155 @@ switch( $mode )
 	/**
 	* Display page to create new vehicle
 	*/
+	case 'insert_make':
+
+		//User Is Annoymous...So Not Allowed To Create A Vehicle
+		if ($user->data['user_id'] == ANONYMOUS)
+		{
+			login_box("garage.$phpEx?mode=user_submit_make");
+		}
+
+		//Let Check The User Is Allowed Perform This Action
+		if (!$auth->acl_get('u_garage_add_make_model'))
+		{
+			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
+		}
+
+		//Get All Data Posted And Make It Safe To Use
+		$params = array('VID' => '', 'made_year' => '', 'mileage' => '', 'mileage_units' => '', 'price' => '', 'currency' => '', 'engine_type' => '', 'url_image' => '', 'tertiary' => '', 'redirect' => '');
+		$data = $garage->process_vars($params);
+		$params = array('make' => '', 'colour' => '', 'comments' => '');
+		$data += $garage->process_mb_vars($params);
+
+		//Checks All Required Data Is Present
+		$params = array('make');
+		$garage->check_required_vars($params);
+
+		//Check Make Does Not Already Exist
+		if ($garage_model->count_make($data['make']) > 0)
+		{
+			redirect(append_sid("garage.$phpEx?mode=error&amp;EID=27", true));
+		}
+
+		//Create The Make
+		$make_id = $garage_model->insert_make($data);
+		$data['make_id'] = $make_id;
+
+		//Perform Any Pending Notifications Requried
+		$garage->pending_notification('unapproved_makes');
+
+		//Now rather than redirect.. we build a page with all data
+		page_header($user->lang['GARAGE']);
+
+		//Set Template Files In Use For This Mode
+		$template->set_filenames(array(
+			'header' 	=> 'garage_header.html',
+			'body'   	=> 'garage_user_submit_data.html')
+		);
+
+		$user_submit_action = append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_vehicle");
+		if ($data['tertiary'] == "edit")
+		{
+			$user_submit_action = append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;VID={$data['VID']}");
+		}
+
+		$template->assign_vars(array(
+			'L_BUTTON_LABEL'		=> $user->lang['RETURN_TO_ITEM'],
+			'S_USER_SUBMIT_SUCCESS'		=> true,
+			'S_USER_SUBMIT_ACTION'		=> $user_submit_action,
+		));
+
+		foreach ($data as $key => $value)
+		{
+			if (empty($value))
+			{
+				continue;
+			}
+			$template->assign_block_vars('hidden_data', array(
+				'VALUE'	=> $value,
+				'NAME'	=> $key,
+			));
+		}
+
+		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
+		$garage_template->sidemenu();
+
+	break;
+	/**
+	* Display page to create new vehicle
+	*/
+	case 'insert_model':
+
+		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
+		if ($user->data['user_id'] == ANONYMOUS)
+		{
+			login_box("garage.$phpEx?mode=user_submit_model");
+		}
+
+		//Let Check The User Is Allowed Perform This Action
+		if (!$auth->acl_get('u_garage_add_make_model'))
+		{
+			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
+		}
+
+		//Get All Data Posted And Make It Safe To Use
+		$params = array('VID' => '', 'make_id' => '', 'made_year' => '', 'mileage' => '', 'mileage_units' => '', 'price' => '', 'currency' => '', 'engine_type' => '', 'url_image' => '', 'tertiary' => '', 'redirect' => '');
+		$data = $garage->process_vars($params);
+		$params = array('model' => '', 'colour' => '', 'comments' => '');
+		$data += $garage->process_mb_vars($params);
+
+		//Checks All Required Data Is Present
+		$params = array('make_id', 'model');
+		$garage->check_required_vars($params);
+
+		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
+		$garage->pending_notification('unapproved_models');
+
+		//Create The Model
+		$model_id = $garage_model->insert_model($data);
+		$data['model_id'] = $model_id;
+
+		//Now rather than redirect.. we build a page with all data
+		page_header($user->lang['GARAGE']);
+
+		//Set Template Files In Use For This Mode
+		$template->set_filenames(array(
+			'header' 	=> 'garage_header.html',
+			'body'   	=> 'garage_user_submit_data.html')
+		);
+
+		$user_submit_action = append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_vehicle");
+		if ($data['tertiary'] == "edit")
+		{
+			$user_submit_action = append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;VID={$data['VID']}");
+		}
+
+		$template->assign_vars(array(
+			'L_BUTTON_LABEL'		=> $user->lang['RETURN_TO_ITEM'],
+			'S_USER_SUBMIT_SUCCESS'		=> true,
+			'S_USER_SUBMIT_ACTION'		=> $user_submit_action,
+		));
+
+		foreach ($data as $key => $value)
+		{
+			if (empty($value))
+			{
+				continue;
+			}
+			$template->assign_block_vars('hidden_data', array(
+				'VALUE'	=> $value,
+				'NAME'	=> $key,
+			));
+		}
+
+		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
+		$garage_template->sidemenu();
+
+	break;
+
+	/**
+	* Display page to create new vehicle
+	*/
 	case 'add_vehicle':
 		/**
 		* Check user logged in, else redirecting to login with return address to get them back
@@ -116,18 +265,20 @@ switch( $mode )
 		}
 
 		/**
-		* Get make, model & year data from web server
-		* If no make or model use default configuration
-		*/
-		$year	= request_var('YEAR', '');
-		$make	= request_var('MAKE_ID', $garage_config['default_make_id']);
-		$model	= request_var('MODEL_ID', $garage_config['default_model_id']);
-
-		/**
 		* Get years & makes data from DB
 		*/
 		$years = $garage->year_list();
 		$makes = $garage_model->get_all_makes();
+
+		/**
+		* Lets try new way of remembering any data entered before user heads to create some needed item(s)
+		*/ 
+		$params = array('made_year' => '', 'make_id' => $garage_config['default_make_id'], 'model_id' => $garage_config['default_model_id'], 'mileage' => '', 'mileage_units' => '', 'price' => '', 'currency' => '', 'engine_type' => '', 'url_image' => '');
+		$data = $garage->process_vars($params);
+		$params = array('colour' => '', 'comments' => '');
+		$data += $garage->process_mb_vars($params);
+		$data['make'] = $data['make_id'];
+		$data['model'] = $data['model_id'];
 
 		/**
 		* Handle template declarations & assignments
@@ -138,22 +289,28 @@ switch( $mode )
 			'body'   	=> 'garage_vehicle.html')
 		);
 		$garage_template->attach_image('vehicle');
-		$garage_template->make_dropdown($makes, $make);
-		$garage_template->engine_dropdown();
-		$garage_template->currency_dropdown();
-		$garage_template->mileage_dropdown();
-		$garage_template->year_dropdown($years, $year);
+		$garage_template->make_dropdown($makes, $data['make_id']);
+		$garage_template->engine_dropdown($data['engine_type']);
+		$garage_template->currency_dropdown($data['currency']);
+		$garage_template->mileage_dropdown($data['mileage_units']);
+		$garage_template->year_dropdown($years, $data['made_year']);
 		$template->assign_vars(array(
 			'L_TITLE' 		=> $user->lang['CREATE_NEW_VEHICLE'],
 			'L_BUTTON' 		=> $user->lang['CREATE_NEW_VEHICLE'],
 			'U_USER_SUBMIT_MAKE' 	=> "javascript:add_make()",
 			'U_USER_SUBMIT_MODEL' 	=> "javascript:add_model()",
-			'MAKE_ID' 		=> $make,
-			'MODEL_ID'		=> $model,
+			'MAKE' 			=> $data['make'],
+			'MAKE_ID' 		=> $data['make_id'],
+			'MODEL' 		=> $data['model'],
+			'MODEL_ID' 		=> $data['model_id'],
+			'COLOUR' 		=> $data['colour'],
+			'MILEAGE' 		=> $data['mileage'],
+			'PRICE' 		=> $data['price'],
+			'COMMENTS' 		=> $data['comments'],
+			'URL_IMAGE'		=> $data['url_image'],
 			'S_DISPLAY_SUBMIT_MAKE'	=> $garage_config['enable_user_submit_make'],
 			'S_DISPLAY_SUBMIT_MODEL'=> $garage_config['enable_user_submit_make'],
-			'S_MODE_ACTION_MAKE' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_make"),
-			'S_MODE_ACTION_MODEL' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_model"),
+			'S_MODE_USER_SUBMIT' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_data"),
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=insert_vehicle"))
 		);
 		$garage_template->sidemenu();		
@@ -261,6 +418,14 @@ switch( $mode )
 		$garage_vehicle->check_ownership($vid);
 
 		/**
+		* Get any changed data incase we are arriving from creating a mark or model
+		*/
+		$params	= array('made_year' => '', 'make_id' => '', 'model_id' => '', 'mileage' => 0, 'mileage_units' => '', 'price' => 0, 'currency' => '', 'engine_type' => 0, 'redirect' => '');
+		$store	= $garage->process_vars($params);
+		$params	= array('colour' => '', 'comments' => '');
+		$store	+= $garage->process_mb_vars($params);
+
+		/**
 		* Get vehicle, gallery, years & makes data from DB
 		*/
 		$data 		= $garage_vehicle->get_vehicle($vid);
@@ -284,32 +449,30 @@ switch( $mode )
 			'FORUM_NAME'	=> $user->lang['EDIT_VEHICLE'],
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;VID=$vid"))
 		);
-		$garage_template->make_dropdown($makes, $data['make_id']);
-		$garage_template->engine_dropdown($data['engine_type']);
-		$garage_template->currency_dropdown($data['currency']);
-		$garage_template->mileage_dropdown($data['mileage_unit']);
-		$garage_template->year_dropdown($years, $data['made_year']);
+		$garage_template->make_dropdown($makes, (!empty($store['make_id'])) ? $store['make_id'] : $data['make_id']);
+		$garage_template->engine_dropdown((!empty($store['engine_type'])) ? $store['engine_type'] : $data['engine_type']);
+		$garage_template->currency_dropdown((!empty($store['currency'])) ? $store['currency'] : $data['currency']);
+		$garage_template->mileage_dropdown((!empty($store['mileage_units'])) ? $store['mileage_units'] : $data['mileage_unit']);
+		$garage_template->year_dropdown($years, (!empty($store['made_year'])) ? $store['made_year'] : $data['made_year']);
 		$garage_template->attach_image('vehicle');
 		$template->assign_vars(array(
        			'L_TITLE' 		=> $user->lang['EDIT_VEHICLE'],
 			'L_BUTTON' 		=> $user->lang['EDIT_VEHICLE'],
 			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;VID=$vid"),
 			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=manage_vehicle_gallery&amp;VID=$vid"),
-			'U_USER_SUBMIT_MAKE' 	=> "javascript:add_make()",
-			'U_USER_SUBMIT_MODEL' 	=> "javascript:add_model()",
+			'U_USER_SUBMIT_MAKE' 	=> "javascript:add_make('edit')",
+			'U_USER_SUBMIT_MODEL' 	=> "javascript:add_model('edit')",
 			'VID' 			=> $vid,
-			'MAKE' 			=> $data['make'],
-			'MAKE_ID' 		=> $data['make_id'],
-			'MODEL' 		=> $data['model'],
-			'MODEL_ID' 		=> $data['model_id'],
-			'COLOUR' 		=> $data['colour'],
-			'MILEAGE' 		=> $data['mileage'],
-			'PRICE' 		=> $data['price'],
-			'COMMENTS' 		=> $data['comments'],
+			'MAKE_ID' 		=> (!empty($store['make_id'])) ? $store['make_id'] : $data['make_id'],
+			'MODEL_ID' 		=> (!empty($store['model_id'])) ? $store['model_id'] : $data['model_id'],
+			'COLOUR' 		=> (!empty($store['colour'])) ? $store['colour'] : $data['colour'],
+			'MILEAGE' 		=> (!empty($store['mileage'])) ? $store['mileage'] : $data['mileage'],
+			'PRICE' 		=> (!empty($store['price'])) ? $store['price'] : $data['price'],
+			'COMMENTS' 		=> (!empty($store['comments'])) ? $store['comments'] : $data['comments'],
+			'REDIRECT' 		=> $store['redirect'],
 			'S_DISPLAY_SUBMIT_MAKE'	=> $garage_config['enable_user_submit_make'],
 			'S_DISPLAY_SUBMIT_MODEL'=> $garage_config['enable_user_submit_make'],
-			'S_MODE_ACTION_MAKE' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_make"),
-			'S_MODE_ACTION_MODEL' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_model"),
+			'S_MODE_USER_SUBMIT' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_data"),
 			'S_MODE_ACTION'		=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=update_vehicle"),
 			'S_IMAGE_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=insert_vehicle_image"),
 		));
@@ -346,7 +509,7 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('made_year' => '', 'make_id' => '', 'model_id' => '', 'mileage' => 0, 'mileage_units' => '', 'price' => 0, 'currency' => '', 'engine_type' => 0);
+		$params = array('made_year' => '', 'make_id' => '', 'model_id' => '', 'mileage' => 0, 'mileage_units' => '', 'price' => 0, 'currency' => '', 'engine_type' => 0, 'redirect' => '');
 		$data = $garage->process_vars($params);
 		$params = array('colour' => '', 'comments' => '');
 		$data += $garage->process_mb_vars($params);
@@ -375,6 +538,10 @@ switch( $mode )
 		/**
 		* All work complete for mode, so redirect to correct page
 		*/
+		if ($data['redirect'] == 'MCP')
+		{
+			redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_vehicles"));
+		}
 		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"));
 	break;
 

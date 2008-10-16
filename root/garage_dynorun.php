@@ -101,6 +101,12 @@ switch( $mode )
 		$garage_vehicle->check_ownership($vid);
 
 		/**
+		* Get all required/optional data and check required data is present
+		*/
+		$params = array('VID' => '', 'dynocentre_id' => '', 'bhp' => '', 'bhp_unit' => '', 'torque' => '', 'torque_unit' => '', 'boost' => '', 'boost_unit' => '', 'nitrous' => '', 'peakpoint' => '', 'url_image' => '');
+		$data 	= $garage->process_vars($params);
+
+		/**
 		* Get dynocentres & vehicle data from DB
 		*/
 		$dynocentres = $garage_business->get_business_by_type(BUSINESS_DYNOCENTRE);
@@ -123,18 +129,25 @@ switch( $mode )
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_dynorun&amp;VID=$vid"))
 		);
 		$garage_template->attach_image('dynorun');
-		$garage_template->nitrous_dropdown();
-		$garage_template->power_dropdown('bhp_unit');
-		$garage_template->power_dropdown('torque_unit');
-		$garage_template->boost_dropdown();
-		$garage_template->dynocentre_dropdown($dynocentres);
+		$garage_template->nitrous_dropdown($data['nitrous']);
+		$garage_template->power_dropdown('bhp_unit', $data['bhp_unit']);
+		$garage_template->power_dropdown('torque_unit', $data['torque_unit']);
+		$garage_template->boost_dropdown($data['boost_unit']);
+		$garage_template->dynocentre_dropdown($dynocentres, $data['dynocentre_id']);
 		$template->assign_vars(array(
 			'L_TITLE'  			=> $user->lang['ADD_NEW_RUN'],
 			'L_BUTTON'  			=> $user->lang['ADD_NEW_RUN'],
-			'U_SUBMIT_BUSINESS_DYNOCENTRE'	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_business&amp;VID=$vid&amp;redirect=add_dynorun&amp;BUSINESS=" . BUSINESS_DYNOCENTRE ),
+			'U_SUBMIT_BUSINESS_DYNOCENTRE'	=> 'javascript:add_dynocentre()',
 			'VID' 				=> $vid,
-			'S_MODE_ACTION' 		=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=insert_dynorun"))
-         	);
+			'BHP' 				=> $data['bhp'],
+			'TORQUE' 			=> $data['torque'],
+			'BOOST' 			=> $data['boost'],
+			'NITROUS' 			=> $data['nitrous'],
+			'PEAKPOINT'	 		=> $data['peakpoint'],
+			'URL_IMAGE'			=> $data['url_image'],
+			'S_MODE_ACTION' 		=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=insert_dynorun"),
+			'S_MODE_USER_SUBMIT' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_data"),
+         	));
 		$garage_template->sidemenu();
 	break;
 
@@ -237,9 +250,23 @@ switch( $mode )
 		}
 
 		/**
+		* Check we have a VID supplied
+		*/
+		if (empty($vid))
+		{
+			$vid = $garage_dynorun->get_vehicle_for_dynorun($did);
+		}
+
+		/**
 		* Check vehicle ownership, only owners & moderators with correct permissions get past here
 		*/
 		$garage_vehicle->check_ownership($vid);
+
+		/**
+		* Get any changed data incase we are arriving from creating a dynocentre
+		*/
+		$params = array('dynocentre_id' => '', 'bhp' => '', 'bhp_unit' => '', 'torque' => 0, 'torque_unit' => '', 'boost' => 0, 'boost_unit' => 'PSI', 'nitrous' => 0, 'peakpoint' => 0, 'redirect' => '');
+		$store 	= $garage->process_vars($params);
 
 		/**
 		* Get vehicle, dynorun, dynocentres & gallery data from DB
@@ -266,24 +293,26 @@ switch( $mode )
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_vehicle&amp;VID=$vid&amp;DID=$did"))
 		);
 		$garage_template->attach_image('dynorun');
-		$garage_template->nitrous_dropdown($data['nitrous']);
-		$garage_template->power_dropdown('bhp_unit', $data['bhp_unit']);
-		$garage_template->power_dropdown('torque_unit', $data['torque_unit']);
-		$garage_template->boost_dropdown($data['boost_unit']);
-		$garage_template->dynocentre_dropdown($dynocentres, $data['dynocentre_id']);
+		$garage_template->nitrous_dropdown((!empty($store['nitrous'])) ? $store['nitrous'] : $data['nitrous']);
+		$garage_template->power_dropdown('bhp_unit', (!empty($store['bhp_unit'])) ? $store['bhp_unit'] : $data['bhp_unit']);
+		$garage_template->power_dropdown('torque_unit', (!empty($store['torque_unit'])) ? $store['torque_unit'] : $data['torque_unit']);
+		$garage_template->boost_dropdown((!empty($store['boost_unit'])) ? $store['boost_unit'] : $data['boost_unit']);
+		$garage_template->dynocentre_dropdown($dynocentres, (!empty($store['dynocentre_id'])) ? $store['dynocentre_id'] : $data['dynocentre_id']);
 		$template->assign_vars(array(
 			'L_TITLE'  		=> $user->lang['EDIT_RUN'],
 			'L_BUTTON'  		=> $user->lang['EDIT_RUN'],
 			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=edit_dynorun&amp;VID=$vid&amp;DID=$did"),
 			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=edit_dynorun&amp;VID=$vid&amp;DID=$did#images"),
+			'U_SUBMIT_BUSINESS_DYNOCENTRE'=> "javascript:add_dynocentre('edit')",
+			'S_MODE_USER_SUBMIT' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_data"),
 			'VID' 			=> $vid,
 			'DID' 			=> $did,
-			'BHP' 			=> $data['bhp'],
-			'TORQUE' 		=> $data['torque'],
-			'BOOST' 		=> $data['boost'],
-			'NITROUS' 		=> $data['nitrous'],
-			'PEAKPOINT' 		=> $data['peakpoint'],
-			'PENDING_REDIRECT'	=> request_var('PENDING', ''),
+			'BHP' 			=> (!empty($store['bhp'])) ? $store['bhp'] : $data['bhp'],
+			'TORQUE' 		=> (!empty($store['torque'])) ? $store['torque'] : $data['torque'],
+			'BOOST' 		=> (!empty($store['boost'])) ? $store['boost'] : $data['boost'],
+			'NITROUS' 		=> (!empty($store['nitrous'])) ? $store['nitrous'] : $data['nitrous'],
+			'PEAKPOINT' 		=> (!empty($store['peakpoint'])) ? $store['peakpoint'] : $data['peakpoint'],
+			'REDIRECT' 		=> $store['redirect'],
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=update_dynorun"),
 			'S_IMAGE_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=insert_dynorun_image"),
 		));
@@ -320,7 +349,7 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('dynocentre_id' => '', 'bhp' => '', 'bhp_unit' => '', 'torque' => '', 'torque_unit' => '', 'boost' => '', 'boost_unit' => '', 'nitrous' => '', 'peakpoint' => '', 'editupload' => '', 'image_id' => '', 'pending_redirect' => '');
+		$params = array('dynocentre_id' => '', 'bhp' => '', 'bhp_unit' => '', 'torque' => '', 'torque_unit' => '', 'boost' => '', 'boost_unit' => '', 'nitrous' => '', 'peakpoint' => '', 'editupload' => '', 'image_id' => '', 'redirect' => '');
 		$data 	= $garage->process_vars($params);
 		$params = array('dynocentre_id', 'bhp', 'bhp_unit');
 		$garage->check_required_vars($params);
@@ -347,7 +376,7 @@ switch( $mode )
 		/**
 		* If editted by MCP redirect back to MCP
 		*/
-		if ($data['pending_redirect'] == 'MCP')
+		if ($data['redirect'] == 'MCP')
 		{
 			redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_dynoruns"));
 		}

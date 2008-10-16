@@ -110,7 +110,7 @@ class garage_track
 	*/
 	function update_track($data)
 	{
-		global $db, $tid, $garage_config;
+		global $db, $garage_config;
 
 		$update_sql = array(
 			'title' 	=> $data['title'],
@@ -121,7 +121,7 @@ class garage_track
 
 		$sql = 'UPDATE ' . GARAGE_TRACKS_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
-			WHERE id = $tid";
+			WHERE id = " . $data['id'];
 
 
 		$db->sql_query($sql);
@@ -199,6 +199,36 @@ class garage_track
 	}
 
 	/**
+	* Return vehicle id of lap
+	*
+	* @param int $lid lap id to get vehicle id for
+	*
+	*/
+	function get_vehicle_id_for_lap($lid)
+	{
+		global $db;
+
+		$data = null;
+
+		$sql = $db->sql_build_query('SELECT', 
+			array(
+			'SELECT'	=> 'v.id',
+			'FROM'		=> array(
+				GARAGE_VEHICLES_TABLE	=> 'v',
+				GARAGE_LAPS_TABLE	=> 'l',
+			),
+			'WHERE'		=>  "l.id = $lid
+						AND v.id = l.vehicle_id"
+		));
+
+		$result = $db->sql_query($sql);
+		$data = $db->sql_fetchrow($result);
+		$db->sql_freeresult($result);
+
+		return $data['id'];
+	}
+
+	/**
 	* Return data for a specific lap
 	*
 	* @param int $lid lap id to return data for
@@ -236,8 +266,8 @@ class garage_track
 						AND l.track_id = t.id
 						AND l.vehicle_id = v.id
 						AND v.user_id = u.user_id
-						AND v.make_id = mk.id AND mk.pending = 0
-						AND v.model_id = md.id AND md.pending = 0"
+						AND v.make_id = mk.id
+						AND v.model_id = md.id"
 		));
 
 		$result = $db->sql_query($sql);
@@ -291,7 +321,7 @@ class garage_track
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'v.id, v.made_year, v.user_id, mk.make, md.model, u.username, u.user_id, t.title, l.*, i.attach_id, l.id as lid, v.made_year, mk.make, md.model',
+			'SELECT'	=> 'v.id, v.made_year, v.user_id, mk.make, md.model, u.username, u.user_id, u.user_colour, t.title, l.*, i.attach_id, l.id as lid, v.made_year, mk.make, md.model',
 			'FROM'		=> array(
 				GARAGE_LAPS_TABLE	=> 'l',
 				GARAGE_TRACKS_TABLE	=> 't',
@@ -314,8 +344,8 @@ class garage_track
 						AND l.track_id = t.id
 						AND l.vehicle_id = v.id
 						AND v.user_id = u.user_id
-						AND v.make_id = mk.id AND mk.pending = 0
-						AND v.model_id = md.id AND md.pending = 0"
+						AND v.make_id = mk.id
+						AND v.model_id = md.id"
 		));
 
 		$result = $db->sql_query($sql);
@@ -582,78 +612,6 @@ class garage_track
 		{
 			return $user->lang['TRACKDAY'];
 		}
-	}
-
-	/**
-	* Approve laps
-	*
-	* @param array $id_list sigle-dimension array holding the lap ids to disapprove
-	*
-	*/
-	function approve_lap($id_list)
-	{
-		global $phpbb_root_path, $phpEx, $garage;
-
-		for($i = 0; $i < count($id_list); $i++)
-		{
-			$garage->update_single_field(GARAGE_LAPS_TABLE, 'pending', 0, 'id', $id_list[$i]);
-		}
-
-		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_laps"));
-	}
-
-	/**
-	* Approve tracks
-	*
-	* @param array $id_list sigle-dimension array holding the track ids to disapprove
-	*
-	*/
-	function approve_track($id_list)
-	{
-		global $phpbb_root_path, $phpEx, $garage;
-
-		for($i = 0; $i < count($id_list); $i++)
-		{
-			$garage->update_single_field(GARAGE_TRACKS_TABLE, 'pending', 0, 'id', $id_list[$i]);
-		}
-
-		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_tracks"));
-	}
-
-	/**
-	* Disapprove laps
-	*
-	* @param array $id_list sigle-dimension array holding the lap ids to disapprove
-	*
-	*/
-	function disapprove_lap($id_list)
-	{
-		global $phpbb_root_path, $phpEx;
-
-		for($i = 0; $i < count($id_list); $i++)
-		{
-			$this->delete_lap($id_list[$i]);
-		}
-
-		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_laps"));
-	}
-
-	/**
-	* Disapprove tracks
-	*
-	* @param array $id_list sigle-dimension array holding the track ids to disapprove
-	*
-	*/
-	function disapprove_track($id_list)
-	{
-		global $phpbb_root_path, $phpEx;
-
-		for($i = 0; $i < count($id_list); $i++)
-		{
-			$this->delete_track($id_list[$i]);
-		}
-
-		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_tracks"));
 	}
 
 	/**

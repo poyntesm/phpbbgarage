@@ -88,6 +88,222 @@ if ($garage->mcp_access())
 switch( $mode )
 {
 	/**
+	* Build page allowing user submit data
+	* Have form action submit to required page
+	*/
+	case 'user_submit_data':
+
+		//Build Page Header ;)
+		page_header($page_title);
+
+		//Set Template Files In Use For This Mode
+		$template->set_filenames(array(
+			'header' 	=> 'garage_header.html',
+			'body'   	=> 'garage_user_submit_data.html')
+		);
+
+		//Build Navlinks
+		$template->assign_block_vars('navlinks', array(
+			'FORUM_NAME'	=> $user->lang['ADD_USER_DATA'])
+		);
+
+		//Checks All Required Data Is Present
+		$params = array('primary' => '', 'secondary' => '');
+		$data = $garage->process_vars($params);
+
+		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back Just To Main Page Though!!!
+		if ( $user->data['user_id'] == ANONYMOUS )
+		{
+			login_box("garage.$phpEx");
+		}
+
+		if ( $data['primary'] == "vehicle")
+		{
+			$params = array('VID' => '', 'made_year' => '', 'make_id' => '', 'mileage' => '', 'mileage_units' => '', 'price' => '', 'currency' => '', 'engine_type' => '', 'url_image' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
+			$store = $garage->process_vars($params);
+			$params = array('colour' => '', 'comments' => '');
+			$store += $garage->process_mb_vars($params);
+
+			if ($data['secondary'] == "make")
+			{
+				//Check This Feature Is Enabled & User Authorised
+				if (!$garage_config['enable_user_submit_make'] || !$auth->acl_get('u_garage_add_make_model'))
+				{
+					redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=18"));
+				}
+				$template->assign_vars(array(
+					'L_BUTTON_LABEL'		=> $user->lang['ADD_MAKE'],
+					'S_USER_SUBMIT_MAKE'		=> true,
+					'S_USER_SUBMIT_SUCCESSS'	=> false,
+					'S_USER_SUBMIT_ACTION'		=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=insert_make"),
+				));
+			}
+			if ($data['secondary'] == "model")
+			{
+				//Check This Feature Is Enabled & User Authorised
+				if (!$garage_config['enable_user_submit_model'] || !$auth->acl_get('u_garage_add_make_model'))
+				{
+					redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=18"));
+				}
+				$make = $garage_model->get_make($store['make_id']);
+				$template->assign_vars(array(
+					'L_BUTTON_LABEL'		=> $user->lang['ADD_MODEL'],
+					'MAKE'				=> $make['make'],
+					'S_USER_SUBMIT_MODEL'		=> true,
+					'S_USER_SUBMIT_SUCCESSS'	=> false,
+					'S_USER_SUBMIT_ACTION'		=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=insert_model"),
+				));
+			}
+		}
+		elseif ($data['primary'] == "modification")
+		{
+			$params = array('VID' => '', 'MID' => '', 'category_id' => '', 'manufacturer_id' => '', 'product_id' => '', 'price' => 0, 'shop_id' => '', 'installer_id' => '', 'install_price' => 0, 'install_rating' => 0, 'product_rating' => 0, 'editupload' => '', 'image_id' => '', 'purchase_rating' => 0, 'url_image' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
+			$store	= $garage->process_vars($params);
+			$params = array('comments' => '', 'install_comments' => '');
+			$store	+= $garage->process_mb_vars($params);
+			if (($data['secondary'] == "manufacturer") OR ($data['secondary'] == "shop") OR ($data['secondary'] == "garage"))
+			{
+				//Let Check The User Is Allowed Perform This Action
+				if (!$auth->acl_get('u_garage_add_business'))
+				{
+					redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
+				}
+				if ($data['secondary'] == "garage")
+				{
+					$template->assign_vars(array(
+						'S_BUSINESS_GARAGE'		=> true,
+					));
+				}
+				if ($data['secondary'] == "shop")
+				{
+					$template->assign_vars(array(
+						'S_BUSINESS_RETAIL'		=> true,
+					));
+				}
+				if ($data['secondary'] == "manufacturer")
+				{
+					$template->assign_vars(array(
+						'S_BUSINESS_PRODUCT'		=> true,
+					));
+				}
+				$template->assign_vars(array(
+					'L_BUTTON_LABEL'		=> $user->lang['ADD_NEW_BUSINESS'],
+					'S_USER_SUBMIT_BUSINESS'	=> true,
+					'S_USER_SUBMIT_SUCCESSS'	=> false,
+					'S_USER_SUBMIT_ACTION'		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=insert_business"),
+				));
+			}
+			elseif ($data['secondary'] == "product")
+			{
+				unset($store['product_id']);
+				//Check This Feature Is Enabled & User Authorised
+				if (!$garage_config['enable_user_submit_product'] || !$auth->acl_get('u_garage_add_product'))
+				{
+					redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=18"));
+				}
+				$category = $garage->get_category($store['category_id']);
+				$manufacturer = $garage_business->get_business($store['manufacturer_id']);
+
+				$template->assign_vars(array(
+					'CATEGORY' 			=> $category['title'],
+					'MANUFACTURER' 			=> $manufacturer['title'],
+					'L_BUTTON_LABEL'		=> $user->lang['ADD_PRODUCT'],
+					'S_USER_SUBMIT_PRODUCT'		=> true,
+					'S_USER_SUBMIT_SUCCESSS'	=> false,
+					'S_USER_SUBMIT_ACTION'		=> append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=insert_product"),
+				));
+			}
+		}
+		elseif ($data['primary'] == "premium")
+		{
+			$params = array('VID' => '', 'INS_ID' => '', 'premium' => '', 'cover_type_id' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
+			$store 	= $garage->process_vars($params);
+			$params = array('comments' => '');
+			$store 	+= $garage->process_mb_vars($params);
+			//Let Check The User Is Allowed Perform This Action
+			if (!$auth->acl_get('u_garage_add_business'))
+			{
+				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
+			}
+			$template->assign_vars(array(
+				'L_BUTTON_LABEL'		=> $user->lang['ADD_NEW_BUSINESS'],
+				'S_USER_SUBMIT_BUSINESS'	=> true,
+				'S_BUSINESS_INSURANCE'		=> true,
+				'S_USER_SUBMIT_SUCCESSS'	=> false,
+				'S_USER_SUBMIT_ACTION'		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=insert_business"),
+			));
+		}
+		elseif ($data['primary'] == "dynorun")
+		{
+			$params = array('VID' => '', 'DID' => '', 'bhp' => '', 'bhp_unit' => '', 'torque' => 0, 'torque_unit' => '', 'boost' => 0, 'boost_unit' => 'PSI', 'nitrous' => 0, 'peakpoint' => 0, 'url_image' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
+			$store 	= $garage->process_vars($params);
+			//Let Check The User Is Allowed Perform This Action
+			if (!$auth->acl_get('u_garage_add_business'))
+			{
+				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
+			}
+			$template->assign_vars(array(
+				'L_BUTTON_LABEL'		=> $user->lang['ADD_NEW_BUSINESS'],
+				'S_USER_SUBMIT_BUSINESS'	=> true,
+				'S_BUSINESS_DYNOCENTRE'		=> true,
+				'S_USER_SUBMIT_SUCCESSS'	=> false,
+				'S_USER_SUBMIT_ACTION'		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=insert_business"),
+			));
+		}
+		elseif ($data['primary'] == "lap")
+		{
+			$params = array('VID' => '', 'LID' => '', 'condition_id' => '', 'type_id' => '', 'minute' => '', 'second' => '', 'millisecond' => '', 'url_image' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
+			$store 	= $garage->process_vars($params);
+			/**
+			* Check authorisation to perform action, redirecting to error screen if not
+			*/
+			if (!$garage_config['enable_tracktime'] || !$garage_config['enable_user_add_track'] || !$auth->acl_get('u_garage_add_track'))
+			{
+				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=18"));
+			}
+			$garage_template->mileage_dropdown();
+			$template->assign_vars(array(
+				'L_BUTTON_LABEL'		=> $user->lang['ADD_TRACK'],
+				'S_USER_SUBMIT_TRACK'		=> true,
+				'S_USER_SUBMIT_ACTION'		=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=insert_track"),
+				'S_USER_SUBMIT_SUCCESSS'	=> false,
+			));
+		}
+		elseif ($data['primary'] == "service")
+		{
+			$params	= array('VID' => '', 'SVID' => '', 'type_id' => '', 'price' => 0, 'rating' => 0, 'mileage' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
+			$store 	= $garage->process_vars($params);
+			//Let Check The User Is Allowed Perform This Action
+			if (!$auth->acl_get('u_garage_add_business'))
+			{
+				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
+			}
+			$template->assign_vars(array(
+				'L_BUTTON_LABEL'		=> $user->lang['ADD_NEW_BUSINESS'],
+				'S_USER_SUBMIT_BUSINESS'	=> true,
+				'S_BUSINESS_GARAGE'		=> true,
+				'S_USER_SUBMIT_ACTION'		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=insert_business"),
+			));
+		}
+
+		foreach ($store as $key => $value)
+		{
+			if (empty($value))
+			{
+				continue;
+			}
+			$template->assign_block_vars('hidden_data', array(
+				'VALUE'	=> $value,
+				'NAME'	=> $key,
+			));
+		}
+
+		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
+		$garage_template->sidemenu();
+
+		break;
+
+	/**
 	* Display search options page
 	*/
 	case 'search':
@@ -1002,60 +1218,6 @@ switch( $mode )
 		break;
 
 	/**
-	* Page allowing users to submit new business's
-	*/
-	case 'user_submit_business':
-
-		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if ( $user->data['user_id'] == ANONYMOUS )
-		{
-			login_box("garage.$phpEx?mode=user_submit_business");
-		}
-
-		//Let Check The User Is Allowed Perform This Action
-		if (!$auth->acl_get('u_garage_add_business'))
-		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
-		}
-
-		//Build Page Header ;)
-		page_header($page_title);
-
-		//Set Template Files In Use For This Mode
-		$template->set_filenames(array(
-			'header' => 'garage_header.html',
-			'body'   => 'garage_user_submit_business.html')
-		);
-
-		//Build Navlinks
-		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $user->lang['ADD_NEW_BUSINESS'])
-		);
-
-		//Get All Data Posted And Make It Safe To Use
-		$params = array('BUSINESS' => '', 'redirect' => '');
-		$data = $garage->process_vars($params);
-
-		$template->assign_vars(array(
-			'L_TITLE'		=> $user->lang['ADD_NEW_BUSINESS'],
-			'L_BUTTON'		=> $user->lang['ADD_NEW_BUSINESS'],
-			'VID' 			=> $vid,
-			'REDIRECT'		=> $data['redirect'],
-			'S_DISPLAY_PENDING' 	=> $garage_config['enable_business_approval'],
-			'S_BUSINESS_INSURANCE' 	=> ($data['BUSINESS'] == BUSINESS_INSURANCE) ? true : false,
-			'S_BUSINESS_GARAGE' 	=> ($data['BUSINESS'] == BUSINESS_GARAGE) ? true : false,
-			'S_BUSINESS_RETAIL' 	=> ($data['BUSINESS'] == BUSINESS_RETAIL) ? true : false,
-			'S_BUSINESS_PRODUCT' 	=> ($data['BUSINESS'] == BUSINESS_PRODUCT) ? true : false,
-			'S_BUSINESS_DYNOCENTRE' => ($data['BUSINESS'] == BUSINESS_DYNOCENTRE) ? true : false,
-			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=insert_business"))
-		);
-
-		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$garage_template->sidemenu();
-
-		break;
-
-	/**
 	* Insert new business into database
 	*/
 	case 'insert_business':
@@ -1067,7 +1229,7 @@ switch( $mode )
 		}
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('redirect' => '', 'telephone' => '', 'fax' => '', 'website' => '', 'email' => '', 'product' => '0', 'insurance' => '0', 'garage' => '0', 'retail' => '0', 'dynocentre' => '0');
+		$params = array('redirect' => '', 'telephone' => '', 'fax' => '', 'website' => '', 'email' => '', 'product' => '0', 'insurance' => '0', 'garage' => '0', 'retail' => '0', 'dynocentre' => '0', 'url_image' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '');
 		$data 	= $garage->process_vars($params);
 		$params = array('title' => '', 'address' => '', 'opening_hours' => '');
 		$data 	+= $garage->process_mb_vars($params);
@@ -1090,384 +1252,97 @@ switch( $mode )
 		}
 
 		//Create The Business Now...
-		$garage_business->insert_business($data);
-
-		//Send Them Back To Whatever Page Them Came From..Now With Their Required Business :)
-		if ($data['redirect'] == 'add_modification' || $data['redirect'] == 'edit_modification')
-		{
-			redirect(append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=" . $data['redirect'] . "&amp;VID=$vid"));
-		}
-		else if ($data['redirect'] == 'add_dynorun' || $data['redirect'] == 'edit_dynorun')
-		{
-			redirect(append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=" . $data['redirect'] . "&amp;VID=$vid"));
-		}
-		elseif ($data['redirect'] == 'add_premium' || $data['redirect'] == 'edit_premium')
-		{
-			redirect(append_sid("{$phpbb_root_path}garage_premium.$phpEx", "mode=" . $data['redirect'] . "&amp;VID=$vid"));
-		}
-		elseif ($data['redirect'] == 'add_service' || $data['redirect'] == 'edit_service')
-		{
-			redirect(append_sid("{$phpbb_root_path}garage_service.$phpEx", "mode=" . $data['redirect'] . "&amp;VID=$vid"));
-		}
-
-		break;
-
-	/**
-	* Page allowing users to edit business's
-	* 
-	* @todo Move to MCP?
-	*/
-	case 'edit_business':
-
-		//Let Check The User Is Allowed Perform This Action
-		if (!$auth->acl_get('m_garage_edit'))
-		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
-		}
+		$business_id = $garage_business->insert_business($data);
 
 		//Build Page Header ;)
 		page_header($page_title);
 
 		//Set Template Files In Use For This Mode
 		$template->set_filenames(array(
-			'header' => 'garage_header.html',
-			'body'   => 'garage_user_submit_business.html')
+			'header' 	=> 'garage_header.html',
+			'body'   	=> 'garage_user_submit_data.html')
 		);
 
-		//Build Navlinks
-		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $user->lang['EDIT_BUSINESS'])
-		);
-
-		//Pull Required Business Data From DB
-		$data = $garage_business->get_business($bus_id);
+		if ($data['primary'] == "modification")
+		{
+			$params = array('VID' => '', 'MID' => '', 'category_id' => '', 'manufacturer_id' => '', 'product_id' => '', 'price' => 0, 'shop_id' => '', 'installer_id' => '', 'install_price' => 0, 'install_rating' => 0, 'product_rating' => 0, 'editupload' => '', 'image_id' => '', 'purchase_rating' => 0, 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
+			$store	= $garage->process_vars($params);
+			$params = array('comments' => '', 'install_comments' => '');
+			$store	+= $garage->process_mb_vars($params);
+			if ($data['secondary'] == "manufacturer")
+			{
+				$store['manufacturer_id'] = $business_id;
+			}
+			elseif ($data['secondary'] == "shop")
+			{
+				$store['shop_id'] = $business_id;
+			}
+			elseif ($data['secondary'] == "garage")
+			{
+				$store['installer_id'] = $business_id;
+			}
+			$user_submit_action = append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=add_modification");
+			if ($data['tertiary'] == "edit")
+			{
+				$user_submit_action = append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=edit_modification&amp;VID={$store['VID']}&amp;MID={$store['MID']}");
+			}
+		}
+		elseif ($data['primary'] == "premium")
+		{
+			$params = array('VID' => '', 'INS_ID' => '', 'premium' => '', 'cover_type_id' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
+			$store 	= $garage->process_vars($params);
+			$params = array('comments' => '');
+			$store 	+= $garage->process_mb_vars($params);
+			$store['business_id'] = $business_id;
+			$user_submit_action = append_sid("{$phpbb_root_path}garage_premium.$phpEx", "mode=add_premium");
+			if ($data['tertiary'] == "edit")
+			{
+				$user_submit_action = append_sid("{$phpbb_root_path}garage_premium.$phpEx", "mode=edit_premium&amp;VID={$store['VID']}&amp;INS_ID={$store['INS_ID']}");
+			}
+		}
+		elseif ($data['primary'] == "dynorun")
+		{
+			$params = array('VID' => '', 'DID' => '', 'bhp' => '', 'bhp_unit' => '', 'torque' => 0, 'torque_unit' => '', 'boost' => 0, 'boost_unit' => 'PSI', 'nitrous' => 0, 'peakpoint' => 0, 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
+			$store 	= $garage->process_vars($params);
+			$store['dynocentre_id'] = $business_id;
+			$user_submit_action = append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=add_dynorun");
+			if ($data['tertiary'] == "edit")
+			{
+				$user_submit_action = append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=edit_dynorun&amp;VID={$store['VID']}&amp;DID={$store['DID']}");
+			}
+		}
+		elseif ($data['primary'] == "service")
+		{
+			$params	= array('VID' => '', 'SVID' => '', 'type_id' => '', 'price' => 0, 'rating' => 0, 'mileage' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
+			$store 	= $garage->process_vars($params);
+			$store['garage_id'] = $business_id;
+			$user_submit_action = append_sid("{$phpbb_root_path}garage_service.$phpEx", "mode=add_service");
+			if ($data['tertiary'] == "edit")
+			{
+				$user_submit_action = append_sid("{$phpbb_root_path}garage_service.$phpEx", "mode=edit_service&amp;VID={$store['VID']}&amp;SVID={$store['SVID']}");
+			}
+		}
 
 		$template->assign_vars(array(
-			'L_TITLE' 		=> $user->lang['EDIT_BUSINESS'],
-			'L_BUTTON' 		=> $user->lang['EDIT_BUSINESS'],
-			'TITLE' 		=> $data['title'],
-			'ADDRESS'		=> $data['address'],
-			'TELEPHONE'		=> $data['telephone'],
-			'FAX'			=> $data['fax'],
-			'WEBSITE'		=> $data['website'],
-			'EMAIL'			=> $data['email'],
-			'OPENING_HOURS'		=> $data['opening_hours'],
-			'BUSINESS_ID'		=> $data['id'],
-			'S_DISPLAY_PENDING' 	=> $garage_config['enable_business_approval'],
-			'S_BUSINESS_INSURANCE' 	=> ($data['insurance']) ? true : false,
-			'S_BUSINESS_GARAGE' 	=> ($data['garage']) ? true : false,
-			'S_BUSINESS_RETAIL' 	=> ($data['retail']) ? true : false,
-			'S_BUSINESS_PRODUCT' 	=> ($data['product']) ? true : false,
-			'S_BUSINESS_DYNOCENTRE'	=> ($data['dynocentre']) ? true : false,
-			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=update_business"))
-		);
+			'L_BUTTON_LABEL'		=> $user->lang['RETURN_TO_ITEM'],
+			'S_USER_SUBMIT_SUCCESS'		=> true,
+			'S_USER_SUBMIT_ACTION'		=> $user_submit_action,
+		));
+
+		foreach ($store as $key => $value)
+		{
+			if (empty($value))
+			{
+				continue;
+			}
+			$template->assign_block_vars('hidden_data', array(
+				'VALUE'	=> $value,
+				'NAME'	=> $key,
+			));
+		}
 
 		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
 		$garage_template->sidemenu();
-
-		break;
-
-	/**
-	* Update business
-	*/
-	case 'update_business':
-
-		//Let Check The User Is Allowed Perform This Action
-		if (!$auth->acl_get('m_garage_edit'))
-		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
-		}
-
-		//Get All Data Posted And Make It Safe To Use
-		$params = array('id' => '', 'telephone' => '', 'fax' => '', 'website' => '', 'email' => '', 'product' => '', 'insurance' => '', 'garage' => '', 'retail' => '', 'dynocentre' => '');
-		$data 	= $garage->process_vars($params);
-		$params = array('title' => '', 'address' => '', 'opening_hours' => '');
-		$data 	+= $garage->process_mb_vars($params);
-
-		//Check They Entered http:// In The Front Of The Link
-		if ( (!preg_match( "/^http:\/\//i", $data['website'])) AND (!empty($data['website'])) )
-		{
-			$data['website'] = "http://" . $data['website'];
-		}
-
-		//Checks All Required Data Is Present
-		$params = array('title');
-		$garage->check_required_vars($params);
-
-		//Update The Business With Data Acquired
-		$garage_business->update_business($data);
-
-		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_business"));
-
-		break;
-
-	/**
-	* Page allowing users to submit new makes
-	*/
-	case 'user_submit_make':
-
-		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if ($user->data['user_id'] == ANONYMOUS)
-		{
-			login_box("garage.$phpEx?mode=user_submit_make");
-		}
-
-		//Check This Feature Is Enabled
-		if (!$garage_config['enable_user_submit_make'] || !$auth->acl_get('u_garage_add_make_model'))
-		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=18"));
-		}
-
-		//Get All Data Posted And Make It Safe To Use
-		$params = array('made_year' => '');
-		$data = $garage->process_vars($params);
-
-		//Build Page Header ;)
-		page_header($page_title);
-
-		//Set Template Files In Use For This Mode
-		$template->set_filenames(array(
-			'header' => 'garage_header.html',
-			'body'   => 'garage_user_submit_make.html')
-		);
-
-		//Build Navlinks
-		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $user->lang['ADD_MAKE'])
-		);
-
-		$template->assign_vars(array(
-			'YEAR' 			 => $data['made_year'],
-			'S_GARAGE_MODELS_ACTION' => append_sid("{$phpbb_root_path}admin_garage_models.$phpEx"))
-		);
-
-		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$garage_template->sidemenu();
-
-		break;
-
-	case 'insert_make':
-
-		//User Is Annoymous...So Not Allowed To Create A Vehicle
-		if ($user->data['user_id'] == ANONYMOUS)
-		{
-			login_box("garage.$phpEx?mode=user_submit_make");
-		}
-
-		//Let Check The User Is Allowed Perform This Action
-		if (!$auth->acl_get('u_garage_add_make_model'))
-		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
-		}
-
-		//Get All Data Posted And Make It Safe To Use
-		$params = array('made_year' => '');
-		$data = $garage->process_vars($params);
-		$params = array('make' => '');
-		$data += $garage->process_mb_vars($params);
-
-		//Checks All Required Data Is Present
-		$params = array('make', 'made_year');
-		$garage->check_required_vars($params);
-
-		//Check Make Does Not Already Exist
-		if ($garage_model->count_make($data['make']) > 0)
-		{
-			redirect(append_sid("garage.$phpEx?mode=error&amp;EID=27", true));
-		}
-
-		//Create The Make
-		$make_id = $garage_model->insert_make($data);
-
-		//Perform Any Pending Notifications Requried
-		$garage->pending_notification('unapproved_makes');
-
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_vehicle&amp;MAKE_ID=$make_id&amp;YEAR=" . $data['made_year']));
-
-		break;
-
-	/**
-	* Page allowing users to submit new models
-	*/
-	case 'user_submit_model':
-
-		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if ( $user->data['user_id'] == ANONYMOUS )
-		{
-			login_box("garage.$phpEx?mode=user_submit_model");
-		}
-
-		//Check This Feature Is Enabled & User Authorised
-		if (!$garage_config['enable_user_submit_model'] || !$auth->acl_get('u_garage_add_make_model'))
-		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=18"));
-		}
-
-		//Get All Data Posted And Make It Safe To Use
-		$params = array('make_id' => '', 'made_year' => '');
-		$data = $garage->process_vars($params);
-		$year = $data['made_year'];
-
-		//Check If User Owns Vehicle
-		if (empty($data['make_id']))
-		{
-			redirect(append_sid("garage.$phpEx?mode=error&amp;EID=23", true));
-		}
-
-		//Build Page Header ;)
-		page_header($page_title);
-
-		//Set Template Files In Use For This Mode
-		$template->set_filenames(array(
-			'header' => 'garage_header.html',
-			'body'   => 'garage_user_submit_model.html')
-		);
-
-		//Build Navlinks
-		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $user->lang['ADD_MODEL'])
-		);
-
-		//Checks All Required Data Is Present
-		$params = array('make_id');
-		$garage->check_required_vars($params);
-
-		//Pull Required Make Data From DB
-		$data = $garage_model->get_make($data['make_id']);
-
-		$template->assign_vars(array(
-			'YEAR' 		=> $year,
-			'MAKE_ID' 	=> $data['id'],
-			'MAKE' 		=> $data['make'])
-		);
-
-		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$garage_template->sidemenu();
-
-		break;
-
-	/**
-	* Page allowing users to submit new modification products
-	*/
-	case 'user_submit_product':
-
-		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if ( $user->data['user_id'] == ANONYMOUS )
-		{
-			login_box("garage.$phpEx?mode=user_submit_product");
-		}
-
-		//Check This Feature Is Enabled & User Authorised
-		if (!$garage_config['enable_user_submit_product'] || !$auth->acl_get('u_garage_add_product'))
-		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=18"));
-		}
-
-		//Get All Data Posted And Make It Safe To Use
-		$params = array('category_id' => '', 'manufacturer_id' => '', 'VID' => '');
-		$data = $garage->process_vars($params);
-		$params = array('category_id', 'manufacturer_id', 'VID');
-		$garage->check_required_vars($params);
-
-		//Build Page Header ;)
-		page_header($page_title);
-
-		//Set Template Files In Use For This Mode
-		$template->set_filenames(array(
-			'header' => 'garage_header.html',
-			'body'   => 'garage_user_submit_product.html')
-		);
-
-		//Build Navlinks
-		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $user->lang['ADD_PRODUCT'])
-		);
-
-		$category = $garage->get_category($data['category_id']);
-		$manufacturer = $garage_business->get_business($data['manufacturer_id']);
-
-		$template->assign_vars(array(
-			'VID' 			=> $data['VID'],
-			'CATEGORY_ID' 		=> $data['category_id'],
-			'MANUFACTURER_ID'	=> $data['manufacturer_id'],
-			'CATEGORY' 		=> $category['title'],
-			'MANUFACTURER' 		=> $manufacturer['title'])
-		);
-
-		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
-		$garage_template->sidemenu();
-
-		break;
-
-	case 'insert_model':
-
-		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if ($user->data['user_id'] == ANONYMOUS)
-		{
-			login_box("garage.$phpEx?mode=user_submit_model");
-		}
-
-		//Let Check The User Is Allowed Perform This Action
-		if (!$auth->acl_get('u_garage_add_make_model'))
-		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
-		}
-
-		//Get All Data Posted And Make It Safe To Use
-		$params = array('make_id' => '', 'made_year' => '');
-		$data = $garage->process_vars($params);
-		$params = array('make' => '', 'model' => '');
-		$data += $garage->process_mb_vars($params);
-
-		//Checks All Required Data Is Present
-		$params = array('make', 'make_id', 'model');
-		$garage->check_required_vars($params);
-
-		//If Needed Update Garage Config Telling Us We Have A Pending Item And Perform Notifications If Configured
-		$garage->pending_notification('unapproved_models');
-
-		//Create The Model
-		$model_id = $garage_model->insert_model($data);
-
-		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=add_vehicle&amp;MAKE_ID=" . $data['make_id'] . "&amp;MODEL_ID=$model_id&amp;YEAR=" . $data['made_year']));
-
-		break;
-
-	case 'insert_product':
-
-		//Check The User Is Logged In...Else Send Them Off To Do So......And Redirect Them Back!!!
-		if ($user->data['user_id'] == ANONYMOUS)
-		{
-			login_box("garage.$phpEx?mode=user_submit_product");
-		}
-
-		//Let Check The User Is Allowed Perform This Action
-		if (!$auth->acl_get('u_garage_add_product'))
-		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=14"));
-		}
-
-		//Get All Data Posted And Make It Safe To Use
-		$params = array('category_id' => '', 'manufacturer_id' => '', 'vehicle_id' => '');
-		$data = $garage->process_vars($params);
-		$params = array('title' => '');
-		$data += $garage->process_mb_vars($params);
-
-		//Checks All Required Data Is Present
-		$params = array('title', 'category_id', 'manufacturer_id', 'vehicle_id');
-		$garage->check_required_vars($params);
-
-		//If Needed Perform Notifications If Configured
-		if ($garage_config['enable_product_approval'])
-		{
-			$garage->pending_notification('unapproved_products');
-		}
-
-		//Create The Product
-		$data['product_id'] = $garage_modification->insert_product($data);
-
-		//Head Back To Page Updating Dropdowns With New Item ;)
-		redirect(append_sid("{$phpbb_root_path}garage_modification.$phpEx", "mode=add_modification&amp;VID=".$data['vehicle_id']."&amp;category_id=" . $data['category_id'] . "&amp;manufacturer_id=" . $data['manufacturer_id'] ."&amp;product_id=" . $data['product_id']));
 
 		break;
 
@@ -1520,11 +1395,11 @@ switch( $mode )
 			{
 				if ($data['model_id'] == $models[$i]['id'])
 				{
-					echo "obj.options[obj.options.length] = new Option('".$models[$i]['model']."','".$models[$i]['id']."', true, true);\n";
+					echo "obj.options[obj.options.length] = new Option('".addslashes($models[$i]['model'])."','".$models[$i]['id']."', true, true);\n";
 				}
 				else
 				{
-					echo "obj.options[obj.options.length] = new Option('".$models[$i]['model']."','".$models[$i]['id']."', false, false);\n";
+					echo "obj.options[obj.options.length] = new Option('".addslashes($models[$i]['model'])."','".$models[$i]['id']."', false, false);\n";
 				}
 			}
 		}
@@ -1557,11 +1432,11 @@ switch( $mode )
 			{
 				if ($data['product_id'] == $products[$i]['id'])
 				{
-					echo "obj.options[obj.options.length] = new Option('".$products[$i]['title']."','".$products[$i]['id']."', true, true);\n";
+					echo "obj.options[obj.options.length] = new Option('".addslashes($products[$i]['title'])."','".$products[$i]['id']."', true, true);\n";
 				}
 				else
 				{
-					echo "obj.options[obj.options.length] = new Option('".$products[$i]['title']."','".$products[$i]['id']."', false, false);\n";
+					echo "obj.options[obj.options.length] = new Option('".addslashes($products[$i]['title'])."','".$products[$i]['id']."', false, false);\n";
 				}
 			}
 		}

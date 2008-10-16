@@ -15,7 +15,7 @@
 
 		<td width="72%" valign="top" >
 
-				<form id="edit_vehicle" enctype="multipart/form-data" method="post" name="edit_lap" action="{S_MODE_ACTION}">
+				<form id="lap" enctype="multipart/form-data" method="post" name="lap" action="{S_MODE_ACTION}">
 				<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
 				<tbody>
 					<tr>
@@ -46,7 +46,15 @@
 						<!-- INCLUDE garage_image_attach.html -->
 					<!-- ENDIF -->	
 					<tr>
-						<td class="cat" align="center" height="28" colspan="2"><input type="hidden" value="{VID}" name="VID" /><input type="hidden" value="{LID}" name="LID" /><input name="edit_lap" type="submit" value="{L_BUTTON}" class="liteoption" /></td>
+						<td class="cat" align="center" height="28" colspan="2">
+							<input type="hidden" value="{VID}" name="VID" />
+							<input type="hidden" value="{LID}" name="LID" />
+							<input type="hidden" value="" name="primary" />
+							<input type="hidden" value="" name="secondary" />
+							<input type="hidden" value="" name="tertiary" />
+							<input type="hidden" value="{REDIRECT}" name="redirect" />
+							<input name="submit2" type="submit" value="{L_BUTTON}" class="liteoption" />
+						</td>
 					</tr>
 				</tbody>
 				</table>
@@ -59,6 +67,20 @@
 			<!-- ENDIF -->
 			
 		</td>
+
+<script type="text/javascript">
+<!--
+function add_track ( tertiary )
+{
+	var lap = document.getElementById("lap");
+	lap.action = '{S_MODE_USER_SUBMIT}';
+	lap.primary.value = 'lap' ;
+	lap.secondary.value = '' ;
+	lap.tertiary.value = tertiary ;
+	lap.submit() ;
+}
+-->
+</script>
 
 <!-- INCLUDE garage_footer.html -->
 

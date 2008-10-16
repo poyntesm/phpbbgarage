@@ -282,7 +282,7 @@ switch( $mode )
 			'THOU' 			=> $data['thou'],
 			'QUART' 		=> $data['quart'],
 			'QUARTMPH' 		=> $data['quartmph'],
-			'PENDING_REDIRECT'	=> request_var('PENDING', ''),
+			'REDIRECT'		=> request_var('redirect', ''),
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=update_quartermile"),
 			'S_IMAGE_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=insert_quartermile_image"),
 		));
@@ -319,7 +319,7 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('rt' => '', 'sixty' => '', 'three' => '', 'eighth' => '', 'eighthmph' => '', 'thou' => '', 'quart' => '', 'quartmph' => '', 'dynorun_id' => '', 'editupload' => '', 'image_id' => '', 'pending_redirect' => '');
+		$params = array('rt' => '', 'sixty' => '', 'three' => '', 'eighth' => '', 'eighthmph' => '', 'thou' => '', 'quart' => '', 'quartmph' => '', 'dynorun_id' => 0, 'editupload' => '', 'image_id' => '', 'redirect' => '');
 		$data = $garage->process_vars($params);
 		$params = array('quart');
 		$garage->check_required_vars($params);
@@ -336,27 +336,6 @@ switch( $mode )
 		$garage_vehicle->update_vehicle_time($vid);
 
 		/**
-		* Handle any images
-		*/
-		if ($garage_image->image_attached())
-		{
-			if ($garage_image->below_image_quotas())
-			{
-				$image_id = $garage_image->process_image_attached('quartermile', $qmid);
-				$garage->update_single_field(GARAGE_QUARTERMILES_TABLE, 'image_id', $image_id, 'id', $qmid);
-			}
-			else if ($garage_image->above_image_quotas())
-			{
-				redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=4"));
-			}
-		}
-		else if (($garage_config['enable_quartermile_image_required'] == '1') AND ($data['quart'] <= $garage_config['quartermile_image_required_limit']))
-		{
-			$garage_quartermile->delete_quartermile_time($qmid);
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=26"));
-		}
-
-		/**
 		* Perform notification if required
 		*/
 		if ($garage_config['enable_quartermile_approval'])
@@ -367,7 +346,7 @@ switch( $mode )
 		/**
 		* If editted by MCP redirect back to MCP
 		*/
-		if ($data['pending_redirect'] == 'MCP')
+		if ($data['redirect'] == 'MCP')
 		{
 			redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_quartermiles"));
 		}

@@ -720,9 +720,14 @@ class garage_vehicle
 				'ORDER_BY'	=> "rand()"
 			));
 
-   				$result = $db->sql_query_limit($sql, 1);
+   			$result = $db->sql_query_limit($sql, 1);
 			$vehicle_data = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
+
+			if (empty($vehicle_data))
+			{
+				return;
+			}
 
 			//Update SQL Array With Required Statements
 			$featured_vehicle_id = $vehicle_data['id'];
@@ -2462,39 +2467,83 @@ class garage_vehicle
 	}
 
 	/**
-	* Approve vehicle
+	* Return language string for engine type id
 	*
-	* @param array $data single-dimension array holding the vehicle ids to approve
-	*
-	*/
-	function approve_vehicle($id_list)
-	{
-		global $phpbb_root_path, $phpEx, $garage;
-
-		for($i = 0; $i < count($id_list); $i++)
-		{
-			$garage->update_single_field(GARAGE_VEHICLES_TABLE, 'pending', 0, 'id', $id_list[$i]);
-		}
-
-		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_vehicles"));
-	}
-
-	/**
-	* Disapprove vehicle
-	*
-	* @param array $data single-dimension array holding the vehicle ids to disapprove
+	* @param int $id engine type id to return language for
 	*
 	*/
-	function disapprove_vehicle($id_list)
+	function get_engine_type($id)
 	{
-		global $phpbb_root_path, $phpEx;
+		global $user;
 
-		for($i = 0; $i < count($id_list); $i++)
+		if ($id == NA_2_CYLINDER)
 		{
-			$this->delete_vehicle($id_list[$i]);
+			return $user->lang[''];
 		}
-
-		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_vehicles"));
+		else if ($id == FI_3_CYLINDER)
+		{
+			return $user->lang[''];
+		}
+		else if ($id == NA_3_CYLINDER)
+		{
+			return $user->lang[''];
+		}
+		else if ($id == FI_4_CYLINDER)
+		{
+			return $user->lang[''];
+		}
+		else if ($id == NA_4_CYLINDER)
+		{
+			return $user->lang[''];
+		}
+		else if ($id == FI_5_CYLINDER)
+		{
+			return $user->lang[''];
+		}
+		else if ($id == NA_5_CYLINDER)
+		{
+			return $user->lang[''];
+		}
+		else if ($id == FI_6_CYLINDER)
+		{
+			return $user->lang[''];
+		}
+		else if ($id == NA_6_CYLINDER)
+		{
+			return $user->lang[''];
+		}
+		else if ($id == FI_8_CYLINDER)
+		{
+			return $user->lang[''];
+		}
+		else if ($id == NA_8_CYLINDER)
+		{
+			return $user->lang[''];
+		}
+		else if ($id == FI_10_CYLINDER)
+		{
+			return $user->lang[''];
+		}
+		else if ($id == NA_10_CYLINDER)
+		{
+			return $user->lang[''];
+		}
+		else if ($id == FI_12_CYLINDER)
+		{
+			return $user->lang[''];
+		}
+		else if ($id == NA_12_CYLINDER)
+		{
+			return $user->lang[''];
+		}
+		else if ($id == FI_16_CYLINDER)
+		{
+			return $user->lang[''];
+		}
+		else if ($id == NA_16_CYLINDER)
+		{
+			return $user->lang[''];
+		}
 	}
 }
 

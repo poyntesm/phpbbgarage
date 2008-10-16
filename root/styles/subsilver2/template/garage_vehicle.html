@@ -43,7 +43,7 @@ function build_model_list()
 
 		<td width="72%" valign="top" >
 
-				<form id="edit_vehicle" enctype="multipart/form-data" method="post" name="edit_vehicle" action="{S_MODE_ACTION}">
+				<form id="vehicle" enctype="multipart/form-data" method="post" name="vehicle" action="{S_MODE_ACTION}">
 				<table width="100%" id="table000" cellspacing="1" class="tablebg">
 					<tr>
 						<th colspan="2"><span class="gen">{L_TITLE}</span></th>
@@ -94,7 +94,13 @@ function build_model_list()
 					<!-- ENDIF -->
 
 					<tr>
-						<td class="cat" align="center" height="28" colspan="2"><input type="hidden" value="{VID}" name="VID" /><input name="edit_vehicle" type="submit" value="{L_BUTTON}" class="liteoption" /></td>
+						<td class="cat" align="center" height="28" colspan="2">
+							<input type="hidden" value="{VID}" name="VID" />
+							<input type="hidden" value="" name="primary" />
+							<input type="hidden" value="" name="secondary" />
+							<input type="hidden" value="" name="tertiary" />
+							<input name="submit2" type="submit" value="{L_BUTTON}" class="liteoption" />
+						</td>
 					</tr>
 				</table>
 	{S_FORM_TOKEN}
@@ -116,16 +122,24 @@ update_model_list('{MAKE_ID}', '{MODEL_ID}');
 
 <script language="JavaScript" type="text/javascript">
 <!--
-function add_model ()
+function add_model ( tertiary )
 {
-	document.edit_vehicle.action = '{S_MODE_ACTION_MODEL}';
-	document.edit_vehicle.submit() ;
+	var vehicle = document.getElementById("vehicle");
+	vehicle.action = '{S_MODE_USER_SUBMIT}';
+	vehicle.primary.value = 'vehicle' ;
+	vehicle.secondary.value = 'model' ;
+	vehicle.tertiary.value = tertiary ;
+	vehicle.submit() ;
 }
 
-function add_make ()
+function add_make ( tertiary )
 {
-	document.edit_vehicle.action = '{S_MODE_ACTION_MAKE}';
-	document.edit_vehicle.submit();
+	var vehicle = document.getElementById("vehicle");
+	vehicle.action = '{S_MODE_USER_SUBMIT}';
+	vehicle.primary.value = 'vehicle' ;
+	vehicle.secondary.value = 'make' ;
+	vehicle.tertiary.value = tertiary ;
+	vehicle.submit();
 }
 -->
 </script>

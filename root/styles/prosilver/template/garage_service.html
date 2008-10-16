@@ -29,7 +29,7 @@
 						<div class="panel">
 							<div class="inner">
 								<span class="corners-top"><span></span></span>
-								<form id="edit_service" enctype="multipart/form-data" method="post" action="{S_MODE_ACTION}">
+								<form id="service" enctype="multipart/form-data" method="post" action="{S_MODE_ACTION}">
 								<h3>{L_TITLE}</h3>
 								<fieldset>
 									<dl>
@@ -55,12 +55,16 @@
 								</fieldset>
 		
 								<fieldset>
-									<input type="hidden" value="{VID}" name="VID" /><input type="hidden" value="{SVID}" name="SVID" />
+									<input type="hidden" value="{VID}" name="VID" />
+									<input type="hidden" value="{SVID}" name="SVID" />
+									<input type="hidden" value="" name="primary" />
+									<input type="hidden" value="" name="secondary" />
+									<input type="hidden" value="" name="tertiary" />
 								</fieldset>
 
 								<fieldset class="submit-buttons">
 									<input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 
-									<input type="submit" name="submit" value="{L_BUTTON}" class="button1" />
+									<input type="submit" name="submit2" value="{L_BUTTON}" class="button1" />
 								</fieldset>
 								{S_FORM_TOKEN}
 								</form>
@@ -75,6 +79,20 @@
 		<span class="corners-bottom"><span></span></span>
 	</div>
 </div>
+
+<script type="text/javascript">
+<!--
+function add_garage ( tertiary )
+{
+	var service = document.getElementById("service");
+	service.action = '{S_MODE_USER_SUBMIT}';
+	service.primary.value = 'service' ;
+	service.secondary.value = '' ;
+	service.tertiary.value = tertiary ;
+	service.submit() ;
+}
+-->
+</script>
 
 <!-- INCLUDE garage_footer.html -->
 

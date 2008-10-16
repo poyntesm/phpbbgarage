@@ -2,7 +2,130 @@
 
 <form name="mcp" id="mcp" method="post" action="{S_MCP_ACTION}">
 
-<!-- IF S_UNAPPROVED_VEHICLE -->
+<!-- IF S_EDIT_MAKE -->
+
+<table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
+	<thead>
+		<tr>
+			<th height="25" nowrap="nowrap" colspan="2">{L_EDIT_MAKE}</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td class="row1" width="20%"><span class="gen">{L_VEHICLE_MAKE}</span></td>
+			<td class="row2"><input name="make" type="text" class="post" size="35" value="{MAKE}" /></td>
+		</tr>
+	<tbody>
+</table>
+
+<!-- ELSEIF S_EDIT_MODEL -->
+
+<table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
+	<thead>
+		<tr>
+			<th height="25" nowrap="nowrap" colspan="2">{L_EDIT_MODEL}</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td class="row1" width="20%"><span class="gen">{L_VEHICLE_MAKE}</span></td>
+			<td class="row2" align="left" nowrap="nowrap"><span class="gen">{MAKE}</span></td>
+		</tr>
+		<tr>
+			<td class="row1" width="20%"><span class="gen">{L_VEHICLE_MODEL}</span></td>
+			<td class="row2"><input name="model" type="text" class="post" size="35" value="{MODEL}" /></td>
+		</tr>
+	<tbody>
+</table>
+
+<!-- ELSEIF S_EDIT_BUSINESS -->
+<table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
+	<thead>
+		<tr>
+			<th height="25" nowrap="nowrap" colspan="2">{L_EDIT_BUSINESS}</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td class="row1" width="20%"><span class="gen"><b>{L_BUSINESS_NAME}</b></span></td>
+			<td class="row2"><input name="title" type="text" class="post" size="35" value="{TITLE}" /> <span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td>
+		</tr>
+		<tr>
+			<td class="row1" width="35%"><span class="gen"><b>{L_ADDRESS}</b></span></td>
+			<td class="row2"><textarea name="address" cols="40" rows="4" wrap="soft"   class="post">{ADDRESS}</textarea></td>
+		</tr>
+		<tr>
+			<td class="row1" width="20%"><span class="gen"><b>{L_TELEPHONE}</b></span></td>
+			<td class="row2"><input name="telephone" type="text" class="post" size="35" value="{TELEPHONE}" /></td>
+		</tr>
+		<tr>
+			<td class="row1" width="20%"><span class="gen"><b>{L_FAX}</b></span></td>
+			<td class="row2"><input name="fax" type="text" class="post" size="35" value="{FAX}" /></td>
+		</tr>
+		<tr>
+			<td class="row1" width="20%"><span class="gen"><b>{L_WEBSITE}</b></span></td>
+			<td class="row2"><input name="website" type="text" class="post" size="35" value="{WEBSITE}" /></td>
+		</tr>
+		<tr>
+			<td class="row1" width="20%"><span class="gen"><b>{L_EMAIL}</b></span></td>
+			<td class="row2"><input name="email" type="text" class="post" size="35" value="{EMAIL}" /></td>
+		</tr>
+		<tr>
+			<td class="row1" width="35%"><span class="gen"><b>{L_OPENING_HOURS}</b></span></td>
+			<td class="row2"><textarea name="opening_hours" cols="40" rows="4" wrap="soft" class="post">{OPENING_HOURS}</textarea></td>
+		</tr>
+		<tr>
+			<td class="row1" width="20%"><span class="gen"><b>{L_TYPE}</b></span></td>
+			<td class="row2">{L_INSURANCE}&nbsp;:&nbsp;<input type="checkbox" name="insurance" value="1" <!-- IF S_BUSINESS_INSURANCE -->checked="checked"<!-- ENDIF --> /><br />{L_GARAGE}&nbsp;:&nbsp;<input type="checkbox" name="garage" value="1" <!-- IF S_BUSINESS_GARAGE-->checked="checked"<!-- ENDIF --> /><br />{L_RETAIL}&nbsp;:&nbsp;<input type="checkbox" name="retail" value="1" <!-- IF S_BUSINESS_RETAIL -->checked="checked"<!-- ENDIF --> /><br />{L_PRODUCT_MANUFACTURER}&nbsp;:&nbsp;<input type="checkbox" name="product" value="1" <!-- IF S_BUSINESS_PRODUCT -->checked="checked"<!-- ENDIF --> /><br />{L_DYNOCENTRE}&nbsp;:&nbsp;<input type="checkbox" name="dynocentre" value="1" <!-- IF S_BUSINESS_DYNOCENTRE -->checked="checked"<!-- ENDIF --> /></td>
+		</tr>
+	</tbody>
+</table>
+
+<!-- ELSEIF S_EDIT_TRACK -->
+
+<table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
+	<thead>
+		<tr>
+			<th colspan="2"><span class="gen">{L_TITLE}</span></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td class="row1" width="30%"><span class="gen"><b>{L_TRACK}</b></span>&nbsp;<span class="gensmall" style="color:#FF0000">[{L_REQUIRED}]</span></td>
+			<td class="row2"><input name="title" type="text" class="post" size="35" value="{TITLE}" /></td>
+		</tr>
+		<tr>
+			<td class="row1" width="30%"><span class="gen"><b>{L_LENGTH}</b></span></td>
+			<td class="row2"><input name="length" type="text" class="post" size="15" value="{LENGTH}" />&nbsp;<select id="mileage_unit" name="mileage_unit"><option value="">{L_SELECT_MILEAGE_UNIT}</option><option value="">------</option><!-- BEGIN mileage --><option value="{mileage.VALUE}" <!-- IF mileage.S_SELECTED -->selected="selected"<!-- ENDIF -->>{mileage.TEXT}</option><!-- END mileage --></select></td>
+		</tr>
+	</tbody>
+</table>
+
+<!-- ELSEIF S_EDIT_PRODUCT -->
+
+<table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
+	<thead>
+		<tr>
+			<th height="25" nowrap="nowrap" colspan="2">{L_EDIT_PRODUCT}</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td class="row1" width="20%"><span class="gen"><b>{L_MODIFICATION}&nbsp;{L_CATEGORY}</b></span></td>
+			<td class="row2" align="left" nowrap="nowrap"><span class="gen"><select id="category_id" name="category_id" ><option value="">{L_SELECT_CATEGORY}</option><option value="">------</option><!-- BEGIN category--><option value="{category.VALUE}" <!-- IF category.S_SELECTED -->selected="selected"<!-- ENDIF -->>{category.TEXT}</option><!-- END category --></select></span></td>
+		</tr>
+		<tr>
+			<td class="row1" width="20%"><span class="gen"><b>{L_MODIFICATION}&nbsp;{L_MANUFACTURER}</b></span></td>
+			<td class="row2" align="left" nowrap="nowrap"><span class="gen"><select id="manufacturer_id" name="manufacturer_id" ><option value="">{L_SELECT_MANUFACTURER}</option><option value="">------</option><!-- BEGIN manufacturer--><option value="{manufacturer.VALUE}" <!-- IF manufacturer.S_SELECTED -->selected="selected"<!-- ENDIF -->>{manufacturer.TEXT}</option><!-- END manufacturer --></select></span></td>
+		</tr>
+		<tr>
+			<td class="row1" width="20%"><span class="gen"><b>{L_MODIFICATION}&nbsp;{L_PRODUCT}</b></span></td>
+			<td class="row2"><input name="title" type="text" class="post" size="35" value="{TITLE}" /></td>
+		</tr>
+	</tbody>
+</table>
+
+<!-- ELSEIF S_UNAPPROVED_VEHICLE -->
 
 <table width="100%" class="tablebg" cellspacing="1" cellpadding="4" border="0">
 <tr> 
@@ -543,6 +666,6 @@
 	<!-- ENDIF -->
 
 	{S_FORM_TOKEN}
-	</form>
+</form>
 
 <!-- INCLUDE mcp_footer.html -->

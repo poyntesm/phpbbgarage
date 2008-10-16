@@ -1113,42 +1113,6 @@ class garage_modification
 	}
 
 	/**
-	* Approve products
-	*
-	* @param array $id_list single-dimension array holding the product ids to approve
-	*
-	*/
-	function approve_product($id_list)
-	{
-		global $phpbb_root_path, $phpEx, $garage;
-
-		for($i = 0; $i < count($id_list); $i++)
-		{
-			$garage->update_single_field(GARAGE_PRODUCTS_TABLE, 'pending', 0, 'id', $id_list[$i]);
-		}
-
-		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_products"));
-	}
-
-	/**
-	* Disapprove products
-	*
-	* @param array $id_list sigle-dimension array holding the product ids to disapprove
-	*
-	*/
-	function disapprove_product($id_list)
-	{
-		global $phpbb_root_path, $phpEx;
-
-		for($i = 0; $i < count($id_list); $i++)
-		{
-			$this->delete_product($id_list[$i]);
-		}
-
-		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_products"));
-	}
-
-	/**
 	* Delete a product
 	*
 	* @param int $make_id make id to delete

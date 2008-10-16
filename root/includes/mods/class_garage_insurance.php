@@ -38,8 +38,8 @@ class garage_insurance
 			'premium'	=> $data['premium'],
 			'cover_type_id'	=> $data['cover_type_id'],
 			'comments'	=> $data['comments'],
-			'business_id'	=> $data['business_id'])
-		);
+			'business_id'	=> $data['business_id'],
+		));
 
 		$db->sql_query($sql);
 

@@ -36,13 +36,36 @@
 					<td class="row2"><textarea name="comments" cols="60" rows="5" wrap="soft"   class="post">{COMMENTS}</textarea></td>
 				</tr>
 				<tr>
-					<td class="cat" align="center" height="28" colspan="2"><input type="hidden" value="{VID}" name="VID" /><input type="hidden" value="{INS_ID}" name="INS_ID" /><input name="submit" type="submit" value="{L_BUTTON}" class="liteoption" /></td>
+					<td class="cat" align="center" height="28" colspan="2">
+						<input type="hidden" value="{VID}" name="VID" />
+						<input type="hidden" value="{INS_ID}" name="INS_ID" />
+						<input type="hidden" value="" name="primary" />
+						<input type="hidden" value="" name="secondary" />
+						<input type="hidden" value="" name="tertiary" />
+						<input name="submit2" type="submit" value="{L_BUTTON}" class="liteoption" />
+					</td>
 				</tr>
 			</tbody>		
 			</table>
 	{S_FORM_TOKEN}
 			</form>
 		</td>
+		
+<script type="text/javascript">
+<!--
+
+function add_insurer ( tertiary )
+{
+	var insurance = document.getElementById("insurance");
+	insurance.action = '{S_MODE_USER_SUBMIT}';
+	insurance.primary.value = 'premium' ;
+	insurance.secondary.value = '' ;
+	insurance.tertiary.value = tertiary ;
+	insurance.submit() ;
+}
+
+-->
+</script>
 
 <!-- INCLUDE garage_footer.html -->
 

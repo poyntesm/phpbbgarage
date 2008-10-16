@@ -61,7 +61,9 @@ class acp_garage_setting
 						'year_start'				=> array('lang' => 'YEAR_RANGE_BEGINNING', 'type' => 'text:3:4', 'explain' => true),
 						'year_end'				=> array('lang' => 'YEAR_RANGE_END', 'type' => 'text:3:4', 'explain' => true),
 						'enable_user_submit_make'		=> array('lang' => 'USER_SUBMIT_MAKE', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_make_approval'			=> array('lang' => 'ENABLE_MAKE_APPROVAL', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_user_submit_model'		=> array('lang' => 'USER_SUBMIT_MODEL', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_model_approval'			=> array('lang' => 'ENABLE_MODEL_APPROVAL', 'type' => 'radio:yes_no', 'explain' => true),
 						'dateformat'				=> array('lang' => 'GARAGE_DATE_FORMAT', 'type' => 'custom', 'method' => 'dateformat_select', 'explain' => true),
 						'integrate_viewtopic'			=> array('lang' => 'INTEGRATE_VIEWTOPIC', 'type' => 'radio:yes_no', 'explain' => true),
 						'integrate_memberlist'			=> array('lang' => 'INTEGRATE_MEMBERLIST', 'type' => 'radio:yes_no', 'explain' => true),
@@ -248,6 +250,8 @@ class acp_garage_setting
 						'legend1'				=> 'ACP_GARAGE_GUESTBOOK_CONFIG',
 						'enable_guestbooks'			=> array('lang' => 'ENABLE_GUESTBOOK', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_guestbooks_bbcode'		=> array('lang' => 'ENABLE_GUESTBOOK_BBCODE', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_guestbooks_smilies'		=> array('lang' => 'ENABLE_GUESTBOOK_SMILIES', 'type' => 'radio:yes_no', 'explain' => true),
+						'enable_guestbooks_url'			=> array('lang' => 'ENABLE_GUESTBOOK_URL', 'type' => 'radio:yes_no', 'explain' => true),
 						'enable_guestbooks_comment_approval'	=> array('lang' => 'ENABLE_GUESTBOOK_COMMENT_APPROVAL', 'type' => 'radio:yes_no', 'explain' => true),
 					)
 				);

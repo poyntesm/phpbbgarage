@@ -494,7 +494,14 @@ $lang = array_merge($lang, array(
 	'ENABLE_BLOG_SMILIES_EXPLAIN' 	=> 'Enable Smilies usage in blogs.',
 	'ENABLE_BLOG_URL' 		=> 'Enable URL Parsing',
 	'ENABLE_BLOG_URL_EXPLAIN' 	=> 'Enable URL parsingin blogs.',
-
+	'ENABLE_MAKE_APPROVAL' 		=> 'Enable Make Approval',
+	'ENABLE_MAKE_APPROVAL_EXPLAIN' 	=> 'Makes require moderator approval before being listed.',
+	'ENABLE_MODEL_APPROVAL' 	=> 'Enable Model Approval',
+	'ENABLE_MODEL_APPROVAL_EXPLAIN'	=> 'Models require moderator approval before being listed.',
+	'ENABLE_GUESTBOOK_SMILIES' 		=> 'Enable Guestbook Smilies',
+	'ENABLE_GUESTBOOK_SMILIES_EXPLAIN' 	=> 'Enable Smilies usage in guestbook comments.',
+	'ENABLE_GUESTBOOK_URL' 		=> 'Enable URL Parsing',
+	'ENABLE_GUESTBOOK_URL_EXPLAIN' 	=> 'Enable URL parsing in guestbook comments.',
 ));
 
 ?>

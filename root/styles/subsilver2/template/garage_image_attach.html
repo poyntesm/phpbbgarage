@@ -35,7 +35,7 @@
 				<!-- IF S_DISPLAY_REMOTE_IMAGE -->
 				<tr>
 					<td class="row1" width="32%"><span class="gen"><b>{L_ENTER_IMAGE_URL}</b></span></td>
-					<td class="row2" colspan="3"><input name="url_image" type="text" class="post" size="40" maxlength="255" value="http://" /></td>
+					<td class="row2" colspan="3"><input name="url_image" type="text" class="post" size="40" maxlength="255" value="<!-- IF URL_IMAGE -->{URL_IMAGE}<!-- ELSE -->http://<!-- ENDIF -->" /></td>
 				</tr>
 				<!-- ENDIF -->
 				<!-- ENDIF -->

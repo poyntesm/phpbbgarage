@@ -15,7 +15,7 @@
 
 		<td width="72%" valign="top" >
 
-				<form id="edit_vehicle" enctype="multipart/form-data" method="post" name="edit_service" action="{S_MODE_ACTION}">
+				<form id="service" enctype="multipart/form-data" method="post" name="service" action="{S_MODE_ACTION}">
 				<table width="100%" cellpadding="3" cellspacing="1" border="0" class="tablebg">
 				<tbody>
 					<tr>
@@ -42,13 +42,34 @@
 						<td class="row2" colspan="2"><input name="mileage" type="text" class="post" size="10" value="{MILEAGE}" /></td>
 					</tr>
 					<tr>
-						<td class="cat" align="center" height="28" colspan="3"><input type="hidden" value="{VID}" name="VID" /><input type="hidden" value="{SVID}" name="SVID" /><input name="modification" type="submit" value="{L_BUTTON}" class="liteoption" /></td>
+						<td class="cat" align="center" height="28" colspan="3">
+							<input type="hidden" value="{VID}" name="VID" />
+							<input type="hidden" value="{SVID}" name="SVID" />
+							<input type="hidden" value="" name="primary" />
+							<input type="hidden" value="" name="secondary" />
+							<input type="hidden" value="" name="tertiary" />
+							<input name="submit2" type="submit" value="{L_BUTTON}" class="liteoption" />
+						</td>
 					</tr>
 				</tbody>
 				</table>
 	{S_FORM_TOKEN}
 				</form>
 		</td>
+
+<script type="text/javascript">
+<!--
+function add_garage ( tertiary )
+{
+	var service = document.getElementById("service");
+	service.action = '{S_MODE_USER_SUBMIT}';
+	service.primary.value = 'service' ;
+	service.secondary.value = '' ;
+	service.tertiary.value = tertiary ;
+	service.submit() ;
+}
+-->
+</script>
 
 <!-- INCLUDE garage_footer.html -->
 

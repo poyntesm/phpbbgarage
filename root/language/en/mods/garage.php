@@ -805,7 +805,11 @@ $lang = array_merge($lang, array(
 
 	//ADDED FOR B4
 	'DELETE_BLOG'			=> 'Delete blog',
-	'CONFIRM_DELETE_BLOG' 	=> 'Are you sure you want to delete this blog entry?  This operation is not undo-able!',
+	'CONFIRM_DELETE_BLOG' 		=> 'Are you sure you want to delete this blog entry?  This operation is not undo-able!',
+	'ADD_USER_DATA'			=> 'Add user data',
+	'ADD_DATA_SUCCESS'		=> 'Data Successfully Addded',
+	'ADD_DATA_SUCCESS_EXPLAIN'	=> 'The new item you requested to be created has been completed, to be redirected back to the original page where all previously entered data should still be entered please click the button below. <br/><br/><b>NOTE</b>: If you entered an image to be uploaded you will need to re-enter this information. Remote images will be remembered.',
+	'RETURN_TO_ITEM'		=> 'Return To Item',
 ));
 
 ?>

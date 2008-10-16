@@ -31,11 +31,12 @@ class garage_model
 	*/
 	function insert_make($data)
 	{
-		global $db;
+		global $db, $garage_config;
 
 		$sql = 'INSERT INTO ' . GARAGE_MAKES_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'make'	=> $data['make'])
-		);
+			'make'		=> $data['make'],
+			'pending'	=> ($garage_config['enable_model_approval']) ? 1 : 0,
+		));
 
 		$db->sql_query($sql);
 
@@ -130,12 +131,13 @@ class garage_model
 	*/
 	function insert_model($data)
 	{
-		global $db;
+		global $db, $garage_config;
 
 		$sql = 'INSERT INTO ' . GARAGE_MODELS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 			'make_id'	=> $data['make_id'],
-			'model'		=> $data['model'])
-		);
+			'model'		=> $data['model'],
+			'pending'	=> ($garage_config['enable_model_approval']) ? 1 : 0,
+		));
 
 		$db->sql_query($sql);
 
@@ -294,11 +296,13 @@ class garage_model
 
 		$sql = $db->sql_build_query('SELECT', 
 			array(
-			'SELECT'	=> 'md.id, md.model, md.make_id',
+			'SELECT'	=> 'md.id, md.model, md.make_id, mk.make',
 			'FROM'		=> array(
+				GARAGE_MAKES_TABLE	=> 'mk',
 				GARAGE_MODELS_TABLE	=> 'md',
 			),
-			'WHERE'		=>  "md.id = $model_id"
+			'WHERE'		=>  "md.id = $model_id
+						AND md.make_id = mk.id"
 		));
 
 		$result = $db->sql_query($sql);
@@ -575,44 +579,6 @@ class garage_model
 
 		return;
 	}
-
-
-	/**
-	* Approve makes
-	*
-	* @param array $id_list single-dimension array holding the make ids to approve
-	*
-	*/
-	function approve_make($id_list)
-	{
-		global $phpbb_root_path, $phpEx, $garage;
-
-		for($i = 0; $i < count($id_list); $i++)
-		{
-			$garage->update_single_field(GARAGE_MAKES_TABLE, 'pending', 0, 'id', $id_list[$i]);
-		}
-
-		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_makes"));
-	}
-
-	/**
-	* Approve models
-	*
-	* @param array $id_list single-dimension array holding the model ids to approve
-	*
-	*/
-	function approve_model($id_list)
-	{
-		global $phpbb_root_path, $phpEx, $garage;
-
-		for($i = 0; $i < count($id_list); $i++)
-		{
-			$garage->update_single_field(GARAGE_MODELS_TABLE, 'pending', 0, 'id', $id_list[$i]);
-		}
-
-		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_models"));
-	}
-
 }
 
 $garage_model = new garage_model();

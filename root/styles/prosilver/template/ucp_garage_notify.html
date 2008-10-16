@@ -23,6 +23,24 @@
 				<label for="guestbook_pm_notify0"><input type="radio" name="guestbook_pm_notify" id="guestbook_pm_notify0" value="0"<!-- IF not S_GUESTBOOK_PM_NOTIFY --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
 			</dd>
 		</dl>
+		<!-- IF S_DISPLAY_EMAIL_OPTOUT-->
+		<dl>
+			<dt><label for="email_optout1">{L_EMAIL_OPTOUT}:</label></dt>
+			<dd>
+				<label for="email_optout1"><input type="radio" name="email_optout" id="email_optout1" value="1"<!-- IF S_EMAIL_OPTOUT --> checked="checked"<!-- ENDIF --> /> {L_YES}</label> 
+				<label for="email_optout0"><input type="radio" name="email_optout" id="email_optout0" value="0"<!-- IF not S_EMAIL_OPTOUT --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+			</dd>
+		</dl>
+		<!-- ENDIF -->
+		<!-- IF S_DISPLAY_PM_OPTOUT-->
+		<dl>
+			<dt><label for="pm_optout1">{L_PM_OPTOUT}:</label></dt>
+			<dd>
+				<label for="pm_optout1"><input type="radio" name="pm_optout" id="pm_optout1" value="1"<!-- IF S_PM_OPTOUT --> checked="checked"<!-- ENDIF --> /> {L_YES}</label> 
+				<label for="pm_optout0"><input type="radio" name="pm_optout" id="pm_optout0" value="0"<!-- IF not S_PM_OPTOUT --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+			</dd>
+		</dl>
+		<!-- ENDIF -->
 
 		</fieldset>
 

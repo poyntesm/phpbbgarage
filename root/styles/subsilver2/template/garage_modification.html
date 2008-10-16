@@ -47,15 +47,21 @@ function category_change(sel)
 {
 	var category_id = sel.options[sel.selectedIndex].value;
 	var manufacturer_id = document.modification.elements['manufacturer_id'].value;
+	var manufacturer_id_value = manufacturer_id.value;
 
 	//If We Have Two Valid Selections Update Prouct List
-	if (category_id > 0 && manufacturer_id > 0)
+	if (category_id > 0 && manufacturer_id_value > 0)
 	{
 		document.getElementById('product_id').options.length = 0;
 		ajax.requestFile = 'garage.php?mode=get_product_list&category_id='+category_id+'&manufacturer_id='+manufacturer_id;
 		ajax.onCompletion = build_product_list;
 		ajax.runAJAX();
 	}
+	else
+	{
+		document.getElementById('product_id').options.length = 0;
+	}
+		
 
 }
 
@@ -130,7 +136,15 @@ function build_product_list()
 					<!-- ENDIF -->
 
 					<tr>
-						<td class="cat" align="center" height="28" colspan="3"><input type="hidden" value="" name="redirect" /><input type="hidden" value="{VID}" name="VID" /><input type="hidden" value="{MID}" name="MID" /><input name="modification" type="submit" value="{L_BUTTON}" class="liteoption" /></td>
+						<td class="cat" align="center" height="28" colspan="3">
+							<input type="hidden" value="" name="redirect" />
+							<input type="hidden" value="{VID}" name="VID" />
+							<input type="hidden" value="{MID}" name="MID" />
+							<input type="hidden" value="" name="primary" />
+							<input type="hidden" value="" name="secondary" />
+							<input type="hidden" value="" name="tertiary" />
+							<input name="submit2" type="submit" value="{L_BUTTON}" class="liteoption" />
+						</td>
 					</tr>
 				</tbody>
 				</form>
@@ -149,12 +163,46 @@ function build_product_list()
 //Fill The Product Dropdown If We Are Editing + Select Correct One
 update_product_list('{CATEGORY_ID}', '{MANUFACTURER_ID}', '{PRODUCT_ID}');
 
-function add_product (redirect)
+function add_manufacturer ( tertiary )
 {
-	document.modification.redirect.value = redirect;
-	document.modification.action = '{S_MODE_ACTION_PRODUCT}';
-	document.modification.submit() ;
+	var modification = document.getElementById("modification");
+	modification.action = '{S_MODE_USER_SUBMIT}';
+	modification.primary.value = 'modification' ;
+	modification.secondary.value = 'manufacturer' ;
+	modification.tertiary.value = tertiary ;
+	modification.submit() ;
 }
+
+function add_product ( tertiary )
+{
+	var modification = document.getElementById("modification");
+	modification.action = '{S_MODE_USER_SUBMIT}';
+	modification.primary.value = 'modification' ;
+	modification.secondary.value = 'product' ;
+	modification.tertiary.value = tertiary ;
+	modification.submit() ;
+}
+
+function add_shop ( tertiary )
+{
+	var modification = document.getElementById("modification");
+	modification.action = '{S_MODE_USER_SUBMIT}';
+	modification.primary.value = 'modification' ;
+	modification.secondary.value = 'shop' ;
+	modification.tertiary.value = tertiary ;
+	modification.submit() ;
+}
+
+function add_garage ( tertiary )
+{
+	var modification = document.getElementById("modification");
+	modification.action = '{S_MODE_USER_SUBMIT}';
+	modification.primary.value = 'modification' ;
+	modification.secondary.value = 'garage' ;
+	modification.tertiary.value = tertiary ;
+	modification.submit() ;
+}
+
 //-->
 </script>
 

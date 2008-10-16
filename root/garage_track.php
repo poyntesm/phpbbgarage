@@ -106,6 +106,14 @@ switch( $mode )
 		$tracks = $garage_track->get_all_tracks();
 
 		/**
+		* Get all required/optional data and check required data is present
+		*/
+		$params = array('VID' => '', 'track_id' => '', 'length' => '', 'mileage_unit' => '', 'condition_id' => '', 'type_id' => '', 'minute' => '', 'second' => '', 'millisecond' => '', 'redirect' => '', 'url_image' => '');
+		$data 	= $garage->process_vars($params);
+		$params = array('title' => '');
+		$data 	+= $garage->process_mb_vars($params);
+
+		/**
 		* Handle template declarations & assignments
 		*/
 		page_header($user->lang['GARAGE']);
@@ -122,73 +130,22 @@ switch( $mode )
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=add_lap&amp;VID=$vid"))
 		);
 		$garage_template->attach_image('lap');
-		$garage_template->track_dropdown($tracks);
-		$garage_template->track_condition_dropdown();
-		$garage_template->lap_type_dropdown();
+		$garage_template->track_dropdown($tracks, $data['track_id']);
+		$garage_template->track_condition_dropdown($data['condition_id']);
+		$garage_template->lap_type_dropdown($data['type_id']);
 		$template->assign_vars(array(
 			'L_TITLE'  		=> $user->lang['ADD_LAP'],
 			'L_BUTTON'  		=> $user->lang['ADD_LAP'],
-			'U_ADD_TRACK'		=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=add_track&amp;VID=$vid&amp;redirect=add_lap"),
+			'U_ADD_TRACK'		=> 'javascript:add_track()',
 			'VID' 			=> $vid,
+			'MINUTE' 		=> $data['minute'],
+			'SECOND' 		=> $data['second'],
+			'MILLISECOND' 		=> $data['millisecond'],
+			'URL_IMAGE'		=> $data['url_image'],
 			'S_DISPLAY_ADD_TRACK'	=> $garage_config['enable_user_add_track'],
-			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=insert_lap"))
-         	);
-		$garage_template->sidemenu();
-	break;
-
-	/**
-	* Display page to add new lap
-	*/
-	case 'add_track':
-		/**
-		* Check user logged in, else redirecting to login with return address to get them back
-		*/
-		if ($user->data['user_id'] == ANONYMOUS)
-		{
-			login_box("garage_track.$phpEx?mode=add_track&amp;VID=$vid");
-		}
-
-		/**
-		* Check authorisation to perform action, redirecting to error screen if not
-		*/
-		if (!$garage_config['enable_tracktime'] || !$garage_config['enable_user_add_track'] || !$auth->acl_get('u_garage_add_track'))
-		{
-			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=18"));
-		}
-
-		/**
-		* Check vehicle ownership, only owners & moderators with correct permissions get past here
-		*/
-		$garage_vehicle->check_ownership($vid);
-
-		/**
-		* Get vehicle & tracks data from DB
-		*/
-		$vehicle=$garage_vehicle->get_vehicle($vid);
-
-		/**
-		* Handle template declarations & assignments
-		*/
-		page_header($user->lang['GARAGE']);
-		$template->set_filenames(array(
-			'header' => 'garage_header.html',
-			'body'   => 'garage_track.html')
-		);
-		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $vehicle['vehicle'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_own_vehicle&amp;VID=$vid"))
-		);
-		$template->assign_block_vars('navlinks', array(
-			'FORUM_NAME'	=> $user->lang['ADD_TRACK'],
-			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=add_track&amp;VID=$vid"))
-		);
-		$garage_template->mileage_dropdown();
-		$template->assign_vars(array(
-			'L_TITLE'  		=> $user->lang['ADD_TRACK'],
-			'L_BUTTON'  		=> $user->lang['ADD_TRACK'],
-			'VID' 			=> $vid,
-			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=insert_track"))
-         	);
+			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=insert_lap"),
+			'S_MODE_USER_SUBMIT' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_data"),
+         	));
 		$garage_template->sidemenu();
 	break;
 
@@ -295,7 +252,7 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('length' => '', 'mileage_unit' => '');
+		$params = array('VID' => '', 'LID' => '', 'length' => '', 'mileage_unit' => '', 'condition_id' => '', 'type_id' => '', 'minute' => '', 'second' => '', 'millisecond' => '', 'redirect' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '');
 		$data 	= $garage->process_vars($params);
 		$params = array('title' => '');
 		$data 	+= $garage->process_mb_vars($params);
@@ -306,6 +263,7 @@ switch( $mode )
 		* Perform required DB work to create track
 		*/
 		$tid = $garage_track->insert_track($data);
+		$data['track_id'] = $tid;
 
 		/**
 		* Perform notification if required
@@ -315,10 +273,42 @@ switch( $mode )
 			$garage->pending_notification('unapproved_tracks');
 		}
 
-		/**
-		* All work complete for mode, so redirect to correct page
-		*/
-		redirect(append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=add_lap&amp;VID=$vid"));
+		//Now rather than redirect.. we build a page with all data
+		page_header($user->lang['GARAGE']);
+
+		//Set Template Files In Use For This Mode
+		$template->set_filenames(array(
+			'header' 	=> 'garage_header.html',
+			'body'   	=> 'garage_user_submit_data.html')
+		);
+
+		$user_submit_action = append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=add_lap");
+		if ($data['tertiary'] == "edit")
+		{
+			$user_submit_action = append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;VID={$data['VID']}&amp;LID={$data['LID']}");
+		}
+
+		$template->assign_vars(array(
+			'L_BUTTON_LABEL'		=> $user->lang['RETURN_TO_ITEM'],
+			'S_USER_SUBMIT_SUCCESS'		=> true,
+			'S_USER_SUBMIT_ACTION'		=> $user_submit_action,
+		));
+
+		foreach ($data as $key => $value)
+		{
+			if (empty($value))
+			{
+				continue;
+			}
+			$template->assign_block_vars('hidden_data', array(
+				'VALUE'	=> $value,
+				'NAME'	=> $key,
+			));
+		}
+
+		//Display Page...In Order Header->Menu->Body->Footer (Foot Gets Parsed At The Bottom)
+		$garage_template->sidemenu();
+
 	break;
 
 	/**
@@ -337,6 +327,12 @@ switch( $mode )
 		* Check vehicle ownership, only owners & moderators with correct permissions get past here
 		*/
 		$garage_vehicle->check_ownership($vid);
+
+		/**
+		* Get any changed data incase we are arriving from creating a track
+		*/
+		$params = array('track_id' => '', 'condition_id' => '', 'type_id' => '', 'minute' => '', 'second' => '', 'millisecond' => '', 'redirect' => '');
+		$store 	= $garage->process_vars($params);
 
 		/**
 		* Get vehicle, tracks & lap data from DB
@@ -362,20 +358,23 @@ switch( $mode )
 			'FORUM_NAME'	=> $user->lang['EDIT_LAP'],
 			'U_VIEW_FORUM'	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=edit_lap&amp;VID=$vid&amp;LID=$lid"))
 		);
-		$garage_template->track_dropdown($tracks, $data['track_id']);
-		$garage_template->track_condition_dropdown($data['condition_id']);
-		$garage_template->lap_type_dropdown($data['type_id']);
+		$garage_template->track_dropdown($tracks, (!empty($store['track_id'])) ? $store['track_id'] : $data['track_id']);
+		$garage_template->track_condition_dropdown((!empty($store['condition_id'])) ? $store['condition_id'] : $data['condition_id']);
+		$garage_template->lap_type_dropdown((!empty($store['type_id'])) ? $store['type_id'] : $data['type_id']);
 		$template->assign_vars(array(
 			'L_TITLE'  		=> $user->lang['EDIT_LAP'],
 			'L_BUTTON'  		=> $user->lang['EDIT_LAP'],
 			'U_EDIT_DATA' 		=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;VID=$vid&amp;LID=$lid"),
 			'U_MANAGE_GALLERY' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=edit_lap&amp;VID=$vid&amp;LID=$lid#images"),
-			'MINUTE' 		=> $data['minute'],
-			'SECOND' 		=> $data['second'],
-			'MILLISECOND' 		=> $data['millisecond'],
+			'U_ADD_TRACK'		=> "javascript:add_track('edit')",
+			'MINUTE' 		=> (!empty($store['minute'])) ? $store['minute'] : $data['minute'],
+			'SECOND' 		=> (!empty($store['second'])) ? $store['second'] : $data['second'],
+			'MILLISECOND' 		=> (!empty($store['millisecond'])) ? $store['millisecond'] : $data['millisecond'],
 			'VID' 			=> $vid,
 			'LID' 			=> $lid,
-			'PENDING_REDIRECT'	=> request_var('PENDING', ''),
+			'S_DISPLAY_ADD_TRACK'	=> $garage_config['enable_user_add_track'],
+			'S_MODE_USER_SUBMIT' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_data"),
+			'REDIRECT' 		=> $store['redirect'],
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=update_lap"),
 			'S_IMAGE_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_track.$phpEx", "mode=insert_lap_image"),
 		));
@@ -413,7 +412,7 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('track_id' => '', 'condition_id' => '', 'type_id' => '', 'minute' => '', 'second' => '', 'millisecond' => '', 'pending_redirect' => '');
+		$params = array('track_id' => '', 'condition_id' => '', 'type_id' => '', 'minute' => '', 'second' => '', 'millisecond' => '', 'redirect' => '');
 		$data 	= $garage->process_vars($params);
 		$params = array('track_id', 'condition_id', 'type_id', 'minute', 'second', 'millisecond');
 		$garage->check_required_vars($params);
@@ -440,7 +439,7 @@ switch( $mode )
 		/**
 		* If editted by MCP redirect back to MCP
 		*/
-		if ($data['pending_redirect'] == 'MCP')
+		if ($data['redirect'] == 'MCP')
 		{
 			redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_laps"));
 		}

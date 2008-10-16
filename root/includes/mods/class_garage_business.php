@@ -33,8 +33,6 @@ class garage_business
 	{
 		global $db, $garage_config;
 
-		$pending = ($garage_config['enable_business_approval']) ? 1 : 0;
-
 		$sql = 'INSERT INTO ' . GARAGE_BUSINESS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 			'title'		=> $data['title'],
 			'address'	=> $data['address'],
@@ -48,12 +46,12 @@ class garage_business
 			'retail'	=> $data['retail'],
 			'product'	=> $data['product'],
 			'dynocentre'	=> $data['dynocentre'],
-			'pending'	=> $pending,
+			'pending'	=> ($garage_config['enable_business_approval']) ? 1 : 0,
 		));
 
-		$result = $db->sql_query($sql);
+		$db->sql_query($sql);
 
-		return;
+		return $db->sql_nextid();
 	}
 
 	/**
@@ -65,8 +63,6 @@ class garage_business
 	function update_business($data)
 	{
 		global $db, $garage_config;
-
-		$pending = ($data['pending'] == 0) ? 0 : $garage_config['enable_business_approval'];
 
 		$update_sql = array(
 			'title'		=> $data['title'],
@@ -81,7 +77,7 @@ class garage_business
 			'retail'	=> $data['retail'],
 			'product'	=> $data['product'],
 			'dynocentre'	=> $data['dynocentre'],
-			'pending'	=> $pending,
+			'pending'	=> $garage_config['enable_business_approval'],
 		);
 
 		$sql = 'UPDATE ' . GARAGE_BUSINESS_TABLE . '
@@ -699,7 +695,7 @@ class garage_business
 		$dynoruns = $garage_dynorun->get_dynoruns_by_dynocentre_id($business_id);
 		for ($i = 0, $count = sizeof($dynoruns);$i < $count; $i++)
 		{
-			$garage_dynoruns->delete_dynorun($dynoruns[$i]['id']);
+			$garage_dynorun->delete_dynorun($dynoruns[$i]['id']);
 		}
 
 		return;
@@ -823,42 +819,6 @@ class garage_business
 		$garage->update_single_field(GARAGE_PRODUCTS_TABLE, 'business_id', $to_id, 'business_id', $from_id);
 
 		return;
-	}
-
-	/**
-	* Approve business's
-	*
-	* @param array $id_list single-dimension array with business ids to approve
-	*
-	*/
-	function approve_business($id_list)
-	{
-		global $phpbb_root_path, $phpEx, $garage;
-
-		for($i = 0; $i < count($id_list); $i++)
-		{
-			$garage->update_single_field(GARAGE_BUSINESS_TABLE, 'pending', 0, 'id', $id_list[$i]);
-		}
-
-		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_business"));
-	}
-
-	/**
-	* Disapprove business's, this will force a delete of ALL items linked to the business
-	*
-	* @param array $id_list single-dimension array with business ids to disapprove
-	*
-	*/
-	function disapprove_business($id_list)
-	{
-		global $phpbb_root_path, $phpEx;
-
-		for($i = 0; $i < count($id_list); $i++)
-		{
-			$this->delete_business($id_list[$i]);
-		}
-
-		redirect(append_sid("{$phpbb_root_path}mcp.$phpEx", "i=garage&amp;mode=unapproved_business"));
 	}
 }
 $garage_business = new garage_business();
