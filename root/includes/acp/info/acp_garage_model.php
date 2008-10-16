@@ -20,7 +20,7 @@ class acp_garage_model_info
 			'title'		=> 'ACP_GARAGE_MODEL_MANAGEMENT',
 			'version'	=> '1.0.0',
 			'modes'		=> array(
-				'makes' => array('title' => 'ACP_GARAGE_MODELS', 'auth' => 'acl_a_garage_model', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
+				'makes' => array('title' => 'ACP_GARAGE_MODELS', 'auth' => 'acl_a_garage_model', 'cat' => array('ACP_GARAGE_MANAGEMENT')),
 			),
 		);
 	}

@@ -20,7 +20,7 @@ class acp_garage_category_info
 			'title'		=> 'ACP_GARAGE_CATEGORY_MANAGEMENT',
 			'version'	=> '1.0.0',
 			'modes'		=> array(
-				'categories'	=> array('title' => 'ACP_GARAGE_CATEGORIES', 'auth' => 'acl_a_garage_category', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
+				'categories'	=> array('title' => 'ACP_GARAGE_CATEGORIES', 'auth' => 'acl_a_garage_category', 'cat' => array('ACP_GARAGE_MANAGEMENT')),
 			),
 		);
 	}

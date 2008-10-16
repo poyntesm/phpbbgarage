@@ -125,5 +125,8 @@ INSERT INTO phpbb_garage_config (config_name, config_value) VALUES ('enable_blog
 INSERT INTO phpbb_garage_config (config_name, config_value) VALUES ('enable_blogs_url', '1');
 INSERT INTO phpbb_garage_config (config_name, config_value) VALUES ('enable_make_approval', '0');
 INSERT INTO phpbb_garage_config (config_name, config_value) VALUES ('enable_model_approval', '0');
+INSERT INTO phpbb_garage_config (config_name, config_value) VALUES ('enable_guestbooks_url', '1');
+INSERT INTO phpbb_garage_config (config_name, config_value) VALUES ('enable_guestbooks_smilies', '1');
+
 
 # POSTGRES COMMIT #

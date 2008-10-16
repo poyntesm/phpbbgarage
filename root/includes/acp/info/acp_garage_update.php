@@ -20,7 +20,7 @@ class acp_garage_update_info
 			'title'		=> 'ACP_GARAGE_UPDATE',
 			'version'	=> '1.0.0',
 			'modes'		=> array(
-				'version_check'		=> array('title' => 'ACP_GARAGE_VERSION_CHECK', 'auth' => 'acl_a_garage_update', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
+				'version_check'		=> array('title' => 'ACP_GARAGE_VERSION_CHECK', 'auth' => 'acl_a_garage_update', 'cat' => array('ACP_GARAGE_MANAGEMENT')),
 			),
 		);
 	}

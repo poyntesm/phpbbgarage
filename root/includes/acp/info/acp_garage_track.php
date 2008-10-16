@@ -20,7 +20,7 @@ class acp_garage_track_info
 			'title'		=> 'ACP_GARAGE_TRACK_MANAGEMENT',
 			'version'	=> '1.0.0',
 			'modes'		=> array(
-				'track'	=> array('title' => 'ACP_GARAGE_TRACK', 'auth' => 'acl_a_garage_track', 'cat' => array('ACP_GARAGE_CONFIGURATION')),
+				'track'	=> array('title' => 'ACP_GARAGE_TRACK', 'auth' => 'acl_a_garage_track', 'cat' => array('ACP_GARAGE_MANAGEMENT')),
 			),
 		);
 	}
