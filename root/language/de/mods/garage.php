@@ -805,6 +805,10 @@ $lang = array_merge($lang, array(
 	//ADDED FOR B4
 	'DELETE_BLOG'			=> 'Blog-Eintrag löschen',
 	'CONFIRM_DELETE_BLOG' 	=> 'Bist du sicher, dass du diesen Blog-Eintrag löschen möchtest? Du kannst diesen Vorgang nicht rückgängig machen!',
+	'ADD_USER_DATA'			=> 'Benutzerdaten hinzufügen',
+	'ADD_DATA_SUCCESS'		=> 'Daten erfolgreich hinzugefügt',
+	'ADD_DATA_SUCCESS_EXPLAIN'	=> 'Der neue Eintrag, den du beantragt hast zu erstellen, wurde fertiggestellt. Um zurück zur Ausgangsseite zu gelangen, auf der sämtliche vorher eingegebene Daten noch vorhanden sein sollten, klicke bitte auf die nachfolgende Schaltfläche. <br/><br/><b>BEACHTE</b>: Wenn du ein Bild zum Hochladen eingetragen hast, musst du die Informationen nochmals eingeben. Angaben zu externen Bilder wurden beibehalten.',
+	'RETURN_TO_ITEM'		=> 'Zum Eintrag zurückkehren',
 ));
 
 ?>

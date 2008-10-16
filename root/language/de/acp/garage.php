@@ -490,11 +490,18 @@ $lang = array_merge($lang, array(
 	'REMOVE_SELECTED_ORPHANS' 	=> 'Lösche markierte Dateien',
 	'MOVE_PRODUCT_TO'		=> 'Verschiebe Produkte nach',
 	'DELETE_MADE_PRODUCTS'		=> 'Lösche Produkte eines Unternehmens. (Hinweis: Zugeordnete Modifikationen werden gelöscht)',
-	'ENABLE_BLOG_SMILIES' 		=> 'Blog Smilies aktivieren',
-	'ENABLE_BLOG_SMILIES_EXPLAIN' 	=> 'aktiviert die Benutzung von Smilies in Blogs.',
+	'ENABLE_BLOG_SMILIES' 		=> 'Blog-Smilies aktivieren',
+	'ENABLE_BLOG_SMILIES_EXPLAIN' 	=> 'aktiviert die Benutzung von Smilies in Blogs',
 	'ENABLE_BLOG_URL' 		=> 'URL-Parsing aktivieren',
-	'ENABLE_BLOG_URL_EXPLAIN' 	=> 'aktiviert URL-Parsing in Blogs.',
-
+	'ENABLE_BLOG_URL_EXPLAIN' 	=> 'aktiviert URL-Parsing in Blogs',
+	'ENABLE_MAKE_APPROVAL' 		=> 'Herstellergenehmigung aktivieren',
+	'ENABLE_MAKE_APPROVAL_EXPLAIN' 	=> 'Hersteller bedürfen der Genehmigung vom Moderator, bevor sie gelistet werden.',
+	'ENABLE_MODEL_APPROVAL' 	=> 'Fabrikat-Genehmigung aktivieren',
+	'ENABLE_MODEL_APPROVAL_EXPLAIN'	=> 'Fabrikate bedürfen der Genehmigung vom Moderator, bevor sie gelistet werden.',
+	'ENABLE_GUESTBOOK_SMILIES' 		=> 'Gästebuch-Smilies aktivieren',
+	'ENABLE_GUESTBOOK_SMILIES_EXPLAIN' 	=> 'aktiviert die Benutzung von Smilies im Gästebuch',
+	'ENABLE_GUESTBOOK_URL' 		=> 'URL-Parsing aktivieren',
+	'ENABLE_GUESTBOOK_URL_EXPLAIN' 	=> 'aktiviert URL-Parsing in Gästebuch-Kommentaren',
 ));
 
 ?>
