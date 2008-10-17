@@ -158,7 +158,7 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params	= array('rt' => 0, 'sixty' => 0, 'three' => 0, 'eighth' => 0, 'eighthmph' => 0, 'thou' => 0, 'quart' => '', 'quartmph' => 0, 'dynorun_id' => 0);
+		$params	= array('rt' => 0.000, 'sixty' => 0.000, 'three' => 0.000, 'eighth' => 0.000, 'eighthmph' => 0.000, 'thou' => 0.000, 'quart' => '', 'quartmph' => 0.000, 'dynorun_id' => 0);
 		$data 	= $garage->process_vars($params);
 		$params = array('quart');
 		$garage->check_required_vars($params);
@@ -319,7 +319,7 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('rt' => '', 'sixty' => '', 'three' => '', 'eighth' => '', 'eighthmph' => '', 'thou' => '', 'quart' => '', 'quartmph' => '', 'dynorun_id' => 0, 'editupload' => '', 'image_id' => '', 'redirect' => '');
+		$params = array('rt' => 0.000, 'sixty' => 0.000, 'three' => 0.000, 'eighth' => 0.000, 'eighthmph' => 0.000, 'thou' => 0.000, 'quart' => '', 'quartmph' => 0.000, 'dynorun_id' => 0, 'editupload' => '', 'image_id' => '', 'redirect' => '');
 		$data = $garage->process_vars($params);
 		$params = array('quart');
 		$garage->check_required_vars($params);
