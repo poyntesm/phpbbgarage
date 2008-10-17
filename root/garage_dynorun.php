@@ -103,8 +103,10 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('VID' => '', 'dynocentre_id' => '', 'bhp' => '', 'bhp_unit' => '', 'torque' => '', 'torque_unit' => '', 'boost' => '', 'boost_unit' => '', 'nitrous' => '', 'peakpoint' => '', 'url_image' => '');
+		$params = array('VID' => '', 'dynocentre_id' => '', 'bhp' => '', 'torque' => '', 'boost' => '', 'nitrous' => '', 'peakpoint' => '', 'url_image' => '');
 		$data 	= $garage->process_vars($params);
+		$params = array('bhp_unit' => '', 'torque_unit' => '', 'boost_unit' => '');
+		$data	+= $garage->process_mb_vars($params);
 
 		/**
 		* Get dynocentres & vehicle data from DB
@@ -185,8 +187,10 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('dynocentre_id' => '', 'bhp' => '', 'bhp_unit' => '', 'torque' => 0, 'torque_unit' => '', 'boost' => 0, 'boost_unit' => 'PSI', 'nitrous' => 0, 'peakpoint' => 0);
+		$params = array('dynocentre_id' => '', 'bhp' => '', 'torque' => 0, 'boost' => 0, 'nitrous' => 0, 'peakpoint' => 0);
 		$data 	= $garage->process_vars($params);
+		$params = array('bhp_unit' => '', 'torque_unit' => '', 'boost_unit' => 'PSI');
+		$data	+= $garage->process_mb_vars($params);
 		$params = array('dynocentre_id', 'bhp', 'bhp_unit');
 		$garage->check_required_vars($params);
 
@@ -265,8 +269,10 @@ switch( $mode )
 		/**
 		* Get any changed data incase we are arriving from creating a dynocentre
 		*/
-		$params = array('dynocentre_id' => '', 'bhp' => '', 'bhp_unit' => '', 'torque' => 0, 'torque_unit' => '', 'boost' => 0, 'boost_unit' => 'PSI', 'nitrous' => 0, 'peakpoint' => 0, 'redirect' => '');
+		$params = array('dynocentre_id' => '', 'bhp' => '', 'torque' => 0, 'boost' => 0, 'nitrous' => 0, 'peakpoint' => 0, 'redirect' => '');
 		$store 	= $garage->process_vars($params);
+		$params = array('bhp_unit' => '', 'torque_unit' => '', 'boost_unit' => 'PSI');
+		$data	+= $garage->process_mb_vars($params);
 
 		/**
 		* Get vehicle, dynorun, dynocentres & gallery data from DB
@@ -349,8 +355,10 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('dynocentre_id' => '', 'bhp' => '', 'bhp_unit' => '', 'torque' => '', 'torque_unit' => '', 'boost' => '', 'boost_unit' => '', 'nitrous' => '', 'peakpoint' => '', 'editupload' => '', 'image_id' => '', 'redirect' => '');
+		$params = array('dynocentre_id' => '', 'bhp' => '', 'torque' => '', 'boost' => '', 'nitrous' => '', 'peakpoint' => '', 'editupload' => '', 'image_id' => '', 'redirect' => '');
 		$data 	= $garage->process_vars($params);
+		$params = array('bhp_unit' => '', 'torque_unit' => '', 'boost_unit' => '');
+		$data	+= $garage->process_mb_vars($params);
 		$params = array('dynocentre_id', 'bhp', 'bhp_unit');
 		$garage->check_required_vars($params);
 
