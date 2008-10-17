@@ -494,6 +494,14 @@ $lang = array_merge($lang, array(
 	'ENABLE_BLOG_SMILIES_EXPLAIN' 				=> 'Ενεργοποιεί την χρήση εικονιδίων στα blogs.',
 	'ENABLE_BLOG_URL' 							=> 'Ενεργοποίηση ανάλυσης URL',
 	'ENABLE_BLOG_URL_EXPLAIN' 					=> 'Ενεργοποιεί την αυτόματη ανάλυση των URL μέσα στα blogs.',
+	'ENABLE_MAKE_APPROVAL' 						=> 'Ενεργοποίηση έγκρισης μάρκας',
+	'ENABLE_MAKE_APPROVAL_EXPLAIN' 				=> 'Οι μάρκες απαιτούν έγκριση από συντονιστή πριν εμφανιστούν στη λίστα.',
+	'ENABLE_MODEL_APPROVAL' 					=> 'Ενεργοποίηση έγκρισης μοντέλων',
+	'ENABLE_MODEL_APPROVAL_EXPLAIN'				=> 'Τα μοντέλα απαιτούν έγκριση από συντονιστή πριν εμφανιστούν στη λίστα.',
+	'ENABLE_GUESTBOOK_SMILIES' 					=> 'Ενεργοποίηση εικονιδίων στο Guestbook',
+	'ENABLE_GUESTBOOK_SMILIES_EXPLAIN' 			=> 'Ενεργοποίηση χρήσης εικονιδίων στα σχόλια του guestbook.',
+	'ENABLE_GUESTBOOK_URL' 						=> 'Ενεργοποίηση ανάλυσης URLs',
+	'ENABLE_GUESTBOOK_URL_EXPLAIN' 				=> 'Ενεργοποίηση ανάλυσης URLs στα σχόλια του guestbook.',
 
 ));
 
