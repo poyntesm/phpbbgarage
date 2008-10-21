@@ -3,8 +3,7 @@
 *
 * acp_garage_permissions (phpBB Garage Permission Set) [Dutch]
 *
-* @package language 
-* @translated by Roblom from www.deCRXgarage.nl
+* @package language - translated by Roblom from www.deCRXgarage.nl
 * @version $Id: permissions_garage.php 419 2007-05-22 14:41:58Z poyntesm $
 * @copyright (c) 2005 phpBB Garage
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
@@ -64,7 +63,6 @@ $lang = array_merge($lang, array(
 	'acl_u_garage_remote_image'			=> array('lang' => 'Kan gelinkte afbeeldingen gebruiken in de garage', 'cat' => 'garage'),
 	'acl_u_garage_delete_image'			=> array('lang' => 'Kan afbeeldingen verwijderen van eigen items in de garage', 'cat' => 'garage'),
 	'acl_u_garage_deny'					=> array('lang' => 'Blokkeer toegang tot de garage', 'cat' => 'garage'),
-
 ));
 
 
@@ -91,7 +89,8 @@ $lang = array_merge($lang, array(
 * Voegt de nieuwe administrator permissies toe voor phpBB Garage
 */
 $lang = array_merge($lang, array(
- 	'acl_a_garage_setting'	=> array('lang' => 'Kan garageinstellingen veranderen', 'cat' => 'garage'),
+ 	'acl_a_garage_update'	=> array('lang' => 'Kan garage versie controleren', 'cat' => 'garage'),
+ 	'acl_a_garage_setting'	=> array('lang' => 'Kan garage instellingen veranderen', 'cat' => 'garage'),
  	'acl_a_garage_business'	=> array('lang' => 'Kan garage bedrijven beheren', 'cat' => 'garage'),
  	'acl_a_garage_category'	=> array('lang' => 'Kan garage categorie&eumln beheren', 'cat' => 'garage'),
  	'acl_a_garage_field'	=> array('lang' => 'Kan garage custom velden beheren', 'cat' => 'garage'),
