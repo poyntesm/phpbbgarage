@@ -3,8 +3,7 @@
 *
 * garage [Dutch]
 *
-* @package language 
-* @translated by Roblom from www.deCRXgarage.nl
+* @package language translated by Roblom from www.deCRXgarage.nl
 * @version $Id: garage.php 445 2007-06-08 14:32:24Z poyntesm $
 * @copyright (c) 2005 phpBB Garage
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
@@ -12,7 +11,7 @@
 */
 
 /*
-* NIET VERANDEREN !
+* DO NOT CHANGE 
 */
 if (empty($lang) || !is_array($lang))
 {
@@ -67,7 +66,6 @@ $lang = array_merge($lang, array(
 	'VEHICLE_MAKE' 						=> 'Merk voertuig',
 	'VEHICLE_MODEL' 					=> 'Model voertuig',
 	'CHANGE_TO' 						=> 'Wijzig naar',
-
 	'NEW_MAKE_CREATED' 					=> 'Nieuw merk succesvol aangemaakt',
 	'NEW_BUSINESS_CREATED' 				=> 'Nieuw bedrijf succesvol aangemaakt',
 	'BUSINESS_DELETED' 					=> 'Bedrijf succesvol verwijdert',
@@ -77,14 +75,8 @@ $lang = array_merge($lang, array(
 	'MODEL_UPDATED' 					=> 'Model succesvol bijgewerkt',
 	'MAKE_DELETED' 						=> 'Merk succesvol verwijdert',
 	'MODEL_DELETED' 					=> 'Model succesvol verwijdert',
-	'VEHICLE_CREATED' 					=> 'Voertuig succesvol aangemaakt',
-
 	'CLICK_RETURN_GARAGE_MAKES' 		=> 'Klik %shier%s om terug te keren naar het Garage merken &amp modellen beheer',
 	'CLICK_RETURN_GARAGE_BUSINESS' 		=> 'Klik %shier%s om terug te keren naar het Garage bedrijven beheer',
-	'CLICK_RETURN_GARAGE_CONFIG' 		=> 'Klik %shier%s om terug te keren naar het configuratie beheer',
-	'CLICK_RETURN_PERMISSIONS' 			=> 'Klik %shier%s om terug te keren naar het Garage permissie beheer',
-	'CLICK_RETURN_GARAGE' 				=> 'Klik %shier%s om terug te keren naar de Garage',
-
 	'NO_MAKE_SPECIFIED' 				=> 'Geen merk gespecificeerd',
 	'NO_MODEL_SPECIFIED' 				=> 'Geen model gespecificeerd',
 	'NO_NAME_SPECIFIED' 				=> 'Geen naam gespecificeerd',
@@ -92,8 +84,7 @@ $lang = array_merge($lang, array(
 	'GARAGE_CONFIG_EXPLAIN' 			=> 'Hier kun je de algemene configuratie opties beheren.',
 	'GARAGE_CONFIG_UPDATED' 			=> 'Garage configuratie bijgewerkt.',
 	'GARAGE_CONFIG' 					=> 'Algemene Garage configuratie',
-
-//menu
+	'CLICK_RETURN_GARAGE_CONFIG' 		=> 'Klik %shier%s om terug te keren naar het configuratie beheer',
 	'MENU_SELECTION' 					=> '<b>Main Menu Selection</b><br />This affects what links are show in the main menu. Using CTRL select/deselect items that you would like to appear in the main menu.',
 	'CARS_PER_PAGE' 					=> '<b>Vehicles Per Page</b><br />This affects how many vehicles are shown at once while browsing the garage.',
 	'YEAR_START' 						=> '<b>Year Range Beginning</b><br />This is the earliest year you want to appear as a selection for a new vehicle. Format CCYY',
@@ -134,7 +125,6 @@ $lang = array_merge($lang, array(
 	'DELETE_VEHICLE_ID_TITLE' 			=> 'Verwijder voertuig ID ingave',
 	'VEHICLE_ID_TO_DELETE' 				=> '<b>Vehicle ID to Delete</b><br />Enter the ID of the vehicle you wish to delete.<br /><b>NOTE:</b>This is not undo-able!',
 	'DELETE_VEHICLE' 					=> 'Voertuig verwijderen',
-
 	'MODS' 							=> 'Mods',
 	'YEAR' 							=> 'bouwjaar',
 	'MAKE' 							=> 'merk',
@@ -205,11 +195,11 @@ $lang = array_merge($lang, array(
 	'SEARCH_BY_MEMBER' 				=> 'Zoek op gebruikersnaam',
 	'SEARCH_BY_VEHICLE' 			=> 'Zoek op voertuig',
 	'MEMBER_NAME' 					=> 'Gebruikersnaam',
+	'CLICK_RETURN_GARAGE' 				=> 'Klik %shier%s om terug te keren naar de Garage',
+	'VEHICLE_CREATED' 					=> 'Voertuig succesvol aangemaakt',
 	'LATEST_UPDATED' 				=> 'Laatst bijgewerkt',
 	'CREATED' 						=> 'Aangemaakt op',
-
 	'INSTALL' 						=> 'Installatie kosten',
-
 	'TOTAL_SPENT' 					=> 'Totaal uitgegeven',
 	'VEHICLE' 						=> 'Voertuig',
 	'VIEW_VEHICLE' 					=> 'Bekijk voertuig',
@@ -223,7 +213,6 @@ $lang = array_merge($lang, array(
 	'IMAGE_ATTACH' 					=> 'Je kunt een afbeelding bijvoegen.',
 	'MAXIMUM_IMAGE_FILE_SIZE' 		=> 'Maximale bestandsgrootte',
 	'MAXIMUM_IMAGE_RESOLUTION' 		=> 'Maximale resolutie',
-
 	'ENTER_IMAGE_URL' 				=> 'Geef een URL op van een online afbeelding',
 	'ADD_NEW_RUN' 					=> 'Nieuwe dynorun toevoegen',
 	'ADD_NEW_IMAGE' 				=> 'Nieuwe afbeelding toevoegen',
@@ -231,7 +220,6 @@ $lang = array_merge($lang, array(
 	'NOT_ALLOWED_FILE_TYPE_VEHICLE_CREATED_NO_IMAGE' 		=> 'De geuploade afbeelding heeft een bestandsoort dat niet is toegestaan.<br />Het voertuig is aangemaakt maar er is geen afbeelding aan toegevoegd.<br />Ga naar de voertuigen afbeeldingen gallerij om een afbeelding van een ander type te uploaden.',
 	'UPLOAD_IMAGE_SIZE_TOO_BIG_VEHICLE_CREATED_NO_IMAGE' 	=> 'De geuploade afbeelding heeft een resolutie die groter is dan is toegestaan.<br />Het voertuig is aangemaakt maar er is geen afbeelding aan toegevoegd.<br />Ga naar de voertuigen afbeeldingen gallerij om een afbeelding met een kleinere resolutie te uploaden.',
 	'MODIFICATION_UPDATED' 			=> 'Modificatie bijgewerkt',
-
 	'MANAGE_VEHICLE_GALLERY_NOTE' 	=> 'Note: Only this particular vehicle gallery images are maintained through this interface. You may add new images above or delete existing images below. You may select your vehicles hilite image below. Your modification images will not be shown on this page.',
 	'IMAGE' 						=> 'Afbeelding',
 	'REMOVE_IMAGE' 					=> 'Afbeelding verwijderen',
@@ -275,7 +263,7 @@ $lang = array_merge($lang, array(
 	'BOOST_UNIT' 					=> 'Boost type',
 	'NITROUS' 						=> 'Nitrous',
 	'PEAKPOINT' 					=> 'Peakpoint',
-	'INSTALLED_BY' 					=> 'Ge&iumlnstalleerd door',
+	'INSTALLED_BY' 					=> 'Geinstalleerd door',
 	'INSTALLATION_RATING' 			=> 'Installatie cijfer',
 	'PRODUCT_RATING' 				=> 'Produkt cijfer',
 	'PURCHASED_FROM' 				=> 'Aangeschaft bij',
@@ -295,7 +283,6 @@ $lang = array_merge($lang, array(
 	'ADD_COMMENT'	 				=> 'Plaats een nieuw commentaar',
 	'POST_COMMENT' 					=> 'Plaats commentaar',
 	'ADD_FIRST_COMMENT' 			=> 'Er zijn momenteel geen commentaren in dit gastenboek.<br /> Als je gemachtigd bent staat hieronder een veld en kun je de eerste zijn die een bericht plaatst!<br /> Als er geen veld is weergegeven heb je geen rechten om berichten te plaatsen',
-
 	'FEATURED_VEHICLE' 				=> 'Uitgelicht voertuig',
 	'NEWEST_MODIFICATIONS' 			=> 'Nieuwste modificaties',
 	'NEWEST_VEHICLES' 				=> 'Nieuwste voertuigen',
@@ -305,7 +292,6 @@ $lang = array_merge($lang, array(
 	'MOST_MODIFIED_VEHICLE' 		=> 'Meest gemodificeerde voertuigen',
 	'MOST_VIEWED_VEHICLE' 			=> 'Meest bekeken voertuig',
 	'MOST_MONEY_SPENT' 				=> 'Meeste geld uitgegeven',
-
 	'AUTHOR' 						=> 'Auteur',
 	'POSTED_DATE' 					=> 'Geplaatst op',
 	'POWERED_BY'	 				=> 'Powered by',
@@ -316,7 +302,7 @@ $lang = array_merge($lang, array(
 	'APPROVE_BUSINESS' 				=> 'Bedrijf goedkeuren',
 	'REMOVE_BUSINESS' 				=> 'Verwijder bedrijf',
 	'BUSINESS_NAME' 				=> 'Bedrijfsnaam',
-	'BUSINESS_TITLE' 				=> 'Titel bedrijf',
+	'BUSINESS_TITLE' 				=> 'Business Title',
 	'ADDRESS' 						=> 'Adres',
 	'TELEPHONE' 					=> 'Telefoon nr.',
 	'FAX' 							=> 'Fax nr.',
@@ -325,8 +311,8 @@ $lang = array_merge($lang, array(
 	'OPENING_HOURS' 				=> 'Openingstijden',
 	'TYPE' 							=> 'Type',
 	'EDIT_COMMENT' 					=> 'Bewerk commentaar',
-	'CHECK_FOR_PM' 					=> 'Vink dit aan om een PB te ontvangen als iemand een bericht achterlaat in jouw gasatenboek.',
-	'MANAGE' 						=> 'Beheer',
+	'CHECK_FOR_PM' 					=> 'Check this to receive a PM when someone signs your vehicle\'s guestbook.',
+	'MANAGE' 						=> 'Manage',
 	'CLEAR_TIME' 					=> 'Clear Time',
 	'LOWEST_PREMIUM' 				=> 'Laagste premie',
 	'AVERAGE_PREMIUM' 				=> 'Gemiddelde premie',
@@ -376,20 +362,18 @@ $lang = array_merge($lang, array(
 	'MOD_PRICE' 					=> 'Prijs modificatie',
 	'PRICE' 						=> 'Prijs',
 	'SEARCH_INSURANCE_BY_VEHICLE' 	=> 'Zoek verzekeringspremies op voertuig',
-
 	'GARAGE_BUSINESS_TITLE' 		=> 'Garage Business Control',
 	'GARAGE_BUSINESS_EXPLAIN' 		=> 'On this screen you can manage your business\'s: create, edit, delete.',
 	'GARAGE_PERMISSIONS_TITLE' 		=> 'Garage Access Permissions Control',
 	'GARAGE_PERMISSIONS_EXPLAIN' 	=> '<b><u>Permissions &amp Quotas Guide</u></b> : Check box for access, uncheck to remove access. <b>\'DENY\'</b> will override any other permission. <b>\'BROWSE\'</b> dictates whether a user will be able to view the garage. <b>\'INTERACT\'</b> dictates whether the user will be able to vote and leave comments in the Garage. <b>\'ADD\'</b> dictates whether the user will be able to add, edit &amp delete vehicles and modifications to the Garage. <b>\'UPLOAD\'</b> dictates whether the user will be able to upload images in the Garage. The default quota will apply to all users unless group membership grants them a higher value.<br /><br /><b>NOTE:</b> Regardless of permission settings for Guests below they will not be allowed to add a new vehicle to the Garage and hence images as well.<br /><b>NOTE:</b> When a user is a member of mutliple groups, each granted quotas the highest quota will apply.',
 	'PERMISSION_ACCESS_LEVELS' 		=> 'Permission Access Levels',
-
+	'CLICK_RETURN_PERMISSIONS' 			=> 'Klik %shier%s om terug te keren naar het Garage permissie beheer',
 	'NAME' 							=> 'Naam',
 	'BROWSE' 						=> 'Verkennen',
 	'INTERACT' 						=> 'Interact',
 	'ADD' 							=> 'Toevoegen',
 	'UPLOAD' 						=> 'Upload',
 	'SELECT' 						=> 'Selecteer',
-
 	'GLOBAL_ALL_MASKS' 				=> 'GLOBAL PERMISSIONS &amp DEFAULTS QUOTAS:',
 	'GRANULAR_PERMISSIONS' 			=> 'USER LEVEL PERMISSIONS: ',
 	'PRIVATE_PERMISSIONS' 			=> 'GROUP PERMISSIONS &amp GROUP QUOTAS:',
@@ -401,11 +385,9 @@ $lang = array_merge($lang, array(
 	'RATE' 							=> 'Stem',
 	'NOT_RATED_YET' 				=> 'Er is nog niet gestemt op dit voertuig',
 	'UPDATE_RATING' 				=> 'Bestaande waardering bijwerken',
-
 	'TOP_QUARTERMILE_RUNS' 			=> 'Snelste &frac14; mile tijden',
 	'TOP_RATED_VEHICLES' 			=> 'Hoogst gewardeerde voertuigen',
 	'TOP_LAPS'	 					=> 'Snelste rondetijden',
-
 	'ENABLE_TOP_QUARTERMILE' 		=> '<b>Enable Top &frac14; miles?</b><br />Allows the top &frac14; mile times to be shown on the main menu.',
 	'MAX_TOP_QUARTERMILE' 			=> 'Max. no times to show:',
 	'ENABLE_TOP_RATED' 				=> '<b>Enable Top Rated?</b><br />Allows the top rated vehicles to be shown on the main menu.',
@@ -446,7 +428,6 @@ $lang = array_merge($lang, array(
 	'RETAIL_SHOP' 					=> 'Onderdelenwinkel',
 	'WEB_SHOP' 						=> 'Internet winkel',
 	'KEEP_CURRENT_IMAGE' 			=> 'Behoud huidige afbeelding',
-
 	'QUARTERMILE_PENDING' 			=> '&frac14; mile tijden ter goedkeuring',
 	'DYNORUNS_PENDING' 				=> 'Dynoruns ter goedkeuring',
 	'MAKE_PENDING' 					=> 'Merken ter goedkeuring',
@@ -521,7 +502,6 @@ $lang = array_merge($lang, array(
 	'50_BHP_SHOT' 					=> '50 pk Shot',
 	'75_BHP_SHOT' 					=> '75 pk Shot',
 	'100_BHP_SHOT' 					=> '100 pk Shot',
-
 	'CONFIRM_DELETE_VEHICLE' 		=> 'Weet je zeker dat je dit voertuig en alle daaraan verbonden items wilt verwijderen?  Deze actie kan niet ongedaan worden gemaakt!',
 	'CONFIRM_DELETE_MODIFICATION' 	=> 'Weet je zeker dat je deze modificatie wilt verwijderen?  Deze actie kan niet ongedaan worden gemaakt!',
 	'CONFIRM_DELETE_PREMIUM' 		=> 'Weet je zeker dat je deze verzekeringspremie wilt verwijderen?  Deze actie kan niet ongedaan worden gemaakt!',
@@ -536,8 +516,6 @@ $lang = array_merge($lang, array(
 	'MODEL_RESULTS' 				=> 'Zoekresultaten model',
 	'MAKE_MODEL_RESULTS' 			=> 'Zoekresultaten merken &amp modellen',
 	'IMAGE_ATTACHED' 				=> 'Afbeelding beschikbaar',
-
-
 	'GUESTBOOK_NOTIFY_SUBJECT' 		=> 'I Have Left A Vehicle Comment For You',
 	'GUESTBOOK_NOTIFY_TEXT' 		=> '<b>****This message is automatically generated by the site.****</b><br /><br />Your Vehicle Has Recieved A Comment  Click %s To View Your Vehicle Guestbook',
 	'PENDING_ITEMS' 				=> 'Items Requiring Approval',
@@ -556,33 +534,28 @@ $lang = array_merge($lang, array(
 	'REASSIGN_TO' 					=> 'Business To Reassign Items To : ',
 	'REASSIGN_BUTTON' 				=> 'Reassign',
 	'TRANSLATION_LINK' 				=> 'Translation link',
-
+	'NO_ORPHANED_FILES' 			=> 'You Do Not Appear To Have Any Orphaned Files',
+	'ORPHANED_FILES_REMOVED' 		=> 'Orphaned Files Removed',
+	'NO_ORPHANED_FILES_SELECTED' 	=> 'No orphaned files were selected, therefore none were removed ;)',
+	'REBUILD_THUMBNAILS_COMPLETE' 	=> 'Rebuild All Thumbnails completed',
 	'PERMISSIONS_UPDATED' 			=> 'Garage Permissions Updated.',
-	'SHOP' 							=> 'Shop',
 	'PROCESSING_ATTACH_ID' 			=> 'Processing attach_id: ',
 	'REMOTE_IMAGE' 					=> 'Remote Image: ',
-
-
-//	'FILE_NAME' 					=> 'file_name: ',
-//	'NO_ORPHANED_FILES' 			=> 'You Do Not Appear To Have Any Orphaned Files',
-//	'ORPHANED_FILES_REMOVED' 		=> 'Orphaned Files Removed',
-//	'NO_ORPHANED_FILES_SELECTED' 	=> 'No orphaned files were selected, therefore none were removed ;)',
-//	'REBUILD_THUMBNAILS_COMPLETE' 	=> 'Rebuild All Thumbnails completed',
-//	'TEMP_FILE_NAME' 				=> 'tmp_file_name: ',
-//	'REBUILT' 						=> 'Rebuilt: ',
-//	'THUMB_FILE' 					=> 'Thumb File: ',
-//	'SOURCE_FILE' 					=> 'Source File: ',
-//	'FILE_DOES_NOT_EXIST' 			=> 'ERROR -- Remote file does not exist!',
-//	'SOURCE_UNAVAILABLE' 			=> 'Rebuild Failed Source Image Unavailable: ',
-//	'NO_SOURCE_FILE' 				=> 'Thumb Creation Failed No Source File :',
-//	'STARTED_AT' 					=> 'We Started at : ',
-//	'ENDED_AT' 					=> 'We ended at : ',
-//	'HAVE_DONE' 					=> 'We have done : ',
-//	'NEED_TO_PROCESS' 				=> 'We need to process in total : ',
-//	'LOG_TO' 						=> 'We will log to : ',
-
-	'KBYTES' 						=> 'kbytes',
+	'FILE_NAME' 					=> 'file_name: ',
+	'TEMP_FILE_NAME' 				=> 'tmp_file_name: ',
+	'REBUILT' 						=> 'Rebuilt: ',
+	'THUMB_FILE' 					=> 'Thumb File: ',
+	'SOURCE_FILE' 					=> 'Source File: ',
+	'FILE_DOES_NOT_EXIST' 			=> 'ERROR -- Remote file does not exist!',
+	'SOURCE_UNAVAILABLE' 			=> 'Rebuild Failed Source Image Unavailable: ',
+	'NO_SOURCE_FILE' 				=> 'Thumb Creation Failed No Source File :',
+	'STARTED_AT' 					=> 'We Started at : ',
+	'ENDED_AT' 						=> 'We ended at : ',
+	'HAVE_DONE' 					=> 'We have done : ',
+	'NEED_TO_PROCESS' 				=> 'We need to process in total : ',
+	'LOG_TO' 						=> 'We will log to : ',
 	'OUT_OF' 						=> 'van de',
+	'KBYTES' 						=> 'kbytes',
 	'DENY' 							=> 'Deny',
 	'RENAME' 						=> 'Hernoemen',
 	'EMPTY_TITLE' 					=> 'je hebt geen categorie titel opgegeven',
@@ -612,7 +585,6 @@ $lang = array_merge($lang, array(
 	'QUARTERMILE'					=> '&frac14; mile',
 	'ADD_DYNORUN'					=> 'Dynorun toevoegen',
 	'MANAGE_GALLERY'				=> 'Beheer gallerij',
-
 	'TOP_DYNO_RUNS' 				=> 'Hoogste dynorun',
 	'ENABLE_TOP_DYNORUN' 			=> '<b>Hoogste dynoruns inschakelen?</b><br />Toont de hoogste dynoruns in het hoofdmenu.',
 	'MAX_TOP_DYNORUN' 				=> 'Max. no runs to show:',
@@ -671,6 +643,9 @@ $lang = array_merge($lang, array(
 	'GARAGE_ERROR_26' 				=> '<b>Afbeelding bewijs nodig</b><br /><br />Je hebt een &frac14; mile/dynorun opgegeven waarvan is ingesteld dat een afbeelding benodigd is om de tijd/vermogen te bewijzen. Ga terug en verzend dit item opnieuw maar dan met de bijbehorende afbeelding als bewijs.',
 	'GARAGE_ERROR_14' 				=> '<b>Geen toegangsrechten</b><br /><br />Je hebt geprobeert een actie uit te voeren waarvoor niet de benodigde rechten hebt.<br /><br />Om deze actie uit te kunnen voeren heb je de volgende permissie nodig \'u_garage_add_vehicle\'.',
 
+
+
+
 	'SEARCH' 							=> 'Zoeken',
 	'REMOTE' 							=> 'Remote',
 	'RATING MODERATION' 				=> 'Modificatie cijfer',
@@ -698,7 +673,6 @@ $lang = array_merge($lang, array(
 	'5_CYLINDER_FI' 					=> '5 cilinder Forced Induction',
 	'4_CYLINDER_NA' 					=> '4 cilinder Naturally Aspirated',
 	'4_CYLINDER_FI' 					=> '4 cilinder Forced Induction',
-	'ROTARY'							=> 'Wankel motor',
 	'SORT' 								=> 'Sort',
 	'CATEGORY' 							=> 'Categorie',
 	'RETAIL'							=> 'Winkel',
@@ -764,7 +738,6 @@ $lang = array_merge($lang, array(
 	'TRACKS'				=> 'Circuits',
 	'TRACK_CONDITION'		=> 'Baan conditie',
 	'CONDITION'				=> 'Conditie',
-
 	'LAP_TYPE'				=> 'Soort ronde',
 	'ADD_NEW_LAP'			=> 'Nieuwe rondetijd toevoegen',
 	'ADD_LAP'				=> 'Rondetijd toevoegen',
@@ -784,6 +757,7 @@ $lang = array_merge($lang, array(
 	'TRACK_PICTURES'		=> 'Circuit foto\'s',
 
 	//SERVICE HISTORY KEYS
+	'SERVICES'				=> 'Onderhoud',
 	'ADD_SERVICE'			=> 'Onderhoud toevoegen',
 	'ADD_NEW_SERVICE'		=> 'Nieuwe onderhoudsbeurt toevoegen',
 	'EDIT_SERVICE'			=> 'Bewerk onderhoudsbeurt',
@@ -825,12 +799,21 @@ $lang = array_merge($lang, array(
 	'VIEW_COMMENT'			=> '1 commentaar',
 	'VIEW_COMMENTS'			=> '%d commentaren',
 
+
 	'MONTH_TOPRATED_VEHICLE'=> 'Month Top Rated',
 	'VIEW_USERS_GARAGE'		=> 'Bekijk gebruikers garage',
 
+	//ADDED FOR B4
+	'DELETE_BLOG'				=> 'Blog verwijderen',
+	'CONFIRM_DELETE_BLOG' 		=> 'Weet je zeker dat je deze blog wil verwijderen? Deze actie kan niet ongedaan gemaakt worden!',
+	'ADD_USER_DATA'				=> 'Gebruikers gegevens toevoegen',
+	'ADD_DATA_SUCCESS'			=> 'Gegevens successvol toegevoegd',
+	'ADD_DATA_SUCCESS_EXPLAIN'	=> 'The new item you requested to be created has been completed, to be redirected back to the original page where all previously entered data should still be entered please click the button below. <br/><br/><b>NOTE</b>: If you entered an image to be uploaded you will need to re-enter this information. Remote images will be remembered.',
+	'RETURN_TO_ITEM'			=> 'Keer terug naar item',
+
 //************added by roblom
-	'REMOVE_GARAGE_NSTALL' 	=> 'Please delete, move or rename the garage install directory before you use your garage. If this directory is still presentthe garage will be unavailable',
-	'ADD_INSURANCE'			=> 'Verzekering toevoegen',
+	'ROTARY'				=> 'Wankel motor',
+
 ));
 
 ?>

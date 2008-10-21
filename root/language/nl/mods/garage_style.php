@@ -3,8 +3,7 @@
 *
 * garage [Dutch]
 *
-* @package language
-* @translated by Roblom from www.deCRXgarage.nl
+* @package language translated by Roblom from www.deCRXgarage.nl
 * @version $Id: garage.php 451 2007-07-25 14:12:04Z poyntesm $
 * @copyright (c) 2005 phpBB Garage
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
@@ -12,7 +11,7 @@
 */
 
 /*
-* NIET VERANDEREN !
+* DO NOT CHANGE 
 */
 if (empty($lang) || !is_array($lang))
 {
