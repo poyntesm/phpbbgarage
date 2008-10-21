@@ -2,8 +2,7 @@ Subject: phpBB Garage item wacht op goedkeuring
 
 Hallo,
 
-Er is in de phpBB Garage een of meerdere items aangemaakt dat goedkeuring nodig heeft. 
-Geef je goedkeuring/afkeuring op het item(s) via de onderstaande link:
+Er is een nieuw item toegevoegd aan de garage. Bekijk via onderstaande link het item en keur het goed of af.
 
 {U_MCP}
 

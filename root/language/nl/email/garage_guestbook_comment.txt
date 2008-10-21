@@ -2,7 +2,7 @@ Subject: phpBB Garage - Voertuig commentaar ontvangen
 
 Hallo,
 
-Er is een commentaar gegeven op een voertuig waarvan jij de eigenaar bent. Klik op onderstaande link om dit berecht te bekijken 
+Een voertuig waarvan jij de eigenaar bent heeft een nieuw commentaar ontvangen. Klik op de onderstaande link om het te bekijken
 
 {U_VIEW_COMMENT}
 
