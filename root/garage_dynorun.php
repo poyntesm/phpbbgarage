@@ -272,7 +272,7 @@ switch( $mode )
 		$params = array('dynocentre_id' => '', 'bhp' => '', 'torque' => 0, 'boost' => 0, 'nitrous' => 0, 'peakpoint' => 0, 'redirect' => '');
 		$store 	= $garage->process_vars($params);
 		$params = array('bhp_unit' => '', 'torque_unit' => '', 'boost_unit' => 'PSI');
-		$data	+= $garage->process_mb_vars($params);
+		$store	+= $garage->process_mb_vars($params);
 
 		/**
 		* Get vehicle, dynorun, dynocentres & gallery data from DB
