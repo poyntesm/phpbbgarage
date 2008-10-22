@@ -65,9 +65,9 @@ class acp_garage_track
 				* Add a new track
 				*/
 				case 'add':
-					$params = array('length' => '', 'mileage_unit' => '');
+					$params = array('length' => '');
 					$data = $garage->process_vars($params);
-					$params = array('title' => '');
+					$params = array('title' => '', 'mileage_unit' => '');
 					$data += $garage->process_mb_vars($params);
 
 					$garage_track->insert_track($data);
@@ -80,9 +80,9 @@ class acp_garage_track
 				* Update an existing category
 				*/
 				case 'edit':
-					$params = array('id' => '', 'length' => '', 'mileage_unit' => '');
+					$params = array('id' => '', 'length' => '');
 					$data = $garage->process_vars($params);
-					$params = array('title' => '');
+					$params = array('title' => '', 'mileage_unit' => '');
 					$data += $garage->process_mb_vars($params);
 
 					if(!$data['title'])

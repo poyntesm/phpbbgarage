@@ -108,9 +108,9 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('VID' => '', 'track_id' => '', 'length' => '', 'mileage_unit' => '', 'condition_id' => '', 'type_id' => '', 'minute' => '', 'second' => '', 'millisecond' => '', 'redirect' => '', 'url_image' => '');
+		$params = array('VID' => '', 'track_id' => '', 'length' => '', 'condition_id' => '', 'type_id' => '', 'minute' => '', 'second' => '', 'millisecond' => '', 'redirect' => '', 'url_image' => '');
 		$data 	= $garage->process_vars($params);
-		$params = array('title' => '');
+		$params = array('title' => '', 'mileage_unit' => '');
 		$data 	+= $garage->process_mb_vars($params);
 
 		/**
@@ -252,9 +252,9 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('VID' => '', 'LID' => '', 'length' => '', 'mileage_unit' => '', 'condition_id' => '', 'type_id' => '', 'minute' => '', 'second' => '', 'millisecond' => '', 'redirect' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '');
+		$params = array('VID' => '', 'LID' => '', 'length' => '', 'condition_id' => '', 'type_id' => '', 'minute' => '', 'second' => '', 'millisecond' => '', 'redirect' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '');
 		$data 	= $garage->process_vars($params);
-		$params = array('title' => '');
+		$params = array('title' => '', 'mileage_unit' => '');
 		$data 	+= $garage->process_mb_vars($params);
 		$params = array('title');
 		$garage->check_required_vars($params);
