@@ -80,7 +80,7 @@ class acp_garage_track
 				* Update an existing category
 				*/
 				case 'edit':
-					$params = array('id', 'length' => '', 'mileage_unit' => '');
+					$params = array('id' => '', 'length' => '', 'mileage_unit' => '');
 					$data = $garage->process_vars($params);
 					$params = array('title' => '');
 					$data += $garage->process_mb_vars($params);
