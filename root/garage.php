@@ -432,9 +432,18 @@ switch( $mode )
 		//Accept default display if already set, else default to vehicles
 		$default_display = (empty($default_display)) ? 'vehicles' : $default_display;
 
-		//Let Check The User Is Allowed Perform This Action
+		/*
+		* Let Check The User Is Allowed Perform This Action
+		*/
 		if (!$auth->acl_get($required_permission))
 		{
+			/**
+			* If Not Logged In Send Them To Login & Back, Maybe They Have Permission As A User 
+			*/
+			if ( $user->data['user_id'] == ANONYMOUS )
+			{
+				login_box("garage.$phpEx?mode=$mode");
+			}
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=15"));
 		}
 
@@ -1481,15 +1490,18 @@ switch( $mode )
 	* Default statistics page
 	*/
 	default:
-		//Let Check The User Is Allowed Perform This Action
+		/*
+		* Let Check The User Is Allowed Perform This Action
+		*/
 		if (!$auth->acl_get('u_garage_browse'))
 		{
-			//If Not Logged In Send Them To Login & Back, Maybe They Have Permission As A User 
+			/**
+			* If Not Logged In Send Them To Login & Back, Maybe They Have Permission As A User 
+			*/
 			if ( $user->data['user_id'] == ANONYMOUS )
 			{
 				login_box("garage.$phpEx");
 			}
-			//They Are Logged In But Not Allowed So Error Nicely Now...
 			redirect(append_sid("{$phpbb_root_path}garage.$phpEx", "mode=error&amp;EID=15"));
 		}
 
