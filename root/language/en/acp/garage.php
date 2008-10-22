@@ -494,6 +494,7 @@ $lang = array_merge($lang, array(
 	'ENABLE_GUESTBOOK_SMILIES_EXPLAIN' 	=> 'Enable Smilies usage in guestbook comments.',
 	'ENABLE_GUESTBOOK_URL' 		=> 'Enable URL Parsing',
 	'ENABLE_GUESTBOOK_URL_EXPLAIN' 	=> 'Enable URL parsing in guestbook comments.',
+	'NO_THUMBNAILS_TO_REBUILD'	=> 'No thumbnails to rebuild',
 ));
 
 ?>
