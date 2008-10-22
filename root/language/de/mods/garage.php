@@ -809,6 +809,7 @@ $lang = array_merge($lang, array(
 	'ADD_DATA_SUCCESS'		=> 'Daten erfolgreich hinzugefügt',
 	'ADD_DATA_SUCCESS_EXPLAIN'	=> 'Der neue Eintrag, den du beantragt hast zu erstellen, wurde fertiggestellt. Um zurück zur Ausgangsseite zu gelangen, auf der sämtliche vorher eingegebene Daten noch vorhanden sein sollten, klicke bitte auf die nachfolgende Schaltfläche. <br/><br/><b>BEACHTE</b>: Wenn du ein Bild zum Hochladen eingetragen hast, musst du die Informationen nochmals eingeben. Angaben zu externen Bilder wurden beibehalten.',
 	'RETURN_TO_ITEM'		=> 'Zum Eintrag zurückkehren',
+	'DECIMAL_SEPERATOR'		=> ',',
 ));
 
 ?>

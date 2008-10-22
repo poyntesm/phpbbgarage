@@ -451,7 +451,6 @@ $lang = array_merge($lang, array(
 
 	'ACP_MANAGE_QUOTAS'		=> 'Kontingente verwalten',
 	'ACP_MANAGE_BUSINESS'		=> 'Unternehmen verwalten',
-	'ACP_MANAGE_CATEGORY'		=> 'Kategorien verwalten',
 	'ACP_MANAGE_PRODUCTS'		=> 'Produkte verwalten',
 	'ACP_MANAGE_TRACKS'		=> 'Strecken verwalten',
 	'ACP_MANAGE_CATEGORY'		=> 'Kategorien verwalten',
@@ -495,6 +494,7 @@ $lang = array_merge($lang, array(
 	'ENABLE_GUESTBOOK_SMILIES_EXPLAIN' 	=> 'aktiviert die Benutzung von Smilies im Gästebuch',
 	'ENABLE_GUESTBOOK_URL' 		=> 'URL-Parsing aktivieren',
 	'ENABLE_GUESTBOOK_URL_EXPLAIN' 	=> 'aktiviert URL-Parsing in Gästebuch-Kommentaren',
+	'NO_THUMBNAILS_TO_REBUILD'	=> 'Keine Vorschaubilder zu generieren',
 ));
 
 ?>
