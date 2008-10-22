@@ -55,7 +55,14 @@ require($phpbb_root_path . 'includes/cache.' . $phpEx);
 require($phpbb_root_path . 'includes/template.' . $phpEx);
 require($phpbb_root_path . 'includes/session.' . $phpEx);
 require($phpbb_root_path . 'includes/auth.' . $phpEx);
+
 require($phpbb_root_path . 'includes/functions.' . $phpEx);
+
+if (file_exists($phpbb_root_path . 'includes/functions_content.' . $phpEx))
+{
+	require($phpbb_root_path . 'includes/functions_content.' . $phpEx);
+}
+
 require($phpbb_root_path . 'includes/functions_admin.' . $phpEx);
 require($phpbb_root_path . 'includes/constants.' . $phpEx);
 require($phpbb_root_path . 'includes/mods/constants_garage.' . $phpEx);
@@ -81,6 +88,21 @@ $user = new user();
 $cache = new cache();
 $db = new $sql_db();
 
+// Add own hook handler, if present. :o
+if (file_exists($phpbb_root_path . 'includes/hooks/index.' . $phpEx))
+{
+	require($phpbb_root_path . 'includes/hooks/index.' . $phpEx);
+	$phpbb_hook = new phpbb_hook(array('exit_handler', 'phpbb_user_session_handler', 'append_sid', array('template', 'display')));
+
+	foreach ($cache->obtain_hooks() as $hook)
+	{
+		@include($phpbb_root_path . 'includes/hooks/' . $hook . '.' . $phpEx);
+	}
+}
+else
+{
+	$phpbb_hook = false;
+}
 require($phpbb_root_path . 'includes/db/db_tools.' . $phpEx);
 $mod_db = new phpbb_db_tools($db);
 
@@ -124,48 +146,39 @@ $inline_update = (request_var('type', 0)) ? true : false;
 
 // Define outdates possible with routine functions
 $database_update_info = array(
-	// Changes from 2.0.B1 to the next version
-	'2.0.B1'			=> array(
-		// Remove the following keys
-		'drop_keys'		=> array(
-			STYLES_IMAGESET_DATA_TABLE	=> array(
-				'i_id',
-			),
-		),
-		// Add the following keys
-		'add_index'		=> array(
-			STYLES_IMAGESET_DATA_TABLE	=> array(
-				'i_d'			=> array('imageset_id'),
-			),
-		),
-	),
-	// Changes from 2.0.B2 to the next version
-	'2.0.B2'			=> array(
-		// Change the following columns
-		'change_columns'		=> array(
-			BANLIST_TABLE	=> array(
-				'ban_reason'		=> array('VCHAR_UNI', ''),
-			),
-		),
-	),
 	// Changes from 2.0.B3 to the next version
 	'2.0.B3'			=> array(
 		// Change the following columns
 		'change_columns'		=> array(
-			GARAGE_BLOG_TABLE	=> array(
+			GARAGE_BLOGS_TABLE	=> array(
 				'bbcode_uid'		=> array('VARCHAR:8', ''),
 				'bbcode_options'	=> array('UINT', '7'),
 			),
-			GARAGE_VEHICLE_TABLE	=> array(
+			GARAGE_VEHICLES_TABLE	=> array(
+				'price'			=> array('DECIMAL:10', 0),
 				'bbcode_uid'		=> array('VARCHAR:8', ''),
 			),
-			GARAGE_GUESTBOOK_TABLE	=> array(
+			GARAGE_GUESTBOOKS_TABLE	=> array(
 				'bbcode_uid'		=> array('VARCHAR:8', ''),
 			),
-			GARAGE_MODIFICATION_TABLE	=> array(
+			GARAGE_PREMIUMS_TABLE	=> array(
+				'price'			=> array('DECIMAL:10', 0),
+			),
+			GARAGE_SERVICE_HISTORY_TABLE	=> array(
+				'price'			=> array('DECIMAL:10', 0),
+			),
+			GARAGE_MODIFICATIONS_TABLE	=> array(
+				'price'			=> array('DECIMAL:10', 0),
+				'install_price'		=> array('DECIMAL:10', 0),
 				'bbcode_uid'		=> array('VARCHAR:8', ''),
 			),
 		),
+		// Drop the following columns
+		'drop_columns'				=>(
+			GARAGE_MODIFICATIONS_TABLE	=> array(
+				'manufacturer_id'
+			),
+		),,
 	),
 );
 
@@ -255,11 +268,18 @@ else
 flush();
 
 // We go through the schema changes from the lowest to the highest version
-// We skip those versions older than the current version
+// We try to also include versions 'in-between'...
 $no_updates = true;
-foreach ($database_update_info as $version => $schema_changes)
+$versions = array_keys($database_update_info);
+for ($i = 0; $i < sizeof($versions); $i++)
 {
-	if (version_compare($version, $current_version, '<'))
+	$version = $versions[$i];
+	$schema_changes = $database_update_info[$version];
+
+	$next_version = (isset($versions[$i + 1])) ? $versions[$i + 1] : $updates_to_version;
+
+	// If the installed version to be updated to is < than the current version, and if the current version is >= as the version to be updated to next, we will skip the process
+	if (version_compare($version, $current_version, '<') && version_compare($current_version, $next_version, '>='))
 	{
 		continue;
 	}
@@ -292,26 +312,22 @@ $errored = $no_updates = false;
 flush();
 
 $no_updates = true;
+$versions = array_keys($database_update_info);
 
 // some code magic
-if (version_compare($current_version, '2.0.B1', '<='))
+for ($i = 0; $i < sizeof($versions); $i++)
 {
-	// if any update remove comment below
-	//$no_updates = false;
-}
+	$version = $versions[$i];
+	$next_version = (isset($versions[$i + 1])) ? $versions[$i + 1] : $updates_to_version;
 
-if (version_compare($current_version, '2.0.B2', '<='))
-{
-	// if any update remove comment below
-	//$no_updates = false;
-}
+	// If the installed version to be updated to is < than the current version, and if the current version is >= as the version to be updated to next, we will skip the process
+	if (version_compare($version, $current_version, '<') && version_compare($current_version, $next_version, '>='))
+	{
+		continue;
+	}
 
-if (version_compare($current_version, '2.0.B3', '<='))
-{
-	// if any update remove comment below
-	$no_updates = false;
-	_sql('INSERT INTO ' . GARAGE_CONFIG_TABLE . " (config_name, config_value) VALUES ('enable_blogs_smilies', '1')", $errored, $error_ary);
-	_sql('INSERT INTO ' . GARAGE_CONFIG_TABLE . " (config_name, config_value) VALUES ('enable_blogs_url', '1')", $errored, $error_ary);
+
+	change_database_data($no_updates, $version);
 }
 
 _write_result($no_updates, $errored, $error_ary);
@@ -338,7 +354,8 @@ _sql($sql, $errored, $error_ary);
 
 // Reset permissions
 $sql = 'UPDATE ' . USERS_TABLE . "
-	SET user_permissions = ''";
+	SET user_permissions = '',
+		user_perm_from = 0";
 _sql($sql, $errored, $error_ary);
 
 /* Optimize/vacuum analyze the tables where appropriate 
@@ -372,6 +389,8 @@ _write_result($no_updates, $errored, $error_ary);
 
 if (!$inline_update)
 {
+	// Purge the cache...
+	$cache->purge();
 ?>
 
 	<p style="color:red"><?php echo $lang['UPDATE_FILES_NOTICE']; ?></p>
@@ -397,8 +416,6 @@ add_log('admin', 'LOG_GARAGE_UPDATE_DATABASE', $orig_version, $updates_to_versio
 // Now we purge the session table as well as all cache files
 $cache->purge();
 
-exit;
-
 ?>
 
 					</div>
@@ -417,6 +434,34 @@ exit;
 </html>
 
 <?php
+
+garbage_collection();
+
+if (function_exists('exit_handler'))
+{
+	exit_handler();
+}
+
+/**
+* Function where all data changes are executed
+*/
+function change_database_data(&$no_updates, $version)
+{
+	global $db, $map_dbms, $errored, $error_ary, $config, $phpbb_root_path;
+
+	switch ($version)
+	{
+		case '3.0.RC2':
+			_sql('INSERT INTO ' . GARAGE_CONFIG_TABLE . " (config_name, config_value) VALUES ('enable_blogs_smilies', '1')", $errored, $error_ary);
+			_sql('INSERT INTO ' . GARAGE_CONFIG_TABLE . " (config_name, config_value) VALUES ('enable_blogs_url', '1')", $errored, $error_ary);
+			_sql('INSERT INTO ' . GARAGE_CONFIG_TABLE . " (config_name, config_value) VALUES ('enable_make_approval', '1')", $errored, $error_ary);
+			_sql('INSERT INTO ' . GARAGE_CONFIG_TABLE . " (config_name, config_value) VALUES ('enable_model_approval', '1')", $errored, $error_ary);
+			_sql('INSERT INTO ' . GARAGE_CONFIG_TABLE . " (config_name, config_value) VALUES ('enable_guestbooks_url', '1')", $errored, $error_ary);
+			_sql('INSERT INTO ' . GARAGE_CONFIG_TABLE . " (config_name, config_value) VALUES ('enable_guestbooks_smilies', '1')", $errored, $error_ary);
+			$no_updates = false;
+		break;
+	}
+}
 /**
 * Function for triggering an sql statement
 */

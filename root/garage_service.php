@@ -98,7 +98,7 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params	= array('VID' => '', 'garage_id' => '', 'type_id' => '', 'price' => '', 'rating' => '', 'mileage' => '');
+		$params	= array('VID' => '', 'garage_id' => '', 'type_id' => '', 'price' => '', 'price_decimal' => '', 'rating' => '', 'mileage' => '');
 		$data 	= $garage->process_vars($params);
 
 		/**
@@ -126,6 +126,7 @@ switch( $mode )
 			'U_SUBMIT_BUSINESS_GARAGE'	=> "javascript:add_garage('')",
 			'VID' 				=> $vid,
 			'PRICE'				=> $data['price'],
+			'PRICE_DECIMAL'			=> $data['price_decimal'],
 			'MILEAGE'			=> $data['mileage'],
 			'CURRENCY'			=> $vehicle['currency'],
 			'S_MODE_ACTION' 		=> append_sid("{$phpbb_root_path}garage_service.$phpEx", "mode=insert_service"),
@@ -154,7 +155,7 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params	= array('garage_id' => '', 'type_id' => '', 'price' => 0, 'rating' => 0, 'mileage' => '');
+		$params	= array('garage_id' => '', 'type_id' => '', 'price' => 0, 'price_decimal' => 0, 'rating' => 0, 'mileage' => '');
 		$data 	= $garage->process_vars($params);
 		$params = array('garage_id', 'type_id', 'mileage');
 		$garage->check_required_vars($params);
@@ -196,7 +197,7 @@ switch( $mode )
 		/**
 		* Get any changed data incase we are arriving from creating a garage
 		*/
-		$params	= array('garage_id' => '', 'type_id' => '', 'price' => 0, 'rating' => 0, 'mileage' => '');
+		$params	= array('garage_id' => '', 'type_id' => '', 'price' => 0, 'price_decimal' => 0, 'rating' => 0, 'mileage' => '');
 		$store 	= $garage->process_vars($params);
 
 		/**
@@ -230,6 +231,7 @@ switch( $mode )
 			'L_BUTTON'			=> $user->lang['EDIT_SERVICE'],
 			'U_SUBMIT_BUSINESS_GARAGE'	=> "javascript:add_garage('edit')",
 			'PRICE'				=> (!empty($store['price'])) ? $store['price'] : $data['price'],
+			'PRICE_DECIMAL'			=> (!empty($store['price_decimal'])) ? $store['price_decimal'] : $data['price_decimal'],
 			'MILEAGE'			=> (!empty($store['mileage'])) ? $store['mileage'] : $data['mileage'],
 			'CURRENCY'			=> $vehicle['currency'],
 			'VID'				=> $vid,
@@ -260,7 +262,7 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params	= array('garage_id' => '', 'type_id' => '', 'price' => '', 'rating' => '', 'mileage' => '');
+		$params	= array('garage_id' => '', 'type_id' => '', 'price' => '', 'price_decimal' => '', 'rating' => '', 'mileage' => '');
 		$data = $garage->process_vars($params);
 		$params = array('garage_id', 'type_id', 'mileage');
 		$garage->check_required_vars($params);

@@ -119,7 +119,7 @@ class garage_vehicle
 			'colour'		=> $data['colour'],
 			'mileage'		=> $data['mileage'],
 			'mileage_unit'		=> (empty($data['mileage_units']))? 'Miles' : $data['mileage_units'],
-			'price'			=> $data['price'],
+			'price'			=> $data['price'] .','. $data['price_decimal'],
 			'currency'		=> (empty($data['currency'])) ? 'EUR' : $data['currency'],
 			'comments'		=> $data['comments'],
 			'user_id'		=> $user->data['user_id'],
@@ -249,7 +249,7 @@ class garage_vehicle
 			'colour'		=> $data['colour'],
 			'mileage'		=> $data['mileage'],
 			'mileage_unit'		=> $data['mileage_units'],
-			'price'			=> $data['price'],
+			'price'			=> $data['price'] .','. $data['price_decimal'],
 			'currency'		=> $data['currency'],
 			'comments'		=> $data['comments'],
 			'user_id'		=> $this->get_vehicle_owner_id($vid),
@@ -1753,7 +1753,7 @@ class garage_vehicle
             		'DATE_UPDATED' 			=> $user->format_date($vehicle['date_updated']),
             		'MILEAGE' 			=> $vehicle['mileage'],
             		'MILEAGE_UNITS' 		=> $vehicle['mileage_unit'],
-            		'PRICE' 			=> $vehicle['price'],
+            		'PRICE' 			=> $vehicle['price'] . $user->lang['DECIMAL_SEPERATOR'] . $vehicle['price_decimal'],
             		'CURRENCY' 			=> $vehicle['currency'],
             		'TOTAL_MODS' 			=> $vehicle['total_mods'],
             		'TOTAL_SPENT' 			=> (!empty($vehicle['total_spent'])) ? $vehicle['total_spent'] : 0,
@@ -1815,6 +1815,9 @@ class garage_vehicle
 		if (!empty($data))
 		{
 			$data['vehicle'] = "{$data['made_year']} {$data['make']} {$data['model']}";
+			$price_pieces = explode(".", $data['price']);
+			$data['price'] = $price_pieces[0];
+			$data['price_decimal'] = $price_pieces[1];
 		}
 		$db->sql_freeresult($result);
 

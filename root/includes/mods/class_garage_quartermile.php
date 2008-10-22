@@ -33,14 +33,14 @@ class garage_quartermile
 
 		$sql = 'INSERT INTO ' . GARAGE_QUARTERMILES_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 			'vehicle_id'	=> $vid,
-			'rt'		=> $data['rt'],
-			'sixty'		=> $data['sixty'],
-			'three'		=> $data['three'],
-			'eighth'	=> $data['eighth'],
-			'eighthmph'	=> $data['eighthmph'],
-			'thou'		=> $data['thou'],
-			'quart'		=> $data['quart'],
-			'quartmph'	=> $data['quartmph'],
+			'rt'		=> $data['rt'] .'.'. $data['rt_decimal'],
+			'sixty'		=> $data['sixty'] .'.'. $data['sixty_decimal'],
+			'three'		=> $data['three'] .'.'. $data['three_decimal'],
+			'eighth'	=> $data['eighth'] .'.'. $data['eighth_decimal'],
+			'eighthmph'	=> $data['eighthmph'] .'.'. $data['eighthmph_decimal'],
+			'thou'		=> $data['thou'] .'.'. $data['thou_decimal'],
+			'quart'		=> $data['quart'] .'.'. $data['quart_decimal'],
+			'quartmph'	=> $data['quartmph'] .'.'. $data['quartmph_decimal'],
 			'date_created'	=> time(),
 			'date_updated'	=> time(),
 			'dynorun_id'	=> $data['dynorun_id'],
@@ -64,14 +64,14 @@ class garage_quartermile
 
 		$update_sql = array(
 			'vehicle_id'	=> $vid,
-			'rt'		=> $data['rt'],
-			'sixty'		=> $data['sixty'],
-			'three'		=> $data['three'],
-			'eighth'	=> $data['eighth'],
-			'eighthmph'	=> $data['eighthmph'],
-			'thou'		=> $data['thou'],
-			'quart'		=> $data['quart'],
-			'quartmph'	=> $data['quartmph'],
+			'rt'		=> $data['rt'] .'.'. $data['rt_decimal'],
+			'sixty'		=> $data['sixty'] .'.'. $data['sixty_decimal'],
+			'three'		=> $data['three'] .'.'. $data['three_decimal'],
+			'eighth'	=> $data['eighth'] .'.'. $data['eighth_decimal'],
+			'eighthmph'	=> $data['eighthmph'] .'.'. $data['eighthmph_decimal'],
+			'thou'		=> $data['thou'] .'.'. $data['thou_decimal'],
+			'quart'		=> $data['quart'] .'.'. $data['quart_decimal'],
+			'quartmph'	=> $data['quartmph'] .'.'. $data['quartmph_decimal'],
 			'date_updated'	=> time(),
 			'dynorun_id'	=> $data['dynorun_id'],
 			'pending'	=> ($garage_config['enable_quartermile_approval'] == '1') ? 1 : 0
@@ -381,6 +381,36 @@ class garage_quartermile
 		if (!empty($data))
 		{
 			$data['vehicle'] = "{$data['made_year']} {$data['make']} {$data['model']}";
+			$rt_pieces = explode(".", $data['rt']);
+			$data['rt'] = $rt_pieces[0];
+			$data['rt_decimal'] = $rt_pieces[1];
+			$sixty_pieces = explode(".", $data['sixty']);
+			$data['sixty'] = $sixty_pieces[0];
+			$data['sixty_decimal'] = $sixty_pieces[1];
+			$three_pieces = explode(".", $data['three']);
+			$data['three'] = $three_pieces[0];
+			$data['three_decimal'] = $three_pieces[1];
+			$eighth_pieces = explode(".", $data['eighth']);
+			$data['eighth'] = $eighth_pieces[0];
+			$data['eighth_decimal'] = $eighth_pieces[1];
+			$eighthmph_pieces = explode(".", $data['eighthmph']);
+			$data['eighthmph'] = $eighthmph_pieces[0];
+			$data['eighthmph_decimal'] = $eighthmph_pieces[1];
+			$thou_pieces = explode(".", $data['thou']);
+			$data['thou'] = $thou_pieces[0];
+			$data['thou_decimal'] = $thou_pieces[1];
+			$quart_pieces = explode(".", $data['quart']);
+			$data['quart'] = $quart_pieces[0];
+			$data['quart_decimal'] = $quart_pieces[1];
+			$quartmph_pieces = explode(".", $data['quartmph']);
+			$data['quartmph'] = $quartmph_pieces[0];
+			$data['quartmph_decimal'] = $quartmph_pieces[1];
+			if (!empty($data['bhp']))
+			{
+				$bhp_pieces = explode(".", $data['bhp']);
+				$data['bhp'] = $bhp_pieces[0];
+				$data['bhp_decimal'] = $bhp_pieces[1];
+			}
 		}
 		$db->sql_freeresult($result);
 

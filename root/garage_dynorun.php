@@ -103,7 +103,7 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('VID' => '', 'dynocentre_id' => '', 'bhp' => '', 'torque' => '', 'boost' => '', 'nitrous' => '', 'peakpoint' => '', 'url_image' => '');
+		$params = array('VID' => '', 'dynocentre_id' => '', 'bhp' => '', 'bhp_decimal' => '', 'torque' => '', 'torque_decimal' => '', 'boost' => '', 'boost_decimal' => '', 'nitrous' => '', 'peakpoint' => '', 'peakpoint_decimal' => '', 'url_image' => '');
 		$data 	= $garage->process_vars($params);
 		$params = array('bhp_unit' => '', 'torque_unit' => '', 'boost_unit' => '');
 		$data	+= $garage->process_mb_vars($params);
@@ -142,10 +142,14 @@ switch( $mode )
 			'U_SUBMIT_BUSINESS_DYNOCENTRE'	=> 'javascript:add_dynocentre()',
 			'VID' 				=> $vid,
 			'BHP' 				=> $data['bhp'],
+			'BHP_DECIMAL'			=> $data['bhp_decimal'],
 			'TORQUE' 			=> $data['torque'],
+			'TORQUE_DECIMAL'		=> $data['torque_decimal'],
 			'BOOST' 			=> $data['boost'],
+			'BOOST_DECIMAL'			=> $data['boost_decimal'],
 			'NITROUS' 			=> $data['nitrous'],
 			'PEAKPOINT'	 		=> $data['peakpoint'],
+			'PEAKPOINT_DECIMAL' 		=> $data['peakpoint_decimal'],
 			'URL_IMAGE'			=> $data['url_image'],
 			'S_MODE_ACTION' 		=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=insert_dynorun"),
 			'S_MODE_USER_SUBMIT' 		=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_data"),
@@ -187,11 +191,11 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('dynocentre_id' => '', 'bhp' => '', 'torque' => 0, 'boost' => 0, 'nitrous' => 0, 'peakpoint' => 0);
+		$params = array('dynocentre_id' => '', 'bhp' => '', 'bhp_decimal' => '', 'torque' => 0, 'torque_decimal' => 0, 'boost' => 0, 'boost_unit' => 0, 'nitrous' => 0, 'peakpoint' => 0, 'peakpoint_decimal' => 0);
 		$data 	= $garage->process_vars($params);
 		$params = array('bhp_unit' => '', 'torque_unit' => '', 'boost_unit' => 'PSI');
 		$data	+= $garage->process_mb_vars($params);
-		$params = array('dynocentre_id', 'bhp', 'bhp_unit');
+		$params = array('dynocentre_id', 'bhp', 'bhp_decimal', 'bhp_unit');
 		$garage->check_required_vars($params);
 
 		/**
@@ -269,7 +273,7 @@ switch( $mode )
 		/**
 		* Get any changed data incase we are arriving from creating a dynocentre
 		*/
-		$params = array('dynocentre_id' => '', 'bhp' => '', 'torque' => 0, 'boost' => 0, 'nitrous' => 0, 'peakpoint' => 0, 'redirect' => '');
+		$params = array('dynocentre_id' => '', 'bhp' => '', 'bhp_decimal' => '', 'torque' => 0, 'torque_decimal' => 0, 'boost' => 0, 'boost_decimal' => 0, 'nitrous' => 0, 'peakpoint' => 0, 'peakpoint_decimal' => 0, 'redirect' => '');
 		$store 	= $garage->process_vars($params);
 		$params = array('bhp_unit' => '', 'torque_unit' => '', 'boost_unit' => 'PSI');
 		$store	+= $garage->process_mb_vars($params);
@@ -314,10 +318,14 @@ switch( $mode )
 			'VID' 			=> $vid,
 			'DID' 			=> $did,
 			'BHP' 			=> (!empty($store['bhp'])) ? $store['bhp'] : $data['bhp'],
+			'BHP_DECIMAL'		=> (!empty($store['bhp_decimal'])) ? $store['bhp_decimal'] : $data['bhp_decimal'],
 			'TORQUE' 		=> (!empty($store['torque'])) ? $store['torque'] : $data['torque'],
+			'TORQUE_DECIMAL'	=> (!empty($store['torque_decimal'])) ? $store['torque_decimal'] : $data['torque_decimal'],
 			'BOOST' 		=> (!empty($store['boost'])) ? $store['boost'] : $data['boost'],
+			'BOOST_DECIMAL'		=> (!empty($store['boost_decimal'])) ? $store['boost_decimal'] : $data['boost_decimal'],
 			'NITROUS' 		=> (!empty($store['nitrous'])) ? $store['nitrous'] : $data['nitrous'],
 			'PEAKPOINT' 		=> (!empty($store['peakpoint'])) ? $store['peakpoint'] : $data['peakpoint'],
+			'PEAKPOINT_DECIMAL'	=> (!empty($store['peakpoint_decimal'])) ? $store['peakpoint_decimal'] : $data['peakpoint_decimal'],
 			'REDIRECT' 		=> $store['redirect'],
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=update_dynorun"),
 			'S_IMAGE_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=insert_dynorun_image"),
@@ -355,11 +363,11 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('dynocentre_id' => '', 'bhp' => '', 'torque' => '', 'boost' => '', 'nitrous' => '', 'peakpoint' => '', 'editupload' => '', 'image_id' => '', 'redirect' => '');
+		$params = array('dynocentre_id' => '', 'bhp' => '', 'bhp_decimal' => '', 'torque' => '', 'torque_decimal' => '', 'boost' => '', 'boost_decimal' => '', 'nitrous' => '', 'peakpoint' => '', 'peakpoint_decimal' => '', 'editupload' => '', 'image_id' => '', 'redirect' => '');
 		$data 	= $garage->process_vars($params);
 		$params = array('bhp_unit' => '', 'torque_unit' => '', 'boost_unit' => '');
 		$data	+= $garage->process_mb_vars($params);
-		$params = array('dynocentre_id', 'bhp', 'bhp_unit');
+		$params = array('dynocentre_id', 'bhp', 'bhp_decimal', 'bhp_unit');
 		$garage->check_required_vars($params);
 
 		/**
@@ -582,14 +590,14 @@ switch( $mode )
 			'USERNAME_COLOUR'	=> get_username_string('colour', $data['user_id'], $data['username'], $data['user_colour']),
             		'AVATAR_IMG' 		=> ($user->optionget('viewavatars')) ? get_user_avatar($data['user_avatar'], $data['user_avatar_type'], $data['user_avatar_width'], $data['user_avatar_height']) : '',
             		'DYNOCENTRE' 		=> $data['title'],
-            		'BHP' 			=> $data['bhp'],
+            		'BHP' 			=> $data['bhp'] . $user->lang['DECIMAL_SEPERATOR'] . $data['bhp_decimal'],
             		'BHP_UNIT'	 	=> $data['bhp_unit'],
-            		'TORQUE' 		=> $data['torque'],
+            		'TORQUE' 		=> $data['torque'] . $user->lang['DECIMAL_SEPERATOR'] . $data['torque_decimal'],
             		'TORQUE_UNIT' 		=> $data['torque_unit'],
             		'NITROUS' 		=> $data['nitrous'],
-            		'BOOST' 		=> $data['boost'],
+            		'BOOST' 		=> $data['boost'] . $user->lang['DECIMAL_SEPERATOR'] . $data['boost_decimal'],
             		'BOOST_UNIT' 		=> $data['boost_unit'],
-            		'PEAKPOINT' 		=> $data['peakpoint'],
+            		'PEAKPOINT' 		=> $data['peakpoint'] . $user->lang['DECIMAL_SEPERATOR'] . $data['peakpoint_decimal'],
          	));
 
 		$garage_template->sidemenu();

@@ -105,7 +105,7 @@ switch( $mode )
 		}
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('VID' => '', 'made_year' => '', 'mileage' => '', 'mileage_units' => '', 'price' => '', 'currency' => '', 'engine_type' => '', 'url_image' => '', 'tertiary' => '', 'redirect' => '');
+		$params = array('VID' => '', 'made_year' => '', 'mileage' => '', 'mileage_units' => '', 'price' => '', 'price_decimal' => '', 'currency' => '', 'engine_type' => '', 'url_image' => '', 'tertiary' => '', 'redirect' => '');
 		$data = $garage->process_vars($params);
 		$params = array('make' => '', 'colour' => '', 'comments' => '');
 		$data += $garage->process_mb_vars($params);
@@ -182,7 +182,7 @@ switch( $mode )
 		}
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('VID' => '', 'make_id' => '', 'made_year' => '', 'mileage' => '', 'mileage_units' => '', 'price' => '', 'currency' => '', 'engine_type' => '', 'url_image' => '', 'tertiary' => '', 'redirect' => '');
+		$params = array('VID' => '', 'make_id' => '', 'made_year' => '', 'mileage' => '', 'mileage_units' => '', 'price' => '', 'price_decimal' => '', 'currency' => '', 'engine_type' => '', 'url_image' => '', 'tertiary' => '', 'redirect' => '');
 		$data = $garage->process_vars($params);
 		$params = array('model' => '', 'colour' => '', 'comments' => '');
 		$data += $garage->process_mb_vars($params);
@@ -273,7 +273,7 @@ switch( $mode )
 		/**
 		* Lets try new way of remembering any data entered before user heads to create some needed item(s)
 		*/ 
-		$params = array('made_year' => '', 'make_id' => $garage_config['default_make_id'], 'model_id' => $garage_config['default_model_id'], 'mileage' => '', 'mileage_units' => '', 'price' => '', 'currency' => '', 'engine_type' => '', 'url_image' => '');
+		$params = array('made_year' => '', 'make_id' => $garage_config['default_make_id'], 'model_id' => $garage_config['default_model_id'], 'mileage' => '', 'mileage_units' => '', 'price' => '', 'price_decimal' => '', 'currency' => '', 'engine_type' => '', 'url_image' => '');
 		$data = $garage->process_vars($params);
 		$params = array('colour' => '', 'comments' => '');
 		$data += $garage->process_mb_vars($params);
@@ -306,6 +306,7 @@ switch( $mode )
 			'COLOUR' 		=> $data['colour'],
 			'MILEAGE' 		=> $data['mileage'],
 			'PRICE' 		=> $data['price'],
+			'PRICE_DECIMAL'		=> $data['price_decimal'],
 			'COMMENTS' 		=> $data['comments'],
 			'URL_IMAGE'		=> $data['url_image'],
 			'S_DISPLAY_SUBMIT_MAKE'	=> $garage_config['enable_user_submit_make'],
@@ -352,7 +353,7 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params	= array('made_year' => '', 'make_id' => '', 'model_id' => '', 'mileage' => 0, 'mileage_units' => '', 'price' => 0, 'currency' => '', 'engine_type' => 0);
+		$params	= array('made_year' => '', 'make_id' => '', 'model_id' => '', 'mileage' => 0, 'mileage_units' => '', 'price' => 0, 'price_decimal' => 0, 'currency' => '', 'engine_type' => 0);
 		$data	= $garage->process_vars($params);
 		$params	= array('colour' => '', 'comments' => '');
 		$data	+= $garage->process_mb_vars($params);
@@ -420,7 +421,7 @@ switch( $mode )
 		/**
 		* Get any changed data incase we are arriving from creating a mark or model
 		*/
-		$params	= array('made_year' => '', 'make_id' => '', 'model_id' => '', 'mileage' => 0, 'mileage_units' => '', 'price' => 0, 'currency' => '', 'engine_type' => 0, 'redirect' => '');
+		$params	= array('made_year' => '', 'make_id' => '', 'model_id' => '', 'mileage' => 0, 'mileage_units' => '', 'price' => 0, 'price_decimal' => 0, 'currency' => '', 'engine_type' => 0, 'redirect' => '');
 		$store	= $garage->process_vars($params);
 		$params	= array('colour' => '', 'comments' => '');
 		$store	+= $garage->process_mb_vars($params);
@@ -468,6 +469,7 @@ switch( $mode )
 			'COLOUR' 		=> (!empty($store['colour'])) ? $store['colour'] : $data['colour'],
 			'MILEAGE' 		=> (!empty($store['mileage'])) ? $store['mileage'] : $data['mileage'],
 			'PRICE' 		=> (!empty($store['price'])) ? $store['price'] : $data['price'],
+			'PRICE_DECIMAL'		=> (!empty($store['price_decimal'])) ? $store['price_decimal'] : $data['price_decimal'],
 			'COMMENTS' 		=> (!empty($store['comments'])) ? $store['comments'] : $data['comments'],
 			'REDIRECT' 		=> $store['redirect'],
 			'S_DISPLAY_SUBMIT_MAKE'	=> $garage_config['enable_user_submit_make'],
@@ -509,7 +511,7 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('made_year' => '', 'make_id' => '', 'model_id' => '', 'mileage' => 0, 'mileage_units' => '', 'price' => 0, 'currency' => '', 'engine_type' => 0, 'redirect' => '');
+		$params = array('made_year' => '', 'make_id' => '', 'model_id' => '', 'mileage' => 0, 'mileage_units' => '', 'price' => 0, 'price_decimal' => 0, 'currency' => '', 'engine_type' => 0, 'redirect' => '');
 		$data = $garage->process_vars($params);
 		$params = array('colour' => '', 'comments' => '');
 		$data += $garage->process_mb_vars($params);

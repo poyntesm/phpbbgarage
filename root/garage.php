@@ -119,7 +119,7 @@ switch( $mode )
 
 		if ( $data['primary'] == "vehicle")
 		{
-			$params = array('VID' => '', 'made_year' => '', 'make_id' => '', 'mileage' => '', 'mileage_units' => '', 'price' => '', 'currency' => '', 'engine_type' => '', 'url_image' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
+			$params = array('VID' => '', 'made_year' => '', 'make_id' => '', 'mileage' => '', 'mileage_units' => '', 'price' => '', 'price_decimal' => '', 'currency' => '', 'engine_type' => '', 'url_image' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
 			$store = $garage->process_vars($params);
 			$params = array('colour' => '', 'comments' => '');
 			$store += $garage->process_mb_vars($params);
@@ -157,7 +157,7 @@ switch( $mode )
 		}
 		elseif ($data['primary'] == "modification")
 		{
-			$params = array('VID' => '', 'MID' => '', 'category_id' => '', 'manufacturer_id' => '', 'product_id' => '', 'price' => 0, 'shop_id' => '', 'installer_id' => '', 'install_price' => 0, 'install_rating' => 0, 'product_rating' => 0, 'editupload' => '', 'image_id' => '', 'purchase_rating' => 0, 'url_image' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
+			$params = array('VID' => '', 'MID' => '', 'category_id' => '', 'manufacturer_id' => '', 'product_id' => '', 'price' => 0, 'price_decimal' => 0, 'shop_id' => '', 'installer_id' => '', 'install_price' => 0, 'install_price_decimal' => 0, 'install_rating' => 0, 'product_rating' => 0, 'editupload' => '', 'image_id' => '', 'purchase_rating' => 0, 'url_image' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
 			$store	= $garage->process_vars($params);
 			$params = array('comments' => '', 'install_comments' => '');
 			$store	+= $garage->process_mb_vars($params);
@@ -216,7 +216,7 @@ switch( $mode )
 		}
 		elseif ($data['primary'] == "premium")
 		{
-			$params = array('VID' => '', 'INS_ID' => '', 'premium' => '', 'cover_type_id' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
+			$params = array('VID' => '', 'INS_ID' => '', 'premium' => '', 'premium_decimal' => '', 'cover_type_id' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
 			$store 	= $garage->process_vars($params);
 			$params = array('comments' => '');
 			$store 	+= $garage->process_mb_vars($params);
@@ -235,7 +235,7 @@ switch( $mode )
 		}
 		elseif ($data['primary'] == "dynorun")
 		{
-			$params = array('VID' => '', 'DID' => '', 'bhp' => '', 'bhp_unit' => '', 'torque' => 0, 'torque_unit' => '', 'boost' => 0, 'boost_unit' => 'PSI', 'nitrous' => 0, 'peakpoint' => 0, 'url_image' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
+			$params = array('VID' => '', 'DID' => '', 'bhp' => '', 'bhp_decimal' => '', 'bhp_unit' => '', 'torque' => 0, 'torque_decimal' => 0, 'torque_unit' => '', 'boost' => 0, 'boost_decimal' => 0, 'boost_unit' => 'PSI', 'nitrous' => 0, 'peakpoint' => 0, 'peakpoint_decimal' => 0, 'url_image' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
 			$store 	= $garage->process_vars($params);
 			//Let Check The User Is Allowed Perform This Action
 			if (!$auth->acl_get('u_garage_add_business'))
@@ -271,7 +271,7 @@ switch( $mode )
 		}
 		elseif ($data['primary'] == "service")
 		{
-			$params	= array('VID' => '', 'SVID' => '', 'type_id' => '', 'price' => 0, 'rating' => 0, 'mileage' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
+			$params	= array('VID' => '', 'SVID' => '', 'type_id' => '', 'price' => 0, 'price_decimal' => 0, 'rating' => 0, 'mileage' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
 			$store 	= $garage->process_vars($params);
 			//Let Check The User Is Allowed Perform This Action
 			if (!$auth->acl_get('u_garage_add_business'))
@@ -1265,7 +1265,7 @@ switch( $mode )
 
 		if ($data['primary'] == "modification")
 		{
-			$params = array('VID' => '', 'MID' => '', 'category_id' => '', 'manufacturer_id' => '', 'product_id' => '', 'price' => 0, 'shop_id' => '', 'installer_id' => '', 'install_price' => 0, 'install_rating' => 0, 'product_rating' => 0, 'editupload' => '', 'image_id' => '', 'purchase_rating' => 0, 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
+			$params = array('VID' => '', 'MID' => '', 'category_id' => '', 'manufacturer_id' => '', 'product_id' => '', 'price' => 0, 'price_decimal' => 0, 'shop_id' => '', 'installer_id' => '', 'install_price' => 0, 'install_price_decimal' => 0, 'install_rating' => 0, 'product_rating' => 0, 'editupload' => '', 'image_id' => '', 'purchase_rating' => 0, 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
 			$store	= $garage->process_vars($params);
 			$params = array('comments' => '', 'install_comments' => '');
 			$store	+= $garage->process_mb_vars($params);
@@ -1289,7 +1289,7 @@ switch( $mode )
 		}
 		elseif ($data['primary'] == "premium")
 		{
-			$params = array('VID' => '', 'INS_ID' => '', 'premium' => '', 'cover_type_id' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
+			$params = array('VID' => '', 'INS_ID' => '', 'premium' => '', 'premium_decimal' => '', 'cover_type_id' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
 			$store 	= $garage->process_vars($params);
 			$params = array('comments' => '');
 			$store 	+= $garage->process_mb_vars($params);
@@ -1302,7 +1302,7 @@ switch( $mode )
 		}
 		elseif ($data['primary'] == "dynorun")
 		{
-			$params = array('VID' => '', 'DID' => '', 'bhp' => '', 'bhp_unit' => '', 'torque' => 0, 'torque_unit' => '', 'boost' => 0, 'boost_unit' => 'PSI', 'nitrous' => 0, 'peakpoint' => 0, 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
+			$params = array('VID' => '', 'DID' => '', 'bhp' => '', 'bhp_decimal' => '', 'bhp_unit' => '', 'torque' => 0, 'torque_decimal' => 0, 'torque_unit' => '', 'boost' => 0, 'boost_decimal' => 0, 'boost_unit' => 'PSI', 'nitrous' => 0, 'peakpoint' => 0, 'peakpoint_decimal' => 0, 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
 			$store 	= $garage->process_vars($params);
 			$store['dynocentre_id'] = $business_id;
 			$user_submit_action = append_sid("{$phpbb_root_path}garage_dynorun.$phpEx", "mode=add_dynorun");
@@ -1313,7 +1313,7 @@ switch( $mode )
 		}
 		elseif ($data['primary'] == "service")
 		{
-			$params	= array('VID' => '', 'SVID' => '', 'type_id' => '', 'price' => 0, 'rating' => 0, 'mileage' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
+			$params	= array('VID' => '', 'SVID' => '', 'type_id' => '', 'price' => 0, 'price_decimal' => 0, 'rating' => 0, 'mileage' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '', 'redirect' => '');
 			$store 	= $garage->process_vars($params);
 			$store['garage_id'] = $business_id;
 			$user_submit_action = append_sid("{$phpbb_root_path}garage_service.$phpEx", "mode=add_service");

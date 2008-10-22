@@ -37,7 +37,7 @@ class garage_service
 			'vehicle_id'	=> $vid,
 			'garage_id'	=> $data['garage_id'],
 			'type_id' 	=> $data['type_id'],
-			'price' 	=> $data['price'],
+			'price' 	=> $data['price'] .'.'. $data['price_decimal'],
 			'rating' 	=> $data['rating'],
 		       	'mileage' 	=> $data['mileage'],
 			'date_created'	=> time(),
@@ -63,7 +63,7 @@ class garage_service
 			'vehicle_id'	=> $vid,
 			'garage_id'	=> $data['garage_id'],
 			'type_id' 	=> $data['type_id'],
-			'price' 	=> $data['price'],
+			'price' 	=> $data['price'] .'.'. $data['price_decimal'],
 			'rating' 	=> $data['rating'],
 		       	'mileage' 	=> $data['mileage'],
 			'date_updated'	=> time()
@@ -118,6 +118,12 @@ class garage_service
 
       		$result = $db->sql_query($sql);
 		$data = $db->sql_fetchrow($result);
+		if (!empty($data))
+		{
+			$price_pieces = explode(".", $data['price']);
+			$data['price'] = $price_pieces[0];
+			$data['price_decimal'] = $price_pieces[1];
+		}
 		$db->sql_freeresult($result);
 
 		return $data;

@@ -158,9 +158,9 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params	= array('rt' => 0.000, 'sixty' => 0.000, 'three' => 0.000, 'eighth' => 0.000, 'eighthmph' => 0.000, 'thou' => 0.000, 'quart' => '', 'quartmph' => 0.000, 'dynorun_id' => 0);
+		$params	= array('rt' => 0, 'rt_decimal' => 0, 'sixty' => 0, 'sixty_decimal' => 0, 'three' => 0, 'three_decimal' => 0, 'eighth' => 0, 'eighth_decimal' => 0, 'eighthmph' => 0, 'eighthmph_decimal' => 0, 'thou' => 0, 'thou_decimal' => 0, 'quart' => '', 'quart_decimal' => '', 'quartmph' => 0, 'quartmph_decimal' => 0, 'dynorun_id' => 0);
 		$data 	= $garage->process_vars($params);
-		$params = array('quart');
+		$params = array('quart', 'quart_decimal');
 		$garage->check_required_vars($params);
 
 		/**
@@ -253,7 +253,7 @@ switch( $mode )
 		);
 		if (($data['dynorun_id'] > 0) AND (sizeof($dynoruns) > 0))
 		{
-			$bhp_statement = $data['bhp'] . ' BHP @ ' . $data['bhp_unit'];
+			$bhp_statement = $data['bhp'] . $user->lang['DECIMAL_SEPERATOR'] . $data['bhp_decimal'] . ' BHP @ ' . $data['bhp_unit'];
 			$template->assign_vars(array(
 				'S_DISPLAY_DYNORUNS' => true)
 			);
@@ -275,13 +275,21 @@ switch( $mode )
 			'VID'			=> $vid,
 			'QMID'			=> $qmid,
 			'RT'			=> $data['rt'],
+			'RT_DECIMAL'		=> $data['rt_decimal'],
 			'SIXTY'			=> $data['sixty'],
+			'SIXTY_DECIMAL'		=> $data['sixty_decimal'],
 			'THREE' 		=> $data['three'],
+			'THREE_DECIMAL' 	=> $data['three_decimal'],
 			'EIGHTH' 		=> $data['eighth'],
+			'EIGHTH_DECIMAL' 	=> $data['eighth_decimal'],
 			'EIGHTHMPH' 		=> $data['eighthmph'],
+			'EIGHTHMPH_DECIMAL' 	=> $data['eighthmph_decimal'],
 			'THOU' 			=> $data['thou'],
+			'THOU_DECIMAL' 		=> $data['thou_decimal'],
 			'QUART' 		=> $data['quart'],
+			'QUART_DECIMAL' 	=> $data['quart_decimal'],
 			'QUARTMPH' 		=> $data['quartmph'],
+			'QUARTMPH_DECIMAL'	=> $data['quartmph_decimal'],
 			'REDIRECT'		=> request_var('redirect', ''),
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=update_quartermile"),
 			'S_IMAGE_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_quartermile.$phpEx", "mode=insert_quartermile_image"),
@@ -319,9 +327,9 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('rt' => 0.000, 'sixty' => 0.000, 'three' => 0.000, 'eighth' => 0.000, 'eighthmph' => 0.000, 'thou' => 0.000, 'quart' => '', 'quartmph' => 0.000, 'dynorun_id' => 0, 'editupload' => '', 'image_id' => '', 'redirect' => '');
+		$params = array('rt' => 0, 'rt_decimal' => 0, 'sixty' => 0, 'sixty_decimal' => 0, 'three' => 0, 'three_decimal' => 0, 'eighth' => 0, 'eighth_decimal' => 0, 'eighthmph' => 0, 'eighthmph_decimal' => 0, 'thou' => 0, 'thou_decimal' => 0, 'quart' => '', 'quart_decimal' => '', 'quartmph' => 0, 'quartmph_decimal' => 0, 'dynorun_id' => 0, 'editupload' => '', 'image_id' => '', 'redirect' => '');
 		$data = $garage->process_vars($params);
-		$params = array('quart');
+		$params = array('quart', 'quart_decimal');
 		$garage->check_required_vars($params);
 
 		/**
@@ -545,14 +553,14 @@ switch( $mode )
 			'MODEL' 		=> $data['model'],
             		'AVATAR_IMG' 		=> ($user->optionget('viewavatars')) ? get_user_avatar($data['user_avatar'], $data['user_avatar_type'], $data['user_avatar_width'], $data['user_avatar_height']) : '',
             		'DATE_UPDATED' 		=> $user->format_date($data['date_updated']),
-            		'RT' 			=> $data['rt'],
-            		'SIXTY' 		=> $data['sixty'],
-            		'THREE'	 		=> $data['three'],
-            		'EIGHTH' 		=> $data['eighth'],
-            		'EIGHTHMPH' 		=> $data['eighthmph'],
-            		'THOU'	 		=> $data['thou'],
-			'QUART' 		=> $data['quart'],
-			'QUARTMPH' 		=> $data['quartmph'],
+            		'RT' 			=> $data['rt'] . $user->lang['DECIMAL_SEPERATOR'] . $data['rt_decimal'],
+            		'SIXTY' 		=> $data['sixty'] . $user->lang['DECIMAL_SEPERATOR'] . $data['sixty_decimal'],
+            		'THREE'	 		=> $data['three'] . $user->lang['DECIMAL_SEPERATOR'] . $data['three_decimal'],
+            		'EIGHTH' 		=> $data['eighth'] . $user->lang['DECIMAL_SEPERATOR'] . $data['eighth_decimal'],
+            		'EIGHTHMPH' 		=> $data['eighthmph'] . $user->lang['DECIMAL_SEPERATOR'] . $data['eighthmph_decimal'],
+            		'THOU'	 		=> $data['thou'] . $user->lang['DECIMAL_SEPERATOR'] . $data['thou_decimal'],
+			'QUART' 		=> $data['quart'] . $user->lang['DECIMAL_SEPERATOR'] . $data['quart_decimal'],
+			'QUARTMPH' 		=> $data['quartmph'] . $user->lang['DECIMAL_SEPERATOR'] . $data['quartmph_decimal'],
 		));
 		$garage_template->sidemenu();
 	break;

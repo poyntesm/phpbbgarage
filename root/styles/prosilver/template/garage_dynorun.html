@@ -40,15 +40,15 @@
 									</dl>
 									<dl>
 										<dt>{L_BHP_EXPLAIN}</dt>
-										<dd><input name="bhp" type="text" class="inputbox autowidth" size="15" value ="{BHP}" />&nbsp;<select id="bhp_unit" name="bhp_unit"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN bhp_unit --><option value="{bhp_unit.VALUE}" <!-- IF bhp_unit.S_SELECTED -->selected="selected"<!-- ENDIF -->>{bhp_unit.TEXT}</option><!-- END bhp_unit --></select>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span></dd>
+										<dd><input name="bhp" type="text" class="inputbox percision4" maxlength="4" value ="{BHP}" />{L_DECIMAL_SEPERATOR}<input name="bhp_decimal" type="text" class="inputbox percision2" maxlength="2" value="{BHP_DECIMAL}" />&nbsp;<select id="bhp_unit" name="bhp_unit"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN bhp_unit --><option value="{bhp_unit.VALUE}" <!-- IF bhp_unit.S_SELECTED -->selected="selected"<!-- ENDIF -->>{bhp_unit.TEXT}</option><!-- END bhp_unit --></select>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span></dd>
 									</dl>
 									<dl>
 										<dt>{L_TORQUE_EXPLAIN}</dt>
-										<dd><input name="torque" type="text" class="inputbox autowidth" size="15" value ="{TORQUE}" />&nbsp;<select id="torque_unit" name="torque_unit"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN torque_unit --><option value="{torque_unit.VALUE}" <!-- IF torque_unit.S_SELECTED -->selected="selected"<!-- ENDIF -->>{torque_unit.TEXT}</option><!-- END torque_unit --></select></dd>
+										<dd><input name="torque" type="text" class="inputbox percision4" maxlength="4" value ="{TORQUE}" />{L_DECIMAL_SEPERATOR}<input name="torque_decimal" type="text" class="inputbox percision2" maxlength="2" value="{TORQUE_DECIMAL}" />&nbsp;<select id="torque_unit" name="torque_unit"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN torque_unit --><option value="{torque_unit.VALUE}" <!-- IF torque_unit.S_SELECTED -->selected="selected"<!-- ENDIF -->>{torque_unit.TEXT}</option><!-- END torque_unit --></select></dd>
 									</dl>
 									<dl>
 										<dt>{L_BOOST_EXPLAIN}</dt>
-										<dd><input name="boost" type="text" class="inputbox autowidth" size="15" value ="{BOOST}" />&nbsp;<select id="boost_unit" name="boost_unit"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN boost --><option value="{boost.VALUE}" <!-- IF boost.S_SELECTED -->selected="selected"<!-- ENDIF -->>{boost.TEXT}</option><!-- END boost --></select></dd>
+										<dd><input name="boost" type="text" class="inputbox percision4" maxlength="4" value ="{BOOST}" />{L_DECIMAL_SEPERATOR}<input name="boost_decimal" type="text" class="inputbox percision2" maxlength="2" value="{BOOST_DECIMAL}" />&nbsp;<select id="boost_unit" name="boost_unit"><option value="">{L_SELECT_A_OPTION}</option><option value="">------</option><!-- BEGIN boost --><option value="{boost.VALUE}" <!-- IF boost.S_SELECTED -->selected="selected"<!-- ENDIF -->>{boost.TEXT}</option><!-- END boost --></select></dd>
 									</dl>
 									<dl>
 										<dt>{L_NITROUS_EXPLAIN}</dt>
@@ -56,7 +56,7 @@
 									</dl>
 									<dl>
 										<dt>{L_PEAKPOINT_EXPLAIN}</dt>
-										<dd><input name="peakpoint" type="text" class="inputbox autowidth" size="15" value ="{PEAKPOINT}" /></dd>
+										<dd><input name="peakpoint" type="text" class="inputbox percision4" maxlength="4" value ="{PEAKPOINT}" />{L_DECIMAL_SEPERATOR}<input name="peakpoint_decimal" type="text" class="inputbox percision3" maxlength="3" value="{PEAKPOINT_DECIMAL}" /></dd>
 									</dl>
 
 									<!-- IF ! DID -->

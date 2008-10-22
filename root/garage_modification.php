@@ -114,7 +114,7 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('category_id' => '' , 'manufacturer_id' => '', 'product_id' =>'', 'price' => '', 'shop_id' => '', 'installer_id' => '', 'install_price' => '', 'install_rating' => '', 'product_rating' => '', 'purchase_rating' => '', 'url_image' => '');
+		$params = array('category_id' => '' , 'manufacturer_id' => '', 'product_id' =>'', 'price' => '', 'price_decimal' => '', 'shop_id' => '', 'installer_id' => '', 'install_price' => '', 'install_price_decimal' => '', 'install_rating' => '', 'product_rating' => '', 'purchase_rating' => '', 'url_image' => '');
 		$data	= $garage->process_vars($params);
 		$params = array('comments' => '', 'install_comments' => '');
 		$data	+= $garage->process_mb_vars($params);
@@ -152,7 +152,9 @@ switch( $mode )
 			'U_SUBMIT_BUSINESS_PRODUCT'	=> "javascript:add_manufacturer('')",
 			'VID' 				=> $vid,
 			'PRICE' 			=> $data['price'],
+			'PRICE_DECIMAL' 		=> $data['price_decimal'],
 			'INSTALL_PRICE' 		=> $data['install_price'],
+			'INSTALL_PRICE_DECIMAL'		=> $data['install_price_decimal'],
 			'MANUFACTURER_ID' 		=> $data['manufacturer_id'],
 			'PRODUCT_ID' 			=> $data['product_id'],
 			'CATEGORY_ID' 			=> $data['category_id'],
@@ -197,7 +199,7 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('category_id' => '' , 'manufacturer_id' => '', 'product_id' =>'', 'price' => 0, 'shop_id' => '', 'installer_id' => '', 'install_price' => 0, 'install_rating' => 0, 'product_rating' => 0, 'purchase_rating' => 0);
+		$params = array('category_id' => '' , 'manufacturer_id' => '', 'product_id' =>'', 'price' => 0, 'price_decimal' => 0, 'shop_id' => '', 'installer_id' => '', 'install_price' => 0, 'install_price_decimal' => 0, 'install_rating' => 0, 'product_rating' => 0, 'purchase_rating' => 0);
 		$data	= $garage->process_vars($params);
 		$params = array('comments' => '', 'install_comments' => '');
 		$data	+= $garage->process_mb_vars($params);
@@ -258,7 +260,7 @@ switch( $mode )
 		/**
 		* Get any changed data incase we are arriving from creating a manufacturer, product, shop or garage
 		*/
-		$params = array('category_id' => '' , 'manufacturer_id' => '', 'product_id' =>'', 'price' => 0, 'shop_id' => '', 'installer_id' => '', 'install_price' => 0, 'install_rating' => 0, 'product_rating' => 0, 'purchase_rating' => 0);
+		$params = array('category_id' => '' , 'manufacturer_id' => '', 'product_id' =>'', 'price' => 0, 'price_decimal' => 0, 'shop_id' => '', 'installer_id' => '', 'install_price' => 0, 'install_price_decimal' => 0, 'install_rating' => 0, 'product_rating' => 0, 'purchase_rating' => 0);
 		$store	= $garage->process_vars($params);
 		$params = array('comments' => '', 'install_comments' => '');
 		$store	+= $garage->process_mb_vars($params);
@@ -310,7 +312,9 @@ switch( $mode )
 			'MID' 				=> $mid,
 			'VID' 				=> $vid,
 			'PRICE' 			=> (!empty($store['price'])) ? $store['price'] : $data['price'],
+			'PRICE_DECIMAL' 		=> (!empty($store['price_decimal'])) ? $store['price_decimal'] : $data['price_decimal'],
 			'INSTALL_PRICE'	 		=> (!empty($store['install_price'])) ? $store['install_price'] : $data['install_price'],
+			'INSTALL_PRICE_DECIMAL'		=> (!empty($store['install_price_decimal'])) ? $store['install_price_decimal'] : $data['install_price_decimal'],
 			'PRODUCT_ID' 			=> (!empty($store['product_id'])) ? $store['product_id'] : $data['product_id'],
 			'CATEGORY_ID' 			=> (!empty($store['category_id'])) ? $store['category_id'] : $data['category_id'],
 			'MANUFACTURER_ID' 		=> (!empty($store['manufacturer_id'])) ? $store['manufacturer_id'] : $data['manufacturer_id'],
@@ -356,7 +360,7 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('category_id' => '', 'manufacturer_id' => '', 'product_id' => '', 'price' => 0, 'shop_id' => '', 'installer_id' => '', 'install_price' => 0, 'install_rating' => 0, 'product_rating' => 0, 'editupload' => '', 'image_id' => '', 'purchase_rating' => 0);
+		$params = array('category_id' => '', 'manufacturer_id' => '', 'product_id' => '', 'price' => 0, 'price_decimal' => 0, 'shop_id' => '', 'installer_id' => '', 'install_price' => 0, 'install_price_decimal' => 0, 'install_rating' => 0, 'product_rating' => 0, 'editupload' => '', 'image_id' => '', 'purchase_rating' => 0);
 		$data	= $garage->process_vars($params);
 		$params = array('comments' => '', 'install_comments' => '');
 		$data	+= $garage->process_mb_vars($params);
@@ -478,8 +482,8 @@ switch( $mode )
             		'DATE_UPDATED' 		=> $user->format_date($data['date_updated']),
             		'MANUFACTURER' 		=> $data['manufacturer'],
             		'TITLE' 		=> $data['title'],
-            		'PRICE' 		=> $data['price'],
-            		'INSTALL_PRICE' 	=> $data['install_price'],
+            		'PRICE' 		=> $data['price'] . $user->lang['DECIMAL_SEPERATOR'] . $data['price_decimal'],
+            		'INSTALL_PRICE' 	=> $data['install_price'] . $user->lang['DECIMAL_SEPERATOR'] . $data['install_price_decimal'],
             		'INSTALL_COMMENTS' 	=> $data['install_comments'],
             		'CURRENCY' 		=> $data['currency'],
             		'CATEGORY' 		=> $data['category_title'],
@@ -602,7 +606,7 @@ switch( $mode )
 		}
 
 		//Get All Data Posted And Make It Safe To Use
-		$params = array('VID' => '', 'MID' => '', 'category_id' => '', 'manufacturer_id' => '', 'product_id' => '', 'price' => 0, 'shop_id' => '', 'installer_id' => '', 'install_price' => 0, 'install_rating' => 0, 'product_rating' => 0, 'editupload' => '', 'image_id' => '', 'purchase_rating' => 0, 'url_image' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '');
+		$params = array('VID' => '', 'MID' => '', 'category_id' => '', 'manufacturer_id' => '', 'product_id' => '', 'price' => 0, 'price_decimal' => 0, 'shop_id' => '', 'installer_id' => '', 'install_price' => 0, 'install_price_decimal' => 0, 'install_rating' => 0, 'product_rating' => 0, 'editupload' => '', 'image_id' => '', 'purchase_rating' => 0, 'url_image' => '', 'primary' => '', 'secondary' => '', 'tertiary' => '');
 		$data	= $garage->process_vars($params);
 		$params = array('title'=> '', 'comments' => '', 'install_comments' => '');
 		$data	+= $garage->process_mb_vars($params);

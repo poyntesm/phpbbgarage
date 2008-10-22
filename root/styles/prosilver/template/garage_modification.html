@@ -131,7 +131,7 @@ function build_product_list()
 									</dl>
 									<dl>
 										<dt><b>{L_PURCHASED_PRICE}</b></dt>
-										<dd>{CURRENCY}:<input name="price" type="text" class="inputbox autowidth" size="10" value="{PRICE}" />&nbsp;<b>{L_PURCHASE_RATING}</b>&nbsp;<select id="purchase_rating" name="purchase_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN purchase_rating --><option value="{purchase_rating.VALUE}" <!-- IF purchase_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{purchase_rating.TEXT}</option><!-- END purchase_rating --></select></dd>
+										<dd>{CURRENCY}:<input name="price" type="text" class="inputbox percision6" maxlength="8" value="{PRICE}" />{L_DECIMAL_SEPERATOR}<input name="price_decimal" type="text" class="inputbox percision2" maxlength="2" value="{PRICE_DECIMAL}" />&nbsp;<b>{L_PURCHASE_RATING}</b>&nbsp;<select id="purchase_rating" name="purchase_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN purchase_rating --><option value="{purchase_rating.VALUE}" <!-- IF purchase_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{purchase_rating.TEXT}</option><!-- END purchase_rating --></select></dd>
 									</dl>	
 									<dl>
 										<dt><b>{L_INSTALLED_BY}</b>&nbsp;<span style="color:#FF0000">[{L_REQUIRED}]</span></dt>
@@ -139,7 +139,7 @@ function build_product_list()
 									</dl>
 									<dl>
 										<dt><b>{L_INSTALLATION_PRICE}</b></dt>
-										<dd>{CURRENCY}:<input name="install_price" type="text" class="inputbox autowidth" size="10" value="{INSTALL_PRICE}" />&nbsp;<b>{L_INSTALLATION_RATING}</b>&nbsp;<select id="install_rating" name="install_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN install_rating --><option value="{install_rating.VALUE}" <!-- IF install_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{install_rating.TEXT}</option><!-- END install_rating --></select></dd>
+										<dd>{CURRENCY}:<input name="install_price" type="text" class="inputbox percision6" maxlength="8" value="{INSTALL_PRICE}" />{L_DECIMAL_SEPERATOR}<input name="install_price_decimal" type="text" class="inputbox percision2" maxlength="2" value="{INSTALL_PRICE_DECIMAL}" />&nbsp;<b>{L_INSTALLATION_RATING}</b>&nbsp;<select id="install_rating" name="install_rating"><option value="">{L_SELECT_RATING}</option><option value="">------</option><!-- BEGIN install_rating --><option value="{install_rating.VALUE}" <!-- IF install_rating.S_SELECTED -->selected="selected"<!-- ENDIF -->>{install_rating.TEXT}</option><!-- END install_rating --></select></dd>
 									</dl>
 									<dl>
 										<dt><b>{L_DESCRIPTION}</b></dt>

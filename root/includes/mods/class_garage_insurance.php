@@ -35,7 +35,7 @@ class garage_insurance
 
 		$sql = 'INSERT INTO ' . GARAGE_PREMIUMS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 			'vehicle_id'	=> $vid,
-			'premium'	=> $data['premium'],
+			'premium'	=> $data['premium'] .'.'. $data['premium_decimal'],
 			'cover_type_id'	=> $data['cover_type_id'],
 			'comments'	=> $data['comments'],
 			'business_id'	=> $data['business_id'],
@@ -57,7 +57,7 @@ class garage_insurance
 		global $db, $vid, $ins_id;
 
 		$update_sql = array(
-			'premium'	=> $data['premium'],
+			'premium'	=> $data['premium'] .'.'. $data['premium_decimal'],
 			'cover_type_id'	=> $data['cover_type_id'],
 			'comments'	=> $data['comments'],
 			'business_id'	=> $data['business_id']
@@ -122,6 +122,9 @@ class garage_insurance
 		if (!empty($data))
 		{
 			$data['vehicle'] = "{$data['made_year']} {$data['make']} {$data['model']}";
+			$premium_pieces = explode(".", $data['premium']);
+			$data['premium'] = $premium_pieces[0];
+			$data['premium_decimal'] = $premium_pieces[1];
 		}
 		$db->sql_freeresult($result);
 

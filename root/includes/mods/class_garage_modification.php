@@ -40,10 +40,10 @@ class garage_modification
 			'product_id'		=> $data['product_id'],
 			'shop_id'		=> $data['shop_id'],
 			'installer_id'		=> $data['installer_id'],
-			'price'			=> $data['price'],
+			'price'			=> $data['price'] .'.'. $data['price_decimal'],
 			'purchase_rating'	=> $data['purchase_rating'],
 			'comments'		=> $data['comments'],
-			'install_price'		=> $data['install_price'],
+			'install_price'		=> $data['install_price'] .'.'. $data['install_price_decimal'],
 			'install_rating'	=> $data['install_rating'],
 			'install_comments'	=> $data['install_comments'],
 			'product_rating'	=> $data['product_rating'],
@@ -73,10 +73,10 @@ class garage_modification
 			'product_id'		=> $data['product_id'],
 			'shop_id'		=> $data['shop_id'],
 			'installer_id'		=> $data['installer_id'],
-			'price'			=> $data['price'],
+			'price'			=> $data['price'] .'.'. $data['price_decimal'],
 			'purchase_rating'	=> $data['purchase_rating'],
 			'comments'		=> $data['comments'],
-			'install_price'		=> $data['install_price'],
+			'install_price'		=> $data['install_price'] .'.'. $data['install_price_decimal'],
 			'install_rating'	=> $data['install_rating'],
 			'install_comments'	=> $data['install_comments'],
 			'product_rating'	=> $data['product_rating'],
@@ -525,6 +525,12 @@ class garage_modification
 		if (!empty($data))
 		{
 			$data['vehicle'] = "{$data['made_year']} {$data['make']} {$data['model']}";
+			$price_pieces = explode(".", $data['price']);
+			$install_price_pieces = explode(".", $data['install_price']);
+			$data['price'] = $price_pieces[0];
+			$data['price_decimal'] = $price_pieces[1];
+			$data['install_price'] = $install_price_pieces[0];
+			$data['install_price_decimal'] = $install_price_pieces[1];
 		}
 		$db->sql_freeresult($result);
 

@@ -18,7 +18,7 @@ CREATE TABLE [phpbb_garage_vehicles] (
 	[colour] [varchar] (100) DEFAULT ('') NOT NULL ,
 	[mileage] [int] DEFAULT (0) NOT NULL ,
 	[mileage_unit] [varchar] (32) DEFAULT ('Miles') NOT NULL ,
-	[price] [int] DEFAULT (0) NOT NULL ,
+	[price] [float] DEFAULT (0) NOT NULL ,
 	[currency] [varchar] (32) DEFAULT ('EUR') NOT NULL ,
 	[comments] [text] DEFAULT ('') NOT NULL ,
 	[bbcode_bitfield] [varchar] (255) DEFAULT ('') NOT NULL ,
@@ -339,8 +339,8 @@ CREATE TABLE [phpbb_garage_premiums] (
 	[vehicle_id] [int] DEFAULT (0) NOT NULL ,
 	[business_id] [int] DEFAULT (0) NOT NULL ,
 	[cover_type_id] [int] DEFAULT (0) NOT NULL ,
-	[premium] [int] DEFAULT (0) NOT NULL ,
-	[comments] [text] NOT NULL 
+	[premium] [float] DEFAULT (0) NOT NULL ,
+	[comments] [text] DEFAULT ('') NOT NULL 
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
@@ -403,10 +403,9 @@ CREATE TABLE [phpbb_garage_modifications] (
 	[vehicle_id] [int] DEFAULT (0) NOT NULL ,
 	[user_id] [int] DEFAULT (0) NOT NULL ,
 	[category_id] [int] DEFAULT (0) NOT NULL ,
-	[manufacturer_id] [int] DEFAULT (0) NOT NULL ,
 	[product_id] [int] DEFAULT (0) NOT NULL ,
-	[price] [int] DEFAULT (0) NOT NULL ,
-	[install_price] [int] DEFAULT (0) NOT NULL ,
+	[price] [float] DEFAULT (0) NOT NULL ,
+	[install_price] [float] DEFAULT (0) NOT NULL ,
 	[product_rating] [int] DEFAULT (0) NOT NULL ,
 	[purchase_rating] [int] DEFAULT (0) NOT NULL ,
 	[install_rating] [int] DEFAULT (0) NOT NULL ,
@@ -610,7 +609,7 @@ CREATE TABLE [phpbb_garage_service_history] (
 	[vehicle_id] [int] DEFAULT (0) NOT NULL ,
 	[garage_id] [int] DEFAULT (0) NOT NULL ,
 	[type_id] [int] DEFAULT (0) NOT NULL ,
-	[price] [int] DEFAULT (0) NOT NULL ,
+	[price] [float] DEFAULT (0) NOT NULL ,
 	[rating] [int] DEFAULT (0) NOT NULL ,
 	[mileage] [int] DEFAULT (0) NOT NULL ,
 	[date_created] [int] DEFAULT (0) NOT NULL ,

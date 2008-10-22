@@ -36,14 +36,14 @@ class garage_dynorun
 		$sql = 'INSERT INTO ' . GARAGE_DYNORUNS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 			'vehicle_id'	=> $vid,
 			'dynocentre_id'	=> $data['dynocentre_id'],
-			'bhp'		=> $data['bhp'],
+			'bhp'		=> $data['bhp'] .'.'. $data['bhp_decimal'],
 			'bhp_unit'	=> $data['bhp_unit'],
-			'torque'	=> $data['torque'],
+			'torque'	=> $data['torque'] .'.'. $data['torque_decimal'],
 			'torque_unit'	=> (empty($data['torque_unit']))? $data['bhp_unit'] : $data['torque_unit'],
-			'boost'		=> $data['boost'],
+			'boost'		=> $data['boost'] .'.'. $data['boost_decimal'],
 			'boost_unit'	=> (empty($data['boost_unit']))? 'PSI' : $data['boost_unit'],
 			'nitrous'	=> $data['nitrous'],
-			'peakpoint'	=> $data['peakpoint'],
+			'peakpoint'	=> $data['peakpoint'] .'.'. $data['peakpoint_decimal'],
 			'date_created'	=> time(),
 			'date_updated'	=> time(),
 			'pending'	=> ($garage_config['enable_dynorun_approval'] == '1') ? 1 : 0,
@@ -67,14 +67,14 @@ class garage_dynorun
 		$update_sql = array(
 			'vehicle_id'	=> $vid,
 			'dynocentre_id'	=> $data['dynocentre_id'],
-			'bhp'		=> $data['bhp'],
+			'bhp'		=> $data['bhp'] .'.'. $data['bhp_decimal'],
 			'bhp_unit'	=> $data['bhp_unit'],
-			'torque'	=> $data['torque'],
+			'torque'	=> $data['torque'] .'.'. $data['torque_decimal'],
 			'torque_unit'	=> $data['torque_unit'],
-			'boost'		=> $data['boost'],
+			'boost'		=> $data['boost'] .'.'. $data['boost_decimal'],
 			'boost_unit'	=> $data['boost_unit'],
 			'nitrous'	=> $data['nitrous'],
-			'peakpoint'	=> $data['peakpoint'],
+			'peakpoint'	=> $data['peakpoint'] .'.'. $data['peakpoint_decimal'],
 			'date_updated'	=> time(),
 			'pending'	=> ($garage_config['enable_dynorun_approval'] == '1') ? 1 : 0
 		);
@@ -267,6 +267,18 @@ class garage_dynorun
 		if (!empty($data))
 		{
 			$data['vehicle'] = "{$data['made_year']} {$data['make']} {$data['model']}";
+			$bhp_pieces = explode(".", $data['bhp']);
+			$data['bhp'] = $bhp_pieces[0];
+			$data['bhp_decimal'] = $bhp_pieces[1];
+			$torque_pieces = explode(".", $data['torque']);
+			$data['torque'] = $torque_pieces[0];
+			$data['torque_decimal'] = $torque_pieces[1];
+			$boost_pieces = explode(".", $data['boost']);
+			$data['boost'] = $boost_pieces[0];
+			$data['boost_decimal'] = $boost_pieces[1];
+			$peakpoint_pieces = explode(".", $data['peakpoint']);
+			$data['peakpoint'] = $peakpoint_pieces[0];
+			$data['peakpoint_decimal'] = $peakpoint_pieces[1];
 		}
 		$db->sql_freeresult($result);
 

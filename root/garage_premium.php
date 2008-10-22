@@ -91,7 +91,7 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('business_id' => '', 'premium' => '', 'cover_type_id' => '');
+		$params = array('business_id' => '', 'premium' => '', 'premium_decimal' => '', 'cover_type_id' => '');
 		$data 	= $garage->process_vars($params);
 		$params = array('comments' => '');
 		$data 	+= $garage->process_mb_vars($params);
@@ -125,6 +125,7 @@ switch( $mode )
 			'L_BUTTON' 		=> $user->lang['ADD_PREMIUM'],
 			'CURRENCY'		=> $vehicle['currency'],
 			'PREMIUM' 		=> $data['premium'],
+			'PREMIUM_DECIMAL'	=> $data['premium_decimal'],
 			'COMMENTS' 		=> $data['comments'],
 			'U_SUBMIT_BUSINESS' 	=> "javascript:add_insurer('')",
 			'VID' 			=> $vid,
@@ -154,11 +155,11 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('business_id' => '', 'premium' => '', 'cover_type_id' => '');
+		$params = array('business_id' => '', 'premium' => '', 'premium_decimal' => '', 'cover_type_id' => '');
 		$data 	= $garage->process_vars($params);
 		$params = array('comments' => '');
 		$data 	+= $garage->process_mb_vars($params);
-		$params = array('business_id', 'premium', 'cover_type_id');
+		$params = array('business_id', 'premium', 'premium_decimal', 'cover_type_id');
 		$garage->check_required_vars($params);
 
 		/**
@@ -198,7 +199,7 @@ switch( $mode )
 		/**
 		* Get any changed data incase we are arriving from creating a insurer
 		*/
-		$params = array('business_id' => '', 'premium' => '', 'cover_type_id' => '');
+		$params = array('business_id' => '', 'premium' => '', 'premium_decimal' => '', 'cover_type_id' => '');
 		$store 	= $garage->process_vars($params);
 		$params = array('comments' => '');
 		$store 	+= $garage->process_mb_vars($params);
@@ -235,6 +236,7 @@ switch( $mode )
 			'INS_ID' 		=> $ins_id,
 			'VID' 			=> $vid,
 			'PREMIUM' 		=> (!empty($store['premium'])) ? $store['premium'] : $data['premium'],
+			'PREMIUM_DECIMAL'	=> (!empty($store['premium_decimal'])) ? $store['premium_decimal'] : $data['premium_decimal'],
 			'COMMENTS' 		=> (!empty($store['comments'])) ? $store['comments'] : $data['comments'],
 			'U_SUBMIT_BUSINESS' 	=> "javascript:add_insurer('edit')",
 			'S_MODE_USER_SUBMIT' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_data"),
@@ -255,11 +257,11 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('business_id' => '', 'premium' => '', 'cover_type_id' => '');
+		$params = array('business_id' => '', 'premium' => '', 'premium_decimal' => '', 'cover_type_id' => '');
 		$data = $garage->process_vars($params);
 		$params = array('comments' => '');
 		$data += $garage->process_mb_vars($params);
-		$params = array('business_id', 'premium', 'cover_type_id');
+		$params = array('business_id', 'premium', 'premium_decimal', 'cover_type_id');
 		$garage->check_required_vars($params);
 
 		/**
