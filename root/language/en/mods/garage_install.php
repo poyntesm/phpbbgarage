@@ -62,7 +62,7 @@ $lang = array_merge($lang, array(
 
 	'INSTALL_INTRO_BODY'		=> 'With this option, it is possible to install phpBB Garage onto your server.</p>
 
-	<p><strong>Note:</strong> This installer will help you through all the database related steps &amp; also the editting of core phpBB files. Please my sure you have read the template &amp; language MODX files to complete the installation.</p>
+	<p><strong>Note:</strong> This installer will help you through all the database related steps &amp; also the editting of core phpBB files. Please be sure you have read the template &amp; language MODX files to complete the installation.</p>
 
 	<p>phpBB Garage supports the following databases:</p>
 	<ul>
