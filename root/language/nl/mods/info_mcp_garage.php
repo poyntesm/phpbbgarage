@@ -25,11 +25,11 @@ $lang = array_merge($lang, array(
 	'MCP_GARAGE_UNAPPROVED_MAKES'				=> 'Merken ter goedkeuring',
 	'MCP_GARAGE_UNAPPROVED_MODELS'				=> 'Modellen ter goedkeuring',
 	'MCP_GARAGE_UNAPPROVED_BUSINESS'			=> 'Bedrijven ter goedkeuring',
-	'MCP_GARAGE_UNAPPROVED_QUARTERMILES'		=> '&frac14; miles ter goedkeuring',
+	'MCP_GARAGE_UNAPPROVED_QUARTERMILES'		=> '&frac14; mijlen ter goedkeuring',
 	'MCP_GARAGE_UNAPPROVED_DYNORUNS'			=> 'Dynoruns ter goedkeuring',
 	'MCP_GARAGE_UNAPPROVED_LAPS'				=> 'Rondetijden ter goedkeuring',
 	'MCP_GARAGE_UNAPPROVED_TRACKS'				=> 'Circuits ter goedkeuring', 
-	'MCP_GARAGE_UNAPPROVED_PRODUCTS'			=> 'Produkten ter goedkeuring',
+	'MCP_GARAGE_UNAPPROVED_PRODUCTS'			=> 'Producten ter goedkeuring',
 ));
 
 ?>

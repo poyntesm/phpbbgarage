@@ -20,7 +20,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'GARAGE'				=> 'Garage',
-	'QUARTERMILE'			=> '&frac14; Mile',
+	'QUARTERMILE'			=> '&frac14; mijl',
 	'DYNORUN'				=> 'Dynorun',
 	'PENDING_GARAGE_ITEMS'	=> 'Garage items ter goedkeuring',
 	'VIEWING_GARAGE'		=> 'Bekijk Garage',
