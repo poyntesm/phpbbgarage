@@ -478,4 +478,51 @@ a.garage-camera-icon:hover, a.garage-delete-icon:hover, a.garage-edit-icon:hover
 	width:20px;
 	height:20px;
 }
+/* Fixes by Raimon */
+    #garage-main .forabg span.corners-top {
+       background-image: url("{T_THEME_PATH}/images/corners_left_garage.png");
+    }
 
+    #garage-main .forabg span.corners-top span {
+       background-image: url("{T_THEME_PATH}/images/corners_right_garage.png");
+    }
+
+    #garage-main .forabg span.corners-bottom {
+       background-image: url("{T_THEME_PATH}/images/corners_left_garage.png");
+    }
+
+    #garage-main .forabg span.corners-bottom span {
+       background-image: url("{T_THEME_PATH}/images/corners_right_garage.png");
+    }
+
+    #garage-main span.corners-top {
+    display: block;
+    margin: 0 -5px;
+    }
+
+    #garage-main .forabg span.corners-bottom {
+    display: block; 
+    margin: 0 -5px;
+    clear: both;
+    }
+
+    /* IE hack */
+    * html #garage-main .forabg span.corners-top, * html #garage-main .forabg span.corners-bottom { background-image: url("{T_THEME_PATH}/images/corners_left_garage.gif"); }
+    * html #garage-main .forabg span.corners-top span, * html #garage-main .forabg span.corners-bottom span { background-image: url("{T_THEME_PATH}/images/corners_right_garge.gif"); }
+
+    .percision2 {
+	    width:20px !important;
+    }
+
+    .percision3 {
+	    width:30px !important;
+    }
+    .percision4 {
+	    width:40px !important;
+    }
+    .percision5 {
+	    width:50px !important;
+    }
+    .percision6 {
+	    width:60px !important;
+    }
