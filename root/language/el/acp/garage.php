@@ -454,7 +454,6 @@ $lang = array_merge($lang, array(
 	'ACP_MANAGE_CATEGORY'						=> 'Διαχείριση κατηγοριών',
 	'ACP_MANAGE_PRODUCTS'						=> 'Διαχείριση προϊόντων',
 	'ACP_MANAGE_TRACKS'							=> 'Διαχείριση πιστών',
-	'ACP_MANAGE_CATEGORY'						=> 'Διαχείριση κατηγοριών',
 	'ACP_MANAGE_MAKES_MODELS'					=> 'Διαχείριση Μάρκες και μοντέλα',
 
 	//Added For B4
@@ -471,18 +470,11 @@ $lang = array_merge($lang, array(
 	'ACP_GARAGE_BLOG_CONFIG' 					=> 'Ρυθμίσεις Blog',
 	'ENABLE_SERVICE' 							=> 'Ενεργοποίηση Σέρβις',
 	'ENABLE_SERVICE_EXPLAIN' 					=> 'Ενεργοποίηση Σέρβις',
-	'ENABLE_BLOG' 								=> 'Ενργοποίηση Blog',
+	'ENABLE_BLOG' 								=> 'Ενεργοποίηση Blog',
 	'ENABLE_BLOG_EXPLAIN' 						=> 'Επιτρέπει στα μέλη να προσθέτουν ένα blog στα οχήματά τους.',
 	'ENABLE_BLOG_BBCODE' 						=> 'Ενεργοποίηση BBCode στο blog ',
 	'ENABLE_BLOG_BBCODE_EXPLAIN' 				=> 'Επιτρέπει την χρήση του BBcode στα blogs.',
-	'ACP_MANAGE_QUOTAS' 						=> 'Διαχείριση ορίων',
-	'ACP_MANAGE_PRODUCTS' 						=> 'Διαχείριση προϊόντων',
-	'ACP_MANAGE_MAKES_MODELS' 					=> 'Διαχείριση για Μάρκες &amp; Μοντέλα',
-	'ACP_MANAGE_BUSINESS' 						=> 'Διαχείριση επιχειρήσεων',
-	'ACP_MANAGE_CATEGORY' 						=> 'Διαχείριση κατηγοριών',
 	'EDIT_PRODUCT' 								=> 'Επεξεργασία προϊόντος',
-	'SELECT_MANUFACTURER' 						=> 'Επιλέξτε κατασκευαστή',
-	'ACP_MANAGE_TRACKS' 						=> 'Διαχείριση πιστών',
 	'EDIT_TRACK' 								=> 'Επεξεργασία πίστας',
 	'ADD_INSURANCE' 							=> 'Προσθήκη ασφάλειας',
 	'GARAGE_ORPHANS_TITLE' 						=> 'Εντοπιστής ορφανών αρχείων',
@@ -502,6 +494,7 @@ $lang = array_merge($lang, array(
 	'ENABLE_GUESTBOOK_SMILIES_EXPLAIN' 			=> 'Ενεργοποίηση χρήσης εικονιδίων στα σχόλια του guestbook.',
 	'ENABLE_GUESTBOOK_URL' 						=> 'Ενεργοποίηση ανάλυσης URLs',
 	'ENABLE_GUESTBOOK_URL_EXPLAIN' 				=> 'Ενεργοποίηση ανάλυσης URLs στα σχόλια του guestbook.',
+	'NO_THUMBNAILS_TO_REBUILD'					=> 'Δεν υπάρχουν μικρογραφίες για επαναδημιουργία',
 
 ));
 
