@@ -20,7 +20,7 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	'IMG_CAT_GARAGE'				=> 'Εικονίδια phpBB Garage',
-	'IMG_GARAGE_IMG_ATTACHED'		=> 'Image attached',
+	'IMG_GARAGE_IMG_ATTACHED'		=> 'Επισυναπτόμενη εικόνα',
 	'IMG_GARAGE_ICON_GARAGE'		=> 'Εικονίδιο Γκαράζ',
 	'IMG_GARAGE_MAIN_MENU'			=> 'Αρχικό μενού',
 	'IMG_GARAGE_BROWSE'				=> 'Μενού περιήγησης',
