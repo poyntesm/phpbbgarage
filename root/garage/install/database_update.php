@@ -8,7 +8,7 @@
 *
 */
 
-$updates_to_version = '2.0.B3';
+$updates_to_version = '2.0.B4-DEV';
 
 // Return if we "just include it" to find out for which version the database update is responsuble for
 if (defined('IN_PHPBB') && defined('IN_INSTALL'))
@@ -151,18 +151,18 @@ $database_update_info = array(
 		// Change the following columns
 		'change_columns'		=> array(
 			GARAGE_BLOGS_TABLE	=> array(
-				'bbcode_uid'		=> array('VARCHAR:8', ''),
+				'bbcode_uid'		=> array('VCHAR:8', ''),
 				'bbcode_options'	=> array('UINT', '7'),
 			),
 			GARAGE_VEHICLES_TABLE	=> array(
 				'price'			=> array('DECIMAL:10', 0),
-				'bbcode_uid'		=> array('VARCHAR:8', ''),
+				'bbcode_uid'		=> array('VCHAR:8', ''),
 			),
 			GARAGE_GUESTBOOKS_TABLE	=> array(
-				'bbcode_uid'		=> array('VARCHAR:8', ''),
+				'bbcode_uid'		=> array('VCHAR:8', ''),
 			),
 			GARAGE_PREMIUMS_TABLE	=> array(
-				'price'			=> array('DECIMAL:10', 0),
+				'premium'		=> array('DECIMAL:10', 0),
 			),
 			GARAGE_SERVICE_HISTORY_TABLE	=> array(
 				'price'			=> array('DECIMAL:10', 0),
@@ -170,15 +170,15 @@ $database_update_info = array(
 			GARAGE_MODIFICATIONS_TABLE	=> array(
 				'price'			=> array('DECIMAL:10', 0),
 				'install_price'		=> array('DECIMAL:10', 0),
-				'bbcode_uid'		=> array('VARCHAR:8', ''),
+				'bbcode_uid'		=> array('VCHAR:8', ''),
 			),
 		),
 		// Drop the following columns
-		'drop_columns'				=>(
+		'drop_columns'				=> array(
 			GARAGE_MODIFICATIONS_TABLE	=> array(
 				'manufacturer_id'
 			),
-		),,
+		),
 	),
 );
 
@@ -236,8 +236,8 @@ $db->sql_freeresult($result);
 echo $lang['PREVIOUS_VERSION'] . ' :: <strong>' . $garage_config['version'] . '</strong><br />';
 echo $lang['UPDATED_VERSION'] . ' :: <strong>' . $updates_to_version . '</strong>';
 
-$current_version = str_replace('rc', 'RC', strtolower($garage_config['version']));
-$latest_version = str_replace('rc', 'RC', strtolower($updates_to_version));
+$current_version = str_replace('b', 'B', str_replace('rc', 'RC', strtolower($garage_config['version'])));
+$latest_version = str_replace('b', 'B', str_replace('rc', 'RC', strtolower($updates_to_version)));
 $orig_version = $garage_config['version'];
 
 // If the latest version and the current version are 'unequal', we will update the version_update_from, else we do not update anything.
@@ -279,6 +279,7 @@ for ($i = 0; $i < sizeof($versions); $i++)
 	$next_version = (isset($versions[$i + 1])) ? $versions[$i + 1] : $updates_to_version;
 
 	// If the installed version to be updated to is < than the current version, and if the current version is >= as the version to be updated to next, we will skip the process
+	//
 	if (version_compare($version, $current_version, '<') && version_compare($current_version, $next_version, '>='))
 	{
 		continue;
@@ -451,7 +452,7 @@ function change_database_data(&$no_updates, $version)
 
 	switch ($version)
 	{
-		case '3.0.RC2':
+		case '2.0.B3':
 			_sql('INSERT INTO ' . GARAGE_CONFIG_TABLE . " (config_name, config_value) VALUES ('enable_blogs_smilies', '1')", $errored, $error_ary);
 			_sql('INSERT INTO ' . GARAGE_CONFIG_TABLE . " (config_name, config_value) VALUES ('enable_blogs_url', '1')", $errored, $error_ary);
 			_sql('INSERT INTO ' . GARAGE_CONFIG_TABLE . " (config_name, config_value) VALUES ('enable_make_approval', '1')", $errored, $error_ary);
