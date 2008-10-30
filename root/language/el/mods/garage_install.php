@@ -64,16 +64,16 @@ $lang = array_merge($lang, array(
 
 	<p><strong>Note:</strong> This installer will help you through all the database related steps &amp; also the editting of core phpBB files. Please my sure you have read the template &amp; language MODX files to complete the installation.</p>
 
-	<p>phpBB Garage supports the following databases:</p>
+	<p>To phpBB Garage υποστηρίζει τις ακόλουθες βάσεις δεδομένων:</p>
 	<ul>
 		<li>MySQL 3.23 or above (MySQLi supported)</li>
 		<li>PostgreSQL 7.3+</li>
 		<li>SQLite 2.8.2+</li>
 		<li>Firebird 2.0+</li>
-		<li>MS SQL Server 2000 or above (directly or via ODBC)</li>
+		<li>MS SQL Server 2000 ή πιο πρόσφατο (απευθείας ή μέσω  ODBC)</li>
 		<li>Oracle</li>
 	</ul>',
-	'REMOVE_COMPLETE'		=> 'phpBB Garage removed!!',
+	'REMOVE_COMPLETE'		=> 'Το phpBB Garage αφαιρέθηκε!!',
 	'REMOVE_COMPLETE_EXPLAIN'	=> 'Some text about removal post checks here',
 	'PHP_REQUIRED_MODULE'		=> 'Required modules',
 	'PHP_REQUIRED_MODULE_EXPLAIN'	=> '<strong>Required</strong> - These modules or applications are required.',
@@ -129,7 +129,7 @@ $lang = array_merge($lang, array(
 	'SUPPORT_BODY'			=> 'During the beta phase minimal support will be given at <a href="http://forums.phpbbgarage.com/">the phpBB Garage support forums</a>. We will provide answers to general setup questions, configuration problems, conversion problems and support for determining common problems mostly related to bugs.',
 
 	'WELCOME_INSTALL'		=> 'Welcome to phpBB Garage Installation',
-	'WRITABLE'			=> 'Writable',
+	'WRITABLE'			=> 'Εγγράψιμο',
 ));
 
 // Updater
@@ -243,20 +243,20 @@ $lang = array_merge($lang, array(
 
 		<p>phpBB Garage detected an incomplete automatic update. Please make sure you followed every step within the automatic update tool. Below you will find the link again, or go directly to your install directory.</p>
 		',
-	'VERSION_CHECK'				=> 'Version check',
-	'VERSION_CHECK_EXPLAIN'		=> 'Checks to see if the version of phpBB Garage you are currently running is up to date.',
-	'VERSION_NOT_UP_TO_DATE'	=> 'Your version of phpBB Garage is not up to date. Please continue the update process.',
+	'VERSION_CHECK'				=> 'Έλεγχος έκδοσης',
+	'VERSION_CHECK_EXPLAIN'		=> 'Ελέγχει αν η έκδοση του phpBB Garage που χρησιμοποιείτε είναι ενημερωμένη.',
+	'VERSION_NOT_UP_TO_DATE'	=> 'Η έκδοση του phpBB Garage σας δεν είναι ενημερωμένη. Παρακαλώ συνεχίστε με διαδικασία ενημέρωσης.',
 	'VERSION_NOT_UP_TO_DATE_ACP'=> 'Your version of phpBB Garage is not up to date.<br />Below you will find a link to the release announcement for the latest version as well as instructions on how to perform the update.',
 	'VERSION_UP_TO_DATE'		=> 'Your installation is up to date, no updates are available for your version of phpBB Garage. You may want to continue anyway to perform a file validity check.',
 	'VERSION_UP_TO_DATE_ACP'	=> 'Your installation is up to date, no updates are available for your version of phpBB Garage. You do not need to update your installation.',
 
-	'INSERT_OPTIONS'		=> 'Optional data',
-	'INSERT_MAKES'			=> 'Insert makes',
-	'INSERT_MAKES_EXPLAIN'		=> 'Inserts a default set of makes and models.',
-	'INSERT_CATEGORIES'		=> 'Insert categories',
-	'INSERT_CATEGORIES_EXPLAIN'	=> 'Inserts a default set of modification categories.',
-	'CURRENT_VERSION'				=> 'Current version',
-	'LATEST_VERSION'		=> 'Latest version',
+	'INSERT_OPTIONS'		=> 'Προαιρετικά δεδομένα',
+	'INSERT_MAKES'			=> 'Εισαγωγή Μαρκών',
+	'INSERT_MAKES_EXPLAIN'		=> 'Εισάγει κάποιες προεπιλεγμένες μάρκες καθώς και μοντέλα για αυτές.',
+	'INSERT_CATEGORIES'		=> 'Εισαγωγή κατηγοριών',
+	'INSERT_CATEGORIES_EXPLAIN'	=> 'Εισάγει κάποιες προεπιλεγμένες κατηγορίες μετατροπών.',
+	'CURRENT_VERSION'				=> 'Τρέχουσα έκδοση',
+	'LATEST_VERSION'		=> 'Τελευταία έκδοση',
 
 ));
 
