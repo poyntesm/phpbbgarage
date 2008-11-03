@@ -897,7 +897,7 @@ switch ($mode)
 
 		// Sorting
 		$sort_key_text = array('a' => $user->lang['SORT_USERNAME'], 'b' => $user->lang['SORT_LOCATION'], 'c' => $user->lang['SORT_JOINED'], 'd' => $user->lang['SORT_POST_COUNT'], 'f' => $user->lang['WEBSITE'], 'g' => $user->lang['ICQ'], 'h' => $user->lang['AIM'], 'i' => $user->lang['MSNM'], 'j' => $user->lang['YIM'], 'k' => $user->lang['JABBER'], 'o' => $user->lang['GARAGE']);
-		$sort_key_sql = array('a' => 'u.username_clean', 'b' => 'u.user_from', 'c' => 'u.user_regdate', 'd' => 'u.user_posts', 'f' => 'u.user_website', 'g' => 'u.user_icq', 'h' => 'u.user_aim', 'i' => 'u.user_msnm', 'j' => 'u.user_yim', 'k' => 'u.user_jabber', 'o' => 'u.garage_id');
+		$sort_key_sql = array('a' => 'u.username_clean', 'b' => 'u.user_from', 'c' => 'u.user_regdate', 'd' => 'u.user_posts', 'f' => 'u.user_website', 'g' => 'u.user_icq', 'h' => 'u.user_aim', 'i' => 'u.user_msnm', 'j' => 'u.user_yim', 'k' => 'u.user_jabber', 'o' => 'vid');
 
 		if ($auth->acl_get('a_user'))
 		{
@@ -1326,9 +1326,13 @@ switch ($mode)
 		}
 
 		// Get us some users :D
-		$sql = "SELECT u.user_id
+		$sql = "SELECT u.user_id, v.id as vid
 			FROM " . USERS_TABLE . " u
 				$sql_from
+			LEFT JOIN " . GARAGE_VEHICLES_TABLE . " v
+				ON (
+					v.user_id = u.user_id AND v.main_vehicle = 1
+				)
 			WHERE u.user_type IN (" . USER_NORMAL . ', ' . USER_FOUNDER . ")
 				$sql_where
 			ORDER BY $order_by";

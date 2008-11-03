@@ -152,10 +152,24 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 				<find><![CDATA['k' => 'u.user_jabber']]></find>
 				<inline-edit>
 					<inline-find><![CDATA['k' => 'u.user_jabber']]></inline-find>
-					<inline-action type="after-add"><![CDATA[, 'o' => 'u.garage_id']]></inline-action>
+					<inline-action type="after-add"><![CDATA[, 'o' => 'vid']]></inline-action>
 				</inline-edit>
 			</edit>
-
+			<edit>
+				<find><![CDATA[$sql = "SELECT u.user_id]]></find>
+				<inline-edit>
+					<inline-find><![CDATA[u.user_id]]></inline-find>
+					<inline-action type="after-add"><![CDATA[, v.id as vid]]></inline-action>
+				</inline-edit>
+			</edit>
+			<edit>
+				<find><![CDATA[			FROM " . USERS_TABLE . " u
+					$sql_from]]></find>
+				<action type="after-add"><![CDATA[			LEFT JOIN " . GARAGE_VEHICLES_TABLE . " v
+				ON (
+					v.user_id = u.user_id AND v.main_vehicle = 1
+				)]]></action>
+			</edit>
 			<edit>
 				<find><![CDATA[				$sql = 'SELECT *
 					FROM ' . USERS_TABLE . '
