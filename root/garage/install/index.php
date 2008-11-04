@@ -159,6 +159,7 @@ include($phpbb_root_path . 'language/' . $language . '/common.' . $phpEx);
 include($phpbb_root_path . 'language/' . $language . '/acp/common.' . $phpEx);
 include($phpbb_root_path . 'language/' . $language . '/acp/board.' . $phpEx);
 include($phpbb_root_path . 'language/' . $language . '/install.' . $phpEx);
+include($phpbb_root_path . 'language/' . $language . '/mods/garage.' . $phpEx);
 include($phpbb_root_path . 'language/' . $language . '/mods/garage_install.' . $phpEx);
 include($phpbb_root_path . 'language/' . $language . '/posting.' . $phpEx);
 

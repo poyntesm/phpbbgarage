@@ -75,7 +75,7 @@ class garage_convert
 
 	var $p_master;
 
-	function convert(&$p_master)
+	function garage_convert(&$p_master)
 	{
 		$this->p_master = &$p_master;
 	}

@@ -31,9 +31,9 @@ unset($dbpasswd);
 * used on the initial list of convertors and to populate the default settings
 */
 $convertor_data = array(
-	'forum_name'		=> 'phpBB Garage 1.0.5',
-	'version'		=> '1.0.B1',
-	'phpbbgarage_version'	=> '2.0.0',
+	'forum_name'		=> 'phpBB Garage 1.0.5/6',
+	'version'		=> '1.0.B2',
+	'phpbbgarage_version'	=> '2.0.B4',
 	'author'		=> '<a href="http://www.phpbbgarage.com/">phpBB Garage</a>',
 	'dbms'			=> $dbms,
 	'dbhost'		=> $dbhost,
@@ -107,19 +107,19 @@ $garage_config_schema = array(
 		'enable_user_submit_make'		=> 'enable_user_submit_make', 
 		'enable_user_submit_model'		=> 'enable_user_submit_model', 
 		'profile_thumbs'			=> 'profile_thumbs', 
-		'enable_index_menu'			=> 'phpbbgarage_index_menu(menu_selection)',
-		'enable_browse_menu'			=> 'phpbbgarage_browse_menu(menu_selection)',
-		'enable_search_menu'			=> 'phpbbgarage_search_menu(menu_selection)',
-		'enable_insurance_review_menu'		=> 'phpbbgarage_insurance_review_menu(menu_selection)',
-		'enable_garage_review_menu'		=> 'phpbbgarage_garage_review_menu(menu_selection)',
-		'enable_shop_review_menu'		=> 'phpbbgarage_shop_review_menu(menu_selection)',
-		'enable_quartermile_menu'		=> 'phpbbgarage_quartermile_menu(menu_selection)',
-		'enable_dynorun_menu'			=> 'phpbbgarage_dynorun_menu(menu_selection)',
+		'enable_index_menu'			=> 'phpbbgarage_index_menu()',
+		'enable_browse_menu'			=> 'phpbbgarage_browse_menu()',
+		'enable_search_menu'			=> 'phpbbgarage_search_menu()',
+		'enable_insurance_review_menu'		=> 'phpbbgarage_insurance_review_menu()',
+		'enable_garage_review_menu'		=> 'phpbbgarage_garage_review_menu()',
+		'enable_shop_review_menu'		=> 'phpbbgarage_shop_review_menu()',
+		'enable_quartermile_menu'		=> 'phpbbgarage_quartermile_menu()',
+		'enable_dynorun_menu'			=> 'phpbbgarage_dynorun_menu()',
 		'enable_latest_vehicle_index'		=> 'lastupdatedvehiclesmain_on', 
 		'latest_vehicle_index_limit'		=> 'lastupdatedvehiclesmain_limit', 
 		'enable_featured_vehicle'		=> 'phpbbgarage_featured_vehicle()',
 		'featured_vehicle_id'			=> 'featured_vehicle_id',
-		'featured_vehicle_from_block'		=> 'phpbbgarage_feature_from_block(featured_vehicle_from_block)',
+		'featured_vehicle_from_block'		=> 'phpbbgarage_feature_from_block()',
 		'featured_vehicle_description'		=> 'featured_vehicle_description',
 		'enable_newest_vehicle'			=> 'newestvehicles_on',
 		'newest_vehicle_limit'			=> 'newestvehicles_limit', 
@@ -253,7 +253,6 @@ $convertor = array(
 		
 	'execute_first'		=> '
 		import_garage_gallery();
-		phpbbgarage_insert_categories();
 	',
 
 	'execute_last'	=> array(
@@ -282,10 +281,10 @@ $convertor = array(
 			array('make_id',		'garage.make_id',			''),
 			array('model_id',		'garage.model_id',			''),
 			array('main_vehicle',		'garage.main_vehicle',			''),
-			array('weighted_rating',	'',					''),
+			array('weighted_rating',	'',					'get_weighted_rating'),
 			array('bbcode_bitfield',	'',					'get_bbcode_bitfield'),
 			array('bbcode_uid',		'garage.date_updated',			'make_uid'),
-			array('bbcode_options',		'',					''),
+			array('bbcode_options',		'7',					''),
 			array('pending',		'0',					''),
 		),
 		array(
@@ -311,18 +310,16 @@ $convertor = array(
 
 			array('id',			'garage_categories.id',			''),
 			array('title',			'garage_categories.title',		array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
-			array('field_order',		'0',					''),
+			array('field_order',		'',					'category_order'),
 		),
 		array(
 			'target'	=> GARAGE_MODIFICATIONS_TABLE,
 			'query_first'	=> array('target', $convert->truncate_statement . GARAGE_MODIFICATIONS_TABLE),
-			'function_first'=> 'create_placeholder_manufacturer',
 
 			array('id',			'garage_mods.id',			''),
 			array('vehicle_id',		'garage_mods.garage_id',		''),
 			array('user_id',		'garage_mods.member_id',		''),
 			array('category_id',		'garage_mods.category_id',		''),
-			array('manufacturer_id',	'',					'get_placeholder_manufacturer_id'),
 			array('product_id',		'garage_mods.id',			'insert_modification_product'),
 			array('price',			'garage_mods.price',			''),
 			array('install_price',		'garage_mods.install_price',		''),
@@ -332,6 +329,9 @@ $convertor = array(
 			array('shop_id',		'garage_mods.business_id',		''),
 			array('installer_id',		'garage_mods.install_business_id',	''),
 			array('comments',		'garage_mods.comments',			array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
+			array('bbcode_bitfield',	'',					'get_bbcode_bitfield'),
+			array('bbcode_uid',		'garage_mods.date_updated',		'make_uid'),
+			array('bbcode_options',		'7',					''),
 			array('install_comments',	'garage_mods.install_comments',		array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
 			array('date_created',		'garage_mods.date_created',		''),
 			array('date_updated',		'garage_mods.date_updated',		''),
@@ -410,7 +410,7 @@ $convertor = array(
 			array('id',			'garage_rating.id',			''),
 			array('vehicle_id',		'garage_rating.garage_id',		''),
 			array('rating',			'garage_rating.rating',			''),
-			array('user_id',		'garage_rating.user_id',		''),
+			array('user_id',		'garage_rating.user_id',		'change_anonymous'),
 			array('rate_date',		'garage_rating.rate_date',		''),
 		),
 		array(
@@ -490,12 +490,12 @@ $convertor = array(
 
 			array('id',			'garage_guestbooks.id',			''),
 			array('vehicle_id',		'garage_guestbooks.garage_id',		''),
-			array('author_id',		'garage_guestbooks.author_id',		''),
+			array('author_id',		'garage_guestbooks.author_id',		'change_anonymous'),
 			array('post_date',		'garage_guestbooks.post_date',		''),
 			array('ip_address',		'garage_guestbooks.ip_address',		'decode_ip'),
 			array('bbcode_bitfield',	'',					'get_bbcode_bitfield'),
 			array('bbcode_uid',		'garage_guestbooks.post_date',		'make_uid'),
-			array('bbcode_options',		'',					''),
+			array('bbcode_options',		'7',					''),
 			array('pending',		'0',					''),
 			array('post',			'garage_guestbooks.post',		'phpbb_guestbook_prepare_message'),
 		),
