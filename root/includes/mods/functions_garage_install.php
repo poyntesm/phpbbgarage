@@ -30,7 +30,7 @@ function acl_update_role($role_id, $auth_options, $auth_setting = ACL_YES)
 	$result = $db->sql_query($sql);
 	while ($row = $db->sql_fetchrow($result))
 	{
-		$role_options[] = $row;
+		$role_options[] = $row['auth_option_id'];
 	}
 	$db->sql_freeresult($result);
 
@@ -76,7 +76,7 @@ function acl_update_user($user_id, $auth_options, $auth_setting = ACL_YES)
 	$result = $db->sql_query($sql);
 	while ($row = $db->sql_fetchrow($result))
 	{
-		$user_options[] = $row;
+		$user_options[] = $row['auth_option_id'];
 	}
 	$db->sql_freeresult($result);
 
