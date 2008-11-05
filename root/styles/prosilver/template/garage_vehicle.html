@@ -153,8 +153,26 @@ function build_model_list()
 
 <script type="text/javascript">
 <!--
-//Fill The Model Dropdown If We Are Editing + Select Correct One
-update_model_list('{MAKE_ID}', '{MODEL_ID}');
+var make_id = document.getElementById("make_id");
+var model_id = document.getElementById("model_id");
+//Update Model List If Only Make ID Available
+if (make_id.value > 0 && model_id.value == "" && '{MODEL_ID}' == "" )
+{
+	document.getElementById('model_id').options.length = 0;
+	ajax.requestFile = 'garage.php?mode=get_model_list&make_id='+make_id.value;
+	ajax.onCompletion = build_model_list;
+	ajax.runAJAX();
+}
+//Update Model List If Both Make And Model ID Are Available
+else if ('{MAKE_ID}' > 0 && '{MODEL_ID}' > 0)
+{
+	update_model_list('{MAKE_ID}', '{MODEL_ID}');
+}
+//Update Model Even Though Neither Make Or Model ID Are Available
+else
+{
+	update_model_list('', '');
+}
 
 function add_model ( tertiary )
 {
