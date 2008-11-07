@@ -134,6 +134,21 @@ class garage_guestbook
 	}
 
 	/**
+	* Delete comment
+	*
+	* @param int $comment_id id of comment to delete
+	*
+	*/
+	function delete_comment($comment_id)
+	{
+		global $db;
+
+		$garage->delete_rows(GARAGE_GUESTBOOKS_TABLE, 'id', $comment_id);
+
+		return;
+	}
+
+	/**
 	* Return limited array of vehicle comments
 	*
 	* @param int $vid vehicle id to filter comments for

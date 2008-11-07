@@ -512,6 +512,7 @@ switch ($mode)
 		if ($garage_config['integrate_profile'])
 		{
 			include_once($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
+			$garage_vehicle = new garage_vehicle();
 			$garage_vehicle->profile_integration($member['user_id']);
 		}
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------

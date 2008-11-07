@@ -574,6 +574,7 @@ function user_delete($mode, $user_id, $post_username = false)
 	{
 		include($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
 	}
+	$garage_vehicle = new garage_vehicle();
 	$garage_vehicle->delete_user_vehicles($user_id);
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 

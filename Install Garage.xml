@@ -135,6 +135,7 @@ require($phpbb_root_path . 'includes/mods/class_garage.' . $phpEx);
 		if ($garage_config['integrate_profile'])
 		{
 			include_once($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
+			$garage_vehicle = new garage_vehicle();
 			$garage_vehicle->profile_integration($member['user_id']);
 		}
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
@@ -410,6 +411,7 @@ $template->assign_vars(array(
 	{
 		include($phpbb_root_path . 'includes/mods/class_garage_vehicle.' . $phpEx);
 	}
+	$garage_vehicle = new garage_vehicle();
 	$garage_vehicle->delete_user_vehicles($user_id);
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------]]></action>
 			</edit>
@@ -426,6 +428,20 @@ $template->assign_vars(array(
 				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 		$this->add_lang('mods/garage_common');
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------]]></action>
+			</edit>
+		</open>
+
+		<open src="includes/acp/acp_logs.php">
+			<edit>
+				<find><![CDATA[<?php]]></find>
+				<action type="after-add"><![CDATA[//-- mod : Garage ----------------------------------------------------------------------------------------------------------]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[		$user->add_lang('mcp');]]></find>
+				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+		$user->add_lang('acp/garage');
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------]]></action>
 			</edit>
 		</open>
@@ -455,6 +471,19 @@ $template->assign_vars(array(
 			</edit>
 		</open>
 
+		<open src="includes/mcp/mcp_logs.php">
+			<edit>
+				<find><![CDATA[<?php]]></find>
+				<action type="after-add"><![CDATA[//-- mod : Garage ----------------------------------------------------------------------------------------------------------]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA[		$user->add_lang('acp/common');]]></find>
+				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+//-- add
+		$user->add_lang('acp/garage');
+//-- mod finish : Garage ---------------------------------------------------------------------------------------------------]]></action>
+			</edit>
+		</open>
 
 		<open src="styles/prosilver/imageset/imageset.cfg">
 			<edit>
