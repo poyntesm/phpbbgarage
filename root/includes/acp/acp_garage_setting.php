@@ -52,7 +52,7 @@ class acp_garage_setting
 		{
 			case 'general':
 				$display_vars = array(
-					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'title'	=> 'ACP_GARAGE_GENERAL_SETTINGS',
 					'vars'	=> array(
 						'legend1'				=> 'ACP_GARAGE_GENERAL_CONFIG',
 						'cars_per_page'				=> array('lang' => 'VEHICLES_PER_PAGE', 'type' => 'text:3:4', 'explain' => true),
@@ -81,7 +81,7 @@ class acp_garage_setting
 
 			case 'menu':
 				$display_vars = array(
-					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'title'	=> 'ACP_GARAGE_MENU_SETTINGS',
 					'vars'	=> array(
 						'legend1'				=> 'ACP_GARAGE_MENU_CONFIG',
 						'enable_browse_menu' 			=> array('lang' => 'ENABLE_BROWSE_MENU', 'type' => 'radio:yes_no', 'explain' => true),
@@ -103,7 +103,7 @@ class acp_garage_setting
 				break;
 			case 'index':
 				$display_vars = array(
-					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'title'	=> 'ACP_GARAGE_INDEX_SETTINGS',
 					'vars'	=> array(
 						'legend1'				=> 'ACP_GARAGE_INDEX_CONFIG',
 						'index_columns' 			=> array('lang' => 'GARAGE_INDEX_COLUMNS', 'type' => 'custom', 'method' => 'index_columns', 'explain' => true),
@@ -142,7 +142,7 @@ class acp_garage_setting
 				break;
 			case 'images':
 				$display_vars = array(
-					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'title'	=> 'ACP_GARAGE_IMAGES_SETTINGS',
 					'vars'	=> array(
 						'legend1'				=> 'ACP_GARAGE_IMAGE_CONFIG',
 						'enable_images'				=> array('lang' => 'ENABLE_IMAGES', 'type' => 'radio:yes_no', 'explain' => true),
@@ -171,7 +171,7 @@ class acp_garage_setting
 				break;
 			case 'quartermile':
 				$display_vars = array(
-					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'title'	=> 'ACP_GARAGE_QUARTERMILE_SETTINGS',
 					'vars'	=> array(
 						'legend1'				=> 'ACP_GARAGE_QUARTERMILE_CONFIG',
 						'enable_quartermile'			=> array('lang' => 'ENABLE_QUARTERMILE', 'type' => 'radio:yes_no', 'explain' => true),
@@ -184,7 +184,7 @@ class acp_garage_setting
 				break;
 			case 'dynorun':
 				$display_vars = array(
-					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'title'	=> 'ACP_GARAGE_DYNORUN_SETTINGS',
 					'vars'	=> array(
 						'legend1'				=> 'ACP_GARAGE_DYNORUN_CONFIG',
 						'enable_dynorun'			=> array('lang' => 'ENABLE_DYNORUN', 'type' => 'radio:yes_no', 'explain' => true),
@@ -197,7 +197,7 @@ class acp_garage_setting
 				break;
 			case 'track':
 				$display_vars = array(
-					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'title'	=> 'ACP_GARAGE_TRACK_SETTINGS',
 					'vars'	=> array(
 						'legend1'				=> 'ACP_GARAGE_TRACK_CONFIG',
 						'enable_tracktime'			=> array('lang' => 'ENABLE_TRACKTIME', 'type' => 'radio:yes_no', 'explain' => true),
@@ -210,7 +210,7 @@ class acp_garage_setting
 				break;
 			case 'insurance':
 				$display_vars = array(
-					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'title'	=> 'ACP_GARAGE_INSURANCE_SETTINGS',
 					'vars'	=> array(
 						'legend1'				=> 'ACP_GARAGE_INSURANCE_CONFIG',
 						'enable_insurance'			=> array('lang' => 'ENABLE_INSURANCE', 'type' => 'radio:yes_no', 'explain' => true),
@@ -221,7 +221,7 @@ class acp_garage_setting
 				break;
 			case 'business':
 				$display_vars = array(
-					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'title'	=> 'ACP_GARAGE_BUSINESS_SETTINGS',
 					'vars'	=> array(
 						'legend1'				=> 'ACP_GARAGE_BUSINESS_CONFIG',
 						'enable_user_submit_business'		=> array('lang' => 'USER_SUBMIT_BUSINESS', 'type' => 'radio:yes_no', 'explain' => true),
@@ -232,7 +232,7 @@ class acp_garage_setting
 				break;
 			case 'rating':
 				$display_vars = array(
-					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'title'	=> 'ACP_GARAGE_RATING_SETTINGS',
 					'vars'	=> array(
 						'legend1'				=> 'ACP_GARAGE_VEHICLE_RATING_CONFIG',
 						'rating_permanent'			=> array('lang' => 'RATING_PERMANENT', 'type' => 'radio:yes_no', 'explain' => true),
@@ -244,7 +244,7 @@ class acp_garage_setting
 				break;
 			case 'guestbook':
 				$display_vars = array(
-					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'title'	=> 'ACP_GARAGE_GUESTBOOK_SETTINGS',
 					'vars'	=> array(
 
 						'legend1'				=> 'ACP_GARAGE_GUESTBOOK_CONFIG',
@@ -259,7 +259,7 @@ class acp_garage_setting
 				break;
 			case 'product':
 				$display_vars = array(
-					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'title'	=> 'ACP_GARAGE_PRODUCT_SETTINGS',
 					'vars'	=> array(
 						'legend1'				=> 'ACP_GARAGE_PRODUCT_CONFIG',
 						'enable_user_submit_product'		=> array('lang' => 'ENABLE_USER_SUBMIT_PRODUCT', 'type' => 'radio:yes_no', 'explain' => true),
@@ -271,7 +271,7 @@ class acp_garage_setting
 				break;
 			case 'service':
 				$display_vars = array(
-					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'title'	=> 'ACP_GARAGE_SERVICE_SETTINGS',
 					'vars'	=> array(
 						'legend1'				=> 'ACP_GARAGE_SERVICE_CONFIG',
 						'enable_service'			=> array('lang' => 'ENABLE_SERVICE', 'type' => 'radio:yes_no', 'explain' => true),
@@ -281,7 +281,7 @@ class acp_garage_setting
 				break;
 			case 'blog':
 				$display_vars = array(
-					'title'	=> 'ACP_GARAGE_SETTINGS',
+					'title'	=> 'ACP_GARAGE_BLOG_SETTINGS',
 					'vars'	=> array(
 						'legend1'				=> 'ACP_GARAGE_BLOG_CONFIG',
 						'enable_blogs'				=> array('lang' => 'ENABLE_BLOG', 'type' => 'radio:yes_no', 'explain' => true),

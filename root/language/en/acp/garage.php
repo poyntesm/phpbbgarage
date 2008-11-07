@@ -19,8 +19,8 @@ if (empty($lang) || !is_array($lang))
 }
 
 $lang = array_merge($lang, array(
-	'ACP_GARAGE_SETTINGS'				=> 'General Settings',
-	'ACP_GARAGE_SETTINGS_EXPLAIN'			=> 'phpBB Garage Settings',
+	'ACP_GARAGE_SETTINGS'				=> 'phpBB Garage Settings',
+	'ACP_GARAGE_SETTINGS_EXPLAIN'			=> 'phpBB Garage Settings page to update many options available.',
 	'ACP_GARAGE_GENERAL_CONFIG' 			=> 'General Configuration',
 	'ACP_GARAGE_MENU_CONFIG' 			=> 'Menu Configuration',
 	'ACP_GARAGE_INDEX_CONFIG' 			=> 'Index Page Configuration',
