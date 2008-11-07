@@ -8,7 +8,7 @@ if (!defined('IN_PHPBB'))
 // Set install info with file structure to update
 $remove_info = array(
 	'version'	=> array(
-		'remove' => '2.0.B3',
+		'remove' => '2.0.B4-DEV',
 	),
 	'files'		=> array(
 		'common.php',

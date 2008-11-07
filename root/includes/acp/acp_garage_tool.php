@@ -56,10 +56,10 @@ class acp_garage_tool
 			* Rebuild a set number of thumbnails to new deminision
 			*/
 			case 'rebuild_thumbs':
-				$start	= request_var('start', '0');
-				$cycle	= request_var('cycle', '20');
+				$start	= request_var('start', 0);
+				$cycle	= request_var('cycle', 20);
 				$file	= request_var('file', '');
-				$done	= request_var('done', '0');
+				$done	= request_var('done', 0);
 				$garage_image->rebuild_thumbs($start, $cycle, $done, $file);
 			break;
 
