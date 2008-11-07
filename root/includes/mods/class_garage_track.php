@@ -635,7 +635,7 @@ class garage_track
 		if ($action_garage == 'delete')
 		{
 			$this->delete_garage_track_content($track_id);
-			add_log('admin', 'LOG_GARAGE_DELETE_GARAGE', $track_data['title']);
+			add_log('admin', 'LOG_GARAGE_TRACK_DELETE_LAPS', $track_data['title']);
 		}
 		else if ($action_garage == 'move')
 		{
@@ -656,7 +656,7 @@ class garage_track
 					$to_name = $row['title'];
 					$from_name = $track_data['title'];
 					$this->move_category_content($track_id, $laps_to_id);
-					add_log('admin', 'LOG_GARAGE_MOVED_GARAGE', $from_name, $to_name);
+					add_log('admin', 'LOG_GARAGE_TRACK_MOVE_LAPS', $from_name, $to_name);
 				}
 			}
 		}

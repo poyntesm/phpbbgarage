@@ -490,7 +490,7 @@ class garage_business
 		if ($action_garage == 'delete')
 		{
 			$this->delete_garage_business_content($business_id);
-			add_log('admin', 'LOG_GARAGE_DELETE_GARAGE', $business_data['title']);
+			add_log('admin', 'LOG_GARAGE_BUSINESS_DELETE_MODS_INSTALLED', $business_data['title']);
 		}
 		else if ($action_garage == 'move')
 		{
@@ -511,7 +511,7 @@ class garage_business
 					$garage_to_name = $row['title'];
 					$from_name = $business_data['title'];
 					$this->move_garage_business_content($business_id, $garage_to_id);
-					add_log('admin', 'LOG_GARAGE_MOVED_GARAGE', $from_name, $garage_to_name);
+					add_log('admin', 'LOG_GARAGE_BUSINESS_MOVE_INSTALLERS', $from_name, $garage_to_name);
 				}
 			}
 		}
@@ -519,7 +519,7 @@ class garage_business
 		if ($action_insurance == 'delete')
 		{
 			$this->delete_insurance_business_content($business_id);
-			add_log('admin', 'LOG_GARAGE_DELETE_GARAGE', $business_data['title']);
+			add_log('admin', 'LOG_GARAGE_BUSINESS_DELETE_PREMIUMS', $business_data['title']);
 		}
 		else if ($action_insurance == 'move')
 		{
@@ -540,7 +540,7 @@ class garage_business
 					$insurance_to_name = $row['title'];
 					$from_name = $business_data['title'];
 					$this->move_insurance_business_content($business_id, $insurance_to_id);
-					add_log('admin', 'LOG_GARAGE_MOVED_PREMIUMS', $from_name, $insurance_to_name);
+					add_log('admin', 'LOG_GARAGE_BUSINESS_MOVE_PREMIUMS', $from_name, $insurance_to_name);
 				}
 			}
 		}
@@ -548,7 +548,7 @@ class garage_business
 		if ($action_dynocentre == 'delete')
 		{
 			$this->delete_dynocentre_business_content($business_id);
-			add_log('admin', 'LOG_GARAGE_DELETE_GARAGE', $business_data['title']);
+			add_log('admin', 'LOG_GARAGE_BUSINESS_DELETE_DYNORUNS', $business_data['title']);
 		}
 		else if ($action_dynocentre == 'move')
 		{
@@ -569,7 +569,7 @@ class garage_business
 					$dynocentre_to_name = $row['title'];
 					$from_name = $business_data['title'];
 					$this->move_dynocentre_business_content($business_id, $dynocentre_to_id);
-					add_log('admin', 'LOG_GARAGE_MOVED_DYNORUNS', $from_name, $dynocentre_to_name);
+					add_log('admin', 'LOG_GARAGE_BUSINESS_MOVE_DYNORUNS', $from_name, $dynocentre_to_name);
 				}
 			}
 		}
@@ -577,7 +577,7 @@ class garage_business
 		if ($action_retail == 'delete')
 		{
 			$this->delete_retail_business_content($business_id);
-			add_log('admin', 'LOG_GARAGE_DELETE_GARAGE', $business_data['title']);
+			add_log('admin', 'LOG_GARAGE_BUSINESS_DELETE_MODS_PURCHASED', $business_data['title']);
 		}
 		else if ($action_retail == 'move')
 		{
@@ -598,7 +598,7 @@ class garage_business
 					$retail_to_name = $row['title'];
 					$from_name = $business_data['title'];
 					$this->move_retail_business_content($business_id, $retail_to_id);
-					add_log('admin', 'LOG_GARAGE_MOVED_RETAIL', $from_name, $retail_to_name);
+					add_log('admin', 'LOG_GARAGE_BUSINESS_MOVE_SHOPS', $from_name, $retail_to_name);
 				}
 			}
 		}
@@ -606,7 +606,7 @@ class garage_business
 		if ($action_product == 'delete')
 		{
 			$this->delete_product_business_content($business_id);
-			add_log('admin', 'LOG_GARAGE_DELETE_GARAGE', $business_data['title']);
+			add_log('admin', 'LOG_GARAGE_BUSINESS_DELETE_PRODUCTS', $business_data['title']);
 		}
 		else if ($action_product == 'move')
 		{
@@ -627,7 +627,7 @@ class garage_business
 					$product_to_name = $row['title'];
 					$from_name = $business_data['title'];
 					$this->move_product_business_content($business_id, $product_to_id);
-					add_log('admin', 'LOG_GARAGE_MOVED_PRODUCT', $from_name, $product_to_name);
+					add_log('admin', 'LOG_GARAGE_BUSINESS_MOVE_MANUFACTURERS', $from_name, $product_to_name);
 				}
 			}
 		}

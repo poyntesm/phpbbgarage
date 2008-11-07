@@ -75,6 +75,7 @@ class acp_garage_category
 
 					$garage->update_single_field(GARAGE_CATEGORIES_TABLE, 'title', $title, 'id', $category_id);
 
+					add_log('admin', 'LOG_GARAGE_CATEGORY_UPDATED', $title);
 					trigger_error($user->lang['CATEGORY_UPDATED'] . adm_back_link($this->u_action));
 				break;
 
@@ -85,6 +86,7 @@ class acp_garage_category
 	
 					$action_modifications	= request_var('action_modifications', '');
 					$modifications_to_id	= request_var('modifications_to_id', 0);
+					$data 		= $garage->get_category($category_id);
 
 					$errors = $garage_admin->delete_category($category_id, $action_modifications, $modifications_to_id);
 
@@ -93,6 +95,7 @@ class acp_garage_category
 						break;
 					}
 
+					add_log('admin', 'LOG_GARAGE_CATEGORY_DELETED', $data['title']);
 					trigger_error($user->lang['CATEGORY_DELETED'] . adm_back_link($this->u_action));
 				break;
 			}
@@ -120,7 +123,7 @@ class acp_garage_category
 		
 				$garage_admin->insert_category($data);
 
-				add_log('admin', 'LOG_FORUM_ADD', $data['title']);
+				add_log('admin', 'LOG_GARAGE_CATEGORY_CREATED', $data['title']);
 			break;
 
 			/**
@@ -190,7 +193,7 @@ class acp_garage_category
 
 				$db->sql_query($sql);
 
-				add_log('admin', 'LOG_FORUM_' . strtoupper($action), $data['title'], $moved['title']);
+				add_log('admin', 'LOG_GARAGE_CATEGORY_' . strtoupper($action), $data['title'], $moved['title']);
 
 			break;
 		}

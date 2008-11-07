@@ -8,7 +8,7 @@ if (!defined('IN_PHPBB'))
 // Set install info with file structure to update
 $install_info = array(
 	'version'	=> array(
-		'install' => '2.0.B3',
+		'install' => '2.0.B4-DEV',
 	),
 	'files'		=> array(
 		'common.php',
@@ -20,7 +20,9 @@ $install_info = array(
 		'includes/functions_user.php',
 		'includes/session.php',
 		'includes/acp/acp_language.php',
+		'includes/acp/acp_logs.php',
 		'includes/acp/acp_styles.php',
+		'includes/mcp/mcp_logs.php',
 	),
 	'binary'	=> array(
 	),

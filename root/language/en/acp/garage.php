@@ -495,6 +495,81 @@ $lang = array_merge($lang, array(
 	'ENABLE_GUESTBOOK_URL' 		=> 'Enable URL Parsing',
 	'ENABLE_GUESTBOOK_URL_EXPLAIN' 	=> 'Enable URL parsing in guestbook comments.',
 	'NO_THUMBNAILS_TO_REBUILD'	=> 'No thumbnails to rebuild',
+
+	//LOG BUSINESS KEYS
+	'LOG_GARAGE_BUSINESS_CREATED'			=> '<strong>Added business</strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_UPDATED'			=> '<strong>Edited business</strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_DELETE_MODS_INSTALLED'	=> '<strong>Deleted modifications installed by</strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_DELETE_PREMIUMS'		=> '<strong>Deleted premiums provided by</strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_DELETE_DYNORUNS'		=> '<strong>Deleted dynoruns performed at</strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_DELETE_MOD_PURCHASED'	=> '<strong>Deleted modifications purchased from</strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_DELETE_PRODUCTS'		=> '<strong>Deleted products manufacturered by</strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_MOVE_INSTALLERS'		=> '<strong>Moved modifications installed by</strong> %2$s<br />» %1$s',
+	'LOG_GARAGE_BUSINESS_MOVE_PREMIUMS'		=> '<strong>Moved premiums provided by</strong> %2$s<br />» %1$s',
+	'LOG_GARAGE_BUSINESS_MOVE_DYNORUNS'		=> '<strong>Moved dynoruns performed at</strong> %2$s<br />» %1$s',
+	'LOG_GARAGE_BUSINESS_MOVE_SHOPS'		=> '<strong>Moved modifications purchased from</strong> %2$s<br />» %1$s',
+	'LOG_GARAGE_BUSINESS_MOVE_MANUFACTURERS'	=> '<strong>Moved products manufacturered by</strong> %2$s<br />» %1$s',
+	'LOG_GARAGE_BUSINESS_DELETED'			=> '<strong>Deleted business</strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_APPROVED'			=> '<strong>Approved business</strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_DISAPPROVED'		=> '<strong>Disapproved business</strong><br />» %1$s',
+
+	//LOG MAKE & MODEL KEYS
+	'LOG_GARAGE_MAKE_CREATED'		=> '<strong>Added make</strong><br />» %1$s',
+	'LOG_GARAGE_MAKE_UPDATED'		=> '<strong>Edited make</strong> from %2$s<br />» %1$s',
+	'LOG_GARAGE_MAKE_APPROVED'		=> '<strong>Approved make</strong><br />» %1$s',
+	'LOG_GARAGE_MAKE_DISAPPROVED'		=> '<strong>Disapproved make</strong><br />» %1$s',
+	'LOG_GARAGE_MAKE_DELETED'		=> '<strong>Deleted make</strong><br />» %1$s',
+	'LOG_GARAGE_MAKE_DELETE_VEHICLES'	=> '<strong>Delete vehicles of make</strong><br />» %1$s',
+	'LOG_GARAGE_MAKE_MOVE_VEHICLES'		=> '<strong>Moved vehicles from</strong> %2$s<br />» %1$s',
+	'LOG_GARAGE_MODEL_CREATED'		=> '<strong>Added mode</strong><br />» %1$s',
+	'LOG_GARAGE_MODEL_UPDATED'		=> '<strong>Edited model</strong> from %2$s<br />» %1$s',
+	'LOG_GARAGE_MODEL_APPROVED'		=> '<strong>Approved model</strong><br />» %1$s',
+	'LOG_GARAGE_MODEL_DISAPPROVED'		=> '<strong>Disapproved model</strong><br />» %1$s',
+	'LOG_GARAGE_MODEL_DELETED'		=> '<strong>Deleted model</strong><br />» %1$s',
+	'LOG_GARAGE_MODEL_DELETE_VEHICLES'	=> '<strong>Delete vehicles of model</strong><br />» %1$s',
+	'LOG_GARAGE_MODEL_MOVE_VEHICLES'	=> '<strong>Moved vehicles from</strong> %2$s<br />» %1$s',
+
+	//LOG PRODUCT KEYS
+	'LOG_GARAGE_PRODUCT_CREATED'		=> '<strong>Added product</strong><br />» %1$s',
+	'LOG_GARAGE_PRODUCT_UPDATED'		=> '<strong>Edited product</strong><br />» %1$s',
+	'LOG_GARAGE_PRODUCT_DELETED'		=> '<strong>Deleted product</strong><br />» %1$s',
+	'LOG_GARAGE_PRODUCT_DELETE_MODIFICATION'=> '<strong>Delete modifications linked to</strong><br />» %1$s',
+	'LOG_GARAGE_PRODUCT_MOVE_MODIFICATION'	=> '<strong>Moved modifications from</strong> %2$s<br />» %1$s',
+	'LOG_GARAGE_PRODUCT_APPROVED'		=> '<strong>Approved product</strong><br />» %1$s',
+	'LOG_GARAGE_PRODUCT_DISAPPROVED'	=> '<strong>Disapproved product</strong><br />» %1$s',
+
+	//LOG CONFIG KEYS
+	'LOG_GARAGE_CONFIG_GENERAL'		=> '<strong>Garage general settings updated</strong>',
+	'LOG_GARAGE_CONFIG_MENU'		=> '<strong>Garage menu settings updated</strong>',
+	'LOG_GARAGE_CONFIG_INDEX'		=> '<strong>Garage index settings updated</strong>',
+	'LOG_GARAGE_CONFIG_IMAGES'		=> '<strong>Garage images settings updated</strong>',
+	'LOG_GARAGE_CONFIG_QUARTERMILE'		=> '<strong>Garage quartermile settings updated</strong>',
+	'LOG_GARAGE_CONFIG_DYNORUN'		=> '<strong>Garage dynorun settings updated</strong>',
+	'LOG_GARAGE_CONFIG_TRACK'		=> '<strong>Garage track settings updated</strong>',
+	'LOG_GARAGE_CONFIG_INSURANCE'		=> '<strong>Garage insurance settings updated</strong>',
+	'LOG_GARAGE_CONFIG_BUSINESS'		=> '<strong>Garage business settings updated</strong>',
+	'LOG_GARAGE_CONFIG_RATING'		=> '<strong>Garage rating settings updated</strong>',
+	'LOG_GARAGE_CONFIG_GUESTBOOK'		=> '<strong>Garage guestbook settings updated</strong>',
+	'LOG_GARAGE_CONFIG_PRODUCT'		=> '<strong>Garage product settings updated</strong>',
+	'LOG_GARAGE_CONFIG_SERVICE'		=> '<strong>Garage service settings updated</strong>',
+	'LOG_GARAGE_CONFIG_BLOG'		=> '<strong>Garage blog settings updated</strong>',
+
+	//LOG TRACK KEYS
+	'LOG_GARAGE_TRACK_CREATED'		=> '<strong>Added track</strong><br />» %1$s',
+	'LOG_GARAGE_TRACK_UPDATED'		=> '<strong>Edited track</strong> from %1$s<br />» %2$s',
+	'LOG_GARAGE_TRACK_DELETED'		=> '<strong>Deleted track</strong><br />» %1$s',
+	'LOG_GARAGE_TRACK_DELETE_LAPS'		=> '<strong>Delete laps from</strong><br />» %1$s',
+	'LOG_GARAGE_TRACK_MOVE_LAPS'		=> '<strong>Moved laps from</strong> %2$s<br />» %1$s',
+	'LOG_GARAGE_TRACK_APPROVED'		=> '<strong>Approved track</strong><br />» %1$s',
+	'LOG_GARAGE_TRACK_DISAPPROVED'		=> '<strong>Disapproved track</strong><br />» %1$s',
+
+	//LOG CATEGORY KEYS
+	'LOG_GARAGE_CATEGORY_CREATED'		=> '<strong>Added category</strong><br />» %1$s',
+	'LOG_GARAGE_CATEGORY_DELETED'		=> '<strong>Deleted category</strong><br />» %1$s',
+	'LOG_GARAGE_CATEGORY_UPDATED'		=> '<strongUpdated category</strong><br />» %1$s',
+	'LOG_GARAGE_CATEGORY_MOVE_UP'		=> '<strong>Moved category</strong> %1$s <strong>below</strong> %2$s',
+	'LOG_GARAGE_CATEGORY_MOVE_DOWN'		=> '<strong>Moved category</strong> %1$s <strong>above</strong> %2$s',
+
 ));
 
 ?>

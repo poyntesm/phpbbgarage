@@ -418,7 +418,7 @@ class garage_model
 		if ($action_make == 'delete')
 		{
 			$this->delete_make_content($make_id);
-			add_log('admin', 'LOG_GARAGE_DELETE_MAKE_MODELS', $make['make']);
+			add_log('admin', 'LOG_GARAGE_MAKE_DELETE_VEHICLES', $make['make']);
 		}
 		else if ($action_make == 'move')
 		{
@@ -439,13 +439,13 @@ class garage_model
 					$make_to_name = $row['make'];
 					$from_name = $make['make'];
 					$this->move_make_content($make_id, $make_to_id);
-					add_log('admin', 'LOG_GARAGE_MOVED_MAKE', $from_name, $make_to_name);
+					add_log('admin', 'LOG_GARAGE_MAKE_MOVE_VEHICLES', $from_name, $make_to_name);
 				}
 			}
 		}
 
 		$garage->delete_rows(GARAGE_MAKES_TABLE, 'id', $make_id);
-		add_log('admin', 'LOG_GARAGE_MAKE', $make['make']);
+		add_log('admin', 'LOG_GARAGE_MAKE_DELETED', $make['make']);
 
 		if (sizeof($errors))
 		{
@@ -509,7 +509,7 @@ class garage_model
 		if ($action_model == 'delete')
 		{
 			$this->delete_model_content($model_id);
-			add_log('admin', 'LOG_GARAGE_DELETE_MODELS_MODELS', $model['model']);
+			add_log('admin', 'LOG_GARAGE_MODEL_DELETE_VEHICLES', $model['model']);
 		}
 		else if ($action_model == 'move')
 		{
@@ -530,13 +530,13 @@ class garage_model
 					$model_to_name = $row['model'];
 					$from_name = $model['model'];
 					$this->move_model_content($model_id, $model_to_id);
-					add_log('admin', 'LOG_GARAGE_MOVED_MODEL', $from_name, $model_to_name);
+					add_log('admin', 'LOG_GARAGE_MODELS_MOVE_VEHICLES', $from_name, $model_to_name);
 				}
 			}
 		}
 
 		$garage->delete_rows(GARAGE_MODELS_TABLE, 'id', $model_id);
-		add_log('admin', 'LOG_GARAGE_MODEL', $model['model']);
+		add_log('admin', 'LOG_GARAGE_MODEL_DELETED', $model['model']);
 
 		if (sizeof($errors))
 		{

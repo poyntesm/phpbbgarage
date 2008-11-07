@@ -70,6 +70,7 @@ class acp_garage_model
 					$action_make	= request_var('action_make', '');
 					$make_to_id	= request_var('make_to_id', 0);
 
+					$data = $garage_model->get_make($make_id);
 					$garage_model->delete_make($make_id, $action_make, $make_to_id);
 
 					if (sizeof($errors))
@@ -87,6 +88,7 @@ class acp_garage_model
 					$action_model	= request_var('action_model', '');
 					$model_to_id	= request_var('model_to_id', 0);
 
+					$data = $garage_model->get_model($model_id);
 					$garage_model->delete_model($model_id, $action_model, $model_to_id);
 
 					if (sizeof($errors))
@@ -105,8 +107,10 @@ class acp_garage_model
 					$data = $garage->process_mb_vars($params);
 					$data['id'] = $make_id;
 		
+					$from = $garage_model->get_make($make_id);
 					$garage_model->update_make($data);
 		
+					add_log('admin', 'LOG_GARAGE_MAKE_UPDATED', $data['make'], $from['make']);
 					trigger_error($user->lang['MAKE_UPDATED'] . adm_back_link($this->u_action));
 				break;
 
@@ -118,8 +122,10 @@ class acp_garage_model
 					$data = $garage->process_mb_vars($params);
 					$data['id'] = $model_id;
 		
+					$from = $garage_model->get_model($model_id);
 					$garage_model->update_model($data);
 		
+					add_log('admin', 'LOG_GARAGE_MODEL_UPDATED', $data['model'], $from['model']);
 					trigger_error($user->lang['MODEL_UPDATED'] . adm_back_link($this->u_action  . "&amp;action=models&amp;make_id=$make_id"));
 				break;
 			}
@@ -152,7 +158,7 @@ class acp_garage_model
 		
 				$garage_model->insert_make($data);
 
-				add_log('admin', 'LOG_FORUM_ADD_MAKE', $data['make']);
+				add_log('admin', 'LOG_GARAGE_MAKE_CREATED', $data['make']);
 			break;
 
 			/**
@@ -315,7 +321,7 @@ class acp_garage_model
 					if (!sizeof($errors))
 					{						
 						$garage_model->insert_model($data);
-						add_log('admin', 'LOG_FORUM_ADD_MODEL', $data['model']);
+						add_log('admin', 'LOG_GARAGE_MODEL_CREATED', $data['model']);
 					}
 				}
 

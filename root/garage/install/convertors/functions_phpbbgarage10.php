@@ -601,13 +601,25 @@ function category_order()
 {
 	global $db, $src_db, $same_db, $convert, $user, $config;
 
-	$sql = "SELECT COUNT(*) as total
+	$i=1;
+
+	$sql = "SELECT id
 		FROM " . GARAGE_CATEGORIES_TABLE;
 	$result = $db->sql_query($sql);
-	$row = $db->sql_fetchrow($result);
-	$db->sql_freeresult($result);
+	while ($row = $db->sql_fetchrow($result))
+	{
+		$update_sql = array(
+			'field_order'	=> $i
+		);
 
-	return $row['total'] + 1;
+		$sql1 = 'UPDATE ' . GARAGE_CATEGORIES_TABLE . '
+			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
+			WHERE id = '{$row['id']}'";
+		$db->sql_query($sql1);
+
+		$i++;
+	}
+	$db->sql_freeresult($result);
 }
 
 function is_business_retail($business_id)

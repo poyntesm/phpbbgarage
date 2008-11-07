@@ -71,8 +71,8 @@ class acp_garage_track
 					$data += $garage->process_mb_vars($params);
 
 					$garage_track->insert_track($data);
-					add_log('admin', 'LOG_GARAGE_TRACK_CREATED', $data['title']);
 
+					add_log('admin', 'LOG_GARAGE_TRACK_CREATED', $data['title']);
 					trigger_error($user->lang['TRACK_CREATED'] . adm_back_link($this->u_action));
 				break;
 
@@ -92,8 +92,8 @@ class acp_garage_track
 					}
 
 					$garage_track->update_track($data);
-					add_log('admin', 'LOG_GARAGE_TRACK_UPDATED', $data['title']);
 
+					add_log('admin', 'LOG_GARAGE_TRACK_UPDATED', $data['title']);
 					trigger_error($user->lang['TRACK_UPDATED'] . adm_back_link($this->u_action));
 				break;
 

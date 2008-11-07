@@ -1137,7 +1137,7 @@ class garage_modification
 		if ($action_product == 'delete')
 		{
 			$this->delete_product_content($product_id);
-			add_log('admin', 'LOG_GARAGE_DELETE_PRODUCT_MODIFICATIONS', $product['title']);
+			add_log('admin', 'LOG_GARAGE_PRODUCT_DELETE_MODIFICATION', $product['title']);
 		}
 		else if ($action_make == 'move')
 		{
@@ -1158,13 +1158,13 @@ class garage_modification
 					$to_name = $row['title'];
 					$from_name = $product['title'];
 					$this->move_product_content($product_id, $to_id);
-					add_log('admin', 'LOG_GARAGE_MOVED_PRODUCT', $from_name, $to_name);
+					add_log('admin', 'LOG_GARAGE_PRODUCT_MOVE_MODIFICATION', $from_name, $to_name);
 				}
 			}
 		}
 
 		$garage->delete_rows(GARAGE_PRODUCTS_TABLE, 'id', $product_id);
-		add_log('admin', 'LOG_GARAGE_DELETE_PRODUCT', $product['title']);
+		add_log('admin', 'LOG_GARAGE_PRODUCT_DELETED', $product['title']);
 
 		if (sizeof($errors))
 		{

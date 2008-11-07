@@ -1269,6 +1269,12 @@ class garage_vehicle
 		//We Are Moderating...So Show Options Required
 		if ( $owned == 'MODERATE' )
 		{
+
+			$template->assign_vars(array(
+				'S_DISPLAY_RATINGS_TAB' => true,
+			));
+			$lowest_tab[] = 9;
+
 			$reset_rating_link = '<a href="javascript:confirm_reset_rating(' . $vid . ')"><img src="' . $images['garage_delete'] . '" alt="'.$user->lang['DELETE'].'" title="'.$user->lang['DELETE'].'" border="0" /></a>';
 			$template->assign_block_vars('rating_history', array());
 			$template->assign_vars(array(
@@ -1305,46 +1311,53 @@ class garage_vehicle
 			//Get Rating Given By User To Vehicle
 			$rating = $this->get_user_vehicle_rating($vid);
 
-			//Never Rate So Show Them The Rate Button
-			if ( $rating['total'] < 1 )
+			if ( $user->data['user_id'] == ANONYMOUS )
 			{
+				//
+			}
+			else
+			{
+				//Never Rate So Show Them The Rate Button
+				if ( $rating['total'] < 1 )
+				{
+			 		$garage_template->rating_dropdown('rating');
+					$template->assign_vars(array(
+						'S_DISPLAY_RATE'	=> true,
+						'L_RATING_NOTICE' 	=> '')
+					);
+				}
+				//Rated Already But Permanent So Do Not Show Button
+				else if ( ( $rating['total'] > 0 ) AND ($garage_config['rating_permanent']) )
+				{
+					$template->assign_vars(array(
+						'L_RATING_NOTICE'	=> $user->lang['RATE_PERMANENT'])
+					);
+				}
+				//Rated Already But Not Permanent & Always Updateable
+				else if ( ( $rating['total'] > 0 ) AND (!$garage_config['rating_permanent']) AND ($garage_config['rating_always_updateable']) )
+				{
+			 		$garage_template->rating_dropdown('rating');
+					$template->assign_vars(array(
+						'S_DISPLAY_RATE'	=> true,
+						'L_RATING_NOTICE'	=> $user->lang['UPDATE_RATING'])
+					);
+				}
+				//Rated Already But Not Permanent & Updated Not Always Allowed, Vehicle Not Update So No Rate Update
+				else if ( ( $rating['total'] > 0 ) AND (!$garage_config['rating_permanent']) AND (!$garage_config['rating_always_updateable']) AND ($rating['rate_date'] > $vehicle['date_updated']) )
+				{	
+					$template->assign_vars(array(
+						'L_RATING_NOTICE'	=> $user->lang['VEHICLE_UPDATE_REQUIRED_FOR_RATE'])
+					);
+				}
+				//Rated Already But Not Permanent & Updated Not Always Allowed, Vehicle Updated So Rate Update Allowed
+				else if ( ( $rating['total'] > 0 ) AND (!$garage_config['rating_permanent']) AND (!$garage_config['rating_always_updateable']) AND ($row['rate_date'] < $vehicle['date_updated']) )
+				{
 			 	$garage_template->rating_dropdown('rating');
-				$template->assign_vars(array(
-					'S_DISPLAY_RATE'	=> true,
-					'L_RATING_NOTICE' 	=> '')
-				);
-			}
-			//Rated Already But Permanent So Do Not Show Button
-			else if ( ( $rating['total'] > 0 ) AND ($garage_config['rating_permanent']) )
-			{
-				$template->assign_vars(array(
-					'L_RATING_NOTICE'	=> $user->lang['RATE_PERMANENT'])
-				);
-			}
-			//Rated Already But Not Permanent & Always Updateable
-			else if ( ( $rating['total'] > 0 ) AND (!$garage_config['rating_permanent']) AND ($garage_config['rating_always_updateable']) )
-			{
-			 	$garage_template->rating_dropdown('rating');
-				$template->assign_vars(array(
-					'S_DISPLAY_RATE'	=> true,
-					'L_RATING_NOTICE'	=> $user->lang['UPDATE_RATING'])
-				);
-			}
-			//Rated Already But Not Permanent & Updated Not Always Allowed, Vehicle Not Update So No Rate Update
-			else if ( ( $rating['total'] > 0 ) AND (!$garage_config['rating_permanent']) AND (!$garage_config['rating_always_updateable']) AND ($rating['rate_date'] > $vehicle['date_updated']) )
-			{
-				$template->assign_vars(array(
-					'L_RATING_NOTICE'	=> $user->lang['VEHICLE_UPDATE_REQUIRED_FOR_RATE'])
-				);
-			}
-			//Rated Already But Not Permanent & Updated Not Always Allowed, Vehicle Updated So Rate Update Allowed
-			else if ( ( $rating['total'] > 0 ) AND (!$garage_config['rating_permanent']) AND (!$garage_config['rating_always_updateable']) AND ($row['rate_date'] < $vehicle['date_updated']) )
-			{
-			 	$garage_template->rating_dropdown('rating');
-				$template->assign_vars(array(
-					'S_DISPLAY_RATE'	=> true,
-					'L_RATING_NOTICE' 	=> $user->lang['UPDATE_RATING'])
-				);
+						$template->assign_vars(array(
+						'S_DISPLAY_RATE'	=> true,
+						'L_RATING_NOTICE' 	=> $user->lang['UPDATE_RATING'])
+					);
+				}
 			}
 		}
 

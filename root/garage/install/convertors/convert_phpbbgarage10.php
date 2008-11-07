@@ -257,6 +257,7 @@ $convertor = array(
 
 	'execute_last'	=> array(
 		'phpbbgarage_convert_authentication_quota();',
+		'category_order();',
 	),
 
 	'schema' => array(
@@ -310,7 +311,6 @@ $convertor = array(
 
 			array('id',			'garage_categories.id',			''),
 			array('title',			'garage_categories.title',		array('function1' => 'phpbb_set_encoding', 'function2' => 'utf8_htmlspecialchars')),
-			array('field_order',		'',					'category_order'),
 		),
 		array(
 			'target'	=> GARAGE_MODIFICATIONS_TABLE,
