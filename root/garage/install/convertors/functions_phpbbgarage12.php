@@ -4,6 +4,7 @@
 * @package install
 * @version $Id: functions_phpbb20.php,v 1.56 2007/07/27 17:33:15 acydburn Exp $
 * @copyright (c) 2006 phpBB Group 
+* @copyright (c) 2008 Esmond Poynton
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License 
 *
 */
@@ -152,82 +153,6 @@ function phpbb_set_default_encoding($text)
 }
 
 /**
-* Return correct user id value
-* Everyone's id will be one higher to allow the guest/anonymous user to have a positive id as well
-*/
-function phpbb_user_id($user_id)
-{
-	global $config;
-
-	// Increment user id if the old forum is having a user with the id 1
-	if (!isset($config['increment_user_id']))
-	{
-		global $src_db, $same_db, $convert;
-
-		if ($convert->mysql_convert && $same_db)
-		{
-			$src_db->sql_query("SET NAMES 'binary'");
-		}
-
-		// Now let us set a temporary config variable for user id incrementing
-		$sql = "SELECT user_id
-			FROM {$convert->src_table_prefix}users
-			WHERE user_id = 1";
-		$result = $src_db->sql_query($sql);
-		$id = (int) $src_db->sql_fetchfield('user_id');
-		$src_db->sql_freeresult($result);
-
-		// Try to get the maximum user id possible...
-		$sql = "SELECT MAX(user_id) AS max_user_id
-			FROM {$convert->src_table_prefix}users";
-		$result = $src_db->sql_query($sql);
-		$max_id = (int) $src_db->sql_fetchfield('max_user_id');
-		$src_db->sql_freeresult($result);
-
-		if ($convert->mysql_convert && $same_db)
-		{
-			$src_db->sql_query("SET NAMES 'utf8'");
-		}
-
-		// If there is a user id 1, we need to increment user ids. :/
-		if ($id === 1)
-		{
-			set_config('increment_user_id', ($max_id + 1), true);
-			$config['increment_user_id'] = $max_id + 1;
-		}
-		else
-		{
-			set_config('increment_user_id', 0, true);
-			$config['increment_user_id'] = 0;
-		}
-	}
-
-	// If the old user id is -1 in 2.0.x it is the anonymous user...
-	if ($user_id == -1)
-	{
-		return ANONYMOUS;
-	}
-
-	if (!empty($config['increment_user_id']) && $user_id == 1)
-	{
-		return $config['increment_user_id'];
-	}
-
-	// A user id of 0 can happen, for example within the ban table if no user is banned...
-	// Within the posts and topics table this can be "dangerous" but is the fault of the user
-	// having mods installed (a poster id of 0 is not possible in 2.0.x). 
-	// Therefore, we return the user id "as is".
-
-	return (int) $user_id;
-}
-
-/* Copy additional table fields from old forum to new forum if user wants this (for Mod compatibility for example)
-function phpbb_copy_table_fields()
-{
-}
-*/
-
-/**
 * Convert authentication
 * Will only bring across private if group names match from source to destination
 */
@@ -270,12 +195,10 @@ function phpbbgarage_convert_authentication_quota()
 
 }
 
-function phpbbgarage_browse_menu($menu_selection)
-{
-	return 1;
-		//'menu_selection' => 'MAIN,BROWSE,SEARCH,INSURANCEREVIEW,GARAGEREVIEW,SHOPREVIEW,QUARTERMILE,ROLLINGROAD', 
-}
-
+/**
+* Convert authentication
+* Will only bring across private if group names match from source to destination
+*/
 function phpbb_replace_size($matches)
 {
 	return '[size=' . min(200, ceil(100.0 * (((double) $matches[1])/12.0))) . ':' . $matches[2] . ']';
@@ -416,297 +339,6 @@ function  phpbb_smilie_html_decode($code)
 {
 	$code = str_replace('&lt;', '<', $code);
 	return str_replace('&gt;', '>', $code);
-}
-
-/**
-* Calculate the correct to_address field for private messages
-*/
-function phpbb_privmsgs_to_userid($to_userid)
-{
-	global $config;
-
-	return 'u_' . phpbb_user_id($to_userid);
-}
-
-/**
-* Calculate whether a private message was unread using the bitfield
-*/
-function phpbb_unread_pm($pm_type)
-{
-	return ($pm_type == 5) ? 1 : 0;
-}
-
-/**
-* Calculate whether a private message was new using the bitfield
-*/
-function phpbb_new_pm($pm_type)
-{
-	return ($pm_type == 1) ? 1 : 0;
-}
-
-/**
-* Obtain the folder_id for the custom folder created to replace the savebox from 2.0.x (used to store saved private messages)
-*/
-function phpbb_get_savebox_id($user_id)
-{
-	global $db;
-
-	$user_id = phpbb_user_id($user_id);
-
-	// Only one custom folder, check only one
-	$sql = 'SELECT folder_id
-		FROM ' . PRIVMSGS_FOLDER_TABLE . '
-		WHERE user_id = ' . $user_id;
-	$result = $db->sql_query_limit($sql, 1);
-	$folder_id = (int) $db->sql_fetchfield('folder_id');
-	$db->sql_freeresult($result);
-
-	return $folder_id;
-}
-
-/**
-* Transfer attachment specific configuration options
-* These were not stored in the main config table on 2.0.x
-* This is only used if the Attachment MOD was installed
-*/
-function phpbb_import_attach_config()
-{
-	global $db, $src_db, $same_db, $convert, $config;
-
-	if ($convert->mysql_convert && $same_db)
-	{
-		$src_db->sql_query("SET NAMES 'binary'");
-	}
-
-	$sql = 'SELECT *
-		FROM ' . $convert->src_table_prefix . 'attachments_config';
-	$result = $src_db->sql_query($sql);
-
-	if ($convert->mysql_convert && $same_db)
-	{
-		$src_db->sql_query("SET NAMES 'utf8'");
-	}
-
-	$attach_config = array();
-	while ($row = $src_db->sql_fetchrow($result))
-	{
-		$attach_config[$row['config_name']] = $row['config_value'];
-	}
-	$src_db->sql_freeresult($result);
-
-	set_config('allow_attachments', 1);
-
-	// old attachment mod? Must be very old if this entry do not exist...
-	if (!empty($attach_config['display_order']))
-	{
-		set_config('display_order', $attach_config['display_order']);
-	}
-	set_config('max_filesize', $attach_config['max_filesize']);
-	set_config('max_filesize_pm', $attach_config['max_filesize_pm']);
-	set_config('attachment_quota', $attach_config['attachment_quota']);
-	set_config('max_attachments', $attach_config['max_attachments']);
-	set_config('max_attachments_pm', $attach_config['max_attachments_pm']);
-	set_config('allow_pm_attach', $attach_config['allow_pm_attach']);
-
-	set_config('img_display_inlined', $attach_config['img_display_inlined']);
-	set_config('img_max_width', $attach_config['img_max_width']);
-	set_config('img_max_height', $attach_config['img_max_height']);
-	set_config('img_link_width', $attach_config['img_link_width']);
-	set_config('img_link_height', $attach_config['img_link_height']);
-	set_config('img_create_thumbnail', $attach_config['img_create_thumbnail']);
-	set_config('img_max_thumb_width', 400);
-	set_config('img_min_thumb_filesize', $attach_config['img_min_thumb_filesize']);
-	set_config('img_imagick', $attach_config['img_imagick']);
-}
-
-/**
-* Checks whether there are any usernames on the old board that would map to the same
-* username_clean on phpBB3. Prints out a list if any exist and exits.
-*/
-function phpbb_check_username_collisions()
-{
-	global $db, $src_db, $convert, $table_prefix, $user, $lang;
-
-	$map_dbms = '';
-	switch ($db->sql_layer)
-	{
-		case 'mysql':
-			$map_dbms = 'mysql_40';
-		break;
-	
-		case 'mysql4':
-			if (version_compare($db->mysql_version, '4.1.3', '>='))
-			{
-				$map_dbms = 'mysql_41';
-			}
-			else
-			{
-				$map_dbms = 'mysql_40';
-			}
-		break;
-	
-		case 'mysqli':
-			$map_dbms = 'mysql_41';
-		break;
-	
-		case 'mssql':
-		case 'mssql_odbc':
-			$map_dbms = 'mssql';
-		break;
-	
-		default:
-			$map_dbms = $db->sql_layer;
-		break;
-	}
-
-	// create a temporary table in which we store the clean usernames
-	$drop_sql = 'DROP TABLE ' . $table_prefix . 'userconv';
-	switch ($map_dbms)
-	{
-		case 'firebird':
-			$create_sql = 'CREATE TABLE ' . $table_prefix . 'userconv (
-				user_id INTEGER NOT NULL,
-				username_clean VARCHAR(255) CHARACTER SET UTF8 DEFAULT \'\' NOT NULL COLLATE UNICODE
-			)';
-		break;
-
-		case 'mssql':
-			$create_sql = 'CREATE TABLE [' . $table_prefix . 'userconv] (
-				[user_id] [int] NOT NULL ,
-				[username_clean] [varchar] (255) DEFAULT (\'\') NOT NULL
-			)';
-		break;
-
-		case 'mysql_40':
-			$create_sql = 'CREATE TABLE ' . $table_prefix . 'userconv (
-				user_id mediumint(8) NOT NULL,
-				username_clean blob NOT NULL
-			)';
-		break;
-
-		case 'mysql_41':
-			$create_sql = 'CREATE TABLE ' . $table_prefix . 'userconv (
-				user_id mediumint(8) NOT NULL,
-				username_clean varchar(255) DEFAULT \'\' NOT NULL
-			) CHARACTER SET `utf8` COLLATE `utf8_bin`';
-		break;
-
-		case 'oracle':
-			$create_sql = 'CREATE TABLE ' . $table_prefix . 'userconv (
-				user_id number(8) NOT NULL,
-				username_clean varchar2(255) DEFAULT \'\'
-			)';
-		break;
-
-		case 'postgres':
-			$create_sql = 'CREATE TABLE ' . $table_prefix . 'userconv (
-				user_id INT4 DEFAULT \'0\',
-				username_clean varchar_ci DEFAULT \'\' NOT NULL
-			)';
-		break;
-
-		case 'sqlite':
-			$create_sql = 'CREATE TABLE ' . $table_prefix . 'userconv (
-				user_id INTEGER NOT NULL DEFAULT \'0\',
-				username_clean varchar(255) NOT NULL DEFAULT \'\'
-			)';
-		break;
-	}
-
-	$db->sql_return_on_error(true);
-	$db->sql_query($drop_sql);
-	$db->sql_return_on_error(false);
-	$db->sql_query($create_sql);
-
-	// now select all user_ids and usernames and then convert the username (this can take quite a while!)
-	$sql = 'SELECT user_id, username
-		FROM ' . $convert->src_table_prefix . 'users';
-	$result = $src_db->sql_query($sql);
-
-	$insert_ary = array();
-	$i = 0;
-	while ($row = $src_db->sql_fetchrow($result))
-	{
-		$clean_name = utf8_clean_string(phpbb_set_default_encoding($row['username']));
-		$insert_ary[] = array('user_id' => (int) $row['user_id'], 'username_clean' => (string) $clean_name);
-
-		if ($i % 1000 == 999)
-		{
-			$db->sql_multi_insert($table_prefix . 'userconv', $insert_ary);
-			$insert_ary = array();
-		}
-		$i++;
-	}
-	$src_db->sql_freeresult($result);
-
-	if (sizeof($insert_ary))
-	{
-		$db->sql_multi_insert($table_prefix . 'userconv', $insert_ary);
-	}
-	unset($insert_ary);
-
-	// now find the clean version of the usernames that collide
-	$sql = 'SELECT username_clean
-		FROM ' . $table_prefix . 'userconv
-		GROUP BY username_clean
-		HAVING COUNT(user_id) > 1';
-	$result = $db->sql_query($sql);
-
-	$colliding_names = array();
-	while ($row = $db->sql_fetchrow($result))
-	{
-		$colliding_names[] = $row['username_clean'];
-	}
-	$db->sql_freeresult($result);
-
-	// there was at least one collision, the admin will have to solve it before conversion can continue
-	if (sizeof($colliding_names))
-	{
-		$sql = 'SELECT user_id, username_clean
-			FROM ' . $table_prefix . 'userconv
-			WHERE ' . $db->sql_in_set('username_clean', $colliding_names);
-		$result = $db->sql_query($sql);
-		unset($colliding_names);
-
-		$colliding_user_ids = array();
-		while ($row = $db->sql_fetchrow($result))
-		{
-			$colliding_user_ids[(int) $row['user_id']] = $row['username_clean'];
-		}
-		$db->sql_freeresult($result);
-
-		$sql = 'SELECT username, user_id, user_posts
-			FROM ' . $convert->src_table_prefix . 'users
-			WHERE ' . $src_db->sql_in_set('user_id', array_keys($colliding_user_ids));
-		$result = $src_db->sql_query($sql);
-
-		$colliding_users = array();
-		while ($row = $db->sql_fetchrow($result))
-		{
-			$row['user_id'] = (int) $row['user_id'];
-			if (isset($colliding_user_ids[$row['user_id']]))
-			{
-				$colliding_users[$colliding_user_ids[$row['user_id']]][] = $row;
-			}
-		}
-		$db->sql_freeresult($result);
-		unset($colliding_user_ids);
-
-		$list = '';
-		foreach ($colliding_users as $username_clean => $users)
-		{
-			$list .= sprintf($user->lang['COLLIDING_CLEAN_USERNAME'], $username_clean) . "<br />\n";
-			foreach ($users as $i => $row)
-			{
-				$list .= sprintf($user->lang['COLLIDING_USER'], $row['user_id'], phpbb_set_default_encoding($row['username']), $row['user_posts']) . "<br />\n";
-			}
-		}
-
-		$lang['INST_ERR_FATAL'] = $user->lang['CONV_ERR_FATAL'];
-		$convert->p_master->error('<span style="color:red">' . $user->lang['COLLIDING_USERNAMES_FOUND'] . '</span></b><br /><br />' . $list . '<b>', __LINE__, __FILE__);
-	}
-
-	$db->sql_query($drop_sql);
 }
 
 
@@ -851,48 +483,53 @@ function get_garage_config_value($config_name)
 	return (empty($convert_garage_config[$config_name])) ? '' : $convert_garage_config[$config_name];
 }
 
-function phpbbgarage_index_menu($menu)
+function phpbbgarage_browse_menu()
 {
 	return 1;
 }
 
-function phpbbgarage_search_menu($menu)
+function phpbbgarage_index_menu()
 {
 	return 1;
 }
 
-function phpbbgarage_insurance_review_menu($menu)
+function phpbbgarage_search_menu()
 {
 	return 1;
 }
 
-function phpbbgarage_garage_review_menu($menu)
+function phpbbgarage_insurance_review_menu()
 {
 	return 1;
 }
 
-function phpbbgarage_shop_review_menu($menu)
+function phpbbgarage_garage_review_menu()
 {
 	return 1;
 }
 
-function phpbbgarage_quartermile_menu($menu)
+function phpbbgarage_shop_review_menu()
 {
 	return 1;
 }
 
-function phpbbgarage_dynorun_menu($menu)
+function phpbbgarage_quartermile_menu()
+{
+	return 1;
+}
+
+function phpbbgarage_dynorun_menu()
 {
 	return 1;
 }
 
 
-function phpbbgarage_featured_vehicle($menu)
+function phpbbgarage_featured_vehicle()
 {
 	return 1;
 }
 
-function phpbbgarage_feature_from_block ($menu)
+function phpbbgarage_feature_from_block ()
 {
 	return 0;
 }
@@ -916,10 +553,6 @@ function import_garage_gallery()
 	}
 }
 
-function phpbbgarage_insert_categories()
-{
-	return;
-}
 
 function is_business_retail($business_id)
 {
@@ -961,7 +594,7 @@ function import_dynocentre($dynocentre)
 	if (empty($row))
 	{
 		$sql = 'INSERT INTO ' . GARAGE_BUSINESS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'title'		=> $dynocentre,
+			'title'		=> utf8_htmlspecialchars(phpbb_set_encoding($dynocentre)),
 			'address'	=> '',
 			'telephone'	=> '',
 			'fax'		=> '',
@@ -986,9 +619,41 @@ function import_dynocentre($dynocentre)
 	}
 }
 
+function change_anonymous($user_id)
+{
+	if($user_id == -1 or $user_id < -1)
+	{
+		return ANONYMOUS;
+	}
+	return $user_id;
+}
+
 function import_cover_type($cover_type)
 {
-	return;
+	global $user;
+
+	if ($cover_type == $user->lang['COMPREHENSIVE'] || $cover_type == 'Comprehensive') 
+	{
+		return COMP;
+	}
+	else if ($cover_type == $user->lang['COMPREHENSIVE_CLASSIC'] || $cover_type == 'Comprehensive - Classic') 
+	{
+		return CLAS;
+	}
+	else if ($cover_type == $user->lang['COMPREHENSIVE_REDUCED'] || $cover_type == 'Comprehensive - Reduced Mileage') 
+	{
+		return COMP_RED;
+	}
+	else if ($cover_type == $user->lang['THIRD_PARTY'] || $cover_type == 'Third Party') 
+	{
+		return TP;
+	}
+	else if ($cover_type == $user->lang['THIRD_PARTY_FIRE_THEFT'] || $cover_type == 'Thired Party, Fire & Theft') 
+	{
+		return TPFT;
+	}
+
+	return 0;
 }
 
 /**
@@ -1114,6 +779,16 @@ function get_placeholder_manufacturer_id()
 	}
 }
 
+function attach_thumb_filesize($image_id)
+{
+
+	global $config, $convert, $phpbb_root_path, $user;
+
+	$relative_path = empty($convert->convertor['source_path_absolute']);
+	$convert->convertor['garage_image_path'] = './garage/upload/';
+	$src_path = relative_base(path($convert->convertor['garage_image_path'], $relative_path), $relative_path);
+	return @filesize($src_path . $row['attach_thumb_location']);
+}
 
 function insert_modification_product($src_modification_id)
 {
@@ -1142,7 +817,7 @@ function insert_modification_product($src_modification_id)
 	if (empty($prow['id']))
 	{
 		$sql = 'INSERT INTO ' . GARAGE_PRODUCTS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-			'title'		=> $row['title'],
+			'title'		=> utf8_htmlspecialchars(phpbb_set_encoding($row['title'])),
 			'business_id'	=> $business_id,
 			'category_id'	=> $row['category_id'],
 			'pending'	=> 0,
@@ -1157,4 +832,94 @@ function insert_modification_product($src_modification_id)
 	}
 }
 
+function attach_thumb_width($attach_thumb_location)
+{
+	$relative_path = empty($convert->convertor['source_path_absolute']);
+	$convert->convertor['garage_image_path'] = './garage/upload/';
+	$src_path = relative_base(path($convert->convertor['garage_image_path'], $relative_path), $relative_path);
+	if (file_exists($src_path . $attach_thumb_location))
+	{
+		$attach_thumb_imagesize = @getimagesize($src_path . $attach_thumb_location);
+		return $attach_thumb_imagesize[0];
+	}
+	return 0;
+}
+
+function attach_thumb_height($attach_thumb_location)
+{
+	$relative_path = empty($convert->convertor['source_path_absolute']);
+	$convert->convertor['garage_image_path'] = './garage/upload/';
+	$src_path = relative_base(path($convert->convertor['garage_image_path'], $relative_path), $relative_path);
+	if (file_exists($src_path . $attach_thumb_location))
+	{
+		$attach_thumb_imagesize = @getimagesize($src_path . $attach_thumb_location);
+		return $attach_thumb_imagesize[1];
+	}
+	return 0;
+}
+
+function determine_image_vehicle_id($attach_id)
+{
+	global $db, $src_db, $same_db, $convert, $user, $config;
+
+	//Workout If Image Is Attached To Vehicle Gallery
+	$sql = "SELECT gallery.garage_id
+		FROM " . $convert->src_table_prefix . "garage_gallery gallery
+        		LEFT JOIN " . $convert->src_table_prefix . "garage_images images ON images.attach_id = gallery.image_id 
+		WHERE images.attach_id = " . $attach_id;
+	if ( !($result = $src_db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'Could Select Image Data', '', __LINE__, __FILE__, $sql);
+	}
+	$row = $src_db->sql_fetchrow($result);
+	if (!empty($row['garage_id']))
+	{
+		return $row['garage_id'];
+	}
+
+	//Workout If Image Is Attached To Vehicle Modification
+	$sql = "SELECT mods.garage_id
+		FROM " . $convert->src_table_prefix . "garage_mods mods
+        		LEFT JOIN " . $convert->src_table_prefix . "garage_images images ON images.attach_id = mods.image_id 
+        	WHERE images.attach_id = " . $attach_id;
+	if ( !($result = $src_db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'Could Select Image Data', '', __LINE__, __FILE__, $sql);
+	}
+	$row = $src_db->sql_fetchrow($result);
+	if (!empty($row['garage_id']))
+	{
+		return $row['garage_id'];
+	}
+
+	//Workout If Image Is Attached To Vehicle Quartermile
+	$sql = "SELECT qm.garage_id
+		FROM " . $convert->src_table_prefix . "garage_quartermile qm
+        		LEFT JOIN " . $convert->src_table_prefix . "garage_images images ON images.attach_id = qm.image_id 
+		WHERE images.attach_id = " . $attach_id;
+	if ( !($result = $src_db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'Could Select Image Data', '', __LINE__, __FILE__, $sql);
+	}
+	$row = $src_db->sql_fetchrow($result);
+	if (!empty($row['garage_id']))
+	{
+		return $row['garage_id'];
+	}
+
+	//Workout If Image Is Attached To Vehicle Dynorun
+	$sql = "SELECT rr.garage_id
+		FROM " . $convert->src_table_prefix . "garage_rollingroad rr
+        		LEFT JOIN " . $convert->src_table_prefix . "garage_images images ON images.attach_id = rr.image_id 
+        	WHERE images.attach_id = " . $attach_id;
+	if ( !($result = $src_db->sql_query($sql)) )
+	{
+		message_die(GENERAL_ERROR, 'Could Select Image Data', '', __LINE__, __FILE__, $sql);
+	}
+	$row = $src_db->sql_fetchrow($result);
+	if (!empty($row['garage_id']))
+	{
+		return $row['garage_id'];
+	}
+}
 ?>
