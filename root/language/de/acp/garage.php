@@ -251,6 +251,7 @@ $lang = array_merge($lang, array(
 	'LOG_GARAGE_CONFIG_PRODUCT'			=> '<strong>Produkteinstellungen der Garage geändert</strong>',
 	'LOG_GARAGE_CONFIG_SERVICE'			=> '<strong>Kundendiensteinstellungen der Garage geändert</strong>',
 	'LOG_GARAGE_CONFIG_BLOG'			=> '<strong>Blog-Einstellungen der Garage geändert</strong>',
+	'LOG_GARAGE_UPDATE_DATABASE'		=> '<strong>Datenbank der Garage aktualisiert</strong>',
 
 	'NAME' => 'Name',
 	'BROWSE' => 'Stöbern',
