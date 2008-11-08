@@ -496,6 +496,81 @@ $lang = array_merge($lang, array(
 	'ENABLE_GUESTBOOK_URL_EXPLAIN' 				=> 'Ενεργοποίηση ανάλυσης URLs στα σχόλια του guestbook.',
 	'NO_THUMBNAILS_TO_REBUILD'					=> 'Δεν υπάρχουν μικρογραφίες για επαναδημιουργία',
 
+	//LOG BUSINESS KEYS
+	'LOG_GARAGE_BUSINESS_CREATED'				=> '<strong>Πρόσθεσε επιχείρηση</strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_UPDATED'				=> '<strong>Επεξεργάστηκε επιχείρηση</strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_DELETE_MODS_INSTALLED'	=> '<strong>Διέγραψε μετατροπές που εγκαταστάθηκαν από </strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_DELETE_PREMIUMS'		=> '<strong>Διέγραψε ασφαλιστικά συμβόλαια από </strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_DELETE_DYNORUNS'		=> '<strong>Διέγραψε δυναμομετρήσεις του </strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_DELETE_MOD_PURCHASED'	=> '<strong>Διέγραψε μετατροπές που αγοράστηκαν από </strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_DELETE_PRODUCTS'		=> '<strong>Διέγραψε προϊόντα που κατασκευάστηκαν από </strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_MOVE_INSTALLERS'		=> '<strong>Μετακίνησε μετατροπές που εγκαταστάθηκαν από </strong> %2$s<br />» %1$s',
+	'LOG_GARAGE_BUSINESS_MOVE_PREMIUMS'			=> '<strong>Μετακίνησε ασφαλιστικά συμβόλαια από </strong> %2$s<br />» %1$s',
+	'LOG_GARAGE_BUSINESS_MOVE_DYNORUNS'			=> '<strong>Μετακίνησε δυναμομετρήσεις του </strong> %2$s<br />» %1$s',
+	'LOG_GARAGE_BUSINESS_MOVE_SHOPS'			=> '<strong>Μετακίνησε μετατροπές που αγοράστηκαν από </strong> %2$s<br />» %1$s',
+	'LOG_GARAGE_BUSINESS_MOVE_MANUFACTURERS'	=> '<strong>Μετακίνησε προϊόντα που κατασκευάστηκαν από </strong> %2$s<br />» %1$s',
+	'LOG_GARAGE_BUSINESS_DELETED'				=> '<strong>Διέγραψε επιχείρηση</strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_APPROVED'				=> '<strong>Ενέκρινε επιχείρηση</strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_DISAPPROVED'			=> '<strong>Απέρριψε επιχείρηση</strong><br />» %1$s',
+
+	//LOG MAKE & MODEL KEYS
+	'LOG_GARAGE_MAKE_CREATED'			=> '<strong>Πρόσθεσε μάρκα</strong><br />» %1$s',
+	'LOG_GARAGE_MAKE_UPDATED'			=> '<strong>Επεξεργάστηκε μάρκα</strong> από %2$s<br />» %1$s',
+	'LOG_GARAGE_MAKE_APPROVED'			=> '<strong>Ενέκρινε μάρκα</strong><br />» %1$s',
+	'LOG_GARAGE_MAKE_DISAPPROVED'		=> '<strong>Απέρριψε μάρκα</strong><br />» %1$s',
+	'LOG_GARAGE_MAKE_DELETED'			=> '<strong>Διέγραψε μάρκα</strong><br />» %1$s',
+	'LOG_GARAGE_MAKE_DELETE_VEHICLES'	=> '<strong>Διέγραψε οχήματα μάρκας</strong><br />» %1$s',
+	'LOG_GARAGE_MAKE_MOVE_VEHICLES'		=> '<strong>Μετακίνησε οχήματα από</strong> %2$s<br />» %1$s',
+	'LOG_GARAGE_MODEL_CREATED'			=> '<strong>Πρόσθεσε μοντέλο</strong><br />» %1$s',
+	'LOG_GARAGE_MODEL_UPDATED'			=> '<strong>Επεξεργάστηκε μοντέλο</strong> από %2$s<br />» %1$s',
+	'LOG_GARAGE_MODEL_APPROVED'			=> '<strong>Ενέκρινε μοντέλο</strong><br />» %1$s',
+	'LOG_GARAGE_MODEL_DISAPPROVED'		=> '<strong>Απέρριψε μοντέλο</strong><br />» %1$s',
+	'LOG_GARAGE_MODEL_DELETED'			=> '<strong>Διέγραψε μοντέλο</strong><br />» %1$s',
+	'LOG_GARAGE_MODEL_DELETE_VEHICLES'	=> '<strong>Διέγραψε οχήματα μοντέλου</strong><br />» %1$s',
+	'LOG_GARAGE_MODEL_MOVE_VEHICLES'	=> '<strong>Μετακίνησε οχήματα από</strong> %2$s<br />» %1$s',
+
+	//LOG PRODUCT KEYS
+	'LOG_GARAGE_PRODUCT_CREATED'			=> '<strong>Πρόσθεσε προϊόν</strong><br />» %1$s',
+	'LOG_GARAGE_PRODUCT_UPDATED'			=> '<strong>Επεξεργάστηκε προϊόν</strong><br />» %1$s',
+	'LOG_GARAGE_PRODUCT_DELETED'			=> '<strong>Διέγραψε προϊόν</strong><br />» %1$s',
+	'LOG_GARAGE_PRODUCT_DELETE_MODIFICATION'=> '<strong>Διέγραψε μετατροπές συνδεδεμένες με</strong><br />» %1$s',
+	'LOG_GARAGE_PRODUCT_MOVE_MODIFICATION'	=> '<strong>Μετακίνησε μετατροπές από</strong> %2$s<br />» %1$s',
+	'LOG_GARAGE_PRODUCT_APPROVED'			=> '<strong>Ενέκρινε προϊόν</strong><br />» %1$s',
+	'LOG_GARAGE_PRODUCT_DISAPPROVED'		=> '<strong>Απέρριψε προϊόν</strong><br />» %1$s',
+
+	//LOG CONFIG KEYS
+	'LOG_GARAGE_CONFIG_GENERAL'		=> '<strong>Ενημερώθηκαν οι Γενικές Ρυθμίσεις του Γκαράζ</strong>',
+	'LOG_GARAGE_CONFIG_MENU'		=> '<strong>Οι Ρυθμίσεις μενού του Garage ενημερώθηκαν</strong>',
+	'LOG_GARAGE_CONFIG_INDEX'		=> '<strong>Οι Ρυθμίσεις αρχικής σελίδας του Γκαράζ ενημερώθηκαν</strong>',
+	'LOG_GARAGE_CONFIG_IMAGES'		=> '<strong>Οι Ρυθμίσεις αρχικής εικόνων του Γκαράζ ενημερώθηκαν</strong>',
+	'LOG_GARAGE_CONFIG_QUARTERMILE'	=> '<strong>Οι Ρυθμίσεις χρόνων 0-400μ. του Γκαράζ ενημερώθηκαν</strong>',
+	'LOG_GARAGE_CONFIG_DYNORUN'		=> '<strong>Οι Ρυθμίσεις δυναμομετρήσεων του Γκαράζ ενημερώθηκαν</strong>',
+	'LOG_GARAGE_CONFIG_TRACK'		=> '<strong>Οι Ρυθμίσεις πιστών του Γκαράζ ενημερώθηκαν</strong>',
+	'LOG_GARAGE_CONFIG_INSURANCE'	=> '<strong>Οι Ρυθμίσεις ασφαλειών του Γκαράζ ενημερώθηκαν</strong>',
+	'LOG_GARAGE_CONFIG_BUSINESS'	=> '<strong>Οι Ρυθμίσεις επιχειρήσεων του Γκαράζ ενημερώθηκαν</strong>',
+	'LOG_GARAGE_CONFIG_RATING'		=> '<strong>Οι Ρυθμίσεις αξιολόγησης του Γκαράζ ενημερώθηκαν</strong>',
+	'LOG_GARAGE_CONFIG_GUESTBOOK'	=> '<strong>Οι Ρυθμίσεις guestbook του Γκαράζ ενημερώθηκαν</strong>',
+	'LOG_GARAGE_CONFIG_PRODUCT'		=> '<strong>Οι Ρυθμίσεις προϊόντων του Γκαράζ ενημερώθηκαν</strong>',
+	'LOG_GARAGE_CONFIG_SERVICE'		=> '<strong>Οι Ρυθμίσεις Σέρβις του Γκαράζ ενημερώθηκαν</strong>',
+	'LOG_GARAGE_CONFIG_BLOG'		=> '<strong>Οι Ρυθμίσεις blog του Γκαράζ ενημερώθηκαν</strong>',
+
+	//LOG TRACK KEYS
+	'LOG_GARAGE_TRACK_CREATED'		=> '<strong>Πρόσθεσε πίστα</strong><br />» %1$s',
+	'LOG_GARAGE_TRACK_UPDATED'		=> '<strong>Επεξεργάστηκε πίστα</strong> from %1$s<br />» %2$s',
+	'LOG_GARAGE_TRACK_DELETED'		=> '<strong>Διέγραψε πίστα</strong><br />» %1$s',
+	'LOG_GARAGE_TRACK_DELETE_LAPS'	=> '<strong>Διέγραψε γύρους πίστας από</strong><br />» %1$s',
+	'LOG_GARAGE_TRACK_MOVE_LAPS'	=> '<strong>Μετακίνησε γύρους πίστας από</strong> %2$s<br />» %1$s',
+	'LOG_GARAGE_TRACK_APPROVED'		=> '<strong>Ενέκρινε πίστα</strong><br />» %1$s',
+	'LOG_GARAGE_TRACK_DISAPPROVED'	=> '<strong>Απέρριψε πίστα</strong><br />» %1$s',
+
+	//LOG CATEGORY KEYS
+	'LOG_GARAGE_CATEGORY_CREATED'		=> '<strong>Πρόσθεσε κατηγορία</strong><br />» %1$s',
+	'LOG_GARAGE_CATEGORY_DELETED'		=> '<strong>Διέγραψε κατηγορία</strong><br />» %1$s',
+	'LOG_GARAGE_CATEGORY_UPDATED'		=> '<strong>Ενημέρωσε κατηγορία</strong><br />» %1$s',
+	'LOG_GARAGE_CATEGORY_MOVE_UP'		=> '<strong>Μετακίνησε την κατηγορία</strong> %1$s <strong>κάτω από</strong> %2$s',
+	'LOG_GARAGE_CATEGORY_MOVE_DOWN'		=> '<strong>Μετακίνησε την κατηγορία</strong> %1$s <strong>πάνω από</strong> %2$s',
+
+
 ));
 
 ?>
