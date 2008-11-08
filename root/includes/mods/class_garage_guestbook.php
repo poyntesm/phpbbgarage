@@ -124,7 +124,7 @@ class garage_guestbook
 			'bbcode_options'	=> $data['bbcode_options'],
 		);
 
-		$sql = 'UPDATE ' . GARAGE_GUESBOOKS_TABLE . '
+		$sql = 'UPDATE ' . GARAGE_GUESTBOOKS_TABLE . '
 			SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
 			WHERE id = $comment_id";
 
