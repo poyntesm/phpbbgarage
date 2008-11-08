@@ -495,6 +495,81 @@ $lang = array_merge($lang, array(
 	'ENABLE_GUESTBOOK_URL' 		=> 'URL-Parsing aktivieren',
 	'ENABLE_GUESTBOOK_URL_EXPLAIN' 	=> 'aktiviert URL-Parsing in Gästebuch-Kommentaren',
 	'NO_THUMBNAILS_TO_REBUILD'	=> 'Keine Vorschaubilder zu generieren',
+
+	//LOG BUSINESS KEYS
+	'LOG_GARAGE_BUSINESS_CREATED'			=> '<strong>Unternehmen hinzugefügt</strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_UPDATED'			=> '<strong>Unternehmen aktualisiert</strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_DELETE_MODS_INSTALLED'	=> '<strong>Gelöscht: Modifikationen eingebaut von</strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_DELETE_PREMIUMS'		=> '<strong>Gelöscht: Versicherungen angeboten von</strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_DELETE_DYNORUNS'		=> '<strong>Gelöscht: Leistungstests ausgeführt von</strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_DELETE_MOD_PURCHASED'	=> '<strong>Gelöscht: Modifikationen erworben von</strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_DELETE_PRODUCTS'		=> '<strong>Gelöscht: Produkte hergestellt von</strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_MOVE_INSTALLERS'		=> '<strong>Verschoben: Modifikationen eingebaut von</strong> %2$s<br />» %1$s',
+	'LOG_GARAGE_BUSINESS_MOVE_PREMIUMS'		=> '<strong>Verschoben: Versicherungen angeboten von</strong> %2$s<br />» %1$s',
+	'LOG_GARAGE_BUSINESS_MOVE_DYNORUNS'		=> '<strong>Verschoben: Leistungstests ausgeführte von</strong> %2$s<br />» %1$s',
+	'LOG_GARAGE_BUSINESS_MOVE_SHOPS'		=> '<strong>Verschoben: Modifikationen erworben von</strong> %2$s<br />» %1$s',
+	'LOG_GARAGE_BUSINESS_MOVE_MANUFACTURERS'	=> '<strong>Verschoben: Produkte hergestellt von</strong> %2$s<br />» %1$s',
+	'LOG_GARAGE_BUSINESS_DELETED'			=> '<strong>Unternehmen gelöscht</strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_APPROVED'			=> '<strong>Unternehmen akzeptiert</strong><br />» %1$s',
+	'LOG_GARAGE_BUSINESS_DISAPPROVED'		=> '<strong>Unternehmen abgelehnt</strong><br />» %1$s',
+
+	//LOG MAKE & MODEL KEYS
+	'LOG_GARAGE_MAKE_CREATED'		=> '<strong>Hersteller hinzugefügt</strong><br />» %1$s',
+	'LOG_GARAGE_MAKE_UPDATED'		=> '<strong>Aktualisiert: Hersteller</strong> von %2$s<br />» %1$s',
+	'LOG_GARAGE_MAKE_APPROVED'		=> '<strong>Hersteller akzeptiert</strong><br />» %1$s',
+	'LOG_GARAGE_MAKE_DISAPPROVED'		=> '<strong>Hersteller abgelehnt</strong><br />» %1$s',
+	'LOG_GARAGE_MAKE_DELETED'		=> '<strong>Hersteller gelöscht</strong><br />» %1$s',
+	'LOG_GARAGE_MAKE_DELETE_VEHICLES'	=> '<strong>Gelöscht: Fahrzeuge von Hersteller</strong><br />» %1$s',
+	'LOG_GARAGE_MAKE_MOVE_VEHICLES'		=> '<strong>Verschoben: Fahrzeuge von</strong> %2$s<br />» %1$s',
+	'LOG_GARAGE_MODEL_CREATED'		=> '<strong>Fabrikat hinzugefügt</strong><br />» %1$s',
+	'LOG_GARAGE_MODEL_UPDATED'		=> '<strong>Aktualisiert: Fabrikat</strong> von %2$s<br />» %1$s',
+	'LOG_GARAGE_MODEL_APPROVED'		=> '<strong>Fabrikat akzeptiert</strong><br />» %1$s',
+	'LOG_GARAGE_MODEL_DISAPPROVED'		=> '<strong>Fabrikat abgelehnt</strong><br />» %1$s',
+	'LOG_GARAGE_MODEL_DELETED'		=> '<strong>Fabrikat gelöscht</strong><br />» %1$s',
+	'LOG_GARAGE_MODEL_DELETE_VEHICLES'	=> '<strong>Gelöscht: Fahrzeuge des Fabrikats</strong><br />» %1$s',
+	'LOG_GARAGE_MODEL_MOVE_VEHICLES'	=> '<strong>Verschoben: Fahrzeuge von</strong> %2$s<br />» %1$s',
+
+	//LOG PRODUCT KEYS
+	'LOG_GARAGE_PRODUCT_CREATED'		=> '<strong>Produkt hinzugefügt</strong><br />» %1$s',
+	'LOG_GARAGE_PRODUCT_UPDATED'		=> '<strong>Produkt aktualisiert</strong><br />» %1$s',
+	'LOG_GARAGE_PRODUCT_DELETED'		=> '<strong>Produkt gelöscht</strong><br />» %1$s',
+	'LOG_GARAGE_PRODUCT_DELETE_MODIFICATION'=> '<strong>Gelöscht: Modifikationen in Zusammenhang mit</strong><br />» %1$s',
+	'LOG_GARAGE_PRODUCT_MOVE_MODIFICATION'	=> '<strong>Verschoben: Modifikationen von</strong> %2$s<br />» %1$s',
+	'LOG_GARAGE_PRODUCT_APPROVED'		=> '<strong>Produkt akzeptiert</strong><br />» %1$s',
+	'LOG_GARAGE_PRODUCT_DISAPPROVED'	=> '<strong>Produkt abgelehnt</strong><br />» %1$s',
+
+	//LOG CONFIG KEYS
+	'LOG_GARAGE_CONFIG_GENERAL'			=> '<strong>Allgemeine Einstellungen der Garage geändert</strong>',
+	'LOG_GARAGE_CONFIG_MENU'			=> '<strong>Menüeinstellungen der Garage geändert</strong>',
+	'LOG_GARAGE_CONFIG_INDEX'			=> '<strong>Index-Seiteneinstellung der Garage geändert</strong>',
+	'LOG_GARAGE_CONFIG_IMAGES'			=> '<strong>Bildeinstellungen der Garage geändert</strong>',
+	'LOG_GARAGE_CONFIG_QUARTERMILE'			=> '<strong>&frac14; Meileneinstellungen der Garage geändert</strong>',
+	'LOG_GARAGE_CONFIG_DYNORUN'			=> '<strong>Leistungstesteinstellungen der Garage geändert</strong>',
+	'LOG_GARAGE_CONFIG_TRACK'			=> '<strong>Strecken- &amp; Rundeneinstellungen der Garage geändert</strong>',
+	'LOG_GARAGE_CONFIG_INSURANCE'			=> '<strong>Versicherungseinstellungen der Garage geändert</strong>',
+	'LOG_GARAGE_CONFIG_BUSINESS'			=> '<strong>Unternehmenseinstellungen der Garage geändert</strong>',
+	'LOG_GARAGE_CONFIG_RATING'			=> '<strong>Bewertungseinstellungen der Garage geändert</strong>',
+	'LOG_GARAGE_CONFIG_GUESTBOOK'			=> '<strong>Gästebucheinstellungen der Garage geändert</strong>',
+	'LOG_GARAGE_CONFIG_PRODUCT'			=> '<strong>Produkteinstellungen der Garage geändert</strong>',
+	'LOG_GARAGE_CONFIG_SERVICE'			=> '<strong>Kundendiensteinstellungen der Garage geändert</strong>',
+	'LOG_GARAGE_CONFIG_BLOG'			=> '<strong>Blog-Einstellungen der Garage geändert</strong>',
+	
+	//LOG TRACK KEYS
+	'LOG_GARAGE_TRACK_CREATED'		=> '<strong>Rennstrecke hinzugefügt</strong><br />» %1$s',
+	'LOG_GARAGE_TRACK_UPDATED'		=> '<strong>Rennstrecke aktualisiert</strong> from %1$s<br />» %2$s',
+	'LOG_GARAGE_TRACK_DELETED'		=> '<strong>Rennstrecke gelöscht</strong><br />» %1$s',
+	'LOG_GARAGE_TRACK_DELETE_LAPS'		=> '<strong>Gelöscht: Runden von</strong><br />» %1$s',
+	'LOG_GARAGE_TRACK_MOVE_LAPS'		=> '<strong>Verschoben: Runden von</strong> %2$s<br />» %1$s',
+	'LOG_GARAGE_TRACK_APPROVED'		=> '<strong>Rennstrecke akzeptiert</strong><br />» %1$s',
+	'LOG_GARAGE_TRACK_DISAPPROVED'		=> '<strong>Rennstrecke abgelehnt</strong><br />» %1$s',
+
+	//LOG CATEGORY KEYS
+	'LOG_GARAGE_CATEGORY_CREATED'		=> '<strong>Kategorie hinzugefügt</strong><br />» %1$s',
+	'LOG_GARAGE_CATEGORY_DELETED'		=> '<strong>Kategorie gelöscht</strong><br />» %1$s',
+	'LOG_GARAGE_CATEGORY_UPDATED'		=> '<strong>Kategorie aktualisiert</strong><br />» %1$s',
+	'LOG_GARAGE_CATEGORY_MOVE_UP'		=> '<strong>Verschoben: Kategorie</strong> %1$s <strong>unterhalb</strong> %2$s',
+	'LOG_GARAGE_CATEGORY_MOVE_DOWN'		=> '<strong>Verschoben: Kategorie</strong> %1$s <strong>oberhalb</strong> %2$s',
+
 ));
 
 ?>
