@@ -229,7 +229,7 @@ switch( $mode )
 			include_once($phpbb_root_path . 'includes/functions_privmsgs.' . $phpEx);
 			include_once($phpbb_root_path . 'includes/message_parser.' . $phpEx);
 
-			$data['vehicle_link'] 	= '<a href="garage_guestbook.'.$phpEx.'?mode=view_guestbook&VID='.$vid.'">' . $user->lang['HERE'] . '</a>';
+			$data['vehicle_link'] 	= '<a href="garage_vehicle.'.$phpEx.'?mode=view_vehicle&VID='.$vid.'#guestbook">' . $user->lang['HERE'] . '</a>';
 
 			$message_parser = new parse_message();
 			$message_parser->message = sprintf($user->lang['GUESTBOOK_NOTIFY_TEXT'], $data['vehicle_link']);
