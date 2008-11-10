@@ -31,42 +31,42 @@ if (empty($lang) || !is_array($lang))
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
 
 $lang = array_merge($lang, array(
-	'CONFIG_PHPBB_EMPTY'		=> 'The phpBB Garage config variable for "%s" is empty.',
-	'CONVERT_COMPLETE_EXPLAIN'	=> 'You have now successfully converted your garage to phpBB Garage 2.0. You can now login and <a href="../../garage.php">access your garage</a>. Please ensure that the settings were transferred correctly before enabling your board by deleting the install directory. Remember that help on using phpBB Garage is available online via the <a href="http://www.phpbbgarage.com/support/documentation/2.0/">Documentation</a> and the <a href="http://www.phpbbgarage.com/community/viewforum.php?f=4">beta support forums</a>.',
-	'CONVERT_INTRO'			=> 'Welcome to the phpBB Garage Unified Convertor Framework',
-	'CONVERT_INTRO_BODY'		=> 'From here, you are able to import data from other (installed) garage board systems. The list below shows all the conversion modules currently available. If there is no convertor shown in this list for the board software you wish to convert from, please check our website where further conversion modules may be available for download.',
+	'CONFIG_PHPBB_EMPTY'		=> 'Η μεταβλητή ρύθμισης του phpBB Garage για "%s" είναι άδεια.',
+	'CONVERT_COMPLETE_EXPLAIN'	=> 'Μετατρέψατε επιτυχημένατο Γκαράζ σας στο phpBB Garage 2.0. Μπορείτε τώρα να συνδεθείτε και να <a href="../../garage.php">δείτε το Γκαράζ</a>. Παρακαλώ σιγουρευτείτε πως οι ρυθμίσεις μεταφέρθηκαν σωστά πριν ενεργοποιήσετε το φόρουμ διαγράφοντας το φάκελο εγκατάστασης. Θυμηθείτε πως η βοήθεια χρήσης του phpBB Garage είναι διαθέσιμο  στο online <a href="http://www.phpbbgarage.com/support/documentation/2.0/">Documentation</a> και στην <a href="http://www.phpbbgarage.com/community/viewforum.php?f=4">κοινότητα υποστήριξης εκδόσεων beta</a>.',
+	'CONVERT_INTRO'			=> 'Καλως ήρθατε στο πρόγραμμα μετατροπής του phpBB Garage',
+	'CONVERT_INTRO_BODY'		=> 'Από εδώ , μπορείτε να εισάγετε από άλλα (εγκατεστημένα) συστήματα Γκαράζ. Η παρακάτω λίστα δείχνει όλα τα διαθέσιμα προγράμματα μετατροπής. Αν δεν φαίνεται κανένα πρόγραμμα μετατροπής για την έκδοση Γκαράζ από την οποία θέλετε να κάνετε την μετατροπή, παρακαλώ ελέγξτε τον ιστότοπό μας όπου μπορεί να υπάρχουν αρχεία μετατροπής διαθέσιμα προς κατέβασμα.',
 
-	'FILES_REQUIRED_EXPLAIN'	=> '<strong>Required</strong> - In order to function correctly phpBB Garage needs to be able to access or write to certain files or directories. If you see âNot Foundâ you need to create the relevant file or directory. If you see âUnwritableâ you need to change the permissions on the file or directory to allow phpBB Garage to write to it.',
+	'FILES_REQUIRED_EXPLAIN'	=> '<strong>Απαιτείται</strong> - Για να λειτουργήσει σωστά, το phpBB Garage χρειάζεται να έχει πρόσβαση σε κάποια αρχεία ή φακέλους. Αν δείτε "Δεν βρέθηκε" θα χρειαστεί να δημιουργήσετε το σχετικό αρχείο ή φάκελο. Αν δείτε "Μη-εγγράψιμο" θα χρειαστεί να αλλάξετε τα δικαιώματα του αρχείου ή φακέλου ώστε να επιτρέψετε στο phpBB Garage να γράψει σε αυτό.',
 
 	'INSTALL_CONGRATS_EXPLAIN'	=> '
-		<p>You have now successfully installed phpBB Garage %1$s. From here, you have two options as to what to do with your newly installed phpBB Garage:</p>
-		<h2>Convert an existing garage board to phpBB Garage</h2>
-		<p>The phpBB Garage Unified Convertor Framework supports the conversion of phpBB Garage 1.x.x and other garage board systems to phpBB Garage 2. If you have an existing garage board that you wish to convert, please <a href="%2$s">proceed on to the convertor</a>.</p>
-		<h2>Go live with your phpBB Garage 2!</h2>
-		<p>Clicking the button below will take you to your Administration Control Panel (ACP). Take some time to examine the options available to you. Remember that help is available online via the <a href="http://www.phpbbgarage.com/support/documentation/3.0/">Documentation</a> and the <a href="http://www.phpbbgarage.com/community/viewforum.php?f=4">beta support forums</a>, see the <a href="%3$s">README</a> for further information.</p>',
+		<p>Εγκαταστήσατε με επιτυχία το phpBB Garage %1$s. Από εδώ, έχετε δύο επιλογές για το τι να κάνετε με το νέο σας Γκαράζ:</p>
+		<h2>Μετατρέψτε ένα σύστημα Γκαράζ σε phpBB Garage</h2>
+		<p>Το πρόγραμμα εγκατάστασης του phpBB Garage υποστηρίζει τη μετατροπή από το phpBB Garage 1.x.x και άλλα συστήματα Γκαράζ σε phpBB Garage 2. Αν έχετε ένα υπάρχον Γκαράζ που θέλετε να μετατρέψετε,  παρακαλώ <a href="%2$s">συνεχίστε στο μετατροπέα</a>.</p>
+		<h2>Βγείτε στον "αέρα" με το phpBB Garage 2!</h2>
+		<p>Πατώντας το παρακάτω κουμπί θα μεταβείτε στον Πίνακα Ελέγχου Διαχειριστή (ACP). αφιερώστε λίγο χρόνο για να εξετάσετε τις προσφερόμενες επιλογές. Θυμηθείτε πως η βοήθεια είναι διαθέσιμη μέσω του <a href="http://www.phpbbgarage.com/support/documentation/3.0/">Documentation</a> και της <a href="http://www.phpbbgarage.com/community/viewforum.php?f=4">κοινότητας υποστήριξης εκδόσεων beta</a>, δείτε το  <a href="%3$s">README</a> για περισσότερες πληροφορίες.</p>',
 	'UPDATE_CONGRATS_EXPLAIN'	=> '
-		<p>You have now successfully updated to phpBB Garage %1$s.',
-	'REMOVE_INTRO'			=> 'Welcome to removal',
-	'REMOVE_INTRO_BODY'		=> 'With this option, it is possible to remove phpBB Garage from your server.</p>
+		<p>Κάνατε επιτυχώς αναβάθμιση σε phpBB Garage %1$s.',
+	'REMOVE_INTRO'			=> 'Καλώς ορίσατε στο πρόγραμμα αφαίρεσης',
+	'REMOVE_INTRO_BODY'		=> 'Με αυτή την επιλογή μπορείτε να αφαιρέσετε το phpBB Garage σας.</p>
 
-	<p><strong>Note:</strong> This remover will totally remove all of the phpBB Garage software. Once the data is removed there is no restore option. Only a DB restore and files from before this action can return phpBB Garage to its original state. By clicking next step this process will start. DO NOT PROCEED UNLESS SURE.</p>
+	<p><strong>Σημείωση:</strong> Αυτό το πρόγραμμα θα μετακινήσει όλο το πρόγραμμα του phpBB Garage. Όταν τα δεδομένα αφαιρεθούν, δεν υπάρχει επιλογή ανάκτησης. Μόνο μια ανάκτηση βάσης και αρχείων από κάποιο αντίγραφο ασφαλείας που δημιουργήθηκε πριν από αυτή την ενέργεια μπορεί να επαναφέρει το phpBB Garage στην πρότερή του κατάσταση. Πατώντας το επόμενο βήμα, η διαδικασία θα ξεκινήσει. ΜΗΝ ΠΡΟΧΩΡΗΣΕΤΕ ΑΝ ΔΕΝ ΕΙΣΤΕ ΑΠΟΛΥΤΑ ΣΙΓΟΥΡΟΙ.</p>
 
-	<p>phpBB Garage removes</p>
+	<p>Το phpBB Garage μετακινεί</p>
 	<ul>
-		<li>All created tables</li>
-		<li>All data</li>
-		<li>All phpBB Garage files</li>
-		<li>All phpBB Garage modules</li>
-		<li>All phpBB Garage permissions</li>
+		<li>Όλους τους δημιουργημένους πίνακες</li>
+		<li>Όλα τα δεδομένα</li>
+		<li>Όλα τα αρχεία του phpBB Garage</li>
+		<li>Όλα τα phpBB Garage modules</li>
+		<li>Όλα τα δικαιώματα του phpBB Garage</li>
 		</ul>',
 
-	'INSTALL_INTRO_BODY'		=> 'With this option, it is possible to install phpBB Garage onto your server.</p>
+	'INSTALL_INTRO_BODY'		=> 'Με αυτή την επιλογή μπορείτε να εγκαταστήσετε το phpBB Garage.</p>
 
-	<p><strong>Note:</strong> This installer will help you through all the database related steps &amp; also the editting of core phpBB files. Please my sure you have read the template &amp; language MODX files to complete the installation.</p>
+	<p><strong>Σημείωση:</strong> Ο οδηγός εγκατάστασης θα σας βοηθήσει με τα βήματα που είναι σχετικά με τη βάση δεδομένων &amp; επίσης την επεξεργασία των αρχείων της phpBB. Παρακαλώ σιγουρευτείτε πως διαβάσατε τα αρχεία MODX για τα template &amp; τις γλώσσες για να ολοκληρώσετε την εγκατάσταση.</p>
 
 	<p>To phpBB Garage υποστηρίζει τις ακόλουθες βάσεις δεδομένων:</p>
 	<ul>
-		<li>MySQL 3.23 or above (MySQLi supported)</li>
+		<li>MySQL 3.23 ή μεγαλύτερη (MySQLi supported)</li>
 		<li>PostgreSQL 7.3+</li>
 		<li>SQLite 2.8.2+</li>
 		<li>Firebird 2.0+</li>
@@ -74,181 +74,181 @@ $lang = array_merge($lang, array(
 		<li>Oracle</li>
 	</ul>',
 	'REMOVE_COMPLETE'		=> 'Το phpBB Garage αφαιρέθηκε!!',
-	'REMOVE_COMPLETE_EXPLAIN'	=> 'Some text about removal post checks here',
-	'PHP_REQUIRED_MODULE'		=> 'Required modules',
-	'PHP_REQUIRED_MODULE_EXPLAIN'	=> '<strong>Required</strong> - These modules or applications are required.',
+	'REMOVE_COMPLETE_EXPLAIN'	=> 'Το phpBB Garage αφαιρέθηκε με επιτυχία!!',
+	'PHP_REQUIRED_MODULE'		=> 'Απαιτούμενα modules',
+	'PHP_REQUIRED_MODULE_EXPLAIN'	=> '<strong>Απαιτείται</strong> - αυτά τα modules ή εφαρμογές απαιτούνται.',
 
-	'OVERVIEW_BODY'			=> 'Welcome to our public beta of the next-generation of phpBB Garage after 1.x.x, phpBB Garage 2.0! This release is intended to help us identify bugs and problematic areas.</p><p>Please read <a href="../docs/INSTALL.html">our installation guide</a> for more information about installing phpBB Garage</p><p><strong style="text-transform: uppercase;">Note:</strong> This release is <strong style="text-transform: uppercase;">still not final</strong>. You may want to wait for the full final release before running it live.</p><p>This installation system will guide you through the process of installing phpBB Garage, converting from a different software package or updating to the latest version of phpBB Garage. For more information on each option, select it from the menu above.',
+	'OVERVIEW_BODY'			=> 'Καλώς ορίσατε στην δοκιμαστική έκδοση της επόμενης γενιάς του phpBB Garage μετά την 1.x.x, phpBB Garage 2.0! Αυτή η έκδοση σκοπεύει να μας βοηθήσει να ανακαλύψουμε πιθανά bugs και άλλα προβλήματα.</p><p>Παρακαλώ διαβάστε <a href="../docs/INSTALL.html">τον οδηγό εγκατάστασης</a> για περισσότερες πληροφορίες σχετικά με την εγκατάσταση του phpBB Garage</p><p><strong style="text-transform: uppercase;">Σημ:</strong> Αυτή η έκδοση <strong style="text-transform: uppercase;">δεν ειναι ακομη τελικη</strong>. Ίσως να θέλετε να περιμένετε την τελική έκδοση πριν την τρέξετε σε κανονικό περιβάλλον.</p><p>Ο οδηγός εγκατάστασης θα σας καθοδηγήσει στην διαδικασία εγκατάστασης του phpBB Garage, στην μετατροπή από διαφορετικό σύστημα Γκαράζ ή στην αναβάθμιση στην τελευταία έκδοση του phpBB Garage. Για περισσσότερες πληροφοσίες σχετικά με την κάθε επιλογή, παρακαλώ επιλέξτε από το παραπάνω μενού.',
 
-	'PRE_CONVERT_COMPLETE'		=> 'All pre-conversion steps have successfully been completed. You may now begin the actual conversion process. Please note that you may have to manually adjust several things. After conversion, especially check the permissions assigned, rebuild your search index if necessary and also make sure files got copied correctly, for example avatars and smilies.',
-	'PROCESS_LAST'			=> 'Processing last statements',
+	'PRE_CONVERT_COMPLETE'		=> 'Όλα τα προ-εγκατάστασης βήματα ολοκληρώθηκαν. Μπορείτε τώρα να ξεκινήσετε την πραγματική διαδικασία μετατροπής. Παρακαλώ σημειώστε πως μπορεί να χρειαστεί να κάνετε πολλές χειροκίνητες ρυθμίσεις. Μετά την μετατροπή προσέξτε ειδικά τα δικαιώματα, ξαναδημιουργήστε την Αναζήτηση Ευρετηρίου αν είναι απαραίτητο και επίσης σιγουρευτείτε πως τα αρχεία αντιγράφηκαν σωστά, για παράδειγμα τα άβαταρ και τα εικονίδια.',
+	'PROCESS_LAST'			=> 'Επεξεργασία τελευταίων εντολών',
 
-	'REFRESH_PAGE'			=> 'Refresh page to continue conversion',
-	'REFRESH_PAGE_EXPLAIN'		=> 'If set to yes, the convertor will refresh the page to continue the conversion after having finished a step. If this is your first conversion for testing purposes and to determine any errors in advance, we suggest to set this to No.',
+	'REFRESH_PAGE'			=> 'Ανανέωση σελίδας για συνέχεια της μετατροπής',
+	'REFRESH_PAGE_EXPLAIN'		=> 'Αν το ορίσετε σε ναι, ο μετατροπέας θα ανανεώνει τη σελίδα μετά το τέλος κάθε βήματος. Αν αυτή είναι η πρώτη φορά που κάνετε μετατροπή, για δοκιμαστικούς λόγους και την ανίχνευση σφαλμάτων, σας συνιστούμε το Όχι.',
 //	'REQUIRED'					=> 'Required',
-	'REQUIREMENTS_TITLE'		=> 'Installation compatibility',
-	'REQUIREMENTS_EXPLAIN'		=> 'Before proceeding with the full installation phpBB Garage will carry out some tests on your server configuration and files to ensure that you are able to install and run phpBB Garage. Please ensure you read through the results thoroughly and do not proceed until all the required tests are passed. If you wish to use any of the features depending on the optional tests, you should ensure that these tests are passed also.',
-	'RETRY_WRITE'			=> 'Retry writing config',
-	'RETRY_WRITE_EXPLAIN'		=> 'If you wish you can change the permissions on config.php to allow phpBB to write to it. Should you wish to do that you can click Retry below to try again. Remember to return the permissions on config.php after phpBB has finished installation.',
+	'REQUIREMENTS_TITLE'		=> 'Συμβατότητα εγκατάστασης',
+	'REQUIREMENTS_EXPLAIN'		=> 'Πριν συνεχίσετε με την πλήρη εγκατάσταση, το phpBB Garage θα κάνει κάποιες δοκιμές στις ρυθμίσεις του διακομιστή και των αρχείων σας για να σιγουρευτεί ότι μπορείτε να εγκαταστήσετε και να τρέξετε το phpBB Garage. Παρακαλώ σιγουρευτείτε πως διαβάζετε προσεκτικά τα αποτελέσματα και μην συνεχίζετε εκτός και αν όλες οι δοκιμές τελειώνουν επιτυχημένα. Αν επιθυμείτε να χρησιμοποιήσετε οποιαδήποτε χαρακτηριστικά εξαρτώνται από προαιρετικές δοκιμές, πρέπει να σιγουρευτείτε πως και αυτές οι δοκιμές ολοκληρώνονται με επιτυχία.',
+	'RETRY_WRITE'			=> 'Ξανά προσπάθεια εγγραφής του config',
+	'RETRY_WRITE_EXPLAIN'		=> 'Αν θέλετε μπορείτε να αλλάξετε τα δικαιώματα στο αρχείο config.php για να επιτρέψετε στην phpBB να γράψει σε αυτό. Αν θέλετε να το κάνετε αυτό πατήστε Retry για να ξαναπροσπαθήσετε. Θυμηθείτε να επαναφέρετε τα δικαιώματα στο config.php μετά το τέλος της εγκατάστασης.',
 
-	'SCRIPT_PATH'			=> 'Script path',
-	'SCRIPT_PATH_EXPLAIN'		=> 'The path where phpBB is located relative to the domain name, e.g. <samp>/phpBB3</samp>.',
-	'SELECT_LANG'			=> 'Select language',
-	'SERVER_CONFIG'			=> 'Server configuration',
-	'SEARCH_INDEX_UNCONVERTED'	=> 'Search index was not converted',
-	'SEARCH_INDEX_UNCONVERTED_EXPLAIN'	=> 'Your old search index was not converted. Searching will always yield an empty result. To create a new search index go to the Administration Control Panel, select Maintenance and then choose Search index from the submenu.',
-	'SOFTWARE'			=> 'Garage software',
-	'SPECIFY_OPTIONS'		=> 'Specify conversion options',
-	'STAGE_ADMINISTRATOR'		=> 'Administrator details',
-	'STAGE_OPTIONAL'		=> 'Optional settings',
-	'STAGE_OPTIONAL_EXPLAIN'	=> 'The options on this page allow you to have some default data created during the install. The options here are not required for install, however if you do not use the defaults you will need to setup items such as makes, models &amp; categories after the installation.',
-	'STAGE_CONFIG_FILE'		=> 'Configuration file',
-	'STAGE_CREATE_TABLE'		=> 'Create database tables',
-	'STAGE_CREATE_TABLE_EXPLAIN'	=> 'The database tables used by phpBB Garage have been created and populated with required data and if selected some optional data. Proceed to the next screen to install new permissions required by phpBB Garage.',
-	'STAGE_CREATE_PERMISSIONS'	=> 'Create permissions',
-	'STAGE_CREATE_PERMISSIONS_EXPLAIN'	=> 'New permissions required by phpBB Garage have been created and assigned to default roles if they exist. You should after the install confirm you are happy with the permissions.',
-	'STAGE_INSTALL_MODULES'		=> 'Install modules',
-	'STAGE_INSTALL_MODULES_EXPLAIN'	=> 'The phpBB Garage modules have been installed.',
-	'STAGE_DATABASE'		=> 'Database settings',
-	'STAGE_FINAL'			=> 'Final stage',
-	'STAGE_INTRO'			=> 'Introduction',
-	'STAGE_IN_PROGRESS'		=> 'Conversion in progress',
-	'STAGE_REQUIREMENTS'		=> 'Requirements',
-	'STAGE_DATA'			=> 'Data',
-	'STAGE_DATA_EXPLAIN'		=> 'All phpBB Garage data is now removed. Proceeding will removing all files.',
-	'STAGE_FILES'			=> 'Files',
-	'STAGE_FILES_EXPLAIN'		=> 'All phpBB Garage files are now removed.',
-	'STAGE_SETTINGS'		=> 'Settings',
-	'STARTING_CONVERT'		=> 'Starting conversion process',
-	'STEP_PERCENT_COMPLETED'	=> 'Step <strong>%d</strong> of <strong>%d</strong>',
-	'SUB_INTRO'			=> 'Introduction',
-	'SUB_LICENSE'			=> 'License',
-	'SUB_SUPPORT'			=> 'Support',
-	'SUCCESSFUL_CONNECT'		=> 'Successful connection',
+	'SCRIPT_PATH'			=> 'Path προγράμματος',
+	'SCRIPT_PATH_EXPLAIN'		=> 'Το path που βρίσκεται η phpBB σε σχέση με το όνομα του domain σας, π.χ. <samp>/phpBB3</samp>.',
+	'SELECT_LANG'			=> 'Επιλογή γλώσσας',
+	'SERVER_CONFIG'			=> 'Ρυθμίσεις διακομιστή',
+	'SEARCH_INDEX_UNCONVERTED'	=> 'Η Αναζήτηση Ευρετηρίου δεν μετατράπηκε.',
+	'SEARCH_INDEX_UNCONVERTED_EXPLAIN'	=> 'Η παλιά σας αναζήτηση ευρετηρίου δεν μετατράπηκε. Η αναζήτηση θα επιστρέφει κενά αποτελέσματα. Για τη δημιουργία νέασ αναζήτησης ευρετηρίου πηγαίνετε στον Πίνακα Ελέγχου Διαχειριστή, επιλέξτε Συντήρηση και πατήστε Αναζήτηση Ευρετηρίου από το υπομενού.',
+	'SOFTWARE'			=> 'Λογισμικό Γκαράζ',
+	'SPECIFY_OPTIONS'		=> 'Καθορίστε επιλογές μετατροπής',
+	'STAGE_ADMINISTRATOR'		=> 'Λεπτομέρειες διαχειριστή',
+	'STAGE_OPTIONAL'		=> 'Προαιρετικές ρυθμίσεις',
+	'STAGE_OPTIONAL_EXPLAIN'	=> 'Οι επιλογές σε αυτή τη σελίδα σας επιτρέπουν να προσθέσετε κάποια εξ\' ορισμού δεδομένα κατά την εγκατάσταση. Αυτές οι επιλογές δεν είναι απαραίτητες για την εγκατάσταση, όμως αν δεν τις χρησιμοποιήσετε θα χρειαστεί να εισάγετε μόνοι σας αντικείμενα όπως μάρκες, μοντέλα &amp; κατηγορίες μετά την εγκατάσταση.',
+	'STAGE_CONFIG_FILE'		=> 'Αρχείο παραμετροποίησης',
+	'STAGE_CREATE_TABLE'		=> 'Δημιουργία πινάκων βάσης δεδομένων',
+	'STAGE_CREATE_TABLE_EXPLAIN'	=> 'Οι πίνακες που χρειάζονται από το phpBB Garage δημιουργήθηκαν και απέκτησαν τα απαραίτητα δεδομένα και κάποια προαιρετικά αν το επιλέξατε. Συνεχίστε στην επόμενη οθόνη για να εγκαταστήσετε νέους τύπους προσβάσεων που είναι απαραίτητες για το phpBB Garage.',
+	'STAGE_CREATE_PERMISSIONS'	=> 'Δημιουργία προσβάσεων',
+	'STAGE_CREATE_PERMISSIONS_EXPLAIN'	=> 'Νέες προσβάσεις που απαιτούνται από το phpBB Garage δημιουργήθηκαν και εφαρμόστηκαν στους εξ\' ορισμού ρόλους αν αυτοί υπάρχουν. Μετά την εγκατάσταση πρέπει να επιβεβαιώσετε πως είσαστε ικανοποιημένοι με τις νέες προσβάσεις.',
+	'STAGE_INSTALL_MODULES'		=> 'Εγκατάσταση modules',
+	'STAGE_INSTALL_MODULES_EXPLAIN'	=> 'Τα modules του phpBB Garage εγκαταστάθηκαν.',
+	'STAGE_DATABASE'		=> 'Ρυθμίσεις βάσης δεδομένων',
+	'STAGE_FINAL'			=> 'Τελικό στάδιο',
+	'STAGE_INTRO'			=> 'Εισαγωγή',
+	'STAGE_IN_PROGRESS'		=> 'Μετατροπή σε εξέλιξη',
+	'STAGE_REQUIREMENTS'		=> 'Απαιτήσεις',
+	'STAGE_DATA'			=> 'Δεδομένα',
+	'STAGE_DATA_EXPLAIN'		=> 'Όλα τα δεδομένα του phpBB Garage μετακινήθηκαν. Η συνέχεια θα σβήσει όλα τα αρχεία.',
+	'STAGE_FILES'			=> 'Αρχεία',
+	'STAGE_FILES_EXPLAIN'		=> 'Όλα τα αρχεία του phpBB Garage μετακινήθηκαν.',
+	'STAGE_SETTINGS'		=> 'Ρυθμίσεις',
+	'STARTING_CONVERT'		=> 'Εκκίνηση διαδικασίας μετατροπής',
+	'STEP_PERCENT_COMPLETED'	=> 'Βήμα <strong>%d</strong> από <strong>%d</strong>',
+	'SUB_INTRO'			=> 'Εισαγωγή',
+	'SUB_LICENSE'			=> 'Άδεια χρήσης',
+	'SUB_SUPPORT'			=> 'Υποστήριξη',
+	'SUCCESSFUL_CONNECT'		=> 'Επιτυχημένη σύνδεση',
 // TODO: Write some text on obtaining support
-	'SUPPORT_BODY'			=> 'During the beta phase minimal support will be given at <a href="http://forums.phpbbgarage.com/">the phpBB Garage support forums</a>. We will provide answers to general setup questions, configuration problems, conversion problems and support for determining common problems mostly related to bugs.',
+	'SUPPORT_BODY'			=> 'Κατά τη διάρκεια της φάσης beta θα παρέχεται μικρή βοήθεια στην <a href="http://forums.phpbbgarage.com/">κοινότητα υποστήριξης του phpBB Garage </a>. Θα παρέχονται απαντήσεις σε γενικές ερωτήσεις εγκατάστασης, προβλήματα παραμετροποίησης, προβλήματα μετατροπής καθώς και υποστήριξη για επίλυση κοινών προβλημάτων που οφείλονται κυρίως σε bugs.',
 
-	'WELCOME_INSTALL'		=> 'Welcome to phpBB Garage Installation',
+	'WELCOME_INSTALL'		=> 'Καλώς ορίσατε στην εγκατάσταση του phpBB Garage',
 	'WRITABLE'			=> 'Εγγράψιμο',
 ));
 
 // Updater
 $lang = array_merge($lang, array(
-	'ALL_FILES_UP_TO_DATE'		=> 'All files are up to date with the latest phpBB Garage version. You should now check if everything is working fine.',
+	'ALL_FILES_UP_TO_DATE'		=> 'Όλα τα αρχεία είναι ενημερωμένα και ανήκουν στην τελευταία έκδοση του phpBB Garage. Θα πρέπει να επιβεβαιώσετε τώρα ότι όλα δουλεύουν όπως πρέπει.',
 
-	'CHECK_FILES_UP_TO_DATE'	=> 'According to your database your version is up to date. You may want to proceed with the file check to make sure all files are really up to date with the latest phpBB Garage version.',
-	'COLLECTED_INFORMATION_EXPLAIN'	=> 'The list below shows information about the files needing an update. Please read the information in front of every status block to see what they mean and what you may need to do to perform a successful update.',
-	'COMPLETE_LOGIN_TO_BOARD'	=> 'You should now <a href="../ucp.php?mode=login">login to your board</a> and check if everything is working fine. Do not forget to delete, rename or move your install directory!',
+	'CHECK_FILES_UP_TO_DATE'	=> 'Σύμφωνα με τη βάση δεδομένων σας η έκδοσή σας είναι ενημερωμένη. Ίσως να θέλετε να συνεχίσετε με τον έλεγχο αρχείων για να σιγουρευτείτε πως όλα σας τα αρχεία είναι ενημερωμένα με την τελευταία έκδοση του phpBB Garage.',
+	'COLLECTED_INFORMATION_EXPLAIN'	=> 'Η παρακάτω λίστα δείχνει πληροφορίες σχετικά με τα αρχεία που χρειάζονται για την αναβάθμιση. παρακαλώ διαβάστε τις πληροφορίες μπροστά από κάθε πλαίσιο κατάστασης για να δείτε τι σημαίνουν και τι θα χρειαστεί να κάνετε για να επιτύχετε μια σωστή αναβάθμιση.',
+	'COMPLETE_LOGIN_TO_BOARD'	=> 'Θα πρέπει τώρα να <a href="../ucp.php?mode=login">συνδεθείτε</a> και να ελέγξετε αν όλα δουλεύουν σωστά. Μην ξεχάσετε να διαγράψετε, μετακινήσετε ή μετονομάσετε τον φάκελο εγκατάστασης!',
 
-	'FILE_USED'			=> 'Information used from',			// Single file
-	'FILES_CONFLICT'		=> 'Conflict files',
-	'FILES_CONFLICT_EXPLAIN'	=> 'The following files are modified and do not represent the original files from the old version. phpBB determined that these files create conflicts if they are tried to be merged. Please investigate the conflicts and try to manually resolve them or continue the update choosing the preferred merging method. If you resolve the conflicts manually check the files again after you modified them. You are also able to choose between the preferred merge method for every file. The first one will result in a file where the conflicting lines from your old file will be lost, the other one will result in loosing the changes from the newer file.',
-	'FILES_MODIFIED'		=> 'Modified files',
-	'FILES_MODIFIED_EXPLAIN'	=> 'The following files are modified and do not represent the original files from the old version. The updated file will be a merge between your modifications and the new file.',
-	'FILES_NEW'			=> 'New files',
-	'FILES_NEW_EXPLAIN'		=> 'The following files currently do not exist within your installation.',
-	'FILES_NEW_CONFLICT'		=> 'New conflicting files',
-	'FILES_NEW_CONFLICT_EXPLAIN'	=> 'The following files are new within the latest version but it has been determined that there is already a file with the same name within the same position. This file will be overwritten by the new file.',
-	'FILES_NOT_MODIFIED'		=> 'Not modified files',
-	'FILES_NOT_MODIFIED_EXPLAIN'	=> 'The following files were not modified and represent the original phpBB files from the version you want to update from.',
-	'FILES_UP_TO_DATE'		=> 'Already updated files',
-	'FILES_UP_TO_DATE_EXPLAIN'	=> 'The following files are already up to date and do not need to be updated.',
-	'FTP_SETTINGS'			=> 'FTP settings',
-	'FTP_UPDATE_METHOD'		=> 'FTP upload',
-	'INCOMPATIBLE_UPDATE_FILES'	=> 'The update files found are incompatible with your installed version. Your installed version is %1$s and the update file is for updating phpBB Garage %2$s to %3$s.',
-	'INCOMPATIBLE_REMOVE_FILES'	=> 'The remove files found are incompatible with your installed version. Your installed version is %1$s and the remove file is for phpBB Garage %2$s.',
-	'INCOMPLETE_UPDATE_FILES'	=> 'The update files are incomplete.',
-	'INLINE_UPDATE_SUCCESSFUL'	=> 'The database update was successful. Now you need to continue the update process.',
+	'FILE_USED'			=> 'Πληροφορίες χρησιμοποιούνται από',			// Single file
+	'FILES_CONFLICT'		=> 'Αρχεία με αντιθέσεις',
+	'FILES_CONFLICT_EXPLAIN'	=> 'Τα παρακάτω αρχεία έχουν τροποποιηθεί και δεν αντιπροσωπεύουν τα πρωτότυπα αρχεία από την παλιά έκδοση. Η phpBB ανακάλυψε πως αυτά τα αρχεία δημιουργούν αντιθέσεις αν γίνει προσπάθεια να συγχωνευτούν. Παρακαλώ εξετάστε τις αντιθέσεις και προσπαθήστε να τις λύσετε χειροκίνητα, ή συνεχίστε χρησιμοποιώντας μια από τις μεθόδους συγχώνευσης. Αν επιλύσετε χειροκίνητα τις αντιθέσεις ελέγξτε ξανά τα αρχεία αφού τα τροποποιήσετε. Επίσης μπορείτε να επιλέξετε και τον τον τρόπο συγχώνευσης για κάθε αρχείο. The first one will result in a file where the conflicting lines from your old file will be lost, the other one will result in loosing the changes from the newer file.',
+	'FILES_MODIFIED'		=> 'Τροποποιημένα αρχεία',
+	'FILES_MODIFIED_EXPLAIN'	=> 'Τα παρακάτω αρχεία έχουν τροποποιηθεί και δεν αντιπροσωπεύουν τα πρωτότυπα αρχεία της παλιάς έκδοσης. Το ενημερωμένο αρχείο θα είναι συγχώνευση του τροποποιημένου σας αρχείου και του νέου αρχείου.',
+	'FILES_NEW'			=> 'Νέα αρχεία',
+	'FILES_NEW_EXPLAIN'		=> 'τα ακόλουθα αρχεία δενυπάρχουν στην εγκατάστασή σας.',
+	'FILES_NEW_CONFLICT'		=> 'Νέα αρχεία που δημιουργούν αντιθέσεις',
+	'FILES_NEW_CONFLICT_EXPLAIN'	=> 'Τα παρακάτω αρχεία είναι νέα από την τελευταία έκδοση, αλλά ανακαλύφθηκε ότι υπάρχει ήδη κάποιο αρχείο με το ίδιο όνομα στην ίδια τοποθεσία. Αυτό το αρχείο θα αντικατασταθεί από το νέο αρχείο.',
+	'FILES_NOT_MODIFIED'		=> 'Μη τροποποιημένα αρχεία',
+	'FILES_NOT_MODIFIED_EXPLAIN'	=> 'Τα ακόλουθα αρχεία δεν είναι τροποποιημένα και αντιπροσωπεύουν τα πρωτότυπα αρχεία της έκδοσης από την οποία θέλετε να κάνετε αναβάθμιση.',
+	'FILES_UP_TO_DATE'		=> 'Ήδη ενημερωμένα αρχεία',
+	'FILES_UP_TO_DATE_EXPLAIN'	=> 'Τα ακόλουθα αρχεία είναι ήδη ενημερωμένα και δεν χρειάζεται να ενημερωθούν.',
+	'FTP_SETTINGS'			=> 'Ρυθμίσεις FTP',
+	'FTP_UPDATE_METHOD'		=> 'Ανέβασμα μέσω FTP',
+	'INCOMPATIBLE_UPDATE_FILES'	=> 'Τα αρχεία ενημέρωσης δεν είναι συμβατά με την εγκατεστημένη σας έκδοση. Η έκδοση που έχετε εγκατεστημένη είναι η %1$s και τα αρχεία εγκατάστασης είναι για να αναβαθμίσετε το phpBB Garage %2$s σε %3$s.',
+	'INCOMPATIBLE_REMOVE_FILES'	=> 'Τα αρχεία αφαίρεσης δεν είναι συμβατά με την εγκατεστημένη σας έκδοση. Η έκδοση που έχετε εγκατεστημένη είναι η %1$s και τα αρχεία αφαίρεσης είναι για το phpBB Garage %2$s.',
+	'INCOMPLETE_UPDATE_FILES'	=> 'Τα αρχεία ενημέρωσης είναι ημιτελή.',
+	'INLINE_UPDATE_SUCCESSFUL'	=> 'Η ενημέρωση της βάσης δεδομένων ήταν επιτυχής. Τώρα πρέπει να συνεχίσετε την διαδικασία αναβάθμισης.',
 
-	'KEEP_OLD_NAME'			=> 'Keep username',
+	'KEEP_OLD_NAME'			=> 'Διατήρηση ονόματος μέλους',
 
-	'NO_UPDATE_FILES_EXPLAIN'	=> 'The following files are new or modified but the directory they normally reside in could not be found on your installation. If this list contains files to other directories than language/ or styles/ than you may have modified your directory structure and the update may be incomplete.',
-	'NO_UPDATE_FILES_OUTDATED'	=> 'No valid update directory was found, please make sure you uploaded the relevant files.<br /><br />Your installation does <strong>not</strong> seem to be up to date. Updates are available for your version of phpBB Garage %1$s, please visit <a href="http://www.phpbbgarage.com/downloads/" rel="external">http://www.phpbbgarage.com/downloads/</a> to obtain the correct package to update from Version %2$s to Version %3$s.',
-	'NO_UPDATE_FILES_UP_TO_DATE'	=> 'Your version is up to date. There is no need to run the update tool. If you want to make an integrity check on your files make sure you uploaded the correct update files.',
-	'NO_UPDATE_INFO'		=> 'Update file information could not be found.',
-	'NO_UPDATES_REQUIRED'		=> 'No updates required',
-	'NO_VISIBLE_CHANGES'		=> 'No visible changes',
-	'NOTICE'			=> 'Notice',
-	'NUM_CONFLICTS'			=> 'Number of conflicts',
+	'NO_UPDATE_FILES_EXPLAIN'	=> 'Τα ακόλουθα αρχεία είναι νέα ή τροποποιημένα αλλά ο φάκελος που κανονικά βρίσκονται δεν βρέθηκε στην εγκατάστασή σας. Αν αυτή η λίστα περιέχει αρχεία άλλων φακέλων εκτός από φακέλους language/ ή styles/ τότε ίσως να έχετε τροποποιήσει τη δομή του φακέλου και η διαδικασία αναβάθμισης μπορεί να είναι ημιτελής.',
+	'NO_UPDATE_FILES_OUTDATED'	=> 'Δεν βρέθηκε έγκυρος φάκελος ενημέρωσης, παρακαλώ σιγουρευτείτε ότι ανεβάσατε τα σχετικά αρχεία.<br /><br />Η εγκατάστασή σας <strong>δεν </strong> φαίνεται ενημερωμένη. Οι ενημερώσεις είναι διαθέσιμες για την έκδοσή σας του phpBB Garage %1$s, παρακαλώ επισκεφτείτε το <a href="http://www.phpbbgarage.com/downloads/" rel="external">http://www.phpbbgarage.com/downloads/</a> για να αποκτήσετε το σωστό πακέτο για την αναβάθμιση από την έκδοση %2$s στην έκδοση %3$s.',
+	'NO_UPDATE_FILES_UP_TO_DATE'	=> 'Η εγκατάστασή σας είναι ενημερωμένη. Δεν χρειάζεται να τρέξετε το εργαλείο ενημέρωσης. Αν θέλετε να κάνετε έλεγχο των αρχείων σιγουρευτείτε πως ανεβάσατε τα σωστά αρχεία ενημέρωσης.',
+	'NO_UPDATE_INFO'		=> 'Οι πληροφορίες για το αρχείο ενημέρωσης δεν βρέθηκαν.',
+	'NO_UPDATES_REQUIRED'		=> 'Δεν χρειάζονται ενημερώσεις',
+	'NO_VISIBLE_CHANGES'		=> 'Δεν υπάρχουν ορατές αλλαγές',
+	'NOTICE'			=> 'Σημείωση',
+	'NUM_CONFLICTS'			=> 'Αριθμός αντιθέσεων',
 
-	'OLD_UPDATE_FILES'		=> 'Update files are out of date. The update files found are for updating from phpBB %1$s to phpBB %2$s but the latest version of phpBB is %3$s.',
+	'OLD_UPDATE_FILES'		=> 'Τα αρχεία ενημέρωσης είναι ετεροχρονισμένα. Τα αρχεία ενημέρωσης που βρέθηκαν είναι για αναβάθμιση από phpBB %1$s σε phpBB %2$s αλλά η τελευταία έκδοση της phpBB είναι η %3$s.',
 
-	'PACKAGE_UPDATES_TO'		=> 'Current package updates to version',
-	'PERFORM_DATABASE_UPDATE'	=> 'Perform database update',
-	'PERFORM_DATABASE_UPDATE_EXPLAIN'	=> 'Below you will find a button to the database update script. The database update can take a while, so please do not stop the execution if it seems to hang. After the database update has been performed just follow the instructions to continue the update process.',
-	'PREVIOUS_VERSION'		=> 'Previous version',
-	'PROGRESS'			=> 'Progress',
+	'PACKAGE_UPDATES_TO'		=> 'Το τρέχον πακέτο ενημερώνει στην έκδοση',
+	'PERFORM_DATABASE_UPDATE'	=> 'Εκτέλεση ενημέρωσης βάσης',
+	'PERFORM_DATABASE_UPDATE_EXPLAIN'	=> 'Παρακάτω θα βρείτε ένα κουμπί για το script ενημέρωσης της βάσης. Η ενημέρωση της βάσης μπορεί να χρειαστεί αρκετό χρόνο, οπότε παρακαλώ μην τη σταματήσετε αν νομίσετε πως κόλλησε. Μετά την την ενημέρωση της βάσης απλά ακολουθήστε τις οδηγίες για να συνεχίσετε με τη διαδικασία ενημέρωσης.',
+	'PREVIOUS_VERSION'		=> 'Προηγούμενη έκδοση',
+	'PROGRESS'			=> 'Πρόοδος',
 
-	'RESULT'			=> 'Result',
-	'RUN_DATABASE_SCRIPT'		=> 'Update my database now',
+	'RESULT'			=> 'Αποτέλεσμα',
+	'RUN_DATABASE_SCRIPT'		=> 'Ενημέρωση της βάσης',
 
-	'SELECT_DIFF_MODE'		=> 'Select diff mode',
-	'SELECT_DOWNLOAD_FORMAT'	=> 'Select download archive format',
-	'SELECT_FTP_SETTINGS'		=> 'Select FTP settings',
-	'SHOW_DIFF_CONFLICT'		=> 'Show differences/conflicts',
-	'SHOW_DIFF_FINAL'		=> 'Show resulting file',
-	'SHOW_DIFF_MODIFIED'		=> 'Show merged differences',
-	'SHOW_DIFF_NEW'			=> 'Show file contents',
-	'SHOW_DIFF_NEW_CONFLICT'	=> 'Show differences',
-	'SHOW_DIFF_NOT_MODIFIED'	=> 'Show differences',
-	'SOME_QUERIES_FAILED'		=> 'Some queries failed, the statements and errors are listing below.',
+	'SELECT_DIFF_MODE'		=> 'Επιλέξτε μορφή προβολής διαφορών',
+	'SELECT_DOWNLOAD_FORMAT'	=> 'Επιλέξτε μορφή συμπίεσης για το κατέβασμα',
+	'SELECT_FTP_SETTINGS'		=> 'Επιλογή ρυθμίσεων FTP',
+	'SHOW_DIFF_CONFLICT'		=> 'Προβολή διαφορών/αντιθέσεων',
+	'SHOW_DIFF_FINAL'		=> 'Προβολή παραγόμενου αρχείου',
+	'SHOW_DIFF_MODIFIED'		=> 'Προβολή στγχωνευμένων διαφορών',
+	'SHOW_DIFF_NEW'			=> 'Προβολή αρχείων που παράγουν αντιθέσεις',
+	'SHOW_DIFF_NEW_CONFLICT'	=> 'Προβολή διαφορών',
+	'SHOW_DIFF_NOT_MODIFIED'	=> 'Προβολή διαφορών',
+	'SOME_QUERIES_FAILED'		=> 'Κάποια ερωτήματα απέτυχαν, τα σφάλματα φαίνονται παρακάτω.',
 	'SQL'				=> 'SQL',
-	'SQL_FAILURE_EXPLAIN'		=> 'This is probably nothing to worry about, update will continue. Should this fail to complete you may need to seek help at our support forums. See <a href="../docs/README.html">README</a> for details on how to obtain advice.',
-	'STAGE_FILE_CHECK'		=> 'Check files',
-	'STAGE_UPDATE_DB'		=> 'Update database',
-	'STAGE_UPDATE_FILES'		=> 'Update files',
-	'STAGE_VERSION_CHECK'		=> 'Version check',
-	'STATUS_CONFLICT'		=> 'Modified file producing conflicts',
-	'STATUS_MODIFIED'		=> 'Modified file',
-	'STATUS_NEW'			=> 'New file',
-	'STATUS_NEW_CONFLICT'		=> 'Conflicting new file',
-	'STATUS_NOT_MODIFIED'		=> 'Not modified file',
-	'STATUS_UP_TO_DATE'		=> 'Already updated file',
+	'SQL_FAILURE_EXPLAIN'		=> 'Μάλλον αυτό δεν είναι κάτι που χρειάζεται να σας ανησυχεί, η ενημέρωση θα συνεχίσει. Αν αποτύχει να τελειώσει, ίσως χρειαστεί να αναζητήσετε βοήθεια στην κοινότητα υποστήριξης. Δείτε το <a href="../docs/README.html">README</a> για λεπτομέρειες για το πως θα πάρετε κάποια συμβουλή.',
+	'STAGE_FILE_CHECK'		=> 'Έλεγχος αρχείων',
+	'STAGE_UPDATE_DB'		=> 'Ενημέρωση βάσης',
+	'STAGE_UPDATE_FILES'		=> 'Ενημέρωση αρχείων',
+	'STAGE_VERSION_CHECK'		=> 'Έλεγχος έκδοσης',
+	'STATUS_CONFLICT'		=> 'Τροποποιημένο αρχείο που παράγει αντιθέσεις',
+	'STATUS_MODIFIED'		=> 'Τροποποιημένο αρχείο',
+	'STATUS_NEW'			=> 'Νέο αρχείο',
+	'STATUS_NEW_CONFLICT'		=> 'Νέο αρχείο που παράγει αντιθέσεις',
+	'STATUS_NOT_MODIFIED'		=> 'Μη τροποποιημένο αρχείο',
+	'STATUS_UP_TO_DATE'		=> 'Ήδη ενημερωμένο αρχείο',
 
-	'UPDATE_COMPLETED'		=> 'Update completed',
-	'UPDATE_DATABASE'		=> 'Update database',
-	'UPDATE_DATABASE_EXPLAIN'	=> 'Within the next step the database will be updated.',
-	'UPDATE_DATABASE_SCHEMA'	=> 'Updating database schema',
-	'UPDATE_FILES'			=> 'Update files',
-	'UPDATE_FILES_NOTICE'		=> 'Please make sure you have updated your board files too, this file is only updating your database.',
-	'UPDATE_INSTALLATION'		=> 'Update phpBB Garage installation',
-	'UPDATE_INSTALLATION_EXPLAIN'	=> 'With this option, it is possible to update your phpBB Garage installation to the latest version.<br />During the process all of your files will be checked for their integrity. You are able to review all differences and files before the update.<br /><br />The file update itself can be done in two different ways.</p><h2>Manual Update</h2><p>With this update you only download your personal set of changed files to make sure you do not lose your file modifications you may have done. After you downloaded this package you need to manually upload the files to their correct position under your phpBB Garage root directory. Once done, you are able to do the file check stage again to see if you moved the files to their correct location.</p><h2>Automatic Update with FTP</h2><p>This method is similar to the first one but without the need to download the changed files and uploading them on your own. This will be done for you. In order to use this method you need to know your FTP login details since you will be asked for them. Once finished you will be redirected to the file check again to make sure everything got updated correctly.<br /><br />',
+	'UPDATE_COMPLETED'		=> 'Η ενημέρωση ολοκληρώθηκε',
+	'UPDATE_DATABASE'		=> 'Ενημέρωση βάσης δεδομένων',
+	'UPDATE_DATABASE_EXPLAIN'	=> 'Στο επόμενο βήμα θα ενημερωθεί η βάση.',
+	'UPDATE_DATABASE_SCHEMA'	=> 'Ενημέρωση δομής βάσης',
+	'UPDATE_FILES'			=> 'Ενημέρωση αρχείων',
+	'UPDATE_FILES_NOTICE'		=> 'Παρακαλώ σιγουρευτείτε ότι ενημερώσατε και τα αρχεία της phpbb, αυτό το αρχείο ενημερώνει μόνο τη βάση δεδομένων.',
+	'UPDATE_INSTALLATION'		=> 'Ενημέρωση εγκατάστασης phpBB Garage',
+	'UPDATE_INSTALLATION_EXPLAIN'	=> 'Με αυτή την επιλογή, μπορείτε να ενημερώσετε την εγκατάσταση του phpBB Garage σας στην τελευταία έκδοση.<br />Κατά τη διάρκεια της διαδικασίας θα ελεγχθούν και τα αρχεία σας. Θα μπορείτε να δείτε προεπισκόπηση όλων των διαφορών των αρχείων πριν την ενημέρωση.<br /><br />Η ενημέρωση αρχείων μπορεί να γίνει με δύο διαφορετικούς τρόπους.</p><h2>Χειροκίνητη ενημέρωση</h2><p>Με αυτή την ενημέρωση μπορείτε να μεταφορτώσετε τα αρχεία σας  ώστε να σιγουρευτείτε πως δεν θα χάσετε ότι αλλαγές έχετε κάνει. Αφού κατεβάσετε αυτό το πακέτο, πρεπει να ανεβάσετε χειροκίνητα τα αρχεία στο ριζικό φάκελο του phpBB garage. Μόλις τελειώσετε μπορείτε να ξαναελέγξετε τα αρχεία ώστε να σιγουρευτείτε πως τα τοποθετήσατε στο σωστό φάκελο.</p><h2>Αυτόματη ενημέρωση με χρήση FTP</h2><p>Αυτή η μέθοδος είναι παρόμοια με την πρώτη, εκτός από το γεγονός ότι δεν χρειάζεται να κατεβάσετε τα αλλαγμένα αρχεία και να τα ξαναανεβάσετε μόνοι σας. Αυτό θα γίνει αυτόματα. Για να μπορέσετε να χρησιμοποιήσετε αυτή την μέθοδο, πρέπει να γνωρίζετε τα στοιχεία του FTP λογαριασμού, αφού θα ερωτηθείτε για αυτά. Μόλις τελειώσετε θα ανακατευθυνθείτε πάλι στον έλεγψο αρχείων πάλι, για να σιγουρευτείτε ότι όλα ενημερώθηκαν επιτυχώς.<br /><br />',
 	'UPDATE_INSTRUCTIONS'			=> '
 
-		<h1>Release announcement</h1>
+		<h1>Ανακοίνωση έκδοσης</h1>
 
-		<p>Please read <a href="%1$s" title="%1$s"><strong>the release announcement for the latest version</strong></a> before you continue your update process, it may contain useful information. It also contains full download links as well as the change log.</p>
+		<p>Παρακαλώ διαβάστε <a href="%1$s" title="%1$s"><strong>την ανακοίνωση για την τελευταία έκδοση</strong></a> πριν συνεχίσετε την διαδικασία αναβάθμισης, μπορεί να περιέχει χρήσιμες πληροφορίες. Επίσης περιέχει συνδέσμους για κατέβασμα, όπως επίσης λαι το αρχείο καταγραφής αλλαγών.</p>
 
 		<br />
 
-		<h1>How to update your installation with the Automatic Update Package</h1>
+		<h1>Πως να αναβαθμίσετε την εγκατάστασή σας με τη χρήση του Automatic Update Package</h1>
 
-		<p>The recommended way of updating your installation listed here is only valid for the automatic update package. You are also able to update your installation using the methods listed within the INSTALL.html document. The steps for updating phpBB Garage  automatically are:</p>
+		<p>Ο προτεινόμενος τρόπος αναβάθμισης της εγκατάστασης είναι έγκυρος μόνο για το αυτόματο πακέτο ενημέρωσης. Μπορείτε επίσης να ενημερώσετε την εγκατάσταση χρησιμοποιώντας τις μεθόδους που αναφέρονται στο αρχείο INSTALL.html. Τα βήματα για την αυτόματη αναβάθμιση του phpBB Garage είναι:</p>
 
 		<ul style="margin-left: 20px; font-size: 1.1em;">
-			<li>Go to the <a href="http://www.phpbbgarage.com/downloads/" title="http://www.phpbbgarage.com/downloads/">phpBBGarage.com downloads page</a> and download the "Automatic Update Package" archive.<br /><br /></li>
-			<li>Unpack the archive.<br /><br /></li>
-			<li>Upload the complete uncompressed install folder to your phpBB Garage root directory (where your config.php file is).<br /><br /></li>
+			<li>Πηγαίνετε στη <a href="http://www.phpbbgarage.com/downloads/" title="http://www.phpbbgarage.com/downloads/">σελίδα μεταφορτώσεων του phpBB Garage</a> και κατεβάστε το αρχείο "Automatic Update Package".<br /><br /></li>
+			<li>Αποσυμπίεση του αρχείου.<br /><br /></li>
+			<li>ανεβάστε ολόκληρο τον αποσυμπιεσμένο φάκελο εγκατάστασης στο φάκελο ρίζας του phpBB Garage (εκεί που είναι το αρχείο config.php).<br /><br /></li>
 		</ul>
 
-		<p>Once uploaded your board will be offline for normal users due to the install directory you uploaded now present.<br /><br />
-		<strong><a href="%2$s" title="%2$s">Now start the update process by pointing your browser to the install folder</a>.</strong><br />
+		<p>Μόλις το ανεβάσετε, το φόρουμ σας θα είναι μη ενεργό για τα απλά μέλη λόγω της παρουσίας του φακέλου εγκατάστασης.<br /><br />
+		<strong><a href="%2$s" title="%2$s">Ξεκινήστε τώρα την διαδικασία αναβάθμισης στοχεύοντας τον περιηγητή ίντερνετ στο φάκελο εγκατάστασης</a>.</strong><br />
 		<br />
-		You will then be guided through the update process. You will be notified once the update is complete.
+		Θα καθοδηγηθείτε κατά την διαδικασία εγκατάστασης. Θα εισοποιηθείτε μόλις ολοκληρωθεί η ενημέρωση.
 		</p>
 	',
 	'UPDATE_INSTRUCTIONS_INCOMPLETE'	=> '
 
-		<h1>Incomplete update detected</h1>
+		<h1>Ανιχνεύτηκε ημιτελής ενημέρωση</h1>
 
-		<p>phpBB Garage detected an incomplete automatic update. Please make sure you followed every step within the automatic update tool. Below you will find the link again, or go directly to your install directory.</p>
+		<p>Το phpBB Garage ανίχνευσε μια ημιτελή αυτόματη ενημέρωση. Παρακαλώ σιγουρευτείτε πως ακολουθήσατε όλα τα βήματα του εργαλείου αυτόματης ενημέρωσης. Παρακάτω θα βρείτε ξανά τον σύνδεσμο, ή πηγαίνετε απευθείας στο φάκελο εγκατάστασης.</p>
 		',
 	'VERSION_CHECK'				=> 'Έλεγχος έκδοσης',
 	'VERSION_CHECK_EXPLAIN'		=> 'Ελέγχει αν η έκδοση του phpBB Garage που χρησιμοποιείτε είναι ενημερωμένη.',
 	'VERSION_NOT_UP_TO_DATE'	=> 'Η έκδοση του phpBB Garage σας δεν είναι ενημερωμένη. Παρακαλώ συνεχίστε με διαδικασία ενημέρωσης.',
-	'VERSION_NOT_UP_TO_DATE_ACP'=> 'Your version of phpBB Garage is not up to date.<br />Below you will find a link to the release announcement for the latest version as well as instructions on how to perform the update.',
-	'VERSION_UP_TO_DATE'		=> 'Your installation is up to date, no updates are available for your version of phpBB Garage. You may want to continue anyway to perform a file validity check.',
-	'VERSION_UP_TO_DATE_ACP'	=> 'Your installation is up to date, no updates are available for your version of phpBB Garage. You do not need to update your installation.',
+	'VERSION_NOT_UP_TO_DATE_ACP'=> 'Η έκδοση του phpBB Garage σας δεν είναι ενημερωμένη.<br />Παρακάτω θα βρείτε ένα σύνδεσμο προς την ανακοίνωση της νέας έκδοσης, καθώς και οδηγίες για το πως θα αναβαθμίσετε από την παλιά σας έκδοση.',
+	'VERSION_UP_TO_DATE'		=> 'Η εγκατάστασή σας είναι ενημερωμένη, δεν υπάρχουν ενημερώσεις για την έκδοση του phpBB Garage σας. Αν θέλετε συνεχίστε για έλεγχο των αρχείων.',
+	'VERSION_UP_TO_DATE_ACP'	=> 'Η εγκατάστασή σας είναι ενημερωμένη, δεν υπάρχουν ενημερώσεις για την έκδοση του phpBB Garage σας. Δεν χρειάζεται να ενημερώσετε την εγκατάστασή σας.',
 
 	'INSERT_OPTIONS'		=> 'Προαιρετικά δεδομένα',
 	'INSERT_MAKES'			=> 'Εισαγωγή Μαρκών',
