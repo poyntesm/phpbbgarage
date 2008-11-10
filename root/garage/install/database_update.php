@@ -152,7 +152,6 @@ $database_update_info = array(
 		'change_columns'		=> array(
 			GARAGE_BLOGS_TABLE	=> array(
 				'bbcode_uid'		=> array('VCHAR:8', ''),
-				'bbcode_options'	=> array('UINT', '7'),
 			),
 			GARAGE_VEHICLES_TABLE	=> array(
 				'price'			=> array('DECIMAL:10', 0),
@@ -173,10 +172,19 @@ $database_update_info = array(
 				'bbcode_uid'		=> array('VCHAR:8', ''),
 			),
 		),
+		// Add the following columns
+		'add_columns'				=> array(
+			GARAGE_MODIFICATIONS_TABLE	=> array(
+				'bbcode_options'	=> array('UINT', '7'),
+			),
+		),
 		// Drop the following columns
 		'drop_columns'				=> array(
 			GARAGE_MODIFICATIONS_TABLE	=> array(
 				'manufacturer_id'
+			),
+			GARAGE_BLOGS_TABLE	=> array(
+				'bbcode_flags'
 			),
 		),
 	),
