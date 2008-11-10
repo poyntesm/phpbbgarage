@@ -131,7 +131,7 @@ class acp_garage_tool
 			case 'orphan_delete':
 				$output = $files = array();
 
-				$files = request_var('orphan_attach', '');
+				$files = request_var('orphan_attach', array());
 		
 			        if (!empty($files))
 		        	{

@@ -10,7 +10,7 @@
 </tr>
 </table>
 
-<form action="{S_GARAGE_ORPHAN_REMOVE_ACTION}" method="post" name="orphans">
+<form id="orphans" action="{S_GARAGE_ORPHAN_REMOVE_ACTION}" method="post" name="orphans">
 <table width="100%" cellpadding="3" cellspacing="1" border="0">
 <!-- BEGIN file -->
 <tr>
@@ -18,7 +18,8 @@
 </tr>
 <!-- END file -->
 <tr>
-	<td class="cat" colspan="4" align="center"><input class="btnmain" type="submit" name="action[orphan_remote]" value="{L_REMOVE_SELECTED_ORPHANS}" /></td>
+	<td class="cat" colspan="4" align="center"><input type="submit" value="{L_REMOVE_SELECTED_ORPHANS}" name="submit" id="submit" class="button1"/></td>
+	
 </tr>
 </table>
 </form>
