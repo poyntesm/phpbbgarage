@@ -19,7 +19,6 @@ $install_info = array(
 		'includes/functions.php',
 		'includes/functions_user.php',
 		'includes/session.php',
-		'includes/acp/acp_language.php',
 		'includes/acp/acp_logs.php',
 		'includes/acp/acp_styles.php',
 		'includes/mcp/mcp_logs.php',

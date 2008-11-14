@@ -263,76 +263,74 @@ class install_install extends module
 					$sub = $this->p_master->sub = 'final';
 				}
 
-				/*if ($all_up_to_date)
+				if ($all_up_to_date)
 				{
-					// Add database update to log
-					//add_log('admin', 'LOG_UPDATE_PHPBB', $this->current_version, $this->latest_version);
-
-					// Refresh prosilver css data - this may cause some unhappy users, but 
+					// Refresh any style css data we updated - this may cause some unhappy users, but 
 					$sql = 'SELECT *
-						FROM ' . STYLES_THEME_TABLE . "
-						WHERE theme_name = 'prosilver'";
+						FROM ' . STYLES_THEME_TABLE;
 					$result = $db->sql_query($sql);
-					$theme = $db->sql_fetchrow($result);
-					$db->sql_freeresult($result);
-
-					if ($theme)
+					while( $theme = $db->sql_fetchrow($result) )
 					{
-						$recache = (empty($theme['theme_data'])) ? true : false;
-						$update_time = time();
-
-						// We test for stylesheet.css because it is faster and most likely the only file changed on common themes
-						if (!$recache && $theme['theme_mtime'] < @filemtime("{$phpbb_root_path}styles/" . $theme['theme_path'] . '/theme/stylesheet.css'))
+						//Check For Imageset Data To Load
+						if (file_exists($phpbb_root_path . "garage/install/install/styles/{$theme['theme_name']}/theme/index." . $phpEx))
 						{
-							$recache = true;
-							$update_time = @filemtime("{$phpbb_root_path}styles/" . $theme['theme_path'] . '/theme/stylesheet.css');
-						}
-						else if (!$recache)
-						{
-							$last_change = $theme['theme_mtime'];
-							$dir = @opendir("{$phpbb_root_path}styles/{$theme['theme_path']}/theme");
+							$recache = (empty($theme['theme_data'])) ? true : false;
+							$update_time = time();
 
-							if ($dir)
+							// We test for stylesheet.css because it is faster and most likely the only file changed on common themes
+							if (!$recache && $theme['theme_mtime'] < @filemtime("{$phpbb_root_path}styles/" . $theme['theme_path'] . '/theme/stylesheet.css'))
 							{
-								while (($entry = readdir($dir)) !== false)
+								$recache = true;
+								$update_time = @filemtime("{$phpbb_root_path}styles/" . $theme['theme_path'] . '/theme/stylesheet.css');
+							}
+							else if (!$recache)
+							{
+								$last_change = $theme['theme_mtime'];
+								$dir = @opendir("{$phpbb_root_path}styles/{$theme['theme_path']}/theme");
+	
+								if ($dir)
 								{
-									if (substr(strrchr($entry, '.'), 1) == 'css' && $last_change < @filemtime("{$phpbb_root_path}styles/{$theme['theme_path']}/theme/{$entry}"))
+									while (($entry = readdir($dir)) !== false)
 									{
-										$recache = true;
-										break;
+										if (substr(strrchr($entry, '.'), 1) == 'css' && $last_change < @filemtime("{$phpbb_root_path}styles/{$theme['theme_path']}/theme/{$entry}"))
+										{
+											$recache = true;
+											break;
+										}
 									}
+									closedir($dir);
 								}
-								closedir($dir);
+							}
+	
+							if ($recache)
+							{
+								include_once($phpbb_root_path . 'includes/acp/acp_styles.' . $phpEx);
+	
+								$theme['theme_data'] = acp_styles::db_theme_data($theme);
+								$theme['theme_mtime'] = $update_time;
+	
+								// Save CSS contents
+								$sql_ary = array(
+									'theme_mtime'	=> $theme['theme_mtime'],
+									'theme_data'	=> $theme['theme_data']
+								);
+	
+								$sql = 'UPDATE ' . STYLES_THEME_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
+									WHERE theme_id = ' . $theme['theme_id'];
+								$db->sql_query($sql);
+	
+								$cache->destroy('sql', STYLES_THEME_TABLE);
 							}
 						}
-
-						if ($recache)
-						{
-							include_once($phpbb_root_path . 'includes/acp/acp_styles.' . $phpEx);
-
-							$theme['theme_data'] = acp_styles::db_theme_data($theme);
-							$theme['theme_mtime'] = $update_time;
-
-							// Save CSS contents
-							$sql_ary = array(
-								'theme_mtime'	=> $theme['theme_mtime'],
-								'theme_data'	=> $theme['theme_data']
-							);
-
-							$sql = 'UPDATE ' . STYLES_THEME_TABLE . ' SET ' . $db->sql_build_array('UPDATE', $sql_ary) . '
-								WHERE theme_id = ' . $theme['theme_id'];
-							$db->sql_query($sql);
-
-							$cache->destroy('sql', STYLES_THEME_TABLE);
-						}
 					}
+					$db->sql_freeresult($result);
 
 					$db->sql_return_on_error(true);
 					$db->sql_query('DELETE FROM ' . GARAGE_CONFIG_TABLE . " WHERE config_name = 'version_update_from'");
 					$db->sql_return_on_error(false);
 
 					$cache->purge();
-				}*/
+				}
 
 			break;
 
@@ -763,6 +761,8 @@ class install_install extends module
 					$garage_config[$row['config_name']] = $row['config_value'];
 				}
 				$db->sql_freeresult($result);
+
+				add_log('admin', 'LOG_GARAGE_INSTALL', $garage_config['version']);
 
 				$template->assign_vars(array(
 					'S_FILE_CHECK'	=> false,
@@ -1221,32 +1221,6 @@ class install_install extends module
 				}
 			}
 			$db->sql_freeresult($lresult);
-		}
-		$db->sql_freeresult($result);
-
-		//Handle the installed & supported style themes
-		$sql = 'SELECT *
-			FROM ' . STYLES_THEME_TABLE;
-		$result = $db->sql_query($sql);
-		while( $row = $db->sql_fetchrow($result) )
-		{
-			//Check For Imageset Data To Load
-			if (file_exists($phpbb_root_path . "garage/install/install/styles/{$row['theme_name']}/theme/data." . $phpEx))
-			{
-				$theme_info= array();
-				include($phpbb_root_path . "garage/install/install/styles/{$row['theme_name']}/theme/data." . $phpEx);
-				$theme_data =  $row['theme_data'] . $theme_info['theme_data'];
-
-				$update_sql = array(
-					'theme_data'	=> $theme_data,
-				);
-
-				$sql = 'UPDATE ' . STYLES_THEME_TABLE . '
-					SET ' . $db->sql_build_array('UPDATE', $update_sql) . "
-					WHERE theme_id = {$row['theme_id']}";
-
-				$db->sql_query($sql);
-			}
 		}
 		$db->sql_freeresult($result);
 

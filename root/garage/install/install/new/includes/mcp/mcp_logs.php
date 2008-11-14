@@ -3,7 +3,7 @@
 /**
 *
 * @package mcp
-* @version $Id: mcp_logs.php 8598 2008-06-04 15:37:06Z naderman $
+* @version $Id: mcp_logs.php 9029 2008-10-18 18:44:41Z toonarmy $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -68,7 +68,7 @@ class mcp_logs
 		$this->tpl_name = 'mcp_logs';
 		$this->page_title = 'MCP_LOGS';
 
-		$forum_list = get_forum_list('m_');
+		$forum_list = array_values(array_intersect(get_forum_list('f_read'), get_forum_list('m_')));
 		$forum_list[] = 0;
 
 		$forum_id = $topic_id = 0;

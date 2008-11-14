@@ -7,7 +7,7 @@
 		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
     		<title lang="en-gb">phpBB Garage</title>
     		<description lang="en-gb">This mod allows users of your forum to add details about their vehicles.</description>
-    		<author-notes lang="en-gb"><![CDATA[- Support is given for both prosilver & subsilver2 templates. Please note the DIY instructions at the end of this file should be completed AFTER the COPY actions and not at the end. Currently the XSL does not allow me place the DIY instructions where I need.
+    		<author-notes lang="en-gb"><![CDATA[- Support is given for both prosilver & subSilver2 templates. Please note the DIY instructions at the end of this file should be completed AFTER the COPY actions and not at the end. Currently the XSL does not allow me place the DIY instructions where I need.
 ]]></author-notes>
 
 		<author-group>
@@ -24,20 +24,23 @@
 		<installation>
 			<level>advanced</level>
 			<time>1800</time>
-			<target-version>3.0.2</target-version>
+			<target-version>3.0.3</target-version>
 		</installation>
 
 		<link-group>
-			<link type="template" href="./xml/prosilver-fr.xml" lang="fr">Prosilver French</link>
-			<link type="template" href="./xml/prosilver-de.xml" lang="de">Prosilver German (Casual Honorifics)</link>
-			<link type="template" href="./xml/prosilver-it.xml" lang="it">Prosilver Italian</link>
-			<link type="template" href="./xml/subsilver2-en.xml" lang="en">subsilver2 English</link>
-			<link type="template" href="./xml/subsilver2-fr.xml" lang="fr">subsilver2 French</link>
-			<link type="template" href="./xml/subsilver2-de.xml" lang="de">subsilver2 German (Casual Honorifics)</link>
-			<link type="template" href="./xml/subsilver2-it.xml" lang="it">subsilver2 Italian</link>
+			<link type="template" href="./xml/prosilver-fr.xml" lang="fr">prosilver French</link>
+			<link type="template" href="./xml/prosilver-de.xml" lang="de">prosilver German (Casual Honorifics)</link>
+			<link type="template" href="./xml/prosilver-it.xml" lang="it">prosilver Italian</link>
+			<link type="template" href="./xml/prosilver-el.xml" lang="it">prosilver Greek</link>
+			<link type="template" href="./xml/subsilver2-en.xml" lang="en">subSilver2 English</link>
+			<link type="template" href="./xml/subsilver2-fr.xml" lang="fr">subSilver2 French</link>
+			<link type="template" href="./xml/subsilver2-de.xml" lang="de">subSilver2 German (Casual Honorifics)</link>
+			<link type="template" href="./xml/subsilver2-it.xml" lang="it">subSilver2 Italian</link>
+			<link type="template" href="./xml/subsilver2-el.xml" lang="it">subSilver2 Greek</link>
 			<link type="language" href="./xml/lang-fr.xml" lang="fr">French</link>
 			<link type="language" href="./xml/lang-de.xml" lang="de">German (Casual Honorifics)</link>
 			<link type="language" href="./xml/lang-it.xml" lang="it">Italian</link>
+			<link type="language" href="./xml/lang-el.xml" lang="it">Greek</link>
 		</link-group>
 
 		<history>
@@ -82,7 +85,16 @@
 			<file from="./root/styles/prosilver/imageset/en/*.*" to="./styles/prosilver/imageset/en/" />
 			<file from="./root/styles/prosilver/template/*.*" to="./styles/prosilver/template/" />
 			<file from="./root/styles/prosilver/theme/*.*" to="./styles/prosilver/theme/" />
-			<file from="./root/*.*" to="./" />
+			<file from="./root/garage.php" to="./garage.php" />
+			<file from="./root/garage_blog.php" to="./garage_blog.php" />
+			<file from="./root/garage_dynorun.php" to="./garage_dynorun.php" />
+			<file from="./root/garage_guestbook.php" to="./garage_guestbook.php" />
+			<file from="./root/garage_modification.php" to="./garage_modification.php" />
+			<file from="./root/garage_premium.php" to="./garage_premium.php" />
+			<file from="./root/garage_quartermile.php" to="./garage_quartermile.php" />
+			<file from="./root/garage_service.php" to="./garage_service.php" />
+			<file from="./root/garage_track.php" to="./garage_track.php" />
+			<file from="./root/garage_vehicle.php" to="./garage_vehicle.php" />
 		</copy>
 
 		<diy-instructions lang="en-gb"><![CDATA[Open your web browser and open the address http://www.yourdomain.com/pathtophpbb/garage/install/]]>
@@ -402,10 +414,9 @@ $template->assign_vars(array(
 			</edit>
 			<edit>
 				<find><![CDATA[		set_config('num_users', $config['num_users'] - 1, true);
-	}
-
-	$db->sql_transaction('commit');]]></find>
-				<action type="after-add"><![CDATA[//-- mod start : Garage ----------------------------------------------------------------------------------------------------
+	}]]></find>
+				<action type="after-add"><![CDATA[
+//-- mod start : Garage ----------------------------------------------------------------------------------------------------
 //-- add
 	if (!class_exists('garage_vehicle'))
 	{
@@ -556,9 +567,9 @@ img_garage_no_thumb		= garage_no_thumb.gif*25*120
 		<open src="styles/prosilver/template/overall_header.html">
 			<edit>
 				<find><![CDATA[			<ul class="linklist rightside">]]></find>
-					<action type="after-add"><![CDATA[					<!-- IF S_DISPLAY_GARAGE --><li><a href="{U_GARAGE}" title="{L_GARAGE}" class="icon-garage">{L_GARAGE}</a></li><!-- ENDIF -->
-						<!-- IF S_DISPLAY_QUARTERMILE --><li><a href="{U_QUARTERMILE}" title="{L_QUARTERMILE}" class="icon-quartermile">{L_QUARTERMILE}</a></li><!-- ENDIF -->
-						<!-- IF S_DISPLAY_DYNORUN --><li><a href="{U_DYNORUN}" title="{L_DYNORUN}" class="icon-dynorun">{L_DYNORUN}</a></li><!-- ENDIF -->
+					<action type="after-add"><![CDATA[				<!-- IF S_DISPLAY_GARAGE --><li><a href="{U_GARAGE}" title="{L_GARAGE}" class="icon-garage">{L_GARAGE}</a></li><!-- ENDIF -->
+				<!-- IF S_DISPLAY_QUARTERMILE --><li><a href="{U_QUARTERMILE}" title="{L_QUARTERMILE}" class="icon-quartermile">{L_QUARTERMILE}</a></li><!-- ENDIF -->
+				<!-- IF S_DISPLAY_DYNORUN --><li><a href="{U_DYNORUN}" title="{L_DYNORUN}" class="icon-dynorun">{L_DYNORUN}</a></li><!-- ENDIF -->
 ]]></action>
 			</edit>
 		</open>

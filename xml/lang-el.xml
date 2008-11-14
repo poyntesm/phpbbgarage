@@ -5,19 +5,24 @@
 <mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.1.xsd">
 	<header>
 		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
-    		<title lang="en-gb">phpBB Garage FR Language Pack Installation</title>
-    		<description lang="en-gb">Provide support for 'fr' language to phpBB Garage.</description>
-		<author-notes lang="en-gb"><![CDATA[- Please process also ./xml/xxx-fr.xml where xxx is your required template.
-Current available templates are :
+			<title lang="de">phpBB Garage - Deutsches Sprachpaket</title>
+    		<description lang="en-gb">Provide support for 'de' language to phpBB Garage.</description>
+    		<description lang="de">Diese Installationsdateien bieten eine deutsche Sprachausgabe für phpBB Garage.</description>
+
+			<author-notes lang="en-gb">Current available templates are :
 	- prosilver
-	- subSilver2]]></author-notes>
+	- subSilver2</author-notes>
+
+			<author-notes lang="de">Bisher werden folgende Templates unterstützt:
+	- prosilver
+	- subSilver2</author-notes>
 
 		<author-group>
 			<author>
-				<realname>Esmond Poynton</realname>
-				<email>esmond.poynton[at]gmail[dot]com</email>
-				<username>poyntesm</username>
-				<homepage>http://forums.phpbbgarage.com/</homepage>
+				<realname>Sven Drese</realname>
+				<email>webmaster[at]cbr-fighter[dot]de</email>
+				<username>cbr-fighter</username>
+				<homepage>http://www.cbr-fighter.de/</homepage>
 			</author>
 		</author-group>
 
@@ -30,15 +35,18 @@ Current available templates are :
 		</installation>
 
 		<link-group>
-			<link type="parent" href="./../Install Garage.xml" lang="fr">phpBB Garage</link>
+			<link type="parent" href="./../Install Garage.xml" lang="de">phpBB Garage</link>
 		</link-group>
 
 		<history>
 			<entry>
-        			<date>2007-xx-xx</date>
-			        <rev-version>1.0.0</rev-version>
+				<date>2008-10-04</date>
+				<rev-version>1.0.0</rev-version>
+				<changelog lang="de">
+					<change>Erste Version eines deutschen Sprachpakets veröffentlicht.</change>
+				</changelog>
 				<changelog lang="en-gb">
-					<change>First 'fr' language pack.</change>
+					<change>First 'de' language pack.</change>
 				</changelog>
 			</entry>
 		</history>
@@ -46,7 +54,7 @@ Current available templates are :
 
 	<action-group>
 		<copy>
-			<file from="./root/language/fr/*.*" to="./langauge/fr/" />
+			<file from="./root/language/de/*.*" to="./language/de/" />
 		</copy>
 	</action-group>
 </mod>
