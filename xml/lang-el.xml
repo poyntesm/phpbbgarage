@@ -5,24 +5,24 @@
 <mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.1.xsd">
 	<header>
 		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
-			<title lang="de">phpBB Garage - Deutsches Sprachpaket</title>
-    		<description lang="en-gb">Provide support for 'de' language to phpBB Garage.</description>
-    		<description lang="de">Diese Installationsdateien bieten eine deutsche Sprachausgabe für phpBB Garage.</description>
+			<title lang="de">phpBB Garage - Ελληνική Γλώσσα</title>
+    		<description lang="en-gb">Provide support for 'el' language to phpBB Garage.</description>
+    		<description lang="el">Αυτές είναι οι οδηγίες εγκατάστασης για το phpBB Garage στην Ελληνική γλώσσα.</description>
 
 			<author-notes lang="en-gb">Current available templates are :
 	- prosilver
 	- subSilver2</author-notes>
 
-			<author-notes lang="de">Bisher werden folgende Templates unterstützt:
+			<author-notes lang="el">Διαθέσιμα πρότυπα :
 	- prosilver
 	- subSilver2</author-notes>
 
 		<author-group>
 			<author>
-				<realname>Sven Drese</realname>
-				<email>webmaster[at]cbr-fighter[dot]de</email>
-				<username>cbr-fighter</username>
-				<homepage>http://www.cbr-fighter.de/</homepage>
+				<realname>ChriZathens</realname>
+				<email>techmaster[at]seatnet[dot]gr</email>
+				<username>ChriZathens</username>
+				<homepage>http://www.seatnet.gr/</homepage>
 			</author>
 		</author-group>
 
@@ -35,18 +35,18 @@
 		</installation>
 
 		<link-group>
-			<link type="parent" href="./../Install Garage.xml" lang="de">phpBB Garage</link>
+			<link type="parent" href="./../Install Garage.xml" lang="el">phpBB Garage</link>
 		</link-group>
 
 		<history>
 			<entry>
-				<date>2008-10-04</date>
+				<date>2008-11-10</date>
 				<rev-version>1.0.0</rev-version>
-				<changelog lang="de">
-					<change>Erste Version eines deutschen Sprachpakets veröffentlicht.</change>
+				<changelog lang="el">
+					<change>Πρώτη έκδοση της Ελληνικής γλώσσας.</change>
 				</changelog>
 				<changelog lang="en-gb">
-					<change>First 'de' language pack.</change>
+					<change>First 'el' language pack.</change>
 				</changelog>
 			</entry>
 		</history>
@@ -54,7 +54,7 @@
 
 	<action-group>
 		<copy>
-			<file from="./root/language/de/*.*" to="./language/de/" />
+			<file from="./root/language/el/*.*" to="./language/el/" />
 		</copy>
 	</action-group>
 </mod>
