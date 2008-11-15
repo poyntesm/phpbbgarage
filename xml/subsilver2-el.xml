@@ -5,16 +5,16 @@
 <mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.1.xsd">
 	<header>
 		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
-    		<title lang="de">phpBB Garage subSilver2 DE</title>
-			<description lang="en-gb">Provides subSilver2 DE language support for phpBB Garage</description>
-			<description lang="de">Deutscher subSilver2-Sprachausgabe f�r phpBB Garage</description>
+    		<title lang="el">phpBB Garage subSilver2 EL</title>
+			<description lang="en-gb">Provides subSilver2 EL language support for phpBB Garage</description>
+			<description lang="el">Οδηγίες εγκατάστασης του phpBB Garage για το πρότυπο subsilver2 στην Ελληνική γλώσσα</description>
 
 		<author-group>
 			<author>
-				<realname>Sven Drese</realname>
-				<email>webmaster[at]cbr-fighter[dot]de</email>
-				<username>cbr-fighter</username>
-				<homepage>http://www.cbr-fighter.de/</homepage>
+				<realname>ChriZ</realname>
+				<email>techmaster[at]seatnet[dot]gr</email>
+				<username>ChriZathens</username>
+				<homepage>http://www.seatnet.gr/</homepage>
 			</author>
 		</author-group>
 
@@ -27,18 +27,18 @@
 		</installation>
 
 		<link-group>
-			<link type="parent" href="./../Install Garage.xml" lang="de">phpBB Garage</link>
+			<link type="parent" href="./../Install Garage.xml" lang="el">phpBB Garage</link>
 		</link-group>
 
 		<history>
 			<entry>
 				<date>2008-10-04</date>
 				<rev-version>1.0.0</rev-version>
-				<changelog lang="de">
-					<change>Erste Version eines deutschen Sprachpakets ver�ffentlicht.</change>
+				<changelog lang="el">
+					<change>Πρώτη έκδοση της Ελληνικής γλώσσας.</change>
 				</changelog>
 				<changelog lang="en-gb">
-					<change>First 'de' language pack.</change>
+					<change>First 'el' language pack.</change>
 				</changelog>
 			</entry>
 		</history>
@@ -46,10 +46,10 @@
 
   	<action-group>
 		<copy>
-			<file from="./../root/styles/subsilver2/imageset/de/*.*" to="./styles/subsilver2/imageset/de/" />
+			<file from="./../root/styles/subsilver2/imageset/el/*.*" to="./styles/subsilver2/imageset/el/" />
 		</copy>
 
-		<open src="styles/subsilver2/imageset/de/imageset.cfg">
+		<open src="styles/subsilver2/imageset/el/imageset.cfg">
 			<edit>
 				<find>img_button_topic_reply = button_topic_reply.gif*27*115</find>
 				<action type="after-add">//-- mod start : Garage ----------------------------------------------------------------------------------------------------
@@ -82,6 +82,6 @@ img_garage_no_thumb		= garage_no_thumb.gif
 		</open>
 
 		<diy-instructions lang="en-gb"><![CDATA[Refresh theme & imagest & template cache in ACP]]></diy-instructions>
-		<diy-instructions lang="de"><![CDATA[Aktualisiere Template-, Theme- & Grafiksammlungs-Daten im ACP]]></diy-instructions>
+		<diy-instructions lang="el"><![CDATA[Ανανεώστε το πρότυπο, το θέμα & το σύνολο εικόνων στον Πίνακα Ελέγχου Διαχειριστή]]></diy-instructions>
 	</action-group>
 </mod>
