@@ -18,6 +18,9 @@ if (empty($lang) || !is_array($lang))
 	$lang = array();
 }
 
+/*
+* Language keys for auto-inclusion for UCP Module titles
+*/
 $lang = array_merge($lang, array(
 	'UCP_GARAGE'				=> 'Garage',
 	'UCP_GARAGE_OPTIONS'			=> 'Allgemeine Einstellungen bearbeiten',
