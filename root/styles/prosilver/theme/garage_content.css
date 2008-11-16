@@ -495,7 +495,7 @@ a.garage-camera-icon:hover, a.garage-delete-icon:hover, a.garage-edit-icon:hover
        background-image: url("{T_THEME_PATH}/images/corners_right_garage.png");
     }
 
-    #garage-main span.corners-top {
+    #garage-main .forabg span.corners-top {
     display: block;
     margin: 0 -5px;
     }
