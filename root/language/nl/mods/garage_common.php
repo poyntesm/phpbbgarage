@@ -24,7 +24,7 @@ $lang = array_merge($lang, array(
 	'DYNORUN'				=> 'Dynorun',
 	'PENDING_GARAGE_ITEMS'	=> 'Garage items ter goedkeuring',
 	'VIEWING_GARAGE'		=> 'Bekijk Garage',
-	'USERS_GARAGE'			=> 'Bekijke gebruiker\'s Garage',
+	'USERS_GARAGE'			=> 'Bekijk gebruiker\'s Garage',
 	'REMOVE_GARAGE_INSTALL'	=> 'Verwijder, verplaats of hernoem de garage installatie map voordat je de garage gaat gebruiken. Zolang deze map aanwezig is zal de garage niet toegankelijk zijn',
 	'GARAGE_DISABLE'		=> 'Excuses, de garage is momenteel niet beschikbaar omdat de administrator er werkzaamheden op uitvoert.',
 ));

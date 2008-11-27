@@ -59,8 +59,8 @@ $lang = array_merge($lang, array(
 		<li>Alle phpBB Garage modules</li>
 		<li>Alle phpBB Garage permissies</li>
 		</ul>',
-	'INSTALLMIN'						=> 'Installatie',
-	'INSTALL_INTRO_BODY'				=> 'Met deze optie is het mogelijk om phpBB Garage op jouw server te installeren.</p>
+
+	'INSTALL_INTRO_BODY'		=> 'Met deze optie is het mogelijk om phpBB garage op je server te installeren.</p>
 
 	<p><strong>Opmerking:</strong> Deze installatie tool helpt je stap voor stap door alle database gerelateerde wijzigingen. Ook helpt hij bij het bewerken van de core phpBB bestanden. Lees om de installatie af te ronden de MODX bestanden van de template en taal bestanden.</p>
 
@@ -125,7 +125,6 @@ $lang = array_merge($lang, array(
 	'SUB_LICENSE'						=> 'Licentie',
 	'SUB_SUPPORT'						=> 'Ondersteuning',
 	'SUCCESSFUL_CONNECT'				=> 'Successvolle verbinding',
-
 // TODO: Write some text on obtaining support
 	'SUPPORT_BODY'						=> 'Tijdens de beta fase zal er minimale ondersteuning te vinden zijn op <a href="http://forums.phpbbgarage.com/">het phpBB Garage support forum</a>. We zullen antwoorden geven op vragen over de algemene setup, configuratie problemen, conversie problemen en ondersteuning voor veel voorkomende problemen die meestal gerelateerd zijn aan bugs.',
 
