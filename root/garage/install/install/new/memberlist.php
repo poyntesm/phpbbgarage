@@ -3,7 +3,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id: memberlist.php 9054 2008-11-09 15:48:37Z toonarmy $
+* @version $Id: memberlist.php 9156 2008-12-02 18:48:25Z toonarmy $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -243,7 +243,7 @@ switch ($mode)
 			}
 
 			$rank_title = $rank_img = '';
-			get_user_rank($row['user_rank'], $row['user_posts'], $rank_title, $rank_img, $rank_img_src);
+			get_user_rank($row['user_rank'], (($row['user_id'] == ANONYMOUS) ? false : $row['user_posts']), $rank_title, $rank_img, $rank_img_src);
 
 			$template->assign_block_vars($which_row, array(
 				'USER_ID'		=> $row['user_id'],
@@ -585,7 +585,7 @@ switch ($mode)
 			'S_CUSTOM_FIELDS'	=> (isset($profile_fields['row']) && sizeof($profile_fields['row'])) ? true : false,
 
 			'U_USER_ADMIN'			=> ($auth->acl_get('a_user')) ? append_sid("{$phpbb_root_path}adm/index.$phpEx", 'i=users&amp;mode=overview&amp;u=' . $user_id, true, $user->session_id) : '',
-			'U_USER_BAN'			=> ($auth->acl_get('m_ban')) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=ban&amp;mode=user&amp;u=' . $user_id, true, $user->session_id) : '',
+			'U_USER_BAN'			=> ($auth->acl_get('m_ban') && $user_id != $user->data['user_id']) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=ban&amp;mode=user&amp;u=' . $user_id, true, $user->session_id) : '',
 			'U_MCP_QUEUE'			=> ($auth->acl_getf_global('m_approve')) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=queue', true, $user->session_id) : '',
 
 			'U_SWITCH_PERMISSIONS'	=> ($auth->acl_get('a_switchperm') && $user->data['user_id'] != $user_id) ? append_sid("{$phpbb_root_path}ucp.$phpEx", "mode=switch_perm&amp;u={$user_id}") : '',
@@ -1291,11 +1291,21 @@ switch ($mode)
 			$s_group_select = '<option value="0"' . ((!$group_selected) ? ' selected="selected"' : '') . '>&nbsp;</option>';
 			$group_ids = array();
 
+			/**
+			* @todo add this to a separate function (function is responsible for returning the groups the user is able to see based on the users group membership)
+			*/
+
 			if ($auth->acl_gets('a_group', 'a_groupadd', 'a_groupdel'))
 			{
 				$sql = 'SELECT group_id, group_name, group_type
-					FROM ' . GROUPS_TABLE . '
-					ORDER BY group_name ASC';
+					FROM ' . GROUPS_TABLE;
+
+				if (!$config['coppa_enable'])
+				{
+					$sql .= " WHERE group_name <> 'REGISTERED_COPPA'";
+				}
+
+				$sql .= ' ORDER BY group_name ASC';
 			}
 			else
 			{
@@ -1307,8 +1317,14 @@ switch ($mode)
 							AND ug.user_id = ' . $user->data['user_id'] . '
 							AND ug.user_pending = 0
 						)
-					WHERE (g.group_type <> ' . GROUP_HIDDEN . ' OR ug.user_id = ' . $user->data['user_id'] . ')
-					ORDER BY g.group_name ASC';
+					WHERE (g.group_type <> ' . GROUP_HIDDEN . ' OR ug.user_id = ' . $user->data['user_id'] . ')';
+
+				if (!$config['coppa_enable'])
+				{
+					$sql .= " AND g.group_name <> 'REGISTERED_COPPA'";
+				}
+
+				$sql .= ' ORDER BY g.group_name ASC';
 			}
 			$result = $db->sql_query($sql);
 
@@ -1557,7 +1573,7 @@ function show_profile($data)
 	$user_id = $data['user_id'];
 
 	$rank_title = $rank_img = $rank_img_src = '';
-	get_user_rank($data['user_rank'], $data['user_posts'], $rank_title, $rank_img, $rank_img_src);
+	get_user_rank($data['user_rank'], (($user_id == ANONYMOUS) ? false : $data['user_posts']), $rank_title, $rank_img, $rank_img_src);
 
 	if (!empty($data['user_allow_viewemail']) || $auth->acl_get('a_user'))
 	{

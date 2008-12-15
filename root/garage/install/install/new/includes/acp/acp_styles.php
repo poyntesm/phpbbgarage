@@ -3,7 +3,7 @@
 /**
 *
 * @package acp
-* @version $Id: acp_styles.php 9056 2008-11-09 19:38:44Z toonarmy $
+* @version $Id: acp_styles.php 9152 2008-12-02 16:49:59Z acydburn $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -2189,10 +2189,16 @@ parse_css_file = {PARSE_CSS_FILE}
 			$style_default = request_var('style_default', 0);
 			$store_db = request_var('store_db', 0);
 
-			$sql = "SELECT {$mode}_id
+			// If the admin selected the style to be the default style, but forgot to activate it... we will do it for him
+			if ($style_default)
+			{
+				$style_active = 1;
+			}
+
+			$sql = "SELECT {$mode}_id, {$mode}_name
 				FROM $sql_from
 				WHERE {$mode}_id <> $style_id
-				AND {$mode}_name = '" . $db->sql_escape(strtolower($name)) . "'";
+				AND LOWER({$mode}_name) = '" . $db->sql_escape(strtolower($name)) . "'";
 			$result = $db->sql_query($sql);
 			$conflict = $db->sql_fetchrow($result);
 			$db->sql_freeresult($result);
@@ -3219,7 +3225,7 @@ parse_css_file = {PARSE_CSS_FILE}
 		{
 			$sql = "SELECT {$mode}_id, {$mode}_name, {$mode}_path, {$mode}_storedb
 				FROM $sql_from
-				WHERE {$mode}_name = '" . $db->sql_escape(strtolower($cfg_data['inherit_from'])) . "'
+				WHERE {$mode}_name = '" . $db->sql_escape($cfg_data['inherit_from']) . "'
 					AND {$mode}_inherits_id = 0";
 			$result = $db->sql_query($sql);
 			$row = $db->sql_fetchrow($result);
