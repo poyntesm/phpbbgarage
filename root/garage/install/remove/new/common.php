@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id: common.php,v 1.214 2007/11/18 15:37:17 naderman Exp $
+* @version $Id: common.php 8760 2008-08-15 19:46:51Z aptx $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -103,7 +103,7 @@ if (version_compare(PHP_VERSION, '6.0.0-dev', '>='))
 }
 else
 {
-	set_magic_quotes_runtime(0);
+	@set_magic_quotes_runtime(0);
 
 	// Be paranoid with passed vars
 	if (@ini_get('register_globals') == '1' || strtolower(@ini_get('register_globals')) == 'on' || !function_exists('ini_get'))
@@ -131,7 +131,7 @@ if (!defined('PHPBB_INSTALLED'))
 	// Redirect the user to the installer
 	// We have to generate a full HTTP/1.1 header here since we can't guarantee to have any of the information
 	// available as used by the redirect function
-	$server_name = (!empty($_SERVER['SERVER_NAME'])) ? $_SERVER['SERVER_NAME'] : getenv('SERVER_NAME');
+	$server_name = (!empty($_SERVER['HTTP_HOST'])) ? strtolower($_SERVER['HTTP_HOST']) : ((!empty($_SERVER['SERVER_NAME'])) ? $_SERVER['SERVER_NAME'] : getenv('SERVER_NAME'));
 	$server_port = (!empty($_SERVER['SERVER_PORT'])) ? (int) $_SERVER['SERVER_PORT'] : (int) getenv('SERVER_PORT');
 	$secure = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 1 : 0;
 
@@ -150,7 +150,11 @@ if (!defined('PHPBB_INSTALLED'))
 
 	if ($server_port && (($secure && $server_port <> 443) || (!$secure && $server_port <> 80)))
 	{
-		$url .= ':' . $server_port;
+		// HTTP HOST can carry a port number...
+		if (strpos($server_name, ':') === false)
+		{
+			$url .= ':' . $server_port;
+		}
 	}
 
 	$url .= $script_path;

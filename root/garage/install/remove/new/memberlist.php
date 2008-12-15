@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB3
-* @version $Id: memberlist.php,v 1.254 2007/10/05 14:30:06 acydburn Exp $
+* @version $Id: memberlist.php 9156 2008-12-02 18:48:25Z toonarmy $
 * @copyright (c) 2005 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -129,7 +129,7 @@ switch ($mode)
 		$admin_memberships = group_memberships($admin_group_id, $admin_id_ary);
 
 		$admin_user_ids = array();
-		
+
 		if (!empty($admin_memberships))
 		{
 			// ok, we only need the user ids...
@@ -141,10 +141,9 @@ switch ($mode)
 		unset($admin_memberships);
 
 		$sql = 'SELECT forum_id, forum_name
-			FROM ' . FORUMS_TABLE . '
-			WHERE forum_type = ' . FORUM_POST;
+			FROM ' . FORUMS_TABLE;
 		$result = $db->sql_query($sql);
-		
+
 		$forums = array();
 		while ($row = $db->sql_fetchrow($result))
 		{
@@ -239,7 +238,7 @@ switch ($mode)
 			}
 
 			$rank_title = $rank_img = '';
-			get_user_rank($row['user_rank'], $row['user_posts'], $rank_title, $rank_img, $rank_img_src);
+			get_user_rank($row['user_rank'], (($row['user_id'] == ANONYMOUS) ? false : $row['user_posts']), $rank_title, $rank_img, $rank_img_src);
 
 			$template->assign_block_vars($which_row, array(
 				'USER_ID'		=> $row['user_id'],
@@ -528,13 +527,32 @@ switch ($mode)
 			unset($module);
 		}
 
+		// If the user has m_approve permission or a_user permission, then list then display unapproved posts
+		if ($auth->acl_getf_global('m_approve') || $auth->acl_get('a_user'))
+		{
+			$sql = 'SELECT COUNT(post_id) as posts_in_queue
+				FROM ' . POSTS_TABLE . '
+				WHERE poster_id = ' . $user_id . '
+					AND post_approved = 0';
+			$result = $db->sql_query($sql);
+			$member['posts_in_queue'] = (int) $db->sql_fetchfield('posts_in_queue');
+			$db->sql_freeresult($result);
+		}
+		else
+		{
+			$member['posts_in_queue'] = 0;
+		}
+
 		$template->assign_vars(array(
+			'L_POSTS_IN_QUEUE'	=> $user->lang('NUM_POSTS_IN_QUEUE', $member['posts_in_queue']),
+
 			'POSTS_DAY'			=> sprintf($user->lang['POST_DAY'], $posts_per_day),
 			'POSTS_PCT'			=> sprintf($user->lang['POST_PCT'], $percentage),
 
 			'OCCUPATION'	=> (!empty($member['user_occ'])) ? censor_text($member['user_occ']) : '',
 			'INTERESTS'		=> (!empty($member['user_interests'])) ? censor_text($member['user_interests']) : '',
 			'SIGNATURE'		=> $member['user_sig'],
+			'POSTS_IN_QUEUE'=> $member['posts_in_queue'],
 
 			'AVATAR_IMG'	=> $poster_avatar,
 			'PM_IMG'		=> $user->img('icon_contact_pm', $user->lang['SEND_PRIVATE_MESSAGE']),
@@ -552,6 +570,9 @@ switch ($mode)
 			'S_CUSTOM_FIELDS'	=> (isset($profile_fields['row']) && sizeof($profile_fields['row'])) ? true : false,
 
 			'U_USER_ADMIN'			=> ($auth->acl_get('a_user')) ? append_sid("{$phpbb_root_path}adm/index.$phpEx", 'i=users&amp;mode=overview&amp;u=' . $user_id, true, $user->session_id) : '',
+			'U_USER_BAN'			=> ($auth->acl_get('m_ban') && $user_id != $user->data['user_id']) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=ban&amp;mode=user&amp;u=' . $user_id, true, $user->session_id) : '',
+			'U_MCP_QUEUE'			=> ($auth->acl_getf_global('m_approve')) ? append_sid("{$phpbb_root_path}mcp.$phpEx", 'i=queue', true, $user->session_id) : '',
+
 			'U_SWITCH_PERMISSIONS'	=> ($auth->acl_get('a_switchperm') && $user->data['user_id'] != $user_id) ? append_sid("{$phpbb_root_path}ucp.$phpEx", "mode=switch_perm&amp;u={$user_id}") : '',
 
 			'S_ZEBRA'			=> ($user->data['user_id'] != $user_id && $user->data['is_registered'] && $zebra_enabled) ? true : false,
@@ -881,21 +902,23 @@ switch ($mode)
 		$template_html = 'memberlist_body.html';
 
 		// Sorting
-		$sort_key_text = array('a' => $user->lang['SORT_USERNAME'], 'b' => $user->lang['SORT_LOCATION'], 'c' => $user->lang['SORT_JOINED'], 'd' => $user->lang['SORT_POST_COUNT'], 'e' => $user->lang['SORT_EMAIL'], 'f' => $user->lang['WEBSITE'], 'g' => $user->lang['ICQ'], 'h' => $user->lang['AIM'], 'i' => $user->lang['MSNM'], 'j' => $user->lang['YIM'], 'k' => $user->lang['JABBER']);
+		$sort_key_text = array('a' => $user->lang['SORT_USERNAME'], 'b' => $user->lang['SORT_LOCATION'], 'c' => $user->lang['SORT_JOINED'], 'd' => $user->lang['SORT_POST_COUNT'], 'f' => $user->lang['WEBSITE'], 'g' => $user->lang['ICQ'], 'h' => $user->lang['AIM'], 'i' => $user->lang['MSNM'], 'j' => $user->lang['YIM'], 'k' => $user->lang['JABBER']);
+		$sort_key_sql = array('a' => 'u.username_clean', 'b' => 'u.user_from', 'c' => 'u.user_regdate', 'd' => 'u.user_posts', 'f' => 'u.user_website', 'g' => 'u.user_icq', 'h' => 'u.user_aim', 'i' => 'u.user_msnm', 'j' => 'u.user_yim', 'k' => 'u.user_jabber');
+
+		if ($auth->acl_get('a_user'))
+		{
+			$sort_key_text['e'] = $user->lang['SORT_EMAIL'];
+			$sort_key_sql['e'] = 'u.user_email';
+		}
 
 		if ($auth->acl_get('u_viewonline'))
 		{
 			$sort_key_text['l'] = $user->lang['SORT_LAST_ACTIVE'];
-		}
-		$sort_key_text['m'] = $user->lang['SORT_RANK'];
-
-		$sort_key_sql = array('a' => 'u.username_clean', 'b' => 'u.user_from', 'c' => 'u.user_regdate', 'd' => 'u.user_posts', 'e' => 'u.user_email', 'f' => 'u.user_website', 'g' => 'u.user_icq', 'h' => 'u.user_aim', 'i' => 'u.user_msnm', 'j' => 'u.user_yim', 'k' => 'u.user_jabber');
-
-		if ($auth->acl_get('u_viewonline'))
-		{
 			$sort_key_sql['l'] = 'u.user_lastvisit';
 		}
-		$sort_key_sql['m'] = 'u.user_rank DESC, u.user_posts';
+
+		$sort_key_text['m'] = $user->lang['SORT_RANK'];
+		$sort_key_sql['m'] = 'u.user_rank';
 
 		$sort_dir_text = array('a' => $user->lang['ASCENDING'], 'd' => $user->lang['DESCENDING']);
 
@@ -922,10 +945,13 @@ switch ($mode)
 		$field			= request_var('field', '');
 		$select_single 	= request_var('select_single', false);
 
+		// Search URL parameters, if any of these are in the URL we do a search
+		$search_params = array('username', 'email', 'icq', 'aim', 'yahoo', 'msn', 'jabber', 'search_group_id', 'joined_select', 'active_select', 'count_select', 'joined', 'active', 'count', 'ip');
+
 		// We validate form and field here, only id/class allowed
 		$form = (!preg_match('/^[a-z0-9_-]+$/i', $form)) ? '' : $form;
 		$field = (!preg_match('/^[a-z0-9_-]+$/i', $field)) ? '' : $field;
-		if ($mode == 'searchuser' && ($config['load_search'] || $auth->acl_get('a_')))
+		if (($mode == 'searchuser' || sizeof(array_intersect(array_keys($_GET), $search_params)) > 0) && ($config['load_search'] || $auth->acl_get('a_')))
 		{
 			$username	= request_var('username', '', true);
 			$email		= strtolower(request_var('email', ''));
@@ -970,7 +996,7 @@ switch ($mode)
 			}
 
 			$sql_where .= ($username) ? ' AND u.username_clean ' . $db->sql_like_expression(str_replace('*', $db->any_char, utf8_clean_string($username))) : '';
-			$sql_where .= ($email) ? ' AND u.user_email ' . $db->sql_like_expression(str_replace('*', $db->any_char, $email)) . ' ' : '';
+			$sql_where .= ($auth->acl_get('a_user') && $email) ? ' AND u.user_email ' . $db->sql_like_expression(str_replace('*', $db->any_char, $email)) . ' ' : '';
 			$sql_where .= ($icq) ? ' AND u.user_icq ' . $db->sql_like_expression(str_replace('*', $db->any_char, $icq)) . ' ' : '';
 			$sql_where .= ($aim) ? ' AND u.user_aim ' . $db->sql_like_expression(str_replace('*', $db->any_char, $aim)) . ' ' : '';
 			$sql_where .= ($yahoo) ? ' AND u.user_yim ' . $db->sql_like_expression(str_replace('*', $db->any_char, $yahoo)) . ' ' : '';
@@ -1136,7 +1162,7 @@ switch ($mode)
 				'RANK_IMG'		=> $rank_img,
 				'RANK_IMG_SRC'	=> $rank_img_src,
 
-				'U_PM'			=> ($auth->acl_get('u_sendpm') && $auth->acl_get('u_masspm') && $group_row['group_receive_pm'] && $config['allow_privmsg'] && $config['allow_mass_pm']) ? append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;mode=compose&amp;g=' . $group_id) : '',)
+				'U_PM'			=> ($auth->acl_get('u_sendpm') && $auth->acl_get('u_masspm_group') && $group_row['group_receive_pm'] && $config['allow_privmsg'] && $config['allow_mass_pm']) ? append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;mode=compose&amp;g=' . $group_id) : '',)
 			);
 
 			$sql_select = ', ug.group_leader';
@@ -1146,7 +1172,7 @@ switch ($mode)
 			$sql_where .= " AND ug.user_pending = 0 AND u.user_id = ug.user_id AND ug.group_id = $group_id";
 			$sql_where_data = " AND u.user_id = ug.user_id AND ug.group_id = $group_id";
 		}
-		
+
 		// Sorting and order
 		if (!isset($sort_key_sql[$sort_key]))
 		{
@@ -1154,6 +1180,12 @@ switch ($mode)
 		}
 
 		$order_by .= $sort_key_sql[$sort_key] . ' ' . (($sort_dir == 'a') ? 'ASC' : 'DESC');
+
+		// Unfortunately we must do this here for sorting by rank, else the sort order is applied wrongly
+		if ($sort_key == 'm')
+		{
+			$order_by .= ', u.user_posts DESC';
+		}
 
 		// Count the users ...
 		if ($sql_where)
@@ -1188,7 +1220,7 @@ switch ($mode)
 			'sd'			=> array('sd', 'a'),
 			'form'			=> array('form', ''),
 			'field'			=> array('field', ''),
-			'select_single'	=> array('select_single', 0),
+			'select_single'	=> array('select_single', $select_single),
 			'username'		=> array('username', '', true),
 			'email'			=> array('email', ''),
 			'icq'			=> array('icq', ''),
@@ -1224,26 +1256,41 @@ switch ($mode)
 			}
 		}
 
-		$u_hide_find_member = append_sid("{$phpbb_root_path}memberlist.$phpEx", implode('&amp;', $params));
+		$u_hide_find_member = append_sid("{$phpbb_root_path}memberlist.$phpEx", "start=$start" . (!empty($params) ? '&amp;' . implode('&amp;', $params) : ''));
 
-		$params[] = "mode=$mode";
+		if ($mode)
+		{
+			$params[] = "mode=$mode";
+		}
 		$sort_params[] = "mode=$mode";
+
 		$pagination_url = append_sid("{$phpbb_root_path}memberlist.$phpEx", implode('&amp;', $params));
 		$sort_url = append_sid("{$phpbb_root_path}memberlist.$phpEx", implode('&amp;', $sort_params));
 
-		unset($params, $sort_params);
+		unset($search_params, $sort_params);
 
 		// Some search user specific data
 		if ($mode == 'searchuser' && ($config['load_search'] || $auth->acl_get('a_')))
 		{
 			$group_selected = request_var('search_group_id', 0);
 			$s_group_select = '<option value="0"' . ((!$group_selected) ? ' selected="selected"' : '') . '>&nbsp;</option>';
+			$group_ids = array();
+
+			/**
+			* @todo add this to a separate function (function is responsible for returning the groups the user is able to see based on the users group membership)
+			*/
 
 			if ($auth->acl_gets('a_group', 'a_groupadd', 'a_groupdel'))
 			{
 				$sql = 'SELECT group_id, group_name, group_type
-					FROM ' . GROUPS_TABLE . '
-					ORDER BY group_name ASC';
+					FROM ' . GROUPS_TABLE;
+
+				if (!$config['coppa_enable'])
+				{
+					$sql .= " WHERE group_name <> 'REGISTERED_COPPA'";
+				}
+
+				$sql .= ' ORDER BY group_name ASC';
 			}
 			else
 			{
@@ -1255,16 +1302,28 @@ switch ($mode)
 							AND ug.user_id = ' . $user->data['user_id'] . '
 							AND ug.user_pending = 0
 						)
-					WHERE (g.group_type <> ' . GROUP_HIDDEN . ' OR ug.user_id = ' . $user->data['user_id'] . ')
-					ORDER BY g.group_name ASC';
+					WHERE (g.group_type <> ' . GROUP_HIDDEN . ' OR ug.user_id = ' . $user->data['user_id'] . ')';
+
+				if (!$config['coppa_enable'])
+				{
+					$sql .= " AND g.group_name <> 'REGISTERED_COPPA'";
+				}
+
+				$sql .= ' ORDER BY g.group_name ASC';
 			}
 			$result = $db->sql_query($sql);
 
 			while ($row = $db->sql_fetchrow($result))
 			{
+				$group_ids[] = $row['group_id'];
 				$s_group_select .= '<option value="' . $row['group_id'] . '"' . (($group_selected == $row['group_id']) ? ' selected="selected"' : '') . '>' . (($row['group_type'] == GROUP_SPECIAL) ? $user->lang['G_' . $row['group_name']] : $row['group_name']) . '</option>';
 			}
 			$db->sql_freeresult($result);
+
+			if ($group_selected !== 0 && !in_array($group_selected, $group_ids))
+			{
+				trigger_error('NO_GROUP');
+			}
 
 			$template->assign_vars(array(
 				'USERNAME'	=> $username,
@@ -1280,6 +1339,7 @@ switch ($mode)
 				'IP'		=> $ipdomain,
 
 				'S_IP_SEARCH_ALLOWED'	=> ($auth->acl_getf_global('m_info')) ? true : false,
+				'S_EMAIL_SEARCH_ALLOWED'=> ($auth->acl_get('a_user')) ? true : false,
 				'S_IN_SEARCH_POPUP'		=> ($form && $field) ? true : false,
 				'S_SEARCH_USER'			=> true,
 				'S_FORM_NAME'			=> $form,
@@ -1309,7 +1369,7 @@ switch ($mode)
 			$user_list[] = (int) $row['user_id'];
 		}
 		$db->sql_freeresult($result);
-
+		$leaders_set = false;
 		// So, did we get any users?
 		if (sizeof($user_list))
 		{
@@ -1369,14 +1429,16 @@ switch ($mode)
 			// If we sort by last active date we need to adjust the id cache due to user_lastvisit not being the last active date...
 			if ($sort_key == 'l')
 			{
-				$lesser_than = ($sort_dir == 'a') ? -1 : 1;
-				uasort($id_cache, create_function('$first, $second', "return (\$first['last_visit'] == \$second['last_visit']) ? 0 : ((\$first['last_visit'] < \$second['last_visit']) ? $lesser_than : ($lesser_than * -1));"));
+//				uasort($id_cache, create_function('$first, $second', "return (\$first['last_visit'] == \$second['last_visit']) ? 0 : ((\$first['last_visit'] < \$second['last_visit']) ? $lesser_than : ($lesser_than * -1));"));
+				usort($user_list,  '_sort_last_active');
 			}
 
 			for ($i = 0, $end = sizeof($user_list); $i < $end; ++$i)
 			{
 				$user_id = $user_list[$i];
 				$row =& $id_cache[$user_id];
+				$is_leader = (isset($row['group_leader']) && $row['group_leader']) ? true : false;
+				$leaders_set = ($leaders_set || $is_leader);
 
 				$cp_row = array();
 				if ($config['load_cpf_memberlist'])
@@ -1388,7 +1450,7 @@ switch ($mode)
 					'ROW_NUMBER'		=> $i + ($start + 1),
 
 					'S_CUSTOM_PROFILE'	=> (isset($cp_row['row']) && sizeof($cp_row['row'])) ? true : false,
-					'S_GROUP_LEADER'	=> (isset($row['group_leader']) && $row['group_leader']) ? true : false,
+					'S_GROUP_LEADER'	=> $is_leader,
 
 					'U_VIEW_PROFILE'	=> append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=viewprofile&amp;u=' . $user_id))
 				);
@@ -1429,7 +1491,7 @@ switch ($mode)
 			'JABBER_IMG'	=> $user->img('icon_contact_jabber', $user->lang['JABBER']),
 			'SEARCH_IMG'	=> $user->img('icon_user_search', $user->lang['SEARCH']),
 
-			'U_FIND_MEMBER'			=> ($config['load_search'] || $auth->acl_get('a_')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=searchuser') : '',
+			'U_FIND_MEMBER'			=> ($config['load_search'] || $auth->acl_get('a_')) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=searchuser' . (($start) ? "&amp;start=$start" : '') . (!empty($params) ? '&amp;' . implode('&amp;', $params) : '')) : '',
 			'U_HIDE_FIND_MEMBER'	=> ($mode == 'searchuser') ? $u_hide_find_member : '',
 			'U_SORT_USERNAME'		=> $sort_url . '&amp;sk=a&amp;sd=' . (($sort_key == 'a' && $sort_dir == 'a') ? 'd' : 'a'),
 			'U_SORT_FROM'			=> $sort_url . '&amp;sk=b&amp;sd=' . (($sort_key == 'b' && $sort_dir == 'a') ? 'd' : 'a'),
@@ -1448,6 +1510,7 @@ switch ($mode)
 
 			'S_SHOW_GROUP'		=> ($mode == 'group') ? true : false,
 			'S_VIEWONLINE'		=> $auth->acl_get('u_viewonline'),
+			'S_LEADERS_SET'		=> $leaders_set,
 			'S_MODE_SELECT'		=> $s_sort_key,
 			'S_ORDER_SELECT'	=> $s_sort_dir,
 			'S_CHAR_OPTIONS'	=> $s_char_options,
@@ -1476,11 +1539,11 @@ function show_profile($data)
 	$user_id = $data['user_id'];
 
 	$rank_title = $rank_img = $rank_img_src = '';
-	get_user_rank($data['user_rank'], $data['user_posts'], $rank_title, $rank_img, $rank_img_src);
+	get_user_rank($data['user_rank'], (($user_id == ANONYMOUS) ? false : $data['user_posts']), $rank_title, $rank_img, $rank_img_src);
 
-	if (!empty($data['user_allow_viewemail']) || $auth->acl_get('a_email'))
+	if (!empty($data['user_allow_viewemail']) || $auth->acl_get('a_user'))
 	{
-		$email = ($config['board_email_form'] && $config['email_enable']) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=email&amp;u=' . $user_id) : (($config['board_hide_emails'] && !$auth->acl_get('a_email')) ? '' : 'mailto:' . $data['user_email']);
+		$email = ($config['board_email_form'] && $config['email_enable']) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=email&amp;u=' . $user_id) : (($config['board_hide_emails'] && !$auth->acl_get('a_user')) ? '' : 'mailto:' . $data['user_email']);
 	}
 	else
 	{
@@ -1546,6 +1609,7 @@ function show_profile($data)
 
 		'A_USERNAME'		=> addslashes(get_username_string('username', $user_id, $username, $data['user_colour'])),
 
+		'AVATAR_IMG'		=> get_user_avatar($data['user_avatar'], $data['user_avatar_type'], $data['user_avatar_width'], $data['user_avatar_height']),
 		'ONLINE_IMG'		=> (!$config['load_onlinetrack']) ? '' : (($online) ? $user->img('icon_user_online', 'ONLINE') : $user->img('icon_user_offline', 'OFFLINE')),
 		'S_ONLINE'			=> ($config['load_onlinetrack'] && $online) ? true : false,
 		'RANK_IMG'			=> $rank_img,
@@ -1575,6 +1639,26 @@ function show_profile($data)
 
 		'L_VIEWING_PROFILE'	=> sprintf($user->lang['VIEWING_PROFILE'], $username),
 	);
+}
+
+function _sort_last_active($first, $second)
+{
+	global $id_cache, $sort_dir;
+
+	$lesser_than = ($sort_dir === 'd') ? -1 : 1;
+
+	if (isset($id_cache[$first]['group_leader']) && $id_cache[$first]['group_leader'] && (!isset($id_cache[$second]['group_leader']) || !$id_cache[$second]['group_leader']))
+	{
+		return -1;
+	}
+	else if (isset($id_cache[$second]['group_leader']) && (!isset($id_cache[$first]['group_leader']) || !$id_cache[$first]['group_leader']) && $id_cache[$second]['group_leader'])
+	{
+		return 1;
+	}
+	else
+	{
+		return $lesser_than * (int) ($id_cache[$first]['last_visit'] - $id_cache[$second]['last_visit']);
+	}
 }
 
 ?>
