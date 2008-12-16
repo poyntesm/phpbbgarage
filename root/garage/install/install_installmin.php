@@ -102,7 +102,7 @@ class install_installmin extends module
 
 				$submit = $lang['NEXT_STEP'];
 
-				$url = $this->p_master->module_url . "?mode=$mode&amp;sub=fina;";
+				$url = $this->p_master->module_url . "?mode=$mode&amp;sub=final";
 
 				$template->assign_vars(array(
 					'BODY'		=> $lang['STAGE_INSTALL_MODULES_EXPLAIN'],
@@ -113,7 +113,7 @@ class install_installmin extends module
 
 			case 'final':
 
-				$this->tpl_name = 'garage_install_install';
+				$this->tpl_name = 'garage_install_installmin';
 				// Remove the lock file
 				@unlink($phpbb_root_path . 'cache/install_lock');
 

@@ -141,7 +141,7 @@ class garage_guestbook
 	*/
 	function delete_comment($comment_id)
 	{
-		global $db;
+		global $db, $garage;
 
 		$garage->delete_rows(GARAGE_GUESTBOOKS_TABLE, 'id', $comment_id);
 
@@ -712,7 +712,7 @@ class garage_guestbook
 				'U_YIM'			=> $user_cache[$poster_id]['yim'],
 				'U_AIM'			=> $user_cache[$poster_id]['aim'],
 				'U_JABBER'		=> $user_cache[$poster_id]['jabber'],
-				'U_DELETE'		=> ($auth->acl_get('m_garage_delete')) ? append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=delete_comment&amp;CMT_ID={$comment_data[$i]['comment_id']}") : '',
+				'U_DELETE'		=> ($auth->acl_get('m_garage_delete')) ? append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=delete_comment&amp;VID=$vid&amp;CMT_ID={$comment_data[$i]['comment_id']}") : '',
 				'U_EDIT'		=> ($auth->acl_get('m_garage_edit')) ? append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=edit_comment&amp;CMT_ID={$comment_data[$i]['comment_id']}") : '',
 				'U_POST_AUTHOR'		=> get_username_string('profile', $poster_id, $comment_data[$i]['username'], $comment_data[$i]['user_colour'], $comment_data[$i]['post_username']),
 

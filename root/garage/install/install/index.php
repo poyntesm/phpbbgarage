@@ -8,7 +8,7 @@ if (!defined('IN_PHPBB'))
 // Set install info with file structure to update
 $install_info = array(
 	'version'	=> array(
-		'install' => '2.0.B4-DEV',
+		'install' => '2.0.B4',
 	),
 	'files'		=> array(
 		'common.php',

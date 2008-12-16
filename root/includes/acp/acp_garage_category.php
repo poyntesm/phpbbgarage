@@ -40,9 +40,9 @@ class acp_garage_category
 		/**
 		* Setup page variables such as title, template & available language strings
 		*/
-		$user->add_lang('acp/garage');
+		$user->add_lang(array('acp/garage', 'mods/garage'));
 		$this->tpl_name = 'acp_garage_category';
-		$this->page_title = 'ACP_MANAGE_CATEGORY';
+		$this->page_title = 'GARAGE_CAT_TITLE';
 
 		/**
 		* Setup variables required

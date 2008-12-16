@@ -34,9 +34,9 @@ class acp_garage_quota
 		/**
 		* Setup page variables such as title, template & available language strings
 		*/
-		$user->add_lang('acp/garage');
+		$user->add_lang(array('acp/garage', 'mods/garage'));
 		$this->tpl_name = 'acp_garage_quota';
-		$this->page_title = 'ACP_MANAGE_QUOTAS';
+		$this->page_title = 'QUOTA_TITLE';
 
 		/**
 		* Build All Garage Classes e.g $garage_images->

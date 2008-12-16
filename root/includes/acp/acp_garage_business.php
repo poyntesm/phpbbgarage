@@ -41,9 +41,9 @@ class acp_garage_business
 		/**
 		* Setup page variables such as title, template & available language strings
 		*/
-		$user->add_lang('acp/garage');
+		$user->add_lang(array('acp/garage', 'mods/garage'));
 		$this->tpl_name = 'acp_garage_business';
-		$this->page_title = 'ACP_MANAGE_BUSINESS';
+		$this->page_title = 'GARAGE_BUSINESS_TITLE';
 
 		/**
 		* Setup variables 

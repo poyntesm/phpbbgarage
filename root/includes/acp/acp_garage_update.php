@@ -29,10 +29,10 @@ class acp_garage_update
 		global $db, $user, $auth, $template, $cache, $garage_config;
 		global $phpbb_root_path, $phpbb_admin_path, $phpEx;
 
-		$user->add_lang(array('acp/garage', 'mods/garage_install'));
+		$user->add_lang(array('acp/garage', 'mods/garage', 'mods/garage_install'));
 
 		$this->tpl_name = 'acp_update';
-		$this->page_title = 'ACP_GARAGE_VERSION_CHECK';
+		$this->page_title = 'GARAGE_VERSION_CHECK';
 
 		// Get current and latest version
 		$errstr = '';

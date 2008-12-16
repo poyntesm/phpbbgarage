@@ -18,6 +18,9 @@ if (empty($lang) || !is_array($lang))
 	$lang = array();
 }
 
+/*
+* Language keys for phpBB core file
+*/
 $lang = array_merge($lang, array(
 	'GARAGE'			=> 'Garage',
 	'QUARTERMILE'			=> '&frac14; Mile',

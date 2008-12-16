@@ -369,7 +369,7 @@ switch( $mode )
 		/**
 		* All work complete for mode, so redirect to correct page
 		*/
-		redirect(append_sid("{$phpbb_root_path}garage_guestbook.$phpEx", "mode=view_guestbook&amp;VID=$vid"));
+		redirect(append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=view_vehicle&amp;VID=$vid#guestbook"));
 	break;
 }
 $garage_template->version_notice();

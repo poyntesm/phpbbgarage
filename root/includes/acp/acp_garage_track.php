@@ -42,7 +42,7 @@ class acp_garage_track
 		*/
 		$user->add_lang(array('acp/garage', 'mods/garage'));
 		$this->tpl_name = 'acp_garage_track';
-		$this->page_title = 'ACP_MANAGE_TRACKS';
+		$this->page_title = 'GARAGE_TRACK_TITLE';
 
 		/**
 		* Setup variables required

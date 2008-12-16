@@ -18,6 +18,9 @@ if (empty($lang) || !is_array($lang))
 	$lang = array();
 }
 
+/*
+* Language keys for auto-inclusion for MCP Module titles
+*/
 $lang = array_merge($lang, array(
 	'MCP_GARAGE'					=> 'Garage',
 	'MCP_GARAGE_UNAPPROVED_VEHICLES'		=> 'Vehicles awaiting approval',

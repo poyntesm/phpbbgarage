@@ -18,6 +18,9 @@ if (empty($lang) || !is_array($lang))
 	$lang = array();
 }
 
+/*
+* Language keys for use in acp_styles.php
+*/
 $lang = array_merge($lang, array(
 	'IMG_CAT_GARAGE'		=> 'phpBB Garage images',
 	'IMG_GARAGE_IMG_ATTACHED'	=> 'Image attached',

@@ -41,9 +41,9 @@ class acp_garage_model
 		/**
 		* Setup page variables such as title, template & available language strings
 		*/
-		$user->add_lang('acp/garage');
+		$user->add_lang(array('acp/garage', 'mods/garage'));
 		$this->tpl_name = 'acp_garage_model';
-		$this->page_title = 'ACP_MANAGE_MAKES_MODELS';
+		$this->page_title = 'MODELS_TITLE';
 
 		/**
 		* Setup variables 

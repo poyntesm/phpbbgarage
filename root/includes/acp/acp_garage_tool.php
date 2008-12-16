@@ -36,7 +36,7 @@ class acp_garage_tool
 		*/
 		$user->add_lang(array('acp/garage', 'mods/garage'));
 		$this->tpl_name = 'acp_garage_tool';
-		$this->page_title = 'ACP_GARAGE_TOOLS';
+		$this->page_title = 'TOOLS_TITLE';
 
 		/**
 		* Build All Garage Classes e.g $garage_images->

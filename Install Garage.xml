@@ -19,33 +19,21 @@
 			</author>
 		</author-group>
 
-		<mod-version>2.0.B4-DEV</mod-version>
+		<mod-version>2.0.B4</mod-version>
 
 		<installation>
 			<level>advanced</level>
 			<time>1800</time>
-			<target-version>3.0.3</target-version>
+			<target-version>3.0.4</target-version>
 		</installation>
 
 		<link-group>
-			<link type="template" href="./xml/prosilver-fr.xml" lang="fr">prosilver French</link>
-			<link type="template" href="./xml/prosilver-de.xml" lang="de">prosilver German (Casual Honorifics)</link>
-			<link type="template" href="./xml/prosilver-it.xml" lang="it">prosilver Italian</link>
-			<link type="template" href="./xml/prosilver-el.xml" lang="it">prosilver Greek</link>
 			<link type="template" href="./xml/subsilver2-en.xml" lang="en">subSilver2 English</link>
-			<link type="template" href="./xml/subsilver2-fr.xml" lang="fr">subSilver2 French</link>
-			<link type="template" href="./xml/subsilver2-de.xml" lang="de">subSilver2 German (Casual Honorifics)</link>
-			<link type="template" href="./xml/subsilver2-it.xml" lang="it">subSilver2 Italian</link>
-			<link type="template" href="./xml/subsilver2-el.xml" lang="it">subSilver2 Greek</link>
-			<link type="language" href="./xml/lang-fr.xml" lang="fr">French</link>
-			<link type="language" href="./xml/lang-de.xml" lang="de">German (Casual Honorifics)</link>
-			<link type="language" href="./xml/lang-it.xml" lang="it">Italian</link>
-			<link type="language" href="./xml/lang-el.xml" lang="it">Greek</link>
 		</link-group>
 
 		<history>
 			<entry>
-        			<date>2008-08-25</date>
+        			<date>2008-12-16</date>
 			        <rev-version>2.0.B4</rev-version>
 				<changelog lang="en-gb">
 					<change>Fourth BETA release.</change>
@@ -504,7 +492,6 @@ $template->assign_vars(array(
 img_garage_img_attached		= garage_camera.gif*20*20
 img_garage_edit			= garage_edit.gif*20*20
 img_garage_delete		= garage_delete.gif*20*20
-img_garage_icon_garage		= icon_miniprofile_garage.gif*20*20
 img_garage_toggle		= garage_toggle.gif*18*18
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 				</action>
@@ -528,6 +515,7 @@ img_garage_add_lap		= garage_new_lap.gif*25*120
 img_garage_add_service		= garage_new_service.gif*25*120
 img_garage_main_vehicle		= garage_main_vehicle.gif*25*120
 img_garage_no_thumb		= garage_no_thumb.gif*25*120
+img_garage_icon_garage		= icon_miniprofile_garage.gif*20*20
 //-- mod finish : Garage ---------------------------------------------------------------------------------------------------
 				</action>
 			</edit>

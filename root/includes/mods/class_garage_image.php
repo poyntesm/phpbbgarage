@@ -1661,7 +1661,7 @@ class garage_image
 	function rebuild_thumbs($start, $limit, $done, $file) 
 	{
 	
-		global $user, $db, $SID, $lang, $phpEx, $phpbb_root_path, $garage_config, $garage, $u_action;
+		global $user, $db, $SID, $phpEx, $phpbb_root_path, $garage_config, $garage, $u_action;
 	
 		$output = array();
 		$end = $start + $limit;
@@ -1721,7 +1721,7 @@ class garage_image
 		for ( $i = 0; $i < count($images); $i++ )
 	      	{
 			//Write Log Message
-			$garage->write_logfile($log_file, $log_type, $lang['Processing_Attach_ID'] . $images[$i]['attach_id'], 0);
+			$garage->write_logfile($log_file, $log_type, $user->lang['PROCESSING_ATTACH_ID'] . $images[$i]['attach_id'], 0);
 	
 	       	        //The Process Is Different For Local v Remote Files
 	               	if ( preg_match("/^http:\/\//i", $images[$i]['attach_location']) )
@@ -1745,9 +1745,9 @@ class garage_image
 		                        $thumb_file_name = $images[$i]['attach_thumb_location'];
 	               		}
 	
-		                $garage->write_logfile($log_file, $log_type, $lang['Remote_Image'] . $images[$i]['attach_location'], 1);
-	    	                $garage->write_logfile($log_file, $log_type, $lang['File_Name'] . $file_name, 2);
-	               		$garage->write_logfile($log_file, $log_type, $lang['Temp_File_Name'] . $tmp_file_name, 2);
+		                $garage->write_logfile($log_file, $log_type, $user->lang['REMOTE_IMAGE'] . $images[$i]['attach_location'], 1);
+	    	                $garage->write_logfile($log_file, $log_type, $user->lang['FILE_NAME'] . $file_name, 2);
+	               		$garage->write_logfile($log_file, $log_type, $user->lang['TEMP_FILE_NAME'] . $tmp_file_name, 2);
 	
 	                    	// Make sure it exists, or we'll get nasty errors!
 	               		if ( $this->remote_file_exists($images[$i]['attach_location']) )
@@ -1773,15 +1773,15 @@ class garage_image
 					@unlink($phpbb_root_path . GARAGE_UPLOAD_PATH . $tmp_file_name);
 	
 	                        	// Add the status message
-					$output[] = $lang['Rebuilt'] . $images[$i]['attach_location'] . ' -> '.$thumb_file_name;
+					$output[] = $user->lang['REBUILT'] . $images[$i]['attach_location'] . ' -> '.$thumb_file_name;
 	
-	                        	$garage->write_logfile($log_file, $log_type, $lang['Thumb_File'] . $thumb_file_name, 1);
+	                        	$garage->write_logfile($log_file, $log_type, $user->lang['THUMB_FILE'] . $thumb_file_name, 1);
 	                    	}
 				else
 				{
 	                        	// Tell them that the remote file doesn't exists
-	                        	$output[] = '<b><span class="gensmall" style="color:#FF0000">ERROR</span></b>'.$lang['File_Does_Not_Exist']."(".$images[$i]['attach_file'].")";
-	                        	$garage->write_logfile($log_file, $log_type, $lang['File_Does_Not_Exist'], 1);
+	                        	$output[] = '<b><span class="gensmall" style="color:#FF0000">ERROR</span></b>'.$user->lang['FILE_DOES_NOT_EXIST']."(".$images[$i]['attach_file'].")";
+	                        	$garage->write_logfile($log_file, $log_type, $user->lang['FILE_DOES_NOT_EXIST'], 1);
 	                    	}
 	                }
 			else
@@ -1820,15 +1820,15 @@ class garage_image
 					$garage->update_single_field(GARAGE_IMAGES_TABLE, 'attach_thumb_filesize', $image_filesize, 'attach_id', $images[$i]['attach_id']);
 	
 		                    	//Add The Status Message
-	        	            	$output[] = $lang['Rebuilt'] . $images[$i]['attach_location'].' -> '.$thumb_file_name;
+	        	            	$output[] = $user->lang['REBUILT'] . $images[$i]['attach_location'].' -> '.$thumb_file_name;
 	
-	                	    	$garage->write_logfile($log_file, $log_type, $lang['Thumb_File'] . $thumb_file_name, 1);
+	                	    	$garage->write_logfile($log_file, $log_type, $user->lang['THUMB_FILE'] . $thumb_file_name, 1);
 				}
 				//Original Source File Is Missing
 				else
 				{
-	        	            	$output[] = $lang['Source_Unavailable'] . $images[$i]['attach_location'];
-	                	    	$garage->write_logfile($log_file, $log_type, $lang['No_Source_File'], 1);
+	        	            	$output[] = $user->lang['SOURCE_UNAVAILABLE'] . $images[$i]['attach_location'];
+	                	    	$garage->write_logfile($log_file, $log_type, $user->lang['NO_SOURCE_FILE'], 1);
 				}
 			} // End if remote/local 
 	              	$done++;
