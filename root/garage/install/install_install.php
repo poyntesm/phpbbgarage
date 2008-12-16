@@ -271,7 +271,7 @@ class install_install extends module
 					$result = $db->sql_query($sql);
 					while( $theme = $db->sql_fetchrow($result) )
 					{
-						//Check For Imageset Data To Load
+						//Check For Themes Updated By Installer
 						if (file_exists($phpbb_root_path . "garage/install/install/styles/{$theme['theme_name']}/theme/index." . $phpEx))
 						{
 							$recache = (empty($theme['theme_data'])) ? true : false;
@@ -324,6 +324,160 @@ class install_install extends module
 						}
 					}
 					$db->sql_freeresult($result);
+
+					// Refresh any imageset data we updated - but only for garage images
+					$sql = 'SELECT *
+						FROM ' . STYLES_IMAGESET_TABLE;
+					$result = $db->sql_query($sql);
+					while( $imageset = $db->sql_fetchrow($result))
+					{
+						$sql_ary = array();
+						$db->sql_transaction('begin');
+
+						if (!class_exists('garage_template'))
+						{
+							include($phpbb_root_path . 'includes/mods/class_garage_template.'.$phpEx);
+							$garage_template = new garage_template();
+						}
+
+						//We need to build the imageset_keys now only for garage keys
+						$imageset_keys = array();
+						$imageset_keys['buttons'] = array();
+						$imageset_keys = $garage_template->update_imageset_keys($imageset_keys);
+
+						$imageset_definitions = array();
+						foreach ($imageset_keys as $topic => $key_array)
+						{
+							$imageset_definitions = array_merge($imageset_definitions, $key_array);
+						}
+
+						//Check For Imageset Updated By Installer
+						if (file_exists($phpbb_root_path . "garage/install/install/new/styles/{$imageset['imageset_path']}/imageset/imageset.cfg"))
+						{
+							$cfg_data_imageset = parse_cfg_file("{$phpbb_root_path}styles/{$imageset['imageset_path']}/imageset/imageset.cfg");
+
+							$sql = 'DELETE FROM ' . STYLES_IMAGESET_DATA_TABLE . '
+								WHERE imageset_id = ' . $imageset['imageset_id'] . '
+									AND ' . $db->sql_in_set('image_name', $imageset_keys['garage']) ;
+							$db->sql_query($sql);
+
+							foreach ($cfg_data_imageset as $image_name => $value)
+							{
+								//Lets cut to the chase and make sure we only work with garage images
+								$image_wanted = substr($image_name, 4);
+								if (!in_array($image_wanted, $imageset_keys['garage']))
+								{
+									continue;
+								}
+
+								if (strpos($value, '*') !== false)
+								{
+									if (substr($value, -1, 1) === '*')
+									{
+										list($image_filename, $image_height) = explode('*', $value);
+										$image_width = 0;
+									}
+									else
+									{
+										list($image_filename, $image_height, $image_width) = explode('*', $value);
+									}
+								}
+								else
+								{
+									$image_filename = $value;
+									$image_height = $image_width = 0;
+								}
+
+								if (strpos($image_name, 'img_') === 0 && $image_filename)
+								{
+									$image_name = substr($image_name, 4);
+									if (in_array($image_name, $imageset_definitions))
+									{
+										$sql_ary[] = array(
+											'image_name'		=> (string) $image_name,
+											'image_filename'	=> (string) $image_filename,
+											'image_height'		=> (int) $image_height,
+											'image_width'		=> (int) $image_width,
+											'imageset_id'		=> (int) $imageset['imageset_id'],
+											'image_lang'		=> '',
+										);
+									}
+								}
+							}
+						}
+
+						$sql2 = 'SELECT lang_dir
+							FROM ' . LANG_TABLE;
+						$result2 = $db->sql_query($sql2);
+
+						while ($language = $db->sql_fetchrow($result2))
+						{
+							//Check For Language Imageset Updated By Installer
+							if (file_exists($phpbb_root_path . "garage/install/install/new/styles/{$imageset['imageset_path']}/imageset/{$language['lang_dir']}/imageset.cfg"))
+							{
+								$cfg_data_imageset_data = parse_cfg_file("{$phpbb_root_path}styles/{$imageset['imageset_path']}/imageset/{$language['lang_dir']}/imageset.cfg");
+
+								$sql = 'DELETE FROM ' . STYLES_IMAGESET_DATA_TABLE . '
+									WHERE imageset_id = ' . $imageset['imageset_id'] . '
+										AND ' . $db->sql_in_set('image_name', $imageset_keys['buttons']) ."
+										AND image_lang = '{$language['lang_dir']}'";
+								$db->sql_query($sql);
+
+								foreach ($cfg_data_imageset_data as $image_name => $value)
+								{
+									//Lets cut to the chase and make sure we only work with garage images
+									$image_wanted = substr($image_name, 4);
+									if (!in_array($image_wanted, $imageset_keys['buttons']))
+									{
+										continue;
+									}
+									if (strpos($value, '*') !== false)
+									{
+										if (substr($value, -1, 1) === '*')
+										{
+											list($image_filename, $image_height) = explode('*', $value);
+											$image_width = 0;
+										}
+										else
+										{
+											list($image_filename, $image_height, $image_width) = explode('*', $value);
+										}
+									}
+									else
+									{
+										$image_filename = $value;
+										$image_height = $image_width = 0;
+									}
+
+									if (strpos($image_name, 'img_') === 0 && $image_filename)
+									{
+										$image_name = substr($image_name, 4);
+										if (in_array($image_name, $imageset_definitions))
+										{
+											$sql_ary[] = array(
+												'image_name'		=> (string) $image_name,
+												'image_filename'	=> (string) $image_filename,
+												'image_height'		=> (int) $image_height,
+												'image_width'		=> (int) $image_width,
+												'imageset_id'		=> (int) $imageset['imageset_id'],
+												'image_lang'		=> (string) $language['lang_dir'],
+											);
+										}
+									}
+								}
+							}
+						}
+						$db->sql_freeresult($result2);
+
+						$db->sql_multi_insert(STYLES_IMAGESET_DATA_TABLE, $sql_ary);
+	
+						$db->sql_transaction('commit');
+					}
+					$db->sql_freeresult($result);
+
+					$cache->destroy('sql', STYLES_IMAGESET_DATA_TABLE);
+
+					add_log('admin', 'LOG_IMAGESET_REFRESHED', $imageset['imageset_name']);
 
 					$db->sql_return_on_error(true);
 					$db->sql_query('DELETE FROM ' . GARAGE_CONFIG_TABLE . " WHERE config_name = 'version_update_from'");
@@ -1169,60 +1323,6 @@ class install_install extends module
 			}
 			unset($category_query);
 		}
-
-		//Handle the installed & supported style imagesets
-		$sql = 'SELECT *
-			FROM ' . STYLES_IMAGESET_TABLE;
-		$result = $db->sql_query($sql);
-		while( $row = $db->sql_fetchrow($result) )
-		{
-			//Check For Imageset Data To Load
-			if (file_exists($phpbb_root_path . "garage/install/install/styles/{$row['imageset_name']}/imageset/data." . $phpEx))
-			{
-				$imageset_info= array();
-				include($phpbb_root_path . "garage/install/install/styles/{$row['imageset_name']}/imageset/data." . $phpEx);
-				for ($i = 0, $count = sizeof($imageset_info);$i < $count; $i++)
-				{
-					$sql = 'INSERT INTO ' . STYLES_IMAGESET_DATA_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-						'image_name'	=> $imageset_info[$i]['image_name'],
-						'image_filename'=> $imageset_info[$i]['image_filename'],
-						'image_lang'	=> $imageset_info[$i]['image_lang'],
-						'image_height'	=> $imageset_info[$i]['image_height'],
-						'image_width'	=> $imageset_info[$i]['image_width'],
-						'imageset_id'	=> $row['imageset_id'],
-					));
-					$db->sql_query($sql);
-				}
-			}
-
-			//Check For All Installed Languages
-			$sql = 'SELECT *
-			FROM ' . LANG_TABLE;
-			$lresult = $db->sql_query($sql);
-			while( $lrow = $db->sql_fetchrow($lresult) )
-			{
-				//Check For Imageset Data To Load
-				if (file_exists($phpbb_root_path . "garage/install/install/styles/{$row['imageset_name']}/imageset/{$lrow['lang_dir']}/data." . $phpEx))
-				{
-					$imageset_info= array();
-					include($phpbb_root_path . "garage/install/install/styles/{$row['imageset_name']}/imageset/{$lrow['lang_dir']}/data." . $phpEx);
-					for ($i = 0, $count = sizeof($imageset_info);$i < $count; $i++)
-					{
-						$sql = 'INSERT INTO ' . STYLES_IMAGESET_DATA_TABLE . ' ' . $db->sql_build_array('INSERT', array(
-							'image_name'	=> $imageset_info[$i]['image_name'],
-							'image_filename'=> $imageset_info[$i]['image_filename'],
-							'image_lang'	=> $imageset_info[$i]['image_lang'],
-							'image_height'	=> $imageset_info[$i]['image_height'],
-							'image_width'	=> $imageset_info[$i]['image_width'],
-							'imageset_id'	=> $row['imageset_id'],
-						));
-						$db->sql_query($sql);
-					}
-				}
-			}
-			$db->sql_freeresult($lresult);
-		}
-		$db->sql_freeresult($result);
 
 		$schema_changes = array(
 			'add_columns'	=> array(
