@@ -82,7 +82,7 @@ class install_installmin extends module
 
 			case 'create_permissions':
 				$this->add_permissions($mode, $sub);
-				$this->update_user_permissions($mode, $sub);
+				$this->update_group_permissions($mode, $sub);
 				$this->update_role_permissions($mode, $sub);
 
 				$submit = $lang['NEXT_STEP'];
@@ -720,10 +720,10 @@ class install_installmin extends module
 	/**
 	* Update user permissions
 	*/
-	function update_user_permissions($mode, $sub)
+	function update_group_permissions($mode, $sub)
 	{
-		//Set Anonymous User Permissions
-		acl_update_user(ANONYMOUS, array('u_garage_browse'));
+		//Set Anonymous User Via Guest Permissions
+		update_group_permissions($mode = 'grant', 'GUESTS', $options = array('u_garage_browse'), $auth_setting = ACL_YES);
 	}
 
 	/**
@@ -732,53 +732,25 @@ class install_installmin extends module
 	function update_role_permissions($mode, $sub)
 	{
 		//Standard Admin Role
-		$role = get_role_by_name('ROLE_ADMIN_STANDARD');
-		if ($role)
-		{
-			acl_update_role($role['role_id'], array('a_garage_update', 'a_garage_setting', 'a_garage_business', 'a_garage_category', 'a_garage_field', 'a_garage_model', 'a_garage_product', 'a_garage_quota', 'a_garage_tool', 'a_garage_track'));
-		}
+		update_role_permissions('grant', 'ROLE_ADMIN_STANDARD', array('a_garage_update', 'a_garage_setting', 'a_garage_business', 'a_garage_category', 'a_garage_field', 'a_garage_model', 'a_garage_product', 'a_garage_quota', 'a_garage_tool', 'a_garage_track'), ACL_YES);
 
 		//Full Admin Role
-		$role = get_role_by_name('ROLE_ADMIN_FULL');
-		if ($role)
-		{
-			acl_update_role($role['role_id'], array('a_garage_update', 'a_garage_setting', 'a_garage_business', 'a_garage_category', 'a_garage_field', 'a_garage_model', 'a_garage_product', 'a_garage_quota', 'a_garage_tool', 'a_garage_track'));
-		}
+		update_role_permissions('grant', 'ROLE_ADMIN_FULL', array('a_garage_update', 'a_garage_setting', 'a_garage_business', 'a_garage_category', 'a_garage_field', 'a_garage_model', 'a_garage_product', 'a_garage_quota', 'a_garage_tool', 'a_garage_track'), ACL_YES);
 
 		//Queue Moderator Role
-		$role = get_role_by_name('ROLE_MOD_QUEUE');
-		if ($role)
-		{
-			acl_update_role($role['role_id'], array('m_garage_approve_vehicle', 'm_garage_approve_make', 'm_garage_approve_model', 'm_garage_approve_business', 'm_garage_approve_quartermile', 'm_garage_approve_dynorun', 'm_garage_approve_guestbook', 'm_garage_approve_lap', 'm_garage_approve_track', 'm_garage_approve_product'));
-		}
-
+		update_role_permissions('grant', 'ROLE_MOD_QUEUE', array('m_garage_approve_vehicle', 'm_garage_approve_make', 'm_garage_approve_model', 'm_garage_approve_business', 'm_garage_approve_quartermile', 'm_garage_approve_dynorun', 'm_garage_approve_guestbook', 'm_garage_approve_lap', 'm_garage_approve_track', 'm_garage_approve_product'), ACL_YES);
+			
 		//Standard Moderator Role
-		$role = get_role_by_name('ROLE_MOD_STANDARD');
-		if ($role)
-		{
-			acl_update_role($role['role_id'], array('m_garage_edit', 'm_garage_delete', 'm_garage_rating', 'm_garage_approve_vehicle', 'm_garage_approve_make', 'm_garage_approve_model', 'm_garage_approve_business', 'm_garage_approve_quartermile', 'm_garage_approve_dynorun', 'm_garage_approve_guestbook', 'm_garage_approve_lap', 'm_garage_approve_track', 'm_garage_approve_product'));
-		}
+		update_role_permissions('grant', 'ROLE_MOD_STANDARD', array('m_garage_edit', 'm_garage_delete', 'm_garage_rating', 'm_garage_approve_vehicle', 'm_garage_approve_make', 'm_garage_approve_model', 'm_garage_approve_business', 'm_garage_approve_quartermile', 'm_garage_approve_dynorun', 'm_garage_approve_guestbook', 'm_garage_approve_lap', 'm_garage_approve_track', 'm_garage_approve_product'), ACL_YES);
 	
 		//Full Moderator Role
-		$role = get_role_by_name('ROLE_MOD_FULL');
-		if ($role)
-		{
-			acl_update_role($role['role_id'], array('m_garage_edit', 'm_garage_delete', 'm_garage_rating', 'm_garage_approve_vehicle', 'm_garage_approve_make', 'm_garage_approve_model', 'm_garage_approve_business', 'm_garage_approve_quartermile', 'm_garage_approve_dynorun', 'm_garage_approve_guestbook', 'm_garage_approve_lap', 'm_garage_approve_track', 'm_garage_approve_product'));
-		}
+		update_role_permissions('grant', 'ROLE_MOD_FULL', array('m_garage_edit', 'm_garage_delete', 'm_garage_rating', 'm_garage_approve_vehicle', 'm_garage_approve_make', 'm_garage_approve_model', 'm_garage_approve_business', 'm_garage_approve_quartermile', 'm_garage_approve_dynorun', 'm_garage_approve_guestbook', 'm_garage_approve_lap', 'm_garage_approve_track', 'm_garage_approve_product'), ACL_YES);
 
 		//Standard Features User Role
-		$role = get_role_by_name('ROLE_USER_STANDARD');
-		if ($role)
-		{
-			acl_update_role($role['role_id'], array('u_garage_browse', 'u_garage_search', 'u_garage_add_vehicle', 'u_garage_delete_vehicle', 'u_garage_add_modification', 'u_garage_delete_modification', 'u_garage_add_quartermile', 'u_garage_delete_quartermile', 'u_garage_add_lap', 'u_garage_delete_lap', 'u_garage_add_track', 'u_garage_delete_track', 'u_garage_add_dynorun', 'u_garage_delete_dynorun', 'u_garage_add_insurance', 'u_garage_delete_insurance', 'u_garage_add_service', 'u_garage_delete_service', 'u_garage_add_blog', 'u_garage_delete_blog', 'u_garage_add_business', 'u_garage_add_make_model', 'u_garage_add_product', 'u_garage_rate', 'u_garage_comment', 'u_garage_upload_image', 'u_garage_remote_image', 'u_garage_delete_image', 'u_garage_deny'));
-		}
-
+		update_role_permissions('grant', 'ROLE_USER_STANDARD', array('u_garage_browse', 'u_garage_search', 'u_garage_add_vehicle', 'u_garage_delete_vehicle', 'u_garage_add_modification', 'u_garage_delete_modification', 'u_garage_add_quartermile', 'u_garage_delete_quartermile', 'u_garage_add_lap', 'u_garage_delete_lap', 'u_garage_add_track', 'u_garage_delete_track', 'u_garage_add_dynorun', 'u_garage_delete_dynorun', 'u_garage_add_insurance', 'u_garage_delete_insurance', 'u_garage_add_service', 'u_garage_delete_service', 'u_garage_add_blog', 'u_garage_delete_blog', 'u_garage_add_business', 'u_garage_add_make_model', 'u_garage_add_product', 'u_garage_rate', 'u_garage_comment', 'u_garage_upload_image', 'u_garage_remote_image', 'u_garage_delete_image', 'u_garage_deny'), ACL_YES);
+			
 		//All Features User Role
-		$role = get_role_by_name('ROLE_USER_FULL');
-		if ($role)
-		{
-			acl_update_role($role['role_id'], array('u_garage_browse', 'u_garage_search', 'u_garage_add_vehicle', 'u_garage_delete_vehicle', 'u_garage_add_modification', 'u_garage_delete_modification', 'u_garage_add_quartermile', 'u_garage_delete_quartermile', 'u_garage_add_lap', 'u_garage_delete_lap', 'u_garage_add_track', 'u_garage_delete_track', 'u_garage_add_dynorun', 'u_garage_delete_dynorun', 'u_garage_add_insurance', 'u_garage_delete_insurance', 'u_garage_add_service', 'u_garage_delete_service', 'u_garage_add_blog', 'u_garage_delete_blog', 'u_garage_add_business', 'u_garage_add_make_model', 'u_garage_add_product', 'u_garage_rate', 'u_garage_comment', 'u_garage_upload_image', 'u_garage_remote_image', 'u_garage_delete_image', 'u_garage_deny'));
-		}
+		update_role_permissions('grant', 'ROLE_USER_FULL', array('u_garage_browse', 'u_garage_search', 'u_garage_add_vehicle', 'u_garage_delete_vehicle', 'u_garage_add_modification', 'u_garage_delete_modification', 'u_garage_add_quartermile', 'u_garage_delete_quartermile', 'u_garage_add_lap', 'u_garage_delete_lap', 'u_garage_add_track', 'u_garage_delete_track', 'u_garage_add_dynorun', 'u_garage_delete_dynorun', 'u_garage_add_insurance', 'u_garage_delete_insurance', 'u_garage_add_service', 'u_garage_delete_service', 'u_garage_add_blog', 'u_garage_delete_blog', 'u_garage_add_business', 'u_garage_add_make_model', 'u_garage_add_product', 'u_garage_rate', 'u_garage_comment', 'u_garage_upload_image', 'u_garage_remote_image', 'u_garage_delete_image', 'u_garage_deny'), ACL_YES);
 	}
 
 	/**
