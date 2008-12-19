@@ -7,7 +7,7 @@ INSERT INTO phpbb_garage_config (config_name, config_value) VALUES ('year_end', 
 INSERT INTO phpbb_garage_config (config_name, config_value) VALUES ('enable_user_submit_make', '1');
 INSERT INTO phpbb_garage_config (config_name, config_value) VALUES ('enable_user_submit_model', '1');
 INSERT INTO phpbb_garage_config (config_name, config_value) VALUES ('dateformat', 'd M Y H:i');
-INSERT INTO phpbb_garage_config (config_name, config_value) VALUES ('version', '2.0.B4-DEV');
+INSERT INTO phpbb_garage_config (config_name, config_value) VALUES ('version', '2.0.B4');
 INSERT INTO phpbb_garage_config (config_name, config_value) VALUES ('default_make_id', '');
 INSERT INTO phpbb_garage_config (config_name, config_value) VALUES ('default_model_id', '');
 INSERT INTO phpbb_garage_config (config_name, config_value) VALUES ('integrate_memberlist', '1');
