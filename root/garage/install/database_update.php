@@ -183,9 +183,6 @@ $database_update_info = array(
 			GARAGE_MODIFICATIONS_TABLE	=> array(
 				'manufacturer_id'
 			),
-			GARAGE_BLOGS_TABLE	=> array(
-				'bbcode_flags'
-			),
 		),
 	),
 );

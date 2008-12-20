@@ -19,12 +19,6 @@ if (!defined('IN_INSTALL'))
 
 if (!empty($setmodules))
 {
-	// If phpBB Garage is not installed we do not include this module unless we are running it ;)
-	if (!defined('PHPBBGARAGE_INSTALLED') AND $mode != "remove")
-	{
-		return;
-	}
-
 	$module[] = array(
 		'module_type'		=> 'install',
 		'module_title'		=> 'REMOVE',

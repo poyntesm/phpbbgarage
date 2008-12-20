@@ -19,12 +19,6 @@ if (!defined('IN_INSTALL'))
 
 if (!empty($setmodules))
 {
-	// If phpBB Garage is not installed we do not include this module
-	if (!defined('PHPBBGARAGE_INSTALLED'))
-	{
-		return;
-	}
-
 	$module[] = array(
 		'module_type'		=> 'update',
 		'module_title'		=> 'UPDATE',
