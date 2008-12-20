@@ -33,7 +33,7 @@ unset($dbpasswd);
 $convertor_data = array(
 	'forum_name'		=> 'phpBB Garage 1.0.5/6',
 	'version'		=> '1.0.B2',
-	'phpbbgarage_version'	=> '2.0.B4',
+	'phpbbgarage_version'	=> '2.0.B5-DEV',
 	'author'		=> '<a href="http://www.phpbbgarage.com/">phpBB Garage</a>',
 	'dbms'			=> $dbms,
 	'dbhost'		=> $dbhost,
