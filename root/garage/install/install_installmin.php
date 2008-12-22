@@ -113,7 +113,6 @@ class install_installmin extends module
 
 			case 'final':
 
-				$this->tpl_name = 'garage_install_installmin';
 				// Remove the lock file
 				@unlink($phpbb_root_path . 'cache/install_lock');
 
@@ -140,6 +139,7 @@ class install_installmin extends module
 
 				$sql = 'INSERT INTO ' . GARAGE_CONFIG_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 					'config_name'	=> 'installed',
+					'config_value'	=> 1,
 				));
 				$db->sql_query($sql);
 

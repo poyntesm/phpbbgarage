@@ -926,6 +926,7 @@ class install_install extends module
 
 				$sql = 'INSERT INTO ' . GARAGE_CONFIG_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 					'config_name'	=> 'installed',
+					'config_value'	=> 1,
 				));
 				$db->sql_query($sql);
 
