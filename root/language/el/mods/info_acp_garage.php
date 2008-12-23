@@ -17,6 +17,9 @@ if (empty($lang) || !is_array($lang))
 	$lang = array();
 }
 
+/*
+* Language keys for auto-inclusion for ACP Module titles
+*/
 $lang = array_merge($lang, array(	
 	'ACP_GARAGE'						=> 'Γκαράζ',
 	'ACP_GARAGE_BUSINESS'				=> 'Επιχειρήσεις',
@@ -48,20 +51,6 @@ $lang = array_merge($lang, array(
 	'ACP_GARAGE_GUESTBOOK_SETTINGS'		=> 'Ρυθμίσεις Guestbook',
 	'ACP_GARAGE_PRODUCT_SETTINGS'		=> 'Ρυθμίσεις προϊόντων',
 	'ACP_GARAGE_SERVICE_SETTINGS'		=> 'Ρυθμίσεις των Σέρβις',
-	'ACP_GARAGE_GENERAL_SETTINGS_EXPLAIN'		=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για τις γενικές επιλογές του Γκαράζ.',
-	'ACP_GARAGE_MENU_SETTINGS_EXPLAIN'			=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για τις καρτέλες που εμφανίζονται σε όλες τις σελίδες του Γκαράζ.',
-	'ACP_GARAGE_INDEX_SETTINGS_EXPLAIN'			=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για την πρώτη/αρχική σελίδα του Γκαράζ.',
-	'ACP_GARAGE_IMAGES_SETTINGS_EXPLAIN'		=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για τις επιλογές εικόνων του Γκαράζ.',
-	'ACP_GARAGE_QUARTERMILE_SETTINGS_EXPLAIN'	=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για τις επιλογές των χρόνων 0-400μ. του Γκαράζ.',
-	'ACP_GARAGE_DYNORUN_SETTINGS_EXPLAIN'		=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για τις δυναμομετρήσεις του Γκαράζ',
-	'ACP_GARAGE_TRACK_SETTINGS_EXPLAIN'			=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για τις επιλογές πιστων/γύρων πίστας του Γκαράζ.',
-	'ACP_GARAGE_INSURANCE_SETTINGS_EXPLAIN'		=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για τις ασφάλειες του Γκαράζ.',
-	'ACP_GARAGE_BUSINESS_SETTINGS_EXPLAIN'		=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για τις επιχειρήσεις του Γκαράζ.',
-	'ACP_GARAGE_RATING_SETTINGS_EXPLAIN'		=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για τις επιλογές αξιολόγησης του Γκαράζ.',
-	'ACP_GARAGE_GUESTBOOK_SETTINGS_EXPLAIN'		=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για τις επιλογές guestbook του Γκαράζ.',
-	'ACP_GARAGE_PRODUCT_SETTINGS_EXPLAIN'		=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για τα προϊόντα του Γκαράζ.',
-	'ACP_GARAGE_SERVICE_SETTINGS_EXPLAIN'		=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για το Ιστορικό των Σέρβις του Γκαράζ.',
-	'ACP_GARAGE_BLOG_SETTINGS_EXPLAIN'			=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για τις επιλογές blog του Γκαράζ.',
 	'ACP_GARAGE_BLOG_SETTINGS'					=> 'Ρυθμίσεις Blog',
 	'ACP_GARAGE_FIELDS_MANAGEMENT'				=> 'Διαχείριση προσαρμοσμένων πεδίων',
 	'ACP_GARAGE_FIELDS'							=> 'Προσαρμοσμένα πεδία',
