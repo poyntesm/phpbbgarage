@@ -235,7 +235,7 @@ $lang = array_merge($lang, array(
 	'ENABLE_USER_ADD_LAP'						=> 'Υποβολή πιστών από μέλη',
 	'ENABLE_USER_ADD_LAP_EXPLAIN' 				=> 'Ενεργοποίηση προσθήκης νέων πιστών από μέλη',
 
-
+/*
 //LOG Messages Keys
 	'LOG_GARAGE_CONFIG_GENERAL'					=> '<strong>Άλλαξε τις Γενικές Ρυθμίσεις του Γκαράζ</strong>',
 	'LOG_GARAGE_CONFIG_MENU'					=> '<strong>Άλλαξε τις Ρυθμίσεις Μενού του Γκαράζ</strong>',
@@ -278,7 +278,7 @@ $lang = array_merge($lang, array(
 	'Need_To_Process' 							=> 'Πρέπει να επεξεργαστούμε συνολικά : ',
 	'Log_To' 									=> 'Θα δημιουργηθεί αρχείο καταγραφής σε: ',
 	'Out_Of' 									=> 'Από',
-	'Kbytes' 									=> 'kbytes',
+	'Kbytes' 									=> 'kbytes',*/
 
 	'PERMANENT' 								=> 'Μόνιμο',
 	'NON_PERMANENT'								=> 'Όχι μόνιμο',
@@ -445,7 +445,7 @@ $lang = array_merge($lang, array(
 	'TRACK_NAME_EMPTY'							=> 'Το όνομα πίστας είναι άδειο',
 	'TRACK_DELETED'								=> 'Η πίστα διαγράφηκε',
 	''											=> '',
-
+/*
 	//
 	'GARAGE_CUSTOM_FIELDS'						=> 'Προσαμοσμένα πεδία Γκαράζ',
 
@@ -454,7 +454,7 @@ $lang = array_merge($lang, array(
 	'ACP_MANAGE_CATEGORY'						=> 'Διαχείριση κατηγοριών',
 	'ACP_MANAGE_PRODUCTS'						=> 'Διαχείριση προϊόντων',
 	'ACP_MANAGE_TRACKS'							=> 'Διαχείριση πιστών',
-	'ACP_MANAGE_MAKES_MODELS'					=> 'Διαχείριση Μάρκες και μοντέλα',
+	'ACP_MANAGE_MAKES_MODELS'					=> 'Διαχείριση Μάρκες και μοντέλα', */
 
 	//Added For B4
 	'DEFAULT_MAKE' 								=> 'Προκαθορισμένη Μάρκα',
@@ -495,6 +495,7 @@ $lang = array_merge($lang, array(
 	'ENABLE_GUESTBOOK_URL' 						=> 'Ενεργοποίηση ανάλυσης URLs',
 	'ENABLE_GUESTBOOK_URL_EXPLAIN' 				=> 'Ενεργοποίηση ανάλυσης URLs στα σχόλια του guestbook.',
 	'NO_THUMBNAILS_TO_REBUILD'					=> 'Δεν υπάρχουν μικρογραφίες για επαναδημιουργία',
+	'GARAGE_VERSION_CHECK'						=> 'Έλεγχος έκδοσης phpBB Garage',
 
 	//LOG BUSINESS KEYS
 	'LOG_GARAGE_BUSINESS_CREATED'				=> '<strong>Πρόσθεσε επιχείρηση</strong><br />» %1$s',
@@ -570,6 +571,21 @@ $lang = array_merge($lang, array(
 	'LOG_GARAGE_CATEGORY_MOVE_UP'		=> '<strong>Μετακίνησε την κατηγορία</strong> %1$s <strong>κάτω από</strong> %2$s',
 	'LOG_GARAGE_CATEGORY_MOVE_DOWN'		=> '<strong>Μετακίνησε την κατηγορία</strong> %1$s <strong>πάνω από</strong> %2$s',
 
+	//EXPLAIN KEYS FOR ACP MODES
+	'ACP_GARAGE_GENERAL_SETTINGS_EXPLAIN'		=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για τις γενικές επιλογές του Γκαράζ.',
+	'ACP_GARAGE_MENU_SETTINGS_EXPLAIN'			=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για τις καρτέλες που εμφανίζονται σε όλες τις σελίδες του Γκαράζ.',
+	'ACP_GARAGE_INDEX_SETTINGS_EXPLAIN'			=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για την πρώτη/αρχική σελίδα του Γκαράζ.',
+	'ACP_GARAGE_IMAGES_SETTINGS_EXPLAIN'		=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για τις επιλογές εικόνων του Γκαράζ.',
+	'ACP_GARAGE_QUARTERMILE_SETTINGS_EXPLAIN'	=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για τις επιλογές των χρόνων 0-400μ. του Γκαράζ.',
+	'ACP_GARAGE_DYNORUN_SETTINGS_EXPLAIN'		=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για τις δυναμομετρήσεις του Γκαράζ',
+	'ACP_GARAGE_TRACK_SETTINGS_EXPLAIN'			=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για τις επιλογές πιστων/γύρων πίστας του Γκαράζ.',
+	'ACP_GARAGE_INSURANCE_SETTINGS_EXPLAIN'		=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για τις ασφάλειες του Γκαράζ.',
+	'ACP_GARAGE_BUSINESS_SETTINGS_EXPLAIN'		=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για τις επιχειρήσεις του Γκαράζ.',
+	'ACP_GARAGE_RATING_SETTINGS_EXPLAIN'		=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για τις επιλογές αξιολόγησης του Γκαράζ.',
+	'ACP_GARAGE_GUESTBOOK_SETTINGS_EXPLAIN'		=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για τις επιλογές guestbook του Γκαράζ.',
+	'ACP_GARAGE_PRODUCT_SETTINGS_EXPLAIN'		=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για τα προϊόντα του Γκαράζ.',
+	'ACP_GARAGE_SERVICE_SETTINGS_EXPLAIN'		=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για το Ιστορικό των Σέρβις του Γκαράζ.',
+	'ACP_GARAGE_BLOG_SETTINGS_EXPLAIN'			=> 'Αυτή η σελίδα σας επιτρέπει να κάνετε ρυθμίσεις για τις επιλογές blog του Γκαράζ.',
 
 ));
 
