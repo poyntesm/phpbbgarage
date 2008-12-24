@@ -38,14 +38,24 @@ if (!defined('UMIL_AUTO'))
 	exit;
 }
 
-// If IN_PHPBB is already defined, lets assume they already included the common.php file and are done with setup (this allows them to run their own checks on things if they must)
+/*
+* If IN_PHPBB is already defined, lets assume they already included the common.php file and are done with setup
+*
+* NOTE: If you do not setup the common.php file YOU WILL NOT BE ABLE TO USE ANY CONSTANTS!
+*/
 if (!defined('IN_PHPBB'))
 {
 	define('IN_PHPBB', true);
 	include($phpbb_root_path . 'common.' . $phpEx);
 	$user->session_begin();
 	$auth->acl($user->data);
-	$user->setup($language_file);
+	$user->setup();
+}
+
+// Add the language file if one was specified
+if (isset($language_file))
+{
+	$user->add_lang($language_file);
 }
 
 if (!$user->data['is_registered'])
@@ -118,14 +128,29 @@ else if (!$umil->confirm_box(true))
 	switch ($action)
 	{
 		case 'install' :
+			if (!isset($user->lang['INSTALL_' . $mod_name]))
+			{
+				$user->lang['INSTALL_' . $mod_name] = sprintf($user->lang['INSTALL_MOD'], $user->lang[$mod_name]);
+				$user->lang['INSTALL_' . $mod_name . '_CONFIRM'] = sprintf($user->lang['INSTALL_MOD_CONFIRM'], $user->lang[$mod_name]);
+			}
 			$umil->confirm_box(false, 'INSTALL_' . $mod_name, $hidden);
 		break;
 
 		case 'update' :
+			if (!isset($user->lang['UPDATE_' . $mod_name]))
+			{
+				$user->lang['UPDATE_' . $mod_name] = sprintf($user->lang['UPDATE_MOD'], $user->lang[$mod_name]);
+				$user->lang['UPDATE_' . $mod_name . '_CONFIRM'] = sprintf($user->lang['UPDATE_MOD_CONFIRM'], $user->lang[$mod_name]);
+			}
 			$umil->confirm_box(false, 'UPDATE_' . $mod_name, $hidden);
 		break;
 
 		case 'uninstall' :
+			if (!isset($user->lang['UNINSTALL_' . $mod_name]))
+			{
+				$user->lang['UNINSTALL_' . $mod_name] = sprintf($user->lang['UNINSTALL_MOD'], $user->lang[$mod_name]);
+				$user->lang['UNINSTALL_' . $mod_name . '_CONFIRM'] = sprintf($user->lang['UNINSTALL_MOD_CONFIRM'], $user->lang[$mod_name]);
+			}
 			$umil->confirm_box(false, 'UNINSTALL_' . $mod_name, $hidden);
 		break;
 	}

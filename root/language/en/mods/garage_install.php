@@ -172,6 +172,19 @@ $lang = array_merge($lang, array(
 	'REMOVE_COMPLETE'		=> 'phpBB Garage removed!!',
 	'REMOVE_COMPLETE_EXPLAIN'	=> 'Some text about removal post checks here',
 	'INCOMPATIBLE_REMOVE_FILES'	=> 'The remove files found are incompatible with your installed version. Your installed version is %1$s and the remove file is for phpBB Garage %2$s.',
+
+/**
+* Language keys for phpBB Garage UMIL support
+*/
+	'PHPBB_GARAGE'				=> 'phpBB Garage',
+	'PHPBB_GARAGE_EXPLAIN'			=> 'This MODification to phpBB will allow your users to store information relating to vehicles they own.',
+	'INSTALL_PHPBB_GARAGE'			=> 'Install phpBB Garage',
+	'INSTALL_PHPBB_GARAGE_CONFIRM'		=> 'Are you ready to install phpBB Garage?',
+	'INSERT_REQUIRED_DATA'			=> 'Insert required data into phpBB Garage tables.',
+	'UNINSTALL_PHPBB_GARAGE'		=> 'Uninstall phpBB Garage',
+	'UNINSTALL_PHPBB_GARAGE_CONFIRM'	=> 'Are you ready to uninstall phpBB Garage?  All settings and data saved by this mod will be removed!',
+	'UPDATE_PHPBB_GARAGE'			=> 'Update phpBB Garage',
+	'UPDATE_PHPBB_GARAGE_CONFIRM'		=> 'Are you ready to update phpBB Garage?'
 ));
 
 ?>

@@ -68,15 +68,17 @@
 			<file from="./root/adm/*.*" to="./adm/" />
 			<file from="./root/garage/*.*" to="./garage/" />
 			<file from="./root/includes/*.*" to="./includes/" />
-			<file from="./root/language/en/*.*" to="./langauge/en/" />
+			<file from="./root/language/en/*.*" to="./language/en/" />
 			<file from="./root/styles/prosilver/imageset/*.*" to="./styles/prosilver/imageset/" />
 			<file from="./root/styles/prosilver/imageset/en/*.*" to="./styles/prosilver/imageset/en/" />
 			<file from="./root/styles/prosilver/template/*.*" to="./styles/prosilver/template/" />
 			<file from="./root/styles/prosilver/theme/*.*" to="./styles/prosilver/theme/" />
+			<file from="./root/umil/*.*" to="./umil/" />
 			<file from="./root/garage.php" to="./garage.php" />
 			<file from="./root/garage_blog.php" to="./garage_blog.php" />
 			<file from="./root/garage_dynorun.php" to="./garage_dynorun.php" />
 			<file from="./root/garage_guestbook.php" to="./garage_guestbook.php" />
+			<file from="./root/garage_install.php" to="./garage_install.php" />
 			<file from="./root/garage_modification.php" to="./garage_modification.php" />
 			<file from="./root/garage_premium.php" to="./garage_premium.php" />
 			<file from="./root/garage_quartermile.php" to="./garage_quartermile.php" />

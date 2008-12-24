@@ -68,7 +68,7 @@
 			<file from="./root/adm/*.*" to="./adm/" />
 			<file from="./root/garage/*.*" to="./garage/" />
 			<file from="./root/includes/*.*" to="./includes/" />
-			<file from="./root/language/en/*.*" to="./langauge/en/" />
+			<file from="./root/language/en/*.*" to="./language/en/" />
 			<file from="./root/styles/prosilver/imageset/*.*" to="./styles/prosilver/imageset/" />
 			<file from="./root/styles/prosilver/imageset/en/*.*" to="./styles/prosilver/imageset/en/" />
 			<file from="./root/styles/prosilver/template/*.*" to="./styles/prosilver/template/" />
