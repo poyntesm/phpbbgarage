@@ -170,6 +170,19 @@ $lang = array_merge($lang, array(
 	'REMOVE_COMPLETE'		=> 'Το phpBB Garage αφαιρέθηκε!!',
 	'REMOVE_COMPLETE_EXPLAIN'	=> 'Το phpBB Garage αφαιρέθηκε με επιτυχία!!',
 	'INCOMPATIBLE_REMOVE_FILES'	=> 'Τα αρχεία απεγκατάστασης δεν είναι συμβατά με την  έκδοση του προγράμματος εγκατάστασης. Η εγκατεστημένη σας έκδοση είναι η %1$s και τα αρχεία απεγκατάστασης είναι για το phpBB Garage %2$s.',
+
+/**
+* Language keys for phpBB Garage UMIL support
+*/
+	'PHPBB_GARAGE'				=> 'phpBB Garage',
+	'PHPBB_GARAGE_EXPLAIN'			=> 'Αυτή η προσθήκη στην phpBB θα επιτρέψει στα μέλη να εισάγουν πληροφορίες σχετικά με τα οχήματα που έχουν.',
+	'INSTALL_PHPBB_GARAGE'			=> 'Εγκατάσταση phpBB Garage',
+	'INSTALL_PHPBB_GARAGE_CONFIRM'		=> 'Είσαστε έτοιμοι να εγκαταστήσετε το phpBB Garage;',
+	'INSERT_REQUIRED_DATA'			=> 'Εισαγωγή απαιτούμενων δεδομένων στους πίνακες του phpBB Garage.',
+	'UNINSTALL_PHPBB_GARAGE'		=> 'Απεγκατάσταση του phpBB Garage',
+	'UNINSTALL_PHPBB_GARAGE_CONFIRM'	=> 'Είσαστε σίγουροι ότι θέλετε να απεγκαταστήσετε το phpBB Garage;  Όλες οι ρυθμίσεις και τα αποθηκευμένα δεδομένα θα σβηστούν!',
+	'UPDATE_PHPBB_GARAGE'			=> 'Ενημέρωση phpBB Garage',
+	'UPDATE_PHPBB_GARAGE_CONFIRM'		=> 'Είσαστε σίγουροι ότι θέλετε να ενημερώσετε το phpBB Garage;'	
 ));
 
 ?>
