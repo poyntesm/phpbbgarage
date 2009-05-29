@@ -34,22 +34,22 @@ $lang = array_merge($lang, array(
 	'CONFIG_PHPBB_EMPTY'				=> 'De phpBB Garage configuratie variabele voor "%s" is leeg.',
 	'CONVERT_COMPLETE_EXPLAIN'			=> 'De conversie van je garage naar phpBB Garage 2.0 is succesvol afgerond. Je kunt nu inloggen en <a href="../../garage.php">je garage bezoeken</a>. Wees er zeker van dat alle instellingen succesvol overgezet zijn voordat het forum word geactiveerd door de installatie folder te verwijderen. Onthoud dat hulp voor het gebruik van de phpBB Garage online beschikbaar is via de <a href="http://www.phpbbgarage.com/support/documentation/2.0/">Documentatie</a> en de <a href="http://www.phpbbgarage.com/community/viewforum.php?f=4">beta support fora</a>.',
 	'CONVERT_INTRO'						=> 'Welkom op het phpBB Garage Unified Convertor Framework',
-	'CONVERT_INTRO_BODY'				=> 'Vanaf hier kun je data importeren van andere (ge&iumlnstalleerde) garage forum systemen. De onderstaande lijst toont de coversie modules die momenteel beschikbaar zijn. Als het door jou gezochte conversie module niet in de lijst voorkomt, bezoek dan onze website waar mogelijk meer conversie modules beschikbaar zijn om te downloaden.',
+	'CONVERT_INTRO_BODY'				=> 'Vanaf hier kun je data importeren van andere (ge&iuml;nstalleerde) garage forum systemen. De onderstaande lijst toont de coversie modules die momenteel beschikbaar zijn. Als het door jou gezochte conversie module niet in de lijst voorkomt, bezoek dan onze website waar mogelijk meer conversie modules beschikbaar zijn om te downloaden.',
 
 	'FILES_REQUIRED_EXPLAIN'			=> '<strong>Verplicht</strong> - Voor het goed functioneren van de phpBB Garage is het noodzakelijk dat bepaalde files en mappen toegankelijk en beschrijfbaar zijn. Als er “Niet gevonden” word weergegeven dient het relevante bestand of map aangemaakt te worden. Als “Onbeschrijfbaar” word weergegeven dienen de toegangsrechten van het bestand of map gewijzigd te worden om de phpBB Garage schrijfmogelijkheden te geven.',
 
 	'INSTALL_CONGRATS_EXPLAIN'			=> '
-		<p>Je hebt nu phpBB Garage %1$s succesvol ge&iumlnstalleerd. Vanaf hier zijn er twee mogelijkheden wat te doen met de nieuw ge&iumlnstalleerde phpBB Garage:</p>
+		<p>Je hebt nu phpBB Garage %1$s succesvol ge&iuml;nstalleerd. Vanaf hier zijn er twee mogelijkheden wat te doen met de nieuw ge&iuml;nstalleerde phpBB Garage:</p>
 		<h2>Converteer een bestaand garage forum naar de nieuwe phpBB Garage</h2>
 		<p>De phpBB Garage Unified Convertor Framework ondersteund de conversie van phpBB Garage 1.x.x en andere garage forum systemen naar phpBB Garage 2. Als je een bestaande garage hebt die je wil converteren <a href="%2$s">ga dan verder naar de conversie tool</a>.</p>
 		<h2>Maak de phpBB Garage 2 online toegankelijk!</h2>
 		<p>Klik op onderstaande button om naar het Administratie Controle Paneel (ACP) te gaan. Neem even de tijd om de beschikbare opties te verkennen. Onthoud dat er online hulp beschikbaar is op de <a href="http://www.phpbbgarage.com/support/documentation/3.0/">Documentatie</a> en de <a href="http://www.phpbbgarage.com/community/viewforum.php?f=4">beta support fora</a>, bekijk ook de <a href="%3$s">README</a> voor verdere informatie.</p>',
 	'UPDATE_CONGRATS_EXPLAIN'			=> '
 		<p>De update naar phpBB Garage %1$s is succesvol afgerond.',
-	'REMOVE_INTRO'						=> 'Welkom op de de&iumlnstallatie',
+	'REMOVE_INTRO'						=> 'Welkom op de de&iuml;nstallatie',
 	'REMOVE_INTRO_BODY'					=> 'Met deze optie is het mogelijk om phpBB Garage van de server te verwijderen.</p>
 
-	<p><strong>Opmerking:</strong> deze de&iumlnstallatie verwijdert de complete phpBB Garage software. Als de data eenmaal is verwijdert is er geen herstel optie. Alleen een backup van de database en de bestanden van voor het uitvoeren van deze actie kunnen de phpBB Garage terug zetten naar zijn vorige staat. Door op de volgende stap te klikken zal het deinstallatie proces gestart worden. GAN NIET VERDER TENZIJ JE HET ZEKER WEET.</p>
+	<p><strong>Opmerking:</strong> deze de&iuml;nstallatie verwijdert de complete phpBB Garage software. Als de data eenmaal is verwijdert is er geen herstel optie. Alleen een backup van de database en de bestanden van voor het uitvoeren van deze actie kunnen de phpBB Garage terug zetten naar zijn vorige staat. Door op de volgende stap te klikken zal het deinstallatie proces gestart worden. GAN NIET VERDER TENZIJ JE HET ZEKER WEET.</p>
 
 	<p>phpBB Garage verwijdert</p>
 	<ul>
@@ -92,7 +92,7 @@ $lang = array_merge($lang, array(
 	'RETRY_WRITE_EXPLAIN'				=> 'If you wish you can change the permissions on config.php to allow phpBB to write to it. Should you wish to do that you can click Retry below to try again. Remember to return the permissions on config.php after phpBB has finished installation.',
 
 	'SCRIPT_PATH'						=> 'Script pad',
-	'SCRIPT_PATH_EXPLAIN'				=> 'Het pad waar phpBB is ge&iumlnstalleerd relatief aan de domein naam, bijvoorbeeld <samp>/phpBB3</samp>.',
+	'SCRIPT_PATH_EXPLAIN'				=> 'Het pad waar phpBB is ge&iuml;nstalleerd relatief aan de domein naam, bijvoorbeeld <samp>/phpBB3</samp>.',
 	'SELECT_LANG'						=> 'Selecteer taal',
 	'SERVER_CONFIG'						=> 'Server configuratie',
 	'SEARCH_INDEX_UNCONVERTED'			=> 'Zoek index is niet geconverteerd',
@@ -108,7 +108,7 @@ $lang = array_merge($lang, array(
 	'STAGE_CREATE_PERMISSIONS'			=> 'Permissies aanmaken',
 	'STAGE_CREATE_PERMISSIONS_EXPLAIN'	=> 'Nieuwe permissies die benodigd zijn voor phpBB Garage zijn aangemaakt en toegekend aan standaard rollen als deze aanwezig zijn. Na de installatie dien je de wijzigingen te bevestigen als je tevreden bent met deze permissies.',
 	'STAGE_INSTALL_MODULES'				=> 'Modules installeren',
-	'STAGE_INSTALL_MODULES_EXPLAIN'		=> 'De phpBB Garage modules zijn ge&iumlnstalleerd.',
+	'STAGE_INSTALL_MODULES_EXPLAIN'		=> 'De phpBB Garage modules zijn ge&iuml;nstalleerd.',
 	'STAGE_DATABASE'					=> 'Instellingen database',
 	'STAGE_FINAL'						=> 'Laastste stap',
 	'STAGE_INTRO'						=> 'Introductie',
@@ -253,8 +253,8 @@ $lang = array_merge($lang, array(
 	'INSERT_OPTIONS'			=> 'Optionele data',
 	'INSERT_MAKES'				=> 'Merken toevoegen',
 	'INSERT_MAKES_EXPLAIN'		=> 'Voegt een aantal standaard merken en modellen toe.',
-	'INSERT_CATEGORIES'			=> 'Categorie&eumln toevoegen',
-	'INSERT_CATEGORIES_EXPLAIN'	=> 'Voegt een aantal standaard modificatie categorie&eumln toe.',
+	'INSERT_CATEGORIES'			=> 'Categorie&euml;n toevoegen',
+	'INSERT_CATEGORIES_EXPLAIN'	=> 'Voegt een aantal standaard modificatie categorie&euml;n toe.',
 	'CURRENT_VERSION'			=> 'Huidige versie',
 	'LATEST_VERSION'			=> 'Laatste versie',
 

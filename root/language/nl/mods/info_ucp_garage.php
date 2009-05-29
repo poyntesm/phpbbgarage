@@ -21,7 +21,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'UCP_GARAGE'				=> 'Garage',
 	'UCP_GARAGE_OPTIONS'		=> 'Algemene instellingen bewerken',
-	'UCP_GARAGE_NOTIFY'			=> 'Bericht notivicatie instellingen',
+	'UCP_GARAGE_NOTIFY'			=> 'Bericht notificatie instellingen',
 ));
 
 ?>
