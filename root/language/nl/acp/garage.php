@@ -103,8 +103,8 @@ $lang = array_merge($lang, array(
 	'ENABLE_INSURANCE_REVIEW_MENU_EXPLAIN' 		=> 'Het tabblad Verzekeringen is zichtbaar in het hoofdmenu.',
 	'ENABLE_GARAGE_REVIEW_MENU' 				=> 'Garage bedrijven menu inschakelen',
 	'ENABLE_GARAGE_REVIEW_MENU_EXPLAIN' 		=> 'Het tabblad Garage bedrijven is zichtbaar in het hoofdmenu',
-	'ENABLE_SHOP_REVIEW_MENU' 					=> 'Winkels &amp Bedrijven menu inschakelen',
-	'ENABLE_SHOP_REVIEW_MENU_EXPLAIN' 			=> 'Het tabblad Winkels &amp Bedrijven is zichtbaar in het hoofdmenu.',
+	'ENABLE_SHOP_REVIEW_MENU' 					=> 'Winkels &amp; Bedrijven menu inschakelen',
+	'ENABLE_SHOP_REVIEW_MENU_EXPLAIN' 			=> 'Het tabblad Winkels &amp; Bedrijven is zichtbaar in het hoofdmenu.',
 	'ENABLE_QUARTERMILE_MENU' 					=> '&frac14; mijl menu inschakelen',
 	'ENABLE_QUARTERMILE_MENU_EXPLAIN' 			=> 'Het tabblad &frac14; mijl is zichtbaar in het hoofdmenu.',
 	'ENABLE_DYNORUN_MENU' 						=> 'Dynorun menu inschakelen',
@@ -168,7 +168,7 @@ $lang = array_merge($lang, array(
 	'YEAR_RANGE_BEGINNING' 						=> 'Begin bouwjaar', 
 	'YEAR_RANGE_BEGINNING_EXPLAIN' 				=> 'Dit is het eerste jaar dat word weergegeven in de bouwjaar selectielijst bij het aanmaken van een nieuw voertuig. Formaat EEJJ', 
 	'YEAR_RANGE_END' 							=> 'Offset laatste bouwjaar',
-	'YEAR_RANGE_END_EXPLAIN' 					=> 'Aantal jaren dat bij het aanmaken van een nieuw voertuig word opgeteld of afgetrokken bij het huidige jaar hierdoor word het nieuwste modeljaar gecre&eumlrd. Bij een positief getal word het getal bij het huidige jaar opgeteld, bij een negatief getal word het ervan af getrokken.',
+	'YEAR_RANGE_END_EXPLAIN' 					=> 'Aantal jaren dat bij het aanmaken van een nieuw voertuig word opgeteld of afgetrokken bij het huidige jaar hierdoor word het nieuwste modeljaar gecre&euml;rd. Bij een positief getal word het getal bij het huidige jaar opgeteld, bij een negatief getal word het ervan af getrokken.',
 	'USER_SUBMIT_MAKE' 							=> 'Gebruikers merk inzendingen',
 	'USER_SUBMIT_MAKE_EXPLAIN' 					=> 'Mogen gebruikers nieuwe merken aanmaken?',
 	'USER_SUBMIT_MODEL' 						=> 'Gebruikers model inzedingen',
@@ -223,7 +223,7 @@ $lang = array_merge($lang, array(
 	'ENABLE_PRODUCT_APPROVAL' 					=> 'Produkt goedkeuring',
 	'ENABLE_PRODUCT_APPROVAL_EXPLAIN' 			=> 'Dit zorgt ervoor dat nieuwe Producten eerst goedgekeurd moeten worden door een moderater voordat ze worden toegevoegd aan de database.',
 	'ENABLE_PRODUCT_SEARCH' 					=> 'Produkt zoekfunctie inschakelen',
-	'ENABLE_PRODUCT_SEARCH_EXPLAIN' 			=> 'Dit geeft gebruikers de mogelijkheid om te zoeken naar Producten &amp fabrikanten.',
+	'ENABLE_PRODUCT_SEARCH_EXPLAIN' 			=> 'Dit geeft gebruikers de mogelijkheid om te zoeken naar Producten &amp; fabrikanten.',
 
 
 	'ENABLE_TRACKTIME'							=> 'Rondetijden inschakelen',
@@ -304,8 +304,8 @@ $lang = array_merge($lang, array(
 	'NO_DESTINATION_CATEGORY'		=> 'Geen bestemmingslocatie geselecteerd',
 	'NO_CATEGORY'					=> 'Categorie bestaat niet',
 	'CATEGORY_NAME_EMPTY'			=> 'Geen categorie naam opgegeven',
-	'GARAGE_CAT_TITLE' 				=> 'Garage categorie&eumln beheer',
-	'GARAGE_CAT_EXPLAIN' 			=> 'In dit venster kun je de categorie&eumln beheren: aanmaken, wijzigen, goedkeuren, afkeuren en verwijderen.',
+	'GARAGE_CAT_TITLE' 				=> 'Garage categorie&euml;n beheer',
+	'GARAGE_CAT_EXPLAIN' 			=> 'In dit venster kun je de categorie&euml;n beheren: aanmaken, wijzigen, goedkeuren, afkeuren en verwijderen.',
 
 	//QUOTA KEYS
 	'QUOTA_TITLE'					=> 'Maximaal aantal beheer',
@@ -377,7 +377,7 @@ $lang = array_merge($lang, array(
 	'DELETE_MADE_MODIFICATIONS'		=> 'Verwijder modificaties die gemaakt zijn door dit bedrijf',
 
 //Merken & modellen
-	'MODELS_TITLE' 					=> 'Garage Merken &amp Modellen beheer',
+	'MODELS_TITLE' 					=> 'Garage Merken &amp; Modellen beheer',
 	'MODELS_EXPLAIN' 				=> 'Hieronder kun je je merken en modellen toevoegen, wijzigen, goedkeuren, afkeuren en verwijderen.',
 	'CREATE_MAKE'					=> 'Merk aanmaken',
 	'CREATE_MODEL'					=> 'Model aanmaken',
@@ -453,8 +453,8 @@ $lang = array_merge($lang, array(
 	'ACP_MANAGE_BUSINESS' 			=> 'Bedrijven configuratie',
 	'ACP_MANAGE_PRODUCTS'			=> 'Producten beheer',
 	'ACP_MANAGE_TRACKS'				=> 'Circuit beheer',
-	'ACP_MANAGE_CATEGORY'			=> 'Beheer categorie&eumln',
-	'ACP_MANAGE_MAKES_MODELS'		=> 'Merken &amp Modellen beheer',
+	'ACP_MANAGE_CATEGORY'			=> 'Beheer categorie&euml;n',
+	'ACP_MANAGE_MAKES_MODELS'		=> 'Merken &amp; Modellen beheer',
 
 	//Added For B4
 	'DEFAULT_MAKE' 						=> 'Standaard merk ID',
