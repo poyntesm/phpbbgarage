@@ -257,14 +257,15 @@ switch( $mode )
 			$template->assign_vars(array(
 				'S_DISPLAY_DYNORUNS' => true)
 			);
-			$garage_template->dynorun_dropdown($data['dynorun_id'], $bhp_statement, $vid);
+			#$garage_template->dynorun_dropdown($dynoruns, $data['dynorun_id'], $bhp_statement, $vid);
+			$garage_template->dynorun_dropdown($dynoruns, $data['dynorun_id']);
 		}
 		else if (($data['dynorun_id'] == 0) AND (sizeof($dynoruns) > 0))
 		{
 			$template->assign_vars(array(
 				'S_DISPLAY_DYNORUNS' => true)
 			);
-			$garage_template->dynorun_dropdown(NULL, NULL, $vid);
+			$garage_template->dynorun_dropdown($dynoruns);
 		}
 		$garage_template->attach_image('quartermile');
 		$template->assign_vars(array(

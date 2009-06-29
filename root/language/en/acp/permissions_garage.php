@@ -76,7 +76,7 @@ $lang = array_merge($lang, array(
 	'acl_m_garage_approve_vehicle'		=> array('lang' => 'Can approve vehicles', 'cat' => 'garage'),
 	'acl_m_garage_approve_make'		=> array('lang' => 'Can approve makes', 'cat' => 'garage'),
 	'acl_m_garage_approve_model'		=> array('lang' => 'Can approve models', 'cat' => 'garage'),
-	'acl_m_garage_approve_business'		=> array('lang' => 'Can approve business\'s', 'cat' => 'garage'),
+	'acl_m_garage_approve_business'		=> array('lang' => 'Can approve businesses', 'cat' => 'garage'),
 	'acl_m_garage_approve_quartermile'	=> array('lang' => 'Can approve quartermiles', 'cat' => 'garage'),
 	'acl_m_garage_approve_dynorun'		=> array('lang' => 'Can approve dynoruns', 'cat' => 'garage'),
 	'acl_m_garage_approve_guestbook'	=> array('lang' => 'Can approve guestbook comments', 'cat' => 'garage'),

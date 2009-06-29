@@ -33,7 +33,7 @@
 					<td class="row1" width="20%"><span class="gen">{L_VEHICLE_MAKE}</span></td>
 					<td class="row2"><input name="make" type="text" class="post" size="35" value="{MAKE}" /></td>
 				</tr>
-			<!-- ENDIF-->
+			<!-- ENDIF -->
 
 			<!-- IF S_USER_SUBMIT_MODEL and ! S_USER_SUBMIT_SUCCESS -->
 			<thead>
@@ -55,7 +55,7 @@
 					<td class="row1" width="20%"><span class="gen">{L_VEHICLE_MODEL}</span></td>
 					<td class="row2"><input name="model" type="text" class="post" size="35" value="{S_MODEL}" /></td>
 				</tr>
-			<!-- ENDIF-->
+			<!-- ENDIF -->
 
 			<!-- IF S_USER_SUBMIT_PRODUCT and ! S_USER_SUBMIT_SUCCESS -->
 			<thead>
@@ -81,7 +81,7 @@
 					<td class="row1" width="20%"><span class="gen"><b>{L_MODIFICATION}&nbsp;{L_PRODUCT}</b></span></td>
 					<td class="row2"><input name="title" type="text" class="post" size="35" value="" /></td>
 				</tr>
-			<!-- ENDIF-->
+			<!-- ENDIF -->
 
 			<!-- IF S_USER_SUBMIT_TRACK and ! S_USER_SUBMIT_SUCCESS -->
 			<thead>
@@ -99,7 +99,7 @@
 					<td class="row2"><input name="length" type="text" class="post" size="15" value="{LENGTH}" />&nbsp;<select id="mileage_unit" name="mileage_unit"><option value="">{L_SELECT_MILEAGE_UNIT}</option><option value="">------</option><!-- BEGIN mileage --><option value="{mileage.VALUE}" <!-- IF mileage.S_SELECTED -->selected="selected"<!-- ENDIF -->>{mileage.TEXT}</option><!-- END mileage --></select></td>
 				</tr>
 
-			<!-- ENDIF-->
+			<!-- ENDIF -->
 
 			<!-- IF S_USER_SUBMIT_BUSINESS and ! S_USER_SUBMIT_SUCCESS -->
 			<thead>
@@ -145,7 +145,7 @@
 					<td class="row1" width="20%"><span class="gen"><b>{L_TYPE}</b></span></td>
 					<td class="row2">{L_INSURANCE}&nbsp;:&nbsp;<input type="checkbox" name="insurance" value="1" <!-- IF S_BUSINESS_INSURANCE -->checked="checked"<!-- ENDIF --> /><br />{L_GARAGE}&nbsp;:&nbsp;<input type="checkbox" name="garage" value="1" <!-- IF S_BUSINESS_GARAGE-->checked="checked"<!-- ENDIF --> /><br />{L_RETAIL}&nbsp;:&nbsp;<input type="checkbox" name="retail" value="1" <!-- IF S_BUSINESS_RETAIL -->checked="checked"<!-- ENDIF --> /><br />{L_PRODUCT_MANUFACTURER}&nbsp;:&nbsp;<input type="checkbox" name="product" value="1" <!-- IF S_BUSINESS_PRODUCT -->checked="checked"<!-- ENDIF --> /><br />{L_DYNOCENTRE}&nbsp;:&nbsp;<input type="checkbox" name="dynocentre" value="1" <!-- IF S_BUSINESS_DYNOCENTRE -->checked="checked"<!-- ENDIF --> /></td>
 				</tr>
-				<!-- ENDIF-->
+				<!-- ENDIF -->
 
 
 				<tr>

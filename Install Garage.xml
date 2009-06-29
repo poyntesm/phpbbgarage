@@ -87,7 +87,7 @@
 			<file from="./root/garage_vehicle.php" to="./garage_vehicle.php" />
 		</copy>
 
-		<diy-instructions lang="en-gb"><![CDATA[Open your web browser and open the address http://www.yourdomain.com/pathtophpbb/garage/install/]]>
+		<diy-instructions lang="en-gb"><![CDATA[Open your web browser and open the address http://www.yourdomain.com/pathtophpbb/garage_install.php]]>
 		</diy-instructions>
 	    
 		<open src="common.php">
@@ -403,7 +403,7 @@ $template->assign_vars(array(
 				<action type="after-add"><![CDATA[//-- mod : Garage ----------------------------------------------------------------------------------------------------------]]></action>
 			</edit>
 			<edit>
-				<find><![CDATA[		set_config('num_users', $config['num_users'] - 1, true);
+				<find><![CDATA[		set_config_count('num_users', -1, true);
 	}]]></find>
 				<action type="after-add"><![CDATA[
 //-- mod start : Garage ----------------------------------------------------------------------------------------------------

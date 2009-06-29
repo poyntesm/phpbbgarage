@@ -11,6 +11,8 @@
 
 <link href="{UMIL_ROOT_PATH}style/style.css" rel="stylesheet" type="text/css" media="screen" />
 
+<!-- INCLUDE parse.css -->
+
 <script type="text/javascript">
 // <![CDATA[
 
@@ -92,3 +94,11 @@ function dE(n, s, type)
 					</div>
 
 					<div id="main" class="install-body">
+
+		 <!-- IF S_BOARD_DISABLED -->
+		<div class="rules">
+			<div class="inner"><span class="corners-top"><span></span></span>
+				<strong>{L_INFORMATION}:</strong> {L_BOARD_DISABLED}
+			<span class="corners-bottom"><span></span></span></div>
+		</div>
+		<!-- ENDIF -->

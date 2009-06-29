@@ -191,7 +191,7 @@ switch( $mode )
 		/**
 		* Get all required/optional data and check required data is present
 		*/
-		$params = array('dynocentre_id' => '', 'bhp' => '', 'bhp_decimal' => '', 'torque' => 0, 'torque_decimal' => 0, 'boost' => 0, 'boost_unit' => 0, 'nitrous' => 0, 'peakpoint' => 0, 'peakpoint_decimal' => 0);
+		$params = array('dynocentre_id' => '', 'bhp' => '', 'bhp_decimal' => '', 'torque' => 0, 'torque_decimal' => 0, 'boost' => 0, 'boost_decimal' => 0, 'nitrous' => 0, 'peakpoint' => 0, 'peakpoint_decimal' => 0);
 		$data 	= $garage->process_vars($params);
 		$params = array('bhp_unit' => '', 'torque_unit' => '', 'boost_unit' => 'PSI');
 		$data	+= $garage->process_mb_vars($params);

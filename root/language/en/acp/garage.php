@@ -53,8 +53,8 @@ $lang = array_merge($lang, array(
 	'ENABLE_INSURANCE_EXPLAIN' 			=> 'This will allow users to add insurance data to vehicles',
 	'ENABLE_INSURANCE_SEARCH' 			=> 'Enable Insurance Search',
 	'ENABLE_INSURANCE_SEARCH_EXPLAIN' 		=> 'This will enable searching for insurance data.',
-	'BUSINESS_APPROVAL' 				=> 'Business\'s Need Approval',
-	'BUSINESS_APPROVAL_EXPLAIN' 			=> 'This will make all business\'s need approval from a moderator or administrator before appearing.',
+	'BUSINESS_APPROVAL' 				=> 'Businesses Need Approval',
+	'BUSINESS_APPROVAL_EXPLAIN' 			=> 'This will make all businesses need approval from a moderator or administrator before appearing.',
 	'RATING_PERMANENT' 				=> 'Ratings Permanent',
 	'RATING_PERMANENT_EXPLAIN' 			=> 'Allows you to set the inital rating as a permanent unchangable value.',
 	'RATING_ALWAYS_UPDATEABLE' 			=> 'Rating Always Updateable',
@@ -174,7 +174,7 @@ $lang = array_merge($lang, array(
 	'USER_SUBMIT_MODEL' 				=> 'User Model Submission',
 	'USER_SUBMIT_MODEL_EXPLAIN' 			=> 'Enable users to submit new models',
 	'USER_SUBMIT_BUSINESS' 				=> 'User Business Submission',
-	'USER_SUBMIT_BUSINESS_EXPLAIN' 			=> 'Enable users to submit new business\'s',
+	'USER_SUBMIT_BUSINESS_EXPLAIN' 			=> 'Enable users to submit new businesses',
 	'ENABLE_LATESTMAIN_VEHICLE' 			=> 'Enable Latest Vehicles',
 	'ENABLE_LATESTMAIN_VEHICLE_EXPLAIN' 		=> 'Enable \'Latest Updated\' block on all pages',
 	'LATESTMAIN_VEHCILE_LIMIT' 			=> 'Latest Vehicles Limit ',
@@ -321,7 +321,7 @@ $lang = array_merge($lang, array(
 
 	//BUSINESS KEYS
 	'GARAGE_BUSINESS_TITLE' 	=> 'Garage Business Control',
-	'GARAGE_BUSINESS_EXPLAIN' 	=> 'On this screen you can manage your business\'s: create, edit, delete.',
+	'GARAGE_BUSINESS_EXPLAIN' 	=> 'On this screen you can manage your businesses: create, edit, delete.',
 	'EDIT_BUSINESS'			=> 'Edit business',
 	'CREATE_BUSINESS'		=> 'Create business',
 	'BUSINESS_CREATED'		=> 'Business created',
@@ -386,7 +386,7 @@ $lang = array_merge($lang, array(
 
 	//PRODUCT KEYS
 	'MANUFACTURER_TITLE'		=> 'Garage Product Control',
-	'MANUFACTURER_EXPLAIN'		=> 'On this screen you can manage your products: add, modify, delete. Manufacturers are business\'s and are managed through business management.',
+	'MANUFACTURER_EXPLAIN'		=> 'On this screen you can manage your products: add, modify, delete. Manufacturers are businesses and are managed through business management.',
 	'MANUFACTURER_INDEX'		=> 'Manufacturer Index',
 	'CREATE_PRODUCT'		=> 'Create product',
 	'PRODUCTS_TITLE'		=> 'Garage Product Control',

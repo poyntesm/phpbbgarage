@@ -4,7 +4,7 @@
  * @author Nathan Guse (EXreaction) http://lithiumstudios.org
  * @author David Lewis (Highway of Life) highwayoflife@gmail.com
  * @package umil
- * @version $Id: umil_frontend.php 53 2009-01-03 22:34:27Z exreaction $
+ * @version $Id: umil_frontend.php 149 2009-06-16 00:58:51Z exreaction $
  * @copyright (c) 2008 phpBB Group
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  */
@@ -49,25 +49,31 @@ class umil_frontend extends umil
 
 	/**
 	* Constructor
+	*
+	* @param string $title The title to display
+	* @param bool $auto_display_results Automatically display results or not?
+	* @param bool $force_display_results Allows you to force this to automatically display all results
+	* @param object|bool $db Allows you to use your own $db object instead of the global $db
 	*/
-	function umil_frontend($title = '', $auto_display_results = false, $force_display_results = false)
+	function umil_frontend($title = '', $auto_display_results = false, $force_display_results = false, $db = false)
 	{
-		global $db, $phpbb_root_path, $phpEx, $template, $user;
+		global $phpbb_root_path, $phpEx, $template, $user;
 
 		$this->title = $title;
 
-		// Need some ACP language items.
-		$user->add_lang('acp/common');
-
 		// we must call the main constructor
-		$this->umil();
+		$this->umil(false, $db);
 		$this->auto_display_results = $auto_display_results;
 		$this->force_display_results = $force_display_results;
 
 		$user->add_lang('install');
 
 		// Setup the template
-		$template->set_custom_template($phpbb_root_path . 'umil/style/', 'umil');
+		$template->set_custom_template($phpbb_root_path . 'umil/style', 'umil');
+
+		// The UMIL template is never stored in the database
+		$user->theme['template_storedb'] = false;
+
 		$template->set_filenames(array(
 			'body' => 'index_body.html',
 		));
@@ -75,15 +81,16 @@ class umil_frontend extends umil
 		$title_explain = (isset($user->lang[$title . '_EXPLAIN'])) ? $user->lang[$title . '_EXPLAIN'] : '';
 		$title = (isset($user->lang[$title])) ? $user->lang[$title] : $title;
 
-		page_header($title);
+		page_header($title, false);
 
 		$template->assign_vars(array(
-			'SQL_LAYER'			=> $db->sql_layer,
+			'SQL_LAYER'			=> $this->db->sql_layer,
 			'UMIL_ROOT_PATH'	=> $phpbb_root_path . 'umil/',
 
 			'U_ADM_INDEX'		=> append_sid("{$phpbb_root_path}adm/index.$phpEx", false, true, $user->session_id),
 			'U_INDEX'			=> append_sid("{$phpbb_root_path}index.$phpEx"),
 
+			'PAGE_TITLE'		=> $title,
 			'L_TITLE'			=> $title,
 			'L_TITLE_EXPLAIN'	=> $title_explain,
 		));
@@ -221,7 +228,7 @@ class umil_frontend extends umil
 	*/
 	function display_results($command = '', $result = '')
 	{
-		global $template, $user;
+		global $config, $template, $user, $phpbb_root_path;
 
 		$command = ($command) ? $command : $this->command;
 		$command = (isset($user->lang[$command])) ? $user->lang[$command] : $command;
@@ -232,39 +239,55 @@ class umil_frontend extends umil
 
 		if ($result != $user->lang['SUCCESS'])
 		{
-			if ($this->errors == false)
+			// Check if the umil/error_files/ is writable
+			if (!is_writable("{$phpbb_root_path}umil/error_files/"))
 			{
-				$this->errors = true;
-
-				global $phpbb_root_path;
-				// Setting up an error recording file
-				$append = 0;
-				$this->error_file = "{$phpbb_root_path}umil/error_files/" . strtolower($this->title) . '.txt';
-				while (file_exists($this->error_file))
-				{
-					$this->error_file = "{$phpbb_root_path}umil/error_files/" . strtolower($this->title) . $append . '.txt';
-					$append++;
-				}
+				phpbb_chmod("{$phpbb_root_path}umil/error_files/", CHMOD_ALL);
 			}
 
-			if (file_exists($this->error_file) && filesize($this->error_file))
+			// Hopefully it is writable now.  If not there is nothing we can do.
+			if (is_writable("{$phpbb_root_path}umil/error_files/"))
 			{
-				$fp = fopen($this->error_file, 'rb');
-				$contents = fread($fp, filesize($this->error_file));
+				if ($this->errors == false)
+				{
+					$this->errors = true;
+
+					// Setting up an error recording file
+					$append = 0;
+					$this->error_file = "{$phpbb_root_path}umil/error_files/" . strtolower($this->title) . '.txt';
+					while (file_exists($this->error_file))
+					{
+						$this->error_file = "{$phpbb_root_path}umil/error_files/" . strtolower($this->title) . $append . '.txt';
+						$append++;
+					}
+				}
+
+				if (file_exists($this->error_file) && filesize($this->error_file))
+				{
+					$fp = fopen($this->error_file, 'rb');
+					$contents = fread($fp, filesize($this->error_file));
+					fclose($fp);
+					phpbb_chmod($this->error_file, CHMOD_ALL);
+				}
+				else
+				{
+					$contents = ((isset($user->lang[$this->title])) ? $user->lang[$this->title] : $this->title) . "\n";
+					$contents .= 'PHP Version: ' . phpversion() . "\n";
+					$contents .= 'DBMS: ' . $this->db->sql_server_info() . "\n";
+					$contents .= 'phpBB3 Version: ' . $config['version'] . "\n\n";
+				}
+
+				$contents .= "{$command}\n{$result}\n\n";
+
+				$fp = fopen($this->error_file, 'wb');
+				fwrite($fp, $contents);
 				fclose($fp);
 				phpbb_chmod($this->error_file, CHMOD_ALL);
 			}
 			else
 			{
-				$contents = ((isset($user->lang[$this->title])) ? $user->lang[$this->title] : $this->title) . "\n\n";
+				$this->errors = true;
 			}
-
-			$contents .= "{$command}\n{$result}\n\n";
-
-			$fp = fopen($this->error_file, 'wb');
-			fwrite($fp, $contents);
-			fclose($fp);
-			phpbb_chmod($this->error_file, CHMOD_ALL);
 		}
 
 		if ($result != $user->lang['SUCCESS'] || $this->force_display_results == true)// || defined('DEBUG'))
@@ -284,13 +307,16 @@ class umil_frontend extends umil
 	*/
 	function done()
 	{
-		global $template, $user;
+		global $phpbb_root_path, $phpEx, $template, $user;
+
+		$download_file = ($this->error_file) ? append_sid("{$phpbb_root_path}umil/file.$phpEx", 'file=' . basename($this->error_file, '.txt')) : '';
+		$filename = ($this->error_file) ? 'umil/error_files/' . basename($this->error_file) : '';
 
 		$template->assign_vars(array(
 			'U_ERROR_FILE'		=> $this->error_file,
 
 			'L_RESULTS'			=> ($this->errors) ? $user->lang['FAIL'] : $user->lang['SUCCESS'],
-			'L_ERROR_NOTICE'	=> sprintf($user->lang['ERROR_NOTICE'], $this->error_file),
+			'L_ERROR_NOTICE'	=> ($this->errors) ? (($this->error_file) ? sprintf($user->lang['ERROR_NOTICE'], $download_file, $filename) : $user->lang['ERROR_NOTICE_NO_FILE']) : '',
 
 			'S_RESULTS'			=> $this->results,
 			'S_SUCCESS'			=> ($this->errors) ? false : true,
@@ -356,6 +382,7 @@ class umil_frontend extends umil
 			break;
 
 			case 'select':
+			case 'select_multiple':
 			case 'custom':
 
 				$return = '';
@@ -390,12 +417,22 @@ class umil_frontend extends umil
 				}
 				else
 				{
+					if ($tpl_type[0] == 'select_multiple')
+					{
+						$new[$config_key] = @unserialize(trim($new[$config_key]));
+					}
+
 					$args = array($default, $name);
 				}
 
 				$return = call_user_func_array($call, $args);
 
-				if ($tpl_type[0] == 'select')
+
+				if ($tpl_type[0] == 'select_multiple')
+				{
+					$tpl = '<select id="' . $key . '" name="' . $name . '[]" multiple="multiple">' . $return . '</select>';
+				}
+				else if ($tpl_type[0] == 'select')
 				{
 					$multiple	= ((isset($vars['multiple']) && $vars['multiple']) ? ' multiple="multiple"' : '');
 					$tpl['tpl']		= '<select id="' . $name . '" name="' . $name . (!empty($multiple) ? '[]' : '') . '"' . $multiple . '>' . $return . '</select>';
@@ -420,4 +457,163 @@ class umil_frontend extends umil
 	}
 }
 
+// Compatibility
+if (!function_exists('phpbb_chmod'))
+{
+	// They shouldn't be defined...but just in case...
+	if (!defined('CHMOD_ALL'))
+	{
+		@define('CHMOD_ALL', 7);
+		@define('CHMOD_READ', 4);
+		@define('CHMOD_WRITE', 2);
+		@define('CHMOD_EXECUTE', 1);
+	}
+
+	/**
+	* Global function for chmodding directories and files for internal use
+	* This function determines owner and group whom the file belongs to and user and group of PHP and then set safest possible file permissions.
+	* The function determines owner and group from common.php file and sets the same to the provided file. Permissions are mapped to the group, user always has rw(x) permission.
+	* The function uses bit fields to build the permissions.
+	* The function sets the appropiate execute bit on directories.
+	*
+	* Supported constants representing bit fields are:
+	*
+	* CHMOD_ALL - all permissions (7)
+	* CHMOD_READ - read permission (4)
+	* CHMOD_WRITE - write permission (2)
+	* CHMOD_EXECUTE - execute permission (1)
+	*
+	* NOTE: The function uses POSIX extension and fileowner()/filegroup() functions. If any of them is disabled, this function tries to build proper permissions, by calling is_readable() and is_writable() functions.
+	*
+	* @param $filename The file/directory to be chmodded
+	* @param $perms Permissions to set
+	* @return true on success, otherwise false
+	*
+	* @author faw, phpBB Group
+	*/
+	function phpbb_chmod($filename, $perms = CHMOD_READ)
+	{
+		// Return if the file no longer exists.
+		if (!file_exists($filename))
+		{
+			return false;
+		}
+
+		if (!function_exists('fileowner') || !function_exists('filegroup'))
+		{
+			$file_uid = $file_gid = false;
+			$common_php_owner = $common_php_group = false;
+		}
+		else
+		{
+			global $phpbb_root_path, $phpEx;
+
+			// Determine owner/group of common.php file and the filename we want to change here
+			$common_php_owner = fileowner($phpbb_root_path . 'common.' . $phpEx);
+			$common_php_group = filegroup($phpbb_root_path . 'common.' . $phpEx);
+
+			$file_uid = fileowner($filename);
+			$file_gid = filegroup($filename);
+
+			// Try to set the owner to the same common.php has
+			if ($common_php_owner !== $file_uid && $common_php_owner !== false && $file_uid !== false)
+			{
+				// Will most likely not work
+				if (@chown($filename, $common_php_owner));
+				{
+					clearstatcache();
+					$file_uid = fileowner($filename);
+				}
+			}
+
+			// Try to set the group to the same common.php has
+			if ($common_php_group !== $file_gid && $common_php_group !== false && $file_gid !== false)
+			{
+				if (@chgrp($filename, $common_php_group));
+				{
+					clearstatcache();
+					$file_gid = filegroup($filename);
+				}
+			}
+		}
+
+		// And the owner and the groups PHP is running under.
+		$php_uid = (function_exists('posix_getuid')) ? @posix_getuid() : false;
+		$php_gids = (function_exists('posix_getgroups')) ? @posix_getgroups() : false;
+
+		// Who is PHP?
+		if ($file_uid === false || $file_gid === false || $php_uid === false || $php_gids === false)
+		{
+			$php = NULL;
+		}
+		else if ($file_uid == $php_uid /* && $common_php_owner !== false && $common_php_owner === $file_uid*/)
+		{
+			$php = 'owner';
+		}
+		else if (in_array($file_gid, $php_gids))
+		{
+			$php = 'group';
+		}
+		else
+		{
+			$php = 'other';
+		}
+
+		// Owner always has read/write permission
+		$owner = CHMOD_READ | CHMOD_WRITE;
+		if (is_dir($filename))
+		{
+			$owner |= CHMOD_EXECUTE;
+
+			// Only add execute bit to the permission if the dir needs to be readable
+			if ($perms & CHMOD_READ)
+			{
+				$perms |= CHMOD_EXECUTE;
+			}
+		}
+
+		switch ($php)
+		{
+			case null:
+			case 'owner':
+				/* ATTENTION: if php is owner or NULL we set it to group here. This is the most failsafe combination for the vast majority of server setups.
+
+				$result = @chmod($filename, ($owner << 6) + (0 << 3) + (0 << 0));
+
+				clearstatcache();
+
+				if (!is_null($php) || (is_readable($filename) && is_writable($filename)))
+				{
+					break;
+				}
+			*/
+
+			case 'group':
+				$result = @chmod($filename, ($owner << 6) + ($perms << 3) + (0 << 0));
+
+				clearstatcache();
+
+				if (!is_null($php) || ((!($perms & CHMOD_READ) || is_readable($filename)) && (!($perms & CHMOD_WRITE) || is_writable($filename))))
+				{
+					break;
+				}
+
+			case 'other':
+				$result = @chmod($filename, ($owner << 6) + ($perms << 3) + ($perms << 0));
+
+				clearstatcache();
+
+				if (!is_null($php) || ((!($perms & CHMOD_READ) || is_readable($filename)) && (!($perms & CHMOD_WRITE) || is_writable($filename))))
+				{
+					break;
+				}
+
+			default:
+				return false;
+			break;
+		}
+
+		return $result;
+	}
+}
 ?>

@@ -23,7 +23,7 @@ if (empty($lang) || !is_array($lang))
 */
 $lang = array_merge($lang, array(
 	'ACP_GARAGE'				=> 'Garage',
-	'ACP_GARAGE_BUSINESS'			=> 'Business\'s',
+	'ACP_GARAGE_BUSINESS'			=> 'Businesses',
 	'ACP_GARAGE_BUSINESS_MANAGEMENT'	=> 'Garage business management',
 	'ACP_GARAGE_CATEGORIES'			=> 'Categories',
 	'ACP_GARAGE_CATEGORY_MANAGEMENT'	=> 'Garage category management',

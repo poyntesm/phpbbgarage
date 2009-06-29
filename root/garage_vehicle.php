@@ -310,7 +310,7 @@ switch( $mode )
 			'COMMENTS' 		=> $data['comments'],
 			'URL_IMAGE'		=> $data['url_image'],
 			'S_DISPLAY_SUBMIT_MAKE'	=> $garage_config['enable_user_submit_make'],
-			'S_DISPLAY_SUBMIT_MODEL'=> $garage_config['enable_user_submit_make'],
+			'S_DISPLAY_SUBMIT_MODEL'=> $garage_config['enable_user_submit_model'],
 			'S_MODE_USER_SUBMIT' 	=> append_sid("{$phpbb_root_path}garage.$phpEx", "mode=user_submit_data"),
 			'S_MODE_ACTION' 	=> append_sid("{$phpbb_root_path}garage_vehicle.$phpEx", "mode=insert_vehicle"))
 		);

@@ -31,6 +31,15 @@ $version_config_name = 'phpbbgarage_version';
 $language_file = 'mods/garage_install';
 
 /*
+* Options to display to the user (this is purely optional, if you do not need the options you do not have to set up this variable at all)
+* Uses the acp_board style of outputting information, with some extras (such as the 'default' and 'select_user' options)
+*/
+$options = array(
+	'install_makes'		=> array('lang' => 'INSERT_MAKES', 'type' => 'radio:yes_no', 'default' => true),
+	'install_categories'	=> array('lang' => 'INSERT_CATEGORIES', 'type' => 'radio:yes_no', 'default' => true),
+);
+
+/*
 * The array of versions
 */
 $versions = array(
@@ -103,10 +112,6 @@ $versions = array(
 					'field_order'		=> array('USINT', 0),
 				),
 				'PRIMARY_KEY'	=> 'id',
-				'KEYS'			=> array(
-					'title'		=> array('INDEX', 'title'),
-					'id'		=> array('INDEX', array('id', 'title')),
-				),
 			)),
 			array('phpbb_garage_config', array(
 				'COLUMNS'		=> array(
@@ -1864,9 +1869,19 @@ function garage_model_entries($action, $version)
 */
 function garage_data_entry($action, $version)
 {
+	$install_makes = request_var('install_makes', true);
+	$install_categories = request_var('install_categories', true);
+
 	garage_config_entries($action, $version);
-	garage_model_entries($action, $version);
-	garage_category_entries($action, $version);
+
+	if ($install_makes)
+	{
+		garage_model_entries($action, $version);
+	}
+	if ($install_makes)
+	{
+		garage_category_entries($action, $version);
+	}
 
 	return 'INSERT_REQUIRED_DATA';
 }

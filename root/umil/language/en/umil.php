@@ -1,9 +1,18 @@
 <?php
 /**
-* @package phpBB3 UMIL - Unified MOD Install File
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
-*/
+ *
+ * @author Nathan Guse (EXreaction) http://lithiumstudios.org
+ * @author David Lewis (Highway of Life) highwayoflife@gmail.com
+ * @package umil
+ * @version $Id: umil.php 149 2009-06-16 00:58:51Z exreaction $
+ * @copyright (c) 2008 phpBB Group
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ *
+ */
 
+/**
+ * @ignore
+ */
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -25,13 +34,17 @@ if (empty($lang) || !is_array($lang))
 // You do not need this where single placeholders are used, e.g. 'Message %d' is fine
 // equally where a string contains only two placeholders which are used to wrap text
 // in a url you again do not need to specify an order e.g., 'Click %sHERE%s' is fine
+//
+// Some characters you may want to copy&paste:
+// ’ » “ ” …
+//
 
 $lang = array_merge($lang, array(
 	'ACTION'						=> 'Action',
 	'ADVANCED'						=> 'Advanced',
 	'AUTH_CACHE_PURGE'				=> 'Purging the Auth Cache',
 
-	'CACHE_PURGE'					=> 'Purging your forum\'s cache',
+	'CACHE_PURGE'					=> 'Purging your forum’s cache',
 	'CONFIGURE'						=> 'Configure',
 	'CONFIG_ADD'					=> 'Adding new config variable: %s',
 	'CONFIG_ALREADY_EXISTS'			=> 'ERROR: Config variable %s already exists.',
@@ -42,9 +55,11 @@ $lang = array_merge($lang, array(
 	'DISPLAY_RESULTS'				=> 'Display Full Results',
 	'DISPLAY_RESULTS_EXPLAIN'		=> 'Select yes to display all of the actions and results during the requested action.',
 
-	'ERROR_NOTICE'					=> 'One or more errors occured during the requested action.  Please download <a href="%s">this file</a> with the errors listed in it and ask the mod author for assistance.',
+	'ERROR_NOTICE'					=> 'One or more errors occured during the requested action.  Please download <a href="%1$s">this file</a> with the errors listed in it and ask the mod author for assistance.<br /><br />If you have any problem downloading that file you may access it directly with an FTP browser at the following location: %2$s',
+	'ERROR_NOTICE_NO_FILE'			=> 'One or more errors occured during the requested action.  Please make a full record of any errors and ask the mod author for assistance.',
 
 	'FAIL'							=> 'Fail',
+	'FILE_COULD_NOT_READ'			=> 'ERROR: Could not open the file %s for reading.',
 	'FOUNDERS_ONLY'					=> 'You must be a board founder to access this page.',
 
 	'GROUP_NOT_EXIST'				=> 'Group does not exist',
@@ -53,14 +68,17 @@ $lang = array_merge($lang, array(
 	'IMAGESET_CACHE_PURGE'			=> 'Refreshing the %s imageset',
 	'INSTALL'						=> 'Install',
 	'INSTALL_MOD'					=> 'Install %s',
-	'INSTALL_MOD_CONFIRM'			=> 'Are you ready to install the %s?',
+	'INSTALL_MOD_CONFIRM'			=> 'Are you ready to install %s?',
 
 	'MODULE_ADD'					=> 'Adding %1$s module: %2$s',
+	'MODULE_ALREADY_EXIST'			=> 'ERROR: Module already exists.',
 	'MODULE_NOT_EXIST'				=> 'ERROR: Module does not exist.',
 	'MODULE_REMOVE'					=> 'Removing %1$s module: %2$s',
 
 	'NONE'							=> 'None',
+	'NO_TABLE_DATA'					=> 'ERROR: No table data was specified',
 
+	'PARENT_NOT_EXIST'				=> 'ERROR: The parent category specified for this module does not exist.',
 	'PERMISSIONS_WARNING'			=> 'New permission settings have been added.  Be sure to check your permission settings and see that they are as you would like them.',
 	'PERMISSION_ADD'				=> 'Adding new permission option: %s',
 	'PERMISSION_ALREADY_EXISTS'		=> 'ERROR: Permission option %s already exists.',
@@ -88,19 +106,23 @@ $lang = array_merge($lang, array(
 	'TABLE_KEY_REMOVE'				=> 'Removing a key named %2$s from table %1$s',
 	'TABLE_NOT_EXIST'				=> 'ERROR: Database table %s does not exist.',
 	'TABLE_REMOVE'					=> 'Removing database table: %s',
+	'TABLE_ROW_INSERT_DATA'			=> 'Inserting data in the %s database table.',
+	'TABLE_ROW_REMOVE_DATA'			=> 'Removing a row from the %s database table',
+	'TABLE_ROW_UPDATE_DATA'			=> 'Updating a row in the %s database table.',
 	'TEMPLATE_CACHE_PURGE'			=> 'Refreshing the %s template',
 	'THEME_CACHE_PURGE'				=> 'Refreshing the %s theme',
 
 	'UNINSTALL'						=> 'Uninstall',
 	'UNINSTALL_MOD'					=> 'Uninstall %s',
-	'UNINSTALL_MOD_CONFIRM'			=> 'Are you ready to uninstall the %s?  All settings and data saved by this mod will be removed!',
+	'UNINSTALL_MOD_CONFIRM'			=> 'Are you ready to uninstall %s?  All settings and data saved by this mod will be removed!',
 	'UNKNOWN'						=> 'Unknown',
-	'UPDATE_MOD'					=> 'Update Test Mod',
-	'UPDATE_MOD_CONFIRM'			=> 'Are you ready to update the %s?',
+	'UPDATE_MOD'					=> 'Update %s',
+	'UPDATE_MOD_CONFIRM'			=> 'Are you ready to update %s?',
+	'UPDATE_UMIL'					=> 'This version of UMIL is outdated.<br /><br />Please download the latest UMIL (Unified MOD Install Library) from: <a href="%1$s">%1$s</a>',
 
 	'VERSIONS'						=> 'Mod Version: <strong>%1$s</strong><br />Currently Installed: <strong>%2$s</strong>',
 	'VERSION_SELECT'				=> 'Version Select',
-	'VERSION_SELECT_EXPLAIN'		=> 'Do not change from "Ignore" unless you know what you are doing or were told to.',
+	'VERSION_SELECT_EXPLAIN'		=> 'Do not change from “Ignore” unless you know what you are doing or were told to.',
 ));
 
 ?>
