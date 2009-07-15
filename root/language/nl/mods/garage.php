@@ -813,7 +813,7 @@ $lang = array_merge($lang, array(
 
 //************added by roblom
 	'ROTARY'				=> 'Wankel motor',
-
+	'DECIMAL_SEPERATOR'		=> '.',
 ));
 
 ?>
